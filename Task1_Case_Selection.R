@@ -89,13 +89,16 @@ df_askHR %>%
     
   ) -> df_askHR
 
+df_askHR %>%
+  arrange(Desc_Word_Count) -> df_askHR
+
 # Word count <= 100
 # Too limiting => Word count <= 400
-df_askHR %>%
-  filter(
-    # Desc_Word_Count <= 300
-    Desc_Word_Count <= 400
-  ) -> df_askHR
+# df_askHR %>%
+#   filter(
+#     # Desc_Word_Count <= 300
+#     Desc_Word_Count <= 400
+#   ) -> df_askHR
 
 # TITLE WORD COUNT --------------------------------------------------------------
 # Word count
@@ -121,16 +124,16 @@ df_askHR %>%
 
 # Title word count <= 25
 # Too limiting => Title word count <= 30
-df_askHR %>%
-  filter(
-    # Title_Word_Count <= 25
-    Title_Word_Count <= 30
-  ) -> df_askHR
+# df_askHR %>%
+#   filter(
+#     # Title_Word_Count <= 25
+#     Title_Word_Count <= 30
+#   ) -> df_askHR
 
 
 # NUMBER OF CASES -------------------------------------------------------------------------
-df_askHR %>% 
-  nrow(.)
+# df_askHR %>% 
+#   nrow(.)
 
 # EXPORT FILTERED DATA -----------------------------------------------------------
 df_askHR %>% 
