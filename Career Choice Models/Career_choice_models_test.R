@@ -53,6 +53,19 @@ df_occupations %>%
 
 # # Exploratory Factor Analysis (EFA)
 # P.S.: try breaking down the data frame by skills and abilities categories (i.e. perform separate factor analyses to reduce each category individually)
+# df_occupations %>%
+#   select(
+#     where(is.numeric)
+#     , -ends_with('.I') #Using recommended levels
+#     # , -ends_with('.L') #Using importance values
+#   ) %>%
+#   select(
+#     starts_with('Active_Listening'):last_col()
+#   ) -> df_occupations.numeric
+
+# 'Not in' operator
+# `%!in%` <- Negate(`%in%`)
+
 df_occupations %>%
   select(
     where(is.numeric)
@@ -60,8 +73,12 @@ df_occupations %>%
     # , -ends_with('.L') #Using importance values
   ) %>%
   select(
-    starts_with('Active_Listening'):last_col()
+    starts_with('Active_Listening'):starts_with('Transportation') #Skills, abilities, and knowledge only
   ) -> df_occupations.numeric
+
+# Simpler names, if needed
+# colnames(df_occupations.numeric) <- paste0('V',seq_along(df_occupations.numeric))
+
 
 # K-M-O factor adequacy test
 # * 0.00 to 0.49 unacceptable
@@ -93,9 +110,13 @@ df_occupations.numeric %>%
 
 # Parallel analysis suggests 15 factors are sufficient
 # P.S.: If using importance values rather than level, Parallel analysis suggests 17 factors are sufficient
+# P.S.: Using only skills, abilities and knowledge, Parallel analysis suggests 11 factors are sufficient
+# P.S.: If using importance values rather than level, with only skills, abilities and knowledge, Parallel analysis suggests 12 factors are sufficient
 
 # Factor Analysis
-n.facts <- 15
+n.facts <- 11
+# n.facts <- 12
+# n.facts <- 15
 # n.facts <- 17
 
 # Initially, we suppose that factors could be correlated to one another.
@@ -104,45 +125,201 @@ fit <- factanal(df_occupations.numeric, n.facts, rotation = 'promax')
 
 print(fit, digits = 2, cutoff = 0.3, sort = T)
 
-# Factors are mostly (but not entirely) uncorrelated.
-# => Try orthogonal rotation as well.
-fit2 <- factanal(df_occupations.numeric, n.facts, rotation = 'varimax')
-
-print(fit2, digits = 2, cutoff = 0.3, sort = T)
+# Factors are somewhat (but not entirely) uncorrelated.
+# => Orthogonal rotation does not seem appropriate.
+# => Keep Oblique rotation factors
 
 # Plot factors
-# Oblique
 fa.diagram(fit$loadings)
-# Orthogonal
-fa.diagram(fit2$loadings)
 
-# Oblique rotation seems to be cleaner.
+# On first sight, Factors 9 and 10 seem disposable.
+# This is confirmed by further analyses.
 
-# fa.diagram(fit$loadings[,1:2])
-# fa.diagram(fit2$loadings[,1:2])
-
-# Further evaluation
-# Do all the variables load to the factors sufficiently?
+# Evaluation
+# Do variables load to the factors sufficiently?
 # |factor loading| > 0.4
-fct_load.sufficent <- abs(fit$loadings) > 0.4 
+fct_load.sufficient <- abs(fit$loadings) > 0.4 
 
-fct_load.sufficent2 <- abs(fit2$loadings) > 0.4 
-
-round(colSums(fct_load.sufficent)/nrow(fct_load.sufficent), 2) 
-round(colSums(fct_load.sufficent2)/nrow(fct_load.sufficent2), 2)
-
-# Factor 13, 14, and 15 are irrelevant if supposing orthogonal rotation.
+# Variables sufficiently load to each factor
+colSums(fct_load.sufficient)
+nrow(fct_load.sufficient)
+# Variables that sufficiently load to each factor (%)
+round(colSums(fct_load.sufficient)/nrow(fct_load.sufficient), 2)
+# All factors have enough variables loading to themselves
+round(colSums(fct_load.sufficient)/nrow(fct_load.sufficient), 2) > 0
 
 # Do all factors have at least three - or, better, four - or more variables loading onto them?
-colSums(fct_load.sufficent) >= 3
-colSums(fct_load.sufficent) >= 4
-
-colSums(fct_load.sufficent2) >= 3
-colSums(fct_load.sufficent2) >= 4
+colSums(fct_load.sufficient) >= 3
+colSums(fct_load.sufficient) >= 4
 
 # Crossloadings: variables that load to more than one factor with loading values within 0.05 of one another
-fit$loadings %>% view()
-# sapply(list, function)
+fit$loadings[,] %>% 
+  as.matrix() %>% 
+  as_tibble(rownames = 'Metric') %>% 
+  mutate(Metric = factor(Metric)) -> df_loadings
+
+# Max loading vs other loadings
+df_loadings %>%
+  pivot_longer(#Convert to long data format
+    cols = starts_with('Factor')
+    , names_to = 'Factor'
+    , values_to = 'Loading'
+  ) %>% 
+  group_by(Metric) %>%
+  mutate(
+    Loading.Max = max(Loading) #Max loading per variable
+    , Loading.Diff.Abs = abs(Loading.Max - Loading) #Absolute difference
+    , Diff.Significant = ifelse(#Whether the difference is significant or not (i.e. <= 0.05)
+      Loading.Diff.Abs == 0
+      , yes = F #Loading.Diff.Abs == 0 <=> Max Loading (i.e. difference between max value and itself)
+      , no = Loading.Diff.Abs <= 0.05
+    )
+  ) -> df_loadings.long
+
+# Loadings Heatmap
+df_loadings.long %>%
+  ggplot(aes(
+     x = fct_inorder(Factor)
+     , y = fct_rev(fct_inorder(Metric))
+     , fill = Loading
+    )) + 
+  geom_tile() + 
+  scale_fill_gradient2(
+    low = "#FF0000"
+    , mid = "#FFFFCC"
+    , high = "#075AFF")
+
+# Loadings Difference Heatmap
+df_loadings.long %>%
+  ggplot(aes(
+     x = fct_inorder(Factor)
+     , y = fct_rev(fct_inorder(Metric))
+     , fill = Loading.Diff.Abs
+    )) + 
+  geom_tile() + 
+  scale_fill_gradient2(
+    low = "#FF0000"
+    , mid = "#FFFFCC"
+    , high = "#075AFF")
+
+# Significant Loadings Difference Heatmap
+df_loadings.long %>%
+  ggplot(aes(
+     x = fct_inorder(Factor)
+     , y = fct_rev(fct_inorder(Metric))
+     , fill = Diff.Significant
+    )) + 
+  geom_tile()
+
+# Almost no significant difference between factor loadings for each item.
+# Conclusion: Very few crossloadings. Each item maps considerably to only one factor.
+
+
+# Internal consistency test: Cronbach's Alpha
+# Do the factors form a coherent group in and of themselves?  
+
+# Matching items to factors
+# Since there are relatively few crossloadings, it is adequate to  
+# use maximum loading as the criteria for factor matching.
+df_loadings.long %>% 
+  filter(
+    Loading == Loading.Max
+  ) -> df_loadings.long.factors
+
+# Interestingly, although all factors are statistically relevant,
+# factors 9 and 10 have no item maximally loading to them.
+# This means they are likely secondary factors, if useful at all.
+# Therefore, unless we manually assign items to these two factors,
+# the inclusion criteria (i.e. max loadings) leads us to disconsider them.  
+
+# Separate factors into individual data frames
+lapply(
+  unique(df_loadings.long.factors$Factor)
+  , function(factors){
+    
+    df_loadings.long.factors %>%
+      filter(
+        Factor == factors
+      ) %>%
+      pull(Metric) %>%
+      factor(.) %>%
+      return(.)
+    
+  }) -> list_chr_loadings.long.factors
+
+# Apply Alpha test to each subset of variables
+lapply(
+    list_chr_loadings.long.factors
+    , function(factors){
+      
+      df_occupations.numeric %>%
+        select(factors) -> df.temp #Select only the variables that match to each factor
+        
+      if(length(factors) > 1){#By definition, internal consistency tests only apply to groups of more than one variable
+        
+        df.temp %>%
+          alpha(.) %>%
+          return(.)
+        
+      }
+      else{
+        
+        return(NA)
+      
+        }
+      
+    }) -> list_alpha
+  
+# Raw alpha score
+lapply(
+  seq_along(list_alpha)
+  , function(index){
+    
+    if(!is.na(list_alpha[index])){
+
+      list_alpha[[index]]$total$raw_alpha %>%
+      return(.)
+
+    }
+    else{
+
+      return(NA)
+
+    }
+    
+  }) -> list_raw_alpha
+
+# The general rule of thumb is that a Cronbach's alpha of 0.70 and above is good
+lapply(
+  list_raw_alpha
+  , function(cronbach){
+   
+    cronbach %>% 
+      as_tibble(.) -> cronbach
+    
+    colnames(cronbach) <- 'Cronbach_Alpha'
+    
+    cronbach %>%
+      mutate(
+        Good.Cronbach_Alpha = Cronbach_Alpha >= 0.7
+      ) %>% 
+      return(.)
+     
+  }) %>% 
+  bind_rows(.) %>%
+  mutate(
+    Factor = paste0('Factor', row_number())
+  ) -> df_raw_alpha
+
+
+# Conclusion: There are 9 internally consistent factors, most with very high Alpha values.
+# This means that all items can be consistently reduced to these 9 factors.
+# P.S.: Factor 4 is composed of only 1 item. Therefore, it is internally consistent by definition.
+
+# Other visualizations (test later)
+# install.packages('FactoMineR')
+# library(FactoMineR)
+# result <- PCA(df_occupations.numeric)
 
 
 # EUCLIDEAN DISTANCE ------------------------------------------------------
