@@ -16,11 +16,11 @@ lapply(pkg, function(x)
 #   {citation(package = x)})
 
 # WORKING DIRECTORY -------------------------------------------------------
-setwd('C:/Users/Cao/Documents/Github/Atlas-Research')
+setwd('C:/Users/Cao/Documents/Github/Atlas-Research/Career-Choice-Models')
 
 # DATA --------------------------------------------------------------------
 # Occupations data frame
-df_occupations <- readr::read_csv('https://docs.google.com/spreadsheets/d/e/2PACX-1vSphzWoCxoNaiaJcQUWKCMqUAT041Q8UqUgM7rSzIwYZb7FhttKJwNgtrFf-r7EgzXHFom4UjLl2ltk/pub?gid=563902602&single=true&output=csv') 
+df_occupations <- readr::read_csv('https://docs.google.com/spreadsheets/d/e/2PACX-1vSphzWoCxoNaiaJcQUWKCMqUAT041Q8UqUgM7rSzIwYZb7FhttKJwNgtrFf-r7EgzXHFom4UjLl2ltk/pub?gid=563902602&single=true&output=csv')
 
 # Labels character vector
 chr_labels <- scan(
@@ -108,7 +108,7 @@ df_occupations.numeric %>%
 df_occupations.numeric %>%
   fa.parallel(fa = 'fa')
 
-# Parallel analysis suggests 15 factors are sufficient
+# Parallel analysis suggests 11 factors are sufficient
 # P.S.: If using importance values rather than level, Parallel analysis suggests 17 factors are sufficient
 # P.S.: Using only skills, abilities and knowledge, Parallel analysis suggests 11 factors are sufficient
 # P.S.: If using importance values rather than level, with only skills, abilities and knowledge, Parallel analysis suggests 12 factors are sufficient
@@ -138,7 +138,7 @@ fa.diagram(fit$loadings)
 # Evaluation
 # Do variables load to the factors sufficiently?
 # |factor loading| > 0.4
-fct_load.sufficient <- abs(fit$loadings) > 0.4 
+fct_load.sufficient <- abs(fit$loadings) > 0.4
 
 # Variables sufficiently load to each factor
 colSums(fct_load.sufficient)
@@ -179,10 +179,10 @@ df_loadings %>%
 # Loadings Heatmap
 df_loadings.long %>%
   ggplot(aes(
-     x = fct_inorder(Factor)
-     , y = fct_rev(fct_inorder(Metric))
-     , fill = Loading
-    )) + 
+    x = fct_inorder(Factor)
+    , y = fct_rev(fct_inorder(Metric))
+    , fill = Loading
+  )) + 
   geom_tile() + 
   scale_fill_gradient2(
     low = "#FF0000"
@@ -192,10 +192,10 @@ df_loadings.long %>%
 # Loadings Difference Heatmap
 df_loadings.long %>%
   ggplot(aes(
-     x = fct_inorder(Factor)
-     , y = fct_rev(fct_inorder(Metric))
-     , fill = Loading.Diff.Abs
-    )) + 
+    x = fct_inorder(Factor)
+    , y = fct_rev(fct_inorder(Metric))
+    , fill = Loading.Diff.Abs
+  )) + 
   geom_tile() + 
   scale_fill_gradient2(
     low = "#FF0000"
@@ -205,10 +205,10 @@ df_loadings.long %>%
 # Significant Loadings Difference Heatmap
 df_loadings.long %>%
   ggplot(aes(
-     x = fct_inorder(Factor)
-     , y = fct_rev(fct_inorder(Metric))
-     , fill = Diff.Significant
-    )) + 
+    x = fct_inorder(Factor)
+    , y = fct_rev(fct_inorder(Metric))
+    , fill = Diff.Significant
+  )) + 
   geom_tile()
 
 # Almost no significant difference between factor loadings for each item.
@@ -249,42 +249,42 @@ lapply(
 
 # Apply Alpha test to each subset of variables
 lapply(
-    list_chr_loadings.long.factors
-    , function(factors){
+  list_chr_loadings.long.factors
+  , function(factors){
+    
+    df_occupations.numeric %>%
+      select(factors) -> df.temp #Select only the variables that match to each factor
+    
+    if(length(factors) > 1){#By definition, internal consistency tests only apply to groups of more than one variable
       
-      df_occupations.numeric %>%
-        select(factors) -> df.temp #Select only the variables that match to each factor
-        
-      if(length(factors) > 1){#By definition, internal consistency tests only apply to groups of more than one variable
-        
-        df.temp %>%
-          alpha(.) %>%
-          return(.)
-        
-      }
-      else{
-        
-        return(NA)
+      df.temp %>%
+        alpha(.) %>%
+        return(.)
       
-        }
+    }
+    else{
       
-    }) -> list_alpha
-  
+      return(NA)
+      
+    }
+    
+  }) -> list_alpha
+
 # Raw alpha score
 lapply(
   seq_along(list_alpha)
   , function(index){
     
     if(!is.na(list_alpha[index])){
-
+      
       list_alpha[[index]]$total$raw_alpha %>%
-      return(.)
-
+        return(.)
+      
     }
     else{
-
+      
       return(NA)
-
+      
     }
     
   }) -> list_raw_alpha
@@ -293,7 +293,7 @@ lapply(
 lapply(
   list_raw_alpha
   , function(cronbach){
-   
+    
     cronbach %>% 
       as_tibble(.) -> cronbach
     
@@ -304,7 +304,7 @@ lapply(
         Good.Cronbach_Alpha = Cronbach_Alpha >= 0.7
       ) %>% 
       return(.)
-     
+    
   }) %>% 
   bind_rows(.) %>%
   mutate(
