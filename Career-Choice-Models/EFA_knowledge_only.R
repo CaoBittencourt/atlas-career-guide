@@ -51,8 +51,8 @@ df_occupations %>%
 df_occupations %>%
   select(
     where(is.numeric)
-    , -ends_with('.I') #Using recommended levels
-    # , -ends_with('.L') #Using importance values
+    # , -ends_with('.I') #Using recommended levels
+    , -ends_with('.L') #Using importance values
   ) %>%
   select(
     starts_with('English_Language'):starts_with('Transportation') #Abilities only
@@ -81,9 +81,7 @@ df_occupations.numeric %>%
 # * 0.70 to 0.79 middling
 # * 0.80 to 0.89 meritorious
 # => 0.90 to 1.00 marvelous
-df_occupations.numeric <- df_occupations.numeric[, KMO(df_occupations.numeric)$MSAi > 0.50]
-
-round(KMO(df_occupations.numeric)$MSA, 2)
+round(KMO(df_occupations.numeric[, KMO(df_occupations.numeric)$MSAi > 0.50])$MSA, 2)
 
 # Null hypothesis: the variables in the data set are essentially uncorrelated.
 # Rejected the null hypothesis. Therefore, the data may be grouped into factors.
@@ -302,7 +300,7 @@ lapply(
     
     cronbach %>%
       mutate(
-        Good.Cronbach_Alpha = Cronbach_Alpha >= 0.7
+        Cronbach_Alpha.Good = Cronbach_Alpha >= 0.7
       ) %>% 
       return(.)
     
@@ -350,9 +348,7 @@ df_loadings.long.factors %>%
 # * 0.70 to 0.79 middling
 # * 0.80 to 0.89 meritorious
 # => 0.90 to 1.00 marvelous
-df_occupations.numeric <- df_occupations.numeric[, KMO(df_occupations.numeric)$MSAi > 0.50]
-
-round(KMO(df_occupations.numeric)$MSA, 2)
+round(KMO(df_occupations.numeric[, KMO(df_occupations.numeric)$MSAi > 0.50])$MSA, 2)
 
 # Null hypothesis: the variables in the data set are essentially uncorrelated.
 # Rejected the null hypothesis. Therefore, the data may be grouped into factors.
@@ -561,7 +557,7 @@ lapply(
     
     cronbach %>%
       mutate(
-        Good.Cronbach_Alpha = Cronbach_Alpha >= 0.7
+        Cronbach_Alpha.Good = Cronbach_Alpha >= 0.7
       ) %>% 
       return(.)
     
@@ -609,9 +605,7 @@ df_loadings.long.factors %>%
 # * 0.70 to 0.79 middling
 # * 0.80 to 0.89 meritorious
 # => 0.90 to 1.00 marvelous
-df_occupations.numeric <- df_occupations.numeric[, KMO(df_occupations.numeric)$MSAi > 0.50]
-
-round(KMO(df_occupations.numeric)$MSA, 2)
+round(KMO(df_occupations.numeric[, KMO(df_occupations.numeric)$MSAi > 0.50])$MSA, 2)
 
 # Null hypothesis: the variables in the data set are essentially uncorrelated.
 # Rejected the null hypothesis. Therefore, the data may be grouped into factors.
@@ -820,7 +814,7 @@ lapply(
     
     cronbach %>%
       mutate(
-        Good.Cronbach_Alpha = Cronbach_Alpha >= 0.7
+        Cronbach_Alpha.Good = Cronbach_Alpha >= 0.7
       ) %>% 
       return(.)
     
@@ -865,9 +859,7 @@ df_loadings.long.factors %>%
 # * 0.70 to 0.79 middling
 # * 0.80 to 0.89 meritorious
 # => 0.90 to 1.00 marvelous
-df_occupations.numeric <- df_occupations.numeric[, KMO(df_occupations.numeric)$MSAi > 0.50]
-
-round(KMO(df_occupations.numeric)$MSA, 2)
+round(KMO(df_occupations.numeric[, KMO(df_occupations.numeric)$MSAi > 0.50])$MSA, 2)
 
 # Null hypothesis: the variables in the data set are essentially uncorrelated.
 # Rejected the null hypothesis. Therefore, the data may be grouped into factors.
@@ -1076,7 +1068,7 @@ lapply(
     
     cronbach %>%
       mutate(
-        Good.Cronbach_Alpha = Cronbach_Alpha >= 0.7
+        Cronbach_Alpha.Good = Cronbach_Alpha >= 0.7
       ) %>% 
       return(.)
     
@@ -1121,9 +1113,7 @@ df_loadings.long.factors %>%
 # * 0.70 to 0.79 middling
 # * 0.80 to 0.89 meritorious
 # => 0.90 to 1.00 marvelous
-df_occupations.numeric <- df_occupations.numeric[, KMO(df_occupations.numeric)$MSAi > 0.50]
-
-round(KMO(df_occupations.numeric)$MSA, 2)
+round(KMO(df_occupations.numeric[, KMO(df_occupations.numeric)$MSAi > 0.50])$MSA, 2)
 
 # Null hypothesis: the variables in the data set are essentially uncorrelated.
 # Rejected the null hypothesis. Therefore, the data may be grouped into factors.
@@ -1346,7 +1336,7 @@ lapply(
     
     cronbach %>%
       mutate(
-        Good.Cronbach_Alpha = Cronbach_Alpha >= 0.7
+        Cronbach_Alpha.Good = Cronbach_Alpha >= 0.7
       ) %>% 
       return(.)
     
@@ -1390,9 +1380,7 @@ df_loadings.long.factors %>%
 # * 0.70 to 0.79 middling
 # * 0.80 to 0.89 meritorious
 # => 0.90 to 1.00 marvelous
-df_occupations.numeric <- df_occupations.numeric[, KMO(df_occupations.numeric)$MSAi > 0.50]
-
-round(KMO(df_occupations.numeric)$MSA, 2)
+round(KMO(df_occupations.numeric[, KMO(df_occupations.numeric)$MSAi > 0.50])$MSA, 2)
 
 # Null hypothesis: the variables in the data set are essentially uncorrelated.
 # Rejected the null hypothesis. Therefore, the data may be grouped into factors.
@@ -1601,7 +1589,7 @@ lapply(
     
     cronbach %>%
       mutate(
-        Good.Cronbach_Alpha = Cronbach_Alpha >= 0.7
+        Cronbach_Alpha.Good = Cronbach_Alpha >= 0.7
       ) %>% 
       return(.)
     
@@ -1646,9 +1634,7 @@ df_loadings.long.factors %>%
 # * 0.70 to 0.79 middling
 # * 0.80 to 0.89 meritorious
 # => 0.90 to 1.00 marvelous
-df_occupations.numeric <- df_occupations.numeric[, KMO(df_occupations.numeric)$MSAi > 0.50]
-
-round(KMO(df_occupations.numeric)$MSA, 2)
+round(KMO(df_occupations.numeric[, KMO(df_occupations.numeric)$MSAi > 0.50])$MSA, 2)
 
 # Null hypothesis: the variables in the data set are essentially uncorrelated.
 # Rejected the null hypothesis. Therefore, the data may be grouped into factors.
@@ -1857,7 +1843,7 @@ lapply(
     
     cronbach %>%
       mutate(
-        Good.Cronbach_Alpha = Cronbach_Alpha >= 0.7
+        Cronbach_Alpha.Good = Cronbach_Alpha >= 0.7
       ) %>% 
       return(.)
     
@@ -1904,7 +1890,6 @@ df_loadings.long.factors %>%
 # PICKING BEST ITEMS (NOT USING IRT) ---------------------------------------------
 # Number of items to pick
 n.items <- 3
-# n.items <- 2
 
 # min crossloadings
 df_loadings.long %>% 
@@ -1955,9 +1940,7 @@ df_occupations.numeric %>%
 # * 0.70 to 0.79 middling
 # * 0.80 to 0.89 meritorious
 # => 0.90 to 1.00 marvelous
-df_occupations.numeric <- df_occupations.numeric[, KMO(df_occupations.numeric)$MSAi > 0.50]
-
-round(KMO(df_occupations.numeric)$MSA, 2)
+round(KMO(df_occupations.numeric[, KMO(df_occupations.numeric)$MSAi > 0.50])$MSA, 2)
 
 # Null hypothesis: the variables in the data set are essentially uncorrelated.
 # Rejected the null hypothesis. Therefore, the data may be grouped into factors.
@@ -2178,7 +2161,7 @@ lapply(
     
     cronbach %>%
       mutate(
-        Good.Cronbach_Alpha = Cronbach_Alpha >= 0.7
+        Cronbach_Alpha.Good = Cronbach_Alpha >= 0.7
       ) %>% 
       return(.)
     
