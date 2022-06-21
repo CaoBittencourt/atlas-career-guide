@@ -3,6 +3,7 @@ pkg <- c(
   # 'ggthemes', 'scales' #Visualization
   'readr', 'readxl','openxlsx' #Read and write utilities
   , 'tidyverse', 'labelled' #Data wrangling
+  # , 'caret' #Variance filter
   , 'psych' #Factor analysis
 )
 
@@ -49,24 +50,30 @@ df_occupations %>%
 
 # Only numeric variables
 df_occupations %>%
+  # select(
+  #   where(is.numeric)
+  #   # , -ends_with('.I') #Using recommended levels
+  #   , -ends_with('.L') #Using importance values
+  # ) %>%
   select(
-    where(is.numeric)
-    # , -ends_with('.I') #Using recommended levels
-    , -ends_with('.L') #Using importance values
-  ) %>%
-  select(
-    starts_with('English_Language'):starts_with('Transportation') #Abilities only
+    where(function(x){str_detect(attributes(x)$label, 'Knowledge.')}) #Knowledge only
+    , -ends_with('.I') #Using recommended levels
+    # starts_with('English_Language'):starts_with('Transportation') #Knowledge only
+  ) %>% 
+  mutate(#0 to 100 => 0 to 1 (helps calculate similarity later on)
+    across(
+      .fns = function(x){x/100}
+    )
   ) -> df_occupations.numeric
 
 # Simpler names, if needed
 # colnames(df_occupations.numeric) <- paste0('V',seq_along(df_occupations.numeric))
 
 # Testing without problematic variables (viz. Food Production)
-
-df_occupations.numeric %>%
-  select(
-    -starts_with('Food_Production') #Remove Food Production
-  ) -> df_occupations.numeric
+# df_occupations.numeric %>%
+#   select(
+#     -starts_with('Food_Production') #Remove Food Production
+#   ) -> df_occupations.numeric
 
 # EFA I: 8 factors => 7 factors? --------------------------------------------------------
 # # Exploratory Factor Analysis (EFA)
@@ -92,15 +99,28 @@ df_occupations.numeric %>%
   cor() %>%
   eigen() -> ev
 
+sum(ev$values >= 1)
+
+# Kaiser criterion suggests 8 factors are sufficient
+
 # Scree plot
 df_occupations.numeric %>%
-  scree(pc = F) #Factor analysis => pc = False 
+  scree(pc = F) #Factor analysis => pc = False
 
 # Parallel analysis
 df_occupations.numeric %>%
-  fa.parallel(fa = 'fa')
+  fa.parallel(fa = 'fa') -> pa_analysis
 
 # Parallel analysis suggests 8 factors are sufficient
+
+# Very simple structure criterion (VSS)
+df_occupations.numeric %>% 
+  VSS(n = 2 * pa_analysis$nfact) %>%
+  summary()
+
+# VSS criterion 1 suggests 2 factors are sufficient
+# VSS criterion 2 suggests 3 factors are sufficient
+# Velicer MAP criterion suggests 9 factors are sufficient
 
 # Factor Analysis
 n.facts <- 8
@@ -108,7 +128,6 @@ n.facts <- 8
 # Initially, we suppose that factors could be correlated to one another.
 # Therefore, we apply an oblique rotation to the factors.
 fit <- factanal(df_occupations.numeric, n.facts, rotation = 'promax')
-# fit <- factanal(df_occupations.numeric, n.facts, rotation = 'varimax')
 
 print(fit, digits = 2, cutoff = 0.3, sort = T)
 
