@@ -108,7 +108,7 @@ df_occupations %>%
 # # Parallel analysis suggests 6 factors are sufficient
 # 
 # # Very simple structure criterion (VSS)
-# df_occupations.numeric %>% 
+# df_occupations.numeric %>%
 #   VSS(n = 2 * pa_analysis$nfact) %>%
 #   summary()
 # 
@@ -345,7 +345,7 @@ df_occupations %>%
 # # install.packages('FactoMineR')
 # # library(FactoMineR)
 # # result <- PCA(df_occupations.numeric)
-# 
+
 # # EFA II: 5 factors => 4 factors? --------------------------------------------------------
 # # # Exploratory Factor Analysis (EFA)
 # 
