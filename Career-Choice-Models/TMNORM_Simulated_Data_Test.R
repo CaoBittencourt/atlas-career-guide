@@ -88,6 +88,7 @@ rtmvnorm(
   , mu = dbl_mean
   , sigma = cov_mat
   , lb = rep(0,length(dbl_mean))
+  , ub = rep(1,length(dbl_mean))
 ) -> mat_trunc_norm
 
 colnames(mat_trunc_norm) <- colnames(df_occupations.numeric)

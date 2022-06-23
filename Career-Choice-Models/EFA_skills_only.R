@@ -139,19 +139,30 @@ df_occupations %>%
 # # Evaluation
 # # Do variables load to the factors sufficiently?
 # # |factor loading| > 0.4
-# fct_load.sufficient <- abs(fit$loadings) > 0.4
+# (abs(fit$loadings) > 0.4) %>% 
+#   as_tibble(rownames = 'Metric') %>% 
+#   mutate(
+#     Load.Sufficient = rowSums(select(.,starts_with('Factor')))
+#     , Load.Sufficient.Bin = ifelse(Load.Sufficient > 1, 1, Load.Sufficient)
+#   ) -> df_loadings.sufficient
 # 
-# # Variables sufficiently load to each factor
-# colSums(fct_load.sufficient)
-# nrow(fct_load.sufficient)
-# # Variables that sufficiently load to each factor (%)
-# round(colSums(fct_load.sufficient)/nrow(fct_load.sufficient), 2)
-# # All factors have variables that sufficiently load to them
-# round(colSums(fct_load.sufficient)/nrow(fct_load.sufficient), 2) > 0
+# # Percentage of variables that load significantly to at least one factor
+# df_loadings.sufficient %>%
+#   summarise(Load.Sufficient.Prct = sum(Load.Sufficient.Bin)/nrow(.))
+# 
+# # Variables that do not load significantly to any factor
+# df_loadings.sufficient %>% 
+#   filter(Load.Sufficient.Bin == 0) %>% 
+#   pull(Metric)
 # 
 # # Do all factors have at least three - or, better, four - or more variables loading onto them?
-# colSums(fct_load.sufficient) >= 3
-# colSums(fct_load.sufficient) >= 4
+# df_loadings.sufficient %>% 
+#   select(starts_with('Factor')) %>%
+#   colSums() >= 3
+# 
+# df_loadings.sufficient %>% 
+#   select(starts_with('Factor')) %>%
+#   colSums() >= 4
 # 
 # # Factors 4 and 5 don't have at least 3 variables loading to them.
 # 
@@ -345,7 +356,7 @@ df_occupations %>%
 # # install.packages('FactoMineR')
 # # library(FactoMineR)
 # # result <- PCA(df_occupations.numeric)
-# 
+
 # # EFA II: 4 factors => 3 factors? --------------------------------------------------------
 # # # Exploratory Factor Analysis (EFA)
 # 
@@ -417,19 +428,30 @@ df_occupations %>%
 # # Evaluation
 # # Do variables load to the factors sufficiently?
 # # |factor loading| > 0.4
-# fct_load.sufficient <- abs(fit$loadings) > 0.4
+# (abs(fit$loadings) > 0.4) %>% 
+#   as_tibble(rownames = 'Metric') %>% 
+#   mutate(
+#     Load.Sufficient = rowSums(select(.,starts_with('Factor')))
+#     , Load.Sufficient.Bin = ifelse(Load.Sufficient > 1, 1, Load.Sufficient)
+#   ) -> df_loadings.sufficient
 # 
-# # Variables sufficiently load to each factor
-# colSums(fct_load.sufficient)
-# nrow(fct_load.sufficient)
-# # Variables that sufficiently load to each factor (%)
-# round(colSums(fct_load.sufficient)/nrow(fct_load.sufficient), 2)
-# # All factors have variables that sufficiently load to them
-# round(colSums(fct_load.sufficient)/nrow(fct_load.sufficient), 2) > 0
+# # Percentage of variables that load significantly to at least one factor
+# df_loadings.sufficient %>%
+#   summarise(Load.Sufficient.Prct = sum(Load.Sufficient.Bin)/nrow(.))
+# 
+# # Variables that do not load significantly to any factor
+# df_loadings.sufficient %>% 
+#   filter(Load.Sufficient.Bin == 0) %>% 
+#   pull(Metric)
 # 
 # # Do all factors have at least three - or, better, four - or more variables loading onto them?
-# colSums(fct_load.sufficient) >= 3
-# colSums(fct_load.sufficient) >= 4
+# df_loadings.sufficient %>% 
+#   select(starts_with('Factor')) %>%
+#   colSums() >= 3
+# 
+# df_loadings.sufficient %>% 
+#   select(starts_with('Factor')) %>%
+#   colSums() >= 4
 # 
 # # All factors have at least 4 variables loading to them.
 # 
@@ -623,7 +645,7 @@ df_occupations %>%
 # # library(FactoMineR)
 # # result <- PCA(df_occupations.numeric)
 # 
-# 
+
 # # EFA III: 4 factors => 3 factors! --------------------------------------------------------
 # # # Exploratory Factor Analysis (EFA)
 # 
@@ -695,19 +717,30 @@ df_occupations %>%
 # # Evaluation
 # # Do variables load to the factors sufficiently?
 # # |factor loading| > 0.4
-# fct_load.sufficient <- abs(fit$loadings) > 0.4
+# (abs(fit$loadings) > 0.4) %>% 
+#   as_tibble(rownames = 'Metric') %>% 
+#   mutate(
+#     Load.Sufficient = rowSums(select(.,starts_with('Factor')))
+#     , Load.Sufficient.Bin = ifelse(Load.Sufficient > 1, 1, Load.Sufficient)
+#   ) -> df_loadings.sufficient
 # 
-# # Variables sufficiently load to each factor
-# colSums(fct_load.sufficient)
-# nrow(fct_load.sufficient)
-# # Variables that sufficiently load to each factor (%)
-# round(colSums(fct_load.sufficient)/nrow(fct_load.sufficient), 2)
-# # All factors have variables that sufficiently load to them
-# round(colSums(fct_load.sufficient)/nrow(fct_load.sufficient), 2) > 0
+# # Percentage of variables that load significantly to at least one factor
+# df_loadings.sufficient %>%
+#   summarise(Load.Sufficient.Prct = sum(Load.Sufficient.Bin)/nrow(.))
+# 
+# # Variables that do not load significantly to any factor
+# df_loadings.sufficient %>% 
+#   filter(Load.Sufficient.Bin == 0) %>% 
+#   pull(Metric)
 # 
 # # Do all factors have at least three - or, better, four - or more variables loading onto them?
-# colSums(fct_load.sufficient) >= 3
-# colSums(fct_load.sufficient) >= 4
+# df_loadings.sufficient %>% 
+#   select(starts_with('Factor')) %>%
+#   colSums() >= 3
+# 
+# df_loadings.sufficient %>% 
+#   select(starts_with('Factor')) %>%
+#   colSums() >= 4
 # 
 # # All factors have at least 4 variables loading to them.
 # 
@@ -901,7 +934,7 @@ df_occupations %>%
 # # library(FactoMineR)
 # # result <- PCA(df_occupations.numeric)
 # 
-# 
+
 # # CONCLUSION --------------------------------------------------------------
 # # There are 3 internally consistent factors, all of them with very high Alpha values.
 # # This means that all skills can be consistently reduced to these 3 factors.
@@ -952,7 +985,7 @@ df_occupations %>%
 # 
 # df_loadings.items.skills
 # # df_loadings.items.skills2
-# 
+
 # # TESTING BEST ITEMS: EFA II STILL CONSISTENT? YES! --------------------------------------------------------
 # # # Exploratory Factor Analysis (EFA)
 # 
@@ -1030,19 +1063,30 @@ df_occupations %>%
 # # Evaluation
 # # Do variables load to the factors sufficiently?
 # # |factor loading| > 0.4
-# fct_load.sufficient <- abs(fit$loadings) > 0.4
+# (abs(fit$loadings) > 0.4) %>% 
+#   as_tibble(rownames = 'Metric') %>% 
+#   mutate(
+#     Load.Sufficient = rowSums(select(.,starts_with('Factor')))
+#     , Load.Sufficient.Bin = ifelse(Load.Sufficient > 1, 1, Load.Sufficient)
+#   ) -> df_loadings.sufficient
 # 
-# # Variables sufficiently load to each factor
-# colSums(fct_load.sufficient)
-# nrow(fct_load.sufficient)
-# # Variables that sufficiently load to each factor (%)
-# round(colSums(fct_load.sufficient)/nrow(fct_load.sufficient), 2)
-# # All factors have variables that sufficiently load to them
-# round(colSums(fct_load.sufficient)/nrow(fct_load.sufficient), 2) > 0
+# # Percentage of variables that load significantly to at least one factor
+# df_loadings.sufficient %>%
+#   summarise(Load.Sufficient.Prct = sum(Load.Sufficient.Bin)/nrow(.))
+# 
+# # Variables that do not load significantly to any factor
+# df_loadings.sufficient %>% 
+#   filter(Load.Sufficient.Bin == 0) %>% 
+#   pull(Metric)
 # 
 # # Do all factors have at least three - or, better, four - or more variables loading onto them?
-# colSums(fct_load.sufficient) >= 3
-# colSums(fct_load.sufficient) >= 4
+# df_loadings.sufficient %>% 
+#   select(starts_with('Factor')) %>%
+#   colSums() >= 3
+# 
+# df_loadings.sufficient %>% 
+#   select(starts_with('Factor')) %>%
+#   colSums() >= 4
 # 
 # # All factors have at least 4 variables loading to them.
 # 
@@ -1238,7 +1282,7 @@ df_occupations %>%
 # # library(FactoMineR)
 # # result <- PCA(df_occupations.numeric)
 # 
-# 
+
 # # # # -------------------------------------------------------------------------
 # # # 
 # # # df_occupations %>% 
@@ -1327,7 +1371,7 @@ df_occupations %>%
 # EXPORT RESULTS ONLY (SOURCE) --------------------------------------------------------
 n.facts <- 3
 
-fit <- factanal(df_occupations.numeric/100, n.facts, rotation = 'promax')
+fit <- factanal(df_occupations.numeric, n.facts, rotation = 'promax')
 
 fit$loadings[,] %>%
   as.matrix() %>%
