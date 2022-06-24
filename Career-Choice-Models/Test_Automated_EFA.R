@@ -2,6 +2,7 @@
 pkg <- c(
   'tidyverse', 'glue' #Data wrangling
   , 'psych' #Factor analysis
+  # , 'ctv' #Most relevant psychometrics packages
   , 'paletteer' #Palettes for visualization
 )
 
@@ -278,6 +279,24 @@ fun_factor.analysis <- function(
         as_tibble(rownames = 'Item') %>%
         mutate(Item = factor(Item)) -> df_loadings
       
+      # Max loading vs other loadings
+      df_loadings %>%
+        pivot_longer(#Convert to long data format
+          cols = -starts_with('Item')
+          , names_to = 'Factor'
+          , values_to = 'Loading'
+        ) %>%
+        group_by(Item) %>%
+        mutate(
+          Loading.Max = max(Loading) #Max loading per variable
+          , Loading.Diff.Abs = abs(Loading.Max - Loading) #Absolute difference
+          , Diff.Significant = ifelse(#Whether the difference is significant or not (i.e. <= 0.05)
+            Loading.Diff.Abs == 0
+            , yes = F #Loading.Diff.Abs == 0 <=> Max Loading (i.e. difference between max value and itself)
+            , no = Loading.Diff.Abs <= dbl_cross_loading.threshold
+          )
+        ) -> df_loadings.long
+      
       # Do variables load to the factors sufficiently?
       # |factor loading| >= cross loading threshold (generally, 0.4)
       df_loadings %>%
@@ -422,8 +441,11 @@ fun_factor.analysis <- function(
     ) -> df_loadings.long.factors
   
   # Separate factors into individual data frames
+  factors.names <- str_sort(unique(df_loadings.long.factors$Factor), numeric = T)
+  names(factors.names) <- factors.names
+  
   lapply(
-    str_sort(unique(df_loadings.long.factors$Factor))
+    factors.names
     , function(factors){
       
       df_loadings.long.factors %>%
@@ -434,9 +456,12 @@ fun_factor.analysis <- function(
         factor(.) %>%
         return(.)
       
-    }) -> list_chr_loadings.long.factors
+    }
+  ) -> list_chr_loadings.long.factors
   
   # Calculate reliability measures for each subset of variables
+  options(warn = -1) 
+  
   lapply(
     list_chr_loadings.long.factors
     , function(factors){
@@ -453,38 +478,78 @@ fun_factor.analysis <- function(
           omega(nfactors = 1) -> metrics.omega
         
         tibble(
-          'Lambda4' = metrics.other$maxrb
-          , 'Lambda6' = metrics.other$lambda6
-          , 'Split.Avg' = metrics.other$meanr
-          , 'Alpha' = metrics.other$alpha
+          'Lambda6' = metrics.other$lambda6
+          , 'OmegaT' = metrics.omega$omega.tot
           , 'Lambda2' = metrics.other$lambda2
-          , 'Beta' = metrics.other$minrb
+          , 'Alpha' = metrics.other$alpha
+          , 'Split.Max' = metrics.other$maxrb
+          , 'Split.Avg' = metrics.other$meanr
+          , 'Split.Min' = metrics.other$minrb
           , 'Interitem.r' = metrics.other$av.r
-          , 'Omega' = metrics.omega$omega.tot
         ) -> df_metrics
-        
-        # df_metrics %>% 
-        #   mutate(
-        #     across(
-        #       .cols = 
-        #     )
-        #   )
         
         return(df_metrics)
         
       }
       else{
         
-        return(NA)
+        tibble(
+          'Split.Max' = NA
+          , 'Lambda6' = NA
+          , 'Split.Avg' = NA
+          , 'Lambda2' = NA
+          , 'Alpha' = NA
+          , 'Split.Min' = NA
+          , 'OmegaT' = NA
+          , 'Interitem.r' = NA
+        ) -> df_metrics
+        
+        return(df_metrics)
         
       }
       
-    }) -> list_reliability
+    }
+  ) %>%
+    bind_rows(.id = 'Factor') %>%
+    select(Factor, everything()) -> df_reliability
   
+  options(warn = getOption('warn'))
+  
+  df_reliability %>%
+    mutate(
+      across(
+        # The minimum required consistency score
+        # may be higher or lower, depending on the context.
+        .cols = -starts_with(c('Factor','Interitem'))
+        ,.fns = function(x){
+          case_when(
+            x < 0.5 ~ 'Unacceptable'
+            , x >= 0.5 & x < 0.6 ~ 'Poor'
+            , x >= 0.6 & x < 0.7 ~ 'Questionable'
+            , x >= 0.7 & x < 0.8 ~ 'Acceptable'
+            , x >= 0.8 & x < 0.9 ~ 'Good'
+            , x >= 0.9 ~ 'Excellent'
+          )
+        }
+      )
+    ) %>%
+    mutate(
+      across(
+        .cols = starts_with('Interitem')
+        ,.fns = function(x){
+          case_when(
+            x < 0.15 ~ 'Incoherent'
+            , x >= 0.15 & x <= 0.5 ~ 'Ideal'
+            , x > 0.5 ~ 'Too similar'
+          )
+        }
+      )
+    ) -> df_reliability.evaluation
   
   list(
     'model' = fit
-    , 'reliability' = list_reliability
+    , 'reliability' = df_reliability
+    , 'evaluation' = df_reliability.evaluation
     , 'loadings' = df_loadings
     , 'loadings.long' = df_loadings.long
     , 'sufficient' = df_loadings.sufficient.sum
@@ -776,6 +841,9 @@ df_loadings.long %>%
 
 
 # Separate factors into individual data frames
+factors <- str_sort(unique(df_loadings.long.factors$Factor)) 
+names(factors) <- str_sort(unique(df_loadings.long.factors$Factor))
+
 lapply(
   str_sort(unique(df_loadings.long.factors$Factor))
   , function(factors){
@@ -841,7 +909,7 @@ dsdsds$omega.tot
 lapply(
   1:length(list_alpha)
   , 
-  )
+)
 list_alpha[[]]
 
 # Raw alpha score
@@ -910,16 +978,21 @@ EFA5
 fun_factor.analysis(
   # Basic
   df_data.numeric = df_occupations.numeric
-  , int_nfactors = 4
+  , int_nfactors = 10
   , chr_rotation = 'promax'
   # Underloadings and crossloadings
   , remove_under_loading.items = T
-  , remove_cross_loading.items = F
+  , remove_cross_loading.items = T
   , dbl_under_loading.threshold = 0.4 #Lesser than 0.4 loading = underloading
   , dbl_cross_loading.threshold = 0.05 #Lesser than 0.05 loading difference = crossloading
   # Diagrams and tests
   , show_diagrams = T
-  , show_results = T
+  , show_results = F
   , stop_at_warnings = F
-) -> test 
+) -> test
+
+test$removed.items
+test$reliability
+test$evaluation
+test$sufficient
 
