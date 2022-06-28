@@ -70,7 +70,7 @@ df_occupations %>%
 # Simpler names, if needed
 # colnames(df_occupations.numeric) <- paste0('V',seq_along(df_occupations.numeric))
 
-# Testing without problematic variables (viz. Food Production)
+# # Testing without problematic variables (viz. Food Production)
 df_occupations.numeric %>%
   select(
     -starts_with(c(
@@ -629,14 +629,18 @@ df_loadings.sufficient %>%
 # Variables that do not load significantly to any factor
 df_loadings.sufficient %>% 
   filter(Load.Sufficient.Bin == 0) %>% 
-  pull(Metric)
+  # pull(Metric) -> chr_remove2
+  pull(Metric) -> chr_remove4
 
 # Food production does not load sufficiently to any factor
 # Since it is a very negatively asymmetrical variable,
 # so much so that most careers don't require any level of this field of knowledge,
 # it seems thus appropriate to drop it from the data set.
+# df_occupations.numeric %>% 
+#   select(-starts_with('Food_Production')) -> df_occupations.numeric
 df_occupations.numeric %>% 
-  select(-starts_with('Food_Production')) -> df_occupations.numeric
+  # select(-all_of(chr_remove2)) -> df_occupations.numeric
+  select(-all_of(chr_remove4)) -> df_occupations.numeric
 
 # Re-running the model
 
@@ -796,6 +800,15 @@ df_loadings.long %>%
     , fill = Diff.Significant
   )) +
   geom_tile()
+
+df_loadings.long %>% 
+  filter(Diff.Significant) %>%
+  pull(Metric) %>%
+  as.character() -> chr_remove
+  # as.character() -> chr_remove3
+
+df_occupations.numeric %>%
+  select(-all_of(chr_remove)) -> df_occupations.numeric
 
 # Almost no significant difference between factor loadings for each item.
 # Conclusion: Very few crossloadings. Each item maps considerably to only one factor.

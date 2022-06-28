@@ -27,88 +27,72 @@ lapply(pkg, function(x)
 setwd('C:/Users/Cao/Documents/Github/Atlas-Research/Career-Choice-Models')
 
 # DATA --------------------------------------------------------------------
-# EFA skills
-source('./EFA_skills_only.R')
-# EFA abilities
-source('./EFA_abilities_only.R')
-
-# Selected skills and abilities
-df_loadings.items.skills %>%
-  bind_rows(df_loadings.items.ablts) -> df_loadings.items.skills_ablts
+# Auto-EFA skills
+source('./Auto_EFA_skills_output.R')
+# Auto-EFA abilities
+source('./Auto_EFA_abilities_output.R')
+# Auto-EFA knowledge
+source('./Auto_EFA_knowledge_output.R')
 
 # Only numeric variables
 df_occupations %>%
   select(
-    df_loadings.items.skills_ablts$Metric #Selected skills and abilities only
-    # where(function(x){str_detect(attributes(x)$label, '_Skills.')}) #Skills
-    # , where(function(x){str_detect(attributes(x)$label, 'Abilities.')}) #Abilities
-    # , where(function(x){str_detect(attributes(x)$label, 'Knowledge.')}) #Knowledge
-    # where(function(x){str_detect(attributes(x)$label, 'Knowledge.')}) #Knowledge
-    , -ends_with('.I') #Using recommended levels
-    # , -ends_with('.L') #Using importance values
+    all_of(c(# Selected skills, abilities, and knowledge
+      df_skills.items$Item
+      , df_ablt.items$Item
+      # where(function(x){str_detect(attributes(x)$label, '_Skills.')}) #Skills only
+      # , where(function(x){str_detect(attributes(x)$label, 'Abilities.')}) #Skills only
+      # , where(function(x){str_detect(attributes(x)$label, 'Knowledge.')}) #Skills only
+      # , -ends_with('.I') #Using recommended levels
+      # , df_know.items$Item
+    )
+    )
   ) %>% 
   mutate(#0 to 100 => 0 to 1 (helps calculate similarity later on)
     across(
       .fns = function(x){x/100}
     )
-  ) -> df_occupations.numeric
-
-# Simpler names, if needed
-# colnames(df_occupations.numeric) <- paste0('V',seq_along(df_occupations.numeric))
+  ) -> df_occupations.numeric.items
 
 # SIMULATED QUESTIONNAIRE ---------------------------------------------------------------
 # Set number of individuals
-n_simulations <- 500
+n_simulations <- 1000
 
 # Generic names for each individual
 chr_individuals <- paste('Subject', 1:n_simulations)
 names(chr_individuals) <- chr_individuals
 
 # Get the first line from the correlation matrix
-# In order to keep the original relationships between variables
-df_occupations.numeric %>% 
+# In order to keep the original relationship between variables
+df_occupations.numeric.items %>% 
   cov() -> cov_mat
 
-df_occupations.numeric %>% 
+df_occupations.numeric.items %>% 
   cor() %>% 
   as_tibble() %>%
   slice(1) -> df_correlations
 
 # Simulate normal distributions in accordance with the correlation matrix
 # Mean for each variable
-df_occupations.numeric %>%
+df_occupations.numeric.items %>%
   summarise(across(
     .fns = mean
   )) %>% 
   as.numeric() -> dbl_mean
 
-# Multivariate truncated normal distribution with correlated data
+# Multivariate truncated normal distribution
 rtmvnorm(
   n = n_simulations
   , mu = dbl_mean
   , sigma = cov_mat
-  , lb = rep(0,length(dbl_mean))
-  , ub = rep(1,length(dbl_mean))
+  , lb = rep(0,length(dbl_mean)) #Scale between 0 and 1
+  , ub = rep(1,length(dbl_mean)) #Scale between 0 and 1 
 ) -> mat_trunc_norm
 
-colnames(mat_trunc_norm) <- colnames(df_occupations.numeric)
+colnames(mat_trunc_norm) <- colnames(df_occupations.numeric.items)
 
 mat_trunc_norm %>%
   as_tibble() -> df_simulations
-
-# mvrnorm(
-#   n = n_simulations
-#   , mu = dbl_mean
-#   , Sigma = cov_mat
-#   , empirical = T
-# ) %>%
-#   as_tibble() -> df_simulations
-
-# Only non-negative values
-sum(df_simulations < 0)
-sum(df_simulations < 0)/(ncol(df_simulations)*nrow(df_simulations))
-
-# df_simulations[df_simulations < 0] <- 0
 
 # Add the names of each individual
 df_simulations %>% 
@@ -117,66 +101,13 @@ df_simulations %>%
     , .before = names(.)[1]
   ) -> df_simulations
 
-# # Verify that the original parameters (mean, sd, and correlation) are still the same
-# # Mean
-# sum(
-#   df_simulations %>%
-#     summarise(
-#       across(
-#         .cols = where(is.numeric)
-#         ,.fns = function(x){round(mean(x),1)}
-#       )
-#     ) ==
-#     df_occupations.numeric %>%
-#     summarise(
-#       across(
-#         .cols = where(is.numeric)
-#         ,.fns = function(x){round(mean(x),1)}
-#       )
-#     )
-# )/ncol(df_occupations.numeric)
-# 
-# # Sd
-# sum(
-#   df_simulations %>%
-#     summarise(
-#       across(
-#         .cols = where(is.numeric)
-#         ,.fns = function(x){round(sd(x),1)}
-#       )
-#     ) ==
-#     df_occupations.numeric %>%
-#     summarise(
-#       across(
-#         .cols = where(is.numeric)
-#         ,.fns = function(x){round(sd(x),1)}
-#       )
-#     )
-# )/ncol(df_occupations.numeric)
-# 
-# # Correlations
-# sum(
-#   df_simulations %>%
-#     select(where(
-#       is.numeric
-#     )) %>%
-#     cor() %>%
-#     as_tibble() %>%
-#     slice(1) %>%
-#     round(1) ==
-# 
-#     df_correlations %>%
-#     round(1)
-# )/ncol(df_simulations)
-
-
 # APPLY KNN ---------------------------------------------------------------
 # Define k
 
 # RECOMMENDED
 # Typical suggested value for k is sqrt(nrow(df))
 # Looking for k nearest neighbors in all career clusters
-# df_occupations.numeric %>%
+# df_occupations.numeric.items %>%
 #   nrow(.) %>%
 #   sqrt(.) %>%
 #   round(.) -> k.value
@@ -192,7 +123,7 @@ k.value <- 1
 # COMPLETE COMPARISON
 # Or find k nearest neighbors using the whole data set
 # i.e. order everything with respect to euclidean distance
-# k.value <- nrow(df_occupations.numeric)
+# k.value <- nrow(df_occupations.numeric.items)
 
 # Find the k nearest neighbors
 lapply(
@@ -203,7 +134,7 @@ lapply(
       filter(Subject == subject) -> df_subject
     
     FNN::get.knnx(
-      data = df_occupations.numeric
+      data = df_occupations.numeric.items
       , query = df_subject %>% select(where(is.numeric))
       , k = k.value
     ) -> KNN.output
@@ -241,42 +172,23 @@ lapply(
         # Wage difference for later on
         , Wage.Diff = Annual_Wage_2021 - first(Annual_Wage_2021)
         
-      # ) %>% 
-      # mutate(#Round values
-      #   across(
-      #     .cols = starts_with('Similarity.')
-      #     ,.fns = function(x){round(x,4)}
-      #   )
-      # ) -> df_occupations.KNN
-    
-    ) -> df_occupations.KNN
+        # ) %>% 
+        # mutate(#Round values
+        #   across(
+        #     .cols = starts_with('Similarity.')
+        #     ,.fns = function(x){round(x,4)}
+        #   )
+        # ) -> df_occupations.KNN
+        
+      ) -> df_occupations.KNN
     
     return(df_occupations.KNN)
     
   }
 ) -> list_df_occupations.KNN
 
-
-
 list_df_occupations.KNN %>% 
   bind_rows() -> test
-
-# test %>%
-#   summarise(
-#     across(
-#       .cols = starts_with('Similarity.')
-#       ,.fns = list(
-#         'Max' = max
-#         , 'Mean' = mean
-#         , 'Min' = min
-#         , 'SD' = sd
-#       ))
-#   ) %>% 
-#   pivot_longer(
-#     cols = everything()
-#     , names_to = 'Similarity'
-#     , values_to = 'Value'
-#   ) %>% view()
 
 test %>%
   pivot_longer(
@@ -289,3 +201,6 @@ test %>%
     , color = Similarity
   )) + 
   geom_density(size = 1.5)
+
+test$Similarity.Common %>% summary()
+test$Similarity.Gaussian %>% summary()
