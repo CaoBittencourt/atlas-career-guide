@@ -74,7 +74,7 @@ df_occupations.numeric.skills %>%
 
 # AUTO-EFA
 df_occupations.numeric.skills %>%
-  fun_factor.analysis(
+  fun_EFA(
     # Basic
     int_nfactors = n.facts
     , chr_rotation = 'promax'
@@ -105,7 +105,7 @@ n.facts <- 4
 
 # AUTO-EFA
 df_occupations.numeric.skills %>%
-  fun_factor.analysis(
+  fun_EFA(
     # Basic
     int_nfactors = n.facts
     , chr_rotation = 'promax'
@@ -136,7 +136,7 @@ n.facts <- 3
 
 # AUTO-EFA
 df_occupations.numeric.skills %>%
-  fun_factor.analysis(
+  fun_EFA(
     # Basic
     int_nfactors = n.facts
     , chr_rotation = 'promax'
@@ -190,7 +190,7 @@ df_occupations.numeric.skills %>%
 
 # AUTO-EFA
 df_occupations.numeric.skills.items %>%
-  fun_factor.analysis(
+  fun_EFA(
     # Basic
     int_nfactors = n.facts
     , chr_rotation = 'promax'
@@ -227,21 +227,3 @@ EFA_skills.3.items$removed.items
 # it is safe to conclude EFA here.
 
 
-
-# MULTI-AUTO EFA ----------------------------------------------------------
-fun_factor.analysis.multi(
-  # Basic
-  df_data.numeric = df_occupations.numeric.skills
-  , auto_select.nfactors = T
-  , chr_rotation = 'promax'
-  # Underloadings and crossloadings
-  , remove_under_loading.items = F
-  , remove_cross_loading.items = F
-  , dbl_under_loading.threshold = 0.4 #Lesser than 0.4 loading = under loading
-  , dbl_cross_loading.threshold = 0.05 #Lesser than 0.05 loading difference = cross loading
-  # Diagrams and tests
-  , show_diagrams = T
-  , show_results = F
-) -> EFA_skills.Multi
-
-EFA_skills.Multi$reliability.evaluation %>% view()
