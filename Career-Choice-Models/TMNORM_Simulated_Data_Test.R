@@ -27,24 +27,29 @@ lapply(pkg, function(x)
 setwd('C:/Users/Cao/Documents/Github/Atlas-Research/Career-Choice-Models')
 
 # DATA --------------------------------------------------------------------
-# Auto-EFA skills
-source('./Auto_EFA_skills_output.R')
-# Auto-EFA abilities
-source('./Auto_EFA_abilities_output.R')
-# Auto-EFA knowledge
-source('./Auto_EFA_knowledge_output.R')
+# # Auto-EFA skills
+# source('./Auto_EFA_skills_output.R')
+# # Auto-EFA abilities
+# source('./Auto_EFA_abilities_output.R')
+# # Auto-EFA knowledge
+# source('./Auto_EFA_knowledge_output.R')
+# Fully-auto-EFA "best models"
+source('./Fully_Auto_EFA_all_output.R')
 
 # Only numeric variables
 df_occupations %>%
   select(
     all_of(c(# Selected skills, abilities, and knowledge
-      df_skills.items$Item
-      , df_ablt.items$Item
+      # df_skills.items$Item
+      # , df_ablt.items$Item
       # where(function(x){str_detect(attributes(x)$label, '_Skills.')}) #Skills only
       # , where(function(x){str_detect(attributes(x)$label, 'Abilities.')}) #Skills only
       # , where(function(x){str_detect(attributes(x)$label, 'Knowledge.')}) #Skills only
       # , -ends_with('.I') #Using recommended levels
       # , df_know.items$Item
+      chr_Skill.Items
+      , chr_Ablt.Items
+      , chr_Know.Items
     )
     )
   ) %>% 
@@ -123,7 +128,7 @@ k.value <- 1
 # COMPLETE COMPARISON
 # Or find k nearest neighbors using the whole data set
 # i.e. order everything with respect to euclidean distance
-# k.value <- nrow(df_occupations.numeric.items)
+k.value <- nrow(df_occupations.numeric.items)
 
 # Find the k nearest neighbors
 lapply(
@@ -204,3 +209,4 @@ test %>%
 
 test$Similarity.Common %>% summary()
 test$Similarity.Gaussian %>% summary()
+df_occupations.numeric.items %>% ncol()

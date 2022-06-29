@@ -672,7 +672,15 @@ fun_EFA <- function(
 
 
 #  [x] TOP ITEMS FUNCTION ------------------------------------------------------
-fun_top.items <- function(df_loadings.long, int_n.items = 3){
+fun_top.items <- function(df_loadings.long, int_n.items.total = 15){
+  
+  # Items per factor
+  df_loadings.long$Factor %>% 
+    unique() %>% 
+    length() -> nfacts
+  
+  # Round up
+  int_n.items <- ceiling(int_n.items.total / nfacts)
   
   df_loadings.long %>% 
     group_by(Item) %>%
@@ -701,9 +709,6 @@ fun_top.items <- function(df_loadings.long, int_n.items = 3){
     ) %>% return(.)
   
 }
-
-
-
 
 
 # [x] MULTI FUNCTIONS: PERFORM EFA WITHIN A RANGE OF FACTOR NUMBERS -------
@@ -784,6 +789,7 @@ fun_EFA.multi <- function(
           , Items.Min = min(Items)
           , Items.Avg = mean(Items)
           , Items.Max = max(Items)
+          , Items.Total = round(Items.Avg * Useful_Factors)
           , across(
             .cols = -contains(c('Factor', 'Items'))
             ,.fns = function(x){min(x, na.rm = T)}
@@ -842,7 +848,7 @@ fun_EFA.multi <- function(
 
 
 #  [x] MULTI TOP ITEMS FUNCTION ------------------------------------------------------
-fun_top.items.multi <- function(list_EFA, int_n.items = 3){
+fun_top.items.multi <- function(list_EFA, int_n.items.total = 15){
   
   # Apply top items function to each EFA in the list returned by fun_EFA.multi
   lapply(
@@ -851,7 +857,7 @@ fun_top.items.multi <- function(list_EFA, int_n.items = 3){
       
       fun_top.items(
         df_loadings.long =  EFA$loadings.long
-        , int_n.items = int_n.items
+        , int_n.items.total = int_n.items.total
       )
       
     }
@@ -861,16 +867,13 @@ fun_top.items.multi <- function(list_EFA, int_n.items = 3){
 
 
 
-
-
-
 # [x] WORKFLOW FUNCTIONS: PERFORM EFA AND TOP ITEMS SELECTION FROM BEGINNING TO END --------
 #  [x] TOP ITEMS WORKFLOW FUNCTION ------------------------------------------------------
 fun_top.items.workflow <- function(
     # Basic
   df_data.numeric
   , int_nfactors = 1
-  , int_n.items = 3
+  , int_n.items.total = 15
   , chr_rotation = 'promax'
   # Underloadings and crossloadings
   , remove_under_loading.items = T
@@ -906,7 +909,7 @@ fun_top.items.workflow <- function(
       
       fun_top.items(
         df_loadings.long = list_EFA$loadings.long
-        , int_n.items = int_n.items
+        , int_n.items.total= int_n.items.total
       ) %>% 
         return(.)
       
@@ -962,7 +965,7 @@ fun_top.items.multi.workflow <- function(
   , auto_select.nfactors = F
   , int_nfactors.min = 1
   , int_nfactors.max = 5
-  , int_n.items = 3
+  , int_n.items.total= 15
   , chr_rotation = 'promax'
   # Underloadings and crossloadings
   , remove_under_loading.items = T
@@ -993,7 +996,7 @@ fun_top.items.multi.workflow <- function(
   ) -> list_EFA
   
   # Multi top items
-  fun_top.items.multi(list_EFA$EFA, int_n.items = int_n.items) -> list_df_top.items
+  fun_top.items.multi(list_EFA$EFA, int_n.items.total= int_n.items.total) -> list_df_top.items
   
   
   # Repeat EFA with top items only
@@ -1060,6 +1063,7 @@ fun_top.items.multi.workflow <- function(
           , Items.Min = min(Items)
           , Items.Avg = mean(Items)
           , Items.Max = max(Items)
+          , Items.Total = round(Items.Avg * Useful_Factors)
           , across(
             .cols = -contains(c('Factor', 'Items'))
             ,.fns = function(x){min(x, na.rm = T)}
@@ -1135,7 +1139,7 @@ fun_best.model.multi.workflow <- function(
   , int_min.factor_size = 3
   , int_nfactors.min = 1
   , int_nfactors.max = 5
-  , int_n.items = 3
+  , int_n.items.total= 15
   , chr_rotation = 'promax'
   # Underloadings and crossloadings
   , remove_under_loading.items = T
@@ -1154,7 +1158,7 @@ fun_best.model.multi.workflow <- function(
     , auto_select.nfactors = auto_select.nfactors
     , int_nfactors.min = int_nfactors.min
     , int_nfactors.max = int_nfactors.max
-    , int_n.items = int_n.items
+    , int_n.items.total= int_n.items.total
     , chr_rotation = chr_rotation
     # Underloadings and crossloadings
     , remove_under_loading.items = remove_under_loading.items
@@ -1171,64 +1175,23 @@ fun_best.model.multi.workflow <- function(
     # 1. Unnecessary factors: if unused factors > 0, exclude model
     filter(Unused_Factors == 0) %>%
     # 2. Minimum items per factor: if min items per factor < int_min.factor_size, exclude model
-    filter(Items.Min >= int_min.factor_size) %>%
-    # 3. Minimum top items per factor: if min items per factor < n top items, exclude model
-    filter(Items.Min >= int_n.items) -> df_reliability
+    filter(Items.Min >= int_min.factor_size) -> df_reliability
   
   # 4. Reliability comparison
-  list_EFA.multi.top_items$reliability.evaluation %>% 
-    filter(Model %in% df_reliability$Model) %>%
-    pivot_longer(
-      cols = -contains(c('Model', 'Factors', 'Items'))
-      , names_to = 'Metric'
-      , values_to = 'Value'
-    ) %>%
+  df_reliability %>%
+    # EFA_Ablt$EFA.workflow$reliability.metrics %>% 
     group_by(
       across(
-        contains(c('Model', 'Factors', 'Items'))
+        contains(c('Model', 'Factors', 'Items', 'Interitem'))
       )
     ) %>%
-    count(Value, name = 'Count') %>% 
-    group_by(Value) %>% 
-    top_n(1, Count) %>%
-    group_by(Value) %>%
-    # Remove ties
-    filter(n() < 2) %>% 
-    ungroup() -> df_reliability.best
+    transmute(
+      Reliability.Avg = mean(
+        c_across(-contains(c('Model', 'Factors', 'Items', 'Interitem')))
+        , na.rm = T)) %>% 
+    ungroup() %>%
+    top_n(1, Reliability.Avg) -> df_reliability.best
   
-  # If there is still more than one model,
-  # take the one which has the highest count of quality indicators
-  if(nrow(df_reliability.best) > 1){
-    
-    chr_reliability.priority <- c(
-      
-      'Excellent' #1. Excellent indicators
-      , 'Good' #2. Good indicators
-      , 'Acceptable' #3. Acceptable indicators
-      , 'Ideal' #4. Ideal interitem correlations
-      , 'Questionable' #5. Questionable indicators
-      , 'Too similar' #6. Too similar interitem correlations
-      , 'Incoherent' #7. Weak interitem correlations
-      , 'Poor' #8. Poor indicators
-      , 'Unacceptable' #9. Unacceptable indicators
-      
-    )
-    
-    # Remove ties from priority vector 
-    intersect(
-      chr_reliability.priority
-      , df_reliability.best$Value
-    ) -> chr_reliability.priority
-    
-    # Remaining first priority
-    chr_reliability.priority <- chr_reliability.priority[1] 
-    
-    # Take "best model" based on remaining top priority criterion
-    df_reliability.best %>% 
-      filter(Value == chr_reliability.priority) %>%
-      return(.)
-    
-  } -> df_reliability.best
   
   # Best models
   list_EFA.multi.top_items$reliability.evaluation %>%
@@ -1236,9 +1199,9 @@ fun_best.model.multi.workflow <- function(
   
   # Most internally consistent model ("Best model")
   list(
-    'EFA' = list_EFA.multi.top_items$EFA$EFA[df_reliability.best$Model]
-    , 'top.items' = list_EFA.multi.top_items$top.items[df_reliability.best$Model]
-    , 'EFA.top.items' = list_EFA.multi.top_items$EFA.top.items[df_reliability.best$Model]
+    'EFA' = list_EFA.multi.top_items$EFA$EFA[df_reliability.best$Model] %>% purrr::flatten()
+    , 'top.items' = list_EFA.multi.top_items$top.items[df_reliability.best$Model] %>% purrr::flatten_df()
+    , 'EFA.top.items' = list_EFA.multi.top_items$EFA.top.items[df_reliability.best$Model] %>% purrr::flatten()
   ) -> list_EFA.Best
   
   # Overall reliability comparison
