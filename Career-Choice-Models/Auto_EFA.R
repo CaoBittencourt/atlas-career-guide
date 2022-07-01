@@ -22,6 +22,10 @@ lapply(pkg, function(x)
 #  [x] ADEQUACY TESTING FUNCTION -----------------------------------------------
 fun_adequacy.tests <- function(df_numeric){
   
+  # Make sure there is only numeric data
+  df_numeric %>% 
+    select(where(is.numeric)) -> df_numeric
+  
   # Adequacy tests
   # K-M-O factor adequacy test
   tibble(
@@ -63,6 +67,10 @@ fun_adequacy.tests <- function(df_numeric){
 
 #  [x] OPTIMAL NUMBER OF FACTORS FUNCTION --------------------------------
 fun_nfactors.selection <- function(df_numeric){
+  
+  # Make sure there is only numeric data
+  df_numeric %>% 
+    select(where(is.numeric)) -> df_numeric
   
   # Kaiser criterion
   sum(
@@ -150,6 +158,11 @@ fun_EFA <- function(
   , show_diagrams = T
   , show_results = F
 ){
+  
+  # Make sure there is only numeric data
+  df_data.numeric %>% 
+    select(where(is.numeric)) -> df_data.numeric
+  
   # Return NA if error (i.e. unable to optimize EFA)
   tryCatch(
     
@@ -160,7 +173,7 @@ fun_EFA <- function(
       
       # Fit factor model
       factanal(
-        x = df_data.numeric %>% select(where(is.numeric))
+        x = df_data.numeric
         , factors = int_nfactors
         , rotation = chr_rotation
         , control = list(
@@ -222,7 +235,7 @@ fun_EFA <- function(
           # Rerun model
           # Fit factor model
           factanal(
-            x = df_data.numeric %>% select(where(is.numeric))
+            x = df_data.numeric
             , factors = int_nfactors
             , rotation = chr_rotation
             , control = list(
@@ -333,7 +346,7 @@ fun_EFA <- function(
           # Rerun model
           # Fit factor model
           factanal(
-            x = df_data.numeric %>% select(where(is.numeric))
+            x = df_data.numeric
             , factors = int_nfactors
             , rotation = chr_rotation
             , control = list(
@@ -413,7 +426,7 @@ fun_EFA <- function(
               # Rerun model
               # Fit factor model
               factanal(
-                x = df_data.numeric %>% select(where(is.numeric))
+                x = df_data.numeric
                 , factors = int_nfactors
                 , rotation = chr_rotation
                 , control = list(
@@ -717,8 +730,7 @@ fun_EFA.multi <- function(
     # Basic
   df_data.numeric
   , auto_select.nfactors = F
-  , int_nfactors.min = 1
-  , int_nfactors.max = 5
+  , int_nfactors.vector = seq(1,5)
   , chr_rotation = 'promax'
   # Underloadings and crossloadings
   , remove_under_loading.items = T
@@ -730,7 +742,11 @@ fun_EFA.multi <- function(
   , show_results = F
 ){
   
-  # If auto select auto select number of factors,
+  # Make sure there is only numeric data
+  df_data.numeric %>% 
+    select(where(is.numeric)) -> df_data.numeric
+  
+  # If auto select number of factors,
   # the range of min and max number of factors in the models 
   # will start from the minimum in the selection criteria data frame
   # and end with the maximum
@@ -738,20 +754,24 @@ fun_EFA.multi <- function(
     
     fun_nfactors.selection(df_data.numeric) -> df_auto_select
     
-    min(df_auto_select$Factors.Suggested) -> int_nfactors.min
-    max(df_auto_select$Factors.Suggested) -> int_nfactors.max
+    seq(
+      min(df_auto_select$Factors.Suggested)
+      , max(df_auto_select$Factors.Suggested)
+    ) -> int_nfactors.vector
     
   }
+  
+  # If repetitions in vector, keep only unique values
+  int_nfactors.vector <- unique(int_nfactors.vector)
+  
   # List names = number of factors
-  int_nfactors.min:int_nfactors.max -> int_nfacts
+  names(int_nfactors.vector) <- paste0('EFA.', int_nfactors.vector, 'Factors')
   
-  names(int_nfacts) <- paste0('EFA.', int_nfacts, 'Factors')
-  
-  names(int_nfacts) <- str_replace(names(int_nfacts), 'EFA.1Factors', 'EFA.1Factor')
+  names(int_nfactors.vector) <- str_replace(names(int_nfactors.vector), 'EFA.1Factors', 'EFA.1Factor')
   
   # Apply automated factor analysis for each number of factors
   lapply(
-    int_nfacts
+    int_nfactors.vector
     , function(nfacts){
       
       fun_EFA(
@@ -775,7 +795,7 @@ fun_EFA.multi <- function(
   # Remove NA's returned when optimization fails
   list_EFA.multi[!is.na(list_EFA.multi)] -> list_EFA.multi
   
-  int_nfacts[names(list_EFA.multi)] -> int_nfacts
+  int_nfactors.vector[names(list_EFA.multi)] -> int_nfactors.vector
   
   # Data frames comparing reliability metrics across models
   Map(
@@ -792,14 +812,14 @@ fun_EFA.multi <- function(
           , Items.Total = round(Items.Avg * Useful_Factors)
           , across(
             .cols = -contains(c('Factor', 'Items'))
-            ,.fns = function(x){min(x, na.rm = T)}
-            ,.names = '{col}.Min'
+            ,.fns = function(x){mean(x, na.rm = T)}
+            ,.names = '{col}.Avg'
           )
         ) %>%
         return(.)
     }
-    , facts.int = int_nfacts
-    , facts.name = names(int_nfacts)
+    , facts.int = int_nfactors.vector
+    , facts.name = names(int_nfactors.vector)
     
   ) %>%
     bind_rows(.id = 'Model') -> df_summary
@@ -885,6 +905,10 @@ fun_top.items.workflow <- function(
   , show_results = F
 ){
   
+  # Make sure there is only numeric data
+  df_data.numeric %>% 
+    select(where(is.numeric)) -> df_data.numeric
+  
   # EFA
   fun_EFA(
     # Basic
@@ -963,8 +987,7 @@ fun_top.items.multi.workflow <- function(
     # Basic
   df_data.numeric
   , auto_select.nfactors = F
-  , int_nfactors.min = 1
-  , int_nfactors.max = 5
+  , int_nfactors.vector = seq(1,5)
   , int_n.items.total= 15
   , chr_rotation = 'promax'
   # Underloadings and crossloadings
@@ -977,13 +1000,19 @@ fun_top.items.multi.workflow <- function(
   , show_results = F
 ){
   
+  # Make sure there is only numeric data
+  df_data.numeric %>% 
+    select(where(is.numeric)) -> df_data.numeric
+  
+  # If repetitions in vector, keep only unique values
+  int_nfactors.vector <- unique(int_nfactors.vector)
+  
   # Multi EFA
   fun_EFA.multi(
     # Basic
     df_data.numeric = df_data.numeric
     , auto_select.nfactors = auto_select.nfactors
-    , int_nfactors.min = int_nfactors.min
-    , int_nfactors.max = int_nfactors.max
+    , int_nfactors.vector = int_nfactors.vector
     , chr_rotation = chr_rotation
     # Underloadings and crossloadings
     , remove_under_loading.items = remove_under_loading.items
@@ -1015,8 +1044,8 @@ fun_top.items.multi.workflow <- function(
   ) -> list_data.numeric.top_items
   
   # Retrieve number of factors in each EFA in list
-  list_EFA$reliability.metrics$Factors -> int_nfacts
-  list_EFA$reliability.metrics$Model -> names(int_nfacts)
+  list_EFA$reliability.metrics$Factors -> int_nfactors.vector
+  list_EFA$reliability.metrics$Model -> names(int_nfactors.vector)
   
   # Map automated factor analysis for each number of factors
   # with subset of data (top items)
@@ -1041,7 +1070,7 @@ fun_top.items.multi.workflow <- function(
       
     }
     , data = list_data.numeric.top_items
-    , nfacts = int_nfacts
+    , nfacts = int_nfactors.vector
     
   ) -> list_EFA.top.items
   
@@ -1049,7 +1078,7 @@ fun_top.items.multi.workflow <- function(
   list_EFA.top.items[!is.na(list_EFA.top.items)] -> list_EFA.top.items
   
   # Update number of factors
-  int_nfacts[names(list_EFA.top.items)] -> int_nfacts
+  int_nfactors.vector[names(list_EFA.top.items)] -> int_nfactors.vector
   
   # Data frames comparing reliability metrics across models
   Map(
@@ -1066,14 +1095,14 @@ fun_top.items.multi.workflow <- function(
           , Items.Total = round(Items.Avg * Useful_Factors)
           , across(
             .cols = -contains(c('Factor', 'Items'))
-            ,.fns = function(x){min(x, na.rm = T)}
-            ,.names = '{col}.Min'
+            ,.fns = function(x){mean(x, na.rm = T)}
+            ,.names = '{col}.Avg'
           )
         ) %>%
         return(.)
     }
-    , facts.int = int_nfacts
-    , facts.name = names(int_nfacts)
+    , facts.int = int_nfactors.vector
+    , facts.name = names(int_nfactors.vector)
     
   ) %>%
     bind_rows(.id = 'Model') -> df_summary
@@ -1132,13 +1161,12 @@ fun_top.items.multi.workflow <- function(
 
 # [x] BEST MODELS: PERFORM EFA WITHIN A RANGE OF FACTOR NUMBERS AND PICK THE BEST MODEL" --------
 #  [x] FULLY AUTOMATED EFA TOP ITEMS WORKFLOW FUNCTION ------------------------------------------------------
-fun_best.model.multi.workflow <- function(
+fun_best.model.top.items.workflow <- function(
     # Basic
   df_data.numeric
   , auto_select.nfactors = F
   , int_min.factor_size = 3
-  , int_nfactors.min = 1
-  , int_nfactors.max = 5
+  , int_nfactors.vector = seq(1,5)
   , int_n.items.total= 15
   , chr_rotation = 'promax'
   # Underloadings and crossloadings
@@ -1151,13 +1179,19 @@ fun_best.model.multi.workflow <- function(
   , show_results = F
 ){
   
+  # Make sure there is only numeric data
+  df_data.numeric %>% 
+    select(where(is.numeric)) -> df_data.numeric
+  
+  # If repetitions in vector, keep only unique values
+  int_nfactors.vector <- unique(int_nfactors.vector)
+  
   # Run multi EFA top items workflow
   fun_top.items.multi.workflow(
     # Basic
     df_data.numeric = df_data.numeric
     , auto_select.nfactors = auto_select.nfactors
-    , int_nfactors.min = int_nfactors.min
-    , int_nfactors.max = int_nfactors.max
+    , int_nfactors.vector = int_nfactors.vector
     , int_n.items.total= int_n.items.total
     , chr_rotation = chr_rotation
     # Underloadings and crossloadings
@@ -1179,7 +1213,6 @@ fun_best.model.multi.workflow <- function(
   
   # 4. Reliability comparison
   df_reliability %>%
-    # EFA_Ablt$EFA.workflow$reliability.metrics %>% 
     group_by(
       across(
         contains(c('Model', 'Factors', 'Items', 'Interitem'))
@@ -1213,8 +1246,8 @@ fun_best.model.multi.workflow <- function(
   list(
     'EFA.workflow' = list_EFA.multi.top_items
     , 'best.model' = list_EFA.Best
-    , 'reliability.metrics' = df_reliability.all
-    , 'reliability.evaluation' = df_reliability.eval.all
+    , 'all.models.reliability' = df_reliability.all
+    , 'all.models.evaluation' = df_reliability.eval.all
     , 'best.models.reliability' = df_reliability
     , 'best.models.evaluation' = df_reliability.eval
     
@@ -1230,6 +1263,100 @@ fun_best.model.multi.workflow <- function(
 
 
 
-#  [ ] BEST MODEL WITHOUT TOP ITEMS (ONLY STAGE ONE COMPARISON) ----------------
+#  [x] FULLY AUTOMATED EFA WORKFLOW FUNCTION (WITHOUT TOP ITEMS SELECTION) ------------------------------------------------------
+fun_best.model.workflow <- function(
+    # Basic
+  df_data.numeric
+  , auto_select.nfactors = F
+  , int_min.factor_size = 3
+  , int_nfactors.vector = seq(1,5)
+  , chr_rotation = 'promax'
+  # Underloadings and crossloadings
+  , remove_under_loading.items = T
+  , remove_cross_loading.items = F
+  , dbl_under_loading.threshold = 0.4 #Lesser than 0.4 loading = under loading
+  , dbl_cross_loading.threshold = 0.05 #Lesser than 0.05 loading difference = cross loading
+  # Diagrams and tests
+  , show_diagrams = T
+  , show_results = F
+){
+  
+  # Make sure there is only numeric data
+  df_data.numeric %>% 
+    select(where(is.numeric)) -> df_data.numeric
+  
+  # If repetitions in vector, keep only unique values
+  int_nfactors.vector <- unique(int_nfactors.vector)
+  
+  # Run multi EFA workflow (without top items)
+  fun_EFA.multi(
+    # Basic
+    df_data.numeric
+    , auto_select.nfactors = auto_select.nfactors
+    , int_nfactors.vector = int_nfactors.vector
+    , chr_rotation = chr_rotation
+    # Underloadings and crossloadings
+    , remove_under_loading.items = remove_under_loading.items
+    , remove_cross_loading.items = remove_cross_loading.items
+    , dbl_under_loading.threshold = dbl_under_loading.threshold
+    , dbl_cross_loading.threshold = dbl_cross_loading.threshold
+    # Diagrams and tests
+    , show_diagrams = show_diagrams
+    , show_results = show_results
+  ) -> list_EFA.multi
+  
+  # Exclusion criteria
+  list_EFA.multi$reliability.metrics %>% 
+    # 1. Unnecessary factors: if unused factors > 0, exclude model
+    filter(Unused_Factors == 0) %>%
+    # 2. Minimum items per factor: if min items per factor < int_min.factor_size, exclude model
+    filter(Items.Min >= int_min.factor_size) -> df_reliability
+  
+  # 4. Reliability comparison
+  df_reliability %>%
+    group_by(
+      across(
+        contains(c('Model', 'Factors', 'Items', 'Interitem'))
+      )
+    ) %>%
+    transmute(
+      Reliability.Avg = mean(
+        c_across(-contains(c('Model', 'Factors', 'Items', 'Interitem')))
+        , na.rm = T)) %>% 
+    ungroup() %>%
+    top_n(1, Reliability.Avg) -> df_reliability.best
+  
+  
+  # Best models
+  list_EFA.multi$reliability.evaluation %>%
+    filter(Model %in% df_reliability$Model) -> df_reliability.eval
+  
+  # Most internally consistent model ("Best model")
+  list_EFA.multi$EFA[df_reliability.best$Model] %>% 
+    purrr::flatten() -> list_EFA.Best
+  
+  # Overall reliability comparison
+  list_EFA.multi$reliability.metrics -> df_reliability.all
+  list_EFA.multi$reliability.evaluation -> df_reliability.eval.all
+  
+  
+  # Output
+  list(
+    'EFA.workflow' = list_EFA.multi
+    , 'best.model' = list_EFA.Best
+    , 'all.models.reliability' = df_reliability.all
+    , 'all.models.evaluation' = df_reliability.eval.all
+    , 'best.models.reliability' = df_reliability
+    , 'best.models.evaluation' = df_reliability.eval
+    
+  ) %>%
+    return(.)
+  
+  
+}
+
+
+
+
 
 

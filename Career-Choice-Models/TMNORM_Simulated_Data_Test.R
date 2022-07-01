@@ -26,6 +26,10 @@ lapply(pkg, function(x)
 # WORKING DIRECTORY -------------------------------------------------------
 setwd('C:/Users/Cao/Documents/Github/Atlas-Research/Career-Choice-Models')
 
+# FUNCTIONS ---------------------------------------------------------------
+source('./Simulated_Data.R')
+source('./KNN_Matching.R')
+
 # DATA --------------------------------------------------------------------
 # # Auto-EFA skills
 # source('./Auto_EFA_skills_output.R')
@@ -40,13 +44,10 @@ source('./Fully_Auto_EFA_all_output.R')
 df_occupations %>%
   select(
     all_of(c(# Selected skills, abilities, and knowledge
-      # df_skills.items$Item
-      # , df_ablt.items$Item
       # where(function(x){str_detect(attributes(x)$label, '_Skills.')}) #Skills only
       # , where(function(x){str_detect(attributes(x)$label, 'Abilities.')}) #Skills only
       # , where(function(x){str_detect(attributes(x)$label, 'Knowledge.')}) #Skills only
       # , -ends_with('.I') #Using recommended levels
-      # , df_know.items$Item
       chr_Skill.Items
       , chr_Ablt.Items
       , chr_Know.Items
@@ -60,139 +61,34 @@ df_occupations %>%
   ) -> df_occupations.numeric.items
 
 # SIMULATED QUESTIONNAIRE ---------------------------------------------------------------
-# Set number of individuals
-n_simulations <- 1000
-
-# Generic names for each individual
-chr_individuals <- paste('Subject', 1:n_simulations)
-names(chr_individuals) <- chr_individuals
-
-# Get the first line from the correlation matrix
-# In order to keep the original relationship between variables
-df_occupations.numeric.items %>% 
-  cov() -> cov_mat
-
-df_occupations.numeric.items %>% 
-  cor() %>% 
-  as_tibble() %>%
-  slice(1) -> df_correlations
-
-# Simulate normal distributions in accordance with the correlation matrix
-# Mean for each variable
-df_occupations.numeric.items %>%
-  summarise(across(
-    .fns = mean
-  )) %>% 
-  as.numeric() -> dbl_mean
-
-# Multivariate truncated normal distribution
-rtmvnorm(
-  n = n_simulations
-  , mu = dbl_mean
-  , sigma = cov_mat
-  , lb = rep(0,length(dbl_mean)) #Scale between 0 and 1
-  , ub = rep(1,length(dbl_mean)) #Scale between 0 and 1 
-) -> mat_trunc_norm
-
-colnames(mat_trunc_norm) <- colnames(df_occupations.numeric.items)
-
-mat_trunc_norm %>%
-  as_tibble() -> df_simulations
-
-# Add the names of each individual
-df_simulations %>% 
-  mutate(
-    Subject = chr_individuals
-    , .before = names(.)[1]
-  ) -> df_simulations
+df_simulations <- fun_simulate.tmvnorm(
+  df_data.numeric = df_occupations.numeric.items
+  , int_n.simulations = 100
+  , chr_observations.name = 'Subject'
+  , dbl_lower.bound = 0
+  , dbl_upper.bound = 1
+)
 
 # APPLY KNN ---------------------------------------------------------------
-# Define k
-
-# RECOMMENDED
-# Typical suggested value for k is sqrt(nrow(df))
-# Looking for k nearest neighbors in all career clusters
-# df_occupations.numeric.items %>%
-#   nrow(.) %>%
-#   sqrt(.) %>%
-#   round(.) -> k.value
-
-# ARBITRARY (INPUT)
-# Or arbitrarily assign k (e.g. top 10 closest matches)
-# May k could be given via user input
-# k.value <- 10
-# k.value <- 5
-# k.value <- 3
-k.value <- 1
-
-# COMPLETE COMPARISON
-# Or find k nearest neighbors using the whole data set
-# i.e. order everything with respect to euclidean distance
-k.value <- nrow(df_occupations.numeric.items)
-
-# Find the k nearest neighbors
 lapply(
-  chr_individuals
-  , function(subject){
+  df_simulations$Subject
+  , function(subj){
     
     df_simulations %>% 
-      filter(Subject == subject) -> df_subject
+      filter(Subject == subj) %>%
+      select(-Subject) -> vec_compare
     
-    FNN::get.knnx(
-      data = df_occupations.numeric.items
-      , query = df_subject %>% select(where(is.numeric))
-      , k = k.value
-    ) -> KNN.output
+    fun_KNN.matching(
+      df_data.numeric = df_occupations.numeric.items
+      , vec_query.numeric = vec_compare
+      , int_k = nrow(df_occupations.numeric.items)
+      , auto_select.k = F
+    ) %>% 
+      return(.)
     
-    # Arrange original data frame with KNN output
-    df_occupations %>% 
-      slice(as.vector(KNN.output$nn.index)) %>% 
-      select(#For the present purposes, keep only the following columns
-        Career_Cluster
-        , Occupation
-        , Annual_Wage_2021
-        # , df_loadings.items.skills_ablts$Metric
-      ) %>% 
-      # plyr::rbind.fill(df_subject) %>%
-      mutate(#Add euclidean distances and convert them to similarities
-        Euclidean_Distance = as.vector(KNN.output$nn.dist)
-        # Common similarity: 1/(1 + dist), "+1" for dist = 0
-        , Similarity.Common = 1 / (1 + Euclidean_Distance)
-        # Similarity via gaussian kernel: exp(-dist)
-        , Similarity.Gaussian = exp(-Euclidean_Distance)
-        # Normalized by max value: 1 - dist.norm = 1 - dist/max(dist)
-        , Similarity.Max = 1 - (Euclidean_Distance / max(Euclidean_Distance))
-        
-        # [Try again] Yielding negative values for greater distances
-        # Tangent similarity: 1 - arctan(dist) = 1 for dist = 0 
-        # , Similarity.Tan = 1 - atan(Euclidean_Distance)
-        # , Similarity.Tan = 1 - atan(Euclidean_Distance/2)
-        # , Similarity.Tan = 1 - atan(Euclidean_Distance/pi)
-        
-        # [Try again] Equivalence between euclidean and cosine
-        # [Wrong formula] Yielding negative values for greater distances
-        # , Similarity.Cosine = 1 - (Euclidean_Distance/2)
-        # , Similarity.Cosine = 1 - (Euclidean_Distance^2)/2
-        
-        # Wage difference for later on
-        , Wage.Diff = Annual_Wage_2021 - first(Annual_Wage_2021)
-        
-        # ) %>% 
-        # mutate(#Round values
-        #   across(
-        #     .cols = starts_with('Similarity.')
-        #     ,.fns = function(x){round(x,4)}
-        #   )
-        # ) -> df_occupations.KNN
-        
-      ) -> df_occupations.KNN
-    
-    return(df_occupations.KNN)
-    
-  }
-) -> list_df_occupations.KNN
+  }) -> list_KNN.matching
 
-list_df_occupations.KNN %>% 
+list_KNN.matching %>% 
   bind_rows() -> test
 
 test %>%
