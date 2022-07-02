@@ -184,21 +184,89 @@ df_occupations %>%
 # show_diagrams <- T
 # show_results <- F
 
-# GLOBAL EFA PAREMETERS 3 ---------------------------------------------------
+# # GLOBAL EFA PAREMETERS 3 ---------------------------------------------------
+# # Number of factors
+# auto_select.nfactors <- T
+# # int_nfactors.vector <- seq(1,5)
+# 
+# # Minimum factor size
+# # int_min.factor_size.basic <- 2
+# int_min.factor_size <- 3
+# 
+# # Top items
+# # int_n.items.total.basic <- 5
+# # int_n.items.total.cross <- 10
+# 
+# int_n.items.total.skill <- 14
+# int_n.items.total.ablt <- 16
+# int_n.items.total.know <- 12
+# 
+# # Rotation (Oblique)
+# chr_rotation <- 'promax'
+# # chr_rotation <- 'oblimin'
+# # Rotation (Orthogonal)
+# # chr_rotation <- 'varimax'
+# 
+# # Underloadings and crossloadings
+# remove_under_loading.items <- T
+# remove_cross_loading.items <- T
+# dbl_under_loading.threshold <- 0.3 #Lesser than 0.4 loading <- under loading
+# # dbl_cross_loading.threshold <- 0.05 #Lesser than 0.05 loading difference <- cross loading
+# dbl_cross_loading.threshold <- 0.35
+# 
+# # Diagrams and tests
+# show_diagrams <- T
+# show_results <- F
+
+# # *GLOBAL EFA PAREMETERS 4* ---------------------------------------------------
+# # Number of factors
+# auto_select.nfactors <- T
+# # int_nfactors.vector <- seq(1,5)
+# 
+# # Minimum factor size
+# # int_min.factor_size.basic <- 2
+# int_min.factor_size <- 3
+# 
+# # Top items
+# # int_n.items.total.basic <- 5
+# # int_n.items.total.cross <- 10
+# 
+# int_n.items.total.skill <- 6
+# int_n.items.total.ablt <- 12
+# int_n.items.total.know <- 12
+# 
+# # Rotation (Oblique)
+# chr_rotation <- 'promax'
+# # chr_rotation <- 'oblimin'
+# # Rotation (Orthogonal)
+# # chr_rotation <- 'varimax'
+# 
+# # Underloadings and crossloadings
+# remove_under_loading.items <- T
+# remove_cross_loading.items <- T
+# dbl_under_loading.threshold <- 0.3 #Lesser than 0.4 loading <- under loading
+# # dbl_cross_loading.threshold <- 0.05 #Lesser than 0.05 loading difference <- cross loading
+# dbl_cross_loading.threshold <- 0.35
+# 
+# # Diagrams and tests
+# show_diagrams <- T
+# show_results <- F
+
+# GLOBAL EFA PAREMETERS FIRST TEST ---------------------------------------------------
 # Number of factors
 auto_select.nfactors <- T
 # int_nfactors.vector <- seq(1,5)
 
 # Minimum factor size
-int_min.factor_size.basic <- 2
+# int_min.factor_size.basic <- 2
 int_min.factor_size <- 3
 
 # Top items
-int_n.items.total.basic <- 5
-int_n.items.total.cross <- 10
+# int_n.items.total.basic <- 5
+# int_n.items.total.cross <- 10
 
-int_n.items.total.skill <- 12
-int_n.items.total.ablt <- 16
+int_n.items.total.skill <- 8
+int_n.items.total.ablt <- 12 #don't edit
 int_n.items.total.know <- 12
 
 # Rotation (Oblique)
@@ -236,7 +304,7 @@ show_results <- F
 #   , show_diagrams = show_diagrams
 #   , show_results = show_results
 # ) -> EFA_Basic
-# 
+#
 # # Cross Functional Skills
 # fun_best.model.top.items.workflow(
 #   # Basic
@@ -308,7 +376,6 @@ fun_best.model.top.items.workflow(
   , show_diagrams = show_diagrams
   , show_results = show_results
 ) -> EFA_Know
-
 
 # # FULLY AUTOMATED EFA WORKFLOW (ONLY STAGE ONE) --------------------------------------------
 # # Basic Skills
@@ -397,35 +464,38 @@ fun_best.model.top.items.workflow(
 # ) -> EFA_Know.1
 # 
 
-# COMPARING ONE STAGE WITH TWO STAGE EFA --------------------------------
-# Skills
-EFA_Skill$best.model$EFA.top.items$reliability.evaluation
-EFA_Skill.1$best.model$reliability.evaluation
-
-EFA_Skill$best.models.evaluation %>% view()
-EFA_Skill.1$best.models.evaluation %>% view()
-
-# Abilities
-EFA_Ablt$best.model$EFA.top.items$reliability.evaluation
-EFA_Ablt.1$best.model$reliability.evaluation
-
-EFA_Ablt$best.model$EFA.top.items$reliability.evaluation
-EFA_Ablt$EFA.workflow$EFA.top.items$EFA.2Factors$reliability.evaluation
-EFA_Ablt$EFA.workflow$EFA.top.items$EFA.4Factors$reliability.evaluation
-
-EFA_Ablt$best.models.evaluation %>% view()
-EFA_Ablt.1$best.models.evaluation %>% view()
-
-# Fields of Knowledge
-EFA_Know$best.model$EFA.top.items$reliability.evaluation
-EFA_Know.1$best.model$reliability.evaluation
-
-EFA_Know$best.models.evaluation %>% view()
-EFA_Know.1$best.models.evaluation %>% view()
-
-EFA_Know$EFA.workflow$EFA.top.items$EFA.2Factors$reliability.evaluation
-EFA_Know$EFA.workflow$EFA.top.items$EFA.3Factors$reliability.evaluation
-EFA_Know$EFA.workflow$EFA.top.items$EFA.4Factors$reliability.evaluation
+# # COMPARING ONE STAGE WITH TWO STAGE EFA --------------------------------
+# # Skills
+# EFA_Skill$best.model$EFA.top.items$reliability.evaluation
+# EFA_Skill.1$best.model$reliability.evaluation
+# 
+# EFA_Skill$best.models.evaluation %>% view()
+# EFA_Skill.1$best.models.evaluation %>% view()
+# 
+# EFA_Skill$EFA.workflow$EFA.top.items$EFA.2Factors$reliability.evaluation
+# EFA_Skill$EFA.workflow$EFA.top.items$EFA.3Factors$reliability.evaluation
+# 
+# # Abilities
+# EFA_Ablt$best.model$EFA.top.items$reliability.evaluation
+# EFA_Ablt.1$best.model$reliability.evaluation
+# 
+# EFA_Ablt$best.model$EFA.top.items$reliability.evaluation
+# EFA_Ablt$EFA.workflow$EFA.top.items$EFA.2Factors$reliability.evaluation
+# EFA_Ablt$EFA.workflow$EFA.top.items$EFA.4Factors$reliability.evaluation
+# 
+# EFA_Ablt$best.models.evaluation %>% view()
+# EFA_Ablt.1$best.models.evaluation %>% view()
+# 
+# # Fields of Knowledge
+# EFA_Know$best.model$EFA.top.items$reliability.evaluation
+# EFA_Know.1$best.model$reliability.evaluation
+# 
+# EFA_Know$best.models.evaluation %>% view()
+# EFA_Know.1$best.models.evaluation %>% view()
+# 
+# EFA_Know$EFA.workflow$EFA.top.items$EFA.2Factors$reliability.evaluation
+# EFA_Know$EFA.workflow$EFA.top.items$EFA.3Factors$reliability.evaluation
+# EFA_Know$EFA.workflow$EFA.top.items$EFA.4Factors$reliability.evaluation
 
 # # MOST INTERPRETABLE CONSISTENT MODELS 2 ------------------------------------
 # # Skills
@@ -440,7 +510,7 @@ EFA_Know$EFA.workflow$EFA.top.items$EFA.4Factors$reliability.evaluation
 # # All models have excellent consistency, on average. The differences are very slight.
 # # Therefore, although the one factor model was selected as "best model" in terms of consistency,
 # # the other models are just as reliable, and interpretability will be given more importance.
-# # In the first stage EFA, the two factor model is the most consistent. It, thus, seems that the single factor model
+# # In the first stage EFA, the two factor model is the most consistent. Thus, it is clear that the single factor model
 # # was selected as "best model" because the top items selection increased its internal consistency metrics.
 # # This is confirmed when inspecting the selected top items: all of cognitive and social abilities are missing.
 # # The single factor model is composed of bodily abilities only. That is, this model is only more consistent because
@@ -503,7 +573,7 @@ EFA_Know$EFA.workflow$EFA.top.items$EFA.4Factors$reliability.evaluation
 # # All models have excellent consistency, on average. The differences are very slight.
 # # Therefore, although the one factor model was selected as "best model" in terms of consistency,
 # # the other models are just as reliable, and interpretability will be given more importance.
-# # In the first stage EFA, the two factor model is the most consistent. It, thus, seems that the single factor model
+# # In the first stage EFA, the two factor model is the most consistent. Thus, is is clear that the single factor model
 # # was selected as "best model" because the top items selection increased its internal consistency metrics.
 # # This is confirmed when inspecting the selected top items: all of cognitive and social abilities are missing.
 # # The single factor model is composed of bodily abilities only. That is, this model is only more consistent because
@@ -575,7 +645,7 @@ EFA_Know$EFA.workflow$EFA.top.items$EFA.4Factors$reliability.evaluation
 # EFA_Ablt$best.model$top.items$Item -> chr_Ablt.Items
 # EFA_Know$best.model$top.items$Item -> chr_Know.Items
 
-# Revised models
-EFA_Skill$best.model$top.items$Item -> chr_Skill.Items
-EFA_Ablt$EFA.workflow$top.items$EFA.4Factors$Item -> chr_Ablt.Items
-EFA_Know$EFA.workflow$top.items$EFA.4Factors$Item -> chr_Know.Items
+# Revised and selected models
+chr_Skill.Items <- EFA_Skill$EFA.workflow$top.items$EFA.2Factors$Item
+chr_Ablt.Items <- EFA_Ablt$EFA.workflow$top.items$EFA.4Factors$Item 
+chr_Know.Items <- EFA_Know$EFA.workflow$top.items$EFA.4Factors$Item 

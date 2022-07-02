@@ -25,7 +25,6 @@ fun_simulate.tmvnorm <- function(
     # Truncated multivariate normal distribution parameters
     , dbl_lower.bound = 0
     , dbl_upper.bound = 1
-    
 ){
   
   # Get numeric data only
@@ -61,15 +60,16 @@ fun_simulate.tmvnorm <- function(
     , sigma = mtx_cov
     , lb = rep(dbl_lower.bound, length(dbl_mean))
     , ub = rep(dbl_upper.bound, length(dbl_mean))
-  ) -> mtx_tmvnorm
+  ) %>% 
+    matrix(nrow = int_n.simulations) -> mtx_tmvnorm
   
   colnames(mtx_tmvnorm) <- colnames(df_data.numeric)
-  
+
   mtx_tmvnorm %>%
     as_tibble() -> df_simulations
-  
+
   # Add the names of each observation
-  df_simulations %>% 
+  df_simulations %>%
     mutate(
       !!sym(chr_observations.name) := chr_observations
       , .before = names(.)[1]

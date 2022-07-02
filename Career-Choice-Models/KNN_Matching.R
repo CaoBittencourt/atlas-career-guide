@@ -23,7 +23,12 @@ fun_KNN.matching <- function(
   
   # Get numeric data only
   df_data.numeric %>%
-    select(where(is.numeric)) -> df_data.numeric
+    select(where(is.numeric)) -> df_data.numeric.temp
+  
+  if(is.data.frame(vec_query.numeric)){
+    vec_query.numeric %>% 
+      select(where(is.numeric)) -> vec_query.numeric
+  }
   
   # Define k
   if(auto_select.k){
@@ -40,13 +45,13 @@ fun_KNN.matching <- function(
   
   # Find the k nearest neighbors
   FNN::get.knnx(
-    data = df_data.numeric
+    data = df_data.numeric.temp
     , query = vec_query.numeric
     , k = int_k
   ) -> KNN.output
   
   # Arrange original data frame with KNN output
-  df_occupations %>% 
+  df_data.numeric %>% 
     slice(as.vector(KNN.output$nn.index)) %>% 
     mutate(#Add euclidean distances and convert them to similarities
       Euclidean_Distance = as.vector(KNN.output$nn.dist)

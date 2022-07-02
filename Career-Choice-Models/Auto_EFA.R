@@ -31,7 +31,7 @@ fun_adequacy.tests <- function(df_numeric){
   tibble(
     'Adequacy_Index' = 'KMO'
     , 'Summary' = 'Measures sampling adequacy to factor analysis.'
-    , 'Statistic' = round(KMO(df_numeric[, KMO(df_numeric)$MSAi > 0.50])$MSA,2)
+    , 'Statistic' = KMO(df_numeric)$MSA
   ) %>% 
     mutate(
       Evaluation = case_when(
@@ -48,7 +48,7 @@ fun_adequacy.tests <- function(df_numeric){
   tibble(
     'Adequacy_Index' = 'Barlett'
     , 'Summary' = 'P-value to reject the hypothesis that the data is uncorrelated and cannot be grouped into factors.'
-    , 'Statistic' = cortest.bartlett(df_numeric)$p.value
+    , 'Statistic' = cortest.bartlett(cor(df_numeric))$p.value
   ) %>% 
     mutate(
       Evaluation = ifelse(
