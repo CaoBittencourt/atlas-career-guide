@@ -15,43 +15,43 @@ lapply(pkg, function(x)
 
 # KNN MATCHING FUNCTION -------------------------------------------------------------------------
 fun_KNN.matching <- function(
-  df_data.numeric
-  , vec_query.numeric
-  , int_k = 1
-  , auto_select.k = F
+  .df_data.numeric
+  , .vec_query.numeric
+  , .int_k = 1
+  , .auto_select.k = F
 ){ 
   
   # Get numeric data only
-  df_data.numeric %>%
-    select(where(is.numeric)) -> df_data.numeric.temp
+  .df_data.numeric %>%
+    select(where(is.numeric)) -> .df_data.numeric.temp
   
-  if(is.data.frame(vec_query.numeric)){
-    vec_query.numeric %>% 
-      select(where(is.numeric)) -> vec_query.numeric
+  if(is.data.frame(.vec_query.numeric)){
+    .vec_query.numeric %>% 
+      select(where(is.numeric)) -> .vec_query.numeric
   }
   
   # Define k
-  if(auto_select.k){
+  if(.auto_select.k){
     # RECOMMENDED
     # Typical suggested value for k is sqrt(nrow(df))
     # Looking for k nearest neighbors in all career clusters
     
-    df_data.numeric %>% 
+    .df_data.numeric %>% 
       nrow(.) %>%
       sqrt(.) %>%
-      round(.) -> int_k
+      round(.) -> .int_k
     
   }
   
   # Find the k nearest neighbors
   FNN::get.knnx(
-    data = df_data.numeric.temp
-    , query = vec_query.numeric
-    , k = int_k
+    data = .df_data.numeric.temp
+    , query = .vec_query.numeric
+    , k = .int_k
   ) -> KNN.output
   
   # Arrange original data frame with KNN output
-  df_data.numeric %>% 
+  .df_data.numeric %>% 
     slice(as.vector(KNN.output$nn.index)) %>% 
     mutate(#Add euclidean distances and convert them to similarities
       Euclidean_Distance = as.vector(KNN.output$nn.dist)

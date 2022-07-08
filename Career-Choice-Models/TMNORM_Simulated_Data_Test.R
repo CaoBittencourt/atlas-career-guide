@@ -106,38 +106,38 @@ df_occupations %>%
 # SIMULATED QUESTIONNAIRE ---------------------------------------------------------------
 # Skills only
 df_simulations.skill <- fun_simulate.tmvnorm(
-  df_data.numeric = df_occupations.numeric.skill
-  , int_n.simulations = 100
-  , chr_observations.name = 'Subject'
-  , dbl_lower.bound = 0
-  , dbl_upper.bound = 1
+  .df_data.numeric = df_occupations.numeric.skill
+  ,.int_n.simulations = 100
+  ,.chr_observations.name = 'Subject'
+  ,.dbl_lower.bound = 0
+  ,.dbl_upper.bound = 1
 )
 
 # Abilities only
 df_simulations.ablt <- fun_simulate.tmvnorm(
-  df_data.numeric = df_occupations.numeric.ablt
-  , int_n.simulations = 100
-  , chr_observations.name = 'Subject'
-  , dbl_lower.bound = 0
-  , dbl_upper.bound = 1
+  .df_data.numeric = df_occupations.numeric.ablt
+  ,.int_n.simulations = 100
+  ,.chr_observations.name = 'Subject'
+  ,.dbl_lower.bound = 0
+  ,.dbl_upper.bound = 1
 )
 
 # Fields of Knowledge only
 df_simulations.know <- fun_simulate.tmvnorm(
-  df_data.numeric = df_occupations.numeric.know
-  , int_n.simulations = 100
-  , chr_observations.name = 'Subject'
-  , dbl_lower.bound = 0
-  , dbl_upper.bound = 1
+  .df_data.numeric = df_occupations.numeric.know
+  ,.int_n.simulations = 100
+  ,.chr_observations.name = 'Subject'
+  ,.dbl_lower.bound = 0
+  ,.dbl_upper.bound = 1
 )
 
 # All items
 df_simulations <- fun_simulate.tmvnorm(
-  df_data.numeric = df_occupations.numeric.items
-  , int_n.simulations = 100
-  , chr_observations.name = 'Subject'
-  , dbl_lower.bound = 0
-  , dbl_upper.bound = 1
+  .df_data.numeric = df_occupations.numeric.items
+  ,.int_n.simulations = 100
+  ,.chr_observations.name = 'Subject'
+  ,.dbl_lower.bound = 0
+  ,.dbl_upper.bound = 1
 )
 
 # APPLY KNN ---------------------------------------------------------------
@@ -150,10 +150,10 @@ lapply(
       select(-Subject) -> vec_compare
     
     fun_KNN.matching(
-      df_data.numeric = df_occupations.numeric.items
-      , vec_query.numeric = vec_compare
-      , int_k = nrow(df_occupations.numeric.items)
-      , auto_select.k = F
+      .df_data.numeric = df_occupations.numeric.items
+      ,.vec_query.numeric = vec_compare
+      ,.int_k = nrow(df_occupations.numeric.items)
+      ,.auto_select.k = F
     ) %>% 
       return(.)
     
@@ -169,10 +169,10 @@ lapply(
 #       select(-Subject) -> vec_compare
 #     
 #     fun_KNN.matching(
-#       df_data.numeric = df_occupations.numeric.skill
-#       , vec_query.numeric = vec_compare
-#       , int_k = nrow(df_occupations.numeric.skill)
-#       , auto_select.k = F
+#       .df_data.numeric = df_occupations.numeric.skill
+#       ,.vec_query.numeric = vec_compare
+#       ,.int_k = nrow(df_occupations.numeric.skill)
+#       ,.auto_select.k = F
 #     ) %>%
 #       rename_with(
 #         .cols = starts_with(c('Similarity.','Euclidean_'))
@@ -192,10 +192,10 @@ lapply(
 #       select(-Subject) -> vec_compare
 #     
 #     fun_KNN.matching(
-#       df_data.numeric = df_occupations.numeric.ablt
-#       , vec_query.numeric = vec_compare
-#       , int_k = nrow(df_occupations.numeric.ablt)
-#       , auto_select.k = F
+#       .df_data.numeric = df_occupations.numeric.ablt
+#       ,.vec_query.numeric = vec_compare
+#       ,.int_k = nrow(df_occupations.numeric.ablt)
+#       ,.auto_select.k = F
 #     ) %>%
 #       rename_with(
 #         .cols = starts_with(c('Similarity.','Euclidean_'))
@@ -216,10 +216,10 @@ lapply(
 #       select(-Subject) -> vec_compare
 #     
 #     fun_KNN.matching(
-#       df_data.numeric = df_occupations.numeric.know
-#       , vec_query.numeric = vec_compare
-#       , int_k = nrow(df_occupations.numeric.know)
-#       , auto_select.k = F
+#       .df_data.numeric = df_occupations.numeric.know
+#       ,.vec_query.numeric = vec_compare
+#       ,.int_k = nrow(df_occupations.numeric.know)
+#       ,.auto_select.k = F
 #     ) %>%
 #       rename_with(
 #         .cols = starts_with(c('Similarity.','Euclidean_'))

@@ -116,419 +116,428 @@ df_occupations %>%
     )
   ) -> df_occupations.numeric.know
 
-# # GLOBAL EFA PAREMETERS 1 ---------------------------------------------------
+# # GLOBAL EFA PARAMETERS 1 ---------------------------------------------------
 # # Number of factors
-# auto_select.nfactors <- T
+# .auto_select.nfactors <- T
 # # int_nfactors.vector <- seq(1,5)
 # 
 # # Minimum factor size
-# int_min.factor_size.basic <- 2
-# int_min.factor_size <- 3
+# .int_min.factor_size.basic <- 2
+# .int_min.factor_size <- 3
 # 
 # # Top items
-# int_n.items.total.basic <- 5
-# int_n.items.total.cross <- 10
+# .int_n.items.total.basic <- 5
+# .int_n.items.total.cross <- 10
 # 
-# int_n.items.total.skill <- 15
-# int_n.items.total.ablt <- 20
-# int_n.items.total.know <- 15
+# .int_n.items.total.skill <- 15
+# .int_n.items.total.ablt <- 20
+# .int_n.items.total.know <- 15
 # 
 # # Rotation (Oblique)
-# chr_rotation <- 'promax'
-# # chr_rotation <- 'oblimin'
+# .chr_rotation <- 'promax'
+# # .chr_rotation <- 'oblimin'
 # # Rotation (Orthogonal)
-# # chr_rotation <- 'varimax'
-# 
+# # .chr_rotation <- 'varimax'
+# .remove_unacceptable_MSAi.items <- T
+
 # # Underloadings and crossloadings
-# remove_under_loading.items <- F
-# remove_cross_loading.items <- T
-# dbl_under_loading.threshold <- 0.4 #Lesser than 0.4 loading <- under loading
-# # dbl_cross_loading.threshold <- 0.05 #Lesser than 0.05 loading difference <- cross loading
-# dbl_cross_loading.threshold <- 0.25
+# .remove_under_loading.items <- F
+# .remove_cross_loading.items <- T
+# .dbl_under_loading.threshold <- 0.4 #Lesser than 0.4 loading <- under loading
+# # .dbl_cross_loading.threshold <- 0.05 #Lesser than 0.05 loading difference <- cross loading
+# .dbl_cross_loading.threshold <- 0.25
 # 
 # # Diagrams and tests
-# show_diagrams <- T
-# show_results <- F
+# .show_diagrams <- T
+# .show_results <- F
 
-# # GLOBAL EFA PAREMETERS 2 ---------------------------------------------------
+# # GLOBAL EFA PARAMETERS 2 ---------------------------------------------------
 # # Number of factors
-# auto_select.nfactors <- T
+# .auto_select.nfactors <- T
 # # int_nfactors.vector <- seq(1,5)
 # 
 # # Minimum factor size
-# int_min.factor_size.basic <- 2
-# int_min.factor_size <- 3
+# .int_min.factor_size.basic <- 2
+# .int_min.factor_size <- 3
 # 
 # # Top items
-# int_n.items.total.basic <- 5
-# int_n.items.total.cross <- 10
+# .int_n.items.total.basic <- 5
+# .int_n.items.total.cross <- 10
 # 
-# int_n.items.total.skill <- 15
-# int_n.items.total.ablt <- 20
-# int_n.items.total.know <- 15
+# .int_n.items.total.skill <- 15
+# .int_n.items.total.ablt <- 20
+# .int_n.items.total.know <- 15
 # 
 # # Rotation (Oblique)
-# chr_rotation <- 'promax'
-# # chr_rotation <- 'oblimin'
+# .chr_rotation <- 'promax'
+# # .chr_rotation <- 'oblimin'
 # # Rotation (Orthogonal)
-# # chr_rotation <- 'varimax'
-# 
+# # .chr_rotation <- 'varimax'
+# .remove_unacceptable_MSAi.items <- T
 # # Underloadings and crossloadings
-# remove_under_loading.items <- T
-# remove_cross_loading.items <- T
-# dbl_under_loading.threshold <- 0.3 #Lesser than 0.4 loading <- under loading
-# # dbl_cross_loading.threshold <- 0.05 #Lesser than 0.05 loading difference <- cross loading
-# dbl_cross_loading.threshold <- 0.3
+# .remove_under_loading.items <- T
+# .remove_cross_loading.items <- T
+# .dbl_under_loading.threshold <- 0.3 #Lesser than 0.4 loading <- under loading
+# # .dbl_cross_loading.threshold <- 0.05 #Lesser than 0.05 loading difference <- cross loading
+# .dbl_cross_loading.threshold <- 0.3
 # 
 # # Diagrams and tests
-# show_diagrams <- T
-# show_results <- F
+# .show_diagrams <- T
+# .show_results <- F
 
-# # GLOBAL EFA PAREMETERS 3 ---------------------------------------------------
+# # GLOBAL EFA PARAMETERS 3 ---------------------------------------------------
 # # Number of factors
-# auto_select.nfactors <- T
+# .auto_select.nfactors <- T
 # # int_nfactors.vector <- seq(1,5)
 # 
 # # Minimum factor size
-# # int_min.factor_size.basic <- 2
-# int_min.factor_size <- 3
+# # .int_min.factor_size.basic <- 2
+# .int_min.factor_size <- 3
 # 
 # # Top items
-# # int_n.items.total.basic <- 5
-# # int_n.items.total.cross <- 10
+# # .int_n.items.total.basic <- 5
+# # .int_n.items.total.cross <- 10
 # 
-# int_n.items.total.skill <- 14
-# int_n.items.total.ablt <- 16
-# int_n.items.total.know <- 12
+# .int_n.items.total.skill <- 14
+# .int_n.items.total.ablt <- 16
+# .int_n.items.total.know <- 12
 # 
 # # Rotation (Oblique)
-# chr_rotation <- 'promax'
-# # chr_rotation <- 'oblimin'
+# .chr_rotation <- 'promax'
+# # .chr_rotation <- 'oblimin'
 # # Rotation (Orthogonal)
-# # chr_rotation <- 'varimax'
-# 
+# # .chr_rotation <- 'varimax'
+# .remove_unacceptable_MSAi.items <- T
 # # Underloadings and crossloadings
-# remove_under_loading.items <- T
-# remove_cross_loading.items <- T
-# dbl_under_loading.threshold <- 0.3 #Lesser than 0.4 loading <- under loading
-# # dbl_cross_loading.threshold <- 0.05 #Lesser than 0.05 loading difference <- cross loading
-# dbl_cross_loading.threshold <- 0.35
+# .remove_under_loading.items <- T
+# .remove_cross_loading.items <- T
+# .dbl_under_loading.threshold <- 0.3 #Lesser than 0.4 loading <- under loading
+# # .dbl_cross_loading.threshold <- 0.05 #Lesser than 0.05 loading difference <- cross loading
+# .dbl_cross_loading.threshold <- 0.35
 # 
 # # Diagrams and tests
-# show_diagrams <- T
-# show_results <- F
+# .show_diagrams <- T
+# .show_results <- F
 
-# # *GLOBAL EFA PAREMETERS 4* ---------------------------------------------------
+# # *GLOBAL EFA PARAMETERS 4* ---------------------------------------------------
 # # Number of factors
-# auto_select.nfactors <- T
+# .auto_select.nfactors <- T
 # # int_nfactors.vector <- seq(1,5)
 # 
 # # Minimum factor size
-# # int_min.factor_size.basic <- 2
-# int_min.factor_size <- 3
+# # .int_min.factor_size.basic <- 2
+# .int_min.factor_size <- 3
 # 
 # # Top items
-# # int_n.items.total.basic <- 5
-# # int_n.items.total.cross <- 10
+# # .int_n.items.total.basic <- 5
+# # .int_n.items.total.cross <- 10
 # 
-# int_n.items.total.skill <- 6
-# int_n.items.total.ablt <- 12
-# int_n.items.total.know <- 12
+# .int_n.items.total.skill <- 6
+# .int_n.items.total.ablt <- 12
+# .int_n.items.total.know <- 12
 # 
 # # Rotation (Oblique)
-# chr_rotation <- 'promax'
-# # chr_rotation <- 'oblimin'
+# .chr_rotation <- 'promax'
+# # .chr_rotation <- 'oblimin'
 # # Rotation (Orthogonal)
-# # chr_rotation <- 'varimax'
-# 
+# # .chr_rotation <- 'varimax'
+# .remove_unacceptable_MSAi.items <- T
 # # Underloadings and crossloadings
-# remove_under_loading.items <- T
-# remove_cross_loading.items <- T
-# dbl_under_loading.threshold <- 0.3 #Lesser than 0.4 loading <- under loading
-# # dbl_cross_loading.threshold <- 0.05 #Lesser than 0.05 loading difference <- cross loading
-# dbl_cross_loading.threshold <- 0.35
+# .remove_under_loading.items <- T
+# .remove_cross_loading.items <- T
+# .dbl_under_loading.threshold <- 0.3 #Lesser than 0.4 loading <- under loading
+# # .dbl_cross_loading.threshold <- 0.05 #Lesser than 0.05 loading difference <- cross loading
+# .dbl_cross_loading.threshold <- 0.35
 # 
 # # Diagrams and tests
-# show_diagrams <- T
-# show_results <- F
+# .show_diagrams <- T
+# .show_results <- F
 
-# GLOBAL EFA PAREMETERS FIRST TEST ---------------------------------------------------
+# GLOBAL EFA PARAMETERS FIRST TEST ---------------------------------------------------
 # Number of factors
-auto_select.nfactors <- T
+.auto_select.nfactors <- T
 # int_nfactors.vector <- seq(1,5)
 
 # Minimum factor size
-# int_min.factor_size.basic <- 2
-int_min.factor_size <- 3
+# .int_min.factor_size.basic <- 2
+.int_min.factor_size <- 3
 
 # Top items
-# int_n.items.total.basic <- 5
-# int_n.items.total.cross <- 10
+# .int_n.items.total.basic <- 5
+# .int_n.items.total.cross <- 10
 
-int_n.items.total.skill <- 8
-int_n.items.total.ablt <- 12 #don't edit
-int_n.items.total.know <- 12
+.int_n.items.total.skill <- 8
+.int_n.items.total.ablt <- 12 #don't edit
+.int_n.items.total.know <- 12
 
 # Rotation (Oblique)
-chr_rotation <- 'promax'
-# chr_rotation <- 'oblimin'
+.chr_rotation <- 'promax'
+# .chr_rotation <- 'oblimin'
 # Rotation (Orthogonal)
-# chr_rotation <- 'varimax'
-
+# .chr_rotation <- 'varimax'
+.remove_unacceptable_MSAi.items <- T
 # Underloadings and crossloadings
-remove_under_loading.items <- T
-remove_cross_loading.items <- T
-dbl_under_loading.threshold <- 0.3 #Lesser than 0.4 loading <- under loading
-# dbl_cross_loading.threshold <- 0.05 #Lesser than 0.05 loading difference <- cross loading
-dbl_cross_loading.threshold <- 0.35
+.remove_under_loading.items <- T
+.remove_cross_loading.items <- T
+.dbl_under_loading.threshold <- 0.3 #Lesser than 0.4 loading <- under loading
+# .dbl_cross_loading.threshold <- 0.05 #Lesser than 0.05 loading difference <- cross loading
+.dbl_cross_loading.threshold <- 0.35
 
 # Diagrams and tests
-show_diagrams <- T
-show_results <- F
+.show_diagrams <- T
+.show_results <- F
 
-# GLOBAL EFA PAREMETERS FIRST TEST ---------------------------------------------------
+# GLOBAL EFA PARAMETERS FIRST TEST ---------------------------------------------------
 # Number of factors
-auto_select.nfactors <- T
+.auto_select.nfactors <- T
 # int_nfactors.vector <- seq(1,5)
 
 # Minimum factor size
-# int_min.factor_size.basic <- 2
-int_min.factor_size <- 3
+# .int_min.factor_size.basic <- 2
+.int_min.factor_size <- 3
 
 # Top items
-# int_n.items.total.basic <- 5
-# int_n.items.total.cross <- 10
+# .int_n.items.total.basic <- 5
+# .int_n.items.total.cross <- 10
 
-int_n.items.total.skill <- 8
-int_n.items.total.ablt <- 12 #don't edit
-int_n.items.total.know <- 12
+.int_n.items.total.skill <- 8
+.int_n.items.total.ablt <- 12 #don't edit
+.int_n.items.total.know <- 12
 
 # Rotation (Oblique)
-# chr_rotation <- 'promax'
-# chr_rotation <- 'oblimin'
+# .chr_rotation <- 'promax'
+# .chr_rotation <- 'oblimin'
 # Rotation (Orthogonal)
-chr_rotation <- 'varimax'
+.chr_rotation <- 'varimax'
+.remove_unacceptable_MSAi.items <- T
 
 # Underloadings and crossloadings
-remove_under_loading.items <- T
-remove_cross_loading.items <- T
-dbl_under_loading.threshold <- 0.3 #Lesser than 0.4 loading <- under loading
-# dbl_cross_loading.threshold <- 0.05 #Lesser than 0.05 loading difference <- cross loading
-dbl_cross_loading.threshold <- 0.35
+.remove_under_loading.items <- T
+.remove_cross_loading.items <- T
+.dbl_under_loading.threshold <- 0.3 #Lesser than 0.4 loading <- under loading
+# .dbl_cross_loading.threshold <- 0.05 #Lesser than 0.05 loading difference <- cross loading
+.dbl_cross_loading.threshold <- 0.35
 
 # Diagrams and tests
-show_diagrams <- T
-show_results <- F
+.show_diagrams <- T
+.show_results <- F
 
-# GLOBAL EFA PAREMETERS FIRST TEST ---------------------------------------------------
+# GLOBAL EFA PARAMETERS FIRST TEST ---------------------------------------------------
 # Number of factors
-auto_select.nfactors <- T
+.auto_select.nfactors <- T
 # int_nfactors.vector <- seq(1,5)
 
 # Minimum factor size
-# int_min.factor_size.basic <- 2
-int_min.factor_size <- 3
+# .int_min.factor_size.basic <- 2
+.int_min.factor_size <- 3
 
 # Top items
-# int_n.items.total.basic <- 5
-# int_n.items.total.cross <- 10
+# .int_n.items.total.basic <- 5
+# .int_n.items.total.cross <- 10
 
-int_n.items.total.skill <- 8
-int_n.items.total.ablt <- 12 #don't edit
-int_n.items.total.know <- 12
+.int_n.items.total.skill <- 8
+.int_n.items.total.ablt <- 12 #don't edit
+.int_n.items.total.know <- 12
 
 # Rotation (Oblique)
-# chr_rotation <- 'promax'
-# chr_rotation <- 'oblimin'
+# .chr_rotation <- 'promax'
+# .chr_rotation <- 'oblimin'
 # Rotation (Orthogonal)
-chr_rotation <- 'varimax'
+.chr_rotation <- 'varimax'
+.remove_unacceptable_MSAi.items <- T
 
 # Underloadings and crossloadings
-remove_under_loading.items <- T
-remove_cross_loading.items <- T
-dbl_under_loading.threshold <- 0.5 #Lesser than 0.4 loading <- under loading
-# dbl_cross_loading.threshold <- 0.05 #Lesser than 0.05 loading difference <- cross loading
-dbl_cross_loading.threshold <- 0.35
+.remove_under_loading.items <- T
+.remove_cross_loading.items <- T
+.dbl_under_loading.threshold <- 0.5 #Lesser than 0.4 loading <- under loading
+# .dbl_cross_loading.threshold <- 0.05 #Lesser than 0.05 loading difference <- cross loading
+.dbl_cross_loading.threshold <- 0.35
 
 # Diagrams and tests
-show_diagrams <- T
-show_results <- F
+.show_diagrams <- T
+.show_results <- F
 
 # FULLY AUTOMATED EFA WORKFLOW (WITH TOP ITEMS) --------------------------------------------
 # # Basic Skills
 # fun_best.model.top.items.workflow(
 #   # Basic
-#   df_data.numeric = df_occupations.numeric.basic
-#   , auto_select.nfactors = auto_select.nfactors
-#   , int_min.factor_size = int_min.factor_size.basic
-#   , int_n.items.total = int_n.items.total.cross
-#   , chr_rotation = chr_rotation
+#   .df_data.numeric = df_occupations.numeric.basic
+#   , .auto_select.nfactors = .auto_select.nfactors
+#   , .int_min.factor_size = .int_min.factor_size.basic
+#   , .int_n.items.total = .int_n.items.total.cross
+#   , .chr_rotation = .chr_rotation
 #   # Underloadings and crossloadings
-#   , remove_under_loading.items = remove_under_loading.items
-#   , remove_cross_loading.items = remove_cross_loading.items
-#   , dbl_under_loading.threshold = dbl_under_loading.threshold
-#   , dbl_cross_loading.threshold = dbl_cross_loading.threshold
+#   , .remove_under_loading.items = .remove_under_loading.items
+#   , .remove_cross_loading.items = .remove_cross_loading.items
+#   , .dbl_under_loading.threshold = .dbl_under_loading.threshold
+#   , .dbl_cross_loading.threshold = .dbl_cross_loading.threshold
 #   # Diagrams and tests
-#   , show_diagrams = show_diagrams
-#   , show_results = show_results
+#   , .show_diagrams = .show_diagrams
+#   , .show_results = .show_results
 # ) -> EFA_Basic
 #
 # # Cross Functional Skills
 # fun_best.model.top.items.workflow(
 #   # Basic
-#   df_data.numeric = df_occupations.numeric.cross
-#   , auto_select.nfactors = auto_select.nfactors
-#   , int_min.factor_size = int_min.factor_size.basic
-#   , int_n.items.total = int_n.items.total.cross
-#   , chr_rotation = chr_rotation
+#   .df_data.numeric = df_occupations.numeric.cross
+#   , .auto_select.nfactors = .auto_select.nfactors
+#   , .int_min.factor_size = .int_min.factor_size.basic
+#   , .int_n.items.total = .int_n.items.total.cross
+#   , .chr_rotation = .chr_rotation
 #   # Underloadings and crossloadings
-#   , remove_under_loading.items = remove_under_loading.items
-#   , remove_cross_loading.items = remove_cross_loading.items
-#   , dbl_under_loading.threshold = dbl_under_loading.threshold
-#   , dbl_cross_loading.threshold = dbl_cross_loading.threshold
+#   , .remove_under_loading.items = .remove_under_loading.items
+#   , .remove_cross_loading.items = .remove_cross_loading.items
+#   , .dbl_under_loading.threshold = .dbl_under_loading.threshold
+#   , .dbl_cross_loading.threshold = .dbl_cross_loading.threshold
 #   # Diagrams and tests
-#   , show_diagrams = show_diagrams
-#   , show_results = show_results
+#   , .show_diagrams = .show_diagrams
+#   , .show_results = .show_results
 # ) -> EFA_Cross
 
 # All Skills
 fun_best.model.top.items.workflow(
   # Basic
-  df_data.numeric = df_occupations.numeric.skill
-  , auto_select.nfactors = auto_select.nfactors
-  , int_min.factor_size = int_min.factor_size
-  , int_n.items.total = int_n.items.total.skill
-  , chr_rotation = chr_rotation
+  .df_data.numeric = df_occupations.numeric.skill
+  , .auto_select.nfactors = .auto_select.nfactors
+  , .int_min.factor_size = .int_min.factor_size
+  , .int_n.items.total = .int_n.items.total.skill
+  , .chr_rotation = .chr_rotation
+  , .remove_unacceptable_MSAi.items = .remove_unacceptable_MSAi.items
   # Underloadings and crossloadings
-  , remove_under_loading.items = remove_under_loading.items
-  , remove_cross_loading.items = remove_cross_loading.items
-  , dbl_under_loading.threshold = dbl_under_loading.threshold
-  , dbl_cross_loading.threshold = dbl_cross_loading.threshold
+  , .remove_under_loading.items = .remove_under_loading.items
+  , .remove_cross_loading.items = .remove_cross_loading.items
+  , .dbl_under_loading.threshold = .dbl_under_loading.threshold
+  , .dbl_cross_loading.threshold = .dbl_cross_loading.threshold
   # Diagrams and tests
-  , show_diagrams = show_diagrams
-  , show_results = show_results
+  , .show_diagrams = .show_diagrams
+  , .show_results = .show_results
 ) -> EFA_Skill
 
 # Abilities
 fun_best.model.top.items.workflow(
   # Basic
-  df_data.numeric = df_occupations.numeric.ablt
-  , auto_select.nfactors = auto_select.nfactors
-  , int_min.factor_size = int_min.factor_size
-  , int_n.items.total = int_n.items.total.ablt
-  , chr_rotation = chr_rotation
+  .df_data.numeric = df_occupations.numeric.ablt
+  , .auto_select.nfactors = .auto_select.nfactors
+  , .int_min.factor_size = .int_min.factor_size
+  , .int_n.items.total = .int_n.items.total.ablt
+  , .chr_rotation = .chr_rotation
+  , .remove_unacceptable_MSAi.items = .remove_unacceptable_MSAi.items
   # Underloadings and crossloadings
-  , remove_under_loading.items = remove_under_loading.items
-  , remove_cross_loading.items = remove_cross_loading.items
-  , dbl_under_loading.threshold = dbl_under_loading.threshold
-  , dbl_cross_loading.threshold = dbl_cross_loading.threshold
+  , .remove_under_loading.items = .remove_under_loading.items
+  , .remove_cross_loading.items = .remove_cross_loading.items
+  , .dbl_under_loading.threshold = .dbl_under_loading.threshold
+  , .dbl_cross_loading.threshold = .dbl_cross_loading.threshold
   # Diagrams and tests
-  , show_diagrams = show_diagrams
-  , show_results = show_results
+  , .show_diagrams = .show_diagrams
+  , .show_results = .show_results
 ) -> EFA_Ablt
 
 # Knowledge
 fun_best.model.top.items.workflow(
   # Basic
-  df_data.numeric = df_occupations.numeric.know
-  , auto_select.nfactors = auto_select.nfactors
-  , int_min.factor_size = int_min.factor_size
-  , int_n.items.total = int_n.items.total.know
-  , chr_rotation = chr_rotation
+  .df_data.numeric = df_occupations.numeric.know
+  , .auto_select.nfactors = .auto_select.nfactors
+  , .int_min.factor_size = .int_min.factor_size
+  , .int_n.items.total = .int_n.items.total.know
+  , .chr_rotation = .chr_rotation
+  , .remove_unacceptable_MSAi.items = .remove_unacceptable_MSAi.items
   # Underloadings and crossloadings
-  , remove_under_loading.items = remove_under_loading.items
-  , remove_cross_loading.items = remove_cross_loading.items
-  , dbl_under_loading.threshold = dbl_under_loading.threshold
-  , dbl_cross_loading.threshold = dbl_cross_loading.threshold
+  , .remove_under_loading.items = .remove_under_loading.items
+  , .remove_cross_loading.items = .remove_cross_loading.items
+  , .dbl_under_loading.threshold = .dbl_under_loading.threshold
+  , .dbl_cross_loading.threshold = .dbl_cross_loading.threshold
   # Diagrams and tests
-  , show_diagrams = show_diagrams
-  , show_results = show_results
+  , .show_diagrams = .show_diagrams
+  , .show_results = .show_results
 ) -> EFA_Know
 
 # # FULLY AUTOMATED EFA WORKFLOW (ONLY STAGE ONE) --------------------------------------------
 # # Basic Skills
 # # fun_best.model.workflow(
 # #   # Basic
-# #   df_data.numeric = df_occupations.numeric.basic
-# #   , auto_select.nfactors = auto_select.nfactors
-# #   , int_min.factor_size = int_min.factor_size.basic
-# #   , chr_rotation = chr_rotation
+# #   .df_data.numeric = df_occupations.numeric.basic
+# #   , .auto_select.nfactors = .auto_select.nfactors
+# #   , .int_min.factor_size = .int_min.factor_size.basic
+# #   , .chr_rotation = .chr_rotation
 # #   # Underloadings and crossloadings
-# #   , remove_under_loading.items = remove_under_loading.items
-# #   , remove_cross_loading.items = remove_cross_loading.items
-# #   , dbl_under_loading.threshold = dbl_under_loading.threshold
-# #   , dbl_cross_loading.threshold = dbl_cross_loading.threshold
+# #   , .remove_under_loading.items = .remove_under_loading.items
+# #   , .remove_cross_loading.items = .remove_cross_loading.items
+# #   , .dbl_under_loading.threshold = .dbl_under_loading.threshold
+# #   , .dbl_cross_loading.threshold = .dbl_cross_loading.threshold
 # #   # Diagrams and tests
-# #   , show_diagrams = show_diagrams
-# #   , show_results = show_results
+# #   , .show_diagrams = .show_diagrams
+# #   , .show_results = .show_results
 # # ) -> EFA_Basic.1
 # #
 # # # Cross Functional Skills
 # # fun_best.model.workflow(
 # #   # Basic
-# #   df_data.numeric = df_occupations.numeric.cross
-# #   , auto_select.nfactors = auto_select.nfactors
-# #   , int_min.factor_size = int_min.factor_size.basic
-# #   , chr_rotation = chr_rotation
+# #   .df_data.numeric = df_occupations.numeric.cross
+# #   , .auto_select.nfactors = .auto_select.nfactors
+# #   , .int_min.factor_size = .int_min.factor_size.basic
+# #   , .chr_rotation = .chr_rotation
 # #   # Underloadings and crossloadings
-# #   , remove_under_loading.items = remove_under_loading.items
-# #   , remove_cross_loading.items = remove_cross_loading.items
-# #   , dbl_under_loading.threshold = dbl_under_loading.threshold
-# #   , dbl_cross_loading.threshold = dbl_cross_loading.threshold
+# #   , .remove_under_loading.items = .remove_under_loading.items
+# #   , .remove_cross_loading.items = .remove_cross_loading.items
+# #   , .dbl_under_loading.threshold = .dbl_under_loading.threshold
+# #   , .dbl_cross_loading.threshold = .dbl_cross_loading.threshold
 # #   # Diagrams and tests
-# #   , show_diagrams = show_diagrams
-# #   , show_results = show_results
+# #   , .show_diagrams = .show_diagrams
+# #   , .show_results = .show_results
 # # ) -> EFA_Cross.1
 # 
 # # All Skills
 # fun_best.model.workflow(
 #   # Basic
-#   df_data.numeric = df_occupations.numeric.skill
-#   , auto_select.nfactors = auto_select.nfactors
-#   , int_min.factor_size = int_min.factor_size
-#   , chr_rotation = chr_rotation
+#   .df_data.numeric = df_occupations.numeric.skill
+#   , .auto_select.nfactors = .auto_select.nfactors
+#   , .int_min.factor_size = .int_min.factor_size
+#   , .chr_rotation = .chr_rotation
+#   , .remove_unacceptable_MSAi.items = .remove_unacceptable_MSAi.items
 #   # Underloadings and crossloadings
-#   , remove_under_loading.items = remove_under_loading.items
-#   , remove_cross_loading.items = remove_cross_loading.items
-#   , dbl_under_loading.threshold = dbl_under_loading.threshold
-#   , dbl_cross_loading.threshold = dbl_cross_loading.threshold
+#   , .remove_under_loading.items = .remove_under_loading.items
+#   , .remove_cross_loading.items = .remove_cross_loading.items
+#   , .dbl_under_loading.threshold = .dbl_under_loading.threshold
+#   , .dbl_cross_loading.threshold = .dbl_cross_loading.threshold
 #   # Diagrams and tests
-#   , show_diagrams = show_diagrams
-#   , show_results = show_results
+#   , .show_diagrams = .show_diagrams
+#   , .show_results = .show_results
 # ) -> EFA_Skill.1
 # 
 # # Abilities
 # fun_best.model.workflow(
 #   # Basic
-#   df_data.numeric = df_occupations.numeric.ablt
-#   , auto_select.nfactors = auto_select.nfactors
-#   , int_min.factor_size = int_min.factor_size
-#   , chr_rotation = chr_rotation
+#   .df_data.numeric = df_occupations.numeric.ablt
+#   , .auto_select.nfactors = .auto_select.nfactors
+#   , .int_min.factor_size = .int_min.factor_size
+#   , .chr_rotation = .chr_rotation
+#   , .remove_unacceptable_MSAi.items = .remove_unacceptable_MSAi.items
 #   # Underloadings and crossloadings
-#   , remove_under_loading.items = remove_under_loading.items
-#   , remove_cross_loading.items = remove_cross_loading.items
-#   , dbl_under_loading.threshold = dbl_under_loading.threshold
-#   , dbl_cross_loading.threshold = dbl_cross_loading.threshold
+#   , .remove_under_loading.items = .remove_under_loading.items
+#   , .remove_cross_loading.items = .remove_cross_loading.items
+#   , .dbl_under_loading.threshold = .dbl_under_loading.threshold
+#   , .dbl_cross_loading.threshold = .dbl_cross_loading.threshold
 #   # Diagrams and tests
-#   , show_diagrams = show_diagrams
-#   , show_results = show_results
+#   , .show_diagrams = .show_diagrams
+#   , .show_results = .show_results
 # ) -> EFA_Ablt.1
 # 
 # # Knowledge
 # fun_best.model.workflow(
 #   # Basic
-#   df_data.numeric = df_occupations.numeric.know
-#   , auto_select.nfactors = auto_select.nfactors
-#   , int_min.factor_size = int_min.factor_size
-#   , chr_rotation = chr_rotation
+#   .df_data.numeric = df_occupations.numeric.know
+#   , .auto_select.nfactors = .auto_select.nfactors
+#   , .int_min.factor_size = .int_min.factor_size
+#   , .chr_rotation = .chr_rotation
+#   , .remove_unacceptable_MSAi.items = .remove_unacceptable_MSAi.items
 #   # Underloadings and crossloadings
-#   , remove_under_loading.items = remove_under_loading.items
-#   , remove_cross_loading.items = remove_cross_loading.items
-#   , dbl_under_loading.threshold = dbl_under_loading.threshold
-#   , dbl_cross_loading.threshold = dbl_cross_loading.threshold
+#   , .remove_under_loading.items = .remove_under_loading.items
+#   , .remove_cross_loading.items = .remove_cross_loading.items
+#   , .dbl_under_loading.threshold = .dbl_under_loading.threshold
+#   , .dbl_cross_loading.threshold = .dbl_cross_loading.threshold
 #   # Diagrams and tests
-#   , show_diagrams = show_diagrams
-#   , show_results = show_results
+#   , .show_diagrams = .show_diagrams
+#   , .show_results = .show_results
 # ) -> EFA_Know.1
 # 
 
