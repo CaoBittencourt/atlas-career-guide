@@ -16,70 +16,9 @@ lapply(pkg, function(x)
 # WORKING DIRECTORY -------------------------------------------------------
 setwd('C:/Users/Cao/Documents/Github/Atlas-Research/Career-Choice-Models')
 
-# KNN MATCHING FUNCTION -------------------------------------------------------------------------
-fun_KNN.matching <- function(
-    df_data.numeric
-    , vec_query.numeric
-    , int_k = 1
-    , auto_select.k = F
-){ 
-  
-  # Get numeric data only
-  df_data.numeric %>%
-    select(where(is.numeric)) -> df_data.numeric.temp
-  
-  if(is.data.frame(vec_query.numeric)){
-    vec_query.numeric %>% 
-      select(where(is.numeric)) -> vec_query.numeric
-  }
-  
-  # Define k
-  if(auto_select.k){
-    # RECOMMENDED
-    # Typical suggested value for k is sqrt(nrow(df))
-    # Looking for k nearest neighbors in all career clusters
-    
-    df_data.numeric %>% 
-      nrow(.) %>%
-      sqrt(.) %>%
-      round(.) -> int_k
-    
-  }
-  
-  # Find the k nearest neighbors
-  FNN::get.knnx(
-    data = df_data.numeric.temp
-    , query = vec_query.numeric
-    , k = int_k
-  ) -> KNN.output
-  
-  # Arrange original data frame with KNN output
-  df_data.numeric %>% 
-    slice(as.vector(KNN.output$nn.index)) %>% 
-    mutate(#Add euclidean distances and convert them to similarities
-      Euclidean_Distance = as.vector(KNN.output$nn.dist)
-      # Common similarity: 1/(1 + dist), "+1" for dist = 0
-      , Similarity.Common = 1 / (1 + Euclidean_Distance)
-      # Similarity via gaussian kernel: exp(-dist)
-      , Similarity.Gaussian = exp(-Euclidean_Distance)
-      
-      # [Try again] Yielding negative values for greater distances
-      # Tangent similarity: 1 - arctan(dist) = 1 for dist = 0 
-      # , Similarity.Tan = 1 - atan(Euclidean_Distance)
-      # , Similarity.Tan = 1 - atan(Euclidean_Distance/2)
-      # , Similarity.Tan = 1 - atan(Euclidean_Distance/pi)
-      
-      # [Try again] Equivalence between euclidean and cosine
-      # [Wrong formula] Yielding negative values for greater distances
-      # , Similarity.Cosine = 1 - (Euclidean_Distance/2)
-      # , Similarity.Cosine = 1 - (Euclidean_Distance^2)/2
-      
-    ) %>% 
-    return(.)
-  
-}
-
-
+# FUNCTIONS ---------------------------------------------------------------
+source('./Simulated_Data.R')
+source('./KNN_Matching.R')
 
 # EFA-REDUCED OCCUPATIONS DATA FRAME -------------------------------------------
 # Occupations data frame
@@ -108,7 +47,7 @@ c(
   , 'Finger_Dexterity.L'
   , 'Arm_Hand_Steadiness.L'
   , 'Manual_Dexterity.L'
-  # Factor 3 is composed of bodily robustness, potency, and coordination (overall body robustness):
+  # Factor 3 is composed of bodily robustness, potency, and coordination (overall body robustness)
   , 'Stamina.L'
   , 'Gross_Body_Coordination.L'
   , 'Trunk_Strength.L'
@@ -119,19 +58,19 @@ c(
 ) -> chr_Ablt.Items
 
 c(
-  # Factor 1 is composed of health-related fields of knowledge (health / help):
+  # Factor 1 is composed of health-related fields of knowledge (health / help).
   'Therapy_and_Counseling.L'
   , 'Psychology.L'
   , 'Medicine_and_Dentistry.L'
-  # Factor 2 is composed of engineering / building-related fields of knowledge (build):
+  # Factor 2 is composed of engineering / building-related fields of knowledge (build).
   , 'Physics.L'
   , 'Engineering_and_Technology.L'
   , 'Building_and_Construction.L'
-  # Factor 3 is composed of financial and enterprising fields of knowledge (FGV):
+  # Factor 3 is composed of financial and enterprising fields of knowledge (FGV).
   , 'Economics_and_Accounting.L'
   , 'Sales_and_Marketing.L'
   , 'Administration_and_Management.L'
-  # Factor 4 is composed of arts and humanities (communists):
+  # Factor 4 is composed of arts and humanities (communists).
   , 'History_and_Archeology.L'
   , 'Geography.L'
   , 'Fine_Arts.L'
@@ -156,7 +95,7 @@ df_occupations %>%
         , chr_Ablt.Items
         , chr_Know.Items
       ))
-      ,.fns = function(x){x/100}
+      , .fns = function(x){x/100}
     )
   ) -> df_occupations
 
@@ -166,9 +105,9 @@ df_occupations %>%
     Entry_level_Education %in% c(
       "Bachelor's degree"
       , "Doctoral or professional degree"
-      # , "Associate's degree"
+      , "Associate's degree"
       , "Master's degree"
-    )
+      )
   ) -> df_occupations
 
 
@@ -192,22 +131,22 @@ df_input %>%
         , chr_Ablt.Items
         , chr_Know.Items
       ))
-      # ,.fns = function(x){
-      #   recode(x 
-      #     , '1' = .0 
-      #     , '2' = .25
-      #     , '3' = .5
-      #     , '4' = .75
-      #     , '5' = 1
-      #   )}
-      ,.fns = function(x){
-        recode(x 
-               , '1' = .0 
-               , '2' = .27
-               , '3' = .54
-               , '4' = .85
-               , '5' = 1
+      , .fns = function(x){
+        recode(x
+          , '1' = .0
+          , '2' = .25
+          , '3' = .5
+          , '4' = .75
+          , '5' = 1
         )}
+      # , .fns = function(x){
+      #   recode(x 
+      #          , '1' = .0 
+      #          , '2' = .27
+      #          , '3' = .54
+      #          , '4' = .85
+      #          , '5' = 1
+      #   )}
     )
   ) -> df_input
 
@@ -223,7 +162,7 @@ names(chr_names) <- df_input$Name
 # Simulate one user input
 # fun_simulate.tmvnorm(
 #   .df_data.numeric = df_occupations
-#   ,.int_n.simulations = 1
+#   , .int_n.simulations = 1
 # ) -> vec_user.input
 
 # APPLY KNN ---------------------------------------------------------------
@@ -236,12 +175,18 @@ lapply(
     
     fun_KNN.matching(
       .df_data.numeric = df_occupations
-      ,.vec_query.numeric = vec_user.input
-      ,.int_k = nrow(df_occupations)
+      , .vec_query.numeric = vec_user.input
+      , .int_k = nrow(df_occupations)
     ) %>% 
       return(.)
     
   }) -> list_KNN.output
+
+# fun_KNN.matching(
+#   .df_data.numeric = df_occupations
+#   , .vec_query.numeric = vec_user.input
+#   , .int_k = nrow(df_occupations)
+# ) -> df_KNN.output
 
 # INDIVIDUAL MATCHING (SKILLS ONLY) ---------------------------------------
 df_occupations %>% 
@@ -269,8 +214,8 @@ lapply(
     
     fun_KNN.matching(
       .df_data.numeric = df_occupations.skill
-      ,.vec_query.numeric = vec_user.input
-      ,.int_k = nrow(df_occupations.skill)
+      , .vec_query.numeric = vec_user.input
+      , .int_k = nrow(df_occupations.skill)
     ) %>% 
       return(.)
     
@@ -303,8 +248,8 @@ lapply(
     
     fun_KNN.matching(
       .df_data.numeric = df_occupations.ablt
-      ,.vec_query.numeric = vec_user.input
-      ,.int_k = nrow(df_occupations.ablt)
+      , .vec_query.numeric = vec_user.input
+      , .int_k = nrow(df_occupations.ablt)
     ) %>% 
       return(.)
     
@@ -337,8 +282,8 @@ lapply(
     
     fun_KNN.matching(
       .df_data.numeric = df_occupations.know
-      ,.vec_query.numeric = vec_user.input
-      ,.int_k = nrow(df_occupations.know)
+      , .vec_query.numeric = vec_user.input
+      , .int_k = nrow(df_occupations.know)
     ) %>% 
       return(.)
     
@@ -377,8 +322,8 @@ lapply(
     
     fun_KNN.matching(
       .df_data.numeric = df_occupations.skill.know
-      ,.vec_query.numeric = vec_user.input
-      ,.int_k = nrow(df_occupations.skill.know)
+      , .vec_query.numeric = vec_user.input
+      , .int_k = nrow(df_occupations.skill.know)
     ) %>% 
       return(.)
     
@@ -417,8 +362,8 @@ lapply(
     
     fun_KNN.matching(
       .df_data.numeric = df_occupations.skill.ablt
-      ,.vec_query.numeric = vec_user.input
-      ,.int_k = nrow(df_occupations.skill.ablt)
+      , .vec_query.numeric = vec_user.input
+      , .int_k = nrow(df_occupations.skill.ablt)
     ) %>% 
       return(.)
     
@@ -457,8 +402,8 @@ lapply(
     
     fun_KNN.matching(
       .df_data.numeric = df_occupations.ablt.know
-      ,.vec_query.numeric = vec_user.input
-      ,.int_k = nrow(df_occupations.ablt.know)
+      , .vec_query.numeric = vec_user.input
+      , .int_k = nrow(df_occupations.ablt.know)
     ) %>% 
       return(.)
     

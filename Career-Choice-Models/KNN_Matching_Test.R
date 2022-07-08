@@ -95,7 +95,7 @@ df_occupations %>%
         , chr_Ablt.Items
         , chr_Know.Items
       ))
-      ,.fns = function(x){x/100}
+      , .fns = function(x){x/100}
     )
   ) -> df_occupations
 
@@ -131,22 +131,22 @@ df_input %>%
         , chr_Ablt.Items
         , chr_Know.Items
       ))
-      # ,.fns = function(x){
-      #   recode(x 
-      #     , '1' = .0 
-      #     , '2' = .25
-      #     , '3' = .5
-      #     , '4' = .75
-      #     , '5' = 1
-      #   )}
-      ,.fns = function(x){
-        recode(x 
-               , '1' = .0 
-               , '2' = .27
-               , '3' = .54
-               , '4' = .85
-               , '5' = 1
+      , .fns = function(x){
+        recode(x
+          , '1' = .0
+          , '2' = .25
+          , '3' = .5
+          , '4' = .75
+          , '5' = 1
         )}
+      # , .fns = function(x){
+      #   recode(x 
+      #          , '1' = .0 
+      #          , '2' = .27
+      #          , '3' = .54
+      #          , '4' = .85
+      #          , '5' = 1
+      #   )}
     )
   ) -> df_input
 
@@ -162,7 +162,7 @@ names(chr_names) <- df_input$Name
 # Simulate one user input
 # fun_simulate.tmvnorm(
 #   .df_data.numeric = df_occupations
-#   ,.int_n.simulations = 1
+#   , .int_n.simulations = 1
 # ) -> vec_user.input
 
 # APPLY KNN ---------------------------------------------------------------
@@ -175,8 +175,8 @@ lapply(
     
     fun_KNN.matching(
       .df_data.numeric = df_occupations
-      ,.vec_query.numeric = vec_user.input
-      ,.int_k = nrow(df_occupations)
+      , .vec_query.numeric = vec_user.input
+      , .int_k = nrow(df_occupations)
     ) %>% 
       return(.)
     
@@ -184,8 +184,8 @@ lapply(
 
 # fun_KNN.matching(
 #   .df_data.numeric = df_occupations
-#   ,.vec_query.numeric = vec_user.input
-#   ,.int_k = nrow(df_occupations)
+#   , .vec_query.numeric = vec_user.input
+#   , .int_k = nrow(df_occupations)
 # ) -> df_KNN.output
 
 # INDIVIDUAL MATCHING (SKILLS ONLY) ---------------------------------------
@@ -214,8 +214,8 @@ lapply(
     
     fun_KNN.matching(
       .df_data.numeric = df_occupations.skill
-      ,.vec_query.numeric = vec_user.input
-      ,.int_k = nrow(df_occupations.skill)
+      , .vec_query.numeric = vec_user.input
+      , .int_k = nrow(df_occupations.skill)
     ) %>% 
       return(.)
     
@@ -248,8 +248,8 @@ lapply(
     
     fun_KNN.matching(
       .df_data.numeric = df_occupations.ablt
-      ,.vec_query.numeric = vec_user.input
-      ,.int_k = nrow(df_occupations.ablt)
+      , .vec_query.numeric = vec_user.input
+      , .int_k = nrow(df_occupations.ablt)
     ) %>% 
       return(.)
     
@@ -282,8 +282,8 @@ lapply(
     
     fun_KNN.matching(
       .df_data.numeric = df_occupations.know
-      ,.vec_query.numeric = vec_user.input
-      ,.int_k = nrow(df_occupations.know)
+      , .vec_query.numeric = vec_user.input
+      , .int_k = nrow(df_occupations.know)
     ) %>% 
       return(.)
     
@@ -322,8 +322,8 @@ lapply(
     
     fun_KNN.matching(
       .df_data.numeric = df_occupations.skill.know
-      ,.vec_query.numeric = vec_user.input
-      ,.int_k = nrow(df_occupations.skill.know)
+      , .vec_query.numeric = vec_user.input
+      , .int_k = nrow(df_occupations.skill.know)
     ) %>% 
       return(.)
     
@@ -362,8 +362,8 @@ lapply(
     
     fun_KNN.matching(
       .df_data.numeric = df_occupations.skill.ablt
-      ,.vec_query.numeric = vec_user.input
-      ,.int_k = nrow(df_occupations.skill.ablt)
+      , .vec_query.numeric = vec_user.input
+      , .int_k = nrow(df_occupations.skill.ablt)
     ) %>% 
       return(.)
     
@@ -402,8 +402,8 @@ lapply(
     
     fun_KNN.matching(
       .df_data.numeric = df_occupations.ablt.know
-      ,.vec_query.numeric = vec_user.input
-      ,.int_k = nrow(df_occupations.ablt.know)
+      , .vec_query.numeric = vec_user.input
+      , .int_k = nrow(df_occupations.ablt.know)
     ) %>% 
       return(.)
     
