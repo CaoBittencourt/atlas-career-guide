@@ -735,6 +735,17 @@ fun_EFA <- function(
       # Recommended number of factors
       df_nfactors <- fun_nfactors.selection(.df_numeric = .df_data.numeric)
       
+      # Factor congruence table
+      fit$loadings %>% 
+        congruence() %>%
+        matrix(
+          nrow = nrow(.)
+          , ncol = ncol(.)
+          , dimnames = list(rownames(.), rownames(.))
+        ) %>%
+        as_tibble(rownames = 'Factor') -> df_congruence
+      
+      
       # Visualizations and results
       # Factor Analysis Diagram and fit results
       if(.show_diagrams){fa.diagram(fit$loadings)}
@@ -749,6 +760,7 @@ fun_EFA <- function(
         , 'sufficient.loadings' = df_loadings.sufficient.sum
         , 'reliability.metrics' = df_reliability
         , 'reliability.evaluation' = df_reliability.evaluation
+        , 'factor.congruence' = df_congruence
         , 'removed.items' = unique(chr_removed.items)
         , 'under_loading.items' = unique(chr_under.items)
         , 'cross_loading.items' = unique(chr_cross.items)
