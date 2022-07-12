@@ -55,8 +55,8 @@ df_occupations %>%
 df_occupations %>%
   select(
     where(function(x){str_detect(attributes(x)$label, '_Skill')}) #All Skills only
-    , -ends_with('.I') #Using recommended levels
-    # , -ends_with('.L') #Using importance levels
+    # , -ends_with('.I') #Using recommended levels
+    , -ends_with('.L') #Using importance levels
   ) %>% 
   mutate(#0 to 100 => 0 to 1 (helps calculate similarity later on)
     across(
@@ -94,8 +94,8 @@ df_occupations %>%
 df_occupations %>%
   select(
     where(function(x){str_detect(attributes(x)$label, 'Abilities.')}) #Abilities only
-    , -ends_with('.I') #Using recommended levels
-    # , -ends_with('.L') #Using importance levels
+    # , -ends_with('.I') #Using recommended levels
+    , -ends_with('.L') #Using importance levels
   ) %>% 
   mutate(#0 to 100 => 0 to 1 (helps calculate similarity later on)
     across(
@@ -107,8 +107,8 @@ df_occupations %>%
 df_occupations %>%
   select(
     where(function(x){str_detect(attributes(x)$label, 'Knowledge.')}) #Knowledge only
-    , -ends_with('.I') #Using recommended levels
-    # , -ends_with('.L') #Using importance levels
+    # , -ends_with('.I') #Using recommended levels
+    , -ends_with('.L') #Using importance levels
   ) %>% 
   mutate(#0 to 100 => 0 to 1 (helps calculate similarity later on)
     across(
@@ -279,7 +279,7 @@ df_occupations %>%
 # Underloadings and crossloadings
 .remove_under_loading.items <- T
 .remove_cross_loading.items <- T
-.dbl_under_loading.threshold <- 0.3 #Lesser than 0.4 loading <- under loading
+.dbl_under_loading.threshold <- 0.4 #Lesser than 0.4 loading <- under loading
 # .dbl_cross_loading.threshold <- 0.05 #Lesser than 0.05 loading difference <- cross loading
 .dbl_cross_loading.threshold <- 0.35
 
