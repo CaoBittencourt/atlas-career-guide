@@ -265,6 +265,7 @@ lapply(
 ) -> list_factor.scores
 
 # KNN MATCHING ON FACTOR SCORES ---------------------------------------------------------------
+start <- proc.time()
 lapply(
   list_factor.scores
   , function(factor_scores){
@@ -277,6 +278,38 @@ lapply(
       return(.)
     
   }) -> list_KNN.output
+end <- proc.time()
+print(start - end)
+
+start <- proc.time()
+
+fun_KNN.matching.vec(
+  .df_data.numeric = df_occupations.scores
+  , .vec_query.numeric = list_factor.scores
+  , .int_k = nrow(df_occupations)
+) -> list_KNN.output
+
+end <- proc.time()
+print(start - end)
+
+
+fun_KNN.matching.vec <- Vectorize(
+  fun_KNN.matching
+  , vectorize.args = '.vec_query.numeric'
+  , SIMPLIFY = F
+)
+
+fun_KNN.matching.vec(
+  .df_data.numeric = df_occupations.scores
+  , .vec_query.numeric = list(tibble(1, 2, 3, 4, 5, 6))
+  , .int_k = nrow(df_occupations.scores)
+) -> list_KNN.output
+
+start <- proc.time()
+nums <- gsub("test", "", samples)
+end <-  proc.time()
+
+
 
 list_KNN.output$Milena %>% view()
 list_KNN.output$Martijn %>% 

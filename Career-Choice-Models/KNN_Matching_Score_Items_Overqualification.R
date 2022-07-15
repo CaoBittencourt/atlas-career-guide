@@ -1,8 +1,6 @@
 # PACKAGES -----------------------------------------------------------------
 pkg <- c(
-  'psych' #Score factors
-  , 'FNN' #Fast K-NN Algorithm (faster than the 'class' package)
-  , 'jsonify' #Work with JSON (faster than jsonlite)
+  'psych', 'GPArotation' #Factor analysis
   , 'tidyverse' #Data wrangling
 )
 
@@ -17,69 +15,11 @@ lapply(pkg, function(x)
 
 
 
-# KNN MATCHING FUNCTION -------------------------------------------------------------------------
-fun_KNN.matching <- function(
-    .df_data.numeric
-    , .vec_query.numeric
-    , .int_k = 1
-    , .auto_select.k = F
-){ 
-  
-  # Get numeric data only
-  .df_data.numeric %>%
-    select(where(is.numeric)) -> .df_data.numeric.temp
-  
-  if(is.data.frame(.vec_query.numeric)){
-    .vec_query.numeric %>% 
-      select(where(is.numeric)) -> .vec_query.numeric
-  }
-  
-  # Define k
-  if(.auto_select.k){
-    # RECOMMENDED
-    # Typical suggested value for k is sqrt(nrow(df))
-    # Looking for k nearest neighbors in all career clusters
-    
-    .df_data.numeric %>% 
-      nrow(.) %>%
-      sqrt(.) %>%
-      round(.) -> .int_k
-    
-  }
-  
-  # Find the k nearest neighbors
-  FNN::get.knnx(
-    data = .df_data.numeric.temp
-    , query = .vec_query.numeric
-    , k = .int_k
-  ) -> KNN.output
-  
-  # Arrange original data frame with KNN output
-  .df_data.numeric %>% 
-    slice(as.vector(KNN.output$nn.index)) %>% 
-    mutate(#Add euclidean distances and convert them to similarities
-      Euclidean_Distance = as.vector(KNN.output$nn.dist)
-      # Common similarity: 1/(1 + dist), "+1" for dist = 0
-      , Similarity.Common = 1 / (1 + Euclidean_Distance)
-      # Similarity via gaussian kernel: exp(-dist)
-      , Similarity.Gaussian = exp(-Euclidean_Distance)
-      
-      # [Try again] Yielding negative values for greater distances
-      # Tangent similarity: 1 - arctan(dist) = 1 for dist = 0 
-      # , Similarity.Tan = 1 - atan(Euclidean_Distance)
-      # , Similarity.Tan = 1 - atan(Euclidean_Distance/2)
-      # , Similarity.Tan = 1 - atan(Euclidean_Distance/pi)
-      
-      # [Try again] Equivalence between euclidean and cosine
-      # [Wrong formula] Yielding negative values for greater distances
-      # , Similarity.Cosine = 1 - (Euclidean_Distance/2)
-      # , Similarity.Cosine = 1 - (Euclidean_Distance^2)/2
-      
-    ) %>% 
-    return(.)
-  
-}
+# WORKING DIRECTORY -------------------------------------------------------
+setwd('C:/Users/Cao/Documents/Github/Atlas-Research/Career-Choice-Models')
 
+# KNN MATCHING ---------------------------------------------------------------
+source('./KNN_Matching.R')
 
 # SKILLS FACTOR LIST -----------------------------------------------------------------
 list_skill.factors <- list(
@@ -100,33 +40,33 @@ list_skill.factors <- list(
   
 )
 
-# # ABILITIES FACTOR LIST ---------------------------------------------------
-# list_ablt.factors <- list(
-#   'Perception' = c(
-#     # Factor 1 is composed of perceptual abilities (perception):
-#     'Night_Vision.L'
-#     , 'Sound_Localization.L'
-#     , 'Glare_Sensitivity.L'
-#   )
-#   , 'Dexterity' = c(
-#     # Factor 2 is composed of manual abilities (dexterity):
-#     'Finger_Dexterity.L'
-#     , 'Arm_Hand_Steadiness.L'
-#     , 'Manual_Dexterity.L'
-#   )
-#   , 'Robustness' = c(
-#     # Factor 3 is composed of bodily robustness, potency, and coordination (overall body robustness)
-#     'Stamina.L'
-#     , 'Gross_Body_Coordination.L'
-#     , 'Trunk_Strength.L'
-#   )
-#   , 'Intelligence' = c(
-#     # Factor 4 is composed of cognitive abilities (intelligence):
-#     'Inductive_Reasoning.L'
-#     , 'Problem_Sensitivity.L'
-#     , 'Deductive_Reasoning.L'
-#   ) 
-# )
+# ABILITIES FACTOR LIST ---------------------------------------------------
+list_ablt.factors <- list(
+  'Perception' = c(
+    # Factor 1 is composed of perceptual abilities (perception):
+    'Night_Vision.L'
+    , 'Sound_Localization.L'
+    , 'Glare_Sensitivity.L'
+  )
+  , 'Dexterity' = c(
+    # Factor 2 is composed of manual abilities (dexterity):
+    'Finger_Dexterity.L'
+    , 'Arm_Hand_Steadiness.L'
+    , 'Manual_Dexterity.L'
+  )
+  , 'Robustness' = c(
+    # Factor 3 is composed of bodily robustness, potency, and coordination (overall body robustness)
+    'Stamina.L'
+    , 'Gross_Body_Coordination.L'
+    , 'Trunk_Strength.L'
+  )
+  , 'Intelligence' = c(
+    # Factor 4 is composed of cognitive abilities (intelligence):
+    'Inductive_Reasoning.L'
+    , 'Problem_Sensitivity.L'
+    , 'Deductive_Reasoning.L'
+  )
+)
 
 # KNOWLEDGE FACTOR LIST ---------------------------------------------------
 list_know.factors <- list(
@@ -158,9 +98,9 @@ list_know.factors <- list(
 
 
 # ALL FACTORS LIST -------------------------------------------------------------
-list_factors <- list(
+list_factors <- list( 
   'Skills' = list_skill.factors
-  # , 'Abilities' = list_ablt.factors
+  , 'Abilities' = list_ablt.factors
   , 'Knowledge' = list_know.factors
 )
 
@@ -262,16 +202,137 @@ df_input.all %>%
 # For this example, use Martijn' questionnaire 
 df_input.all %>% 
   # filter(Name == 'Acilio') %>%
-  filter(Name == 'Alexandre') %>%
+  # filter(Name == 'Alexandre') %>%
   # filter(Name == 'Cao') %>%
   # filter(Name == 'Felipe') %>%
   # filter(Name == 'Gabriel') %>%
-  # filter(Name == 'Martijn') %>%
+  filter(Name == 'Martijn') %>%
   # filter(Name == 'Maurício') %>%
   # filter(Name == 'Milena') %>%
   # filter(Name == 'Tatiana') %>%
   # filter(Name == 'Uelinton') %>%
   select(-Name) -> df_input
+
+# [GOOD] [IRRELEVANT QUALIFICATION] OVERQUALIFICATION INPUT (ONLY IF SCORE == 0) -------------------------------------------------
+df_input %>%
+  rename_with(
+    .fn = function(x){paste0(x,'.input')}
+  ) %>%
+  bind_cols(
+    df_occupations
+  ) %>%
+  # group_by(Occupation) %>%
+  mutate(
+    across(
+      .cols = c(
+        !ends_with('.input')
+        , -Occupation
+        , -Career_Cluster
+      )
+      ,.fns = function(x){
+        
+        ifelse(
+          x == 0
+          , yes = 0
+          , no = eval(sym(paste0(cur_column(),'.input')))
+        )
+
+      }
+      , .names = '{col}.sub'
+    )
+  ) %>%
+  # ungroup() %>%
+  select(
+    ends_with('.sub')
+  ) %>%
+  rename_with(
+    function(x){str_remove(x,'.sub')}
+  ) -> df_input.sub
+
+
+# # [BAD] [PERFECT] OVERQUALIFICATION INPUT (SCORE > VALUE) -------------------------------------------------
+# df_input %>%
+#   rename_with(
+#     .fn = function(x){paste0(x,'.input')}
+#   ) %>%
+#   bind_cols(
+#     df_occupations
+#   ) %>%
+#   group_by(Occupation) %>%
+#   mutate(
+#     across(
+#       .cols = c(
+#         !ends_with('.input')
+#         , -Career_Cluster
+#       )
+#       ,.fns = function(x){
+# 
+#         min(x, eval(sym(paste0(cur_column(),'.input'))))
+# 
+#       }
+#       , .names = '{col}.sub'
+#     )
+#   ) %>%
+#   ungroup() %>%
+#   select(
+#     ends_with('.sub')
+#   ) %>%
+#   rename_with(
+#     function(x){str_remove(x,'.sub')}
+#   ) -> df_input.sub
+
+# # [TRY AGAIN] [N-TIMES] OVERQUALIFICATION INPUT (SCORE >= N*VALUE) -------------------------------------------------
+# n <- 4
+# 
+# df_input %>%
+#   rename_with(
+#     .fn = function(x){paste0(x,'.input')}
+#   ) %>%
+#   bind_cols(
+#     df_occupations
+#   ) %>%
+#   group_by(Occupation) %>%
+#   mutate(
+#     across(
+#       .cols = c(
+#         !ends_with('.input')
+#         # , -Occupation
+#         , -Career_Cluster
+#       )
+#       ,.fns = function(x){
+# 
+#         ifelse(
+#           n*x <= eval(sym(paste0(cur_column(),'.input')))
+#           , yes = x
+#           , no = eval(sym(paste0(cur_column(),'.input')))
+#         )
+# 
+#       }
+#       , .names = '{col}.sub'
+#     )
+#   ) %>%
+#   ungroup() %>%
+#   select(
+#     ends_with('.sub')
+#   ) %>%
+#   rename_with(
+#     function(x){str_remove(x,'.sub')}
+#   ) -> df_input.sub
+
+# KNN MATCHING WITHOUT ITEM SCORES ----------------------------------------
+lapply(
+  1:nrow(df_input.sub)
+  , function(x){
+    
+    fun_KNN.matching(
+      .df_data.numeric = df_occupations[x,]
+      , .vec_query.numeric = df_input.sub[x,]
+      , .int_k = 1
+    ) 
+    
+  }) %>%
+  bind_rows() %>% 
+  arrange(desc(Similarity.Common)) -> df_KNN.output.sub
 
 # SCORE ITEMS (OCCUPATIONS) -----------------------------------------------
 psych::scoreVeryFast(
@@ -298,7 +359,7 @@ psych::scoreVeryFast(
     , list_factors %>%
       flatten() %>% 
       names()
-  ) -> df_occupations
+  ) -> df_occupations.scores
 
 # SCORE ITEMS (JSON INPUT) -----------------------------------------------
 lapply(
@@ -307,33 +368,42 @@ lapply(
     
     psych::scoreVeryFast(
       keys = scales
-      , items = df_input 
+      , items = df_input.sub 
       , totals = F #Average scores
     ) %>% 
-      as_tibble() %>% 
-      colMeans()
+      as_tibble()
     
   } 
-) %>% 
-  flatten_df() -> df_factor.scores
+) %>% flatten_df() -> df_factor.scores
 
-# KNN MATCHING ON FACTOR SCORES ---------------------------------------------------------------
-fun_KNN.matching(
-  .df_data.numeric = df_occupations
-  , .vec_query.numeric = df_factor.scores
-  , .int_k = nrow(df_occupations)
-) -> df_KNN.output
+# KNN MATCHING WITH ITEM SCORES -------------------------------------------
+lapply(
+  1:nrow(df_factor.scores)
+  , function(x){
+    
+    fun_KNN.matching(
+      .df_data.numeric = df_occupations.scores[x,]
+      , .vec_query.numeric = df_factor.scores[x,]
+      , .int_k = 1
+    ) 
+    
+  }) %>%
+  bind_rows() %>% 
+  arrange(desc(Similarity.Common)) -> df_KNN.output.sub.scores
 
-# CONVERT OUTPUT TO JSON --------------------------------------------------
-df_KNN.output %>% 
+# OUTPUT ------------------------------------------------------------------
+df_KNN.output.sub %>% 
   select(
     Occupation
     , Career_Cluster
-    , starts_with('Similarity.')
-  ) %>%
-  to_json(digits = 4) %>% 
-  pretty_json() -> JSON_KNN.output
+    , starts_with('Similarity')
+  ) %>% 
+  view()
 
-# # EXPORT JSON -------------------------------------------------------------
-# write(JSON_KNN.output, file = 'json.txt')
-# 
+df_KNN.output.sub.scores %>% 
+  select(
+    Occupation
+    , Career_Cluster
+    , starts_with('Similarity')
+  ) %>% 
+  view()
