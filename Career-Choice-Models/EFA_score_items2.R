@@ -125,7 +125,7 @@ list_skill.factors <- list(
 #     'Inductive_Reasoning.L'
 #     , 'Problem_Sensitivity.L'
 #     , 'Deductive_Reasoning.L'
-#   ) 
+#   )
 # )
 
 # KNOWLEDGE FACTOR LIST ---------------------------------------------------
@@ -262,11 +262,11 @@ df_input.all %>%
 # For this example, use Martijn' questionnaire 
 df_input.all %>% 
   # filter(Name == 'Acilio') %>%
-  filter(Name == 'Alexandre') %>%
+  # filter(Name == 'Alexandre') %>%
   # filter(Name == 'Cao') %>%
   # filter(Name == 'Felipe') %>%
   # filter(Name == 'Gabriel') %>%
-  # filter(Name == 'Martijn') %>%
+  filter(Name == 'Martijn') %>%
   # filter(Name == 'Maurício') %>%
   # filter(Name == 'Milena') %>%
   # filter(Name == 'Tatiana') %>%
