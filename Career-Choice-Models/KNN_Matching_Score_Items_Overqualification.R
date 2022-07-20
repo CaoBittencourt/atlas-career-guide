@@ -101,7 +101,7 @@ list_know.factors <- list(
 # ALL FACTORS LIST -------------------------------------------------------------
 list_factors <- list( 
   'Skills' = list_skill.factors
-  # , 'Abilities' = list_ablt.factors
+  , 'Abilities' = list_ablt.factors
   , 'Knowledge' = list_know.factors
 )
 
@@ -204,12 +204,12 @@ df_input.all %>%
 df_input.all %>% 
   # filter(Name == 'Acilio') %>%
   # filter(Name == 'Alexandre') %>%
-  # filter(Name == 'Cao') %>%
+  filter(Name == 'Cao') %>%
   # filter(Name == 'Felipe') %>%
   # filter(Name == 'Gabriel') %>%
   # filter(Name == 'Martijn') %>%
   # filter(Name == 'Maurício') %>%
-  filter(Name == 'Milena') %>%
+  # filter(Name == 'Milena') %>%
   # filter(Name == 'Tatiana') %>%
   # filter(Name == 'Uelinton') %>%
   select(-Name) -> df_input

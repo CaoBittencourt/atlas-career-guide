@@ -69,7 +69,7 @@ fun_KNN.matching <- function(
       # [Try again] Equivalence between euclidean and cosine
       # [Wrong formula] Yielding negative values for greater distances
       # , Similarity.Cosine = 1 - (Euclidean_Distance/2)
-      # , Similarity.Cosine = 1 - (Euclidean_Distance^2)/2
+      , Similarity.Cosine = 1 - ((Euclidean_Distance^2)/2)
       
     ) %>% 
     return(.)

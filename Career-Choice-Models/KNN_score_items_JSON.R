@@ -184,16 +184,10 @@ df_occupations %>%
 df_occupations %>%
   select(
     Occupation
-    , Career_Cluster
     , all_of(
       list_factors %>%
         flatten() %>% 
         flatten_chr()
-      #   c(
-      #   flatten_chr(list_skill.factors)
-      #   , flatten_chr(list_ablt.factors)
-      #   , flatten_chr(list_know.factors)
-      # )
     )
   ) %>%
   mutate(
@@ -202,11 +196,6 @@ df_occupations %>%
         list_factors %>%
           flatten() %>% 
           flatten_chr()
-        #   c(
-        #   flatten_chr(list_skill.factors)
-        #   , flatten_chr(list_ablt.factors)
-        #   , flatten_chr(list_know.factors)
-        # )
       )
       , .fns = function(x){x/100}
     )
@@ -214,7 +203,7 @@ df_occupations %>%
 
 # EFA-REDUCED QUERY VECTOR (JSON) -----------------------------------------------
 # User questionnaires data frame
-df_input.all <- read_csv(url('https://docs.google.com/spreadsheets/d/e/2PACX-1vSphzWoCxoNaiaJcQUWKCMqUAT041Q8UqUgM7rSzIwYZb7FhttKJwNgtrFf-r7EgzXHFom4UjLl2ltk/pub?gid=725827850&single=true&output=csv'))
+df_input <- read_csv(url('https://docs.google.com/spreadsheets/d/e/2PACX-1vSphzWoCxoNaiaJcQUWKCMqUAT041Q8UqUgM7rSzIwYZb7FhttKJwNgtrFf-r7EgzXHFom4UjLl2ltk/pub?gid=725827850&single=true&output=csv'))
 
 # df_input %>% 
 #   to_json() -> dsds
@@ -222,18 +211,12 @@ df_input.all <- read_csv(url('https://docs.google.com/spreadsheets/d/e/2PACX-1vS
 # from_json(dsds) %>% 
 #   as_tibble() -> df_input
 
-df_input.all %>% 
+df_input %>% 
   select(
-    Name
-    , all_of(
+    all_of(
       list_factors %>%
         flatten() %>% 
         flatten_chr()
-      #   c(
-      #   flatten_chr(list_skill.factors)
-      #   , flatten_chr(list_ablt.factors)
-      #   , flatten_chr(list_know.factors)
-      # )
     )
   ) %>%  
   mutate(
@@ -242,11 +225,6 @@ df_input.all %>%
         list_factors %>%
           flatten() %>% 
           flatten_chr()
-        #   c(
-        #   flatten_chr(list_skill.factors)
-        #   , flatten_chr(list_ablt.factors)
-        #   , flatten_chr(list_know.factors)
-        # )
       )
       , .fns = function(x){
         recode(x
@@ -257,21 +235,7 @@ df_input.all %>%
                , '5' = 1
         )}
     )
-  ) -> df_input.all
-
-# For this example, use Martijn' questionnaire 
-df_input.all %>% 
-  # filter(Name == 'Acilio') %>%
-  # filter(Name == 'Alexandre') %>%
-  # filter(Name == 'Cao') %>%
-  # filter(Name == 'Felipe') %>%
-  # filter(Name == 'Gabriel') %>%
-  filter(Name == 'Martijn') %>%
-  # filter(Name == 'Maurício') %>%
-  # filter(Name == 'Milena') %>%
-  # filter(Name == 'Tatiana') %>%
-  # filter(Name == 'Uelinton') %>%
-  select(-Name) -> df_input
+  ) -> df_input
 
 # SCORE ITEMS (OCCUPATIONS) -----------------------------------------------
 psych::scoreVeryFast(
@@ -328,7 +292,6 @@ fun_KNN.matching(
 df_KNN.output %>% 
   select(
     Occupation
-    , Career_Cluster
     , starts_with('Similarity.')
   ) %>%
   to_json(digits = 4) %>% 
