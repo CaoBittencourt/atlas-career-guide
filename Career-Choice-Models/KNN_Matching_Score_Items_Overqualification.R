@@ -170,11 +170,6 @@ df_input.all %>%
       list_factors %>%
         flatten() %>% 
         flatten_chr()
-      #   c(
-      #   flatten_chr(list_skill.factors)
-      #   , flatten_chr(list_ablt.factors)
-      #   , flatten_chr(list_know.factors)
-      # )
     )
   ) %>%  
   mutate(
@@ -183,11 +178,6 @@ df_input.all %>%
         list_factors %>%
           flatten() %>% 
           flatten_chr()
-        #   c(
-        #   flatten_chr(list_skill.factors)
-        #   , flatten_chr(list_ablt.factors)
-        #   , flatten_chr(list_know.factors)
-        # )
       )
       , .fns = function(x){
         recode(x
@@ -389,13 +379,13 @@ df_input %>%
 #   #       , -Career_Cluster
 #   #     )
 #   #     ,.fns = function(x){
-#   # 
+#   #
 #   #       ifelse(
 # #         x == 0
 # #         , yes = 0
 # #         , no = eval(sym(paste0(cur_column(),'.input')))
 # #       )
-# # 
+# #
 # #     }
 # #     , .names = '{col}.sub'
 # #   )
@@ -480,20 +470,20 @@ df_input %>%
 
 
 # -------------------------------------------------------------------------
-# # KNN MATCHING WITHOUT ITEM SCORES ----------------------------------------
-# lapply(
-#   1:nrow(df_input.sub)
-#   , function(x){
-#     
-#     fun_KNN.matching(
-#       .df_data.numeric = df_occupations[x,]
-#       , .vec_query.numeric = df_input.sub[x,]
-#       , .int_k = 1
-#     ) 
-#     
-#   }) %>%
-#   bind_rows() %>% 
-#   arrange(desc(Similarity.Common)) -> df_KNN.output.sub
+# KNN MATCHING WITHOUT ITEM SCORES ----------------------------------------
+lapply(
+  1:nrow(df_input.sub)
+  , function(x){
+
+    fun_KNN.matching(
+      .df_data.numeric = df_occupations[x,]
+      , .vec_query.numeric = df_input.sub[x,]
+      , .int_k = 1
+    )
+
+  }) %>%
+  bind_rows() %>%
+  arrange(desc(Similarity.Common)) -> df_KNN.output.sub
 
 # SCORE ITEMS (OCCUPATIONS) -----------------------------------------------
 psych::scoreVeryFast(
@@ -553,18 +543,20 @@ lapply(
   arrange(desc(Similarity.Common)) -> df_KNN.output.sub.scores
 
 # OUTPUT ------------------------------------------------------------------
-# df_KNN.output.sub %>%
-#   select(
-#     Occupation
-#     , Career_Cluster
-#     , starts_with('Similarity')
-#   ) %>%
-#   view()
+df_KNN.output.sub %>%
+  select(
+    Occupation
+    , Career_Cluster
+    , Euclidean_Distance
+    , starts_with('Similarity')
+  ) %>%
+  view()
 
 df_KNN.output.sub.scores %>% 
   select(
     Occupation
     , Career_Cluster
+    , Euclidean_Distance
     , starts_with('Similarity')
   ) %>% 
   view()
