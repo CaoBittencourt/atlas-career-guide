@@ -479,6 +479,7 @@ lapply(
       .df_data.numeric = df_occupations[x,]
       , .vec_query.numeric = df_input.sub[x,]
       , .int_k = 1
+      , .euclidean.norm = T
     )
 
   }) %>%

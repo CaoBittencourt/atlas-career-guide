@@ -186,3 +186,47 @@ fun_KNN.matching <- function(
   
 }
 
+
+
+# -------------------------------------------------------------------------
+
+
+# KNN MATCHING WITH ITEM SCORES -------------------------------------------
+df_input.sub %>% 
+  mutate(id = row_number()) %>% 
+  pivot_longer(cols = !id) %>% 
+  group_by(id) %>% 
+  mutate(value = value / norm(value, type = '2')) %>% 
+  ungroup() %>% 
+  pivot_wider() %>% 
+  select(-id) -> dsds
+
+df_occupations %>% 
+  pivot_longer(cols = !c(Occupation, Career_Cluster)) %>% 
+  group_by(Occupation, Career_Cluster) %>% 
+  mutate(value = value / norm(value, type = '2')) %>% 
+  ungroup() %>% 
+  pivot_wider() -> lalala
+
+
+lapply(
+  1:nrow(df_factor.scores)
+  , function(x){
+    
+    fun_KNN.matching(
+      .df_data.numeric = lalala[x,]
+      , .vec_query.numeric = dsds[x,]
+      , .int_k = 1
+    ) 
+    
+  }) %>%
+  bind_rows() %>% 
+  arrange(desc(Similarity.Common)) %>% 
+  select(
+    Occupation
+    , Career_Cluster
+    , Euclidean_Distance
+    , starts_with('Similarity.')
+  ) %>%
+  view()
+
