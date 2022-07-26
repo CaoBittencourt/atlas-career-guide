@@ -21,7 +21,6 @@ setwd('C:/Users/Cao/Documents/Github/Atlas-Research/Career-Choice-Models')
 # KNN MATCHING ---------------------------------------------------------------
 source('./KNN_Matching.R')
 
-# -------------------------------------------------------------------------
 # SKILLS FACTOR LIST -----------------------------------------------------------------
 list_skill.factors <- list(
   'General' = c(
@@ -99,10 +98,10 @@ list_know.factors <- list(
 
 
 # ALL FACTORS LIST -------------------------------------------------------------
-list_factors <- list( 
+list_factors <- list(
   'Skills' = list_skill.factors
-  # , 'Abilities' = list_ablt.factors
-  , 'Knowledge' = list_know.factors
+  , 'Abilities' = list_ablt.factors
+  # , 'Knowledge' = list_know.factors
 )
 
 # EFA-REDUCED OCCUPATIONS DATA FRAME -------------------------------------------
@@ -116,7 +115,7 @@ df_occupations %>%
     Entry_level_Education %in% c(
       "Bachelor's degree"
       , "Doctoral or professional degree"
-      # , "Associate's degree"
+      , "Associate's degree"
       , "Master's degree"
     )
   ) -> df_occupations
@@ -127,17 +126,27 @@ df_occupations %>%
     Occupation
     , Career_Cluster
     , all_of(
-      list_factors %>%
-        flatten() %>% 
-        flatten_chr()
+      # list_factors %>%
+      #   flatten() %>% 
+      #   flatten_chr()
+      c(
+        flatten_chr(list_skill.factors)
+        , flatten_chr(list_ablt.factors)
+        , flatten_chr(list_know.factors)
+      )
     )
   ) %>%
   mutate(
     across(
       .cols = all_of(
-        list_factors %>%
-          flatten() %>% 
-          flatten_chr()
+        # list_factors %>%
+        #   flatten() %>% 
+        #   flatten_chr()
+        c(
+          flatten_chr(list_skill.factors)
+          , flatten_chr(list_ablt.factors)
+          , flatten_chr(list_know.factors)
+        )
       )
       , .fns = function(x){x/100}
     )
@@ -145,7 +154,7 @@ df_occupations %>%
 
 # EFA-REDUCED QUERY VECTOR (JSON) -----------------------------------------------
 # User questionnaires data frame
-df_input.all <- read_csv(url('https://docs.google.com/spreadsheets/d/e/2PACX-1vSphzWoCxoNaiaJcQUWKCMqUAT041Q8UqUgM7rSzIwYZb7FhttKJwNgtrFf-r7EgzXHFom4UjLl2ltk/pub?gid=725827850&single=true&output=csv'))
+df_input <- read_csv(url('https://docs.google.com/spreadsheets/d/e/2PACX-1vSphzWoCxoNaiaJcQUWKCMqUAT041Q8UqUgM7rSzIwYZb7FhttKJwNgtrFf-r7EgzXHFom4UjLl2ltk/pub?gid=725827850&single=true&output=csv'))
 
 # df_input %>% 
 #   to_json() -> dsds
@@ -153,21 +162,31 @@ df_input.all <- read_csv(url('https://docs.google.com/spreadsheets/d/e/2PACX-1vS
 # from_json(dsds) %>% 
 #   as_tibble() -> df_input
 
-df_input.all %>% 
+df_input %>% 
   select(
     Name
     , all_of(
-      list_factors %>%
-        flatten() %>% 
-        flatten_chr()
+      # list_factors %>%
+      #   flatten() %>% 
+      #   flatten_chr()
+      c(
+        flatten_chr(list_skill.factors)
+        , flatten_chr(list_ablt.factors)
+        , flatten_chr(list_know.factors)
+      )
     )
   ) %>%  
   mutate(
     across(
       .cols = all_of(
-        list_factors %>%
-          flatten() %>% 
-          flatten_chr()
+        # list_factors %>%
+        #   flatten() %>% 
+        #   flatten_chr()
+        c(
+          flatten_chr(list_skill.factors)
+          , flatten_chr(list_ablt.factors)
+          , flatten_chr(list_know.factors)
+        )
       )
       , .fns = function(x){
         recode(x
@@ -178,26 +197,18 @@ df_input.all %>%
                , '5' = 1
         )}
     )
-  ) -> df_input.all
+  ) -> df_input
 
 # For this example, use Martijn' questionnaire 
-df_input.all %>% 
-  filter(Name == 'Acilio') %>%
-  # filter(Name == 'Alexandre') %>%
-  # filter(Name == 'Cao') %>%
-  # filter(Name == 'Felipe') %>%
+df_input %>%
+  filter(Name == 'Martijn') %>%
   # filter(Name == 'Gabriel') %>%
-  # filter(Name == 'Martijn') %>%
-  # filter(Name == 'Maurício') %>%
+  # filter(Name == 'Cao') %>%
   # filter(Name == 'Milena') %>%
-  # filter(Name == 'Tatiana') %>%
-  # filter(Name == 'Uelinton') %>%
+  # filter(Name == 'Acilio') %>%
   select(-Name) -> df_input
 
-
-
-# -------------------------------------------------------------------------
-# [sk:Martijn++|sak:Martijn+++] [IRRELEVANT QUALIFICATION] OVERQUALIFICATION INPUT (ONLY IF SCORE == 0) -------------------------------------------------
+# [GOOD] [IRRELEVANT QUALIFICATION] OVERQUALIFICATION INPUT (ONLY IF SCORE == 0) -------------------------------------------------
 df_input %>%
   rename_with(
     .fn = function(x){paste0(x,'.input')}
@@ -214,127 +225,12 @@ df_input %>%
         , -Career_Cluster
       )
       ,.fns = function(x){
-
+        
         ifelse(
           x == 0
           , yes = 0
           , no = eval(sym(paste0(cur_column(),'.input')))
         )
-
-      }
-      , .names = '{col}.sub'
-    )
-  ) %>%
-  # ungroup() %>%
-  select(
-    ends_with('.sub')
-  ) %>%
-  rename_with(
-    function(x){str_remove(x,'.sub')}
-  ) -> df_input.sub
-
-
-# [sk:Martijn++|sak:Martijn+++] [LOW REQUIREMENTS] OVERQUALIFICATION INPUT (ONLY IF SCORE <= 0.05) -------------------------------------------------
-df_input %>%
-  rename_with(
-    .fn = function(x){paste0(x,'.input')}
-  ) %>%
-  bind_cols(
-    df_occupations
-  ) %>%
-  # group_by(Occupation) %>%
-  mutate(
-    across(
-      .cols = c(
-        !ends_with('.input')
-        , -Occupation
-        , -Career_Cluster
-      )
-      ,.fns = function(x){
-
-        ifelse(
-          # Overqualified if > .05 and requirement <= .05
-          x <= 0.05 & eval(sym(paste0(cur_column(),'.input'))) > x
-          , yes = x
-          , no = eval(sym(paste0(cur_column(),'.input')))
-        )
-
-      }
-      , .names = '{col}.sub'
-    )
-  ) %>%
-  # ungroup() %>%
-  select(
-    ends_with('.sub')
-  ) %>%
-  rename_with(
-    function(x){str_remove(x,'.sub')}
-  ) -> df_input.sub
-
-
-
-# [sk:Martijn++-|sak:Martijn+++-] [LOW REQUIREMENTS] OVERQUALIFICATION INPUT (ONLY IF SCORE <= 0.125) -------------------------------------------------
-df_input %>%
-  rename_with(
-    .fn = function(x){paste0(x,'.input')}
-  ) %>%
-  bind_cols(
-    df_occupations
-  ) %>%
-  # group_by(Occupation) %>%
-  mutate(
-    across(
-      .cols = c(
-        !ends_with('.input')
-        , -Occupation
-        , -Career_Cluster
-      )
-      ,.fns = function(x){
-
-        ifelse(
-          # Overqualified if > .125 and requirement <= .125
-          x <= 0.125 & eval(sym(paste0(cur_column(),'.input'))) > x
-          , yes = x
-          , no = eval(sym(paste0(cur_column(),'.input')))
-        )
-
-      }
-      , .names = '{col}.sub'
-    )
-  ) %>%
-  # ungroup() %>%
-  select(
-    ends_with('.sub')
-  ) %>%
-  rename_with(
-    function(x){str_remove(x,'.sub')}
-  ) -> df_input.sub
-
-
-# [sk:Martijn+++-|sak:Martijn+++--] [LOW REQUIREMENTS] OVERQUALIFICATION INPUT (ONLY IF SCORE <= 0.25) -------------------------------------------------
-df_input %>%
-  rename_with(
-    .fn = function(x){paste0(x,'.input')}
-  ) %>%
-  bind_cols(
-    df_occupations
-  ) %>%
-  # group_by(Occupation) %>%
-  mutate(
-    across(
-      .cols = c(
-        !ends_with('.input')
-        , -Occupation
-        , -Career_Cluster
-      )
-      ,.fns = function(x){
-        
-        ifelse(
-          # Overqualified if > .25 and requirement <= .25
-          x <= 0.25 & eval(sym(paste0(cur_column(),'.input'))) > x
-          , yes = x
-          , no = eval(sym(paste0(cur_column(),'.input')))
-        )
         
       }
       , .names = '{col}.sub'
@@ -349,47 +245,7 @@ df_input %>%
   ) -> df_input.sub
 
 
-# -------------------------------------------------------------------------
-
-
-# [REALLY BAD] [INPUT NOTHING] -------------------------------------------------
-df_input %>%
-  rename_with(
-    .fn = function(x){paste0(x,'.input')}
-  ) %>%
-  bind_cols(
-    df_occupations
-  ) %>%
-  # group_by(Occupation) %>%
-  # mutate(
-  #   across(
-  #     .cols = c(
-  #       !ends_with('.input')
-  #       , -Occupation
-  #       , -Career_Cluster
-  #     )
-  #     ,.fns = function(x){
-  #
-  #       ifelse(
-#         x == 0
-#         , yes = 0
-#         , no = eval(sym(paste0(cur_column(),'.input')))
-#       )
-#
-#     }
-#     , .names = '{col}.sub'
-#   )
-# ) %>%
-# ungroup() %>%
-select(
-  ends_with('.input')
-) %>%
-  rename_with(
-    function(x){str_remove(x,'.input')}
-  ) -> df_input.sub
-
-
-# # [BAD] [PERFECT] OVERQUALIFICATION INPUT (SCORE < VALUE) -------------------------------------------------
+# # [BAD] [PERFECT] OVERQUALIFICATION INPUT (SCORE > VALUE) -------------------------------------------------
 # df_input %>%
 #   rename_with(
 #     .fn = function(x){paste0(x,'.input')}
@@ -420,7 +276,7 @@ select(
 #     function(x){str_remove(x,'.sub')}
 #   ) -> df_input.sub
 
-# # [TRY AGAIN] [N-TIMES] OVERQUALIFICATION INPUT (SCORE <= N*VALUE) -------------------------------------------------
+# # [TRY AGAIN] [N-TIMES] OVERQUALIFICATION INPUT (SCORE >= N*VALUE) -------------------------------------------------
 # n <- 4
 # 
 # df_input %>%
@@ -458,22 +314,19 @@ select(
 #     function(x){str_remove(x,'.sub')}
 #   ) -> df_input.sub
 
-
-# -------------------------------------------------------------------------
 # KNN MATCHING WITHOUT ITEM SCORES ----------------------------------------
 lapply(
   1:nrow(df_input.sub)
   , function(x){
-
+    
     fun_KNN.matching(
       .df_data.numeric = df_occupations[x,]
       , .vec_query.numeric = df_input.sub[x,]
       , .int_k = 1
-      , .euclidean.norm = T
-    )
-
+    ) 
+    
   }) %>%
-  bind_rows() %>%
+  bind_rows() %>% 
   arrange(desc(Similarity.Common)) -> df_KNN.output.sub
 
 # SCORE ITEMS (OCCUPATIONS) -----------------------------------------------
@@ -498,9 +351,12 @@ psych::scoreVeryFast(
     where(
       negate(is.numeric)
     )
-    , list_factors %>%
-      flatten() %>% 
-      names()
+    , all_of(c(
+      list_factors %>%
+        flatten() %>%
+        names()
+      , flatten_chr(list_know.factors)
+    ))
   ) -> df_occupations.scores
 
 # SCORE ITEMS (JSON INPUT) -----------------------------------------------
@@ -518,6 +374,17 @@ lapply(
   } 
 ) %>% flatten_df() -> df_factor.scores
 
+df_input.sub %>% 
+  bind_cols(df_factor.scores) %>%
+  select(
+    list_factors %>%
+      flatten() %>%
+      names()
+    , list_know.factors %>% 
+      flatten_chr()
+  ) -> df_factor.scores
+
+
 # KNN MATCHING WITH ITEM SCORES -------------------------------------------
 lapply(
   1:nrow(df_factor.scores)
@@ -534,20 +401,8 @@ lapply(
   arrange(desc(Similarity.Common)) -> df_KNN.output.sub.scores
 
 # OUTPUT ------------------------------------------------------------------
-df_KNN.output.sub %>%
-  select(
-    Occupation
-    , Career_Cluster
-    , Euclidean_Distance
-    , starts_with('Similarity')
-  ) %>%
+df_KNN.output.sub %>% 
   view()
 
 df_KNN.output.sub.scores %>% 
-  select(
-    Occupation
-    , Career_Cluster
-    , Euclidean_Distance
-    , starts_with('Similarity')
-  ) %>% 
   view()

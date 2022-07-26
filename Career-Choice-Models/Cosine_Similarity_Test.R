@@ -1,6 +1,7 @@
 # PACKAGES -----------------------------------------------------------------
 pkg <- c(
   'psych', 'GPArotation' #Factor analysis
+  , 'text2vec' #Cosine similarity
   , 'tidyverse' #Data wrangling
 )
 
@@ -14,14 +15,12 @@ lapply(pkg, function(x)
 #   {citation(package = x)})
 
 
-
 # WORKING DIRECTORY -------------------------------------------------------
 setwd('C:/Users/Cao/Documents/Github/Atlas-Research/Career-Choice-Models')
 
 # KNN MATCHING ---------------------------------------------------------------
 source('./KNN_Matching.R')
 
-# -------------------------------------------------------------------------
 # SKILLS FACTOR LIST -----------------------------------------------------------------
 list_skill.factors <- list(
   'General' = c(
@@ -101,7 +100,7 @@ list_know.factors <- list(
 # ALL FACTORS LIST -------------------------------------------------------------
 list_factors <- list( 
   'Skills' = list_skill.factors
-  # , 'Abilities' = list_ablt.factors
+  , 'Abilities' = list_ablt.factors
   , 'Knowledge' = list_know.factors
 )
 
@@ -182,12 +181,12 @@ df_input.all %>%
 
 # For this example, use Martijn' questionnaire 
 df_input.all %>% 
-  filter(Name == 'Acilio') %>%
+  # filter(Name == 'Acilio') %>%
   # filter(Name == 'Alexandre') %>%
   # filter(Name == 'Cao') %>%
   # filter(Name == 'Felipe') %>%
   # filter(Name == 'Gabriel') %>%
-  # filter(Name == 'Martijn') %>%
+  filter(Name == 'Martijn') %>%
   # filter(Name == 'Maurício') %>%
   # filter(Name == 'Milena') %>%
   # filter(Name == 'Tatiana') %>%
@@ -195,46 +194,49 @@ df_input.all %>%
   select(-Name) -> df_input
 
 
-
-# -------------------------------------------------------------------------
-# [sk:Martijn++|sak:Martijn+++] [IRRELEVANT QUALIFICATION] OVERQUALIFICATION INPUT (ONLY IF SCORE == 0) -------------------------------------------------
-df_input %>%
-  rename_with(
-    .fn = function(x){paste0(x,'.input')}
-  ) %>%
-  bind_cols(
-    df_occupations
-  ) %>%
-  # group_by(Occupation) %>%
-  mutate(
-    across(
-      .cols = c(
-        !ends_with('.input')
-        , -Occupation
-        , -Career_Cluster
-      )
-      ,.fns = function(x){
-
-        ifelse(
-          x == 0
-          , yes = 0
-          , no = eval(sym(paste0(cur_column(),'.input')))
-        )
-
-      }
-      , .names = '{col}.sub'
-    )
-  ) %>%
-  # ungroup() %>%
+# TEST --------------------------------------------------------------------
+# Cosine => Pearson (normalize by subtracting the mean of the vector)
+df_occupations %>% 
   select(
-    ends_with('.sub')
-  ) %>%
-  rename_with(
-    function(x){str_remove(x,'.sub')}
-  ) -> df_input.sub
+    ends_with('.L')
+  ) %>% 
+  as.matrix() -> mtx_occupations
+
+df_input %>% 
+  as.matrix() -> mtx_input
+
+sim2(
+  x = mtx_occupations
+  , y = mtx_input
+  , method = 'cosine'
+  # , norm = 'l2'
+  # , norm = 'none'
+) %>% 
+  # diag() %>%
+  as_tibble() -> lalala
+
+names(lalala) <- 'Similarity.Cosine'
+
+lalala
+
+df_occupations %>% 
+  bind_cols(lalala) %>% 
+  select(
+    Occupation
+    , Career_Cluster
+    , Similarity.Cosine
+  ) %>% 
+  arrange(desc(Similarity.Cosine)) -> lalala
+
+# Angular similarity
+lalala %>% 
+  mutate(
+    Similarity.Angular = 1 - (acos(Similarity.Cosine)/pi)
+  ) -> lalala
 
 
-# [sk:Martijn++|sak:Martijn+++] [LOW REQUIREMENTS] OVERQUALIFICATION INPUT (ONLY IF SCORE <= 0.05) -------------------------------------------------
+# OVERQUALIFICATION INPUTATION TEST ---------------------------------------
+# [VERY LOW REQUIREMENTS] OVERQUALIFICATION INPUT (ONLY IF SCORE <= 0.05) -------------------------------------------------
 df_input %>%
   rename_with(
     .fn = function(x){paste0(x,'.input')}
@@ -251,90 +253,13 @@ df_input %>%
         , -Career_Cluster
       )
       ,.fns = function(x){
-
+        
         ifelse(
           # Overqualified if > .05 and requirement <= .05
           x <= 0.05 & eval(sym(paste0(cur_column(),'.input'))) > x
           , yes = x
           , no = eval(sym(paste0(cur_column(),'.input')))
         )
-
-      }
-      , .names = '{col}.sub'
-    )
-  ) %>%
-  # ungroup() %>%
-  select(
-    ends_with('.sub')
-  ) %>%
-  rename_with(
-    function(x){str_remove(x,'.sub')}
-  ) -> df_input.sub
-
-
-
-# [sk:Martijn++-|sak:Martijn+++-] [LOW REQUIREMENTS] OVERQUALIFICATION INPUT (ONLY IF SCORE <= 0.125) -------------------------------------------------
-df_input %>%
-  rename_with(
-    .fn = function(x){paste0(x,'.input')}
-  ) %>%
-  bind_cols(
-    df_occupations
-  ) %>%
-  # group_by(Occupation) %>%
-  mutate(
-    across(
-      .cols = c(
-        !ends_with('.input')
-        , -Occupation
-        , -Career_Cluster
-      )
-      ,.fns = function(x){
-
-        ifelse(
-          # Overqualified if > .125 and requirement <= .125
-          x <= 0.125 & eval(sym(paste0(cur_column(),'.input'))) > x
-          , yes = x
-          , no = eval(sym(paste0(cur_column(),'.input')))
-        )
-
-      }
-      , .names = '{col}.sub'
-    )
-  ) %>%
-  # ungroup() %>%
-  select(
-    ends_with('.sub')
-  ) %>%
-  rename_with(
-    function(x){str_remove(x,'.sub')}
-  ) -> df_input.sub
-
-
-# [sk:Martijn+++-|sak:Martijn+++--] [LOW REQUIREMENTS] OVERQUALIFICATION INPUT (ONLY IF SCORE <= 0.25) -------------------------------------------------
-df_input %>%
-  rename_with(
-    .fn = function(x){paste0(x,'.input')}
-  ) %>%
-  bind_cols(
-    df_occupations
-  ) %>%
-  # group_by(Occupation) %>%
-  mutate(
-    across(
-      .cols = c(
-        !ends_with('.input')
-        , -Occupation
-        , -Career_Cluster
-      )
-      ,.fns = function(x){
-        
-        ifelse(
-          # Overqualified if > .25 and requirement <= .25
-          x <= 0.25 & eval(sym(paste0(cur_column(),'.input'))) > x
-          , yes = x
-          , no = eval(sym(paste0(cur_column(),'.input')))
-        )
         
       }
       , .names = '{col}.sub'
@@ -349,7 +274,7 @@ df_input %>%
   ) -> df_input.sub
 
 
-# -------------------------------------------------------------------------
+
 
 
 # [REALLY BAD] [INPUT NOTHING] -------------------------------------------------
@@ -389,92 +314,20 @@ select(
   ) -> df_input.sub
 
 
-# # [BAD] [PERFECT] OVERQUALIFICATION INPUT (SCORE < VALUE) -------------------------------------------------
-# df_input %>%
-#   rename_with(
-#     .fn = function(x){paste0(x,'.input')}
-#   ) %>%
-#   bind_cols(
-#     df_occupations
-#   ) %>%
-#   group_by(Occupation) %>%
-#   mutate(
-#     across(
-#       .cols = c(
-#         !ends_with('.input')
-#         , -Career_Cluster
-#       )
-#       ,.fns = function(x){
-# 
-#         min(x, eval(sym(paste0(cur_column(),'.input'))))
-# 
-#       }
-#       , .names = '{col}.sub'
-#     )
-#   ) %>%
-#   ungroup() %>%
-#   select(
-#     ends_with('.sub')
-#   ) %>%
-#   rename_with(
-#     function(x){str_remove(x,'.sub')}
-#   ) -> df_input.sub
-
-# # [TRY AGAIN] [N-TIMES] OVERQUALIFICATION INPUT (SCORE <= N*VALUE) -------------------------------------------------
-# n <- 4
-# 
-# df_input %>%
-#   rename_with(
-#     .fn = function(x){paste0(x,'.input')}
-#   ) %>%
-#   bind_cols(
-#     df_occupations
-#   ) %>%
-#   group_by(Occupation) %>%
-#   mutate(
-#     across(
-#       .cols = c(
-#         !ends_with('.input')
-#         # , -Occupation
-#         , -Career_Cluster
-#       )
-#       ,.fns = function(x){
-# 
-#         ifelse(
-#           n*x <= eval(sym(paste0(cur_column(),'.input')))
-#           , yes = x
-#           , no = eval(sym(paste0(cur_column(),'.input')))
-#         )
-# 
-#       }
-#       , .names = '{col}.sub'
-#     )
-#   ) %>%
-#   ungroup() %>%
-#   select(
-#     ends_with('.sub')
-#   ) %>%
-#   rename_with(
-#     function(x){str_remove(x,'.sub')}
-#   ) -> df_input.sub
-
-
-# -------------------------------------------------------------------------
 # KNN MATCHING WITHOUT ITEM SCORES ----------------------------------------
 lapply(
   1:nrow(df_input.sub)
   , function(x){
-
+    
     fun_KNN.matching(
       .df_data.numeric = df_occupations[x,]
       , .vec_query.numeric = df_input.sub[x,]
       , .int_k = 1
-      , .euclidean.norm = T
     )
-
+    
   }) %>%
   bind_rows() %>%
-  arrange(desc(Similarity.Common)) -> df_KNN.output.sub
+  arrange(Euclidean_Distance) -> df_KNN.output.sub
 
 # SCORE ITEMS (OCCUPATIONS) -----------------------------------------------
 psych::scoreVeryFast(
@@ -531,7 +384,7 @@ lapply(
     
   }) %>%
   bind_rows() %>% 
-  arrange(desc(Similarity.Common)) -> df_KNN.output.sub.scores
+  arrange(Euclidean_Distance) -> df_KNN.output.sub.scores
 
 # OUTPUT ------------------------------------------------------------------
 df_KNN.output.sub %>%
@@ -551,3 +404,35 @@ df_KNN.output.sub.scores %>%
     , starts_with('Similarity')
   ) %>% 
   view()
+
+# GRAPHS ------------------------------------------------------------------
+df_KNN.output.sub %>%
+  pivot_longer(
+    cols = starts_with('Similarity.')
+    , names_to = 'Similarity'
+    , values_to = 'Value'
+  ) %>%
+  ggplot(aes(
+    x = Value
+    , color = Similarity
+  )) + 
+  geom_density(size = 1.5) +
+  scale_x_continuous(
+    limits = c(-1,1)
+  )
+
+df_KNN.output.sub.scores %>%
+  pivot_longer(
+    cols = starts_with('Similarity.')
+    , names_to = 'Similarity'
+    , values_to = 'Value'
+  ) %>%
+  ggplot(aes(
+    x = Value
+    , color = Similarity
+  )) + 
+  geom_density(size = 1.5) +
+  scale_x_continuous(
+    limits = c(-1,1)
+  )
+

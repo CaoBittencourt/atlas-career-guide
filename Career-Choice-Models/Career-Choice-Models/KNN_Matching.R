@@ -71,7 +71,6 @@ fun_KNN.matching <- function(
       # , Similarity.Tan = 1 - atan(Euclidean_Distance/2)
       # , Similarity.Tan = 1 - atan(Euclidean_Distance/pi)
 
-      # "Cosine-ish" / quadratic similarity
       # Equivalence between euclidean and cosine (if euclidean E [0,2])
       , Similarity.Cosine = 1 - ((Euclidean_Distance^2)/2)
 

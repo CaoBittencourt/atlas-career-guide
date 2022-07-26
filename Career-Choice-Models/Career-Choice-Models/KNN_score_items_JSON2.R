@@ -1,9 +1,9 @@
 # PACKAGES -----------------------------------------------------------------
 pkg <- c(
-  'tidyverse', 'glue' #Data wrangling
-  , 'psych', 'GPArotation' #Factor analysis
-  # , 'ctv' #Most relevant psychometrics packages
-  , 'paletteer' #Palettes for visualization
+  'psych' #Score factors
+  , 'FNN' #Fast K-NN Algorithm (faster than the 'class' package)
+  , 'jsonify' #Work with JSON (faster than jsonlite)
+  , 'tidyverse' #Data wrangling
 )
 
 # Activate / install packages
@@ -20,7 +20,7 @@ lapply(pkg, function(x)
 # WORKING DIRECTORY -------------------------------------------------------
 setwd('C:/Users/Cao/Documents/Github/Atlas-Research/Career-Choice-Models')
 
-# KNN MATCHING ---------------------------------------------------------------
+# FUNCTIONS ---------------------------------------------------------------
 source('./KNN_Matching.R')
 
 # SKILLS FACTOR LIST -----------------------------------------------------------------
@@ -41,11 +41,6 @@ list_skill.factors <- list(
   )
   
 )
-
-# lapply(
-#   list_skill.factors
-#   , function(x){paste0('+',x)}
-#   ) -> list_skill.factors
 
 # ABILITIES FACTOR LIST ---------------------------------------------------
 list_ablt.factors <- list(
@@ -72,7 +67,7 @@ list_ablt.factors <- list(
     'Inductive_Reasoning.L'
     , 'Problem_Sensitivity.L'
     , 'Deductive_Reasoning.L'
-  ) 
+  )
 )
 
 # KNOWLEDGE FACTOR LIST ---------------------------------------------------
@@ -107,7 +102,7 @@ list_know.factors <- list(
 # ALL FACTORS LIST -------------------------------------------------------------
 list_factors <- list(
   'Skills' = list_skill.factors
-  # , 'Abilities' = list_ablt.factors
+  , 'Abilities' = list_ablt.factors
   , 'Knowledge' = list_know.factors
 )
 
@@ -116,11 +111,21 @@ list_factors <- list(
 df_occupations <- readr::read_csv('https://docs.google.com/spreadsheets/d/e/2PACX-1vSphzWoCxoNaiaJcQUWKCMqUAT041Q8UqUgM7rSzIwYZb7FhttKJwNgtrFf-r7EgzXHFom4UjLl2ltk/pub?gid=563902602&single=true&output=csv')
 
 # Matching data frame
+# Only highly qualified professions
+df_occupations %>%
+  filter(
+    Entry_level_Education %in% c(
+      "Bachelor's degree"
+      , "Doctoral or professional degree"
+      # , "Associate's degree"
+      , "Master's degree"
+    )
+  ) -> df_occupations
+
+# Select only necessary variables
 df_occupations %>%
   select(
-    where(
-      negate(is.numeric)
-    )
+    Occupation
     , all_of(
       list_factors %>%
         flatten() %>% 
@@ -138,27 +143,22 @@ df_occupations %>%
     )
   ) -> df_occupations
 
-df_occupations %>%
-  # Select only highly qualified professions
-  filter(
-    Entry_level_Education %in% c(
-      "Bachelor's degree"
-      , "Doctoral or professional degree"
-      # , "Associate's degree"
-      , "Master's degree"
-    )
-  ) -> df_occupations
-
-
-
-# EFA-REDUCED QUERY VECTOR (USER INPUT) -----------------------------------------------
+# EFA-REDUCED QUERY VECTOR (JSON) -----------------------------------------------
 # User questionnaires data frame
 df_input <- read_csv(url('https://docs.google.com/spreadsheets/d/e/2PACX-1vSphzWoCxoNaiaJcQUWKCMqUAT041Q8UqUgM7rSzIwYZb7FhttKJwNgtrFf-r7EgzXHFom4UjLl2ltk/pub?gid=725827850&single=true&output=csv'))
 
+# df_input %>% 
+#   to_json() -> dsds
+# 
+# from_json(dsds) %>% 
+#   as_tibble() -> df_input
+
+df_input %>% 
+  filter(Name == 'Martijn') -> df_input
+
 df_input %>% 
   select(
-    Name
-    , all_of(
+    all_of(
       list_factors %>%
         flatten() %>% 
         flatten_chr()
@@ -182,19 +182,9 @@ df_input %>%
     )
   ) -> df_input
 
-# Keep only completed questionnaires
-df_input %>% 
-  drop_na() -> df_input
-
-
-# Vector of names
-chr_names <- df_input$Name
-names(chr_names) <- df_input$Name
-chr_names <- sort(chr_names)
-
 # SCORE ITEMS (OCCUPATIONS) -----------------------------------------------
 psych::scoreVeryFast(
-  keys = list_factors %>% flatten()
+  keys = flatten(list_factors)
   
   , items = df_occupations %>%
     select(
@@ -217,70 +207,41 @@ psych::scoreVeryFast(
     , list_factors %>%
       flatten() %>% 
       names()
-  ) -> df_occupations.scores
+  ) -> df_occupations
 
-# SCORE ITEMS (INPUT) -------------------------------------------------------------
+# SCORE ITEMS (JSON INPUT) -----------------------------------------------
 lapply(
-  chr_names
-  , function(name){
+  list_factors
+  , function(scales){
     
-    lapply(
-      list_factors
-      , function(scales){
-        
-        psych::scoreVeryFast(
-          keys = scales
-          
-          , items = df_input %>%
-            filter(Name == name) %>% 
-            select(flatten_chr(scales))
-          
-          , totals = F #Average scores
-        ) %>% 
-          as_tibble() %>% 
-          colMeans()
-        
-      } 
-    )
-  } %>% flatten_df()
-) -> list_factor.scores
+    psych::scoreVeryFast(
+      keys = scales
+      , items = df_input 
+      , totals = F #Average scores
+    ) %>% 
+      as_tibble() %>% 
+      colMeans()
+    
+  } 
+) %>% 
+  flatten_df() -> df_factor.scores
 
 # KNN MATCHING ON FACTOR SCORES ---------------------------------------------------------------
-lapply(
-  list_factor.scores
-  , function(factor_scores){
-    
-    fun_KNN.matching(
-      .df_data.numeric = df_occupations.scores
-      , .vec_query.numeric = factor_scores
-      # , .int_k = nrow(df_occupations)
-      , .int_k = 30
-    ) %>% 
-      return(.)
-    
-  }) -> list_KNN.output
+fun_KNN.matching(
+  .df_data.numeric = df_occupations
+  , .vec_query.numeric = df_factor.scores
+  , .int_k = nrow(df_occupations)
+) -> df_KNN.output
 
-# OUTPUT ------------------------------------------------------------------
-lapply(
-  list_KNN.output
-  , function(df){
-    
-    df %>% 
-      select(
-        Occupation
-        , Career_Cluster
-        , Euclidean_Distance
-        , starts_with('Similarity.')
-      )
-    
-  }) -> list_KNN.output
+# CONVERT OUTPUT TO JSON --------------------------------------------------
+df_KNN.output %>% 
+  select(
+    Occupation
+    , starts_with('Similarity.')
+  ) %>% view()
+  # to_json(digits = 4) %>% 
+  # pretty_json() -> JSON_KNN.output
 
-list_KNN.output$Acilio %>% view()
-list_KNN.output$Alexandre %>% view()
-list_KNN.output$Cao %>% view()
-list_KNN.output$Gabriel %>% view()
-list_KNN.output$Martijn %>% view()
-list_KNN.output$Maurício %>% view()
-list_KNN.output$Milena %>% view()
-list_KNN.output$Tatiana %>% view()
-
+# # EXPORT JSON -------------------------------------------------------------
+# write(JSON_KNN.output, file = 'json.txt')
+# 
