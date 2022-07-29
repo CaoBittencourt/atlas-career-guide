@@ -205,7 +205,7 @@ fun_KNN.matching(
   , .dbl_decimals = 4
 ) -> df_KNN.output
 
-# OVERQUALIFICATION IMPUTATION (0) --------------------------------------------
+# OVERQUALIFICATION IMPUTATION - 100% UNNECESSARY COMPETENCY (0) --------------------------------------------
 fun_KNN.matching(
   .df_data.numeric = df_occupations
   , .vec_query.numeric = df_input
@@ -215,7 +215,7 @@ fun_KNN.matching(
   , .dbl_decimals = 4
 ) -> df_KNN.output.sub
 
-# # OVERQUALIFICATION IMPUTATION (0.0625) --------------------------------------------
+# # OVERQUALIFICATION IMPUTATION - 5-POINT LIKERT LOW / 4 (0.0625) --------------------------------------------
 # fun_KNN.matching(
 #   .df_data.numeric = df_occupations
 #   , .vec_query.numeric = df_input
@@ -225,7 +225,7 @@ fun_KNN.matching(
 #   , .dbl_decimals = 4
 # ) -> df_KNN.output.sub
 # 
-# # OVERQUALIFICATION IMPUTATION (0.125) --------------------------------------------
+# # OVERQUALIFICATION IMPUTATION - 5-POINT LIKERT LOW / 2 (0.125) --------------------------------------------
 # fun_KNN.matching(
 #   .df_data.numeric = df_occupations
 #   , .vec_query.numeric = df_input
@@ -235,7 +235,7 @@ fun_KNN.matching(
 #   , .dbl_decimals = 4
 # ) -> df_KNN.output.sub
 
-# # OVERQUALIFICATION IMPUTATION (0.25) --------------------------------------------
+# # OVERQUALIFICATION IMPUTATION - 5-POINT LIKERT LOW (0.25) --------------------------------------------
 # fun_KNN.matching(
 #   .df_data.numeric = df_occupations
 #   , .vec_query.numeric = df_input
@@ -244,6 +244,37 @@ fun_KNN.matching(
 #   , .dbl_over_qualification.threshold = 0.25
 #   , .dbl_decimals = 4
 # ) -> df_KNN.output.sub
+
+# # OVERQUALIFICATION IMPUTATION - 10-POINT LIKERT VERY LOW / 2 (0.05) --------------------------------------------
+# fun_KNN.matching(
+#   .df_data.numeric = df_occupations
+#   , .vec_query.numeric = df_input
+#   , .int_k = nrow(df_occupations)
+#   , .imput.over_qualification = T
+#   , .dbl_over_qualification.threshold = 0.05
+#   , .dbl_decimals = 4
+# ) -> df_KNN.output.sub
+# 
+# # OVERQUALIFICATION IMPUTATION - 10-POINT LIKERT VERY LOW (0.10) --------------------------------------------
+# fun_KNN.matching(
+#   .df_data.numeric = df_occupations
+#   , .vec_query.numeric = df_input
+#   , .int_k = nrow(df_occupations)
+#   , .imput.over_qualification = T
+#   , .dbl_over_qualification.threshold = 0.1
+#   , .dbl_decimals = 4
+# ) -> df_KNN.output.sub
+
+# # OVERQUALIFICATION IMPUTATION - 10-POINT LIKERT LOW (0.20) --------------------------------------------
+# fun_KNN.matching(
+#   .df_data.numeric = df_occupations
+#   , .vec_query.numeric = df_input
+#   , .int_k = nrow(df_occupations)
+#   , .imput.over_qualification = T
+#   , .dbl_over_qualification.threshold = 0.2
+#   , .dbl_decimals = 4
+# ) -> df_KNN.output.sub
+
 
 # ------- VISUALIZATION -------------------------------------------------------------------------
 
@@ -266,7 +297,7 @@ df_KNN.output.sub %>%
 df_KNN.output.long %>% 
   arrange(desc(Value)) %>% 
   group_by(Similarity) %>% 
-  slice(1:10) %>% 
+  slice(1:15) %>% 
   ungroup() %>% 
   mutate(
     Occupation = fct_reorder(
@@ -290,7 +321,7 @@ df_KNN.output.long %>%
   geom_col() + 
   facet_wrap(
     facets = vars(Occupation)
-    , nrow = 2
+    , nrow = 3
   ) + 
   labs(
     x = 'Similarity (%)'
@@ -300,12 +331,12 @@ df_KNN.output.long %>%
   ) +
   scale_x_continuous(limits = c(-1,1)) + 
   ggthemes::scale_fill_gdocs() + 
-  ggthemes::theme_hc() -> plt_top10
+  ggthemes::theme_hc() -> plt_top15
 
 ggsave(
-  plot = plt_top10
-  , filename = 'Similarities_Comparison_Bar1.png'
-  , width = 17
+  plot = plt_top15
+  , filename = '1.Similarities_Comparison_Bar1.png'
+  , width = 16
   , height = 8
 )
 
@@ -313,7 +344,7 @@ ggsave(
 df_KNN.output.sub.long %>% 
   arrange(desc(Value)) %>% 
   group_by(Similarity) %>% 
-  slice(1:10) %>% 
+  slice(1:15) %>% 
   ungroup() %>% 
   mutate(
     Occupation = fct_reorder(
@@ -337,7 +368,7 @@ df_KNN.output.sub.long %>%
   geom_col() + 
   facet_wrap(
     facets = vars(Occupation)
-    , nrow = 2
+    , nrow = 3
   ) + 
   labs(
     x = 'Similarity (%)'
@@ -347,12 +378,12 @@ df_KNN.output.sub.long %>%
   ) +
   scale_x_continuous(limits = c(-1,1)) + 
   ggthemes::scale_fill_gdocs() + 
-  ggthemes::theme_hc() -> plt_top10.sub
+  ggthemes::theme_hc() -> plt_top15.sub
 
 ggsave(
-  plot = plt_top10.sub
-  , filename = 'Similarities_Comparison_Bar2.png'
-  , width = 17
+  plot = plt_top15.sub
+  , filename = '2.Similarities_Comparison_Bar2.png'
+  , width = 16
   , height = 8
 )
 
@@ -389,7 +420,7 @@ tmp %>%
   ) +
   facet_wrap(
     facets = vars(Similarity)
-    , nrow = 3) + 
+    , nrow = 4) + 
   labs(
     x = 'Similarity (%)'
     , y = 'Count'
@@ -400,8 +431,8 @@ tmp %>%
 
 ggsave(
   plot = plt_hist
-  , filename = 'Similarities_Comparison_Hist1.png'
-  , width = 17
+  , filename = '3.Similarities_Comparison_Hist1.png'
+  , width = 16
   , height = 8
 )
 
@@ -438,7 +469,7 @@ tmp %>%
   ) +
   facet_wrap(
     facets = vars(Similarity)
-    , nrow = 3) + 
+    , nrow = 4) + 
   labs(
     x = 'Similarity (%)'
     , y = 'Count'
@@ -449,8 +480,8 @@ tmp %>%
 
 ggsave(
   plot = plt_hist.sub
-  , filename = 'Similarities_Comparison_Hist2.png'
-  , width = 17
+  , filename = '4.Similarities_Comparison_Hist2.png'
+  , width = 16
   , height = 8
 )
 
@@ -495,8 +526,8 @@ df_KNN.output.long %>%
 
 ggsave(
   plot = plt_heatmap
-  , filename = 'Similarities_Comparison_Heatmap1.png'
-  , width = 17
+  , filename = '5.Similarities_Comparison_Heatmap1.png'
+  , width = 16
   , height = 8
 )
 
@@ -541,8 +572,8 @@ df_KNN.output.sub.long %>%
 
 ggsave(
   plot = plt_heatmap.sub
-  , filename = 'Similarities_Comparison_Heatmap2.png'
-  , width = 17
+  , filename = '6.Similarities_Comparison_Heatmap2.png'
+  , width = 16
   , height = 8
 )
 
@@ -550,8 +581,8 @@ ggsave(
 # HEATMAPS (SIDE BY SIDE) -----------------------------------------------
 ggsave(
   plot = plt_heatmap + plt_heatmap.sub
-  , filename = 'Similarities_Comparison_Heatmap3.png'
-  , width = 17
+  , filename = '7.Similarities_Comparison_Heatmap3.png'
+  , width = 16
   , height = 8
 )
 
@@ -604,7 +635,7 @@ tmp %>%
   ) +
   facet_wrap(
     facets = vars(Similarity)
-    , nrow = 3) + 
+    , nrow = 4) + 
   labs(
     x = 'Similarity Ranking'
     , y = 'Similarity (%)'
@@ -619,8 +650,8 @@ tmp %>%
 
 ggsave(
   plot = plt_line
-  , filename = 'Similarities_Comparison_Lines1.png'
-  , width = 17
+  , filename = '8.Similarities_Comparison_Lines1.png'
+  , width = 16
   , height = 8
 )
 
@@ -673,7 +704,7 @@ tmp %>%
   ) +
   facet_wrap(
     facets = vars(Similarity)
-    , nrow = 3) + 
+    , nrow = 4) + 
   labs(
     x = 'Similarity Ranking'
     , y = 'Similarity (%)'
@@ -688,16 +719,16 @@ tmp %>%
 
 ggsave(
   plot = plt_line.sub
-  , filename = 'Similarities_Comparison_Lines2.png'
-  , width = 17
+  , filename = '9.Similarities_Comparison_Lines2.png'
+  , width = 16
   , height = 8
 )
 
 # LINE CHARTS (SIDE BY SIDE) -----------------------------------------------
 ggsave(
   plot = plt_line + plt_line.sub
-  , filename = 'Similarities_Comparison_Lines3.png'
-  , width = 17
+  , filename = '10.Similarities_Comparison_Lines3.png'
+  , width = 16
   , height = 8
 )
 

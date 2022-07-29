@@ -192,17 +192,17 @@ fun_KNN.matching <- function(
         Euclidean_Distance = as.vector(KNN.output$nn.dist)
         
         # Simple similarity, no adjustments
-        , Similarity.Simple1 = 1 - pmin(Euclidean_Distance, 1) #Bound at [0,1]
-        , Similarity.Simple2 = 1 - pmin(Euclidean_Distance, 2) #Bound at [-1,1]
+        , Similarity.Sub1 = 1 - pmin(Euclidean_Distance, 1) #Bound at [0,1]
+        , Similarity.Sub2 = 1 - pmin(Euclidean_Distance, 2) #Bound at [-1,1]
         # Common similarity: 1/(1 + dist), "+1" for dist = 0
-        , Similarity.Common = 1 / (1 + Euclidean_Distance) #Bound at [0,1]
+        , Similarity.Div = 1 / (1 + Euclidean_Distance) #Bound at [0,1]
         # Maximum-normalized similarity: 1 - dist/max(dist)
         , Similarity.Max = 1 - (Euclidean_Distance / max(Euclidean_Distance)) #Bound at [0,1]
         # Similarity via gaussian kernel: exp(-dist)
-        , Similarity.Gaussian1 = exp(-Euclidean_Distance) #Bound at [0,1]
-        , Similarity.Gaussian2 = exp(-0.5*Euclidean_Distance) #Bound at [0,1]
-        , Similarity.Gaussian3 = exp(-0.25*Euclidean_Distance) #Bound at [0,1]
-        , Similarity.Gaussian4 = exp(-0.125*Euclidean_Distance) #Bound at [0,1]
+        , Similarity.Gauss1 = exp(-Euclidean_Distance) #Bound at [0,1]
+        , Similarity.Gauss2 = exp(-0.5*Euclidean_Distance) #Bound at [0,1]
+        , Similarity.Gauss3 = exp(-0.25*Euclidean_Distance) #Bound at [0,1]
+        , Similarity.Gauss4 = exp(-0.125*Euclidean_Distance) #Bound at [0,1]
         # Square root similarity
         , Similarity.Sqrt1 = 1 - (sqrt(pmin(Euclidean_Distance, 4)) / 2) #Bound at [0,1]
         , Similarity.Sqrt2 = 1 - (sqrt(pmin(Euclidean_Distance, 16)) / 2) #Bound at [-1,1]
@@ -213,14 +213,13 @@ fun_KNN.matching <- function(
         # Quadratic similarity
         # , Similarity.Quad = 1 - (Euclidean_Distance^2)
         , Similarity.Quad1 = 1 - (pmin(Euclidean_Distance,1) ^ 2) #Bound at [0,1]
-        , Similarity.Quad2 = 1 - (pmin(Euclidean_Distance,sqrt(2)) ^ 2)/2 #Bound at [0,1]
+        , Similarity.Quad2 = 1 - (pmin(Euclidean_Distance,sqrt(2)) ^ 2) / 2 #Bound at [0,1]
         , Similarity.Quad3 = 1 - (pmin(Euclidean_Distance,sqrt(2)) ^ 2) #Bound at [-1,1]
-        , Similarity.Quad4 = 1 - (pmin(Euclidean_Distance,sqrt(2)) ^ 2)/2 #Bound at [-1,1]
         # "Cosine-ish" similarity
         # Equivalence between euclidean and cosine (if euclidean E [0,2])
-        , Similarity.Cosine = 1 - ((pmin(Euclidean_Distance, 2) ^ 2) / 2) #Bound at [-1,1]
+        , Similarity.Cos = 1 - ((pmin(Euclidean_Distance, 2) ^ 2) / 2) #Bound at [-1,1]
         # Angular similarity
-        , Similarity.Angular = 1 - (acos(Similarity.Cosine) / pi) #Bound at [0,1]
+        , Similarity.Ang = 1 - (acos(Similarity.Cos) / pi) #Bound at [0,1]
         
         , across(
           .cols = starts_with('Similarity.')
@@ -247,17 +246,17 @@ fun_KNN.matching <- function(
         Euclidean_Distance = as.vector(KNN.output$nn.dist)
         
         # Simple similarity, no adjustments
-        , Similarity.Simple1 = 1 - pmin(Euclidean_Distance, 1) #Bound at [0,1]
-        , Similarity.Simple2 = 1 - pmin(Euclidean_Distance, 2) #Bound at [-1,1]
+        , Similarity.Sub1 = 1 - pmin(Euclidean_Distance, 1) #Bound at [0,1]
+        , Similarity.Sub2 = 1 - pmin(Euclidean_Distance, 2) #Bound at [-1,1]
         # Common similarity: 1/(1 + dist), "+1" for dist = 0
-        , Similarity.Common = 1 / (1 + Euclidean_Distance) #Bound at [0,1]
+        , Similarity.Div = 1 / (1 + Euclidean_Distance) #Bound at [0,1]
         # Maximum-normalized similarity: 1 - dist/max(dist)
         , Similarity.Max = 1 - (Euclidean_Distance / max(Euclidean_Distance)) #Bound at [0,1]
         # Similarity via gaussian kernel: exp(-dist)
-        , Similarity.Gaussian1 = exp(-Euclidean_Distance) #Bound at [0,1]
-        , Similarity.Gaussian2 = exp(-0.5*Euclidean_Distance) #Bound at [0,1]
-        , Similarity.Gaussian3 = exp(-0.25*Euclidean_Distance) #Bound at [0,1]
-        , Similarity.Gaussian4 = exp(-0.125*Euclidean_Distance) #Bound at [0,1]
+        , Similarity.Gauss1 = exp(-Euclidean_Distance) #Bound at [0,1]
+        , Similarity.Gauss2 = exp(-0.5*Euclidean_Distance) #Bound at [0,1]
+        , Similarity.Gauss3 = exp(-0.25*Euclidean_Distance) #Bound at [0,1]
+        , Similarity.Gauss4 = exp(-0.125*Euclidean_Distance) #Bound at [0,1]
         # Square root similarity
         , Similarity.Sqrt1 = 1 - (sqrt(pmin(Euclidean_Distance, 4)) / 2) #Bound at [0,1]
         , Similarity.Sqrt2 = 1 - (sqrt(pmin(Euclidean_Distance, 16)) / 2) #Bound at [-1,1]
@@ -268,14 +267,13 @@ fun_KNN.matching <- function(
         # Quadratic similarity
         # , Similarity.Quad = 1 - (Euclidean_Distance^2)
         , Similarity.Quad1 = 1 - (pmin(Euclidean_Distance,1) ^ 2) #Bound at [0,1]
-        , Similarity.Quad2 = 1 - (pmin(Euclidean_Distance,sqrt(2)) ^ 2)/2 #Bound at [0,1]
+        , Similarity.Quad2 = 1 - (pmin(Euclidean_Distance,sqrt(2)) ^ 2) / 2 #Bound at [0,1]
         , Similarity.Quad3 = 1 - (pmin(Euclidean_Distance,sqrt(2)) ^ 2) #Bound at [-1,1]
-        , Similarity.Quad4 = 1 - (pmin(Euclidean_Distance,sqrt(2)) ^ 2)/2 #Bound at [-1,1]
         # "Cosine-ish" similarity
         # Equivalence between euclidean and cosine (if euclidean E [0,2])
-        , Similarity.Cosine = 1 - ((pmin(Euclidean_Distance, 2) ^ 2) / 2) #Bound at [-1,1]
+        , Similarity.Cos = 1 - ((pmin(Euclidean_Distance, 2) ^ 2) / 2) #Bound at [-1,1]
         # Angular similarity
-        , Similarity.Angular = 1 - (acos(Similarity.Cosine) / pi) #Bound at [0,1]
+        , Similarity.Ang = 1 - (acos(Similarity.Cos) / pi) #Bound at [0,1]
         
         , across(
           .cols = starts_with('Similarity.')
