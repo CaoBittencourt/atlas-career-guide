@@ -145,15 +145,15 @@ df_occupations %>%
 
 # EFA-REDUCED QUERY VECTOR (JSON) -----------------------------------------------
 # User questionnaires data frame
-df_input.all <- read_csv(url('https://docs.google.com/spreadsheets/d/e/2PACX-1vSphzWoCxoNaiaJcQUWKCMqUAT041Q8UqUgM7rSzIwYZb7FhttKJwNgtrFf-r7EgzXHFom4UjLl2ltk/pub?gid=725827850&single=true&output=csv'))
+df_imput.all <- read_csv(url('https://docs.google.com/spreadsheets/d/e/2PACX-1vSphzWoCxoNaiaJcQUWKCMqUAT041Q8UqUgM7rSzIwYZb7FhttKJwNgtrFf-r7EgzXHFom4UjLl2ltk/pub?gid=725827850&single=true&output=csv'))
 
-# df_input %>% 
+# df_imput %>% 
 #   to_json() -> dsds
 # 
 # from_json(dsds) %>% 
-#   as_tibble() -> df_input
+#   as_tibble() -> df_imput
 
-df_input.all %>% 
+df_imput.all %>% 
   select(
     Name
     , all_of(
@@ -178,10 +178,10 @@ df_input.all %>%
                , '5' = 1
         )}
     )
-  ) -> df_input.all
+  ) -> df_imput.all
 
 # For this example, use Martijn' questionnaire 
-df_input.all %>% 
+df_imput.all %>% 
   filter(Name == 'Acilio') %>%
   # filter(Name == 'Alexandre') %>%
   # filter(Name == 'Cao') %>%
@@ -192,15 +192,15 @@ df_input.all %>%
   # filter(Name == 'Milena') %>%
   # filter(Name == 'Tatiana') %>%
   # filter(Name == 'Uelinton') %>%
-  select(-Name) -> df_input
+  select(-Name) -> df_imput
 
 
 
 # -------------------------------------------------------------------------
-# [sk:Martijn++|sak:Martijn+++] [IRRELEVANT QUALIFICATION] OVERQUALIFICATION INPUT (ONLY IF SCORE == 0) -------------------------------------------------
-df_input %>%
+# [sk:Martijn++|sak:Martijn+++] [IRRELEVANT QUALIFICATION] OVERQUALIFICATION IMPUT (ONLY IF SCORE == 0) -------------------------------------------------
+df_imput %>%
   rename_with(
-    .fn = function(x){paste0(x,'.input')}
+    .fn = function(x){paste0(x,'.imput')}
   ) %>%
   bind_cols(
     df_occupations
@@ -209,7 +209,7 @@ df_input %>%
   mutate(
     across(
       .cols = c(
-        !ends_with('.input')
+        !ends_with('.imput')
         , -Occupation
         , -Career_Cluster
       )
@@ -218,7 +218,7 @@ df_input %>%
         ifelse(
           x == 0
           , yes = 0
-          , no = eval(sym(paste0(cur_column(),'.input')))
+          , no = eval(sym(paste0(cur_column(),'.imput')))
         )
 
       }
@@ -231,13 +231,13 @@ df_input %>%
   ) %>%
   rename_with(
     function(x){str_remove(x,'.sub')}
-  ) -> df_input.sub
+  ) -> df_imput.sub
 
 
-# [sk:Martijn++|sak:Martijn+++] [LOW REQUIREMENTS] OVERQUALIFICATION INPUT (ONLY IF SCORE <= 0.05) -------------------------------------------------
-df_input %>%
+# [sk:Martijn++|sak:Martijn+++] [LOW REQUIREMENTS] OVERQUALIFICATION IMPUT (ONLY IF SCORE <= 0.05) -------------------------------------------------
+df_imput %>%
   rename_with(
-    .fn = function(x){paste0(x,'.input')}
+    .fn = function(x){paste0(x,'.imput')}
   ) %>%
   bind_cols(
     df_occupations
@@ -246,7 +246,7 @@ df_input %>%
   mutate(
     across(
       .cols = c(
-        !ends_with('.input')
+        !ends_with('.imput')
         , -Occupation
         , -Career_Cluster
       )
@@ -254,9 +254,9 @@ df_input %>%
 
         ifelse(
           # Overqualified if > .05 and requirement <= .05
-          x <= 0.05 & eval(sym(paste0(cur_column(),'.input'))) > x
+          x <= 0.05 & eval(sym(paste0(cur_column(),'.imput'))) > x
           , yes = x
-          , no = eval(sym(paste0(cur_column(),'.input')))
+          , no = eval(sym(paste0(cur_column(),'.imput')))
         )
 
       }
@@ -269,14 +269,14 @@ df_input %>%
   ) %>%
   rename_with(
     function(x){str_remove(x,'.sub')}
-  ) -> df_input.sub
+  ) -> df_imput.sub
 
 
 
-# [sk:Martijn++-|sak:Martijn+++-] [LOW REQUIREMENTS] OVERQUALIFICATION INPUT (ONLY IF SCORE <= 0.125) -------------------------------------------------
-df_input %>%
+# [sk:Martijn++-|sak:Martijn+++-] [LOW REQUIREMENTS] OVERQUALIFICATION IMPUT (ONLY IF SCORE <= 0.125) -------------------------------------------------
+df_imput %>%
   rename_with(
-    .fn = function(x){paste0(x,'.input')}
+    .fn = function(x){paste0(x,'.imput')}
   ) %>%
   bind_cols(
     df_occupations
@@ -285,7 +285,7 @@ df_input %>%
   mutate(
     across(
       .cols = c(
-        !ends_with('.input')
+        !ends_with('.imput')
         , -Occupation
         , -Career_Cluster
       )
@@ -293,9 +293,9 @@ df_input %>%
 
         ifelse(
           # Overqualified if > .125 and requirement <= .125
-          x <= 0.125 & eval(sym(paste0(cur_column(),'.input'))) > x
+          x <= 0.125 & eval(sym(paste0(cur_column(),'.imput'))) > x
           , yes = x
-          , no = eval(sym(paste0(cur_column(),'.input')))
+          , no = eval(sym(paste0(cur_column(),'.imput')))
         )
 
       }
@@ -308,13 +308,13 @@ df_input %>%
   ) %>%
   rename_with(
     function(x){str_remove(x,'.sub')}
-  ) -> df_input.sub
+  ) -> df_imput.sub
 
 
-# [sk:Martijn+++-|sak:Martijn+++--] [LOW REQUIREMENTS] OVERQUALIFICATION INPUT (ONLY IF SCORE <= 0.25) -------------------------------------------------
-df_input %>%
+# [sk:Martijn+++-|sak:Martijn+++--] [LOW REQUIREMENTS] OVERQUALIFICATION IMPUT (ONLY IF SCORE <= 0.25) -------------------------------------------------
+df_imput %>%
   rename_with(
-    .fn = function(x){paste0(x,'.input')}
+    .fn = function(x){paste0(x,'.imput')}
   ) %>%
   bind_cols(
     df_occupations
@@ -323,7 +323,7 @@ df_input %>%
   mutate(
     across(
       .cols = c(
-        !ends_with('.input')
+        !ends_with('.imput')
         , -Occupation
         , -Career_Cluster
       )
@@ -331,9 +331,9 @@ df_input %>%
         
         ifelse(
           # Overqualified if > .25 and requirement <= .25
-          x <= 0.25 & eval(sym(paste0(cur_column(),'.input'))) > x
+          x <= 0.25 & eval(sym(paste0(cur_column(),'.imput'))) > x
           , yes = x
-          , no = eval(sym(paste0(cur_column(),'.input')))
+          , no = eval(sym(paste0(cur_column(),'.imput')))
         )
         
       }
@@ -346,16 +346,16 @@ df_input %>%
   ) %>%
   rename_with(
     function(x){str_remove(x,'.sub')}
-  ) -> df_input.sub
+  ) -> df_imput.sub
 
 
 # -------------------------------------------------------------------------
 
 
-# [REALLY BAD] [INPUT NOTHING] -------------------------------------------------
-df_input %>%
+# [REALLY BAD] [IMPUT NOTHING] -------------------------------------------------
+df_imput %>%
   rename_with(
-    .fn = function(x){paste0(x,'.input')}
+    .fn = function(x){paste0(x,'.imput')}
   ) %>%
   bind_cols(
     df_occupations
@@ -364,7 +364,7 @@ df_input %>%
   # mutate(
   #   across(
   #     .cols = c(
-  #       !ends_with('.input')
+  #       !ends_with('.imput')
   #       , -Occupation
   #       , -Career_Cluster
   #     )
@@ -373,7 +373,7 @@ df_input %>%
   #       ifelse(
 #         x == 0
 #         , yes = 0
-#         , no = eval(sym(paste0(cur_column(),'.input')))
+#         , no = eval(sym(paste0(cur_column(),'.imput')))
 #       )
 #
 #     }
@@ -382,17 +382,17 @@ df_input %>%
 # ) %>%
 # ungroup() %>%
 select(
-  ends_with('.input')
+  ends_with('.imput')
 ) %>%
   rename_with(
-    function(x){str_remove(x,'.input')}
-  ) -> df_input.sub
+    function(x){str_remove(x,'.imput')}
+  ) -> df_imput.sub
 
 
-# # [BAD] [PERFECT] OVERQUALIFICATION INPUT (SCORE < VALUE) -------------------------------------------------
-# df_input %>%
+# # [BAD] [PERFECT] OVERQUALIFICATION IMPUT (SCORE < VALUE) -------------------------------------------------
+# df_imput %>%
 #   rename_with(
-#     .fn = function(x){paste0(x,'.input')}
+#     .fn = function(x){paste0(x,'.imput')}
 #   ) %>%
 #   bind_cols(
 #     df_occupations
@@ -401,12 +401,12 @@ select(
 #   mutate(
 #     across(
 #       .cols = c(
-#         !ends_with('.input')
+#         !ends_with('.imput')
 #         , -Career_Cluster
 #       )
 #       ,.fns = function(x){
 # 
-#         min(x, eval(sym(paste0(cur_column(),'.input'))))
+#         min(x, eval(sym(paste0(cur_column(),'.imput'))))
 # 
 #       }
 #       , .names = '{col}.sub'
@@ -418,14 +418,14 @@ select(
 #   ) %>%
 #   rename_with(
 #     function(x){str_remove(x,'.sub')}
-#   ) -> df_input.sub
+#   ) -> df_imput.sub
 
-# # [TRY AGAIN] [N-TIMES] OVERQUALIFICATION INPUT (SCORE <= N*VALUE) -------------------------------------------------
+# # [TRY AGAIN] [N-TIMES] OVERQUALIFICATION IMPUT (SCORE <= N*VALUE) -------------------------------------------------
 # n <- 4
 # 
-# df_input %>%
+# df_imput %>%
 #   rename_with(
-#     .fn = function(x){paste0(x,'.input')}
+#     .fn = function(x){paste0(x,'.imput')}
 #   ) %>%
 #   bind_cols(
 #     df_occupations
@@ -434,16 +434,16 @@ select(
 #   mutate(
 #     across(
 #       .cols = c(
-#         !ends_with('.input')
+#         !ends_with('.imput')
 #         # , -Occupation
 #         , -Career_Cluster
 #       )
 #       ,.fns = function(x){
 # 
 #         ifelse(
-#           n*x <= eval(sym(paste0(cur_column(),'.input')))
+#           n*x <= eval(sym(paste0(cur_column(),'.imput')))
 #           , yes = x
-#           , no = eval(sym(paste0(cur_column(),'.input')))
+#           , no = eval(sym(paste0(cur_column(),'.imput')))
 #         )
 # 
 #       }
@@ -456,18 +456,18 @@ select(
 #   ) %>%
 #   rename_with(
 #     function(x){str_remove(x,'.sub')}
-#   ) -> df_input.sub
+#   ) -> df_imput.sub
 
 
 # -------------------------------------------------------------------------
 # KNN MATCHING WITHOUT ITEM SCORES ----------------------------------------
 lapply(
-  1:nrow(df_input.sub)
+  1:nrow(df_imput.sub)
   , function(x){
 
     fun_KNN.matching(
       .df_data.numeric = df_occupations[x,]
-      , .vec_query.numeric = df_input.sub[x,]
+      , .vec_query.numeric = df_imput.sub[x,]
       , .int_k = 1
       , .euclidean.norm = T
     )
@@ -503,14 +503,14 @@ psych::scoreVeryFast(
       names()
   ) -> df_occupations.scores
 
-# SCORE ITEMS (JSON INPUT) -----------------------------------------------
+# SCORE ITEMS (JSON IMPUT) -----------------------------------------------
 lapply(
   list_factors
   , function(scales){
     
     psych::scoreVeryFast(
       keys = scales
-      , items = df_input.sub 
+      , items = df_imput.sub 
       , totals = F #Average scores
     ) %>% 
       as_tibble()

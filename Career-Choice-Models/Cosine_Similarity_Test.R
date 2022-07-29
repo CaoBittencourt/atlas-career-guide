@@ -142,15 +142,9 @@ df_occupations %>%
     )
   ) -> df_occupations
 
-# EFA-REDUCED QUERY VECTOR (JSON) -----------------------------------------------
+# EFA-REDUCED QUERY VECTOR -----------------------------------------------
 # User questionnaires data frame
 df_input.all <- read_csv(url('https://docs.google.com/spreadsheets/d/e/2PACX-1vSphzWoCxoNaiaJcQUWKCMqUAT041Q8UqUgM7rSzIwYZb7FhttKJwNgtrFf-r7EgzXHFom4UjLl2ltk/pub?gid=725827850&single=true&output=csv'))
-
-# df_input %>% 
-#   to_json() -> dsds
-# 
-# from_json(dsds) %>% 
-#   as_tibble() -> df_input
 
 df_input.all %>% 
   select(
@@ -194,48 +188,48 @@ df_input.all %>%
   select(-Name) -> df_input
 
 
-# TEST --------------------------------------------------------------------
-# Cosine => Pearson (normalize by subtracting the mean of the vector)
-df_occupations %>% 
-  select(
-    ends_with('.L')
-  ) %>% 
-  as.matrix() -> mtx_occupations
+# # TEST --------------------------------------------------------------------
+# # Cosine => Pearson (normalize by subtracting the mean of the vector)
+# df_occupations %>% 
+#   select(
+#     ends_with('.L')
+#   ) %>% 
+#   as.matrix() -> mtx_occupations
+# 
+# df_input %>% 
+#   as.matrix() -> mtx_input
+# 
+# sim2(
+#   x = mtx_occupations
+#   , y = mtx_input
+#   , method = 'cosine'
+#   # , norm = 'l2'
+#   # , norm = 'none'
+# ) %>% 
+#   # diag() %>%
+#   as_tibble() -> lalala
+# 
+# names(lalala) <- 'Similarity.Cosine'
+# 
+# lalala
+# 
+# df_occupations %>% 
+#   bind_cols(lalala) %>% 
+#   select(
+#     Occupation
+#     , Career_Cluster
+#     , Similarity.Cosine
+#   ) %>% 
+#   arrange(desc(Similarity.Cosine)) -> lalala
+# 
+# # Angular similarity
+# lalala %>% 
+#   mutate(
+#     Similarity.Angular = 1 - (acos(Similarity.Cosine)/pi)
+#   ) -> lalala
+# 
 
-df_input %>% 
-  as.matrix() -> mtx_input
-
-sim2(
-  x = mtx_occupations
-  , y = mtx_input
-  , method = 'cosine'
-  # , norm = 'l2'
-  # , norm = 'none'
-) %>% 
-  # diag() %>%
-  as_tibble() -> lalala
-
-names(lalala) <- 'Similarity.Cosine'
-
-lalala
-
-df_occupations %>% 
-  bind_cols(lalala) %>% 
-  select(
-    Occupation
-    , Career_Cluster
-    , Similarity.Cosine
-  ) %>% 
-  arrange(desc(Similarity.Cosine)) -> lalala
-
-# Angular similarity
-lalala %>% 
-  mutate(
-    Similarity.Angular = 1 - (acos(Similarity.Cosine)/pi)
-  ) -> lalala
-
-
-# OVERQUALIFICATION INPUTATION TEST ---------------------------------------
+# OVERQUALIFICATION IMPUTATION TEST ---------------------------------------
 # [VERY LOW REQUIREMENTS] OVERQUALIFICATION INPUT (ONLY IF SCORE <= 0.05) -------------------------------------------------
 df_input %>%
   rename_with(
@@ -405,34 +399,193 @@ df_KNN.output.sub.scores %>%
   ) %>% 
   view()
 
-# GRAPHS ------------------------------------------------------------------
+# HISTOGRAMS ------------------------------------------------------------------
 df_KNN.output.sub %>%
   pivot_longer(
     cols = starts_with('Similarity.')
     , names_to = 'Similarity'
     , values_to = 'Value'
-  ) %>%
+  ) -> df_KNN.output.sub.long
+
+df_KNN.output.sub.long %>%
+  mutate(
+    Similarity2 = Similarity
+    , Similarity2 = fct_reorder(
+      Similarity2, Value
+      , .fun = max, .desc = T
+    )
+    , Similarity = fct_reorder(
+      Similarity, Value
+      , .fun = max, .desc = T
+    )
+  ) -> tmp
+
+tmp %>%
   ggplot(aes(
     x = Value
-    , color = Similarity
+    # , color = Similarity
   )) + 
-  geom_density(size = 1.5) +
-  scale_x_continuous(
-    limits = c(-1,1)
-  )
-
+  geom_histogram(
+    data = tmp %>% 
+      select(-Similarity)
+    , aes(group = Similarity2)
+    # , color = 'grey'
+    , binwidth = .1
+    # , color = 'grey'
+    , fill = 'grey'
+    , alpha = 0.5
+  ) +
+  geom_histogram(
+    # aes(color = Similarity)
+    aes(fill = Similarity)
+    , binwidth = .1
+    # , color = viridis::plasma(1)
+    , fill = viridis::plasma(1)
+  )+
+  facet_wrap(
+    facets = vars(Similarity)
+    , nrow = 3) + 
+  ggthemes::theme_hc()
+  
 df_KNN.output.sub.scores %>%
   pivot_longer(
     cols = starts_with('Similarity.')
     , names_to = 'Similarity'
     , values_to = 'Value'
-  ) %>%
+  ) -> df_KNN.output.sub.scores.long
+
+df_KNN.output.sub.scores.long %>%
+  mutate(
+    Similarity2 = Similarity
+    , Similarity2 = fct_reorder(
+      Similarity2, Value
+      , .fun = max, .desc = T
+    )
+    , Similarity = fct_reorder(
+      Similarity, Value
+      , .fun = max, .desc = T
+    )
+  ) -> tmp.scores
+
+tmp.scores %>%
   ggplot(aes(
     x = Value
-    , color = Similarity
+    # , color = Similarity
   )) + 
-  geom_density(size = 1.5) +
-  scale_x_continuous(
-    limits = c(-1,1)
-  )
+  geom_histogram(
+    data = tmp %>% 
+      select(-Similarity)
+    , aes(group = Similarity2)
+    # , color = 'grey'
+    , binwidth = .1
+    # , color = 'grey'
+    , fill = 'grey'
+    , alpha = 0.5
+  ) +
+  geom_histogram(
+    # aes(color = Similarity)
+    aes(fill = Similarity)
+    , binwidth = .1
+    # , color = viridis::plasma(1)
+    , fill = viridis::plasma(1)
+  )+
+  facet_wrap(
+    facets = vars(Similarity)
+    , nrow = 3) + 
+  ggthemes::theme_hc()
+  
+# BAR PLOTS (MAX / MIN MATCHING %) ------------------------------------------------------------------
+df_KNN.output.sub %>%
+  pivot_longer(
+    cols = starts_with('Similarity.')
+    , names_to = 'Similarity'
+    , values_to = 'Value'
+  ) -> df_KNN.output.sub.long
 
+df_KNN.output.sub.long %>%
+  mutate(
+    Similarity2 = Similarity
+    , Similarity2 = fct_reorder(
+      Similarity2, Value
+      , .fun = max, .desc = T
+    )
+    , Similarity = fct_reorder(
+      Similarity, Value
+      , .fun = max, .desc = T
+    )
+  ) -> tmp
+
+tmp %>%
+  ggplot(aes(
+    x = Value
+    # , color = Similarity
+  )) + 
+  geom_histogram(
+    data = tmp %>% 
+      select(-Similarity)
+    , aes(group = Similarity2)
+    # , color = 'grey'
+    , binwidth = .1
+    # , color = 'grey'
+    , fill = 'grey'
+    , alpha = 0.5
+  ) +
+  geom_histogram(
+    # aes(color = Similarity)
+    aes(fill = Similarity)
+    , binwidth = .1
+    # , color = viridis::plasma(1)
+    , fill = viridis::plasma(1)
+  )+
+  facet_wrap(
+    facets = vars(Similarity)
+    , nrow = 3) + 
+  ggthemes::theme_hc()
+  
+df_KNN.output.sub.scores %>%
+  pivot_longer(
+    cols = starts_with('Similarity.')
+    , names_to = 'Similarity'
+    , values_to = 'Value'
+  ) -> df_KNN.output.sub.scores.long
+
+df_KNN.output.sub.scores.long %>%
+  mutate(
+    Similarity2 = Similarity
+    , Similarity2 = fct_reorder(
+      Similarity2, Value
+      , .fun = max, .desc = T
+    )
+    , Similarity = fct_reorder(
+      Similarity, Value
+      , .fun = max, .desc = T
+    )
+  ) -> tmp.scores
+
+tmp.scores %>%
+  ggplot(aes(
+    x = Value
+    # , color = Similarity
+  )) + 
+  geom_histogram(
+    data = tmp %>% 
+      select(-Similarity)
+    , aes(group = Similarity2)
+    # , color = 'grey'
+    , binwidth = .1
+    # , color = 'grey'
+    , fill = 'grey'
+    , alpha = 0.5
+  ) +
+  geom_histogram(
+    # aes(color = Similarity)
+    aes(fill = Similarity)
+    , binwidth = .1
+    # , color = viridis::plasma(1)
+    , fill = viridis::plasma(1)
+  )+
+  facet_wrap(
+    facets = vars(Similarity)
+    , nrow = 3) + 
+  ggthemes::theme_hc()
+  
