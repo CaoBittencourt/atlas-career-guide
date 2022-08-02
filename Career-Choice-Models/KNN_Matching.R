@@ -210,6 +210,12 @@ fun_KNN.matching <- function(
         , Similarity.Sqrt3 = sqrt(
           round(1 - ((pmin(Euclidean_Distance, sqrt(2)) ^ 2) / 2), 10)
         ) #Bound at [0,1]
+        , Similarity.Sqrt4 = sqrt(
+          round(1 - ((pmin(Euclidean_Distance, 2) ^ 2) / 4), 10)
+        ) #Bound at [0,1]
+        , Similarity.Sqrt5 = sqrt(
+          round(1 - ((pmin(Euclidean_Distance, 3) ^ 2) / 9), 10)
+        ) #Bound at [0,1]
         # Quadratic similarity
         # , Similarity.Quad = 1 - (Euclidean_Distance^2)
         , Similarity.Quad1 = 1 - (pmin(Euclidean_Distance,1) ^ 2) #Bound at [0,1]
@@ -263,6 +269,12 @@ fun_KNN.matching <- function(
         # Square root similarity 2 ("cosine-ish" + square root)
         , Similarity.Sqrt3 = sqrt(
           round(1 - ((pmin(Euclidean_Distance, sqrt(2)) ^ 2) / 2), 10)
+        ) #Bound at [0,1]
+        , Similarity.Sqrt4 = sqrt(
+          round(1 - ((pmin(Euclidean_Distance, 2) ^ 2) / 4), 10)
+        ) #Bound at [0,1]
+        , Similarity.Sqrt5 = sqrt(
+          round(1 - ((pmin(Euclidean_Distance, 3) ^ 2) / 9), 10)
         ) #Bound at [0,1]
         # Quadratic similarity
         # , Similarity.Quad = 1 - (Euclidean_Distance^2)

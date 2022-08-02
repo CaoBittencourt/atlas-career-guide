@@ -287,75 +287,75 @@ df_occupations %>%
 .show_diagrams <- T
 .show_results <- F
 
-# GLOBAL EFA PARAMETERS FIRST TEST ---------------------------------------------------
-# Number of factors
-.auto_select.nfactors <- T
-# int_nfactors.vector <- seq(1,5)
-
-# Minimum factor size
-# .int_min.factor_size.basic <- 2
-.int_min.factor_size <- 3
-
-# Top items
-# .int_n.items.total.basic <- 5
-# .int_n.items.total.cross <- 10
-
-.int_n.items.total.skill <- 8
-.int_n.items.total.ablt <- 12 #don't edit
-.int_n.items.total.know <- 12
-
-# Rotation (Oblique)
-# .chr_rotation <- 'promax'
-# .chr_rotation <- 'oblimin'
-# Rotation (Orthogonal)
-.chr_rotation <- 'varimax'
-.remove_unacceptable_MSAi.items <- T
-
-# Underloadings and crossloadings
-.remove_under_loading.items <- T
-.remove_cross_loading.items <- T
-.dbl_under_loading.threshold <- 0.3 #Lesser than 0.4 loading <- under loading
-# .dbl_cross_loading.threshold <- 0.05 #Lesser than 0.05 loading difference <- cross loading
-.dbl_cross_loading.threshold <- 0.35
-
-# Diagrams and tests
-.show_diagrams <- T
-.show_results <- F
-
-# GLOBAL EFA PARAMETERS FIRST TEST ---------------------------------------------------
-# Number of factors
-.auto_select.nfactors <- T
-# int_nfactors.vector <- seq(1,5)
-
-# Minimum factor size
-# .int_min.factor_size.basic <- 2
-.int_min.factor_size <- 3
-
-# Top items
-# .int_n.items.total.basic <- 5
-# .int_n.items.total.cross <- 10
-
-.int_n.items.total.skill <- 8
-.int_n.items.total.ablt <- 12 #don't edit
-.int_n.items.total.know <- 12
-
-# Rotation (Oblique)
-# .chr_rotation <- 'promax'
-# .chr_rotation <- 'oblimin'
-# Rotation (Orthogonal)
-.chr_rotation <- 'varimax'
-.remove_unacceptable_MSAi.items <- T
-
-# Underloadings and crossloadings
-.remove_under_loading.items <- T
-.remove_cross_loading.items <- T
-.dbl_under_loading.threshold <- 0.5 #Lesser than 0.4 loading <- under loading
-# .dbl_cross_loading.threshold <- 0.05 #Lesser than 0.05 loading difference <- cross loading
-.dbl_cross_loading.threshold <- 0.35
-
-# Diagrams and tests
-.show_diagrams <- T
-.show_results <- F
+# # GLOBAL EFA PARAMETERS FIRST TEST ---------------------------------------------------
+# # Number of factors
+# .auto_select.nfactors <- T
+# # int_nfactors.vector <- seq(1,5)
+# 
+# # Minimum factor size
+# # .int_min.factor_size.basic <- 2
+# .int_min.factor_size <- 3
+# 
+# # Top items
+# # .int_n.items.total.basic <- 5
+# # .int_n.items.total.cross <- 10
+# 
+# .int_n.items.total.skill <- 8
+# .int_n.items.total.ablt <- 12 #don't edit
+# .int_n.items.total.know <- 12
+# 
+# # Rotation (Oblique)
+# # .chr_rotation <- 'promax'
+# # .chr_rotation <- 'oblimin'
+# # Rotation (Orthogonal)
+# .chr_rotation <- 'varimax'
+# .remove_unacceptable_MSAi.items <- T
+# 
+# # Underloadings and crossloadings
+# .remove_under_loading.items <- T
+# .remove_cross_loading.items <- T
+# .dbl_under_loading.threshold <- 0.3 #Lesser than 0.4 loading <- under loading
+# # .dbl_cross_loading.threshold <- 0.05 #Lesser than 0.05 loading difference <- cross loading
+# .dbl_cross_loading.threshold <- 0.35
+# 
+# # Diagrams and tests
+# .show_diagrams <- T
+# .show_results <- F
+# 
+# # GLOBAL EFA PARAMETERS FIRST TEST ---------------------------------------------------
+# # Number of factors
+# .auto_select.nfactors <- T
+# # int_nfactors.vector <- seq(1,5)
+# 
+# # Minimum factor size
+# # .int_min.factor_size.basic <- 2
+# .int_min.factor_size <- 3
+# 
+# # Top items
+# # .int_n.items.total.basic <- 5
+# # .int_n.items.total.cross <- 10
+# 
+# .int_n.items.total.skill <- 8
+# .int_n.items.total.ablt <- 12 #don't edit
+# .int_n.items.total.know <- 12
+# 
+# # Rotation (Oblique)
+# # .chr_rotation <- 'promax'
+# # .chr_rotation <- 'oblimin'
+# # Rotation (Orthogonal)
+# .chr_rotation <- 'varimax'
+# .remove_unacceptable_MSAi.items <- T
+# 
+# # Underloadings and crossloadings
+# .remove_under_loading.items <- T
+# .remove_cross_loading.items <- T
+# .dbl_under_loading.threshold <- 0.5 #Lesser than 0.4 loading <- under loading
+# # .dbl_cross_loading.threshold <- 0.05 #Lesser than 0.05 loading difference <- cross loading
+# .dbl_cross_loading.threshold <- 0.35
+# 
+# # Diagrams and tests
+# .show_diagrams <- T
+# .show_results <- F
 
 # FULLY AUTOMATED EFA WORKFLOW (WITH TOP ITEMS) --------------------------------------------
 # # Basic Skills

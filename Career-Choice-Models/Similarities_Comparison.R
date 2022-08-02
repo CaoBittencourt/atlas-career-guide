@@ -186,8 +186,8 @@ df_input.all %>%
   # filter(Name == 'Alexandre') %>%
   # filter(Name == 'Cao') %>%
   # filter(Name == 'Felipe') %>%
-  # filter(Name == 'Gabriel') %>%
-  filter(Name == 'Martijn') %>%
+  filter(Name == 'Gabriel') %>%
+  # filter(Name == 'Martijn') %>%
   # filter(Name == 'Maurício') %>%
   # filter(Name == 'Milena') %>%
   # filter(Name == 'Tatiana') %>%
@@ -195,7 +195,6 @@ df_input.all %>%
   select(-Name) -> df_input
 
 # ------- KNN MATCHING -------------------------------------------------------------------------
-
 # NO IMPUTATION --------------------------------------------
 fun_KNN.matching(
   .df_data.numeric = df_occupations
@@ -255,15 +254,15 @@ fun_KNN.matching(
 #   , .dbl_decimals = 4
 # ) -> df_KNN.output.sub
 # 
-# # OVERQUALIFICATION IMPUTATION - 10-POINT LIKERT VERY LOW (0.10) --------------------------------------------
-# fun_KNN.matching(
-#   .df_data.numeric = df_occupations
-#   , .vec_query.numeric = df_input
-#   , .int_k = nrow(df_occupations)
-#   , .imput.over_qualification = T
-#   , .dbl_over_qualification.threshold = 0.1
-#   , .dbl_decimals = 4
-# ) -> df_KNN.output.sub
+# OVERQUALIFICATION IMPUTATION - 10-POINT LIKERT VERY LOW (0.10) --------------------------------------------
+fun_KNN.matching(
+  .df_data.numeric = df_occupations
+  , .vec_query.numeric = df_input
+  , .int_k = nrow(df_occupations)
+  , .imput.over_qualification = T
+  , .dbl_over_qualification.threshold = 0.1
+  , .dbl_decimals = 4
+) -> df_KNN.output.sub
 
 # # OVERQUALIFICATION IMPUTATION - 10-POINT LIKERT LOW (0.20) --------------------------------------------
 # fun_KNN.matching(
@@ -333,13 +332,6 @@ df_KNN.output.long %>%
   ggthemes::scale_fill_gdocs() + 
   ggthemes::theme_hc() -> plt_top15
 
-ggsave(
-  plot = plt_top15
-  , filename = '1.Similarities_Comparison_Bar1.png'
-  , width = 16
-  , height = 8
-)
-
 # TOP MATCHES (WITH IMPUTATION) ---------------------------------------------------------
 df_KNN.output.sub.long %>% 
   arrange(desc(Value)) %>% 
@@ -380,13 +372,6 @@ df_KNN.output.sub.long %>%
   ggthemes::scale_fill_gdocs() + 
   ggthemes::theme_hc() -> plt_top15.sub
 
-ggsave(
-  plot = plt_top15.sub
-  , filename = '2.Similarities_Comparison_Bar2.png'
-  , width = 16
-  , height = 8
-)
-
 # HISTOGRAMS (NO IMPUTATION) --------------------------------------------------------
 df_KNN.output.long %>%
   mutate(
@@ -420,7 +405,7 @@ tmp %>%
   ) +
   facet_wrap(
     facets = vars(Similarity)
-    , nrow = 4) + 
+    , nrow = 3) + 
   labs(
     x = 'Similarity (%)'
     , y = 'Count'
@@ -428,13 +413,6 @@ tmp %>%
   ) +
   scale_x_continuous(limits = c(-1,1)) + 
   ggthemes::theme_hc() -> plt_hist
-
-ggsave(
-  plot = plt_hist
-  , filename = '3.Similarities_Comparison_Hist1.png'
-  , width = 16
-  , height = 8
-)
 
 # HISTOGRAMS (WITH IMPUTATION) --------------------------------------------------------
 df_KNN.output.sub.long %>%
@@ -469,7 +447,7 @@ tmp %>%
   ) +
   facet_wrap(
     facets = vars(Similarity)
-    , nrow = 4) + 
+    , nrow = 3) + 
   labs(
     x = 'Similarity (%)'
     , y = 'Count'
@@ -477,14 +455,6 @@ tmp %>%
   ) +
   scale_x_continuous(limits = c(-1,1)) + 
   ggthemes::theme_hc() -> plt_hist.sub
-
-ggsave(
-  plot = plt_hist.sub
-  , filename = '4.Similarities_Comparison_Hist2.png'
-  , width = 16
-  , height = 8
-)
-
 
 # HEATMAPS (NO IMPUTATION) ------------------------------------------------
 df_KNN.output.long %>% 
@@ -524,14 +494,6 @@ df_KNN.output.long %>%
     , axis.ticks.x = element_blank()
   ) -> plt_heatmap
 
-ggsave(
-  plot = plt_heatmap
-  , filename = '5.Similarities_Comparison_Heatmap1.png'
-  , width = 16
-  , height = 8
-)
-
-
 # HEATMAPS (WITH IMPUTATION) ------------------------------------------------
 df_KNN.output.sub.long %>% 
   mutate(
@@ -570,22 +532,8 @@ df_KNN.output.sub.long %>%
     , axis.ticks.x = element_blank()
   ) -> plt_heatmap.sub
 
-ggsave(
-  plot = plt_heatmap.sub
-  , filename = '6.Similarities_Comparison_Heatmap2.png'
-  , width = 16
-  , height = 8
-)
-
-
 # HEATMAPS (SIDE BY SIDE) -----------------------------------------------
-ggsave(
-  plot = plt_heatmap + plt_heatmap.sub
-  , filename = '7.Similarities_Comparison_Heatmap3.png'
-  , width = 16
-  , height = 8
-)
-
+plt_heatmaps <- plt_heatmap + plt_heatmap.sub
 
 # LINE CHARTS (NO IMPUTATION) --------------------------------------------------------
 df_KNN.output.long %>%
@@ -635,7 +583,7 @@ tmp %>%
   ) +
   facet_wrap(
     facets = vars(Similarity)
-    , nrow = 4) + 
+    , nrow = 3) + 
   labs(
     x = 'Similarity Ranking'
     , y = 'Similarity (%)'
@@ -647,14 +595,6 @@ tmp %>%
     axis.text.x = element_blank()
     , axis.ticks.x = element_blank()
   ) -> plt_line
-
-ggsave(
-  plot = plt_line
-  , filename = '8.Similarities_Comparison_Lines1.png'
-  , width = 16
-  , height = 8
-)
-
 
 # LINE CHARTS (WITH IMPUTATION) --------------------------------------------------------
 df_KNN.output.sub.long %>%
@@ -704,7 +644,7 @@ tmp %>%
   ) +
   facet_wrap(
     facets = vars(Similarity)
-    , nrow = 4) + 
+    , nrow = 3) + 
   labs(
     x = 'Similarity Ranking'
     , y = 'Similarity (%)'
@@ -717,6 +657,78 @@ tmp %>%
     , axis.ticks.x = element_blank()
   ) -> plt_line.sub
 
+# LINE CHARTS (SIDE BY SIDE) -----------------------------------------------
+plt_lines <- plt_line + plt_line.sub
+
+# PLOT EVERYTHING --------------------------------------------------------------
+plt_top15
+plt_top15.sub
+plt_hist
+plt_hist.sub
+plt_heatmap
+plt_heatmap.sub
+plt_heatmaps
+plt_line
+plt_line.sub
+plt_lines
+
+# SAVE PLOTS --------------------------------------------------------------
+ggsave(
+  plot = plt_top15
+  , filename = '1.Similarities_Comparison_Bar1.png'
+  , width = 16
+  , height = 10
+)
+
+ggsave(
+  plot = plt_top15.sub
+  , filename = '2.Similarities_Comparison_Bar2.png'
+  , width = 16
+  , height = 10
+)
+
+ggsave(
+  plot = plt_hist
+  , filename = '3.Similarities_Comparison_Hist1.png'
+  , width = 16
+  , height = 8
+)
+
+ggsave(
+  plot = plt_hist.sub
+  , filename = '4.Similarities_Comparison_Hist2.png'
+  , width = 16
+  , height = 8
+)
+
+ggsave(
+  plot = plt_heatmap
+  , filename = '5.Similarities_Comparison_Heatmap1.png'
+  , width = 16
+  , height = 8
+)
+
+ggsave(
+  plot = plt_heatmap.sub
+  , filename = '6.Similarities_Comparison_Heatmap2.png'
+  , width = 16
+  , height = 8
+)
+
+ggsave(
+  plot = plt_heatmaps
+  , filename = '7.Similarities_Comparison_Heatmap3.png'
+  , width = 16
+  , height = 8
+)
+
+ggsave(
+  plot = plt_line
+  , filename = '8.Similarities_Comparison_Lines1.png'
+  , width = 16
+  , height = 8
+)
+
 ggsave(
   plot = plt_line.sub
   , filename = '9.Similarities_Comparison_Lines2.png'
@@ -724,11 +736,9 @@ ggsave(
   , height = 8
 )
 
-# LINE CHARTS (SIDE BY SIDE) -----------------------------------------------
 ggsave(
-  plot = plt_line + plt_line.sub
-  , filename = '10.Similarities_Comparison_Lines3.png'
+  plot = plt_lines
+  , filename = '8.Similarities_Comparison_Lines3.png'
   , width = 16
   , height = 8
 )
-

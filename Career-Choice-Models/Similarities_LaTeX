@@ -1,0 +1,35 @@
+Similarity.Sub1: s = 1 - d, d \in [0,1] \Leftrightarrow s \in [0,1]
+\newline
+Similarity.Sub2: s = 1 - d, d \in [0,2] \Leftrightarrow s \in [-1,1]
+\newline
+Similarity.Div: s = \frac{1}{1 + d}, d \in [0,\infty) \Leftrightarrow s \in [0,1]
+\newline
+Similarity.Max: s = 1 - \frac{d}{max(d)}, d \in [0,\infty) \Leftrightarrow s \in [0,1]
+\newline
+Similarity.Gauss1: s = e^{-d}, d \in [0,\infty) \Leftrightarrow s \in [0,1]
+\newline
+Similarity.Gauss2: s = e^{-0.5d}, d \in [0,\infty) \Leftrightarrow s \in [0,1]
+\newline
+Similarity.Gauss3: s = e^{-0.25d}, d \in [0,\infty) \Leftrightarrow s \in [0,1]
+\newline
+Similarity.Gauss4: s = e^{-0.125d}, d \in [0,\infty) \Leftrightarrow s \in [0,1]
+\newline
+Similarity.Sqrt1: s = 1 - \frac{\sqrt{d}}{2}, d \in [0,4] \Leftrightarrow s \in [0,1]
+\newline
+Similarity.Sqrt2: s = 1 - \frac{\sqrt{d}}{2}, d \in [0,16] \Leftrightarrow s \in [-1,1]
+\newline
+Similarity.Sqrt3: s = \sqrt{1 - \frac{d^2}{2}}, d \in [0,\sqrt{2}] \Leftrightarrow s \in [0,1]
+\newline
+Similarity.Sqrt4: s = \sqrt{1 - \frac{d^2}{4}}, d \in [0,2] \Leftrightarrow s \in [0,1]
+\newline
+Similarity.Sqrt5: s = \sqrt{1 - \frac{d^2}{9}}, d \in [0,3] \Leftrightarrow s \in [0,1]
+\newline
+Similarity.Quad1: s = 1 - d^2, d \in [0,1] \Leftrightarrow s \in [0,1]
+\newline
+Similarity.Quad2: s = 1 - \frac{d^2}{2}, d \in [0,\sqrt{2}] \Leftrightarrow s \in [0,1]
+\newline
+Similarity.Quad3: s = 1 - d^2, d \in [0,\sqrt{2}] \Leftrightarrow s \in [-1,1]
+\newline
+Similarity.Cos: s = 1 - \frac{d^2}{2}, d \in [0,2] \Leftrightarrow s \in [-1,1]
+\newline
+Similarity.Ang: s = 1 - \frac{\arccos{(Similarity.Cos(d))}}{\pi}, d \in [0,2] \Leftrightarrow s \in [0,1]
