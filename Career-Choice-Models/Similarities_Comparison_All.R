@@ -4,7 +4,7 @@ pkg <- c(
   'psych', 'GPArotation' #Factor analysis
   , 'text2vec' #Cosine similarity
   , 'ggthemes', 'viridis', 'patchwork' #Data visualization
-  , 'tidyverse' #Data wrangling
+  , 'glue', 'tidyverse' #Data wrangling
 )
 
 # Activate / install packages
@@ -187,7 +187,7 @@ chr_names <- df_input.all$Name
 names(chr_names) <- df_input.all$Name
 
 # ------- KNN MATCHING -------------------------------------------------------------------------
-# NO IMPUTATION AND IMPUTATION AT ZERO ------------------------------------
+# NO IMPUTATION ------------------------------------
 lapply(
   chr_names
   , function(name){
@@ -207,6 +207,16 @@ lapply(
     
   }) -> list_KNN.output
 
+# OVERQUALIFICATION IMPUTATION --------------------------------------------
+# OVERQUALIFICATION IMPUTATION - 100% UNNECESSARY COMPETENCY (0)
+# OVERQUALIFICATION IMPUTATION - 5-POINT LIKERT LOW / 4 (0.0625)
+# OVERQUALIFICATION IMPUTATION - 5-POINT LIKERT LOW / 2 (0.125)
+# OVERQUALIFICATION IMPUTATION - 5-POINT LIKERT LOW (0.25)
+# OVERQUALIFICATION IMPUTATION - 10-POINT LIKERT VERY LOW / 2 (0.05)
+# OVERQUALIFICATION IMPUTATION - 10-POINT LIKERT VERY LOW (0.10)
+# OVERQUALIFICATION IMPUTATION - 10-POINT LIKERT LOW (0.20)
+dbl_threshold <- 0
+
 lapply(
   chr_names
   , function(name){
@@ -214,13 +224,12 @@ lapply(
     df_input.all %>% 
       filter(Name == name) -> df_input
     
-    # OVERQUALIFICATION IMPUTATION - 100% UNNECESSARY COMPETENCY (0) --------------------------------------------
     fun_KNN.matching(
       .df_data.numeric = df_occupations
       , .vec_query.numeric = df_input
       , .int_k = nrow(df_occupations)
       , .imput.over_qualification = T
-      , .dbl_over_qualification.threshold = 0
+      , .dbl_over_qualification.threshold = dbl_threshold
       , .dbl_decimals = 4
     ) %>% 
       return(.)
@@ -310,13 +319,21 @@ tmp %>%
     , binwidth = .1
     , fill = '#fb5607'
   ) +
+  geom_vline(
+    xintercept = 0
+    , linetype = 'dashed'
+  ) + 
+  geom_vline(
+    xintercept = 0.5
+    , linetype = 'dashed'
+  ) + 
   facet_wrap(
     facets = vars(Similarity)
     , nrow = 3) + 
   labs(
     x = 'Similarity (%)'
     , y = 'Count'
-    , title = 'Similarity Metrics Comparison - No Imputation'
+    , title = 'Similarity Metrics Comparison (All users) - No Imputation'
   ) +
   scale_x_continuous(limits = c(-1,1)) + 
   ggthemes::theme_hc() -> plt_hist
@@ -352,13 +369,21 @@ tmp %>%
     , binwidth = .1
     , fill = viridis::plasma(1)
   ) +
+  geom_vline(
+    xintercept = 0
+    , linetype = 'dashed'
+  ) + 
+  geom_vline(
+    xintercept = 0.5
+    , linetype = 'dashed'
+  ) + 
   facet_wrap(
     facets = vars(Similarity)
     , nrow = 3) + 
   labs(
     x = 'Similarity (%)'
     , y = 'Count'
-    , title = 'Similarity Metrics Comparison - With Overqualification Imputation'
+    , title = glue('Similarity Metrics Comparison (All users) - With Overqualification Imputation (at {dbl_threshold})')
   ) +
   scale_x_continuous(limits = c(-1,1)) + 
   ggthemes::theme_hc() -> plt_hist.sub
@@ -387,7 +412,7 @@ df_KNN.output.long %>%
     x = 'Similarity Ranking'
     , y = 'Similarity Metric'
     , fill = 'Similarity (%)'
-    , title = 'Similarity Metrics Comparison - No Imputation'
+    , title = 'Similarity Metrics Comparison (All users) - No Imputation'
   ) + 
   ggthemes::theme_hc() + 
   theme(
@@ -419,7 +444,7 @@ df_KNN.output.sub.long %>%
     x = 'Similarity Ranking'
     , y = 'Similarity Metric'
     , fill = 'Similarity (%)'
-    , title = 'Similarity Metrics Comparison - With Overqualification Imputation'
+    , title = glue('Similarity Metrics Comparison (All users) - With Overqualification Imputation (at {dbl_threshold})')
   ) + 
   ggthemes::theme_hc() + 
   theme(
@@ -472,7 +497,7 @@ tmp %>%
   labs(
     x = 'Similarity Ranking'
     , y = 'Similarity (%)'
-    , title = 'Similarity Metrics Comparison - No Imputation'
+    , title = 'Similarity Metrics Comparison (All users) - No Imputation'
   ) + 
   scale_y_continuous(limits = c(-1,1)) + 
   ggthemes::theme_hc() + 
@@ -523,7 +548,7 @@ tmp %>%
   labs(
     x = 'Similarity Ranking'
     , y = 'Similarity (%)'
-    , title = 'Similarity Metrics Comparison - With Overqualification Imputation'
+    , title = glue('Similarity Metrics Comparison (All users) - With Overqualification Imputation (at {dbl_threshold})')
   ) + 
   scale_y_continuous(limits = c(-1,1)) + 
   ggthemes::theme_hc() + 
