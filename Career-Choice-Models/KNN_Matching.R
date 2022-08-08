@@ -221,6 +221,8 @@ fun_KNN.matching <- function(
         , Similarity.Quad1 = 1 - (pmin(Euclidean_Distance,1) ^ 2) #Bound at [0,1]
         , Similarity.Quad2 = 1 - (pmin(Euclidean_Distance,sqrt(2)) ^ 2) / 2 #Bound at [0,1]
         , Similarity.Quad3 = 1 - (pmin(Euclidean_Distance,sqrt(2)) ^ 2) #Bound at [-1,1]
+        , Similarity.Quad4 = 1 - (pmin(Euclidean_Distance,2.5) ^ 2) / 3.125 #Bound at [-1,1]
+        , Similarity.Quad5 = 1 - (pmin(Euclidean_Distance,3) ^ 2) / 4.5 #Bound at [-1,1]
         # "Cosine-ish" similarity
         # Equivalence between euclidean and cosine (if euclidean E [0,2])
         , Similarity.Cos = 1 - ((pmin(Euclidean_Distance, 2) ^ 2) / 2) #Bound at [-1,1]
@@ -281,6 +283,8 @@ fun_KNN.matching <- function(
         , Similarity.Quad1 = 1 - (pmin(Euclidean_Distance,1) ^ 2) #Bound at [0,1]
         , Similarity.Quad2 = 1 - (pmin(Euclidean_Distance,sqrt(2)) ^ 2) / 2 #Bound at [0,1]
         , Similarity.Quad3 = 1 - (pmin(Euclidean_Distance,sqrt(2)) ^ 2) #Bound at [-1,1]
+        , Similarity.Quad4 = 1 - (pmin(Euclidean_Distance,2.5) ^ 2) / 3.125 #Bound at [-1,1]
+        , Similarity.Quad5 = 1 - (pmin(Euclidean_Distance,3) ^ 2) / 4.5 #Bound at [-1,1]
         # "Cosine-ish" similarity
         # Equivalence between euclidean and cosine (if euclidean E [0,2])
         , Similarity.Cos = 1 - ((pmin(Euclidean_Distance, 2) ^ 2) / 2) #Bound at [-1,1]
@@ -293,6 +297,7 @@ fun_KNN.matching <- function(
         )
         
       ) %>%
+      arrange(Euclidean_Distance) %>%
       return(.)
     
   }

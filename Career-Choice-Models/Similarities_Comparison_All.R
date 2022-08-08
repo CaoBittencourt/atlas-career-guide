@@ -216,6 +216,8 @@ lapply(
 # OVERQUALIFICATION IMPUTATION - 10-POINT LIKERT VERY LOW (0.10)
 # OVERQUALIFICATION IMPUTATION - 10-POINT LIKERT LOW (0.20)
 dbl_threshold <- 0
+# dbl_threshold <- 0.10
+# dbl_threshold <- 0.25
 
 lapply(
   chr_names
@@ -237,7 +239,6 @@ lapply(
   }) -> list_KNN.output.sub
 
 # ------- VISUALIZATION -------------------------------------------------------------------------
-
 # BIND DATA FRAMES --------------------------------------------------------
 list_KNN.output %>% 
   bind_rows(.id = 'Name') %>% 
@@ -329,7 +330,7 @@ tmp %>%
   ) + 
   facet_wrap(
     facets = vars(Similarity)
-    , nrow = 3) + 
+    , nrow = 4) + 
   labs(
     x = 'Similarity (%)'
     , y = 'Count'
@@ -379,7 +380,7 @@ tmp %>%
   ) + 
   facet_wrap(
     facets = vars(Similarity)
-    , nrow = 3) + 
+    , nrow = 4) + 
   labs(
     x = 'Similarity (%)'
     , y = 'Count'
@@ -493,7 +494,7 @@ tmp %>%
   ) +
   facet_wrap(
     facets = vars(Similarity)
-    , nrow = 3) + 
+    , nrow = 4) + 
   labs(
     x = 'Similarity Ranking'
     , y = 'Similarity (%)'
@@ -544,7 +545,7 @@ tmp %>%
   ) +
   facet_wrap(
     facets = vars(Similarity)
-    , nrow = 3) + 
+    , nrow = 4) + 
   labs(
     x = 'Similarity Ranking'
     , y = 'Similarity (%)'

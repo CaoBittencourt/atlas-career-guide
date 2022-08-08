@@ -116,15 +116,15 @@ df_occupations <- readr::read_csv('https://docs.google.com/spreadsheets/d/e/2PAC
 
 # Matching data frame
 # Only highly qualified professions
-df_occupations %>%
-  filter(
-    Entry_level_Education %in% c(
-      "Bachelor's degree"
-      , "Doctoral or professional degree"
-      # , "Associate's degree"
-      , "Master's degree"
-    )
-  ) -> df_occupations
+# df_occupations %>%
+#   filter(
+#     Entry_level_Education %in% c(
+#       "Bachelor's degree"
+#       , "Doctoral or professional degree"
+#       # , "Associate's degree"
+#       , "Master's degree"
+#     )
+#   ) -> df_occupations
 
 # Select only necessary variables
 df_occupations %>%
@@ -182,8 +182,8 @@ df_input.all %>%
 
 # SELECTED USER -----------------------------------------------------------
 # For this example, use Martijn' questionnaire 
-# chr_user <- 'Martijn'
-chr_user <- 'Cao'
+chr_user <- 'Martijn'
+# chr_user <- 'Cao'
 
 df_input.all %>% 
   filter(Name == chr_user) %>%
@@ -356,7 +356,7 @@ tmp %>%
   ) + 
   facet_wrap(
     facets = vars(Similarity)
-    , nrow = 3) + 
+    , nrow = 4) + 
   labs(
     x = 'Similarity (%)'
     , y = 'Count'
@@ -406,7 +406,7 @@ tmp %>%
   ) + 
   facet_wrap(
     facets = vars(Similarity)
-    , nrow = 3) + 
+    , nrow = 4) + 
   labs(
     x = 'Similarity (%)'
     , y = 'Count'
@@ -542,7 +542,7 @@ tmp %>%
   ) +
   facet_wrap(
     facets = vars(Similarity)
-    , nrow = 3) + 
+    , nrow = 4) + 
   labs(
     x = 'Similarity Ranking'
     , y = 'Similarity (%)'
@@ -603,7 +603,7 @@ tmp %>%
   ) +
   facet_wrap(
     facets = vars(Similarity)
-    , nrow = 3) + 
+    , nrow = 4) + 
   labs(
     x = 'Similarity Ranking'
     , y = 'Similarity (%)'
