@@ -111,7 +111,7 @@ fun_KNN.matching <- function(
       mutate(#Add euclidean distances and convert them to similarities
         Euclidean_Distance = as.vector(KNN.output$nn.dist)
         
-        , Compatibility = 1 - (pmin(Euclidean_Distance,2.5) ^ 2) / 3.125 #Bound at [-1,1]
+        , Similarity = 1 - (pmin(Euclidean_Distance,2.5) ^ 2) / 3.125 #Bound at [-1,1]
         
         , across(
           .cols = starts_with('Similarity.')
@@ -137,7 +137,7 @@ fun_KNN.matching <- function(
       mutate(#Add euclidean distances and convert them to similarities
         Euclidean_Distance = as.vector(KNN.output$nn.dist)
         
-        , Compatibility = 1 - (pmin(Euclidean_Distance,2.5) ^ 2) / 3.125 #Bound at [-1,1]
+        , Similarity = 1 - (pmin(Euclidean_Distance,2.5) ^ 2) / 3.125 #Bound at [-1,1]
         
         , across(
           .cols = starts_with('Similarity.')
@@ -314,7 +314,7 @@ df_KNN.output %>%
   select(
     Occupation
     , Entry_level_Education
-    , starts_with('Compatibility')
+    , starts_with('Similarity')
   ) %>% 
   to_json(digits = 4) %>% 
   pretty_json() -> JSON_KNN.output
