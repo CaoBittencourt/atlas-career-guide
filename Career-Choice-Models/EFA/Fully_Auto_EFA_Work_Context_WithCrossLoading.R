@@ -29,7 +29,7 @@ df_occupations <- readr::read_csv('https://docs.google.com/spreadsheets/d/e/2PAC
 # Labels character vector
 chr_labels <- scan(
   url('https://docs.google.com/spreadsheets/d/e/2PACX-1vSphzWoCxoNaiaJcQUWKCMqUAT041Q8UqUgM7rSzIwYZb7FhttKJwNgtrFf-r7EgzXHFom4UjLl2ltk/pub?gid=1223197022&single=true&output=csv')
-  , sep=','
+  , sep = ','
   , what = ''
   , quiet = T
 )
@@ -74,7 +74,12 @@ df_occupations %>%
 .int_min.factor_size <- 3
 
 # Top items
-.int_n.items.total.context <- 15
+# .int_n.items.total.context <- 15
+(
+  df_occupations.numeric.context %>% 
+    ncol() / 2
+) %>% 
+  round(0) -> .int_n.items.total.context
 
 # Rotation (Oblique)
 .chr_rotation <- 'promax'
@@ -146,7 +151,6 @@ EFA_Context.1$best.models.evaluation
 
 # All models are fairly consistent. 
 # Two factors model has excellent reliability.
-
 EFA_Context$all.models.evaluation
 
 # The 4 and 6 factors models did not have sufficient loadings across all factors after top items selection.
@@ -229,7 +233,7 @@ EFA_Context$EFA.workflow$EFA.top.items$EFA.5Factors$removed.items
 length(EFA_Context$EFA.workflow$EFA$EFA$EFA.5Factors$removed.items) / ncol(df_occupations.numeric.context)
 
 # Internal consistency of factors
-EFA_Context$EFA.workflow$EFA.top.items$EFA.5Factors$reliability.evaluation
+EFA_Context$EFA.workflow$EFA.top.items$EFA.5Factors$reliability.evaluation 
 
 # Factors 4 and 5 have somewhat questionable internal consistency.
 # Other factors have internal consistency.
