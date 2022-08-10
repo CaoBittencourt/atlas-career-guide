@@ -103,115 +103,115 @@ df_occupations %>%
     )
   ) -> df_occupations.numeric.context
 
-# VARIANCE PROPORTIONALITY ------------------------------------------------
-df_occupations %>% 
-  select(
-    colnames(
-      df_occupations.numeric.skill
-    )
-    , colnames(
-      df_occupations.numeric.ablt
-    )
-    , colnames(
-      df_occupations.numeric.know
-    )
-    , colnames(
-      df_occupations.numeric.context
-    )
-  ) %>% 
-  mutate(#0 to 100 => 0 to 1 (helps calculate similarity later on)
-    across(
-      .fns = function(x){x/100}
-    )
-  )  -> df_occupations.numeric
-
-df_occupations.numeric %>% 
-  summarise(
-    across(
-      .cols = everything()
-      ,.fns = var
-    )
-  ) %>% 
-  rowSums() -> dbl_occupations.var.total
-
-df_occupations.numeric.skill %>% 
-  summarise(
-    across(
-      .cols = everything()
-      ,.fns = var
-    )
-  ) %>% 
-  rowSums() -> dbl_skills.var.total
-
-df_occupations.numeric.ablt %>% 
-  summarise(
-    across(
-      .cols = everything()
-      ,.fns = var
-    )
-  ) %>% 
-  rowSums() -> dbl_ablt.var.total
-
-df_occupations.numeric.know %>% 
-  summarise(
-    across(
-      .cols = everything()
-      ,.fns = var
-    )
-  ) %>% 
-  rowSums() -> dbl_know.var.total
-
-df_occupations.numeric.context %>% 
-  summarise(
-    across(
-      .cols = everything()
-      ,.fns = var
-    )
-  ) %>% 
-  rowSums() -> dbl_context.var.total
-
-# Variance proportionality (how much each category contributes to total variance)
-sum(
-  dbl_skills.var.total
-  , dbl_ablt.var.total
-  , dbl_know.var.total
-  , dbl_context.var.total
-) == dbl_occupations.var.total
-
-dbl_skills.var.pct <- dbl_skills.var.total / dbl_occupations.var.total
-dbl_ablt.var.pct <- dbl_ablt.var.total / dbl_occupations.var.total
-dbl_know.var.pct <- dbl_know.var.total / dbl_occupations.var.total
-dbl_context.var.pct <- dbl_context.var.total / dbl_occupations.var.total
-
-# Define number of items in the questionnaire
-# dbl_items.total <- 50
-# dbl_items.total <- 30
-# dbl_items.total <- 32
-# dbl_items.total <- 40
-# dbl_items.total <- 60
-
-# Pick N items from each category in proportion to total variability
-dbl_skills.items <- dbl_skills.var.pct * dbl_items.total
-dbl_ablt.items <- dbl_ablt.var.pct * dbl_items.total
-dbl_know.items <- dbl_know.var.pct * dbl_items.total
-dbl_context.items <- dbl_context.var.pct * dbl_items.total
-
-dbl_skills.items <- round(dbl_skills.items)
-dbl_ablt.items <- round(dbl_ablt.items)
-dbl_know.items <- round(dbl_know.items)
-dbl_context.items <- round(dbl_context.items)
-
-dbl_skills.items
-dbl_ablt.items
-dbl_know.items
-dbl_context.items
-
-sum(
-  dbl_skills.items
-  , dbl_ablt.items
-  , dbl_know.items
-  , dbl_context.items
-)
+# # VARIANCE PROPORTIONALITY ------------------------------------------------
+# df_occupations %>% 
+#   select(
+#     colnames(
+#       df_occupations.numeric.skill
+#     )
+#     , colnames(
+#       df_occupations.numeric.ablt
+#     )
+#     , colnames(
+#       df_occupations.numeric.know
+#     )
+#     , colnames(
+#       df_occupations.numeric.context
+#     )
+#   ) %>% 
+#   mutate(#0 to 100 => 0 to 1 (helps calculate similarity later on)
+#     across(
+#       .fns = function(x){x/100}
+#     )
+#   )  -> df_occupations.numeric
+# 
+# df_occupations.numeric %>% 
+#   summarise(
+#     across(
+#       .cols = everything()
+#       ,.fns = var
+#     )
+#   ) %>% 
+#   rowSums() -> dbl_occupations.var.total
+# 
+# df_occupations.numeric.skill %>% 
+#   summarise(
+#     across(
+#       .cols = everything()
+#       ,.fns = var
+#     )
+#   ) %>% 
+#   rowSums() -> dbl_skills.var.total
+# 
+# df_occupations.numeric.ablt %>% 
+#   summarise(
+#     across(
+#       .cols = everything()
+#       ,.fns = var
+#     )
+#   ) %>% 
+#   rowSums() -> dbl_ablt.var.total
+# 
+# df_occupations.numeric.know %>% 
+#   summarise(
+#     across(
+#       .cols = everything()
+#       ,.fns = var
+#     )
+#   ) %>% 
+#   rowSums() -> dbl_know.var.total
+# 
+# df_occupations.numeric.context %>% 
+#   summarise(
+#     across(
+#       .cols = everything()
+#       ,.fns = var
+#     )
+#   ) %>% 
+#   rowSums() -> dbl_context.var.total
+# 
+# # Variance proportionality (how much each category contributes to total variance)
+# sum(
+#   dbl_skills.var.total
+#   , dbl_ablt.var.total
+#   , dbl_know.var.total
+#   , dbl_context.var.total
+# ) == dbl_occupations.var.total
+# 
+# dbl_skills.var.pct <- dbl_skills.var.total / dbl_occupations.var.total
+# dbl_ablt.var.pct <- dbl_ablt.var.total / dbl_occupations.var.total
+# dbl_know.var.pct <- dbl_know.var.total / dbl_occupations.var.total
+# dbl_context.var.pct <- dbl_context.var.total / dbl_occupations.var.total
+# 
+# # Define number of items in the questionnaire
+# # dbl_items.total <- 50
+# # dbl_items.total <- 30
+# # dbl_items.total <- 32
+# # dbl_items.total <- 40
+# # dbl_items.total <- 60
+# 
+# # Pick N items from each category in proportion to total variability
+# dbl_skills.items <- dbl_skills.var.pct * dbl_items.total
+# dbl_ablt.items <- dbl_ablt.var.pct * dbl_items.total
+# dbl_know.items <- dbl_know.var.pct * dbl_items.total
+# dbl_context.items <- dbl_context.var.pct * dbl_items.total
+# 
+# dbl_skills.items <- round(dbl_skills.items)
+# dbl_ablt.items <- round(dbl_ablt.items)
+# dbl_know.items <- round(dbl_know.items)
+# dbl_context.items <- round(dbl_context.items)
+# 
+# dbl_skills.items
+# dbl_ablt.items
+# dbl_know.items
+# dbl_context.items
+# 
+# sum(
+#   dbl_skills.items
+#   , dbl_ablt.items
+#   , dbl_know.items
+#   , dbl_context.items
+# )
 
 # ITEMS PER CATEGORY PARAMETERS -------------------------------------------
 # Manually define number of items
