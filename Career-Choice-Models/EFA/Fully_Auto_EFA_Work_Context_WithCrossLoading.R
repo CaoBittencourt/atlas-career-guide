@@ -64,7 +64,7 @@ df_occupations %>%
     )
   ) -> df_occupations.numeric.context
 
-# GLOBAL EFA PARAMETERS FIRST TEST ---------------------------------------------------
+# GLOBAL EFA PARAMETERS ---------------------------------------------------
 # Number of factors
 .auto_select.nfactors <- T
 # int_nfactors.vector <- seq(1,5)
@@ -92,7 +92,7 @@ df_occupations %>%
 .remove_cross_loading.items <- F
 .dbl_under_loading.threshold <- 0.4 #Lesser than 0.4 loading <- under loading
 # .dbl_cross_loading.threshold <- 0.05 #Lesser than 0.05 loading difference <- cross loading
-.dbl_cross_loading.threshold <- 0.35
+.dbl_cross_loading.threshold <- 0.4
 
 # Diagrams and tests
 .show_diagrams <- T

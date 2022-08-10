@@ -185,8 +185,10 @@ dbl_context.var.pct <- dbl_context.var.total / dbl_occupations.var.total
 
 # Define number of items in the questionnaire
 # dbl_items.total <- 50
+# dbl_items.total <- 30
 # dbl_items.total <- 32
-dbl_items.total <- 40
+# dbl_items.total <- 40
+# dbl_items.total <- 60
 
 # Pick N items from each category in proportion to total variability
 dbl_skills.items <- dbl_skills.var.pct * dbl_items.total
@@ -211,12 +213,12 @@ sum(
   , dbl_context.items
 )
 
+# ITEMS PER CATEGORY PARAMETERS -------------------------------------------
 # Manually define number of items
 .int_n.items.total.skill <- 6
-.int_n.items.total.ablt <- 8
-.int_n.items.total.know <- 8
-# .int_n.items.total.context <- 18
-.int_n.items.total.context <- 20
+.int_n.items.total.ablt <- 12
+.int_n.items.total.know <- 12
+.int_n.items.total.context <- 15
 
 # # GLOBAL EFA PARAMETERS 1 ---------------------------------------------------
 # # Number of factors
@@ -416,7 +418,30 @@ sum(
 # .show_diagrams <- T
 # .show_results <- F
  
-# GLOBAL EFA PARAMETERS 7 ---------------------------------------------------
+# # GLOBAL EFA PARAMETERS 7 ---------------------------------------------------
+# # Number of factors
+# .auto_select.nfactors <- T
+# 
+# # Minimum factor size
+# .int_min.factor_size <- 3
+# 
+# # Rotation (Oblique)
+# .chr_rotation <- 'promax'
+# # .chr_rotation <- 'oblimin'
+# # Rotation (Orthogonal)
+# # .chr_rotation <- 'varimax'
+# .remove_unacceptable_MSAi.items <- T
+# # Underloadings and crossloadings
+# .remove_under_loading.items <- T
+# .remove_cross_loading.items <- T
+# .dbl_under_loading.threshold <- 0.4
+# .dbl_cross_loading.threshold <- 0.2
+# 
+# # Diagrams and tests
+# .show_diagrams <- F
+# .show_results <- F
+
+# GLOBAL EFA PARAMETERS 8 ---------------------------------------------------
 # Number of factors
 .auto_select.nfactors <- T
 
@@ -433,7 +458,7 @@ sum(
 .remove_under_loading.items <- T
 .remove_cross_loading.items <- T
 .dbl_under_loading.threshold <- 0.4
-.dbl_cross_loading.threshold <- 0.2
+.dbl_cross_loading.threshold <- 0.3
 
 # Diagrams and tests
 .show_diagrams <- F
@@ -643,23 +668,23 @@ EFA_Skill$EFA.workflow$top.items$EFA.2Factors %>% view()
 
 # Abilities
 # EFA_Ablt$best.model$top.items %>% view()
-EFA_Ablt$EFA.workflow$top.items$EFA.2Factors %>% view()
-EFA_Ablt$EFA.workflow$top.items$EFA.3Factors %>% view()
+# EFA_Ablt$EFA.workflow$top.items$EFA.2Factors %>% view()
+# EFA_Ablt$EFA.workflow$top.items$EFA.3Factors %>% view()
 EFA_Ablt$EFA.workflow$top.items$EFA.4Factors %>% view()
 
 # All models are highly reliable. However, the four factors is most interpretable.
 
 # Knowledge
-EFA_Know$best.model$top.items %>% view()
-EFA_Know$EFA.workflow$top.items$EFA.3Factors %>% view()
+# EFA_Know$best.model$top.items %>% view()
+# EFA_Know$EFA.workflow$top.items$EFA.3Factors %>% view()
 EFA_Know$EFA.workflow$top.items$EFA.4Factors %>% view()
 
 # Work context
-EFA_Context$best.model$top.items %>% view()
+# EFA_Context$best.model$top.items %>% view()
 EFA_Context$EFA.workflow$top.items$EFA.3Factors %>% view()
 
 # Both the two and three factors models are internally consistent.
-# However, the three factors model is more interpretable and has the correct amount of item (12).
+# However, the three factors model is more interpretable and has the correct amount of items (15).
 
 # OUTPUT ------------------------------------------------------------------
 # Revised and selected models
@@ -667,9 +692,8 @@ EFA_Context$EFA.workflow$top.items$EFA.3Factors %>% view()
 chr_Skill.Items <- EFA_Skill$EFA.workflow$top.items$EFA.2Factors$Item
 # Abilities => 4 factors
 chr_Ablt.Items <- EFA_Ablt$EFA.workflow$top.items$EFA.4Factors$Item 
-# Fields of Knowledge => 2 factors
-# chr_Know.Items <- EFA_Know$EFA.workflow$top.items$EFA.4Factors$Item
-chr_Know.Items <- EFA_Know$best.model$top.items$Item
+# Fields of Knowledge => 4 factors
+chr_Know.Items <- EFA_Know$EFA.workflow$top.items$EFA.4Factors$Item
 # Work Contexts => 3 factors
 chr_Context.Items <- EFA_Context$EFA.workflow$top.items$EFA.3Factors$Item
 
