@@ -172,7 +172,7 @@ fun_EFA <- function(
   , .remove_under_loading.items = T
   , .remove_cross_loading.items = F
   , .dbl_under_loading.threshold = 0.4 #Lesser than 0.4 loading = under loading
-  , .dbl_cross_loading.threshold = 0.05 #Lesser than 0.05 loading difference = cross loading
+  , .dbl_cross_loading.threshold = 0.2 #Lesser than 0.2 loading difference = cross loading
   # Diagrams and tests
   , .show_diagrams = T
   , .show_results = F
@@ -837,7 +837,7 @@ fun_EFA.multi <- function(
   , .remove_under_loading.items = T
   , .remove_cross_loading.items = F
   , .dbl_under_loading.threshold = 0.4 #Lesser than 0.4 loading = under loading
-  , .dbl_cross_loading.threshold = 0.05 #Lesser than 0.05 loading difference = cross loading
+  , .dbl_cross_loading.threshold = 0.2 #Lesser than 0.2 loading difference = cross loading
   # Diagrams and tests
   , .show_diagrams = T
   , .show_results = F
@@ -1007,7 +1007,7 @@ fun_top.items.workflow <- function(
   , .remove_under_loading.items = T
   , .remove_cross_loading.items = F
   , .dbl_under_loading.threshold = 0.4 #Lesser than 0.4 loading = under loading
-  , .dbl_cross_loading.threshold = 0.05 #Lesser than 0.05 loading difference = cross loading
+  , .dbl_cross_loading.threshold = 0.2 #Lesser than 0.2 loading difference = cross loading
   # Diagrams and tests
   , .show_diagrams = T
   , .show_results = F
@@ -1108,7 +1108,7 @@ fun_top.items.multi.workflow <- function(
   , .remove_under_loading.items = T
   , .remove_cross_loading.items = F
   , .dbl_under_loading.threshold = 0.4 #Lesser than 0.4 loading = under loading
-  , .dbl_cross_loading.threshold = 0.05 #Lesser than 0.05 loading difference = cross loading
+  , .dbl_cross_loading.threshold = 0.2 #Lesser than 0.2 loading difference = cross loading
   # Diagrams and tests
   , .show_diagrams = T
   , .show_results = F
@@ -1296,7 +1296,7 @@ fun_best.model.top.items.workflow <- function(
   , .remove_under_loading.items = T
   , .remove_cross_loading.items = F
   , .dbl_under_loading.threshold = 0.4 #Lesser than 0.4 loading = under loading
-  , .dbl_cross_loading.threshold = 0.05 #Lesser than 0.05 loading difference = cross loading
+  , .dbl_cross_loading.threshold = 0.2 #Lesser than 0.2 loading difference = cross loading
   # Diagrams and tests
   , .show_diagrams = T
   , .show_results = F
@@ -1402,7 +1402,7 @@ fun_best.model.workflow <- function(
   , .remove_under_loading.items = T
   , .remove_cross_loading.items = F
   , .dbl_under_loading.threshold = 0.4 #Lesser than 0.4 loading = under loading
-  , .dbl_cross_loading.threshold = 0.05 #Lesser than 0.05 loading difference = cross loading
+  , .dbl_cross_loading.threshold = 0.2 #Lesser than 0.2 loading difference = cross loading
   # Diagrams and tests
   , .show_diagrams = T
   , .show_results = F
