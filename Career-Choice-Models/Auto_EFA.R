@@ -160,6 +160,626 @@ fun_nfactors.selection <- function(.df_numeric){
   
 }
 
+# #  [x] AUTOMATED EFA FUNCTION -----------------------------------------------------------
+# fun_EFA <- function(
+    #     # Basic
+#   .df_data.numeric
+#   , .int_nfactors = 1
+#   , .chr_rotation = 'promax'
+#   # Problematic items (unacceptable MSAi)
+#   , .remove_unacceptable_MSAi.items = T
+#   # Underloadings and crossloadings
+#   , .remove_under_loading.items = T
+#   , .remove_cross_loading.items = F
+#   , .dbl_under_loading.threshold = 0.4 #Lesser than 0.4 loading = under loading
+#   , .dbl_cross_loading.threshold = 0.2 #Lesser than 0.2 loading difference = cross loading
+#   # Diagrams and tests
+#   , .show_diagrams = T
+#   , .show_results = F
+# ){
+#   
+#   # Make sure there is only numeric data
+#   .df_data.numeric %>% 
+#     select(where(is.numeric)) -> .df_data.numeric
+#   
+#   # Return NA if error (i.e. unable to optimize EFA)
+#   tryCatch(
+#     
+#     expr = {
+#       
+#       # For output, log of removed, cross loading, under loading and low MSAi items
+#       chr_removed.items <- character()
+#       chr_cross.items <- character()
+#       chr_under.items <- character()
+#       chr_low_MSAi.items <- character()
+#       
+#       # Fit factor model
+#       # If remove items with unacceptable MSAi
+#       list_MSA <- fun_adequacy.tests(.df_numeric = .df_data.numeric)
+#       
+#       chr_low_MSAi.items <- c(chr_low_MSAi.items, list_MSA$Problematic_Items$Items.Problematic)
+#       
+#       if(.remove_unacceptable_MSAi.items){
+#         
+#         chr_removed.items <- c(chr_removed.items, chr_low_MSAi.items)
+#         
+#         .df_data.numeric %>%
+#           select(-all_of(list_MSA$Problematic_Items$Items.Problematic)) -> .df_data.numeric
+#         
+#       }
+#       
+#       factanal(
+#         x = .df_data.numeric
+#         , factors = .int_nfactors
+#         , rotation = .chr_rotation
+#         , control = list(
+#           nstart = 4
+#           , lower = 0.1
+#         )
+#       ) -> fit
+#       
+#       # Evaluation
+#       # Loadings DF
+#       fit$loadings[,] %>%
+#         as.matrix() %>%
+#         as_tibble(rownames = 'Item') %>%
+#         mutate(Item = factor(Item)) -> df_loadings
+#       
+#       # Do variables load to the factors sufficiently?
+#       # |factor loading| >= under loading threshold (generally, 0.4)
+#       df_loadings %>%
+#         mutate(
+#           across(
+#             .cols = -starts_with('Item')
+#             , .fns = function(x){abs(x) >= .dbl_under_loading.threshold}
+#           )
+#         ) %>%
+#         mutate(
+#           Load.Sufficient = rowSums(select(.,-starts_with('Item')))
+#           , Load.Sufficient.Bin = ifelse(Load.Sufficient > 1, 1, Load.Sufficient)
+#         ) -> df_loadings.sufficient
+#       
+#       # Percentage of variables that load significantly to at least one factor
+#       prc_loadings.sufficient <- sum(df_loadings.sufficient$Load.Sufficient.Bin)/nrow(df_loadings.sufficient)
+#       
+#       # Variables that do not load significantly to any factor
+#       df_loadings.sufficient %>% 
+#         filter(Load.Sufficient.Bin == 0) %>% 
+#         pull(Item) %>% 
+#         as.character() -> chr_under_loading.items
+#       
+#       # Remove under loading items
+#       if(.remove_under_loading.items){
+#         
+#         while(prc_loadings.sufficient != 1){
+#           
+#           # Clear data
+#           rm(
+#             fit
+#             , df_loadings
+#             , df_loadings.sufficient
+#             , prc_loadings.sufficient
+#           )
+#           
+#           # Remove underloading items
+#           .df_data.numeric %>%
+#             select(-all_of(chr_under_loading.items)) -> .df_data.numeric
+#           
+#           # Removed items log
+#           chr_removed.items <- c(chr_removed.items, chr_under_loading.items)  
+#           chr_under.items <- c(chr_under.items, chr_under_loading.items)
+#           
+#           # Rerun model
+#           # Fit factor model
+#           # If remove items with unacceptable MSAi
+#           list_MSA <- fun_adequacy.tests(.df_numeric = .df_data.numeric)
+#           
+#           chr_low_MSAi.items <- c(chr_low_MSAi.items, list_MSA$Problematic_Items$Items.Problematic)
+#           
+#           if(.remove_unacceptable_MSAi.items){
+#             
+#             chr_removed.items <- c(chr_removed.items, chr_low_MSAi.items)
+#             
+#             .df_data.numeric %>%
+#               select(-all_of(list_MSA$Problematic_Items$Items.Problematic)) -> .df_data.numeric
+#             
+#           }
+#           
+#           factanal(
+#             x = .df_data.numeric
+#             , factors = .int_nfactors
+#             , rotation = .chr_rotation
+#             , control = list(
+#               nstart = 4
+#               , lower = 0.1
+#             )
+#           ) -> fit
+#           
+#           # Evaluation
+#           # Loadings DF
+#           fit$loadings[,] %>%
+#             as.matrix() %>%
+#             as_tibble(rownames = 'Item') %>%
+#             mutate(Item = factor(Item)) -> df_loadings
+#           
+#           # Do variables load to the factors sufficiently?
+#           # |factor loading| >= under loading threshold (generally, 0.4)
+#           df_loadings %>%
+#             mutate(
+#               across(
+#                 .cols = -starts_with('Item')
+#                 , .fns = function(x){abs(x) >= .dbl_under_loading.threshold}
+#               )
+#             ) %>%
+#             mutate(
+#               Load.Sufficient = rowSums(select(.,-starts_with('Item')))
+#               , Load.Sufficient.Bin = ifelse(Load.Sufficient > 1, 1, Load.Sufficient)
+#             ) -> df_loadings.sufficient
+#           
+#           # Percentage of variables that load significantly to at least one factor
+#           prc_loadings.sufficient <- sum(df_loadings.sufficient$Load.Sufficient.Bin)/nrow(df_loadings.sufficient)
+#           
+#           # Variables that do not load significantly to any factor
+#           df_loadings.sufficient %>% 
+#             filter(Load.Sufficient.Bin == 0) %>% 
+#             pull(Item) %>%
+#             as.character() -> chr_under_loading.items
+#           
+#         }
+#         
+#       }  
+#       
+#       # Do all factors have at least three - or, better, four - or more variables loading onto them?
+#       df_loadings.sufficient %>% 
+#         summarise(
+#           across(
+#             .cols = -starts_with(c('Item','Load.Sufficient'))
+#             , .fns = function(x){sum(x)}
+#           )
+#         ) %>% 
+#         pivot_longer(
+#           cols = everything()
+#           , names_to = 'Factor'
+#           , values_to = 'Loading.Items'
+#         ) %>%
+#         mutate(
+#           Greater_3 = Loading.Items >= 3
+#           , Greater_4 = Loading.Items >= 4
+#         ) -> df_loadings.sufficient.sum
+#       
+#       # Crossloadings: variables that load to more than one factor with loading values (generally) within 0.05 of one another
+#       # Max loading vs other loadings
+#       df_loadings %>%
+#         pivot_longer(#Convert to long data format
+#           cols = -starts_with('Item')
+#           , names_to = 'Factor'
+#           , values_to = 'Loading'
+#         ) %>%
+#         group_by(Item) %>%
+#         mutate(
+#           Loading.Max = max(Loading) #Max loading per variable
+#           , Loading.Diff.Abs = abs(Loading.Max - Loading) #Absolute difference
+#           , Diff.Significant = ifelse(#Whether the difference is significant or not (i.e. <= 0.05)
+#             Loading.Diff.Abs == 0
+#             , yes = F #Loading.Diff.Abs == 0 <=> Max Loading (i.e. difference between max value and itself)
+#             , no = Loading.Diff.Abs <= .dbl_cross_loading.threshold
+#           )
+#         ) -> df_loadings.long
+#       
+#       # Crossloading items
+#       df_loadings.long %>% 
+#         filter(Diff.Significant) %>% 
+#         pull(Item) %>%
+#         as.character() -> chr_cross_loading.items
+#       
+#       # Remove cross loading items
+#       if(.remove_cross_loading.items){
+#         
+#         while(length(chr_cross_loading.items) != 0){
+#           
+#           # Clear data
+#           rm(
+#             fit
+#             , df_loadings
+#             , df_loadings.sufficient
+#             , prc_loadings.sufficient
+#             , df_loadings.sufficient.sum
+#             , df_loadings.long
+#           )
+#           
+#           # Remove crossloading items
+#           .df_data.numeric %>%
+#             select(-all_of(chr_cross_loading.items)) -> .df_data.numeric
+#           
+#           # Removed items log
+#           chr_removed.items <- c(chr_removed.items, chr_cross_loading.items)  
+#           chr_cross.items <- c(chr_cross.items, chr_cross_loading.items)  
+#           
+#           # Rerun model
+#           # Fit factor model
+#           # If remove items with unacceptable MSAi
+#           list_MSA <- fun_adequacy.tests(.df_numeric = .df_data.numeric)
+#           
+#           chr_low_MSAi.items <- c(chr_low_MSAi.items, list_MSA$Problematic_Items$Items.Problematic)
+#           
+#           if(.remove_unacceptable_MSAi.items){
+#             
+#             chr_removed.items <- c(chr_removed.items, chr_low_MSAi.items)
+#             
+#             .df_data.numeric %>%
+#               select(-all_of(list_MSA$Problematic_Items$Items.Problematic)) -> .df_data.numeric
+#             
+#           }
+#           
+#           factanal(
+#             x = .df_data.numeric
+#             , factors = .int_nfactors
+#             , rotation = .chr_rotation
+#             , control = list(
+#               nstart = 4
+#               , lower = 0.1
+#             )
+#           ) -> fit
+#           
+#           # Evaluation
+#           # Loadings DF
+#           fit$loadings[,] %>%
+#             as.matrix() %>%
+#             as_tibble(rownames = 'Item') %>%
+#             mutate(Item = factor(Item)) -> df_loadings
+#           
+#           # Max loading vs other loadings
+#           df_loadings %>%
+#             pivot_longer(#Convert to long data format
+#               cols = -starts_with('Item')
+#               , names_to = 'Factor'
+#               , values_to = 'Loading'
+#             ) %>%
+#             group_by(Item) %>%
+#             mutate(
+#               Loading.Max = max(Loading) #Max loading per variable
+#               , Loading.Diff.Abs = abs(Loading.Max - Loading) #Absolute difference
+#               , Diff.Significant = ifelse(#Whether the difference is significant or not (i.e. <= 0.05)
+#                 Loading.Diff.Abs == 0
+#                 , yes = F #Loading.Diff.Abs == 0 <=> Max Loading (i.e. difference between max value and itself)
+#                 , no = Loading.Diff.Abs <= .dbl_cross_loading.threshold
+#               )
+#             ) -> df_loadings.long
+#           
+#           # Do variables load to the factors sufficiently?
+#           # |factor loading| >= cross loading threshold (generally, 0.4)
+#           df_loadings %>%
+#             mutate(
+#               across(
+#                 .cols = -starts_with('Item')
+#                 , .fns = function(x){abs(x) >= .dbl_cross_loading.threshold}
+#               )
+#             ) %>%
+#             mutate(
+#               Load.Sufficient = rowSums(select(.,-starts_with('Item')))
+#               , Load.Sufficient.Bin = ifelse(Load.Sufficient > 1, 1, Load.Sufficient)
+#             ) -> df_loadings.sufficient
+#           
+#           # Percentage of variables that load significantly to at least one factor
+#           prc_loadings.sufficient <- sum(df_loadings.sufficient$Load.Sufficient.Bin)/nrow(df_loadings.sufficient)
+#           
+#           # Variables that do not load significantly to any factor
+#           df_loadings.sufficient %>% 
+#             filter(Load.Sufficient.Bin == 0) %>% 
+#             pull(Item) %>%
+#             as.character() -> chr_under_loading.items
+#           
+#           # If there are new under loading items, remove them
+#           if(.remove_under_loading.items){
+#             
+#             while(prc_loadings.sufficient != 1){
+#               
+#               # Clear data
+#               rm(
+#                 fit
+#                 , df_loadings
+#                 , df_loadings.sufficient
+#                 , prc_loadings.sufficient
+#               )
+#               
+#               # Remove underloading items
+#               .df_data.numeric %>%
+#                 select(-all_of(chr_under_loading.items)) -> .df_data.numeric
+#               
+#               # Removed items log
+#               chr_removed.items <- c(chr_removed.items, chr_under_loading.items)  
+#               chr_under.items <- c(chr_under.items, chr_under_loading.items)  
+#               
+#               # Rerun model
+#               # Fit factor model
+#               # If remove items with unacceptable MSAi
+#               list_MSA <- fun_adequacy.tests(.df_numeric = .df_data.numeric)
+#               
+#               chr_low_MSAi.items <- c(chr_low_MSAi.items, list_MSA$Problematic_Items$Items.Problematic)
+#               
+#               if(.remove_unacceptable_MSAi.items){
+#                 
+#                 chr_removed.items <- c(chr_removed.items, chr_low_MSAi.items)
+#                 
+#                 .df_data.numeric %>%
+#                   select(-all_of(list_MSA$Problematic_Items$Items.Problematic)) -> .df_data.numeric
+#                 
+#               }
+#               
+#               factanal(
+#                 x = .df_data.numeric
+#                 , factors = .int_nfactors
+#                 , rotation = .chr_rotation
+#                 , control = list(
+#                   nstart = 4
+#                   , lower = 0.1
+#                 )
+#               ) -> fit
+#               
+#               # Evaluation
+#               # Loadings DF
+#               fit$loadings[,] %>%
+#                 as.matrix() %>%
+#                 as_tibble(rownames = 'Item') %>%
+#                 mutate(Item = factor(Item)) -> df_loadings
+#               
+#               # Do variables load to the factors sufficiently?
+#               # |factor loading| >= under loading threshold (generally, 0.4)
+#               df_loadings %>%
+#                 mutate(
+#                   across(
+#                     .cols = -starts_with('Item')
+#                     , .fns = function(x){abs(x) >= .dbl_under_loading.threshold}
+#                   )
+#                 ) %>%
+#                 mutate(
+#                   Load.Sufficient = rowSums(select(.,-starts_with('Item')))
+#                   , Load.Sufficient.Bin = ifelse(Load.Sufficient > 1, 1, Load.Sufficient)
+#                 ) -> df_loadings.sufficient
+#               
+#               # Percentage of variables that load significantly to at least one factor
+#               prc_loadings.sufficient <- sum(df_loadings.sufficient$Load.Sufficient.Bin)/nrow(df_loadings.sufficient)
+#               
+#               # Variables that do not load significantly to any factor
+#               df_loadings.sufficient %>% 
+#                 filter(Load.Sufficient.Bin == 0) %>% 
+#                 pull(Item) %>%
+#                 as.character() -> chr_under_loading.items
+#               
+#             }
+#             
+#           }
+#           
+#           # Check if there are still cross loading items
+#           df_loadings %>%
+#             pivot_longer(#Convert to long data format
+#               cols = -starts_with('Item')
+#               , names_to = 'Factor'
+#               , values_to = 'Loading'
+#             ) %>%
+#             group_by(Item) %>%
+#             mutate(
+#               Loading.Max = max(Loading) #Max loading per variable
+#               , Loading.Diff.Abs = abs(Loading.Max - Loading) #Absolute difference
+#               , Diff.Significant = ifelse(#Whether the difference is significant or not (i.e. <= 0.05)
+#                 Loading.Diff.Abs == 0
+#                 , yes = F #Loading.Diff.Abs == 0 <=> Max Loading (i.e. difference between max value and itself)
+#                 , no = Loading.Diff.Abs <= .dbl_cross_loading.threshold
+#               )
+#             ) -> df_loadings.long
+#           
+#           # Crossloading items
+#           df_loadings.long %>% 
+#             filter(Diff.Significant) %>% 
+#             pull(Item) %>%
+#             as.character() -> chr_cross_loading.items
+#           
+#         }
+#         
+#       }
+#       
+#       # Do all factors have at least three - or, better, four - or more variables loading onto them?
+#       df_loadings.sufficient %>% 
+#         summarise(
+#           across(
+#             .cols = -starts_with(c('Item','Load.Sufficient'))
+#             , .fns = function(x){sum(x)}
+#           )
+#         ) %>% 
+#         pivot_longer(
+#           cols = everything()
+#           , names_to = 'Factor'
+#           , values_to = 'Loading.Items'
+#         ) %>%
+#         mutate(
+#           Greater_3 = Loading.Items >= 3
+#           , Greater_4 = Loading.Items >= 4
+#         ) -> df_loadings.sufficient.sum
+#       
+#       # Reliability
+#       # Do the factors form a coherent group in and of themselves?
+#       
+#       # Matching items to factors by maximum loading
+#       df_loadings.long %>%
+#         filter(
+#           Loading == Loading.Max
+#         ) -> df_loadings.long.factors
+#       
+#       # Separate factors into individual data frames
+#       factors.names <- str_sort(unique(df_loadings.long.factors$Factor), numeric = T)
+#       names(factors.names) <- factors.names
+#       
+#       # Arrange data frames for output
+#       df_loadings.long %>% 
+#         mutate(
+#           Factor = factor(Factor, levels = factors.names)
+#         ) %>% 
+#         group_by(Item) %>%
+#         arrange(Item, desc(Loading), .by_group = T) -> df_loadings.long
+#       
+#       df_loadings.long.factors %>% 
+#         mutate(
+#           Factor = factor(Factor, levels = factors.names)
+#         ) %>% 
+#         arrange(Factor, desc(Loading)) -> df_loadings.long.factors
+#       
+#       lapply(
+#         factors.names
+#         , function(factors){
+#           
+#           df_loadings.long.factors %>%
+#             filter(
+#               Factor == factors
+#             ) %>%
+#             pull(Item) %>%
+#             factor(.) %>%
+#             return(.)
+#           
+#         }
+#       ) -> list_chr_loadings.long.factors
+#       
+#       # Calculate reliability measures for each subset of variables
+#       # Temporarily disable warnings
+#       options(warn = -1) 
+#       
+#       lapply(
+#         list_chr_loadings.long.factors
+#         , function(factors){
+#           
+#           .df_data.numeric %>%
+#             select(all_of(factors)) -> df.temp #Select only the variables that match to each factor
+#           
+#           if(length(factors) > 1){#By definition, internal consistency tests only apply to groups of more than one variable
+#             
+#             df.temp %>% 
+#               splitHalf() -> metrics.other
+#             
+#             df.temp %>%
+#               omega(nfactors = 1) -> metrics.omega
+#             
+#             tibble(
+#               'Items' = length(factors)
+#               , 'Lambda6' = metrics.other$lambda6
+#               , 'OmegaT' = metrics.omega$omega.tot
+#               , 'Lambda2' = metrics.other$lambda2
+#               , 'Alpha' = metrics.other$alpha
+#               , 'Split.Max' = metrics.other$maxrb
+#               , 'Split.Avg' = metrics.other$meanr
+#               , 'Split.Min' = metrics.other$minrb
+#               , 'Interitem.r' = metrics.other$av.r
+#             ) -> df_metrics
+#             
+#             return(df_metrics)
+#             
+#           }
+#           else{
+#             
+#             tibble(
+#               'Items' = length(factors)
+#               , 'Lambda6' = NA
+#               , 'OmegaT' = NA
+#               , 'Lambda2' = NA
+#               , 'Alpha' = NA
+#               , 'Split.Max' = NA
+#               , 'Split.Avg' = NA
+#               , 'Split.Min' = NA
+#               , 'Interitem.r' = NA
+#             ) -> df_metrics
+#             
+#             return(df_metrics)
+#             
+#           }
+#           
+#         }
+#       ) %>%
+#         bind_rows(.id = 'Factor') %>%
+#         select(Factor, everything()) -> df_reliability
+#       
+#       options(warn = getOption('warn'))
+#       
+#       df_reliability %>%
+#         mutate(
+#           across(
+#             # The minimum required consistency score
+#             # may be higher or lower, depending on the context.
+#             .cols = -starts_with(c('Factor', 'Items', 'Interitem'))
+#             , .fns = function(x){
+#               case_when(
+#                 x < 0.5 ~ 'Unacceptable'
+#                 , x >= 0.5 & x < 0.6 ~ 'Poor'
+#                 , x >= 0.6 & x < 0.7 ~ 'Questionable'
+#                 , x >= 0.7 & x < 0.8 ~ 'Acceptable'
+#                 , x >= 0.8 & x < 0.9 ~ 'Good'
+#                 , x >= 0.9 ~ 'Excellent'
+#               )
+#             }
+#           )
+#         ) %>%
+#         mutate(
+#           across(
+#             .cols = starts_with('Interitem')
+#             , .fns = function(x){
+#               case_when(
+#                 x < 0.15 ~ 'Incoherent'
+#                 , x >= 0.15 & x <= 0.5 ~ 'Ideal'
+#                 , x > 0.5 ~ 'Too similar'
+#               )
+#             }
+#           )
+#         ) -> df_reliability.evaluation
+#       
+#       
+#       # Adequacy tests
+#       df_adequacy <- fun_adequacy.tests(.df_numeric = .df_data.numeric)
+#       
+#       # Recommended number of factors
+#       df_nfactors <- fun_nfactors.selection(.df_numeric = .df_data.numeric)
+#       
+#       # Factor congruence table
+#       fit$loadings %>% 
+#         congruence() %>%
+#         matrix(
+#           nrow = nrow(.)
+#           , ncol = ncol(.)
+#           , dimnames = list(rownames(.), rownames(.))
+#         ) %>%
+#         as_tibble(rownames = 'Factor') -> df_congruence
+#       
+#       
+#       # Visualizations and results
+#       # Factor Analysis Diagram and fit results
+#       if(.show_diagrams){fa.diagram(fit$loadings)}
+#       if(.show_results){print(fit, digits = 2, cutoff = 0.3, sort = T)}
+#       # Heatmaps
+#       
+#       # Output 
+#       list(
+#         'model' = fit
+#         , 'adequacy.tests' = df_adequacy
+#         , 'n.factors' = df_nfactors
+#         , 'sufficient.loadings' = df_loadings.sufficient.sum
+#         , 'reliability.metrics' = df_reliability
+#         , 'reliability.evaluation' = df_reliability.evaluation
+#         , 'factor.congruence' = df_congruence
+#         , 'removed.items' = unique(chr_removed.items)
+#         , 'under_loading.items' = unique(chr_under.items)
+#         , 'cross_loading.items' = unique(chr_cross.items)
+#         , 'unacceptable_MSAi.items' = unique(chr_low_MSAi.items)
+#         , 'data' = .df_data.numeric
+#         , 'loadings' = df_loadings
+#         , 'loadings.long' = df_loadings.long
+#         , 'loadings.long.factors' = df_loadings.long.factors
+#         # , 'plot' = plot_loadings.heatmap
+#       ) %>% return(.)
+#       
+#     }
+#     , error = function(e){return(NA)}
+#     
+#   )
+#   
+# }
+# 
+
 #  [x] AUTOMATED EFA FUNCTION -----------------------------------------------------------
 fun_EFA <- function(
     # Basic
@@ -173,6 +793,8 @@ fun_EFA <- function(
   , .remove_cross_loading.items = F
   , .dbl_under_loading.threshold = 0.4 #Lesser than 0.4 loading = under loading
   , .dbl_cross_loading.threshold = 0.2 #Lesser than 0.2 loading difference = cross loading
+  # Factor redundancy
+  # , .dbl_factor_redundancy.threshold = 0.9 #Higher than 90% correlation = redundant factors
   # Diagrams and tests
   , .show_diagrams = T
   , .show_results = F
@@ -213,8 +835,8 @@ fun_EFA <- function(
         , factors = .int_nfactors
         , rotation = .chr_rotation
         , control = list(
-          nstart = 4
-          , lower = 0.1
+          # nstart = 4,
+          lower = 0.1
         )
       ) -> fit
       
@@ -290,8 +912,8 @@ fun_EFA <- function(
             , factors = .int_nfactors
             , rotation = .chr_rotation
             , control = list(
-              nstart = 4
-              , lower = 0.1
+              # nstart = 4,
+              lower = 0.1
             )
           ) -> fit
           
@@ -416,8 +1038,8 @@ fun_EFA <- function(
             , factors = .int_nfactors
             , rotation = .chr_rotation
             , control = list(
-              nstart = 4
-              , lower = 0.1
+              # nstart = 4,
+              lower = 0.1
             )
           ) -> fit
           
@@ -511,8 +1133,8 @@ fun_EFA <- function(
                 , factors = .int_nfactors
                 , rotation = .chr_rotation
                 , control = list(
-                  nstart = 4
-                  , lower = 0.1
+                  # nstart = 4,
+                  lower = 0.1
                 )
               ) -> fit
               
@@ -735,16 +1357,31 @@ fun_EFA <- function(
       # Recommended number of factors
       df_nfactors <- fun_nfactors.selection(.df_numeric = .df_data.numeric)
       
-      # Factor congruence table
-      fit$loadings %>% 
-        congruence() %>%
-        matrix(
-          nrow = nrow(.)
-          , ncol = ncol(.)
-          , dimnames = list(rownames(.), rownames(.))
-        ) %>%
-        as_tibble(rownames = 'Factor') -> df_congruence
+      # Factor correlations table
+      fit$rotmat %>%
+        solve() -> mtx_tmat
       
+      mtx_tmat %*%
+        t(mtx_tmat) -> mtx_corr
+      
+      mtx_corr %>%
+        round(6) -> mtx_corr
+      
+      colnames(mtx_corr) <- factors.names
+      rownames(mtx_corr) <- factors.names
+      
+      # Redundant factors (factors are considered redundant if correlation > ...)
+      
+      # Suggested rotation matrix
+      ifelse(
+          mtx_corr[lower.tri(mtx_corr)] %>%
+            abs() %>% 
+            mean() >= 0.3
+        
+        , yes = 'promax'
+        , no = 'varimax'
+        
+      ) -> chr_suggested.rotation
       
       # Visualizations and results
       # Factor Analysis Diagram and fit results
@@ -760,7 +1397,8 @@ fun_EFA <- function(
         , 'sufficient.loadings' = df_loadings.sufficient.sum
         , 'reliability.metrics' = df_reliability
         , 'reliability.evaluation' = df_reliability.evaluation
-        , 'factor.congruence' = df_congruence
+        , 'factor.correlation' = mtx_corr
+        , 'suggested.rotation' = chr_suggested.rotation
         , 'removed.items' = unique(chr_removed.items)
         , 'under_loading.items' = unique(chr_under.items)
         , 'cross_loading.items' = unique(chr_cross.items)
