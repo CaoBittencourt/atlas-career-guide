@@ -478,7 +478,7 @@ sum(
 # .dbl_cross_loading.threshold <- 0.2
 # 
 # # Diagrams and tests
-# .show_diagrams <- F
+# .show_diagrams <- T
 # .show_results <- T
 
 # GLOBAL EFA PARAMETERS 8 ---------------------------------------------------
@@ -501,7 +501,7 @@ sum(
 .dbl_cross_loading.threshold <- 0.3
 
 # Diagrams and tests
-.show_diagrams <- F
+.show_diagrams <- T
 .show_results <- T
 
 # # GLOBAL EFA PARAMETERS 9 ---------------------------------------------------
@@ -524,7 +524,7 @@ sum(
 # .dbl_cross_loading.threshold <- 0.35
 # 
 # # Diagrams and tests
-# .show_diagrams <- F
+# .show_diagrams <- T
 # .show_results <- T
 
 # FULLY AUTOMATED EFA WORKFLOW (WITH TOP ITEMS) --------------------------------------------
