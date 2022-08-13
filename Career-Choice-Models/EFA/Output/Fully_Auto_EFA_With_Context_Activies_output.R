@@ -196,13 +196,15 @@ df_occupations.numeric.activities %>%
   rowSums() -> dbl_activities.var.total
 
 # Variance proportionality (how much each category contributes to total variance)
+dbl_occupations.var.total
+
 sum(
   dbl_skills.var.total
   , dbl_ablt.var.total
   , dbl_know.var.total
   , dbl_context.var.total
   , dbl_activities.var.total
-) == dbl_occupations.var.total
+)
 
 dbl_skills.var.pct <- dbl_skills.var.total / dbl_occupations.var.total
 dbl_ablt.var.pct <- dbl_ablt.var.total / dbl_occupations.var.total
@@ -244,13 +246,13 @@ sum(
   , dbl_activities.items
 )
 
-# ITEMS PER CATEGORY PARAMETERS 1 -------------------------------------------
-# Manually define number of items
-.int_n.items.total.skill <- 6
-.int_n.items.total.ablt <- 12
-.int_n.items.total.know <- 12
-.int_n.items.total.context <- 15
-.int_n.items.total.activities <- 15
+# # ITEMS PER CATEGORY PARAMETERS 1 -------------------------------------------
+# # Manually define number of items
+# .int_n.items.total.skill <- 6
+# .int_n.items.total.ablt <- 12
+# .int_n.items.total.know <- 12
+# .int_n.items.total.context <- 15
+# .int_n.items.total.activities <- 15
 
 # ITEMS PER CATEGORY PARAMETERS 2 -------------------------------------------
 # Manually define number of items
@@ -259,6 +261,22 @@ sum(
 .int_n.items.total.know <- 12
 .int_n.items.total.context <- 21
 .int_n.items.total.activities <- 12
+
+# FACTOR ROTATIONS 1 ---------------------------------------------------------
+.chr_rotation.skill <- 'promax'
+.chr_rotation.ablt <- 'promax'
+.chr_rotation.know <- 'promax'
+.chr_rotation.context <- 'promax'
+.chr_rotation.activities <- 'promax'
+
+# FACTOR ROTATIONS 2 ---------------------------------------------------------
+# .chr_rotation.skill <- 'varimax'
+.chr_rotation.skill <- 'promax'
+.chr_rotation.ablt <- 'promax'
+.chr_rotation.know <- 'varimax'
+# .chr_rotation.know <- 'promax'
+.chr_rotation.context <- 'varimax'
+.chr_rotation.activities <- 'varimax'
 
 # # GLOBAL EFA PARAMETERS 1 ---------------------------------------------------
 # # Number of factors
@@ -277,11 +295,6 @@ sum(
 # .int_n.items.total.ablt <- 20
 # .int_n.items.total.know <- 15
 # 
-# # Rotation (Oblique)
-# .chr_rotation <- 'promax'
-# # .chr_rotation <- 'oblimin'
-# # Rotation (Orthogonal)
-# # .chr_rotation <- 'varimax'
 # .remove_unacceptable_MSAi.items <- T
 
 # # Underloadings and crossloadings
@@ -312,11 +325,6 @@ sum(
 # .int_n.items.total.ablt <- 20
 # .int_n.items.total.know <- 15
 # 
-# # Rotation (Oblique)
-# .chr_rotation <- 'promax'
-# # .chr_rotation <- 'oblimin'
-# # Rotation (Orthogonal)
-# # .chr_rotation <- 'varimax'
 # .remove_unacceptable_MSAi.items <- T
 # # Underloadings and crossloadings
 # .remove_under_loading.items <- T
@@ -346,11 +354,6 @@ sum(
 # .int_n.items.total.ablt <- 16
 # .int_n.items.total.know <- 12
 # 
-# # Rotation (Oblique)
-# .chr_rotation <- 'promax'
-# # .chr_rotation <- 'oblimin'
-# # Rotation (Orthogonal)
-# # .chr_rotation <- 'varimax'
 # .remove_unacceptable_MSAi.items <- T
 # # Underloadings and crossloadings
 # .remove_under_loading.items <- T
@@ -380,11 +383,6 @@ sum(
 # .int_n.items.total.ablt <- 12
 # .int_n.items.total.know <- 12
 # 
-# # Rotation (Oblique)
-# .chr_rotation <- 'promax'
-# # .chr_rotation <- 'oblimin'
-# # Rotation (Orthogonal)
-# # .chr_rotation <- 'varimax'
 # .remove_unacceptable_MSAi.items <- T
 # # Underloadings and crossloadings
 # .remove_under_loading.items <- T
@@ -415,11 +413,6 @@ sum(
 # .int_n.items.total.know <- 12
 # .int_n.items.total.context <- 12
 # 
-# # Rotation (Oblique)
-# .chr_rotation <- 'promax'
-# # .chr_rotation <- 'oblimin'
-# # Rotation (Orthogonal)
-# # .chr_rotation <- 'varimax'
 # .remove_unacceptable_MSAi.items <- T
 # # Underloadings and crossloadings
 # .remove_under_loading.items <- T
@@ -441,12 +434,6 @@ sum(
 # # .int_min.factor_size.basic <- 2
 # .int_min.factor_size <- 3
 # 
-# # Rotation (Oblique)
-# .chr_rotation <- 'promax'
-# # .chr_rotation <- 'oblimin'
-# # Rotation (Orthogonal)
-# # .chr_rotation <- 'varimax'
-# .remove_unacceptable_MSAi.items <- T
 # # Underloadings and crossloadings
 # .remove_under_loading.items <- T
 # .remove_cross_loading.items <- T
@@ -457,53 +444,43 @@ sum(
 # # Diagrams and tests
 # .show_diagrams <- T
 # .show_results <- T
- 
-# # GLOBAL EFA PARAMETERS 7 ---------------------------------------------------
-# # Number of factors
-# .auto_select.nfactors <- T
-# 
-# # Minimum factor size
-# .int_min.factor_size <- 3
-# 
-# # Rotation (Oblique)
-# .chr_rotation <- 'promax'
-# # .chr_rotation <- 'oblimin'
-# # Rotation (Orthogonal)
-# # .chr_rotation <- 'varimax'
-# .remove_unacceptable_MSAi.items <- T
-# # Underloadings and crossloadings
-# .remove_under_loading.items <- T
-# .remove_cross_loading.items <- T
-# .dbl_under_loading.threshold <- 0.4
-# .dbl_cross_loading.threshold <- 0.2
-# 
-# # Diagrams and tests
-# .show_diagrams <- T
-# .show_results <- T
 
-# GLOBAL EFA PARAMETERS 8 ---------------------------------------------------
+# GLOBAL EFA PARAMETERS 7 ---------------------------------------------------
 # Number of factors
 .auto_select.nfactors <- T
 
 # Minimum factor size
 .int_min.factor_size <- 3
 
-# Rotation (Oblique)
-.chr_rotation <- 'promax'
-# .chr_rotation <- 'oblimin'
-# Rotation (Orthogonal)
-# .chr_rotation <- 'varim ax'
 .remove_unacceptable_MSAi.items <- T
 # Underloadings and crossloadings
 .remove_under_loading.items <- T
 .remove_cross_loading.items <- T
 .dbl_under_loading.threshold <- 0.4
-.dbl_cross_loading.threshold <- 0.3
+.dbl_cross_loading.threshold <- 0.2
 
 # Diagrams and tests
 .show_diagrams <- T
 .show_results <- T
 
+# # GLOBAL EFA PARAMETERS 8 ---------------------------------------------------
+# # Number of factors
+# .auto_select.nfactors <- T
+# 
+# # Minimum factor size
+# .int_min.factor_size <- 3
+# 
+# .remove_unacceptable_MSAi.items <- T
+# # Underloadings and crossloadings
+# .remove_under_loading.items <- T
+# .remove_cross_loading.items <- T
+# .dbl_under_loading.threshold <- 0.4
+# .dbl_cross_loading.threshold <- 0.3
+# 
+# # Diagrams and tests
+# .show_diagrams <- T
+# .show_results <- T
+# 
 # # GLOBAL EFA PARAMETERS 9 ---------------------------------------------------
 # # Number of factors
 # .auto_select.nfactors <- T
@@ -511,11 +488,6 @@ sum(
 # # Minimum factor size
 # .int_min.factor_size <- 3
 # 
-# # Rotation (Oblique)
-# .chr_rotation <- 'promax'
-# # .chr_rotation <- 'oblimin'
-# # Rotation (Orthogonal)
-# # .chr_rotation <- 'varim ax'
 # .remove_unacceptable_MSAi.items <- T
 # # Underloadings and crossloadings
 # .remove_under_loading.items <- T
@@ -526,15 +498,125 @@ sum(
 # # Diagrams and tests
 # .show_diagrams <- T
 # .show_results <- T
+# 
+# # GLOBAL EFA PARAMETERS 10 ---------------------------------------------------
+# # Number of factors
+# .auto_select.nfactors <- T
+# 
+# # Minimum factor size
+# .int_min.factor_size <- 3
+# 
+# .remove_unacceptable_MSAi.items <- T
+# # Underloadings and crossloadings
+# .remove_under_loading.items <- T
+# .remove_cross_loading.items <- T
+# .dbl_under_loading.threshold <- 0.4
+# .dbl_cross_loading.threshold <- 0.4
+# 
+# # Diagrams and tests
+# .show_diagrams <- T
+# .show_results <- F
+# 
+# # FULLY AUTOMATED EFA WORKFLOW (ONLY STAGE ONE) --------------------------------------------
+# # Skills
+# fun_best.model.workflow(
+#   # Basic
+#   .df_data.numeric = df_occupations.numeric.skill
+#   , .auto_select.nfactors = .auto_select.nfactors
+#   , .int_min.factor_size = .int_min.factor_size
+#   , .chr_rotation = .chr_rotation.skill
+#   , .remove_unacceptable_MSAi.items = .remove_unacceptable_MSAi.items
+#   # Underloadings and crossloadings
+#   , .remove_under_loading.items = .remove_under_loading.items
+#   , .remove_cross_loading.items = .remove_cross_loading.items
+#   , .dbl_under_loading.threshold = .dbl_under_loading.threshold
+#   , .dbl_cross_loading.threshold = .dbl_cross_loading.threshold
+#   # Diagrams and tests
+#   , .show_diagrams = .show_diagrams
+#   , .show_results = .show_results
+# ) -> EFA_Skill.1
+# 
+# # Abilities
+# fun_best.model.workflow(
+#   # Basic
+#   .df_data.numeric = df_occupations.numeric.ablt
+#   , .auto_select.nfactors = .auto_select.nfactors
+#   , .int_min.factor_size = .int_min.factor_size
+#   , .chr_rotation = .chr_rotation.ablt
+#   , .remove_unacceptable_MSAi.items = .remove_unacceptable_MSAi.items
+#   # Underloadings and crossloadings
+#   , .remove_under_loading.items = .remove_under_loading.items
+#   , .remove_cross_loading.items = .remove_cross_loading.items
+#   , .dbl_under_loading.threshold = .dbl_under_loading.threshold
+#   , .dbl_cross_loading.threshold = .dbl_cross_loading.threshold
+#   # Diagrams and tests
+#   , .show_diagrams = .show_diagrams
+#   , .show_results = .show_results
+# ) -> EFA_Ablt.1
+# 
+# # Knowledge
+# fun_best.model.workflow(
+#   # Basic
+#   .df_data.numeric = df_occupations.numeric.know
+#   , .auto_select.nfactors = .auto_select.nfactors
+#   , .int_min.factor_size = .int_min.factor_size
+#   , .chr_rotation = .chr_rotation.know
+#   , .remove_unacceptable_MSAi.items = .remove_unacceptable_MSAi.items
+#   # Underloadings and crossloadings
+#   , .remove_under_loading.items = .remove_under_loading.items
+#   , .remove_cross_loading.items = .remove_cross_loading.items
+#   , .dbl_under_loading.threshold = .dbl_under_loading.threshold
+#   , .dbl_cross_loading.threshold = .dbl_cross_loading.threshold
+#   # Diagrams and tests
+#   , .show_diagrams = .show_diagrams
+#   , .show_results = .show_results
+# ) -> EFA_Know.1
+# 
+# # Work context
+# fun_best.model.workflow(
+#   # Basic
+#   .df_data.numeric = df_occupations.numeric.context
+#   , .auto_select.nfactors = .auto_select.nfactors
+#   , .int_min.factor_size = .int_min.factor_size
+#   , .chr_rotation = .chr_rotation.context
+#   , .remove_unacceptable_MSAi.items = .remove_unacceptable_MSAi.items
+#   # Underloadings and crossloadings
+#   , .remove_under_loading.items = .remove_under_loading.items
+#   , .remove_cross_loading.items = .remove_cross_loading.items
+#   , .dbl_under_loading.threshold = .dbl_under_loading.threshold
+#   , .dbl_cross_loading.threshold = .dbl_cross_loading.threshold
+#   # Diagrams and tests
+#   , .show_diagrams = .show_diagrams
+#   , .show_results = .show_results
+# ) -> EFA_Context.1
+# 
+# # Work activities
+# fun_best.model.workflow(
+#   # Basic
+#   .df_data.numeric = df_occupations.numeric.activities
+#   , .auto_select.nfactors = .auto_select.nfactors
+#   , .int_min.factor_size = .int_min.factor_size
+#   , .chr_rotation = .chr_rotation.activities
+#   , .remove_unacceptable_MSAi.items = .remove_unacceptable_MSAi.items
+#   # Underloadings and crossloadings
+#   , .remove_under_loading.items = .remove_under_loading.items
+#   , .remove_cross_loading.items = .remove_cross_loading.items
+#   , .dbl_under_loading.threshold = .dbl_under_loading.threshold
+#   , .dbl_cross_loading.threshold = .dbl_cross_loading.threshold
+#   # Diagrams and tests
+#   , .show_diagrams = .show_diagrams
+#   , .show_results = .show_results
+# ) -> EFA_Activities.1
 
 # FULLY AUTOMATED EFA WORKFLOW (WITH TOP ITEMS) --------------------------------------------
+# Skills
 fun_best.model.top.items.workflow(
   # Basic
   .df_data.numeric = df_occupations.numeric.skill
   , .auto_select.nfactors = .auto_select.nfactors
   , .int_min.factor_size = .int_min.factor_size
   , .int_n.items.total = .int_n.items.total.skill
-  , .chr_rotation = .chr_rotation
+  , .chr_rotation = .chr_rotation.skill
   , .remove_unacceptable_MSAi.items = .remove_unacceptable_MSAi.items
   # Underloadings and crossloadings
   , .remove_under_loading.items = .remove_under_loading.items
@@ -553,7 +635,7 @@ fun_best.model.top.items.workflow(
   , .auto_select.nfactors = .auto_select.nfactors
   , .int_min.factor_size = .int_min.factor_size
   , .int_n.items.total = .int_n.items.total.ablt
-  , .chr_rotation = .chr_rotation
+  , .chr_rotation = .chr_rotation.ablt
   , .remove_unacceptable_MSAi.items = .remove_unacceptable_MSAi.items
   # Underloadings and crossloadings
   , .remove_under_loading.items = .remove_under_loading.items
@@ -572,7 +654,7 @@ fun_best.model.top.items.workflow(
   , .auto_select.nfactors = .auto_select.nfactors
   , .int_min.factor_size = .int_min.factor_size
   , .int_n.items.total = .int_n.items.total.know
-  , .chr_rotation = .chr_rotation
+  , .chr_rotation = .chr_rotation.know
   , .remove_unacceptable_MSAi.items = .remove_unacceptable_MSAi.items
   # Underloadings and crossloadings
   , .remove_under_loading.items = .remove_under_loading.items
@@ -591,7 +673,7 @@ fun_best.model.top.items.workflow(
   , .auto_select.nfactors = .auto_select.nfactors
   , .int_min.factor_size = .int_min.factor_size
   , .int_n.items.total = .int_n.items.total.context
-  , .chr_rotation = .chr_rotation
+  , .chr_rotation = .chr_rotation.context
   , .remove_unacceptable_MSAi.items = .remove_unacceptable_MSAi.items
   # Underloadings and crossloadings
   , .remove_under_loading.items = .remove_under_loading.items
@@ -610,7 +692,7 @@ fun_best.model.top.items.workflow(
   , .auto_select.nfactors = .auto_select.nfactors
   , .int_min.factor_size = .int_min.factor_size
   , .int_n.items.total = .int_n.items.total.activities
-  , .chr_rotation = .chr_rotation
+  , .chr_rotation = .chr_rotation.activities
   , .remove_unacceptable_MSAi.items = .remove_unacceptable_MSAi.items
   # Underloadings and crossloadings
   , .remove_under_loading.items = .remove_under_loading.items
@@ -622,97 +704,6 @@ fun_best.model.top.items.workflow(
   , .show_results = .show_results
 ) -> EFA_Activities
 
-# FULLY AUTOMATED EFA WORKFLOW (ONLY STAGE ONE) --------------------------------------------
-# All Skills
-fun_best.model.workflow(
-  # Basic
-  .df_data.numeric = df_occupations.numeric.skill
-  , .auto_select.nfactors = .auto_select.nfactors
-  , .int_min.factor_size = .int_min.factor_size
-  , .chr_rotation = .chr_rotation
-  , .remove_unacceptable_MSAi.items = .remove_unacceptable_MSAi.items
-  # Underloadings and crossloadings
-  , .remove_under_loading.items = .remove_under_loading.items
-  , .remove_cross_loading.items = .remove_cross_loading.items
-  , .dbl_under_loading.threshold = .dbl_under_loading.threshold
-  , .dbl_cross_loading.threshold = .dbl_cross_loading.threshold
-  # Diagrams and tests
-  , .show_diagrams = .show_diagrams
-  , .show_results = .show_results
-) -> EFA_Skill.1
-
-# Abilities
-fun_best.model.workflow(
-  # Basic
-  .df_data.numeric = df_occupations.numeric.ablt
-  , .auto_select.nfactors = .auto_select.nfactors
-  , .int_min.factor_size = .int_min.factor_size
-  , .chr_rotation = .chr_rotation
-  , .remove_unacceptable_MSAi.items = .remove_unacceptable_MSAi.items
-  # Underloadings and crossloadings
-  , .remove_under_loading.items = .remove_under_loading.items
-  , .remove_cross_loading.items = .remove_cross_loading.items
-  , .dbl_under_loading.threshold = .dbl_under_loading.threshold
-  , .dbl_cross_loading.threshold = .dbl_cross_loading.threshold
-  # Diagrams and tests
-  , .show_diagrams = .show_diagrams
-  , .show_results = .show_results
-) -> EFA_Ablt.1
-
-# Knowledge
-fun_best.model.workflow(
-  # Basic
-  .df_data.numeric = df_occupations.numeric.know
-  , .auto_select.nfactors = .auto_select.nfactors
-  , .int_min.factor_size = .int_min.factor_size
-  , .chr_rotation = .chr_rotation
-  , .remove_unacceptable_MSAi.items = .remove_unacceptable_MSAi.items
-  # Underloadings and crossloadings
-  , .remove_under_loading.items = .remove_under_loading.items
-  , .remove_cross_loading.items = .remove_cross_loading.items
-  , .dbl_under_loading.threshold = .dbl_under_loading.threshold
-  , .dbl_cross_loading.threshold = .dbl_cross_loading.threshold
-  # Diagrams and tests
-  , .show_diagrams = .show_diagrams
-  , .show_results = .show_results
-) -> EFA_Know.1
-
-# Work context
-fun_best.model.workflow(
-  # Basic
-  .df_data.numeric = df_occupations.numeric.context
-  , .auto_select.nfactors = .auto_select.nfactors
-  , .int_min.factor_size = .int_min.factor_size
-  , .chr_rotation = .chr_rotation
-  , .remove_unacceptable_MSAi.items = .remove_unacceptable_MSAi.items
-  # Underloadings and crossloadings
-  , .remove_under_loading.items = .remove_under_loading.items
-  , .remove_cross_loading.items = .remove_cross_loading.items
-  , .dbl_under_loading.threshold = .dbl_under_loading.threshold
-  , .dbl_cross_loading.threshold = .dbl_cross_loading.threshold
-  # Diagrams and tests
-  , .show_diagrams = .show_diagrams
-  , .show_results = .show_results
-) -> EFA_Context.1
-
-# Work activities
-fun_best.model.workflow(
-  # Basic
-  .df_data.numeric = df_occupations.numeric.activities
-  , .auto_select.nfactors = .auto_select.nfactors
-  , .int_min.factor_size = .int_min.factor_size
-  , .chr_rotation = .chr_rotation
-  , .remove_unacceptable_MSAi.items = .remove_unacceptable_MSAi.items
-  # Underloadings and crossloadings
-  , .remove_under_loading.items = .remove_under_loading.items
-  , .remove_cross_loading.items = .remove_cross_loading.items
-  , .dbl_under_loading.threshold = .dbl_under_loading.threshold
-  , .dbl_cross_loading.threshold = .dbl_cross_loading.threshold
-  # Diagrams and tests
-  , .show_diagrams = .show_diagrams
-  , .show_results = .show_results
-) -> EFA_Activities.1
-
 # COMPARING ONE STAGE WITH TWO STAGE EFA --------------------------------
 # Skills
 EFA_Skill$best.model$EFA.top.items$reliability.evaluation
@@ -720,9 +711,9 @@ EFA_Skill.1$best.model$reliability.evaluation
 
 EFA_Skill$best.models.evaluation %>% view()
 EFA_Skill.1$best.models.evaluation %>% view()
+EFA_Skill$all.models.evaluation %>% view()
 
 EFA_Skill$EFA.workflow$EFA.top.items$EFA.2Factors$reliability.evaluation %>% view()
-EFA_Skill$EFA.workflow$EFA.top.items$EFA.3Factors$reliability.evaluation %>% view()
 
 # Abilities
 EFA_Ablt$best.model$EFA.top.items$reliability.evaluation
@@ -730,6 +721,7 @@ EFA_Ablt.1$best.model$reliability.evaluation
 
 EFA_Ablt$best.models.evaluation %>% view()
 EFA_Ablt.1$best.models.evaluation %>% view()
+EFA_Ablt$all.models.evaluation %>% view()
 
 EFA_Ablt$best.model$EFA.top.items$reliability.evaluation %>% view()
 EFA_Ablt$EFA.workflow$EFA.top.items$EFA.2Factors$reliability.evaluation %>% view()
@@ -741,8 +733,8 @@ EFA_Know$best.model$EFA.top.items$reliability.evaluation
 EFA_Know.1$best.model$reliability.evaluation
 
 EFA_Know$best.models.evaluation %>% view()
-EFA_Know$all.models.evaluation %>% view()
 EFA_Know.1$best.models.evaluation %>% view()
+EFA_Know$all.models.evaluation %>% view()
 
 EFA_Know$EFA.workflow$EFA.top.items$EFA.2Factors$reliability.evaluation %>% view()
 EFA_Know$EFA.workflow$EFA.top.items$EFA.3Factors$reliability.evaluation %>% view()
@@ -754,6 +746,7 @@ EFA_Context.1$best.model$reliability.evaluation
 
 EFA_Context$best.models.evaluation %>% view()
 EFA_Context.1$best.models.evaluation %>% view()
+EFA_Context$all.models.evaluation %>% view()
 
 EFA_Context$EFA.workflow$EFA.top.items$EFA.2Factors$reliability.evaluation %>% view()
 EFA_Context$EFA.workflow$EFA.top.items$EFA.3Factors$reliability.evaluation %>% view()
@@ -764,9 +757,48 @@ EFA_Activities.1$best.model$reliability.evaluation
 
 EFA_Activities$best.models.evaluation %>% view()
 EFA_Activities.1$best.models.evaluation %>% view()
+EFA_Activities$all.models.evaluation %>% view()
 
 EFA_Activities$EFA.workflow$EFA.top.items$EFA.2Factors$reliability.evaluation %>% view()
 EFA_Activities$EFA.workflow$EFA.top.items$EFA.3Factors$reliability.evaluation %>% view()
+
+# FACTOR ADEQUACY TESTS --------------------------------
+# Skills
+EFA_Skill$best.model$EFA.top.items$adequacy.tests
+EFA_Skill.1$best.model$adequacy.tests
+
+EFA_Skill$EFA.workflow$EFA.top.items$EFA.2Factors$adequacy.tests
+
+# Abilities
+EFA_Ablt$best.model$EFA.top.items$adequacy.tests
+EFA_Ablt.1$best.model$adequacy.tests
+
+EFA_Ablt$best.model$EFA.top.items$adequacy.tests
+EFA_Ablt$EFA.workflow$EFA.top.items$EFA.2Factors$adequacy.tests
+EFA_Ablt$EFA.workflow$EFA.top.items$EFA.3Factors$adequacy.tests
+EFA_Ablt$EFA.workflow$EFA.top.items$EFA.4Factors$adequacy.tests
+
+# Fields of Knowledge
+EFA_Know$best.model$EFA.top.items$adequacy.tests
+EFA_Know.1$best.model$adequacy.tests
+
+EFA_Know$EFA.workflow$EFA.top.items$EFA.2Factors$adequacy.tests
+EFA_Know$EFA.workflow$EFA.top.items$EFA.3Factors$adequacy.tests
+EFA_Know$EFA.workflow$EFA.top.items$EFA.4Factors$adequacy.tests
+
+# Work context
+EFA_Context$best.model$EFA.top.items$adequacy.tests
+EFA_Context.1$best.model$adequacy.tests
+
+EFA_Context$EFA.workflow$EFA.top.items$EFA.2Factors$adequacy.tests
+EFA_Context$EFA.workflow$EFA.top.items$EFA.3Factors$adequacy.tests
+
+# Work activities
+EFA_Activities$best.model$EFA.top.items$adequacy.tests
+EFA_Activities.1$best.model$adequacy.tests
+
+EFA_Activities$EFA.workflow$EFA.top.items$EFA.2Factors$adequacy.tests
+EFA_Activities$EFA.workflow$EFA.top.items$EFA.3Factors$adequacy.tests
 
 # FACTOR CORRELATION AND REDUNDANCY --------------------------------
 # Skills
@@ -774,7 +806,6 @@ EFA_Skill$best.model$EFA.top.items$factor.correlation
 EFA_Skill.1$best.model$factor.correlation
 
 EFA_Skill$EFA.workflow$EFA.top.items$EFA.2Factors$factor.correlation
-EFA_Skill$EFA.workflow$EFA.top.items$EFA.3Factors$factor.correlation
 
 # Abilities
 EFA_Ablt$best.model$EFA.top.items$factor.correlation
@@ -813,7 +844,6 @@ EFA_Skill$best.model$EFA.top.items$suggested.rotation
 EFA_Skill.1$best.model$suggested.rotation
 
 EFA_Skill$EFA.workflow$EFA.top.items$EFA.2Factors$suggested.rotation
-EFA_Skill$EFA.workflow$EFA.top.items$EFA.3Factors$suggested.rotation
 
 # Abilities
 EFA_Ablt$best.model$EFA.top.items$suggested.rotation
@@ -885,11 +915,176 @@ EFA_Activities$EFA.workflow$top.items$EFA.3Factors %>% view()
 # Revised and selected models
 # Skills => 2 factors
 chr_Skill.Items <- EFA_Skill$EFA.workflow$top.items$EFA.2Factors$Item
-# Abilities => 4 factors
-chr_Ablt.Items <- EFA_Ablt$EFA.workflow$top.items$EFA.4Factors$Item 
+# # Abilities => 4 factors
+# chr_Ablt.Items <- EFA_Ablt$EFA.workflow$top.items$EFA.4Factors$Item 
+# Abilities => 3 factors
+chr_Ablt.Items <- EFA_Ablt$EFA.workflow$top.items$EFA.3Factors$Item 
 # Fields of Knowledge => 4 factors
 chr_Know.Items <- EFA_Know$EFA.workflow$top.items$EFA.4Factors$Item
 # Work Contexts => 3 factors
 chr_Context.Items <- EFA_Context$EFA.workflow$top.items$EFA.3Factors$Item
 # Work Activities => 3 factors
 chr_Activities.Items <- EFA_Activities$EFA.workflow$top.items$EFA.3Factors$Item
+
+# RETAINED VARIANCE ------------------------------------------------
+df_occupations.numeric %>%
+  select(all_of(c(
+    chr_Skill.Items
+    , chr_Ablt.Items
+    , chr_Know.Items
+    , chr_Context.Items
+    , chr_Activities.Items
+  ))
+  ) -> df_occupations.numeric.items
+
+df_occupations.numeric.items %>% 
+  summarise(
+    across(
+      .cols = everything()
+      ,.fns = var
+    )
+  ) %>%
+  rowSums() -> dbl_occupations.var.items
+
+df_occupations.numeric.skill %>%
+  select(all_of(c(
+    chr_Skill.Items
+  ))
+  ) %>% 
+  summarise(
+    across(
+      .cols = everything()
+      ,.fns = var
+    )
+  ) %>%
+  rowSums() -> dbl_skills.var.items
+
+df_occupations.numeric.ablt %>%
+  select(all_of(c(
+    chr_Ablt.Items
+  ))
+  ) %>%
+  summarise(
+    across(
+      .cols = everything()
+      ,.fns = var
+    )
+  ) %>%
+  rowSums() -> dbl_ablt.var.items
+
+df_occupations.numeric.know %>%
+  select(all_of(c(
+    chr_Know.Items
+  ))
+  ) %>%
+  summarise(
+    across(
+      .cols = everything()
+      ,.fns = var
+    )
+  ) %>%
+  rowSums() -> dbl_know.var.items
+
+df_occupations.numeric.context %>%
+  select(all_of(c(
+    chr_Context.Items
+  ))
+  ) %>%
+  summarise(
+    across(
+      .cols = everything()
+      ,.fns = var
+    )
+  ) %>%
+  rowSums() -> dbl_context.var.items
+
+df_occupations.numeric.activities %>%
+  select(all_of(c(
+    chr_Activities.Items
+  ))
+  ) %>%
+  summarise(
+    across(
+      .cols = everything()
+      ,.fns = var
+    )
+  ) %>%
+  rowSums() -> dbl_activities.var.items
+
+# Retained variance vs. Dimensionality (Overall)
+dbl_occupations.var.total
+dbl_occupations.var.items
+
+ncol(df_occupations.numeric)
+ncol(df_occupations.numeric.items)
+
+dbl_occupations.var.items / dbl_occupations.var.total
+ncol(df_occupations.numeric.items) / ncol(df_occupations.numeric)
+
+dbl_occupations.var.total / dbl_occupations.var.items
+ncol(df_occupations.numeric) / ncol(df_occupations.numeric.items)
+
+# Retained variance vs. Dimensionality (Skills)
+dbl_skills.var.total
+dbl_skills.var.items
+
+ncol(df_occupations.numeric.skill)
+length(chr_Skill.Items)
+
+dbl_skills.var.items / dbl_skills.var.total
+length(chr_Skill.Items) / ncol(df_occupations.numeric.skill)
+
+dbl_skills.var.total / dbl_skills.var.items
+ncol(df_occupations.numeric.skill) / length(chr_Skill.Items)
+
+# Retained variance vs. Dimensionality (Abilities)
+dbl_ablt.var.total
+dbl_ablt.var.items
+
+ncol(df_occupations.numeric.ablt)
+length(chr_Ablt.Items)
+
+dbl_ablt.var.items / dbl_ablt.var.total
+length(chr_Ablt.Items) / ncol(df_occupations.numeric.ablt)
+
+dbl_ablt.var.total / dbl_ablt.var.items
+ncol(df_occupations.numeric.ablt) / length(chr_Ablt.Items)
+
+# Retained variance vs. Dimensionality (Knowledge)
+dbl_know.var.total
+dbl_know.var.items
+
+ncol(df_occupations.numeric.know)
+length(chr_Know.Items)
+
+dbl_know.var.items / dbl_know.var.total
+length(chr_Know.Items) / ncol(df_occupations.numeric.know)
+
+dbl_know.var.total / dbl_know.var.items
+ncol(df_occupations.numeric.know) / length(chr_Know.Items)
+
+# Retained variance vs. Dimensionality (Work contexts)
+dbl_context.var.total
+dbl_context.var.items
+
+ncol(df_occupations.numeric.context)
+length(chr_Context.Items)
+
+dbl_context.var.items / dbl_context.var.total
+length(chr_Context.Items) / ncol(df_occupations.numeric.context)
+
+dbl_context.var.total / dbl_context.var.items
+ncol(df_occupations.numeric.context) / length(chr_Context.Items)
+
+# Retained variance vs. Dimensionality (Work activities)
+dbl_activities.var.total
+dbl_activities.var.items
+
+ncol(df_occupations.numeric.activities)
+length(chr_Activities.Items)
+
+dbl_activities.var.items / dbl_activities.var.total
+length(chr_Activities.Items) / ncol(df_occupations.numeric.activities)
+
+dbl_activities.var.total / dbl_activities.var.items
+ncol(df_occupations.numeric.activities) / length(chr_Activities.Items)
