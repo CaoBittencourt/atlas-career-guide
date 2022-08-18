@@ -94,7 +94,8 @@ df_occupations %>%
 # Only numeric variables
 df_occupations %>%
   select(
-    where(function(x){str_detect(attributes(x)$label, 'Work_Context.')}) #Work contexts only
+    where(function(x){str_detect(attributes(x)$label, 'Work_Context.')}) #Work contexts and
+    , where(function(x){str_detect(attributes(x)$label, 'Work_Activities.')}) #Work activities too
     , -ends_with('.I') #Using recommended levels
     # , -ends_with('.L') #Using importance levels
   ) %>% 
@@ -104,21 +105,8 @@ df_occupations %>%
     )
   ) -> df_occupations.numeric.context
 
-# Only numeric variables
-df_occupations %>%
-  select(
-    where(function(x){str_detect(attributes(x)$label, 'Work_Activities.')}) #Work activities only
-    , -ends_with('.I') #Using recommended levels
-    # , -ends_with('.L') #Using importance levels
-  ) %>% 
-  mutate(#0 to 100 => 0 to 1 (helps calculate similarity later on)
-    across(
-      .fns = function(x){x/100}
-    )
-  ) -> df_occupations.numeric.activities
-
 # ----- PARAMETERS -----------------------------------------------------------
-# VARIANCE PROPORTIONALITY  ------------------------------------------------
+# VARIANCE PROPORTIONALITY ------------------------------------------------
 df_occupations %>%
   select(
     colnames(
@@ -132,9 +120,6 @@ df_occupations %>%
     )
     , colnames(
       df_occupations.numeric.context
-    )
-    , colnames(
-      df_occupations.numeric.activities
     )
   ) %>%
   mutate(#0 to 100 => 0 to 1 (helps calculate similarity later on)
@@ -188,15 +173,6 @@ df_occupations.numeric.context %>%
   ) %>%
   rowSums() -> dbl_context.var.total
 
-df_occupations.numeric.activities %>%
-  summarise(
-    across(
-      .cols = everything()
-      ,.fns = var
-    )
-  ) %>%
-  rowSums() -> dbl_activities.var.total
-
 # Variance proportionality (how much each category contributes to total variance)
 dbl_occupations.var.total
 
@@ -205,20 +181,12 @@ sum(
   , dbl_ablt.var.total
   , dbl_know.var.total
   , dbl_context.var.total
-  , dbl_activities.var.total
 )
 
 dbl_skills.var.pct <- dbl_skills.var.total / dbl_occupations.var.total
 dbl_ablt.var.pct <- dbl_ablt.var.total / dbl_occupations.var.total
 dbl_know.var.pct <- dbl_know.var.total / dbl_occupations.var.total
 dbl_context.var.pct <- dbl_context.var.total / dbl_occupations.var.total
-dbl_activities.var.pct <- dbl_activities.var.total / dbl_occupations.var.total
-
-dbl_skills.var.pct %>% round(4)
-dbl_ablt.var.pct %>% round(4)
-dbl_know.var.pct %>% round(4)
-dbl_context.var.pct %>% round(4)
-dbl_activities.var.pct %>% round(4)
 
 # Define number of items in the questionnaire
 dbl_items.total <- 60
@@ -228,27 +196,24 @@ dbl_skills.items <- dbl_skills.var.pct * dbl_items.total
 dbl_ablt.items <- dbl_ablt.var.pct * dbl_items.total
 dbl_know.items <- dbl_know.var.pct * dbl_items.total
 dbl_context.items <- dbl_context.var.pct * dbl_items.total
-dbl_activities.items <- dbl_activities.var.pct * dbl_items.total
 
 dbl_skills.items <- round(dbl_skills.items)
 dbl_ablt.items <- round(dbl_ablt.items)
 dbl_know.items <- round(dbl_know.items)
 dbl_context.items <- round(dbl_context.items)
-dbl_activities.items <- round(dbl_activities.items)
 
 dbl_skills.items
 dbl_ablt.items
 dbl_know.items
 dbl_context.items
-dbl_activities.items
 
 sum(
   dbl_skills.items
   , dbl_ablt.items
   , dbl_know.items
   , dbl_context.items
-  , dbl_activities.items
 )
+
 
 # # ITEMS PER CATEGORY PARAMETERS 1 -------------------------------------------
 # # Manually define number of items
@@ -256,15 +221,20 @@ sum(
 # .int_n.items.total.ablt <- 12
 # .int_n.items.total.know <- 12
 # .int_n.items.total.context <- 15
-# .int_n.items.total.activities <- 15
 
 # ITEMS PER CATEGORY PARAMETERS 2 -------------------------------------------
 # Manually define number of items
 .int_n.items.total.skill <- 6
 .int_n.items.total.ablt <- 9
 .int_n.items.total.know <- 12
-.int_n.items.total.context <- 21
-.int_n.items.total.activities <- 12
+.int_n.items.total.context <- 33
+
+# ITEMS PER CATEGORY PARAMETERS 3 -------------------------------------------
+# Manually define number of items
+.int_n.items.total.skill <- 8
+.int_n.items.total.ablt <- 9
+.int_n.items.total.know <- 16
+.int_n.items.total.context <- 27
 
 # FACTOR ROTATIONS 1 ---------------------------------------------------------
 .chr_rotation.skill <- 'promax'
@@ -467,23 +437,23 @@ sum(
 # .show_diagrams <- T
 # .show_results <- T
 
-# GLOBAL EFA PARAMETERS 8 ---------------------------------------------------
-# Number of factors
-.auto_select.nfactors <- T
-
-# Minimum factor size
-.int_min.factor_size <- 3
-
-.remove_unacceptable_MSAi.items <- T
-# Underloadings and crossloadings
-.remove_under_loading.items <- T
-.remove_cross_loading.items <- T
-.dbl_under_loading.threshold <- 0.4
-.dbl_cross_loading.threshold <- 0.3
-
-# Diagrams and tests
-.show_diagrams <- T
-.show_results <- T
+# # GLOBAL EFA PARAMETERS 8 * ---------------------------------------------------
+# # Number of factors
+# .auto_select.nfactors <- T
+# 
+# # Minimum factor size
+# .int_min.factor_size <- 3
+# 
+# .remove_unacceptable_MSAi.items <- T
+# # Underloadings and crossloadings
+# .remove_under_loading.items <- T
+# .remove_cross_loading.items <- T
+# .dbl_under_loading.threshold <- 0.4
+# .dbl_cross_loading.threshold <- 0.3
+# 
+# # Diagrams and tests
+# .show_diagrams <- T
+# .show_results <- T
 
 # # GLOBAL EFA PARAMETERS 9 ---------------------------------------------------
 # # Number of factors
@@ -551,24 +521,6 @@ sum(
 .remove_under_loading.items <- T
 .remove_cross_loading.items <- F
 .dbl_under_loading.threshold <- 0.5
-.dbl_cross_loading.threshold <- 0.3
-
-# Diagrams and tests
-.show_diagrams <- T
-.show_results <- T
-
-# GLOBAL EFA PARAMETERS 13 ---------------------------------------------------
-# Number of factors
-.auto_select.nfactors <- T
-
-# Minimum factor size
-.int_min.factor_size <- 3
-
-.remove_unacceptable_MSAi.items <- T
-# Underloadings and crossloadings
-.remove_under_loading.items <- T
-.remove_cross_loading.items <- F
-.dbl_under_loading.threshold <- 0.7
 .dbl_cross_loading.threshold <- 0.3
 
 # Diagrams and tests
@@ -744,25 +696,6 @@ fun_best.model.top.items.workflow(
   , .show_results = .show_results
 ) -> EFA_Context
 
-# Work activities
-fun_best.model.top.items.workflow(
-  # Basic
-  .df_data.numeric = df_occupations.numeric.activities
-  , .auto_select.nfactors = .auto_select.nfactors
-  , .int_min.factor_size = .int_min.factor_size
-  , .int_n.items.total = .int_n.items.total.activities
-  , .chr_rotation = .chr_rotation.activities
-  , .remove_unacceptable_MSAi.items = .remove_unacceptable_MSAi.items
-  # Underloadings and crossloadings
-  , .remove_under_loading.items = .remove_under_loading.items
-  , .remove_cross_loading.items = .remove_cross_loading.items
-  , .dbl_under_loading.threshold = .dbl_under_loading.threshold
-  , .dbl_cross_loading.threshold = .dbl_cross_loading.threshold
-  # Diagrams and tests
-  , .show_diagrams = .show_diagrams
-  , .show_results = .show_results
-) -> EFA_Activities
-
 # FIX FIELDS OF KNOWLEDGE EFA --------------------------------------------
 # Knowledge
 fun_best.model.top.items.workflow(
@@ -861,17 +794,6 @@ EFA_Context$all.models.evaluation %>% view()
 EFA_Context$EFA.workflow$EFA.top.items$EFA.2Factors$reliability.evaluation %>% view()
 EFA_Context$EFA.workflow$EFA.top.items$EFA.3Factors$reliability.evaluation %>% view()
 
-# Work activities
-EFA_Activities$best.model$EFA.top.items$reliability.evaluation
-EFA_Activities.1$best.model$reliability.evaluation
-
-EFA_Activities$best.models.evaluation %>% view()
-EFA_Activities.1$best.models.evaluation %>% view()
-EFA_Activities$all.models.evaluation %>% view()
-
-EFA_Activities$EFA.workflow$EFA.top.items$EFA.2Factors$reliability.evaluation %>% view()
-EFA_Activities$EFA.workflow$EFA.top.items$EFA.3Factors$reliability.evaluation %>% view()
-
 # FACTOR ADEQUACY TESTS --------------------------------
 # Skills
 EFA_Skill$best.model$EFA.top.items$adequacy.tests
@@ -902,13 +824,6 @@ EFA_Context.1$best.model$adequacy.tests
 
 EFA_Context$EFA.workflow$EFA.top.items$EFA.2Factors$adequacy.tests
 EFA_Context$EFA.workflow$EFA.top.items$EFA.3Factors$adequacy.tests
-
-# Work activities
-EFA_Activities$best.model$EFA.top.items$adequacy.tests
-EFA_Activities.1$best.model$adequacy.tests
-
-EFA_Activities$EFA.workflow$EFA.top.items$EFA.2Factors$adequacy.tests
-EFA_Activities$EFA.workflow$EFA.top.items$EFA.3Factors$adequacy.tests
 
 # FACTOR CORRELATION AND REDUNDANCY --------------------------------
 # Skills
@@ -941,13 +856,6 @@ EFA_Context.1$best.model$factor.correlation
 EFA_Context$EFA.workflow$EFA.top.items$EFA.2Factors$factor.correlation
 EFA_Context$EFA.workflow$EFA.top.items$EFA.3Factors$factor.correlation
 
-# Work activities
-EFA_Activities$best.model$EFA.top.items$factor.correlation
-EFA_Activities.1$best.model$factor.correlation
-
-EFA_Activities$EFA.workflow$EFA.top.items$EFA.2Factors$factor.correlation
-EFA_Activities$EFA.workflow$EFA.top.items$EFA.3Factors$factor.correlation
-
 # SUGGESTED ROTATION --------------------------------
 # Skills
 EFA_Skill$best.model$EFA.top.items$suggested.rotation
@@ -978,13 +886,6 @@ EFA_Context.1$best.model$suggested.rotation
 
 EFA_Context$EFA.workflow$EFA.top.items$EFA.2Factors$suggested.rotation
 EFA_Context$EFA.workflow$EFA.top.items$EFA.3Factors$suggested.rotation
-
-# Work activities
-EFA_Activities$best.model$EFA.top.items$suggested.rotation
-EFA_Activities.1$best.model$suggested.rotation
-
-EFA_Activities$EFA.workflow$EFA.top.items$EFA.2Factors$suggested.rotation
-EFA_Activities$EFA.workflow$EFA.top.items$EFA.3Factors$suggested.rotation
 
 # TOP ITEMS ---------------------------------------------------------------
 # Skills
@@ -1017,13 +918,6 @@ EFA_Context$EFA.workflow$top.items$EFA.3Factors %>% view()
 # Both the two and three factors models are internally consistent.
 # However, the three factors model is more interpretable and has the correct amount of items (15).
 
-# Work activities
-# EFA_Activities$EFA.workflow$top.items$EFA.2Factors %>% view()
-EFA_Activities$EFA.workflow$top.items$EFA.3Factors %>% view()
-
-# Both the two and three factors models are internally consistent.
-# However, the three factors model is more interpretable and has the correct amount of items (15).
-
 # ----- CHOOSE MODELS AND EXPORT ------------------------------------------------
 # CHOSEN MODELS ------------------------------------------------------------------
 # Revised and selected models
@@ -1035,8 +929,6 @@ chr_Ablt.Model <- 'EFA.3Factors'
 chr_Know.Model <- 'EFA.4Factors'
 # Work Contexts => 3 factors
 chr_Context.Model <- 'EFA.3Factors'
-# Work Activities => 3 factors
-chr_Activities.Model <- 'EFA.3Factors'
 
 # OUTPUT ------------------------------------------------------------------
 # Revised and selected models
@@ -1048,8 +940,6 @@ chr_Ablt.Items <- EFA_Ablt$EFA.workflow$top.items[[chr_Ablt.Model]]$Item
 chr_Know.Items <- EFA_Know$EFA.workflow$top.items[[chr_Know.Model]]$Item
 # Work Contexts
 chr_Context.Items <- EFA_Context$EFA.workflow$top.items[[chr_Context.Model]]$Item
-# Work Activities
-chr_Activities.Items <- EFA_Activities$EFA.workflow$top.items[[chr_Activities.Model]]$Item
 
 # ----- RETAINED VARIANCE VS DIMENSIONALITY REDUCTION ---------------------
 # RETAINED VARIANCE ------------------------------------------------
@@ -1059,7 +949,6 @@ df_occupations.numeric %>%
     , chr_Ablt.Items
     , chr_Know.Items
     , chr_Context.Items
-    , chr_Activities.Items
   ))
   ) -> df_occupations.numeric.items
 
@@ -1123,19 +1012,6 @@ df_occupations.numeric.context %>%
     )
   ) %>%
   rowSums() -> dbl_context.var.items
-
-df_occupations.numeric.activities %>%
-  select(all_of(c(
-    chr_Activities.Items
-  ))
-  ) %>%
-  summarise(
-    across(
-      .cols = everything()
-      ,.fns = var
-    )
-  ) %>%
-  rowSums() -> dbl_activities.var.items
 
 # Retained variance vs. Dimensionality (Overall)
 dbl_occupations.var.total
@@ -1201,16 +1077,3 @@ length(chr_Context.Items) / ncol(df_occupations.numeric.context)
 
 dbl_context.var.total / dbl_context.var.items
 ncol(df_occupations.numeric.context) / length(chr_Context.Items)
-
-# Retained variance vs. Dimensionality (Work activities)
-dbl_activities.var.total
-dbl_activities.var.items
-
-ncol(df_occupations.numeric.activities)
-length(chr_Activities.Items)
-
-dbl_activities.var.items / dbl_activities.var.total
-length(chr_Activities.Items) / ncol(df_occupations.numeric.activities)
-
-dbl_activities.var.total / dbl_activities.var.items
-ncol(df_occupations.numeric.activities) / length(chr_Activities.Items)
