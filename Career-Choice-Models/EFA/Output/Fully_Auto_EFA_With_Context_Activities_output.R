@@ -260,13 +260,17 @@ df_occupations.numeric %>%
   )  %>% 
   pivot_longer(
     cols = everything()
-  ) %>% 
+  )  %>% 
+  mutate(
+    dsds = name %in% c('Frequency_of_Decision_Making', 'Exposed_to_Disease_or_Infections')
+  ) %>%  
   ggplot(
     aes(
       y = fct_reorder(name, value) 
       , x = value
+      , fill = dsds
     )
-  ) + 
+  ) +
   geom_col() + 
   scale_x_continuous(
     limits = c(0,0.15)
@@ -345,10 +349,14 @@ df_occupations.numeric.context %>%
   pivot_longer(
     cols = everything()
   ) %>% 
+  mutate(
+    dsds = name %in% c('Frequency_of_Decision_Making', 'Exposed_to_Disease_or_Infections')
+  ) %>%  
   ggplot(
     aes(
       y = fct_reorder(name, value) 
       , x = value
+      , fill = dsds
     )
   ) + 
   geom_col() + 
@@ -395,24 +403,27 @@ df_occupations.numeric.activities %>%
 
 # ITEMS PER CATEGORY PARAMETERS 3 -------------------------------------------
 # Manually define number of items
-.int_n.items.total.skill <- 6
+.int_n.items.total.skill <- 8
+# .int_n.items.total.skill <- 6
 .int_n.items.total.ablt <- 9
 .int_n.items.total.know <- 16
-.int_n.items.total.context <- 21
-.int_n.items.total.activities <- 12
+# .int_n.items.total.context <- 18
+# .int_n.items.total.context <- 15
+.int_n.items.total.context <- 12
+# .int_n.items.total.activities <- 9 #no
+# .int_n.items.total.activities <- 12 #no
+.int_n.items.total.activities <- 15 #good
 
-# FACTOR ROTATIONS 1 ---------------------------------------------------------
-.chr_rotation.skill <- 'promax'
-.chr_rotation.ablt <- 'promax'
-.chr_rotation.know <- 'promax'
-.chr_rotation.context <- 'promax'
-.chr_rotation.activities <- 'promax'
+# # FACTOR ROTATIONS 1 ---------------------------------------------------------
+# .chr_rotation.skill <- 'promax'
+# .chr_rotation.ablt <- 'promax'
+# .chr_rotation.know <- 'promax'
+# .chr_rotation.context <- 'promax'
+# .chr_rotation.activities <- 'promax'
 
 # FACTOR ROTATIONS 2 ---------------------------------------------------------
-# .chr_rotation.skill <- 'varimax'
 .chr_rotation.skill <- 'promax'
 .chr_rotation.ablt <- 'promax'
-# .chr_rotation.know <- 'varimax'
 .chr_rotation.know <- 'promax'
 .chr_rotation.context <- 'varimax'
 .chr_rotation.activities <- 'promax'
@@ -656,43 +667,43 @@ df_occupations.numeric.activities %>%
 # .show_diagrams <- T
 # .show_results <- F
 # 
-# GLOBAL EFA PARAMETERS 11 ---------------------------------------------------
-# Number of factors
-.auto_select.nfactors <- T
+# # GLOBAL EFA PARAMETERS 11 ---------------------------------------------------
+# # Number of factors
+# .auto_select.nfactors <- T
+# 
+# # Minimum factor size
+# .int_min.factor_size <- 3
+# 
+# .remove_unacceptable_MSAi.items <- T
+# # Underloadings and crossloadings
+# .remove_under_loading.items <- T
+# .remove_cross_loading.items <- F
+# .dbl_under_loading.threshold <- 0.4
+# .dbl_cross_loading.threshold <- 0.3
+# 
+# # Diagrams and tests
+# .show_diagrams <- T
+# .show_results <- T
 
-# Minimum factor size
-.int_min.factor_size <- 3
+# # GLOBAL EFA PARAMETERS 12 ---------------------------------------------------
+# # Number of factors
+# .auto_select.nfactors <- T
+# 
+# # Minimum factor size
+# .int_min.factor_size <- 3
+# 
+# .remove_unacceptable_MSAi.items <- T
+# # Underloadings and crossloadings
+# .remove_under_loading.items <- T
+# .remove_cross_loading.items <- F
+# .dbl_under_loading.threshold <- 0.5
+# .dbl_cross_loading.threshold <- 0.3
+# 
+# # Diagrams and tests
+# .show_diagrams <- T
+# .show_results <- T
 
-.remove_unacceptable_MSAi.items <- T
-# Underloadings and crossloadings
-.remove_under_loading.items <- T
-.remove_cross_loading.items <- F
-.dbl_under_loading.threshold <- 0.4
-.dbl_cross_loading.threshold <- 0.3
-
-# Diagrams and tests
-.show_diagrams <- T
-.show_results <- T
-
-# GLOBAL EFA PARAMETERS 12 ---------------------------------------------------
-# Number of factors
-.auto_select.nfactors <- T
-
-# Minimum factor size
-.int_min.factor_size <- 3
-
-.remove_unacceptable_MSAi.items <- T
-# Underloadings and crossloadings
-.remove_under_loading.items <- T
-.remove_cross_loading.items <- F
-.dbl_under_loading.threshold <- 0.5
-.dbl_cross_loading.threshold <- 0.3
-
-# Diagrams and tests
-.show_diagrams <- T
-.show_results <- T
-
-# GLOBAL EFA PARAMETERS 13 ---------------------------------------------------
+# * GLOBAL EFA PARAMETERS 13 * ---------------------------------------------------
 # Number of factors
 .auto_select.nfactors <- T
 
@@ -912,11 +923,14 @@ fun_best.model.top.items.workflow(
 #   # promax > varimax
 #   , .remove_unacceptable_MSAi.items = T
 #   # Underloadings and crossloadings
+#   # , .remove_under_loading.items = T
 #   , .remove_under_loading.items = T
 #   , .remove_cross_loading.items = T
-#   # , .dbl_under_loading.threshold = 0.4
+#   # , .dbl_under_loading.threshold = 0.45 #no
+#   # , .dbl_under_loading.threshold = 0.4 #no
+#   # , .dbl_under_loading.threshold = 0.6 #no
+#   # , .dbl_under_loading.threshold = 0.7 #no
 #   , .dbl_under_loading.threshold = 0.5
-#   # , .dbl_under_loading.threshold = 0.55
 #   , .dbl_cross_loading.threshold = 0.2
 #   # Diagrams and tests
 #   , .show_diagrams = T
@@ -941,7 +955,7 @@ fun_best.model.top.items.workflow(
 # EFA_Know$EFA.workflow$EFA.top.items$EFA.3Factors$suggested.rotation
 # EFA_Know$EFA.workflow$EFA.top.items$EFA.4Factors$suggested.rotation
 # 
-# # Top items 
+# # Top items
 # EFA_Know$EFA.workflow$top.items$EFA.2Factors %>% view()
 # EFA_Know$EFA.workflow$top.items$EFA.3Factors %>% view()
 # EFA_Know$EFA.workflow$top.items$EFA.4Factors %>% view()
@@ -953,6 +967,121 @@ fun_best.model.top.items.workflow(
 # EFA_Know$EFA.workflow$EFA$EFA$EFA.4Factors$cross_loading.items
 # EFA_Know$EFA.workflow$EFA$EFA$EFA.4Factors$under_loading.items
 # EFA_Know$EFA.workflow$EFA$EFA$EFA.4Factors$loadings.long %>% view
+
+# FIX WORK CONTEXTS EFA --------------------------------------------
+# Work contexts
+fun_best.model.top.items.workflow(
+  # Basic
+  .df_data.numeric = df_occupations.numeric.context
+  , .auto_select.nfactors = T
+  , .int_min.factor_size = 3
+  # , .int_n.items.total = 24
+  # , .int_n.items.total = 24 #shit
+  # , .int_n.items.total = 21 #works well with lower thresholds
+  # , .int_n.items.total = 18 #doesn't work with knowledge-optimizing parameters
+  , .int_n.items.total = 12
+  # , .int_n.items.total = 15 #no
+  # , .chr_rotation = 'promax'
+  , .chr_rotation = 'varimax'
+  # promax > varimax
+  , .remove_unacceptable_MSAi.items = T
+  # Underloadings and crossloadings
+  , .remove_under_loading.items = T
+  , .remove_cross_loading.items = T
+  # , .dbl_under_loading.threshold = 0.4 #no
+  , .dbl_under_loading.threshold = 0.5 #optimizes fields of knowledge
+  , .dbl_cross_loading.threshold = 0.2 #optimizes fields of knowledge
+  # Diagrams and tests
+  , .show_diagrams = T
+  , .show_results = T
+) -> EFA_Context
+
+# Internal consistency
+EFA_Context$best.model$EFA.top.items$reliability.evaluation
+
+EFA_Context$best.models.evaluation %>% view()
+EFA_Context$all.models.evaluation %>% view()
+
+EFA_Context$EFA.workflow$EFA.top.items$EFA.2Factors$reliability.evaluation %>% view()
+EFA_Context$EFA.workflow$EFA.top.items$EFA.3Factors$reliability.evaluation %>% view()
+EFA_Context$EFA.workflow$EFA.top.items$EFA.4Factors$reliability.evaluation %>% view()
+EFA_Context$EFA.workflow$EFA.top.items$EFA.5Factors$reliability.evaluation %>% view()
+
+# Rotation
+EFA_Context$best.model$EFA.top.items$suggested.rotation
+
+EFA_Context$EFA.workflow$EFA.top.items$EFA.2Factors$suggested.rotation
+EFA_Context$EFA.workflow$EFA.top.items$EFA.3Factors$suggested.rotation
+EFA_Context$EFA.workflow$EFA.top.items$EFA.4Factors$suggested.rotation
+
+# Top items
+EFA_Context$EFA.workflow$top.items$EFA.2Factors %>% view()
+EFA_Context$EFA.workflow$top.items$EFA.3Factors %>% view()
+EFA_Context$EFA.workflow$top.items$EFA.4Factors %>% view()
+EFA_Context$EFA.workflow$top.items$EFA.5Factors %>% view()
+
+# Removed items
+EFA_Context$EFA.workflow$EFA.top.items$EFA.4Factors$removed.items
+EFA_Context$EFA.workflow$EFA$EFA$EFA.4Factors$removed.items
+EFA_Context$EFA.workflow$EFA$EFA$EFA.4Factors$cross_loading.items
+EFA_Context$EFA.workflow$EFA$EFA$EFA.4Factors$under_loading.items
+EFA_Context$EFA.workflow$EFA$EFA$EFA.4Factors$loadings.long %>% view
+
+# # FIX WORK ACTIVITIES EFA --------------------------------------------
+# # Work contexts
+# fun_best.model.top.items.workflow(
+#   # Basic
+#   .df_data.numeric = df_occupations.numeric.activities
+#   , .auto_select.nfactors = T
+#   , .int_min.factor_size = 3
+#   , .int_n.items.total = 15 #works best
+#   # , .int_n.items.total = 12 #no
+#   # , .int_n.items.total = 9 #no
+#   , .chr_rotation = 'promax'
+#   # , .chr_rotation = 'varimax'
+#   # promax > varimax
+#   , .remove_unacceptable_MSAi.items = T
+#   # Underloadings and crossloadings
+#   , .remove_under_loading.items = T
+#   , .remove_cross_loading.items = T
+#   # , .dbl_under_loading.threshold = 0.4 #no
+#   , .dbl_under_loading.threshold = 0.5 #optimizes fields of knowledge
+#   , .dbl_cross_loading.threshold = 0.2 #optimizes fields of knowledge
+#   # Diagrams and tests
+#   , .show_diagrams = T
+#   , .show_results = T
+# ) -> EFA_Activities
+# 
+# # Internal consistency
+# EFA_Activities$best.model$EFA.top.items$reliability.evaluation
+# 
+# EFA_Activities$best.models.evaluation %>% view()
+# EFA_Activities$all.models.evaluation %>% view()
+# 
+# EFA_Activities$EFA.workflow$EFA.top.items$EFA.2Factors$reliability.evaluation %>% view()
+# EFA_Activities$EFA.workflow$EFA.top.items$EFA.3Factors$reliability.evaluation %>% view()
+# EFA_Activities$EFA.workflow$EFA.top.items$EFA.4Factors$reliability.evaluation %>% view()
+# EFA_Activities$EFA.workflow$EFA.top.items$EFA.5Factors$reliability.evaluation %>% view()
+# 
+# # Rotation
+# EFA_Activities$best.model$EFA.top.items$suggested.rotation
+# 
+# EFA_Activities$EFA.workflow$EFA.top.items$EFA.2Factors$suggested.rotation
+# EFA_Activities$EFA.workflow$EFA.top.items$EFA.3Factors$suggested.rotation
+# EFA_Activities$EFA.workflow$EFA.top.items$EFA.4Factors$suggested.rotation
+# 
+# # Top items
+# EFA_Activities$EFA.workflow$top.items$EFA.2Factors %>% view()
+# EFA_Activities$EFA.workflow$top.items$EFA.3Factors %>% view()
+# EFA_Activities$EFA.workflow$top.items$EFA.4Factors %>% view()
+# EFA_Activities$EFA.workflow$top.items$EFA.5Factors %>% view()
+# 
+# # Removed items
+# EFA_Activities$EFA.workflow$EFA.top.items$EFA.4Factors$removed.items
+# EFA_Activities$EFA.workflow$EFA$EFA$EFA.4Factors$removed.items
+# EFA_Activities$EFA.workflow$EFA$EFA$EFA.4Factors$cross_loading.items
+# EFA_Activities$EFA.workflow$EFA$EFA$EFA.4Factors$under_loading.items
+# EFA_Activities$EFA.workflow$EFA$EFA$EFA.4Factors$loadings.long %>% view
 
 # ----- EVALUATION --------------------------------------------------------
 # COMPARING ONE STAGE WITH TWO STAGE EFA --------------------------------
@@ -1140,17 +1269,17 @@ EFA_Skill$EFA.workflow$top.items$EFA.2Factors %>% view()
 # EFA_Ablt$best.model$top.items %>% view()
 # EFA_Ablt$EFA.workflow$top.items$EFA.2Factors %>% view()
 EFA_Ablt$EFA.workflow$top.items$EFA.3Factors %>% view()
-EFA_Ablt$EFA.workflow$top.items$EFA.4Factors %>% view()
+# EFA_Ablt$EFA.workflow$top.items$EFA.4Factors %>% view()
 
 # All models are highly reliable. However, the four factors is most interpretable.
 
 # Knowledge
 # EFA_Know$best.model$top.items %>% view()
 
-EFA_Know$EFA.workflow$top.items$EFA.2Factors %>% view()
-EFA_Know$EFA.workflow$top.items$EFA.3Factors %>% view()
+# EFA_Know$EFA.workflow$top.items$EFA.2Factors %>% view()
+# EFA_Know$EFA.workflow$top.items$EFA.3Factors %>% view()
 EFA_Know$EFA.workflow$top.items$EFA.4Factors %>% view()
-EFA_Know$EFA.workflow$top.items$EFA.5Factors %>% view()
+# EFA_Know$EFA.workflow$top.items$EFA.5Factors %>% view()
 
 # Work context
 # EFA_Context$best.model$top.items %>% view()

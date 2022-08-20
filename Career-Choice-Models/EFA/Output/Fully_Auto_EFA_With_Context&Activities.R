@@ -241,7 +241,6 @@ sum(
 .chr_rotation.ablt <- 'promax'
 .chr_rotation.know <- 'promax'
 .chr_rotation.context <- 'promax'
-.chr_rotation.activities <- 'promax'
 
 # FACTOR ROTATIONS 2 ---------------------------------------------------------
 # .chr_rotation.skill <- 'varimax'
@@ -250,7 +249,6 @@ sum(
 # .chr_rotation.know <- 'varimax'
 .chr_rotation.know <- 'promax'
 .chr_rotation.context <- 'varimax'
-.chr_rotation.activities <- 'promax'
 
 # # GLOBAL EFA PARAMETERS 1 ---------------------------------------------------
 # # Number of factors
@@ -522,6 +520,24 @@ sum(
 .remove_cross_loading.items <- F
 .dbl_under_loading.threshold <- 0.5
 .dbl_cross_loading.threshold <- 0.3
+
+# Diagrams and tests
+.show_diagrams <- T
+.show_results <- T
+
+# * GLOBAL EFA PARAMETERS 13 * ---------------------------------------------------
+# Number of factors
+.auto_select.nfactors <- T
+
+# Minimum factor size
+.int_min.factor_size <- 3
+
+.remove_unacceptable_MSAi.items <- T
+# Underloadings and crossloadings
+.remove_under_loading.items <- T
+.remove_cross_loading.items <- T
+.dbl_under_loading.threshold <- 0.5
+.dbl_cross_loading.threshold <- 0.2
 
 # Diagrams and tests
 .show_diagrams <- T
