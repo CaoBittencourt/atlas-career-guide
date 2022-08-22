@@ -25,6 +25,7 @@ source('./KNN_Matching.R')
 
 
 # ------- DATA -------------------------------------------------------------------------
+
 # SKILLS FACTOR LIST -----------------------------------------------------------------
 list_skill.factors <- list(
   'General' = c(
@@ -115,15 +116,15 @@ df_occupations <- readr::read_csv('https://docs.google.com/spreadsheets/d/e/2PAC
 
 # Matching data frame
 # Only highly qualified professions
-df_occupations %>%
-  filter(
-    Entry_level_Education %in% c(
-      "Bachelor's degree"
-      , "Doctoral or professional degree"
-      , "Associate's degree"
-      , "Master's degree"
-    )
-  ) -> df_occupations
+# df_occupations %>%
+#   filter(
+#     Entry_level_Education %in% c(
+#       "Bachelor's degree"
+#       , "Doctoral or professional degree"
+#       # , "Associate's degree"
+#       , "Master's degree"
+#     )
+#   ) -> df_occupations
 
 # Select only necessary variables
 df_occupations %>%
@@ -145,7 +146,35 @@ df_occupations %>%
       )
       , .fns = function(x){x/100}
     )
+    , across(
+      .cols = all_of(
+        list_factors %>%
+          flatten() %>% 
+          flatten_chr()
+      )
+      , .fns = function(x){
+        findInterval(
+          x, seq(0, 1, 0.25)
+        )
+      }
+    )
+    , across(
+      .cols = all_of(
+        list_factors %>%
+          flatten() %>% 
+          flatten_chr()
+      )
+      , .fns = function(x){
+        recode(x
+               , '1' = .0
+               , '2' = .25
+               , '3' = .5
+               , '4' = .75
+               , '5' = 1
+        )}
+    )
   ) -> df_occupations
+
 
 # DATA (USERS) ------------------------------------------------------------
 # User questionnaires data frame
@@ -178,33 +207,24 @@ df_input.all %>%
     )
   ) -> df_input.all
 
-df_input.all %>% 
-  drop_na() -> df_input.all
-
+# SELECTED USER -----------------------------------------------------------
 # For this example, use Martijn' questionnaire 
-chr_names <- df_input.all$Name
-names(chr_names) <- df_input.all$Name
+# chr_user <- 'Martijn'
+chr_user <- 'Cao'
+
+df_input.all %>% 
+  filter(Name == chr_user) %>%
+  select(-Name) -> df_input
 
 # ------- KNN MATCHING -------------------------------------------------------------------------
-# NO IMPUTATION ------------------------------------
-lapply(
-  chr_names
-  , function(name){
-    
-    df_input.all %>% 
-      filter(Name == name) -> df_input
-    
-    # NO IMPUTATION --------------------------------------------
-    fun_KNN.matching(
-      .df_data.numeric = df_occupations
-      , .vec_query.numeric = df_input
-      , .int_k = nrow(df_occupations)
-      , .imput.over_qualification = F
-      , .dbl_decimals = 4
-    ) %>% 
-      return(.)
-    
-  }) -> list_KNN.output
+# NO IMPUTATION --------------------------------------------
+fun_KNN.matching(
+  .df_data.numeric = df_occupations
+  , .vec_query.numeric = df_input
+  , .int_k = nrow(df_occupations)
+  , .imput.over_qualification = F
+  , .dbl_decimals = 4
+) -> df_KNN.output
 
 # OVERQUALIFICATION IMPUTATION --------------------------------------------
 # OVERQUALIFICATION IMPUTATION - 100% UNNECESSARY COMPETENCY (0)
@@ -215,49 +235,17 @@ lapply(
 # OVERQUALIFICATION IMPUTATION - 10-POINT LIKERT VERY LOW (0.10)
 # OVERQUALIFICATION IMPUTATION - 10-POINT LIKERT LOW (0.20)
 dbl_threshold <- 0
-# dbl_threshold <- 0.10
-# dbl_threshold <- 0.25
 
-lapply(
-  chr_names
-  , function(name){
-    
-    df_input.all %>% 
-      filter(Name == name) -> df_input
-    
-    fun_KNN.matching(
-      .df_data.numeric = df_occupations
-      , .vec_query.numeric = df_input
-      , .int_k = nrow(df_occupations)
-      , .imput.over_qualification = T
-      , .dbl_over_qualification.threshold = dbl_threshold
-      , .dbl_decimals = 4
-    ) %>% 
-      return(.)
-    
-  }) -> list_KNN.output.sub
+fun_KNN.matching(
+  .df_data.numeric = df_occupations
+  , .vec_query.numeric = df_input
+  , .int_k = nrow(df_occupations)
+  , .imput.over_qualification = T
+  , .dbl_over_qualification.threshold = dbl_threshold
+  , .dbl_decimals = 4
+) -> df_KNN.output.sub
 
 # ------- VISUALIZATION -------------------------------------------------------------------------
-# BIND DATA FRAMES --------------------------------------------------------
-list_KNN.output %>% 
-  bind_rows(.id = 'Name') %>% 
-  select(
-    Name
-    , Occupation
-    , starts_with('Similarity.')
-    , Euclidean_Distance
-  ) %>%
-  arrange(Euclidean_Distance) -> df_KNN.output
-
-list_KNN.output.sub %>% 
-  bind_rows(.id = 'Name') %>% 
-  select(
-    Name
-    , Occupation
-    , starts_with('Similarity.')
-    , Euclidean_Distance
-  ) %>%
-  arrange(Euclidean_Distance) -> df_KNN.output.sub
 
 # LONG DATA FRAMES --------------------------------------------------------
 df_KNN.output %>%
@@ -265,28 +253,94 @@ df_KNN.output %>%
     cols = starts_with('Similarity.')
     , names_to = 'Similarity'
     , values_to = 'Value'
-  ) %>% 
-  group_by(Similarity) %>% 
-  arrange(Value, Euclidean_Distance) %>% 
-  mutate(
-    ID = row_number()
-    , ID = factor(ID)
-  ) %>%
-  ungroup() -> df_KNN.output.long
+  ) -> df_KNN.output.long
 
 df_KNN.output.sub %>%
   pivot_longer(
     cols = starts_with('Similarity.')
     , names_to = 'Similarity'
     , values_to = 'Value'
-  ) %>% 
+  ) -> df_KNN.output.sub.long
+
+# TOP MATCHES (NO IMPUTATION) ---------------------------------------------------------
+df_KNN.output.long %>% 
+  arrange(desc(Value)) %>% 
   group_by(Similarity) %>% 
-  arrange(Value, Euclidean_Distance) %>% 
+  slice(1:15) %>% 
+  ungroup() %>% 
   mutate(
-    ID = row_number()
-    , ID = factor(ID)
+    Occupation = fct_reorder(
+      .f = Occupation
+      , .x = Value
+      , .fun = max
+      , .desc = T
+    )
+    , Similarity = fct_reorder(
+      .f = Similarity
+      , .x = Value
+      , .fun = max
+      , .desc = F
+    )
   ) %>%
-  ungroup() -> df_KNN.output.sub.long
+  ggplot(aes(
+    x = Value
+    , y = Similarity
+    , fill = Career_Cluster
+  )) +
+  geom_col() + 
+  facet_wrap(
+    facets = vars(Occupation)
+    , nrow = 3
+  ) + 
+  labs(
+    x = 'Similarity (%)'
+    , y = 'Similarity Metric'
+    , title = glue('Similarity Metrics Comparison ({chr_user}) - No Imputation')
+    , fill = 'Career Cluster'
+  ) +
+  scale_x_continuous(limits = c(-1,1)) + 
+  ggthemes::scale_fill_gdocs() + 
+  ggthemes::theme_hc() -> plt_top15
+
+# TOP MATCHES (WITH IMPUTATION) ---------------------------------------------------------
+df_KNN.output.sub.long %>% 
+  arrange(desc(Value)) %>% 
+  group_by(Similarity) %>% 
+  slice(1:15) %>% 
+  ungroup() %>% 
+  mutate(
+    Occupation = fct_reorder(
+      .f = Occupation
+      , .x = Value
+      , .fun = max
+      , .desc = T
+    )
+    , Similarity = fct_reorder(
+      .f = Similarity
+      , .x = Value
+      , .fun = max
+      , .desc = F
+    )
+  ) %>%
+  ggplot(aes(
+    x = Value
+    , y = Similarity
+    , fill = Career_Cluster
+  )) +
+  geom_col() + 
+  facet_wrap(
+    facets = vars(Occupation)
+    , nrow = 3
+  ) + 
+  labs(
+    x = 'Similarity (%)'
+    , y = 'Similarity Metric'
+    , title = glue('Similarity Metrics Comparison ({chr_user}) - With Overqualification Imputation (at {dbl_threshold})')
+    , fill = 'Career Cluster'
+  ) +
+  scale_x_continuous(limits = c(-1,1)) + 
+  ggthemes::scale_fill_gdocs() + 
+  ggthemes::theme_hc() -> plt_top15.sub
 
 # HISTOGRAMS (NO IMPUTATION) --------------------------------------------------------
 df_KNN.output.long %>%
@@ -333,7 +387,7 @@ tmp %>%
   labs(
     x = 'Similarity (%)'
     , y = 'Count'
-    , title = 'Similarity Metrics Comparison (All users) - No Imputation'
+    , title = glue('Similarity Metrics Comparison ({chr_user}) - No Imputation')
   ) +
   scale_x_continuous(limits = c(-1,1)) + 
   ggthemes::theme_hc() -> plt_hist
@@ -383,7 +437,7 @@ tmp %>%
   labs(
     x = 'Similarity (%)'
     , y = 'Count'
-    , title = glue('Similarity Metrics Comparison (All users) - With Overqualification Imputation (at {dbl_threshold})')
+    , title = glue('Similarity Metrics Comparison ({chr_user}) - With Overqualification Imputation (at {dbl_threshold})')
   ) +
   scale_x_continuous(limits = c(-1,1)) + 
   ggthemes::theme_hc() -> plt_hist.sub
@@ -391,15 +445,21 @@ tmp %>%
 # HEATMAPS (NO IMPUTATION) ------------------------------------------------
 df_KNN.output.long %>% 
   mutate(
-    Similarity = fct_reorder(
+    Occupation = fct_reorder(
+      .f = Occupation
+      , .x = Value
+      , .fun = max
+      , .desc = F
+    )
+    , Similarity = fct_reorder(
       .f = Similarity
       , .x = Value
       , .fun = sum
       , .desc = F
     )
-  ) %>%
+  ) %>% 
   ggplot(aes(
-    x = ID
+    x = Occupation
     , y = Similarity
     , fill = Value
   )) +
@@ -412,7 +472,7 @@ df_KNN.output.long %>%
     x = 'Similarity Ranking'
     , y = 'Similarity Metric'
     , fill = 'Similarity (%)'
-    , title = 'Similarity Metrics Comparison (All users) - No Imputation'
+    , title = glue('Similarity Metrics Comparison ({chr_user}) - No Imputation')
   ) + 
   ggthemes::theme_hc() + 
   theme(
@@ -423,15 +483,21 @@ df_KNN.output.long %>%
 # HEATMAPS (WITH IMPUTATION) ------------------------------------------------
 df_KNN.output.sub.long %>% 
   mutate(
-    Similarity = fct_reorder(
+    Occupation = fct_reorder(
+      .f = Occupation
+      , .x = Value
+      , .fun = max
+      , .desc = F
+    )
+    , Similarity = fct_reorder(
       .f = Similarity
       , .x = Value
       , .fun = sum
       , .desc = F
     )
-  ) %>%
+  ) %>% 
   ggplot(aes(
-    x = ID
+    x = Occupation
     , y = Similarity
     , fill = Value
   )) +
@@ -444,7 +510,7 @@ df_KNN.output.sub.long %>%
     x = 'Similarity Ranking'
     , y = 'Similarity Metric'
     , fill = 'Similarity (%)'
-    , title = glue('Similarity Metrics Comparison (All users) - With Overqualification Imputation (at {dbl_threshold})')
+    , title = glue('Similarity Metrics Comparison ({chr_user}) - With Overqualification Imputation (at {dbl_threshold})')
   ) + 
   ggthemes::theme_hc() + 
   theme(
@@ -467,11 +533,21 @@ df_KNN.output.long %>%
       Similarity, Value
       , .fun = max, .desc = T
     )
-  ) -> tmp
+  ) %>% 
+  group_by(Similarity) %>% 
+  mutate(
+    Occupation = fct_reorder(
+      .f = Occupation
+      , .x = Value
+      , .fun = max
+      , .desc = F
+    )
+  ) %>% 
+  ungroup() -> tmp
 
 tmp %>%
   ggplot(aes(
-    x = ID
+    x = Occupation
     , y = Value
     , group = 1
   )) + 
@@ -497,7 +573,7 @@ tmp %>%
   labs(
     x = 'Similarity Ranking'
     , y = 'Similarity (%)'
-    , title = 'Similarity Metrics Comparison (All users) - No Imputation'
+    , title = glue('Similarity Metrics Comparison ({chr_user}) - No Imputation')
   ) + 
   scale_y_continuous(limits = c(-1,1)) + 
   ggthemes::theme_hc() + 
@@ -518,11 +594,21 @@ df_KNN.output.sub.long %>%
       Similarity, Value
       , .fun = max, .desc = T
     )
-  ) -> tmp
+  ) %>% 
+  group_by(Similarity) %>% 
+  mutate(
+    Occupation = fct_reorder(
+      .f = Occupation
+      , .x = Value
+      , .fun = max
+      , .desc = F
+    )
+  ) %>% 
+  ungroup() -> tmp
 
 tmp %>%
   ggplot(aes(
-    x = ID
+    x = Occupation
     , y = Value
     , group = 1
   )) + 
@@ -548,7 +634,7 @@ tmp %>%
   labs(
     x = 'Similarity Ranking'
     , y = 'Similarity (%)'
-    , title = glue('Similarity Metrics Comparison (All users) - With Overqualification Imputation (at {dbl_threshold})')
+    , title = glue('Similarity Metrics Comparison ({chr_user}) - With Overqualification Imputation (at {dbl_threshold})')
   ) + 
   scale_y_continuous(limits = c(-1,1)) + 
   ggthemes::theme_hc() + 
@@ -561,6 +647,8 @@ tmp %>%
 plt_lines <- plt_line + plt_line.sub
 
 # PLOT EVERYTHING --------------------------------------------------------------
+plt_top15
+plt_top15.sub
 plt_hist
 plt_hist.sub
 plt_heatmap
@@ -572,57 +660,71 @@ plt_lines
 
 # SAVE PLOTS --------------------------------------------------------------
 ggsave(
+  plot = plt_top15
+  , filename = glue('1.Similarities_Comparison_Bar1_{chr_user}.png')
+  , width = 16
+  , height = 10
+)
+
+ggsave(
+  plot = plt_top15.sub
+  , filename = glue('2.Similarities_Comparison_Bar2_{chr_user}.png')
+  , width = 16
+  , height = 10
+)
+
+ggsave(
   plot = plt_hist
-  , filename = '1.Similarities_Comparison_Hist1_All.png'
+  , filename = glue('3.Similarities_Comparison_Hist1_{chr_user}.png')
   , width = 16
   , height = 8
 )
 
 ggsave(
   plot = plt_hist.sub
-  , filename = '2.Similarities_Comparison_Hist2_All.png'
+  , filename = glue('4.Similarities_Comparison_Hist2_{chr_user}.png')
   , width = 16
   , height = 8
 )
 
 ggsave(
   plot = plt_heatmap
-  , filename = '3.Similarities_Comparison_Heatmap1_All.png'
+  , filename = glue('5.Similarities_Comparison_Heatmap1_{chr_user}.png')
   , width = 16
   , height = 8
 )
 
 ggsave(
   plot = plt_heatmap.sub
-  , filename = '4.Similarities_Comparison_Heatmap2_All.png'
+  , filename = glue('6.Similarities_Comparison_Heatmap2_{chr_user}.png')
   , width = 16
   , height = 8
 )
 
 ggsave(
   plot = plt_heatmaps
-  , filename = '5.Similarities_Comparison_Heatmap3_All.png'
-  , width = 16
+  , filename = glue('7.Similarities_Comparison_Heatmap3_{chr_user}.png')
+  , width = 17
   , height = 8
 )
 
 ggsave(
   plot = plt_line
-  , filename = '6.Similarities_Comparison_Lines1_All.png'
+  , filename = glue('8.Similarities_Comparison_Lines1_{chr_user}.png')
   , width = 16
   , height = 8
 )
 
 ggsave(
   plot = plt_line.sub
-  , filename = '7.Similarities_Comparison_Lines2_All.png'
+  , filename = glue('9.Similarities_Comparison_Lines2_{chr_user}.png')
   , width = 16
   , height = 8
 )
 
 ggsave(
   plot = plt_lines
-  , filename = '8.Similarities_Comparison_Lines3_All.png'
+  , filename = glue('10.Similarities_Comparison_Lines3_{chr_user}.png')
   , width = 16
   , height = 8
 )

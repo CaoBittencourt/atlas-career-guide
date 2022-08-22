@@ -159,17 +159,17 @@ handler <- function(body, ...){
     
     'Discernment' = c(
       # Factor 1 is composed of cognitive, non-technical, general competencies related to decision-making (discernment)
-      'Judgment_and_Decision.L'
-      , 'Active_Learning.L'
-      , 'Complex_Problem_Solving.L'
-      , 'Critical_Thinking.L'
+      'judgment_and_decision.l'
+      , 'active_learning.l'
+      , 'complex_problem_solving.l'
+      , 'critical_thinking.l'
     )
     , 'Technical' = c(
       # Factor 2 is composed of mechanical, hands-on, specialist skills (technical)
-      'Equipment_Selection.L'
-      , 'Troubleshooting.L'
-      , 'Repairing.L'
-      , 'Equipment_Maintenance.L'
+      'equipment_selection.l'
+      , 'troubleshooting.l'
+      , 'repairing.l'
+      , 'equipment_maintenance.l'
     )
     
   )
@@ -179,21 +179,21 @@ handler <- function(body, ...){
     
     'Perception' = c(
       # Factor 1 is composed of perceptual abilities (perception):
-      'Glare_Sensitivity.L'
-      , 'Peripheral_Vision.L'
-      , 'Sound_Localization.L'
+      'glare_sensitivity.l'
+      , 'peripheral_vision.l'
+      , 'sound_localization.l'
     )
     , 'Dexterity' = c(
       # Factor 2 is composed of manual abilities (dexterity):
-      'Arm_Hand_Steadiness.L'
-      , 'Finger_Dexterity.L'
-      , 'Control_Precision.L'
+      'arm_hand_steadiness.l'
+      , 'finger_dexterity.l'
+      , 'control_precision.l'
     )
     , 'Intelligence' = c(
       # Factor 4 is composed of cognitive abilities (intelligence):
-      'Inductive_Reasoning.L'
-      , 'Deductive_Reasoning.L'
-      , 'Information_Ordering.L'
+      'inductive_reasoning.l'
+      , 'deductive_reasoning.l'
+      , 'information_ordering.l'
     )
     
   )
@@ -203,31 +203,31 @@ handler <- function(body, ...){
     
     'Health' = c(
       # Factor 1 is composed of health-related fields of knowledge (health).
-      'Therapy_and_Counseling.L'
-      , 'Medicine_and_Dentistry.L'
-      , 'Psychology.L'
-      , 'Biology.L'
+      'therapy_and_counseling.l'
+      , 'medicine_and_dentistry.l'
+      , 'psychology.l'
+      , 'biology.l'
     )
     , 'Building' = c(
       # Factor 2 is composed of engineering / building-related fields of knowledge (building).
-      'Physics.L'
-      , 'Engineering_and_Technology.L'
-      , 'Mechanical.L'
-      , 'Building_and_Construction.L'
+      'physics.l'
+      , 'engineering_and_technology.l'
+      , 'mechanical.l'
+      , 'building_and_construction.l'
     ) 
     , 'Business' = c(
       # Factor 3 is composed of financial and enterprising fields of knowledge (business).
-      'Administration_and_Management.L'
-      , 'Economics_and_Accounting.L'
-      , 'Personnel_and_Human_Resources.L'
-      , 'Administrative.L'
+      'administration_and_management.l'
+      , 'economics_and_accounting.l'
+      , 'personnel_and_human_resources.l'
+      , 'administrative.l'
     )
     , 'Arts_Humanities' = c(
       # Factor 4 is composed of arts and humanities (arts & humanities).
-      'History_and_Archeology.L'
-      , 'Fine_Arts.L'
-      , 'Philosophy_and_Theology.L'
-      , 'Sociology_and_Anthropology.L'
+      'history_and_archeology.l'
+      , 'fine_arts.l'
+      , 'philosophy_and_theology.l'
+      , 'sociology_and_anthropology.l'
     ) 
     
   )
@@ -237,24 +237,24 @@ handler <- function(body, ...){
     
     'Environmental_Hazards' = c(
       # Factor 1 is composed of work contexts related to environmental job hazards (environmental hazards).
-      'Outdoors_Under_Cover'
-      , 'Outdoors_Exposed_to_Whether'
-      , 'Indoors_Not_Environmentally_Controlled'
-      , 'Exposed_to_High_Places'
+      'outdoors_under_cover'
+      , 'outdoors_exposed_to_whether'
+      , 'indoors_not_environmentally_controlled'
+      , 'exposed_to_high_places'
     )
     , 'Physical_Exertion' = c(
       # Factor 2 is composed of work contexts related to physical activity (physical exertion).
-      'Spend_Time_Standing'
-      , 'Spend_Time_Making_Repetitive_Motions'
-      , 'Spend_Time_Bending_or_Twisting_the_Body'
-      , 'Spend_Time_Walking_and_Running'
+      'spend_time_standing'
+      , 'spend_time_making_repetitive_motions'
+      , 'spend_time_bending_or_twisting_the_body'
+      , 'spend_time_walking_and_running'
     ) 
     , 'Interpersonal_Conflict' = c(
       # Factor 3 is composed of work contexts related to conflict management (interpersonal conflict).
-      'Frequency_of_Conflict_Situations'
-      , 'Deal_with_Unpleasant_or_Angry_People'
-      , 'Deal_with_Physically_Aggressive_People'
-      , 'Contact_With_Others'
+      'frequency_of_conflict_situations'
+      , 'deal_with_unpleasant_or_angry_people'
+      , 'deal_with_physically_aggressive_people'
+      , 'contact_with_others'
     )
     
   )
@@ -264,27 +264,27 @@ handler <- function(body, ...){
     
     'Analytical' = c(
       # Factor 1 is composed of analytical work activities (analytical).
-      'Processing_Information.L'
-      , 'Analysing_Data_or_Information.L'
-      , 'Working_with_Computers.L'
-      , 'Documenting_Recording_Information.L'
-      , 'Updating_and_Using_Relevant_Knowledge.L'
+      'processing_information.l'
+      , 'analysing_data_or_information.l'
+      , 'working_with_computers.l'
+      , 'documenting_recording_information.l'
+      , 'updating_and_using_relevant_knowledge.l'
     )
     , 'Managerial' = c(
       # Factor 2 is composed of managerial work activities (managerial).
-      'Guiding_Directing_and_Motivating_Subordinates.L'
-      , 'Coordinating_the_Work_and_Activities_of_Others.L'
-      , 'Developing_and_Building_Teams.L'
-      , 'Staffing_Organizational_Units.L'
-      , 'Coaching_and_Developing_Others.L'
+      'guiding_directing_and_motivating_subordinates.l'
+      , 'coordinating_the_work_and_activities_of_others.l'
+      , 'developing_and_building_teams.l'
+      , 'staffing_organizational_units.l'
+      , 'coaching_and_developing_others.l'
     ) 
     , 'Mechanical' = c(
       # Factor 3 is composed of mechanical work activities (mechanical).
-      'Repairing_and_Maintaining_Mechanical_Equipment.L'
-      , 'Controlling_Machines_and_Processes.L'
-      , 'Inspecting_Equipment_Structures_or_Materials.L'
-      , 'Repairing_and_Maintaining_Electronic_Equipment.L'
-      , 'Operating_Vehicles_Mechanized_Devices_or_Equipment.L'
+      'repairing_and_maintaining_mechanical_equipment.l'
+      , 'controlling_machines_and_processes.l'
+      , 'inspecting_equipment_structures_or_materials.l'
+      , 'repairing_and_maintaining_electronic_equipment.l'
+      , 'operating_vehicles_mechanized_devices_or_equipment.l'
     )
     
   )
