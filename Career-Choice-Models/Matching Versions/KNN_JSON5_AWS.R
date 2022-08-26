@@ -238,7 +238,7 @@ handler <- function(body, ...){
     'Environmental_Hazards' = c(
       # Factor 1 is composed of work contexts related to environmental job hazards (environmental hazards).
       'outdoors_under_cover'
-      , 'outdoors_exposed_to_whether'
+      , 'outdoors_exposed_to_weather'
       , 'indoors_not_environmentally_controlled'
       , 'exposed_to_high_places'
     )
@@ -306,8 +306,8 @@ handler <- function(body, ...){
   # Select only necessary variables
   df_occupations %>%
     select(
-      Occupation
-      , Entry_level_Education #Filter will be applied later on in Bubble via user input
+      occupation
+      , entry_level_education #Filter will be applied later on in Bubble via user input
       , all_of(
         list_factors %>%
           flatten() %>% 
@@ -369,8 +369,8 @@ handler <- function(body, ...){
   # CONVERT OUTPUT TO JSON --------------------------------------------------
   df_KNN.output %>% 
     select(
-      Occupation
-      , Entry_level_Education
+      occupation
+      , entry_level_education
       , starts_with('Similarity')
     ) %>% 
     to_json(digits = 4) %>% 
