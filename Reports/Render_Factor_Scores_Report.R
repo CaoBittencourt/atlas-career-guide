@@ -325,7 +325,7 @@ df_factor.scores %>%
 # PLOTS -------------------------------------------------------------------
 
 
-# RENDER R MARDOWN REPORT --------------------------------------------------
+# RENDER R MARKDOWN REPORT --------------------------------------------------
 
 
 setwd('C:/Users/Cao/Documents/Github/Atlas-Research/Reports/Old')
