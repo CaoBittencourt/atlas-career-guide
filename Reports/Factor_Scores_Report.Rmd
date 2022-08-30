@@ -1,0 +1,44 @@
+---
+title: "Factor Scores Report"
+author: "Atlas Research Team"
+date: "`r Sys.Date()`"
+output: 
+  pdf_document:
+    toc: TRUE
+    number_sections: TRUE
+    toc_depth: 4
+header-includes:
+   - \usepackage{floatrow}
+   - \floatsetup[figure]{capposition=top}
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = F)
+knitr::opts_chunk$set(message = F)
+knitr::opts_chunk$set(warning = F)
+
+pkg <- c(
+  'FNN' #Fast K-NN Algorithm (faster than the 'class' package)
+  , 'jsonify' #Work with JSON (faster than jsonlite)
+  , 'ggthemes' #Data visualization
+  , 'tidyverse', 'glue' #Data wrangling
+  , 'tinytex' #LaTeX
+)
+
+# Activate / install packages
+lapply(pkg, function(x)
+  if(!require(x, character.only = T))
+  {install.packages(x); require(x)})
+
+# Install TinyTex
+if(!tinytex::is_tinytex()){
+  tinytex::install_tinytex()
+}
+
+# Increase buffer size
+# Sys.setenv("VROOM_CONNECTION_SIZE" = 10000000)
+
+# Package citation
+# lapply(pkg, function(x)
+#   {citation(package = x)})
+```

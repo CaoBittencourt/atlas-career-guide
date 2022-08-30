@@ -300,7 +300,6 @@ handler <- function(body, ...){
   
   # EFA-REDUCED OCCUPATIONS DATA FRAME -------------------------------------------
   # Occupations data frame
-  # df_occupations <- readr::read_csv('https://docs.google.com/spreadsheets/d/e/2PACX-1vSphzWoCxoNaiaJcQUWKCMqUAT041Q8UqUgM7rSzIwYZb7FhttKJwNgtrFf-r7EgzXHFom4UjLl2ltk/pub?gid=563902602&single=true&output=csv')
   df_occupations <- readr::read_csv('./occupations.csv')
   
   # Select only necessary variables
