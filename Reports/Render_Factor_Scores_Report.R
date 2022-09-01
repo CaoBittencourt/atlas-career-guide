@@ -26,6 +26,7 @@ if(!tinytex::is_tinytex()){
 # FUNCTIONS ---------------------------------------------------------------
 source('C:/Users/Cao/Documents/Github/Atlas-Research/Career-Choice-Models/KNN_Matching.R')
 
+
 # PARAMETERS --------------------------------------------------------------
 # Selected respondent
 chr_user <- 'Martijn'
@@ -235,6 +236,32 @@ df_occupations %>%
     )
   ) -> df_occupations
 
+# EFA-REDUCED POPULATION-WEIGHTED OCCUPATIONS DATA FRAME -------------------------------------------
+# Occupations data frame
+df_occupations <- readr::read_csv('https://docs.google.com/spreadsheets/d/e/2PACX-1vSphzWoCxoNaiaJcQUWKCMqUAT041Q8UqUgM7rSzIwYZb7FhttKJwNgtrFf-r7EgzXHFom4UjLl2ltk/pub?gid=563902602&single=true&output=csv')
+
+# Select only necessary variables
+df_occupations %>%
+  select(
+    occupation
+    , entry_level_education #Filter will be applied later on in Bubble via user input
+    , all_of(
+      list_factors %>%
+        flatten() %>% 
+        flatten_chr()
+    )
+  ) %>%
+  mutate(
+    across(
+      .cols = all_of(
+        list_factors %>%
+          flatten() %>% 
+          flatten_chr()
+      )
+      , .fns = function(x){x/100}
+    )
+  ) -> df_occupations
+
 # EFA-REDUCED QUERY VECTOR -----------------------------------------------
 # User questionnaires data frame
 df_input <- readr::read_csv('https://docs.google.com/spreadsheets/d/e/2PACX-1vSphzWoCxoNaiaJcQUWKCMqUAT041Q8UqUgM7rSzIwYZb7FhttKJwNgtrFf-r7EgzXHFom4UjLl2ltk/pub?gid=725827850&single=true&output=csv')
@@ -280,7 +307,7 @@ fun_KNN.matching(
   , .dbl_decimals = 4
 ) -> df_KNN.output
 
-# FACTOR SCORES -----------------------------------------------------------
+# FACTOR SCORES (USER) -----------------------------------------------------------
 lapply(
   list_factors
   , function(scales){
@@ -317,7 +344,47 @@ df_factor.scores %>%
     df_input.long
   ) -> df_input.long
 
+# # FACTOR SCORES (POPULATION) -----------------------------------------------------------
+# lapply(
+#   list_factors
+#   , function(scales){
+#     
+#     psych::scoreVeryFast(
+#       keys = scales
+#       , items = df_occupations.pop 
+#       , totals = F #Average scores
+#     ) %>% 
+#       as_tibble() %>% 
+#       colMeans()
+#     
+#   } 
+# ) %>% 
+#   flatten_df() -> df_occupations.scores
+# 
+# df_occupations.pop %>% 
+#   pivot_longer(
+#     cols = everything()
+#     , names_to = 'item'
+#     , values_to = 'score'
+#   ) %>% 
+#   full_join(
+#     df_factors.names
+#   ) -> df_input.long
+# 
+# df_factor.scores %>% 
+#   pivot_longer(
+#     cols = everything()
+#     , names_to = 'factor'
+#     , values_to = 'factor.score'
+#   ) %>% 
+#   full_join(
+#     df_input.long
+#   ) -> df_input.long
+
 # DYNAMIC TEXT ------------------------------------------------------------
+# Report Title
+chr_report.title <- glue('Professional Profile — {chr_user}')
+
 # Numbers for dynamic reporting with R Markdown
 
 # Captions for dynamic reporting with R Markdown
@@ -325,9 +392,22 @@ df_factor.scores %>%
 # PLOTS -------------------------------------------------------------------
 
 
+df_input.long %>% 
+  filter(
+    competency == 'Skills'
+  ) %>% 
+  ggplot(aes(
+    x = item
+    , y = score
+    , fill = factor
+  )) + 
+  geom_col() + 
+  facet_wrap(
+    facets = vars(factor)
+  ) + 
+  guides(
+    fill = F
+  )
+
 # RENDER R MARKDOWN REPORT --------------------------------------------------
-
-
-setwd('C:/Users/Cao/Documents/Github/Atlas-Research/Reports/Old')
-
-rmarkdown::render('./dsds.Rmd')
+rmarkdown::render('C:/Users/Cao/Documents/Github/Atlas-Research/Reports/Factor_Scores_Report.Rmd')
