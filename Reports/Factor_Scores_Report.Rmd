@@ -4,7 +4,8 @@ subtitle: "Factor Scores Report"
 author: "Atlas Research Team"
 date: "`r Sys.Date()`"
 output:
-  pdf_document:
+  #pdf_document:
+  ipsum_pdf:
     toc: TRUE
     number_sections: TRUE
     toc_depth: 4

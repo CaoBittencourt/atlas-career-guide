@@ -2,6 +2,8 @@
 # PACKAGES ----------------------------------------------------------------
 pkg <- c(
   'ggthemes' #Data visualization
+  # , 'hrbrthemes', 'extrafont' #Data visualization
+  # , 'ggthemr' #Data visualization
   , 'tidyverse', 'glue', 'rlang' #Data wrangling
 )
 
@@ -14,9 +16,13 @@ lapply(pkg, function(x)
 # lapply(pkg, function(x)
 #   {citation(package = x)})
 
+# # FONTS -------------------------------------------------------------------
+# font_import(prompt = F)
+# loadfonts(device = 'win')
+# hrbrthemes::
+# hrbrthemes::import_roboto_condensed()
+
 # ------- PLOT ELEMENTS ---------------------------------------------------
-
-
 # # DYNAMIC FACETS ----------------------------------------------------------
 # fun_facets <- function(
     #     
@@ -175,12 +181,12 @@ fun_facets <- function(
   if(length(.sym_facets) >= 2){
     
     .sym_facets[[1]] %>%
-      ensym() -> enq_facets1
-      # enquo() -> enq_facets1
+      # ensym() -> enq_facets1
+      enquo() -> enq_facets1
     
     .sym_facets[[2]] %>%
-      ensym() -> enq_facets2
-      # enquo() -> enq_facets2
+      # ensym() -> enq_facets2
+      enquo() -> enq_facets2
     
   }
   
@@ -195,8 +201,8 @@ fun_facets <- function(
   } else {
     
     .sym_facets %>%
-      ensym() -> enq_facets
-      # enquo() -> enq_facets
+      # ensym() -> enq_facets
+      enquo() -> enq_facets
     
     # For facets = 1 => facet_wrap
     facet_wrap(
@@ -205,6 +211,45 @@ fun_facets <- function(
     ) -> plt_facets
     
   }
+  
+  return(plt_facets)
+  
+}
+
+# DYNAMIC FACETS ----------------------------------------------------------
+fun_facets <- function(
+    
+  .sym_facets = NULL
+  , .int_facets = NULL
+  
+){
+  
+  # Max facets = 2
+  # if(length(.sym_facets) >= 2){
+  #   
+  #   .sym_facets[[1]] -> .sym_facets1
+  #   
+  #   .sym_facets[[2]] -> .sym_facets2
+  #   
+  # }
+  # 
+  # # For facets = 2 => facet_grid
+  # if(length(.sym_facets) >= 2){
+  #   
+  #   facet_grid(
+  #     rows = vars({{.sym_facets1}})
+  #     , cols = vars({{.sym_facets2}})
+  #   ) -> plt_facets
+  #   
+  # } else {
+    
+    # For facets = 1 => facet_wrap
+    facet_wrap(
+      facets = vars({{.sym_facets}})
+      , ncol = .int_facets
+    ) -> plt_facets
+    
+  # }
   
   return(plt_facets)
   
@@ -271,135 +316,119 @@ fun_facets <- function(
 
 
 # ------- PLOTS -----------------------------------------------------------
-# # HISTOGRAM / DENSITY FUNCTION --------------------------------------------
-# fun_dist.plot <- function(
-    #     
-#   # Data
-#   .data
-#   , .mapping
-#   # Plots
-#   , .density = T
-#   , .histogram = F
-#   , .int_bins = NULL
-#   # Facets
-#   , .chr_facets = NULL
-#   , .int_facets = NULL
-#   # Theme
-#   , .theme = 'hc'
-#   , .chr_color = c(
-#     'gdocs'
-#     , 'viridis'
-#     , 'plasma'
-#     , 'magma'
-#     , 'inferno'
-#     , 'cividis'
-#   )
-#   , .labels = c(
-#     'normal'
-#     , 'percent'
-#     , 'usd'
-#     , 'brl'
-#   )
-#   
-# ){
-#   
-#   # Eval
-#   enquo(.chr_facets) -> sym_facets
-#   
-#   
-#   if(rlang::quo_is_null(sym_facets)){
-#     
-#     rows <- vars()
-#     
-#   } else {
-#     rows <- vars(!!facet_quo)
-#   }
-#   
-#   # Facets
-#   if(!is_empty(.chr_facets)){
-#     
-#     if(length(.chr_facets) > 2){
-#       
-#       .chr_facets[1:2] -> .chr_facets
-#       
-#     }
-#     
-#     if(length(.chr_facets) > 1){
-#       
-#       facet_grid(
-#         rows = vars(!!sym(.chr_facets[[1]]))
-#         , cols = vars(!!sym(.chr_facets[[2]]))
-#       ) -> plt_facets
-#       
-#     } else {
-#       
-#       facet_wrap(
-#         facets = vars(!!sym(.chr_facets))
-#         , ncol = .int_facets
-#       ) -> plt_facets
-#       
-#     }
-#     
-#   } else {
-#     
-#     NULL -> plt_facets
-#     
-#   }
-#   
-#   # # Colors 
-#   # if(length(.chr_color) > 1){
-#   #   
-#   #   .chr_color <- sample(.chr_color,1)
-#   #   
-#   # } else {
-#   #   
-#   #   case_when(
-#   #     
-#   #     .chr_color == 
-#   #     
-#   #   )
-#   #   
-#   # }
-#   
-#   
-#   # Density plot
-#   if(.density){
-#     
-#     .data %>%
-#       ggplot(.mapping) + 
-#       geom_density(size = 1.22) + 
-#       plt_facets -> plt_density
-#     
-#   } else {
-#     
-#     NULL -> plt_density 
-#     
-#   }
-#   
-#   # Histogram plot
-#   if(.histogram){
-#     
-#     .data %>%
-#       ggplot(.mapping) + 
-#       geom_histogram(bins = .int_bins) + 
-#       plt_facets -> plt_histogram
-#     
-#   } else {
-#     
-#     NULL -> plt_histogram
-#     
-#   } 
-#   
-#   
-#   return(
-#     compact(
-#       list(
-#         'density' = plt_density
-#         , 'histogram' = plt_histogram
-#       )))
-#   
-# }
-# 
+# HISTOGRAM / DENSITY FUNCTION --------------------------------------------
+fun_dist.plot <- function(
+    
+  # Data
+  .data
+  , .mapping
+  # Plots
+  , .density = T
+  , .histogram = F
+  , .int_bins = NULL
+  # Facets
+  , .chr_facets = NULL
+  , .int_facets = NULL
+  # Theme
+  , .theme = 'hc'
+  , .chr_color = c(
+    'gdocs'
+    , 'viridis'
+    , 'plasma'
+    , 'magma'
+    , 'inferno'
+    , 'cividis'
+  )
+  , .labels = c(
+    'normal'
+    , 'percent'
+    , 'usd'
+    , 'brl'
+  )
+  
+){
+  
+  # return( enexprs(.chr_facets) )
+  # return( ensyms(.chr_facets) )
+  # return( enquo(.chr_facets) )
+  
+  # .chr_facets %>% 
+  #   enquo() %>% 
+  #   quo_get_expr() -> expr_facets
+  
+  # Facets
+  # if(length( as_string(.chr_facets) ) > 1){
+  if(length( as_label(enquo(.chr_facets)) ) > 1){
+
+  facet_grid(
+    # rows = vars(!!sym(.chr_facets[[1]]))
+    rows = vars({{.chr_facets[[1]]}})
+    , cols = vars({{.chr_facets[[2]]}})
+  ) -> plt_facets
+
+  } else {
+
+    facet_wrap(
+      facets = vars({{.chr_facets}})
+      , ncol = .int_facets
+    ) -> plt_facets
+
+  }
+
+  # # Colors
+  # if(length(.chr_color) > 1){
+  #
+  #   .chr_color <- sample(.chr_color,1)
+  #
+  # } else {
+  #
+  #   case_when(
+  #
+  #     .chr_color ==
+  #
+  #   )
+  #
+  # }
+
+
+  # Density plot
+  if(.density){
+
+    .data %>%
+      ggplot(.mapping) +
+      geom_density(size = 1.22) +
+      plt_facets -> plt_density
+
+  } else {
+
+    NULL -> plt_density
+
+  }
+
+  # Histogram plot
+  if(.histogram){
+
+    .data %>%
+      ggplot(.mapping) +
+      geom_histogram(bins = .int_bins) +
+      plt_facets -> plt_histogram
+
+  } else {
+
+    NULL -> plt_histogram
+
+  }
+
+
+  return(
+    compact(
+      list(
+        'density' = plt_density
+        , 'histogram' = plt_histogram
+      )))
+  
+}
+
 
 # HISTOGRAM / DENSITY FUNCTION --------------------------------------------
 fun_dist.plot <- function(
@@ -435,6 +464,7 @@ fun_dist.plot <- function(
   
   # Facets
   fun_facets(
+    # .sym_facets = {{.sym_facets}}
     .sym_facets = .sym_facets
     , .int_facets = .int_facets
   ) -> plt_facets
@@ -802,9 +832,23 @@ diamonds %>%
     .mapping = aes(
       x = price
       , color = color)
-    , .sym_facets = clarity 
+    , .chr_facets = clarity
+    # , .sym_facets = clarity
     , .int_facets = 4
   )
+
+dsds %>% quo_get_expr() %>%  class()
+
+
+fun_dist.plot(
+  .data = diamonds
+  , .mapping = aes(
+    x = price
+    , color = color)
+  
+  , .sym_facets = color
+  , .int_facets = 4
+)
 
 
 fun_facets(
@@ -851,25 +895,28 @@ dsds %>%
   # rlang::quo_get_expr()
   rlang::quo_name() 
 
-
 diamonds %>% 
   ggplot(aes(
     x = price
-    , fill = color
+    , fill = clarity
   )) + 
   geom_histogram() -> dsdsds
 
-  facet_grid(
-    rows = vars(!!sym('color'))
-    , cols = vars(!!sym('clarity'))
-  ) -> kkk
+dsdsds + 
+  labs(
+    fill = 'Clarity'
+    , x = 'Price (US$)'
+    , y = 'Frequency'
+    , title = 'Diamond Price vs Clarity'
+    , subtitle = 'How does diamond clarity affect prices?'
+  )
 
-  facet_grid(
-    rows = vars(!!)
-    , cols = vars(!!sym('clarity'))
-  ) -> kkk
+facet_grid(
+  rows = vars(!!sym('color'))
+  , cols = vars(!!sym('clarity'))
+) -> kkk
 
-  dsdsds + kkk
+dsdsds + kkk
 
 # gg_histo(
 #   facet = clarity
