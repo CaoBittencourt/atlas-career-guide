@@ -1,7 +1,7 @@
 # ------- SETUP -----------------------------------------------------------
 # PACKAGES ----------------------------------------------------------------
 pkg <- c(
-  'ggthemes', 'ggridges', 'gghighlight', 'scales'#, 'paletteer' #Data visualization
+  'ggthemes', 'ggridges', 'ggalt', 'gghighlight', 'scales', 'hrbrthemes'#, 'paletteer' #Data visualization
   # , 'hrbrthemes', 'extrafont' #Data visualization
   # , 'ggthemr' #Data visualization
   , 'tidyverse', 'rlang' #Data wrangling
@@ -57,7 +57,13 @@ fun_facets <- function(
   # Number of facets
   .enq_facets %>% 
     quo_get_expr() %>% 
-    length() - 1 -> int_n.args
+    length() -> int_n.args
+  
+  if(int_n.args > 1){
+    
+    int_n.args - 1 -> int_n.args
+    
+  }
   
   # Max facets = 2
   if(int_n.args >= 2){
@@ -85,6 +91,75 @@ fun_facets <- function(
   return(plt_facets)
   
 }
+
+# # [TO DO] DYNAMIC LABELS (GEOM_TEXT) ----------------------------------------------------------
+# fun_labels <- function(
+#     
+#   # Labeling variables quosure
+#   .enq_labels = NULL
+#   # Spacing between geom and label
+#   , .dbl_spacing = .22
+#   # Flipped coordinates
+#   , .coord_flip = T
+#   
+# ){
+#   
+#   # Quosure
+#   if(!is_quosure(.enq_labels)){
+#     
+#     stop("'.enq_labels' must be a quosure.")
+#     
+#   }
+#   
+#   # Logical
+#   if(!(
+#     is.logical(.coord_flip) & 
+#     !is.na(.coord_flip)
+#   )){
+#     
+#     stop("'.coord_flip' must be either TRUE or FALSE.")
+#     
+#   }
+#   
+#   # Numeric
+#   if(!is.numeric(.dbl_spacing)){
+#     
+#     stop("'.dbl_spacing' must be an integer.")
+#     
+#   }
+#   
+#   # Number of labeling variables
+#   .enq_facets %>% 
+#     quo_get_expr() %>% 
+#     length() - 1 -> int_n.labels
+#   
+#   # Max labels = 1
+#   if(int_n.args == 1){
+#     
+#     # Labels if coordinates are flipped
+#     if(.coord_flip){
+#       
+#       geom_text(
+#         aes(label = !!.enq_labels)
+#         , hjust = .dbl_spacing
+#       ) -> plt_text
+#     
+#     } else { 
+#       
+#       # Labels if coordinates are not flipped
+#       
+#       
+#       }
+#     
+#   } else {
+#     
+#     NULL -> plt_text
+#     
+#   }
+#   
+#   return(plt_text)
+#   
+# }
 
 # [DONE] DYNAMIC COLORS ---------------------------------------------------
 fun_colors <- function(
@@ -287,7 +362,7 @@ fun_axis.format <- function(
       )
     ) -> plt_axis.x
     
-  } else if(tolower(.chr_format.x) == 'brl' | tolower(.chr_format.x) == 'R$'){
+  } else if(tolower(.chr_format.x) == 'brl' | tolower(.chr_format.x) == 'r$'){
     
     scale_x_continuous(
       breaks = scales::breaks_extended(n = .int_breaks.x)
@@ -481,7 +556,7 @@ fun_dist.plot <- function(
   , .chr_format.y = NULL
   
   # Theme
-  , .theme = ggthemes::theme_few()
+  , .theme = ggridges::theme_ridges()
   
 ){
   
@@ -494,13 +569,19 @@ fun_dist.plot <- function(
   }
   
   # Logical
-  if(!is.logical(.density)){
+  if(!(
+    is.logical(.density) & 
+    !is.na(.density)
+  )){
     
     stop("'.density' must be either TRUE or FALSE.")
     
   }
   
-  if(!is.logical(.histogram)){
+  if(!(
+    is.logical(.histogram) & 
+    !is.na(.histogram)
+  )){
     
     stop("'.histogram' must be either TRUE or FALSE.")
     
@@ -633,7 +714,7 @@ fun_bar.plot <- function(
   # Plots
   , .bar = F
   , .lollipop = T
-  , .dbl_lollipop.size = 3
+  , .dbl_lollipop.size = 5.4
   
   # Facets
   , .sym_facets = NULL
@@ -658,7 +739,7 @@ fun_bar.plot <- function(
   , .coord_polar = F
   
   # Theme
-  , .theme = ggthemes::theme_few()
+  , .theme = ggridges::theme_ridges()
   
 ){
   
@@ -773,8 +854,14 @@ fun_bar.plot <- function(
     .df_data %>%
       # Plot
       ggplot(.mapping) +
-      # geom_segment(aes(x=group ,xend=group, y=0, yend=val), color="grey") +
-      # geom_point(size=3, color="#69b3a2") +
+      geom_segment(
+        aes(y = 0)
+        , color = '#212121'
+      ) +
+      geom_point(
+        size = .dbl_lollipop.size
+        , color = '#3854FB'
+      ) +
       plt_facets +
       # Colors
       plt_colors + 
@@ -806,69 +893,69 @@ fun_bar.plot <- function(
   
 }
 
-# TEST --------------------------------------------------------------------
-data("diamonds")
-
-diamonds %>%
-  fun_dist.plot(
-    .mapping = aes(
-      x = price
-      # , color = color
-      , fill = color
-    )
-    # , .sym_facets = c(clarity, color)
-    , .theme = ggridges::theme_ridges()
-    , .list_labs = list(
-      title = 'Diamond Pricing'
-      , subtitle = 'How diamond princing varies with clarity and color'
-      , x = 'lalala'
-      , y = 'Frequency'
-    )
-    , .scale_colors = list(
-      scale_color_viridis_d(option = 'cividis')
-      , scale_fill_viridis_d(option = 'cividis')
-    )
-    
-    , .list_legend = list(fill = 'none')
-    , .int_decimals.x = 0
-    , .int_decimals.y = 4
-    , .int_breaks.x = 3
-    , .int_breaks.y = 4
-    , .chr_format.y = NULL
-    , .chr_format.x = 'brl'
-    , .histogram = T
-    , .density = F
-  ) -> dsds
-
-diamonds %>% 
-  ggplot(aes(
-    x = color
-    , y = price
-    # , fill = clarity
-  )) + 
-  geom_col() + 
-  fun_axis.format(.chr_format.x = 'text')
-
-
-diamonds %>% 
-  fun_bar.plot(
-    .mapping = aes(
-      x = cut
-      , y = price
-      , fill = color
-    )
-    , .lollipop = F
-    , .bar = T
-    , .coord_flip = F
-    , .list_labs = list(
-      title = 'dsds'
-      , subtitle = 'lalala'
-      , x = 'Cut'
-      , y = 'Price (USD)'
-    )
-    , .chr_format.y = 'usd'
-    , .int_breaks.y = 15
-    , .theme = ggridges::theme_ridges()
-    # , .sym_facets = NULL
-  )
-
+# # TEST --------------------------------------------------------------------
+# data("diamonds")
+# 
+# diamonds %>%
+#   fun_dist.plot(
+#     .mapping = aes(
+#       x = price
+#       # , color = color
+#       , fill = color
+#     )
+#     # , .sym_facets = c(clarity, color)
+#     , .theme = ggridges::theme_ridges()
+#     , .list_labs = list(
+#       title = 'Diamond Pricing'
+#       , subtitle = 'How diamond princing varies with clarity and color'
+#       , x = 'lalala'
+#       , y = 'Frequency'
+#     )
+#     , .scale_colors = list(
+#       scale_color_viridis_d(option = 'cividis')
+#       , scale_fill_viridis_d(option = 'cividis')
+#     )
+#     
+#     , .list_legend = list(fill = 'none')
+#     , .int_decimals.x = 0
+#     , .int_decimals.y = 4
+#     , .int_breaks.x = 3
+#     , .int_breaks.y = 4
+#     , .chr_format.y = NULL
+#     , .chr_format.x = 'brl'
+#     , .histogram = T
+#     , .density = F
+#     , .sym_facets = c(cut, clarity)
+#   )
+# 
+# 
+# diamonds %>% 
+#   group_by(clarity, cut) %>%
+#   summarise(price = mean(price)) %>% 
+#   ungroup() -> dsds
+# 
+# dsds %>% 
+#   fun_bar.plot(
+#     .mapping = aes(
+#       x = fct_reorder(cut, price) 
+#       , xend = cut
+#       
+#       , y = price
+#       , yend = price
+#       
+#       # , color = cut
+#     )
+#     , .sym_facets = clarity
+#     
+#     , .lollipop = T
+#     , .bar = T
+#     , .coord_flip = T
+#     , .list_labs = list(
+#       title = 'dsds'
+#       , subtitle = 'lalala'
+#       , x = 'Cut'
+#       , y = 'Price (USD)'
+#     )
+#     , .chr_format.y = 'usd'
+#     , .int_breaks.y = 15
+#   )
