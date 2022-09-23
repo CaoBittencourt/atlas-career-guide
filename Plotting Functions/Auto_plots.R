@@ -176,20 +176,29 @@ fun_labels <- function(
       # Only one default parameter per variable
       map(.list_default, 1) -> .list_default
       
-      # Override default parameters with aes mapping
+      # Include mapping into list of arguments
+      .list_default$mapping <- .aes_mapping
+      
+      # Remove overlaps
       .list_default[
         setdiff(
-          standardise_aes_names(names(.list_default))
-          , standardise_aes_names(names(.aes_mapping))
+          names(.list_default)
+          , names(.aes_mapping)
         )] -> .list_default
       
-      # Add label mapping
-      .list_default$mapping <- .aes_mapping['label']
-      
-      chr_label.position <- tolower(.list_default$position)
       
       # Label position
-      if('stack' == chr_label.position){
+      if(length(.list_default$position)){
+        
+        chr_label.position <- tolower(.list_default$position)
+        
+      } else {
+        
+        chr_label.position <- 'identity'
+        
+      }
+      
+      if('stack' %in% chr_label.position){
         # Position stack  
         .list_default$position <- position_stack(vjust = 0.5)
         
@@ -197,7 +206,7 @@ fun_labels <- function(
         
         .list_default$hjust <- NULL
         
-      } else if('fill' == chr_label.position){
+      } else if('fill' %in% chr_label.position){
         # Position fill
         .list_default$position <- position_fill(vjust = 0.5)
         
@@ -205,7 +214,7 @@ fun_labels <- function(
         
         .list_default$hjust <- NULL
         
-      } else if('dodge' == chr_label.position){
+      } else if('dodge' %in% chr_label.position){
         
         .list_default$position <- position_dodge(width = 0.9)
         
@@ -219,11 +228,11 @@ fun_labels <- function(
       # Label orientation
       if(.coord_flip){
         
-        if('stack' == chr_label.position){
+        if('stack' %in% chr_label.position){
           # Position stack
           .list_default$angle <- 90
           
-        } else if('fill' == chr_label.position){
+        } else if('fill' %in% chr_label.position){
           # Position fill
           .list_default$angle <- 90
           
@@ -277,7 +286,7 @@ fun_geom.params <- function(
   .fun_geom = NULL
   # Default parameters (no mapping)
   , .list_default = list()
-  # Aes to override default parameters (mapping)
+  # Aes mapping
   , .aes_mapping = aes()
   
 ){
@@ -324,6 +333,10 @@ fun_geom.params <- function(
   # Only one default parameter per variable
   map(.list_default, 1) -> .list_default
   
+  # Include mapping into list of arguments
+  .list_default$mapping <- .aes_mapping
+  
+  # Remove overlaps
   .list_default[
     setdiff(
       names(.list_default)
@@ -420,243 +433,85 @@ fun_colors <- function(
 # [DONE] DYNAMIC AXIS ----------------------------------------------------------
 fun_axis.format <- function(
     
-  # Format
-  .chr_format.x = NULL
-  , .chr_format.y = NULL
-  # Limits
-  , .dbl_limits.x = NULL
-  , .dbl_limits.y = NULL
-  # Number of breaks
-  , .int_breaks.x = 5
-  , .int_breaks.y = 5
-  # Decimal places
-  , .int_decimals.x = 2
-  , .int_decimals.y = 2
+  # Axis function
+  .fun_axis = scale_y_continuous
+  # Axis function arguments
+  , .list_axis.args = list(
+    # Limits
+    limits = NULL
+    # Number of breaks
+    , breaks = breaks_extended(5)
+  )
+  # Format function with arguments
+  , .fun_format = label_number(accuracy = .01)
   
 ){
   
-  # Character
-  if(!(!length(.chr_format.x) | is.character(.chr_format.x))){
-    
-    stop("'.chr_format.x' must be a character.")
-    
-  }
-  
-  if(!(!length(.chr_format.y) | is.character(.chr_format.y))){
-    
-    stop("'.chr_format.y' must be a character.")
-    
-  }
-  
-  # Numeric
-  if(!(!length(.int_breaks.x) | is.numeric(.int_breaks.x))){
-    
-    stop("'.int_breaks.x' must be an integer.")
-    
-  }
-  
-  if(!(!length(.int_breaks.y) | is.numeric(.int_breaks.y))){
-    
-    stop("'.int_breaks.y' must be an integer.")
-    
-  }
-  
-  if(!(!length(.int_decimals.x) | is.numeric(.int_decimals.x))){
-    
-    stop("'.int_decimals.x' must be an integer.")
-    
-  }
-  
-  if(!(!length(.int_decimals.y) | is.numeric(.int_decimals.y))){
-    
-    stop("'.int_decimals.y' must be an integer.")
-    
-  }
-  
-  # Numeric vector with length == 2
+  # Function
   if(!(
-    !length(.dbl_limits.x)
-    | (is.numeric(.dbl_limits.x)
-       & length(.dbl_limits.x) == 2)
+    !length(.fun_axis)
+    | 'function' %in% tolower(class(.fun_axis))
   )){
     
-    stop("'.dbl_limits.x' must be numeric vector with length two.")
+    stop("'.fun_axis' must be a function for generating an axis.")
     
   }
   
   if(!(
-    !length(.dbl_limits.y)
-    | (is.numeric(.dbl_limits.y)
-       & length(.dbl_limits.y) == 2)
+    !length(.fun_format)
+    | 'function' %in% tolower(class(.fun_format))
   )){
     
-    stop("'.dbl_limits.y' must be numeric vector with length two.")
+    stop("'.fun_format' must be a function for formatting an x axis.")
     
   }
   
-  # Convert to integers
-  if(is.numeric(.int_breaks.x)){
+  # Scale
+  if(length(.fun_axis)){
     
-    round(.int_breaks.x) -> .int_breaks.x
-    
-  }
-  
-  if(is.numeric(.int_breaks.y)){
-    
-    round(.int_breaks.y) -> .int_breaks.y
-    
-  }
-  
-  if(is.numeric(.int_decimals.x)){
-    
-    round(.int_decimals.x) -> .int_decimals.x
-    
-  }
-  
-  if(is.numeric(.int_decimals.y)){
-    
-    round(.int_decimals.y) -> .int_decimals.y
+    if(!c('scalecontinuousposition'
+          , 'scalediscreteposition') %in% 
+       tolower(
+         .fun_axis %>% 
+         do.call(list()) %>% 
+         class()
+       ) %>%
+       any()
+    ){
+      
+      stop("'.fun_axis' must be a function that generates a ggproto scale object.")
+      
+    }
     
   }
   
-  # Accuracy
-  if(is.numeric(.int_decimals.x)){
+  # List
+  if(!is.list(.list_axis.args)){
     
-    10 ^ (- .int_decimals.x) -> dbl_accuracy.x
-    
-  } else {
-    
-    NULL -> dbl_accuracy.x
+    stop("'.list_axis.args' must be a list of arguments to be passed on to '.fun_axis'.")
     
   }
   
-  if(is.numeric(.int_decimals.y)){
-    
-    10 ^ (- .int_decimals.y) -> dbl_accuracy.y
-    
-  } else {
-    
-    NULL -> dbl_accuracy.y
-    
-  }
+  # Default
+  NULL -> plt_axis
   
-  
-  # X axis labels
-  if(!length(.chr_format.x)){
+  # Axis 
+  if(length(.fun_axis)){
     
-    scale_x_continuous(
-      labels = scales::number_format(accuracy = dbl_accuracy.x)
-      , breaks = scales::breaks_extended(n = .int_breaks.x)
-      , limits = .dbl_limits.x
-    ) -> plt_axis.x
+    # Labels
+    .list_axis.args$labels <- .fun_format
     
-  } else if(tolower(.chr_format.x) %in% 'percent' | tolower(.chr_format.x) %in% '%'){
-    
-    scale_x_continuous(
-      labels = scales::percent_format(accuracy = dbl_accuracy.x)
-      , breaks = scales::breaks_extended(n = .int_breaks.x)
-      , limits = .dbl_limits.x
-    ) -> plt_axis.x
-    
-  } else if(tolower(.chr_format.x) %in% 'usd' | tolower(.chr_format.x) %in% '$'){
-    
-    scale_x_continuous(
-      breaks = scales::breaks_extended(n = .int_breaks.x)
-      , labels = scales::label_dollar(
-        accuracy = dbl_accuracy.x
-        , prefix = '$'
-        , big.mark = ','
-        , decimal.mark = '.'
-      )
-      , limits = .dbl_limits.x
-    ) -> plt_axis.x
-    
-  } else if(tolower(.chr_format.x) %in% 'brl' | tolower(.chr_format.x) %in% 'r$'){
-    
-    scale_x_continuous(
-      breaks = scales::breaks_extended(n = .int_breaks.x)
-      , labels = scales::label_dollar(
-        accuracy = dbl_accuracy.x
-        , prefix = 'R$'
-        , big.mark = '.'
-        , decimal.mark = ','
-      )
-      , limits = .dbl_limits.x
-    ) -> plt_axis.x
-    
-  } else if(tolower(.chr_format.x) %in% 'text' | tolower(.chr_format.x) %in% 'text'){
-    
-    scale_x_discrete(
-      labels = function(x){str_wrap(x,10)}
-    ) -> plt_axis.x
-    
-  } else {
-    
-    scale_x_continuous(
-      labels = scales::number_format(accuracy = dbl_accuracy.x)
-      , breaks = scales::breaks_extended(n = .int_breaks.x)
-      , limits = .dbl_limits.x
-    ) -> plt_axis.x
-    
-  }
-  
-  
-  # Y axis labels
-  if(!length(.chr_format.y)){
-    
-    scale_y_continuous(
-      labels = scales::number_format(accuracy = dbl_accuracy.y)
-      , breaks = scales::breaks_extended(n = .int_breaks.y)
-      , limits = .dbl_limits.y
-    ) -> plt_axis.y
-    
-  } else if(tolower(.chr_format.y) %in% 'percent' | tolower(.chr_format.y) %in% '%'){
-    
-    scale_y_continuous(
-      labels = scales::percent_format(accuracy = dbl_accuracy.y)
-      , breaks = scales::breaks_extended(n = .int_breaks.y)
-      , limits = .dbl_limits.y
-    ) -> plt_axis.y
-    
-  } else if(tolower(.chr_format.y) %in% 'usd' | tolower(.chr_format.y) %in% '$'){
-    
-    scale_y_continuous(
-      labels = scales::label_dollar(accuracy = dbl_accuracy.y)
-      , breaks = scales::breaks_extended(n = .int_breaks.y)
-      , limits = .dbl_limits.y
-    ) -> plt_axis.y
-    
-  } else if(tolower(.chr_format.y) %in% 'brl' | tolower(.chr_format.y) %in% 'R$'){
-    
-    scale_y_continuous(
-      labels = scales::label_dollar(accuracy = dbl_accuracy.y, prefix = 'R$')
-      , breaks = scales::breaks_extended(n = .int_breaks.y)
-      , limits = .dbl_limits.y
-    ) -> plt_axis.y
-    
-  } else if(tolower(.chr_format.y) %in% 'text' | tolower(.chr_format.y) %in% 'text'){
-    
-    scale_y_discrete(
-      labels = function(y){str_wrap(y,10)}
-    ) -> plt_axis.y
-    
-  } else {
-    
-    scale_y_continuous(
-      labels = scales::number_format(accuracy = dbl_accuracy.y)
-      , breaks = scales::breaks_extended(n = .int_breaks.y)
-      , limits = .dbl_limits.y
-    ) -> plt_axis.y
+    # Axis
+    do.call(
+      .fun_axis
+      , .list_axis.args
+    ) -> plt_axis
     
   }
   
   
   # Output
-  return(
-    list(
-      'plt_format.x' = plt_axis.x
-      , 'plt_format.y' = plt_axis.y
-    ))
+  return(plt_axis)
   
 }
 
@@ -826,12 +681,44 @@ fun_theme <- function(.theme){
 }
 
 # [DONE] DYNAMIC MAPPING -----------------------------------------------------------
-fun_aes.map <- function(.aes_mapping){
+fun_aes.map <- function(.aes_mapping, .chr_required_aes){
   
   # Aes
   if(!(!length(.aes_mapping) | 'uneval' %in% tolower(class(.aes_mapping)))){
     
     stop("'.aes_mapping' must be an aes() mapping.")
+    
+  }
+  
+  # Character
+  if(!(!length(.chr_required_aes) | is.character(.chr_required_aes))){
+    
+    stop("'.chr_required_aes' must be a character.")
+    
+  }
+  
+  # Required aes()
+  if(length(.aes_mapping) & length(.chr_required_aes)){
+    
+    # Standardize names
+    .chr_required_aes %>%
+      tolower() %>%
+      standardise_aes_names() -> chr_required_aes
+    
+    .aes_mapping %>% 
+      names %>%
+      tolower %>%
+      standardise_aes_names() -> aes_mapping
+    
+    # Check if all required aesthetics are available
+    if(!all(chr_required_aes %in% aes_mapping)){
+      
+      chr_required_aes[!(chr_required_aes %in% aes_mapping)] %>% 
+        paste(collapse = ',') -> chr_missing_aes
+      
+      stop(paste0("The following aesthetics are missing: ", chr_missing_aes, '.'))
+      
+    }
     
   }
   
@@ -866,8 +753,15 @@ fun_reorder <- function(
   # Factor / Character
   if(!(
     !length(.enq_var.fct)
-    | .df_data %>% pull(!!.enq_var.fct) %>% is.character()
-    | .df_data %>% pull(!!.enq_var.fct) %>% is.factor()
+    | .df_data %>%
+    select(
+      !!.enq_var.fct
+    ) %>% 
+    map_df(class) %>% 
+    tail(1) %>%
+    as.character() %in% 
+    c('factor', 'character') %>% 
+    all()
   )){
     
     stop("'.enq_var.fct' must be a quosure of a factor or character variable.")
@@ -877,7 +771,15 @@ fun_reorder <- function(
   # Numerical
   if(!(
     !length(.enq_var.dbl)
-    | .df_data %>% pull(!!.enq_var.dbl) %>% is.numeric()
+    | .df_data %>%
+    select(
+      !!.enq_var.dbl
+    ) %>% 
+    map_df(class) %>% 
+    tail(1) %>%
+    as.character() %in% 
+    c('numeric', 'integer') %>% 
+    all()
   )){
     
     stop("'.enq_var.dbl' must be a quosure of a numerical variable.")
@@ -915,19 +817,22 @@ fun_reorder <- function(
     & length(.desc)
   ){
     
-    .df_data %>% 
-      ungroup() %>% 
+    .df_data %>%
+      ungroup() %>%
       mutate(
-        !!.enq_var.fct := 
-          fct_reorder(
-            !!.enq_var.fct
-            , !!.enq_var.dbl
-            , .desc = .desc
-            , .fun = .fun_ord
-          )
-      ) -> .df_data
+        across(
+          .cols = !!.enq_var.fct
+          ,.fns = function(x){
+            fct_reorder(
+              x
+              , !!.enq_var.dbl
+              , .desc = .desc
+              , .fun = .fun_ord
+            )
+          }
+        )) -> .df_data
     
-  } 
+  }
   
   
   # Output
@@ -949,7 +854,7 @@ fun_plot.histogram <- function(
   , .reorder_fun = sum
   
   # Labels
-  , .list_labs = list(NULL)
+  , .list_labs = list()
   
   # Geom default parameters
   , .list_geom.param = list(
@@ -970,15 +875,21 @@ fun_plot.histogram <- function(
   , .chr_manual.aes = 'fill'
   
   # Legend
-  , .list_legend = list(NULL)
+  , .list_legend = list()
   
-  # Axis
-  , .int_breaks.x = 5
-  , .int_breaks.y = 5
-  , .int_decimals.x = 2
-  , .int_decimals.y = 0
-  , .chr_format.x = NULL
-  , .chr_format.y = NULL
+  # Axes
+  , .fun_axis.x = scale_x_continuous
+  , .fun_axis.y = scale_y_continuous
+  , .list_axis.x.args = list(
+    breaks = breaks_extended(5)
+  )
+  , .list_axis.y.args = list(
+    breaks = breaks_extended(5)
+  )
+  , .fun_format.x = label_number(accuracy = .01)
+  , .fun_format.y = label_number()
+  
+  # Coordinates
   , .dbl_limits.x = NULL
   , .dbl_limits.y = NULL
   
@@ -1001,7 +912,10 @@ fun_plot.histogram <- function(
   
   
   # Aes Mapping
-  fun_aes.map(.aes_mapping) -> aes_mapping
+  fun_aes.map(
+    .aes_mapping
+    , .chr_required_aes = 'x'
+  ) -> aes_mapping
   
   # Facets
   fun_facets(
@@ -1029,17 +943,19 @@ fun_plot.histogram <- function(
     , .chr_manual.aes = .chr_manual.aes
   ) -> plt_colors
   
-  # Axis format
+  # Axes format
   fun_axis.format(
-    .int_breaks.x = .int_breaks.x
-    , .int_breaks.y = .int_breaks.y
-    , .int_decimals.x = .int_decimals.x
-    , .int_decimals.y = .int_decimals.y
-    , .chr_format.x = .chr_format.x
-    , .chr_format.y = .chr_format.y
-    , .dbl_limits.x = .dbl_limits.x
-    , .dbl_limits.y = .dbl_limits.y
-  ) -> list_axis.format
+    .fun_axis = .fun_axis.x
+    , .list_axis.args = .list_axis.x.args
+    , .fun_format = .fun_format.x
+  ) -> plt_axis.x
+  
+  fun_axis.format(
+    .fun_axis = .fun_axis.y
+    , .list_axis.args = .list_axis.y.args
+    , .fun_format = .fun_format.y
+  ) -> plt_axis.y
+  
   
   # Coordinates
   fun_coordinates(
@@ -1070,13 +986,14 @@ fun_plot.histogram <- function(
   # ggplot
   .df_data %>%
     # Plot
-    ggplot(aes_mapping) +
+    ggplot() +
     plt_geom + 
     plt_facets +
     # Colors
     plt_colors + 
-    # Axis
-    list_axis.format +
+    # Axes
+    plt_axis.x +
+    plt_axis.y +
     plt_coord + 
     # Theme
     plt_theme +
@@ -1103,7 +1020,7 @@ fun_plot.density <- function(
   , .reorder_fun = sum
   
   # Labels
-  , .list_labs = list(NULL)
+  , .list_labs = list()
   
   # Geom default parameters
   , .list_geom.param = list(
@@ -1126,15 +1043,21 @@ fun_plot.density <- function(
   , .chr_manual.aes = 'fill'
   
   # Legend
-  , .list_legend = list(NULL)
+  , .list_legend = list()
   
-  # Axis
-  , .int_breaks.x = 5
-  , .int_breaks.y = 5
-  , .int_decimals.x = 2
-  , .int_decimals.y = 4
-  , .chr_format.x = NULL
-  , .chr_format.y = NULL
+  # Axes
+  , .fun_axis.x = scale_x_continuous
+  , .fun_axis.y = scale_y_continuous
+  , .list_axis.x.args = list(
+    breaks = breaks_extended(5)
+  )
+  , .list_axis.y.args = list(
+    breaks = breaks_extended(5)
+  )
+  , .fun_format.x = label_number(accuracy = .01)
+  , .fun_format.y = label_number(accuracy = .0001)
+  
+  # Coordinates
   , .dbl_limits.x = NULL
   , .dbl_limits.y = NULL
   
@@ -1157,7 +1080,10 @@ fun_plot.density <- function(
   
   
   # Aes Mapping
-  fun_aes.map(.aes_mapping) -> aes_mapping
+  fun_aes.map(
+    .aes_mapping
+    , .chr_required_aes = 'x'
+  ) -> aes_mapping
   
   # Facets
   fun_facets(
@@ -1185,17 +1111,18 @@ fun_plot.density <- function(
     , .chr_manual.aes = .chr_manual.aes
   ) -> plt_colors
   
-  # Axis format
+  # Axes format
   fun_axis.format(
-    .int_breaks.x = .int_breaks.x
-    , .int_breaks.y = .int_breaks.y
-    , .int_decimals.x = .int_decimals.x
-    , .int_decimals.y = .int_decimals.y
-    , .chr_format.x = .chr_format.x
-    , .chr_format.y = .chr_format.y
-    , .dbl_limits.x = .dbl_limits.x
-    , .dbl_limits.y = .dbl_limits.y
-  ) -> list_axis.format
+    .fun_axis = .fun_axis.x
+    , .list_axis.args = .list_axis.x.args
+    , .fun_format = .fun_format.x
+  ) -> plt_axis.x
+  
+  fun_axis.format(
+    .fun_axis = .fun_axis.y
+    , .list_axis.args = .list_axis.y.args
+    , .fun_format = .fun_format.y
+  ) -> plt_axis.y
   
   # Coordinates
   fun_coordinates(
@@ -1226,13 +1153,14 @@ fun_plot.density <- function(
   # ggplot
   .df_data %>%
     # Plot
-    ggplot(aes_mapping) +
+    ggplot() +
     plt_geom + 
     plt_facets +
     # Colors
     plt_colors + 
-    # Axis
-    list_axis.format +
+    # Axes
+    plt_axis.x +
+    plt_axis.y +
     plt_coord + 
     # Theme
     plt_theme +
@@ -1259,7 +1187,7 @@ fun_plot.heatmap <- function(
   , .reorder_fun = sum
   
   # Labels
-  , .list_labs = list(NULL)
+  , .list_labs = list()
   , .geom_label = F
   
   # Default parameters
@@ -1288,12 +1216,17 @@ fun_plot.heatmap <- function(
   , .chr_manual.aes = 'fill'
   
   # Legend
-  , .list_legend = list(NULL)
+  , .list_legend = list()
   
-  # Axis
-  , .int_breaks.y = 5
-  , .int_decimals.y = 2
-  , .chr_format.y = NULL
+  # Axes
+  , .fun_axis.x = scale_x_discrete
+  , .fun_axis.y = scale_y_discrete
+  , .list_axis.x.args = list()
+  , .list_axis.y.args = list()
+  , .fun_format.x = function(x){str_wrap(x,10)}
+  , .fun_format.y = function(y){str_wrap(y,10)}
+  
+  # Coordinates
   , .coord_flip = F
   , .coord_polar = F
   
@@ -1316,7 +1249,10 @@ fun_plot.heatmap <- function(
   
   
   # Aes Mapping
-  fun_aes.map(.aes_mapping) -> aes_mapping
+  fun_aes.map(
+    .aes_mapping
+    , .chr_required_aes = c('x','y','fill')
+  ) -> aes_mapping
   
   # Facets
   fun_facets(
@@ -1333,6 +1269,14 @@ fun_plot.heatmap <- function(
       , .enq_var.dbl = aes_mapping$fill
       , .fun_ord = .reorder_fun
       , .desc = .reorder_desc
+    ) -> .df_data
+    
+    fun_reorder(
+      .df_data = .df_data
+      , .enq_var.fct = aes_mapping$y
+      , .enq_var.dbl = aes_mapping$fill
+      , .fun_ord = .reorder_fun
+      , .desc = !.reorder_desc
     ) -> .df_data
     
   }
@@ -1356,13 +1300,18 @@ fun_plot.heatmap <- function(
     , .chr_manual.aes = .chr_manual.aes
   ) -> plt_colors
   
-  # Axis format
+  # Axes format
   fun_axis.format(
-    # X axis is categorical
-    .chr_format.x = 'text'
-    # X axis is categorical
-    , .chr_format.y = 'text'
-  ) -> list_axis.format
+    .fun_axis = .fun_axis.x
+    , .list_axis.args = .list_axis.x.args
+    , .fun_format = .fun_format.x
+  ) -> plt_axis.x
+  
+  fun_axis.format(
+    .fun_axis = .fun_axis.y
+    , .list_axis.args = .list_axis.y.args
+    , .fun_format = .fun_format.y
+  ) -> plt_axis.y
   
   # Coordinates
   fun_coordinates(
@@ -1399,14 +1348,15 @@ fun_plot.heatmap <- function(
   # ggplot
   .df_data %>%
     # Plot
-    ggplot(aes_mapping) +
+    ggplot() +
     plt_geom + 
     plt_labels +
     plt_facets +
     # Colors
     plt_colors + 
-    # Axis
-    list_axis.format +
+    # Axes
+    plt_axis.x +
+    plt_axis.y +
     plt_coord + 
     # Theme
     plt_theme +
@@ -1433,7 +1383,7 @@ fun_plot.bar <- function(
   , .reorder_fun = sum
   
   # Labels
-  , .list_labs = list(NULL)
+  , .list_labs = list()
   , .geom_label = F
   
   # Default parameters
@@ -1462,12 +1412,19 @@ fun_plot.bar <- function(
   , .chr_manual.aes = 'fill'
   
   # Legend
-  , .list_legend = list(NULL)
+  , .list_legend = list()
   
-  # Axis
-  , .int_breaks.y = 5
-  , .int_decimals.y = 2
-  , .chr_format.y = NULL
+  # Axes
+  , .fun_axis.x = scale_x_discrete
+  , .fun_axis.y = scale_y_continuous
+  , .list_axis.x.args = list()
+  , .list_axis.y.args = list(
+    breaks = breaks_extended(5)
+  )
+  , .fun_format.x = function(x){str_wrap(x,10)}
+  , .fun_format.y = label_number(accuracy = .01)
+  
+  # Coordinates
   , .dbl_limits.y = NULL
   , .coord_flip = F
   , .coord_polar = F
@@ -1491,7 +1448,10 @@ fun_plot.bar <- function(
   
   
   # Aes Mapping
-  fun_aes.map(.aes_mapping) -> aes_mapping
+  fun_aes.map(
+    .aes_mapping
+    , .chr_required_aes = c('x','y')
+  ) -> aes_mapping
   
   # Facets
   fun_facets(
@@ -1531,16 +1491,18 @@ fun_plot.bar <- function(
     , .chr_manual.aes = .chr_manual.aes
   ) -> plt_colors
   
-  # Axis format
+  # Axes format
   fun_axis.format(
-    # X axis is categorical
-    .chr_format.x = 'text'
-    # Y axis is numerical
-    , .int_breaks.y = .int_breaks.y
-    , .int_decimals.y = .int_decimals.y
-    , .chr_format.y = .chr_format.y
-    , .dbl_limits.y = .dbl_limits.y
-  ) -> list_axis.format
+    .fun_axis = .fun_axis.x
+    , .list_axis.args = .list_axis.x.args
+    , .fun_format = .fun_format.x
+  ) -> plt_axis.x
+  
+  fun_axis.format(
+    .fun_axis = .fun_axis.y
+    , .list_axis.args = .list_axis.y.args
+    , .fun_format = .fun_format.y
+  ) -> plt_axis.y
   
   # Coordinates
   fun_coordinates(
@@ -1585,14 +1547,15 @@ fun_plot.bar <- function(
   # ggplot
   .df_data %>%
     # Plot
-    ggplot(aes_mapping) +
+    ggplot() +
     plt_geom + 
     plt_labels + 
     plt_facets +
     # Colors
     plt_colors + 
-    # Axis
-    list_axis.format +
+    # Axes
+    plt_axis.x +
+    plt_axis.y +
     plt_coord + 
     # Theme
     plt_theme +
@@ -1619,7 +1582,7 @@ fun_plot.lollipop <- function(
   , .reorder_fun = sum
   
   # Labels
-  , .list_labs = list(NULL)
+  , .list_labs = list()
   , .geom_label = F
   
   # Default parameters
@@ -1633,7 +1596,7 @@ fun_plot.lollipop <- function(
     , alpha = 0.8
     , position = 'identity'
     , color = '#D4D5D8'
-    , size = 2
+    , size = 1.23
   )
   , .list_labels.param = list(
     fontface = 'bold'
@@ -1651,17 +1614,24 @@ fun_plot.lollipop <- function(
   , .scale_colors = list(
     viridis::scale_color_viridis(discrete = T)
     , viridis::scale_fill_viridis(discrete = T)
-  )  
+  )
   , .chr_manual.pal = NULL
   , .chr_manual.aes = 'color'
   
   # Legend
-  , .list_legend = list(NULL)
+  , .list_legend = list()
   
-  # Axis
-  , .int_breaks.y = 5
-  , .int_decimals.y = 2
-  , .chr_format.y = NULL
+  # Axes
+  , .fun_axis.x = scale_x_discrete
+  , .fun_axis.y = scale_y_continuous
+  , .list_axis.x.args = list()
+  , .list_axis.y.args = list(
+    breaks = breaks_extended(5)
+  )
+  , .fun_format.x = function(x){str_wrap(x,10)}
+  , .fun_format.y = label_number(accuracy = .01)
+  
+  # Coordinates
   , .dbl_limits.y = NULL
   , .coord_flip = T
   , .coord_polar = F
@@ -1685,7 +1655,14 @@ fun_plot.lollipop <- function(
   
   
   # Aes Mapping
-  fun_aes.map(.aes_mapping) -> aes_mapping
+  fun_aes.map(
+    .aes_mapping
+    , .chr_required_aes = c('x', 'y')
+  ) -> aes_mapping
+  
+  aes_mapping$x -> aes_mapping$xend
+  
+  aes_mapping$y -> aes_mapping$yend
   
   # Facets
   fun_facets(
@@ -1725,16 +1702,18 @@ fun_plot.lollipop <- function(
     , .chr_manual.aes = .chr_manual.aes
   ) -> plt_colors
   
-  # Axis format
+  # Axes format
   fun_axis.format(
-    # X axis is categorical
-    .chr_format.x = 'text'
-    # Y axis is numerical
-    , .int_breaks.y = .int_breaks.y
-    , .int_decimals.y = .int_decimals.y
-    , .chr_format.y = .chr_format.y
-    , .dbl_limits.y = .dbl_limits.y
-  ) -> list_axis.format
+    .fun_axis = .fun_axis.x
+    , .list_axis.args = .list_axis.x.args
+    , .fun_format = .fun_format.x
+  ) -> plt_axis.x
+  
+  fun_axis.format(
+    .fun_axis = .fun_axis.y
+    , .list_axis.args = .list_axis.y.args
+    , .fun_format = .fun_format.y
+  ) -> plt_axis.y
   
   # Coordinates
   fun_coordinates(
@@ -1780,29 +1759,23 @@ fun_plot.lollipop <- function(
   fun_geom.params(
     .fun_geom = geom_segment
     , .list_default = .list_segment.param
-    , .aes_mapping = aes()
+    , .aes_mapping = aes_mapping[c('x','xend','yend')]
   ) -> plt_segment
-  
-  # geom_segment(
-  #   y = 0
-  #   , size = 1.21
-  #   , color = '#212121'
-  #   , alpha = 0.5
-  # ) -> plt_segment
   
   # ggplot
   .df_data %>%
     # Plot
-    ggplot(aes_mapping) +
-    plt_segment + 
-    plt_geom + 
+    ggplot() +
+    plt_segment +
+    plt_geom +
     plt_labels +
     plt_facets +
     # Colors
-    plt_colors + 
-    # Axis
-    list_axis.format +
-    plt_coord + 
+    plt_colors +
+    # Axes
+    plt_axis.x +
+    plt_axis.y +
+    plt_coord +
     # Theme
     plt_theme +
     plt_legend +
@@ -1815,235 +1788,255 @@ fun_plot.lollipop <- function(
   
 }
 
-# # DUMBBELL CHART FUNCTION --------------------------------------------
-# fun_plot.dumbbell <- function(
-#     
-#   # Data
-#   .df_data
-#   , .aes_mapping
-#   
-#   # Reorder
-#   , .reorder_fct = T
-#   , .reorder_desc = F
-#   , .reorder_fun = max
-#   
-#   # Labels
-#   , .list_labs = list(NULL)
-#   , .geom_label = F
-#   
-#   # Default parameters
-#   , .list_point1.param = list(
-#     position = 'identity'
-#     , color = '#182766'
-#     , size = 5.4
-#   )
-#   , .list_point2.param = list(
-#     position = 'identity'
-#     , color = '#4AF7B0'
-#     , size = 5.4
-#   )
-#   , .list_segment.param = list(
-#     alpha = 0.8
-#     , position = 'identity'
-#     , color = '#D4D5D8'
-#     , size = 2
-#   )
-#   , .list_labels1.param = list(
-#     fontface = 'bold'
-#     , color = '#182766'
-#     , size = 3.33
-#     , vjust = 2.22
-#     , hjust = 0.5
-#   )
-#   , .list_labels2.param = list(
-#     fontface = 'bold'
-#     , color = '#4AF7B0'
-#     , size = 3.33
-#     , vjust = -1.5
-#     , hjust = 0.5
-#   )
-#   
-#   # Facets
-#   , .sym_facets = NULL
-#   , .int_facets = NULL
-#   
-#   # Legend
-#   , .list_legend = list(NULL)
-#   
-#   # Axis
-#   , .int_breaks.y = 5
-#   , .int_decimals.y = 2
-#   , .chr_format.y = NULL
-#   , .dbl_limits.y = NULL
-#   , .coord_flip = T
-#   , .coord_polar = F
-#   
-#   # Theme
-#   , .theme = ggridges::theme_ridges(center_axis_labels = T)
-#   
-# ){
-#   
-#   # Errors
-#   # Data frame
-#   if(!is.data.frame(.df_data)){
-#     
-#     stop("'.df_data' must be a data frame.")
-#     
-#   }
-#   
-#   
-#   # Quo vars
-#   enquo(.sym_facets) -> enq_facets
-#   
-#   
-#   # Aes Mapping
-#   fun_aes.map(.aes_mapping) -> aes_mapping
-#   
-#   aes() -> aes_mapping2
-#   
-#   aes(!!aes_mapping$yend) -> aes_mapping2$y
-#   
-#   # Facets
-#   fun_facets(
-#     .enq_facets = enq_facets
-#     , .int_facets = .int_facets
-#   ) -> plt_facets
-#   
-#   # Reordering
-#   if(.reorder_fct){
-#     
-#     fun_reorder(
-#       .df_data = .df_data
-#       , .enq_var.fct = aes_mapping$x
-#       , .enq_var.dbl = aes_mapping$y
-#       , .fun_ord = .reorder_fun
-#       , .desc = .reorder_desc
-#     ) -> .df_data
-#     
-#   }
-#   
-#   if(.reorder_fct & length(plt_facets)){
-#     
-#     fun_reorder(
-#       .df_data = .df_data
-#       , .enq_var.fct = enq_facets
-#       , .enq_var.dbl = aes_mapping$y
-#       , .fun_ord = .reorder_fun
-#       , .desc = .reorder_desc
-#     ) -> .df_data
-#     
-#   }
-#   
-#   # Axis format
-#   fun_axis.format(
-#     # X axis is categorical
-#     .chr_format.x = 'text'
-#     # Y axis is numerical
-#     , .int_breaks.y = .int_breaks.y
-#     , .int_decimals.y = .int_decimals.y
-#     , .chr_format.y = .chr_format.y
-#     , .dbl_limits.y = .dbl_limits.y
-#   ) -> list_axis.format
-#   
-#   # Coordinates
-#   fun_coordinates(
-#     .dbl_limits.y = .dbl_limits.y
-#     , .coord_flip = .coord_flip
-#     , .coord_polar = .coord_polar
-#   ) -> plt_coord
-#   
-#   # Theme
-#   fun_theme(.theme) -> plt_theme
-#   
-#   # Legend
-#   fun_legends(.list_legend) -> plt_legend
-#   
-#   # Labs
-#   fun_labs(.list_labs) -> plt_labs
-#   
-#   # Label position
-#   if(!length(.list_labels1.param$position)){
-#     # Unless specified, use geom position as label position
-#     .list_labels1.param$position <- .list_point1.param$position
-#     
-#   }
-#   
-#   if(!length(.list_labels2.param$position)){
-#     # Unless specified, use geom position as label position
-#     .list_labels2.param$position <- .list_point2.param$position
-#     
-#   }
-#   
-#   # Labels
-#   .list_labels1.param$mapping <- aes_mapping2
-#   
-#   fun_labels(
-#     .list_default = .list_labels1.param
-#     , .aes_mapping = aes()
-#     , .coord_flip = .coord_flip
-#     , .geom_label = .geom_label
-#   ) -> plt_labels1
-#   
-#   
-#   .list_labels2.param$mapping <- aes_mapping2
-#   
-#   fun_labels(
-#     .list_default = .list_labels2.param
-#     , .aes_mapping = aes()
-#     , .coord_flip = .coord_flip
-#     , .geom_label = .geom_label
-#   ) -> plt_labels2
-#   
-#   
-#   # Dumbbell chart
-#   # geom_point 1 with default parameters
-#   fun_geom.params(
-#     .fun_geom = geom_point
-#     , .list_default = .list_point1.param
-#     # , .aes_mapping = aes_mapping['y']
-#   ) -> plt_geom1
-#   
-#   # geom_point 2 with default parameters
-#   .list_point2.param$mapping <- aes(!!aes_mapping['yend'])
-#   
-#   fun_geom.params(
-#     .fun_geom = geom_point
-#     , .list_default = .list_point2.param
-#     # , .aes_mapping = aes_mapping['yend']
-#   ) -> plt_geom2
-#   
-#   # geom_segment with hard-set parameters
-#   # geom_segment with hard-set parameters
-#   fun_geom.params(
-#     .fun_geom = geom_segment
-#     , .list_default = .list_segment.param
-#     , .aes_mapping = aes()
-#   ) -> plt_segment
-#   
-#   # ggplot
-#   .df_data %>%
-#     # Plot
-#     ggplot(aes_mapping) +
-#     plt_segment +
-#     plt_geom1 +
-#     plt_geom2 +
-#     plt_labels1 +
-#     plt_labels2 +
-#     plt_facets +
-#     # Axis
-#     list_axis.format +
-#     plt_coord +
-#     # Theme
-#     plt_theme +
-#     plt_legend +
-#     # Labels
-#     plt_labs -> plt_dumbbell
-#   
-#   
-#   # Output
-#   return(plt_dumbbell)
-#   
-# }
+# DUMBBELL CHART FUNCTION --------------------------------------------
+fun_plot.dumbbell <- function(
+    
+  # Data
+  .df_data
+  , .aes_mapping
+  
+  # Reorder
+  , .reorder_fct = T
+  , .reorder_desc = F
+  , .reorder_fun = max
+  
+  # Labels
+  , .labels = T
+  , .fun_format.labels = function(x){
+    number(x, accuracy = .01)
+    }
+  , .list_args.labels = list(
+    accuracy = .01
+  )
+  , .list_labs = list()
+  , .geom_label = F
+  
+  # Default parameters
+  , .list_geom.param = list(
+    color = 'lightgrey'
+    , colour_x = '#182766'
+    , colour_xend = '#4AF7B0'
+    , size_x = 5.4
+    , size_xend = 5.4
+    , size = 2
+  )
+  , .list_labels1.param = list(
+    fontface = 'bold'
+    , color = '#182766'
+    , size = 3.33
+    , vjust = -1.5
+    , hjust = 0.5
+  )
+  , .list_labels2.param = list(
+    fontface = 'bold'
+    , color = '#4AF7B0'
+    , size = 3.33
+    , vjust = 2.25
+    , hjust = 0.5
+  )
+  
+  # Facets
+  , .sym_facets = NULL
+  , .int_facets = NULL
+  
+  # Legend
+  , .list_legend = list()
+  
+  # Axes
+  , .fun_axis.x = scale_x_continuous
+  , .fun_axis.y = scale_y_discrete
+  , .list_axis.x.args = list(
+    breaks = breaks_extended(5)
+  )
+  , .list_axis.y.args = list()
+  , .fun_format.x = label_number(accuracy = .01)
+  , .fun_format.y = function(y){str_wrap(y,10)}
+  
+  # Coordinates
+  , .dbl_limits.x = NULL
+  , .coord_flip = F
+  , .coord_polar = F
+  
+  # Theme
+  , .theme = ggridges::theme_ridges(center_axis_labels = T)
+  
+){
+  
+  # Errors
+  # Data frame
+  if(!is.data.frame(.df_data)){
+    
+    stop("'.df_data' must be a data frame.")
+    
+  }
+  
+  # Function
+  if(!(
+    !length(.fun_format.labels)
+    | 'function' %in% tolower(class(.fun_format.labels))
+  )){
+    
+    stop("'.fun_format.labels' must be a function for formatting labels.")
+    
+  }
+  
+  
+  # Quo vars
+  enquo(.sym_facets) -> enq_facets
+  
+  
+  # Aes Mapping
+  fun_aes.map(
+    .aes_mapping
+    , .chr_required_aes = c('x','xend','y')
+  ) -> aes_mapping
+  
+  # Facets
+  fun_facets(
+    .enq_facets = enq_facets
+    , .int_facets = .int_facets
+  ) -> plt_facets
+  
+  # Reordering
+  if(.reorder_fct){
+    
+    fun_reorder(
+      .df_data = .df_data
+      , .enq_var.fct = aes_mapping$y
+      , .enq_var.dbl = aes_mapping$x
+      , .fun_ord = .reorder_fun
+      , .desc = .reorder_desc
+    ) -> .df_data
+    
+  }
+  
+  if(.reorder_fct & length(plt_facets)){
+    
+    fun_reorder(
+      .df_data = .df_data
+      , .enq_var.fct = enq_facets
+      , .enq_var.dbl = aes_mapping$x
+      , .fun_ord = .reorder_fun
+      , .desc = .reorder_desc
+    ) -> .df_data
+    
+  }
+  
+  # Axes format
+  fun_axis.format(
+    .fun_axis = .fun_axis.x
+    , .list_axis.args = .list_axis.x.args
+    , .fun_format = .fun_format.x
+  ) -> plt_axis.x
+  
+  fun_axis.format(
+    .fun_axis = .fun_axis.y
+    , .list_axis.args = .list_axis.y.args
+    , .fun_format = .fun_format.y
+  ) -> plt_axis.y
+  
+  # Coordinates
+  fun_coordinates(
+    .dbl_limits.x = .dbl_limits.x
+    , .coord_flip = .coord_flip
+    , .coord_polar = .coord_polar
+  ) -> plt_coord
+  
+  # Theme
+  fun_theme(.theme) -> plt_theme
+  
+  # Legend
+  fun_legends(.list_legend) -> plt_legend
+  
+  # Labs
+  fun_labs(.list_labs) -> plt_labs
+  
+  # Label position
+  if(!length(.list_labels1.param$position)){
+    # Unless specified, use geom position as label position
+    .list_labels1.param$position <- .list_geom.param$position
+    
+  }
+  
+  if(!length(.list_labels2.param$position)){
+    # Unless specified, use geom position as label position
+    .list_labels2.param$position <- .list_geom.param$position
+    
+  }
+  
+  # Labels
+  if(.labels){
+    
+    # Compose individual aes() for each label
+    aes(
+      label = !!aes_mapping$x %>% 
+        .fun_format.labels
+      , x = !!aes_mapping$x
+      , y = !!aes_mapping$y
+    ) -> aes_labels1
+    
+    aes(
+      label = !!aes_mapping$xend %>% 
+        .fun_format.labels
+      , x = !!aes_mapping$xend
+      , y = !!aes_mapping$y
+    ) -> aes_labels2
+    
+    # Call labels function
+    fun_labels(
+      .list_default = .list_labels1.param
+      , .aes_mapping = aes_labels1
+      # , .coord_flip = !.coord_flip
+      , .geom_label = .geom_label
+    ) -> plt_labels1
+    
+    fun_labels(
+      .list_default = .list_labels2.param
+      , .aes_mapping = aes_labels2
+      # , .coord_flip = !.coord_flip
+      , .geom_label = .geom_label
+    ) -> plt_labels2
+    
+  } else {
+    
+    NULL -> plt_labels1
+    
+    NULL -> plt_labels2
+    
+  }
+  
+  
+  # Dumbbell chart
+  # geom_dumbbell
+  fun_geom.params(
+    .fun_geom = geom_dumbbell
+    , .list_default = .list_geom.param
+    , .aes_mapping = aes_mapping
+  ) -> plt_geom
+  
+  # ggplot
+  .df_data %>%
+    # Plot
+    ggplot() +
+    plt_geom +
+    plt_labels1 +
+    plt_labels2 +
+    plt_facets +
+    # Axes
+    plt_axis.x +
+    plt_axis.y +
+    plt_coord +
+    # Theme
+    plt_theme +
+    plt_legend +
+    # Labels
+    plt_labs -> plt_dumbbell
+  
+  
+  # Output
+  return(plt_dumbbell)
+  
+}
 
 # TEST --------------------------------------------------------------------
 data("diamonds")
@@ -2054,188 +2047,59 @@ tibble(
   , c = runif(5, 25, 50)
   # , d = runif(5, 0, 80)
 ) %>%
-  mutate(
-    a = fct_reorder(a, b)
-  ) %>%
-  fun_plot.dumbbell(aes(
-    x = a
-    , xend = a
-    , y = c
-    , yend = b
-  ))
-  
-  
-  ggplot(aes(
-    x = b
-    , xend = c
-    , y = a
-  )) + 
-  geom_dumbbell(
-    color = 'lightgrey'
-    , colour_x = viridis(4)[3]
-    , colour_xend = viridis(4)[2]
-    , size_x = 5.4
-    , size_xend = 5.4
-    , size = 2
-  ) +
-  theme_ridges(center_axis_labels = T) + 
-  geom_text(aes(label = number(b, accuracy = .01)
-                , x = b)
-            , hjust = 1.5
-            # , vjust = -1.5
-            , color = viridis(4)[3]
-            , fontface = 'bold'
-  ) +
-  geom_text(aes(label = number(c, accuracy = .01)
-                , x = c)
-            , hjust = -.5
-            # , vjust = 1.5
-            , color = viridis(4)[2]
-            , fontface = 'bold'
+  fun_plot.dumbbell(
+    aes(
+      y = a
+      , x = b
+      , xend = c
+    )
+    , .dbl_limits.x = c(0,100)
+    , .reorder_fct = T
+    , .labels = T
   )
 
-
-tibble(
-  a = LETTERS[1:10]
-  , b = runif(10, 0, 100)
-  , c = runif(10, 0, 100)
-  # , d = runif(5, 0, 80)
-) %>%
-  mutate(
-    a = fct_reorder(a, b)
-  ) %>%
-  ggplot(aes(
-    x = a
-    , xend = a
-    , y = b
-    , yend = c
-  )) + 
-  geom_segment(
-    color = 'lightgrey'
-    , size = 3
-    , alpha = 0.5
-  ) +
-  geom_point(aes(y = b), size = 5.4, color = viridis(4)[2]) +
-  geom_point(aes(y = c), size = 5.4, color = viridis(4)[3]) +
-  # geom_point(aes(y = d), size = 5.4, color = viridis(4)[4]) +
-  coord_flip() +
-  theme_ridges(center_axis_labels = T) + 
-  geom_text(aes(label = number(b, accuracy = .01)
-                , y = b
-  )
-  , color = viridis(4)[2]
-  , fontface = 'bold'
-  , vjust = -1.5) +
-  geom_text(aes(label = number(c, accuracy = .01)
-                , y = c)
-            , color = viridis(4)[3]
-            , fontface = 'bold'
-            , vjust = 2.22)
-
-
-
-diamonds %>% 
+diamonds %>%
   group_by(clarity) %>% 
   summarise(price = mean(price)) %>% 
-  ungroup() %>% 
-  mutate(
-    clarity = fct_reorder(clarity, price, .fun = sum, .desc = F)
-  ) %>% 
+  mutate(clarity = paste0(clarity, 'dsdsds lalalala dsds')) %>% 
   fun_plot.lollipop(aes(
     x = clarity
-    , xend = clarity
     , y = price
-    , yend = price
-    , label = dollar(price, accuracy = .01)
-    , color = clarity
+    # , color = clarity
+    , label = dollar(price,.01)
   )
-  , .coord_flip = T
+  , .fun_format.y = label_dollar(.01)
   )
-
-
-
-fun_plot.heatmap(
-  aes(
-    x = cut
-    , y = as.numeric(clarity)
-    , fill = price
-    # , label = dollar(price, accuracy = .01)
-  )
-  , .coord_polar = F
-) + 
-  ylim(c(-8/4,8+1)) +
-  # ylim(c(0, max(as.numeric(diamonds$clarity) + 15) + 0.5)) +
-  # scale_y_discrete(
-  #   breaks = seq_along(levels(diamonds$clarity)) + 15
-  #   , labels = levels(diamonds$clarity)
-  #   ) + 
-  annotate(
-    x = ''
-    , y = 1:8
-    , label = levels(diamonds$clarity)
-    , size = 3.33
-    , geom = 'text'
-  ) +
-  coord_polar(start = -0.5)
-
-
 
 diamonds %>% 
+  fun_plot.density(aes(
+    x = price
+    , fill = clarity
+  )
+  , .sym_facets = clarity
+  , .int_facets = 4
+  , .reorder_fct = T
+  , .reorder_desc = T
+  , .dbl_limits.x = c(-1000,1000)
+  , .fun_format.x = dollar_format(accuracy = .01)
+  )
+
+
+diamonds %>%
   group_by(cut, clarity) %>% 
-  summarise(price = mean(price)) %>% 
+  summarise(price = mean(price)) %>%
   ungroup() %>% 
-  mutate(
-    cut = fct_reorder(cut, price, .fun = sum, .desc = T)
-    , clarity = fct_reorder(clarity, price, .fun = sum, .desc = F)
-  ) %>% 
-  ggplot(aes(
-    x = cut
-    , y = clarity
-    , fill = price
-    , label = dollar(price, accuracy = .01)
-  )) + 
-  geom_tile(
-    position = position_identity()
-    , color = 'white'
-    , size = 3.33
-  ) + 
-  geom_text(
-    position = position_identity()
-    , fontface = 'bold'
-    , color = 'white'
-    , size = 3.33
-  ) +
-  scale_fill_viridis() + 
-  theme_ridges(center_axis_labels = T) + 
-  coord_polar()
-
-diamonds %>% 
-  pivot_longer(
-    cols = c(x,y,z,table,carat,depth)
-  ) %>%
-  group_by(cut, name) %>%
-  summarise(value = mean(value)) %>%
-  ungroup() %>%
-  mutate(
-    cut = fct_reorder(cut, value, .fun = sum, .desc = T)
-    , name = fct_reorder(name, value, .fun = sum, .desc = F)
-  ) %>%
-  ggplot(aes(
-    x = cut
-    , y = name
-    , fill = value
-    , label = number(value, accuracy = .01)
-  )) + 
-  geom_tile(
-    color = 'white'
-    , size = 3
-  ) + 
-  geom_text(
-    position = 'dodge'
-    , fontface = 'bold'
-    , color = 'white'
-    , size = 5
-  ) +
-  scale_fill_viridis() + 
-  theme_ridges(center_axis_labels = T) +
-  coord_polar()
+  fun_plot.heatmap(
+    aes(
+      x = cut
+      # , y = as.numeric(clarity)
+      , y = clarity
+      , fill = price
+      , label = dollar(price, accuracy = .01)
+    )
+    # , .sym_facets = c(cut, clarity)
+    , .coord_polar = F
+    , .reorder_fct = T
+    , .reorder_desc = T
+    , .reorder_fun = sum
+  )
