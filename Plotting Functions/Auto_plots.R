@@ -1,7 +1,10 @@
-# ------- SETUP -----------------------------------------------------------
+# -------- SETUP -----------------------------------------------------------
 # PACKAGES ----------------------------------------------------------------
 pkg <- c(
-  'ggthemes', 'ggridges', 'gghighlight', 'scales' , 'viridis', 'ggalt' #'paletteer' #Data visualization
+  'ggthemes', 'ggridges', 'gghighlight', 'scales' , 'viridis', 'ggalt'
+  # , 'ComplexHeatmap'
+  , 'circlize' #'paletteer' #Data visualization
+  , 'devtools' #Dev Tools
   # , 'ggalt', 'hrbrthemes', 'extrafont' #Data visualization
   # , 'ggthemr' #Data visualization
   , 'tidyverse', 'rlang' #Data wrangling
@@ -11,6 +14,11 @@ pkg <- c(
 lapply(pkg, function(x)
   if(!require(x, character.only = T))
   {install.packages(x); require(x)})
+
+install_github('jokergoo/ComplexHeatmap')
+# install_github('jokergoo/circlize')
+
+library(ComplexHeatmap)
 
 # Package citation
 # lapply(pkg, function(x)
@@ -22,7 +30,7 @@ lapply(pkg, function(x)
 # hrbrthemes::
 # hrbrthemes::import_roboto_condensed()
 
-# ------- PLOT ELEMENTS ---------------------------------------------------
+# -------- PLOT ELEMENTS ---------------------------------------------------
 # [DONE] DYNAMIC FACETS ----------------------------------------------------------
 fun_facets <- function(
     
@@ -840,7 +848,7 @@ fun_reorder <- function(
   
 }
 
-# ------- PLOTS -----------------------------------------------------------
+# -------- PLOTS -----------------------------------------------------------
 # HISTOGRAM FUNCTION --------------------------------------------
 fun_plot.histogram <- function(
     
@@ -2038,8 +2046,32 @@ fun_plot.dumbbell <- function(
   
 }
 
+# CIRCULAR HEATMAP FUNCTION -----------------------------------------------
+fun_plot.heatmap.circ <- function(){}
+
 # TEST --------------------------------------------------------------------
 data("diamonds")
+
+set.seed(123)
+mat1 = rbind(cbind(matrix(rnorm(50*5, mean = 1), nr = 50), 
+                   matrix(rnorm(50*5, mean = -1), nr = 50)),
+             cbind(matrix(rnorm(50*5, mean = -1), nr = 50), 
+                   matrix(rnorm(50*5, mean = 1), nr = 50))
+)
+rownames(mat1) = paste0("R", 1:100)
+colnames(mat1) = paste0("C", 1:10)
+mat1 = mat1[sample(100, 100), ] # randomly permute rows
+split = sample(letters[1:5], 100, replace = TRUE)
+split = factor(split, levels = letters[1:5])
+col_fun1 <- colorRamp2(c(-2, 0, 2), c("red", "white", "blue"))
+
+circos.clear()
+
+circos.heatmap(
+  mat = mat1
+  # , split = split
+  , col = col_fun1
+)
 
 tibble(
   a = LETTERS[1:5]
