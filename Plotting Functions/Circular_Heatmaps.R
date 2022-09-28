@@ -33,6 +33,7 @@ library(ComplexHeatmap)
 # hrbrthemes::
 # hrbrthemes::import_roboto_condensed()
 
+# -------- FACTORS -----------------------------------------------------------
 # SKILLS FACTOR LIST -----------------------------------------------------------------
 list_skill.factors <- list(
   
@@ -190,6 +191,32 @@ list_factors %>%
   drop_na() %>%
   ungroup() -> df_factors.names
 
+# REORDER CATEGORIES FOR AESTHETIC PURPOSES -------------------------------------------------------------
+# Factors list
+list_factors <- list(
+  'Fields of Knowledge' = list_know.factors
+  , 'Abilities' = list_ablt.factors
+  , 'Skills' = list_skill.factors
+  # , 'Work Contexts' = list_context.factors
+  # , 'Work Activities' = list_activities.factors
+)
+
+# Factor names data frame
+list_factors %>%
+  bind_rows(
+    .id = 'competency'
+  ) %>%
+  pivot_longer(
+    cols = -competency
+    , names_to = 'factor'
+    , values_to = 'item'
+  ) %>%
+  drop_na() %>%
+  ungroup() -> df_factors.names
+
+# -------- DATA -----------------------------------------------------------
+
+
 # EFA-REDUCED OCCUPATIONS DATA FRAME -------------------------------------------
 # Occupations data frame
 df_occupations <- readr::read_csv('https://docs.google.com/spreadsheets/d/e/2PACX-1vSphzWoCxoNaiaJcQUWKCMqUAT041Q8UqUgM7rSzIwYZb7FhttKJwNgtrFf-r7EgzXHFom4UjLl2ltk/pub?gid=563902602&single=true&output=csv')
@@ -202,27 +229,16 @@ list_factors %>%
 # Select only necessary variables
 df_occupations %>%
   select(
-    occupation
+    annual_wage_2021
+    , occupation
     , all_of(chr_vars)
   ) %>%
   mutate(
     across(
-      .cols = chr_vars
+      .cols = all_of(chr_vars)
       , .fns = function(x){x/100}
     )
   ) -> df_occupations
-
-# SPLIT DATA FRAME BY FACTORS ---------------------------------------------
-map(
-  list_factors
-  , function(vars){
-    
-    df_occupations %>% 
-      select(flatten_chr(vars)) %>% 
-      return()
-    
-  }
-) -> list_df_occupations.factors
 
 # CONVERT TO MATRIX --------------------------------------------------------------------
 # Keep occupation names
@@ -231,154 +247,80 @@ df_occupations %>%
   factor() -> fct_occupations
 
 # Convert to matrix
-map(
-  list_df_occupations.factors
-  , as.matrix
-) -> list_mtx_occupations
+df_occupations %>% 
+  select(all_of(chr_vars)) %>% 
+  as.matrix() -> mtx_occupations
 
 # Rownames
+fct_occupations -> rownames(mtx_occupations)
+
+# CLUSTERIZATION --------------------------------------------------------------------
+# N of clusters
+int_cluster <- 8 
+
+# K-means clusterization algorithm
+kmeans(
+  mtx_occupations
+  , centers = int_cluster
+)$cluster -> int_kmeans.split
+
+# SAMPLE OF OCCUPATIONS ---------------------------------------------------
+# Total occupations to display
+int_cluster * 50
+
+# Top n
+int_top.n <- 50
+
+# Select top n from each cluster
+int_kmeans.split %>% 
+  as_tibble(rownames = 'occupation') %>% 
+  rename(cluster.kmeans = value) %>% 
+  mutate(cluster.kmeans = factor(cluster.kmeans)) %>% 
+  full_join(df_occupations) %>% 
+  group_by(cluster.kmeans) %>% 
+  arrange(desc(annual_wage_2021)) %>% 
+  slice(1:int_top.n) %>%
+  ungroup() -> df_occupations
+
+# Adjusted matrix
+df_occupations %>% 
+  column_to_rownames('occupation') %>%
+  select(all_of(chr_vars)) %>% 
+  as.matrix() -> mtx_occupations
+
+# Adjusted split
+df_occupations %>% 
+  pull(cluster.kmeans) -> int_kmeans.split
+
+# SPLIT DATA BY FACTORS ---------------------------------------------
 map(
-  list_mtx_occupations
-  , function(mtx){
+  list_factors
+  , function(vars){
     
-    fct_occupations -> rownames(mtx)
-    
-    return(mtx)
+    mtx_occupations[,flatten_chr(vars)] %>% 
+      return()
     
   }
 ) -> list_mtx_occupations
 
-# CLUSTERIZATION --------------------------------------------------------------------
-# K-means clusterization algorithm
-kmeans(
-  bind_cols(list_mtx_occupations)
-  , centers = 8
-)$cluster -> int_kmeans.split
-
-# SAMPLE OF OCCUPATIONS ---------------------------------------------------
-int_kmeans.split 
-
-
-# # DATA --------------------------------------------------------------------
-# # df_occupations <- readr::read_csv('https://docs.google.com/spreadsheets/d/e/2PACX-1vSphzWoCxoNaiaJcQUWKCMqUAT041Q8UqUgM7rSzIwYZb7FhttKJwNgtrFf-r7EgzXHFom4UjLl2ltk/pub?gid=563902602&single=true&output=csv')
-# 
-# # # Filter one sample to fit
-# # df_occupations %>% 
-# #   sample_n(50) -> df_occupations
-# 
-# # # # Keep occupation cluster
-# # df_occupations %>%
-# #   pull(career_cluster) %>%
-# #   factor() -> fct_cluster
-# 
-# # Keep occupation names
-# df_occupations %>% 
-#   pull(occupation) %>% 
-#   factor() -> fct_occupations
-# 
-# # Convert to matrix
-# df_occupations %>%
-#   select(where(
-#     is.numeric
-#   )) %>% 
-#   as.matrix() -> mtx_occupations
-# 
-# fct_occupations -> rownames(mtx_occupations)
-# 
-# # Clusterization
-# # fastcluster::hclust(
-# #   dist(mtx_occupations)
-# # ) -> hclust_clusters
-# # 
-# # cutree(hclust_clusters, 10) %>% view
-# 
-# # mtx_occupations[hclust_clusters$order,] -> mtx_occupations
-# 
-# kmeans(mtx_occupations, centers = 8)$cluster -> int_kmeans.split
-# 
-# # Split variables
-# ncol(mtx_occupations)
-# 
-# divisors(ncol(mtx_occupations))
-# 
-# # split(
-# #   seq(1,161)
-# #   , cut(
-# #     seq(1,161)
-# #     , 7, labels = F
-# #     )
-# # ) -> list_index
-# 
-# list(1:ncol(mtx_occupations)) -> list_index
-# 
-# paste0('mtx', names(list_index)) -> names(list_index)
-# 
-# map(
-#   list_index
-#   , function(index){
-#     
-#     return(mtx_occupations[,index])
-#     
-#   }
-# ) -> list_mtx_occupations
-# 
-# list_mtx_occupations %>% 
-#   sapply(ncol)
-# 
-# list_mtx_occupations %>% 
-#   sapply(ncol) %>% 
-#   sum() == ncol(mtx_occupations)
-
-# # DATA (SALARIES) --------------------------------------------------------------------
-# df_occupations <- readr::read_csv('https://docs.google.com/spreadsheets/d/e/2PACX-1vSphzWoCxoNaiaJcQUWKCMqUAT041Q8UqUgM7rSzIwYZb7FhttKJwNgtrFf-r7EgzXHFom4UjLl2ltk/pub?gid=563902602&single=true&output=csv')
-# 
-# # # Filter one sample to fit
-# # df_occupations %>% 
-# #   sample_n(50) -> df_occupations
-# 
-# # Keep occupation cluster
-# df_occupations %>% 
-#   pull(career_cluster) %>% 
-#   factor() -> fct_cluster
-# 
-# # Keep occupation names
-# df_occupations %>% 
-#   pull(occupation) %>% 
-#   factor() -> fct_occupations
-# 
-# # Convert to matrix
-# df_occupations %>% 
-#   select(annual_wage_2021) %>%
-#   # select(1:50) %>%
-#   # mutate(across(
-#   #   .fns = function(x){x / 100}
-#   # )) %>% 
-#   as.matrix() -> mtx_occupations
-# 
-# rownames(mtx_occupations) <- fct_occupations
-# colnames(mtx_occupations) <- 'Annual Wage (2021)'
-# 
-# t(mtx_occupations) -> mtx_occupations
-# 
-# # Sample 
-# mtx_occupations[1:50,] -> mtx_occupations1
-# mtx_occupations[51:100,] -> mtx_occupations2
-# mtx_occupations[101:150,] -> mtx_occupations3
-# mtx_occupations[151:200,] -> mtx_occupations4
-
 # -------- PLOT ELEMENTS ---------------------------------------------------
-# -------- PLOTS -----------------------------------------------------------
-# CIRCULAR HEATMAP FUNCTION -----------------------------------------------
-fun_plot.heatmap.circ <- function(){}
-
-# TEST --------------------------------------------------------------------
+# TRACK HEIGHT ------------------------------------------------------------
 # Track proportions 
 map(
   list_mtx_occupations
   , ~ ncol(.) / ncol(mtx_occupations)
-) -> list_proportions 
+) -> list_tracks
 
-# Colors
+# Total track length
+int_track.size <- 0.70
+
+# Track sizes
+map(
+  list_tracks
+  , ~ . * int_track.size
+) -> list_tracks
+
+# COLORS ------------------------------------------------------------------
 # Atlas palette 1
 # fun_color <- colorRamp2(c(0, 0.5, 1), plasma(3))
 # colorRamp2(
@@ -398,6 +340,16 @@ map(
 #     , '#4AF7B0'
 #   )
 # ) -> fun_color
+
+# Atlas palette 3
+colorRamp2(
+  c(0.3, 0.5, 0.7)
+  , c(
+    '#753AF9'
+    , '#FFFFFF'
+    , '#4AF7B0'
+  )
+) -> fun_color
 
 # Red white green
 # colorRamp2(
@@ -419,40 +371,69 @@ colorRamp2(
   )
 ) -> fun_color
 
+# Red white blue (boost colors)
+colorRamp2(
+  c(0.3, 0.5, 0.7)
+  , c(
+    '#F22B29'
+    , '#FFFFFF'
+    , '#182766'
+  )
+) -> fun_color
+
+# OCCUPATION LABELS -------------------------------------------------------
+
+# SECTOR LABELS -----------------------------------------------------------
+c(
+  rep(F, length(list_mtx_occupations) - 1)
+  , T
+) -> lgc_sector.labels
+
+
+# -------- PLOTS -----------------------------------------------------------
+# CIRCULAR HEATMAP FUNCTION -----------------------------------------------
+fun_plot.heatmap.circ <- function(){}
+
+# TEST --------------------------------------------------------------------
 circos.clear()
+
 circos.par(
   start.degree = 85
-  , gap.degree = 10
+  # , gap.degree = 10
+  , gap.degree = 5
 )
 
+# Circular heatmap 
 Map(
-  function(mtx, prop){
+  function(mtx, track, sector.labels){
     
     circos.heatmap(
       mat = mtx
       , split = int_kmeans.split 
       , col = fun_color
-      # , track.height = 0.5
-      # , track.height = 0.8 * prop
-      , track.height = 0.7 * prop
+      , track.height = track
       # , rownames.side = 'outside'
-      # , cell.border = '#FFFFFF'
+      , cell.border = '#FFFFFF'
+      , bg.border = '#212121'
+      , bg.lwd = 2.23
+      # , cell.border = '#212121'
       # , cell.lwd = 2.23
       # , cell.lwd = .125
-      # , cell.lwd = .0625
-      , show.sector.labels = T
-      , cluster = F
+      , cell.lwd = .0625
+      , show.sector.labels = sector.labels
+      , cluster = T
     )
     
   }
   , mtx = list_mtx_occupations
-  , prop = list_proportions
+  , track = list_tracks
+  , sector.labels = lgc_sector.labels
 )
 
 circos.heatmap(
   mat = list_mtx_occupations$Skills
-    # , split = split
-    , col = fun_color
+  # , split = split
+  , col = fun_color
   , track.height = .8
   # , rownames.side = 'outside'
   # , cell.border = 'white'
