@@ -348,35 +348,35 @@ df_factor.scores %>%
 # lapply(
 #   list_factors
 #   , function(scales){
-#     
+# 
 #     psych::scoreVeryFast(
 #       keys = scales
-#       , items = df_occupations.pop 
+#       , items = df_occupations.pop
 #       , totals = F #Average scores
-#     ) %>% 
-#       as_tibble() %>% 
+#     ) %>%
+#       as_tibble() %>%
 #       colMeans()
-#     
-#   } 
-# ) %>% 
+# 
+#   }
+# ) %>%
 #   flatten_df() -> df_occupations.scores
 # 
-# df_occupations.pop %>% 
+# df_occupations.pop %>%
 #   pivot_longer(
 #     cols = everything()
 #     , names_to = 'item'
 #     , values_to = 'score'
-#   ) %>% 
+#   ) %>%
 #   full_join(
 #     df_factors.names
 #   ) -> df_input.long
 # 
-# df_factor.scores %>% 
+# df_factor.scores %>%
 #   pivot_longer(
 #     cols = everything()
 #     , names_to = 'factor'
 #     , values_to = 'factor.score'
-#   ) %>% 
+#   ) %>%
 #   full_join(
 #     df_input.long
 #   ) -> df_input.long

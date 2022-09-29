@@ -6,7 +6,7 @@ pkg <- c(
   , 'circlize' #'paletteer' #Data visualization
   , 'devtools' #Dev Tools
   , 'psych' #Factor scores
-  # , 'fastcluster' #Faster clusterization algorithms
+  , 'fastcluster' #Faster clusterization algorithms
   , 'numbers' #Divisors
   # , 'ggalt', 'hrbrthemes', 'extrafont' #Data visualization
   # , 'ggthemr' #Data visualization
@@ -215,8 +215,6 @@ list_factors %>%
   ungroup() -> df_factors.names
 
 # -------- DATA -----------------------------------------------------------
-
-
 # EFA-REDUCED OCCUPATIONS DATA FRAME -------------------------------------------
 # Occupations data frame
 df_occupations <- readr::read_csv('https://docs.google.com/spreadsheets/d/e/2PACX-1vSphzWoCxoNaiaJcQUWKCMqUAT041Q8UqUgM7rSzIwYZb7FhttKJwNgtrFf-r7EgzXHFom4UjLl2ltk/pub?gid=563902602&single=true&output=csv')
@@ -240,66 +238,124 @@ df_occupations %>%
     )
   ) -> df_occupations
 
-# CONVERT TO MATRIX --------------------------------------------------------------------
-# Keep occupation names
-df_occupations %>%
-  pull(occupation) %>%
-  factor() -> fct_occupations
+# FACTOR SCORES TO REDUCE DIMENSIONALITY ----------------------------------
+psych::scoreVeryFast(
+  keys = flatten(list_factors)
+  
+  , items = df_occupations %>%
+    select(
+      all_of(
+        chr_vars
+      ))
+  , totals = F #Average scores
+) %>% 
+  as_tibble() %>% 
+  bind_cols(
+    df_occupations
+  ) %>% 
+  select(
+    # where(
+    #   negate(is.numeric)
+    # )
+    -all_of(chr_vars)
+    # , list_factors %>%
+    #   flatten() %>%
+    #   names()
+  ) -> df_occupations
 
+# CONVERT TO MATRIX --------------------------------------------------------------------
 # Convert to matrix
 df_occupations %>% 
-  select(all_of(chr_vars)) %>% 
+  column_to_rownames('occupation') %>% 
+  # select(all_of(chr_vars)) %>%
+  select(
+    list_factors %>%
+      flatten() %>%
+      names()
+  ) %>%
   as.matrix() -> mtx_occupations
 
-# Rownames
-fct_occupations -> rownames(mtx_occupations)
-
-# CLUSTERIZATION --------------------------------------------------------------------
+# K-MEANS (SECTORS) --------------------------------------------------------------------
+# Elbow plots to optimally select the number of clusters
 # N of clusters
-int_cluster <- 8 
+int_cluster <- 8 #1/2 of clusters proposed by the BLS
 
-# K-means clusterization algorithm
+# K-means for grouping occupations
 kmeans(
   mtx_occupations
   , centers = int_cluster
 )$cluster -> int_kmeans.split
 
-# SAMPLE OF OCCUPATIONS ---------------------------------------------------
+# SAMPLE OF OCCUPATIONS (WAGE) ---------------------------------------------------
 # Total occupations to display
-int_cluster * 50
+# int_cluster * 45
+# 8 gaps of 5 degrees + 320 degrees of professions = 360 degrees
+int_cluster * 40
 
 # Top n
-int_top.n <- 50
+# int_top.n <- 45
+# int_top.n <- 40
+int_top.n <- 20
 
 # Select top n from each cluster
 int_kmeans.split %>% 
   as_tibble(rownames = 'occupation') %>% 
   rename(cluster.kmeans = value) %>% 
   mutate(cluster.kmeans = factor(cluster.kmeans)) %>% 
-  full_join(df_occupations) %>% 
+  right_join(df_occupations) %>%
   group_by(cluster.kmeans) %>% 
-  arrange(desc(annual_wage_2021)) %>% 
-  slice(1:int_top.n) %>%
+  arrange(desc(annual_wage_2021)) %>%
+  slice(1:int_top.n) %>% 
   ungroup() -> df_occupations
 
 # Adjusted matrix
 df_occupations %>% 
   column_to_rownames('occupation') %>%
-  select(all_of(chr_vars)) %>% 
+  # select(all_of(chr_vars)) %>% 
+  select(
+    list_factors %>%
+      flatten() %>%
+      names()
+  ) %>% 
   as.matrix() -> mtx_occupations
+
+# HIERARCHICAL CLUSTERING (ORDER) -----------------------------------------
+# H-Clustering
+fastcluster::hclust(
+  dist(mtx_occupations)
+) -> hclust_occupations
+
+# Reorder matrix
+mtx_occupations[hclust_occupations$order,] -> mtx_occupations
+
+# Reorder data frame
+df_occupations[hclust_occupations$order,] -> df_occupations
 
 # Adjusted split
 df_occupations %>% 
   pull(cluster.kmeans) -> int_kmeans.split
 
-# SPLIT DATA BY FACTORS ---------------------------------------------
+# # HIERARCHICAL CLUSTERING WITHIN GROUPS (ORDER) -----------------------------------------
+# # H-Clustering
+# fastcluster::hclust(
+#   dist(mtx_occupations)
+# ) -> hclust_occupations
+# 
+# # Reorder matrix
+# mtx_occupations[hclust_occupations$order,] -> mtx_occupations
+# 
+# # Reorder data frame
+# df_occupations[hclust_occupations$order,] -> df_occupations
+
+# SPLIT DATA BY CATEGORIES ---------------------------------------------
 map(
   list_factors
   , function(vars){
-    
-    mtx_occupations[,flatten_chr(vars)] %>% 
+
+    # mtx_occupations[,flatten_chr(vars)] %>%
+    mtx_occupations[,names(flatten(vars))] %>%
       return()
-    
+
   }
 ) -> list_mtx_occupations
 
@@ -312,7 +368,8 @@ map(
 ) -> list_tracks
 
 # Total track length
-int_track.size <- 0.70
+# int_track.size <- 0.70
+int_track.size <- 0.5
 
 # Track sizes
 map(
@@ -320,66 +377,126 @@ map(
   , ~ . * int_track.size
 ) -> list_tracks
 
-# COLORS ------------------------------------------------------------------
-# Atlas palette 1
-# fun_color <- colorRamp2(c(0, 0.5, 1), plasma(3))
+# # COLORS ------------------------------------------------------------------
+# # Atlas palette 1
+# # fun_color <- colorRamp2(c(0, 0.5, 1), plasma(3))
+# # colorRamp2(
+# #   c(0, 0.5, 1)
+# #   , c(
+# #     '#753AF9'
+# #     , '#D4D5D8'
+# #     , '#4AF7B0'
+# #   )
+# # ) -> fun_color
+# 
+# # Atlas palette 2
+# # colorRamp2(
+# #   c(0, 1)
+# #   , c(
+# #     '#753AF9'
+# #     , '#4AF7B0'
+# #   )
+# # ) -> fun_color
+# 
+# # Atlas palette 3 (boost colors)
 # colorRamp2(
-#   c(0, 0.5, 1)
+#   c(0.3, 0.5, 0.7)
 #   , c(
 #     '#753AF9'
-#     , '#D4D5D8'
-#     , '#4AF7B0'
-#   )
-# ) -> fun_color
-
-# Atlas palette 2
-# colorRamp2(
-#   c(0, 1)
-#   , c(
-#     '#753AF9'
-#     , '#4AF7B0'
-#   )
-# ) -> fun_color
-
-# Atlas palette 3
-colorRamp2(
-  c(0.3, 0.5, 0.7)
-  , c(
-    '#753AF9'
-    , '#FFFFFF'
-    , '#4AF7B0'
-  )
-) -> fun_color
-
-# Red white green
-# colorRamp2(
-#   c(0, 0.5, 1)
-#   , c(
-#     '#F22B29'
 #     , '#FFFFFF'
 #     , '#4AF7B0'
 #   )
 # ) -> fun_color
+# 
+# # Red white green
+# # colorRamp2(
+# #   c(0, 0.5, 1)
+# #   , c(
+# #     '#F22B29'
+# #     , '#FFFFFF'
+# #     , '#4AF7B0'
+# #   )
+# # ) -> fun_color
+# 
+# # # Red white blue
+# # colorRamp2(
+# #   c(0, 0.5, 1)
+# #   , c(
+# #     '#F22B29'
+# #     , '#FFFFFF'
+# #     , '#182766'
+# #   )
+# # ) -> fun_color
+# # 
+# # Red white blue (boost colors)
+# # colorRamp2(
+# #   c(0.3, 0.5, 0.7)
+# #   , c(
+# #     '#F22B29'
+# #     , '#FFFFFF'
+# #     , '#182766'
+# #   )
+# # ) -> fun_color
 
-# Red white blue
-colorRamp2(
-  c(0, 0.5, 1)
-  , c(
-    '#F22B29'
-    , '#FFFFFF'
-    , '#182766'
-  )
-) -> fun_color
+# # LIST OF COLORS ------------------------------------------------------------------
+# # Atlas palette 1
+# colorRamp2(
+#   # c(0, 1)
+#   # c(0.3, 0.7)
+#   c(0, 0.7)
+#   , c(
+#     '#FFFFFF'
+#     , '#753AF9'
+#   )
+# ) -> fun_color1
+# 
+# # Atlas palette 2
+# colorRamp2(
+#   # c(0, 1)
+#   # c(0.3, 0.7)
+#   c(0, 0.7)
+#   , c(
+#     '#FFFFFF'
+#     , '#4AF7B0'
+#   )
+# ) -> fun_color2
+# 
+# # Atlas palette 3
+# colorRamp2(
+#   # c(0, 1)
+#   # c(0.3, 0.7)
+#   c(0, 0.7)
+#   , c(
+#     '#FFFFFF'
+#     , '#182766'
+#   )
+# ) -> fun_color3
+# 
+# # Color list
+# list(
+#   fun_color3
+#   , fun_color1
+#   , fun_color2
+# ) -> list_fun_color
 
-# Red white blue (boost colors)
+# LIST OF COLORS ------------------------------------------------------------------
+# Atlas palette 1
 colorRamp2(
-  c(0.3, 0.5, 0.7)
+  # c(0, 1)
+  # c(0.3, 0.7)
+  c(0, 0.7)
   , c(
-    '#F22B29'
-    , '#FFFFFF'
-    , '#182766'
+    '#753AF9'
+    , '#4AF7B0'
   )
-) -> fun_color
+) -> fun_color1
+
+# Color list
+list(
+  fun_color1
+  , fun_color1
+  , fun_color1
+) -> list_fun_color
 
 # OCCUPATION LABELS -------------------------------------------------------
 
@@ -389,12 +506,11 @@ c(
   , T
 ) -> lgc_sector.labels
 
-
 # -------- PLOTS -----------------------------------------------------------
-# CIRCULAR HEATMAP FUNCTION -----------------------------------------------
-fun_plot.heatmap.circ <- function(){}
+# # CIRCULAR HEATMAP FUNCTION -----------------------------------------------
+# fun_plot.heatmap.circ <- function(){}
 
-# TEST --------------------------------------------------------------------
+# SPLIT + SECTORS --------------------------------------------------------------------
 circos.clear()
 
 circos.par(
@@ -405,41 +521,65 @@ circos.par(
 
 # Circular heatmap 
 Map(
-  function(mtx, track, sector.labels){
+  function(
+    mtx
+    , track
+    , sector.labels
+    , colors
+  ){
     
     circos.heatmap(
       mat = mtx
       , split = int_kmeans.split 
-      , col = fun_color
+      , col = colors
       , track.height = track
       # , rownames.side = 'outside'
-      , cell.border = '#FFFFFF'
-      , bg.border = '#212121'
-      , bg.lwd = 2.23
+      # , cell.border = '#FFFFFF'
+      , cell.border = '#212121'
+      # , bg.border = '#212121'
+      # , bg.lwd = 2.23
       # , cell.border = '#212121'
+      , cell.lwd = 1
       # , cell.lwd = 2.23
       # , cell.lwd = .125
-      , cell.lwd = .0625
+      # , cell.lwd = .0625
       , show.sector.labels = sector.labels
-      , cluster = T
+      , cluster = F
     )
     
   }
   , mtx = list_mtx_occupations
   , track = list_tracks
   , sector.labels = lgc_sector.labels
+  , colors = list_fun_color
 )
 
-circos.heatmap(
-  mat = list_mtx_occupations$Skills
-  # , split = split
-  , col = fun_color
-  , track.height = .8
-  # , rownames.side = 'outside'
-  # , cell.border = 'white'
-  # , cell.lwd = 2.23
-  # , cluster = T
-)
+# # Circular heatmap 
+# Map(
+#   function(mtx, track, sector.labels){
+#     
+#     circos.heatmap(
+#       mat = mtx
+#       , split = int_kmeans.split 
+#       , col = fun_color
+#       , track.height = track
+#       # , rownames.side = 'outside'
+#       , cell.border = '#FFFFFF'
+#       , bg.border = '#212121'
+#       , bg.lwd = 2.23
+#       # , cell.border = '#212121'
+#       # , cell.lwd = 2.23
+#       # , cell.lwd = .125
+#       , cell.lwd = .0625
+#       , show.sector.labels = sector.labels
+#       , cluster = F
+#     )
+#     
+#   }
+#   , mtx = list_mtx_occupations
+#   , track = list_tracks
+#   , sector.labels = lgc_sector.labels
+# )
 
 # # TEST --------------------------------------------------------------------
 # # fun_color <- colorRamp2(c(0, 0.5, 1), plasma(3))
