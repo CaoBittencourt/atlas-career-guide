@@ -97,7 +97,13 @@ colorRamp2(
 
 # -------- PLOTS -----------------------------------------------------------
 # ATLAS LOGO HEATMAP --------------------------------------------------------------------
-
 df_occupations %>%
+  pivot_longer(cols = - occupation) %>% 
   fun_plot.heatmap(aes(
-  ))
+    x = occupation
+    , y = name
+    , fill = value
+  )
+  , .reorder_fct = F
+  , .coord_polar = T
+  )

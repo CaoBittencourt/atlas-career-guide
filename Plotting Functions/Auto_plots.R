@@ -2,8 +2,7 @@
 # PACKAGES ----------------------------------------------------------------
 pkg <- c(
   'ggthemes', 'ggridges', 'gghighlight', 'scales' , 'viridis', 'ggalt'
-  # , 'ComplexHeatmap'
-  , 'circlize' #'paletteer' #Data visualization
+  # , 'circlize' #'paletteer' #Data visualization
   , 'devtools' #Dev Tools
   # , 'ggalt', 'hrbrthemes', 'extrafont' #Data visualization
   # , 'ggthemr' #Data visualization
@@ -14,11 +13,6 @@ pkg <- c(
 lapply(pkg, function(x)
   if(!require(x, character.only = T))
   {install.packages(x); require(x)})
-
-install_github('jokergoo/ComplexHeatmap')
-# install_github('jokergoo/circlize')
-
-library(ComplexHeatmap)
 
 # Package citation
 # lapply(pkg, function(x)
@@ -1378,6 +1372,183 @@ fun_plot.heatmap <- function(
   
 }
 
+# LINE CHART FUNCTION --------------------------------------------
+fun_plot.line <- function(
+    
+  # Data
+  .df_data
+  , .aes_mapping
+  
+  # Reorder
+  , .reorder_fct = F
+  , .reorder_desc = F
+  , .reorder_fun = max
+  
+  # Labels
+  , .list_labs = list()
+  , .geom_label = F
+  
+  # Default parameters
+  , .list_geom.param = list(
+    position = 'identity'
+    , color = '#3854FB'
+    , size = 1.2
+  )
+  
+  # Facets
+  , .sym_facets = NULL
+  , .int_facets = NULL
+  
+  # Colors
+  , .scale_colors = list(
+    viridis::scale_color_viridis(discrete = T)
+    , viridis::scale_fill_viridis(discrete = T)
+  )
+  , .chr_manual.pal = NULL
+  , .chr_manual.aes = 'color'
+  
+  # Legend
+  , .list_legend = list()
+  
+  # Axes
+  , .fun_axis.x = scale_x_discrete
+  , .fun_axis.y = scale_y_continuous
+  , .list_axis.x.args = list()
+  , .list_axis.y.args = list(
+    breaks = breaks_extended(5)
+  )
+  , .fun_format.x = function(x){str_wrap(x,10)}
+  , .fun_format.y = label_number(accuracy = .01)
+  
+  # Coordinates
+  , .dbl_limits.y = NULL
+  , .coord_flip = F
+  , .coord_polar = F
+  
+  # Theme
+  , .theme = ggridges::theme_ridges(center_axis_labels = T)
+  
+){
+  
+  # Errors
+  # Data frame
+  if(!is.data.frame(.df_data)){
+    
+    stop("'.df_data' must be a data frame.")
+    
+  }
+  
+  
+  # Quo vars
+  enquo(.sym_facets) -> enq_facets
+  
+  
+  # Aes Mapping
+  fun_aes.map(
+    .aes_mapping
+    , .chr_required_aes = c('x', 'y')
+  ) -> aes_mapping
+  
+  # Facets
+  fun_facets(
+    .enq_facets = enq_facets
+    , .int_facets = .int_facets
+  ) -> plt_facets
+  
+  # Reordering
+  if(.reorder_fct){
+    
+    fun_reorder(
+      .df_data = .df_data
+      , .enq_var.fct = aes_mapping$x
+      , .enq_var.dbl = aes_mapping$y
+      , .fun_ord = .reorder_fun
+      , .desc = .reorder_desc
+    ) -> .df_data
+    
+  }
+  
+  if(.reorder_fct & length(plt_facets)){
+    
+    fun_reorder(
+      .df_data = .df_data
+      , .enq_var.fct = enq_facets
+      , .enq_var.dbl = aes_mapping$y
+      , .fun_ord = .reorder_fun
+      , .desc = .reorder_desc
+    ) -> .df_data
+    
+  }
+  
+  # Color mapping
+  fun_colors(
+    .scale_color = .scale_colors
+    , .chr_manual.pal = .chr_manual.pal
+    , .chr_manual.aes = .chr_manual.aes
+  ) -> plt_colors
+  
+  # Axes format
+  fun_axis.format(
+    .fun_axis = .fun_axis.x
+    , .list_axis.args = .list_axis.x.args
+    , .fun_format = .fun_format.x
+  ) -> plt_axis.x
+  
+  fun_axis.format(
+    .fun_axis = .fun_axis.y
+    , .list_axis.args = .list_axis.y.args
+    , .fun_format = .fun_format.y
+  ) -> plt_axis.y
+  
+  # Coordinates
+  fun_coordinates(
+    .dbl_limits.y = .dbl_limits.y
+    , .coord_flip = .coord_flip
+    , .coord_polar = .coord_polar
+  ) -> plt_coord
+  
+  # Theme
+  fun_theme(.theme) -> plt_theme
+  
+  # Legend
+  fun_legends(.list_legend) -> plt_legend
+  
+  # Labs
+  fun_labs(.list_labs) -> plt_labs
+  
+  
+  # Line chart
+  # geom_line with default parameters
+  fun_geom.params(
+    .fun_geom = geom_line
+    , .list_default = .list_geom.param
+    , .aes_mapping = aes_mapping
+  ) -> plt_geom
+  
+  # ggplot
+  .df_data %>%
+    # Plot
+    ggplot() +
+    plt_geom +
+    plt_facets +
+    # Colors
+    plt_colors +
+    # Axes
+    plt_axis.x +
+    plt_axis.y +
+    plt_coord +
+    # Theme
+    plt_theme +
+    plt_legend +
+    # Labels
+    plt_labs -> plt_line
+  
+  
+  # Output
+  return(plt_line)
+  
+}
+
 # BAR CHART FUNCTION --------------------------------------------
 fun_plot.bar <- function(
     
@@ -2046,92 +2217,89 @@ fun_plot.dumbbell <- function(
   
 }
 
-# CIRCULAR HEATMAP FUNCTION -----------------------------------------------
-fun_plot.heatmap.circ <- function(){}
-
-# TEST --------------------------------------------------------------------
-data("diamonds")
-
-set.seed(123)
-mat1 = rbind(cbind(matrix(rnorm(50*5, mean = 1), nr = 50), 
-                   matrix(rnorm(50*5, mean = -1), nr = 50)),
-             cbind(matrix(rnorm(50*5, mean = -1), nr = 50), 
-                   matrix(rnorm(50*5, mean = 1), nr = 50))
-)
-rownames(mat1) = paste0("R", 1:100)
-colnames(mat1) = paste0("C", 1:10)
-mat1 = mat1[sample(100, 100), ] # randomly permute rows
-split = sample(letters[1:5], 100, replace = TRUE)
-split = factor(split, levels = letters[1:5])
-col_fun1 <- colorRamp2(c(-2, 0, 2), c("red", "white", "blue"))
-
-circos.clear()
-
-circos.heatmap(
-  mat = mat1
-  # , split = split
-  , col = col_fun1
-)
-
-tibble(
-  a = LETTERS[1:5]
-  , b = runif(5, 0, 100)
-  , c = runif(5, 25, 50)
-  # , d = runif(5, 0, 80)
-) %>%
-  fun_plot.dumbbell(
-    aes(
-      y = a
-      , x = b
-      , xend = c
-    )
-    , .dbl_limits.x = c(0,100)
-    , .reorder_fct = T
-    , .labels = T
-  )
-
-diamonds %>%
-  group_by(clarity) %>% 
-  summarise(price = mean(price)) %>% 
-  mutate(clarity = paste0(clarity, 'dsdsds lalalala dsds')) %>% 
-  fun_plot.lollipop(aes(
-    x = clarity
-    , y = price
-    # , color = clarity
-    , label = dollar(price,.01)
-  )
-  , .fun_format.y = label_dollar(.01)
-  )
-
-diamonds %>% 
-  fun_plot.density(aes(
-    x = price
-    , fill = clarity
-  )
-  , .sym_facets = clarity
-  , .int_facets = 4
-  , .reorder_fct = T
-  , .reorder_desc = T
-  , .dbl_limits.x = c(-1000,1000)
-  , .fun_format.x = dollar_format(accuracy = .01)
-  )
-
-
-diamonds %>%
-  group_by(cut, clarity) %>% 
-  summarise(price = mean(price)) %>%
-  ungroup() %>% 
-  fun_plot.heatmap(
-    aes(
-      x = cut
-      # , y = as.numeric(clarity)
-      , y = clarity
-      , fill = price
-      , label = dollar(price, accuracy = .01)
-    )
-    # , .sym_facets = c(cut, clarity)
-    , .coord_polar = F
-    , .reorder_fct = T
-    , .reorder_desc = T
-    , .reorder_fun = sum
-  )
+# # TEST --------------------------------------------------------------------
+# data("diamonds")
+# 
+# set.seed(123)
+# mat1 = rbind(cbind(matrix(rnorm(50*5, mean = 1), nr = 50), 
+#                    matrix(rnorm(50*5, mean = -1), nr = 50)),
+#              cbind(matrix(rnorm(50*5, mean = -1), nr = 50), 
+#                    matrix(rnorm(50*5, mean = 1), nr = 50))
+# )
+# rownames(mat1) = paste0("R", 1:100)
+# colnames(mat1) = paste0("C", 1:10)
+# mat1 = mat1[sample(100, 100), ] # randomly permute rows
+# split = sample(letters[1:5], 100, replace = TRUE)
+# split = factor(split, levels = letters[1:5])
+# col_fun1 <- colorRamp2(c(-2, 0, 2), c("red", "white", "blue"))
+# 
+# circos.clear()
+# 
+# circos.heatmap(
+#   mat = mat1
+#   # , split = split
+#   , col = col_fun1
+# )
+# 
+# tibble(
+#   a = LETTERS[1:5]
+#   , b = runif(5, 0, 100)
+#   , c = runif(5, 25, 50)
+#   # , d = runif(5, 0, 80)
+# ) %>%
+#   fun_plot.dumbbell(
+#     aes(
+#       y = a
+#       , x = b
+#       , xend = c
+#     )
+#     , .dbl_limits.x = c(0,100)
+#     , .reorder_fct = T
+#     , .labels = T
+#   )
+# 
+# diamonds %>%
+#   group_by(clarity) %>% 
+#   summarise(price = mean(price)) %>% 
+#   mutate(clarity = paste0(clarity, 'dsdsds lalalala dsds')) %>% 
+#   fun_plot.lollipop(aes(
+#     x = clarity
+#     , y = price
+#     # , color = clarity
+#     , label = dollar(price,.01)
+#   )
+#   , .fun_format.y = label_dollar(.01)
+#   )
+# 
+# diamonds %>% 
+#   fun_plot.density(aes(
+#     x = price
+#     , fill = clarity
+#   )
+#   , .sym_facets = clarity
+#   , .int_facets = 4
+#   , .reorder_fct = T
+#   , .reorder_desc = T
+#   , .dbl_limits.x = c(-1000,1000)
+#   , .fun_format.x = dollar_format(accuracy = .01)
+#   )
+# 
+# 
+# diamonds %>%
+#   group_by(cut, clarity) %>% 
+#   summarise(price = mean(price)) %>%
+#   ungroup() %>% 
+#   fun_plot.heatmap(
+#     aes(
+#       x = cut
+#       # , y = as.numeric(clarity)
+#       , y = clarity
+#       , fill = price
+#       , label = dollar(price, accuracy = .01)
+#     )
+#     # , .sym_facets = c(cut, clarity)
+#     , .coord_polar = F
+#     , .reorder_fct = T
+#     , .reorder_desc = T
+#     , .reorder_fun = sum
+#   )

@@ -24,6 +24,9 @@ library(ComplexHeatmap)
 # lapply(pkg, function(x)
 #   {citation(package = x)})
 
+# WORKING DIRECTORY -------------------------------------------------------
+setwd('C:/Users/Cao/Documents/Github/Atlas-Research')
+
 # # [TO DO] FONTS -------------------------------------------------------------------
 # font_import(prompt = F)
 # loadfonts(device = 'win')
@@ -49,8 +52,8 @@ df_occupations %>%
   ) -> df_occupations
 
 # # Sample to speed testing
-# df_occupations %>% 
-#   sample_n(50) -> df_occupations
+# df_occupations %>%
+#   sample_n(30) -> df_occupations
 
 # REORDER ROWS AND COLS TO LOOK LIKE ATLAS LOGO ---------------------------
 # Cols
@@ -91,6 +94,7 @@ df_occupations %>%
 # int_track.size <- 0.125
 # int_track.size <- 0.25
 int_track.size <- 0.2
+# int_track.size <- 0.5
 
 # LIST OF COLORS ------------------------------------------------------------------
 colorRamp2(
@@ -110,15 +114,40 @@ circos.clear()
 
 circos.par(
   # start.degree = - (45 + 90)
-  start.degree = - 120
+  start.degree = 180
+  # start.degree = - 120
+  # start.degree = - 90
   , gap.degree = 0
 )
+
+png(
+  'Logo_Heatmap.png'
+  , type = 'cairo'
+  , bg = 'transparent'
+  # , width = 1920
+  , width = 500 #465
+  , height = 500 #225
+  # , width = 1080
+  # , height = 1080
+  # , units = 'px'
+  , units = 'mm'
+  , res = 1500
+)
+
+# pdf(
+#   'Logo_Heatmap.pdf'
+#   , bg = 'transparent'
+#   # , width = 1920
+#   , width = 500
+#   , height = 500
+# )
 
 # Circular heatmap 
 circos.heatmap(
   mat = mtx_occupations
   , col = fun_colors
   , track.height = int_track.size
+  # , split = seq(1, nrow(mtx_occupations))
   # , rownames.side = 'outside'
   # , cell.border = '#FFFFFF'
   # , cell.border = '#212121'
@@ -131,3 +160,6 @@ circos.heatmap(
   # , cell.lwd = .0625
   , cluster = F
 )
+
+dev.off()
+  
