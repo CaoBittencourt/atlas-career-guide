@@ -19,7 +19,10 @@ lapply(pkg, function(x)
 source('C:/Users/Cao/Documents/Github/Atlas-Research/Plotting Functions/Auto_plots.R')
 
 # DATA --------------------------------------------------------------------
+# Occupations data frame
 df_occupations <- readr::read_csv('https://docs.google.com/spreadsheets/d/e/2PACX-1vSphzWoCxoNaiaJcQUWKCMqUAT041Q8UqUgM7rSzIwYZb7FhttKJwNgtrFf-r7EgzXHFom4UjLl2ltk/pub?gid=563902602&single=true&output=csv')
+
+# Employed workers data frame
 
 # Select only necessary variables
 df_occupations %>%
@@ -35,9 +38,9 @@ df_occupations %>%
 
 # POPULATION-WEIGHTED DATA FRAME ------------------------------------------
 df_occupations %>% 
-  mutate(work.force = work.force / pmin(work.force, na.rm = T)) %>% 
+  mutate(workers = work.force / pmin(workers, na.rm = T)) %>% 
   group_by(occupation) %>% 
-  slice(1:work.force)
+  slice(1:workers)
 
 # -------- INTRODUCTION TO CAPITAL FLEXIBILITY ------------------------------
 # QUIZ: WHICH ARE THE MOST FLEXIBLE ATTRIBUTES? --------------------------
