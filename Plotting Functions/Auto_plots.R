@@ -1411,16 +1411,19 @@ fun_plot.line <- function(
   , .list_legend = list()
   
   # Axes
-  , .fun_axis.x = scale_x_discrete
+  , .fun_axis.x = scale_x_continuous
   , .fun_axis.y = scale_y_continuous
-  , .list_axis.x.args = list()
+  , .list_axis.x.args = list(
+    breaks = breaks_extended(5)
+  )
   , .list_axis.y.args = list(
     breaks = breaks_extended(5)
   )
-  , .fun_format.x = function(x){str_wrap(x,10)}
+  , .fun_format.x = label_number(accuracy = .01)
   , .fun_format.y = label_number(accuracy = .01)
   
   # Coordinates
+  , .dbl_limits.x = NULL
   , .dbl_limits.y = NULL
   , .coord_flip = F
   , .coord_polar = F
@@ -1456,18 +1459,6 @@ fun_plot.line <- function(
   ) -> plt_facets
   
   # Reordering
-  if(.reorder_fct){
-    
-    fun_reorder(
-      .df_data = .df_data
-      , .enq_var.fct = aes_mapping$x
-      , .enq_var.dbl = aes_mapping$y
-      , .fun_ord = .reorder_fun
-      , .desc = .reorder_desc
-    ) -> .df_data
-    
-  }
-  
   if(.reorder_fct & length(plt_facets)){
     
     fun_reorder(
@@ -1502,7 +1493,8 @@ fun_plot.line <- function(
   
   # Coordinates
   fun_coordinates(
-    .dbl_limits.y = .dbl_limits.y
+    .dbl_limits.x = .dbl_limits.x
+    , .dbl_limits.y = .dbl_limits.y
     , .coord_flip = .coord_flip
     , .coord_polar = .coord_polar
   ) -> plt_coord
