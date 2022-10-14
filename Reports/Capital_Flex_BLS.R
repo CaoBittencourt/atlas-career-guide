@@ -213,7 +213,7 @@ df_occupations.kflex2 %>%
   , .reorder_fct = T
   , .fun_axis.y = scale_y_continuous
   , .list_axis.y.args = list(
-    limits = c(-0.5,1.1)
+    limits = c(-0.55,1.1)
   )
   , .theme = ggridges::theme_ridges() + 
     theme(
@@ -246,7 +246,7 @@ df_occupations.kflex2 %>%
     }) + 
   annotate(
     x = 1
-    , y = -.5
+    , y = -.55
     , label = str_wrap(
       'HALF OF ALL PROFESSIONS IS COMMON SENSE!'
       , width = 20
