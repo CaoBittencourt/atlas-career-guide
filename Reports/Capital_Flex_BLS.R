@@ -91,7 +91,7 @@ df_kflex.long %>%
     , label = str_wrap(
       'Capital Flexibility is normally distributed. 
       This means that most values concentrate in the middle of the Capital Flexibility bell curve.
-      Thus, attributes have a reasonable degree of carryover to different professions.'
+      Thus, attributes have a fair degree of transferability to different professions.'
       , width = 28
       )
     , fontface = 'plain'
@@ -123,7 +123,7 @@ df_kflex.long2 %>%
   , .reorder_fct = T
   , .fun_axis.y = scale_y_continuous
   , .list_axis.y.args = list(
-    limits = c(-0.5,1.1)
+    limits = c(-0.55,1.1)
   )
   , .theme = ggridges::theme_ridges() + 
     theme(
@@ -156,9 +156,9 @@ df_kflex.long2 %>%
     }) + 
   annotate(
     x = 1
-    , y = -.5
+    , y = -.55
     , label = str_wrap(
-      'Many skills have a fair degree of carryover to other activities.'
+      'Many skills have reasonable carryover to other activities.'
       , width = 20
     ) 
     , geom = 'text'
@@ -248,7 +248,7 @@ df_occupations.kflex2 %>%
     x = 1
     , y = -.5
     , label = str_wrap(
-      'HALF OF ALL PROFESSIONS ARE COMMON SENSE!'
+      'HALF OF ALL PROFESSIONS IS COMMON SENSE!'
       , width = 20
     ) 
     , geom = 'text'
