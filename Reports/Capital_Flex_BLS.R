@@ -16,104 +16,20 @@ lapply(pkg, function(x)
 # KFLEX FUNCTION ------------------------------------------------------
 source('C:/Users/Cao/Documents/Github/Atlas-Research/Functions/Capital_Flexibility.R')
 
+# PLOTTING FUNCTIONS ------------------------------------------------------
+source('C:/Users/Cao/Documents/Github/Atlas-Research/Functions/Auto_plots.R')
+
 # DATA --------------------------------------------------------------------
-# Occupations data frame
-df_occupations <- readr::read_csv('https://docs.google.com/spreadsheets/d/e/2PACX-1vSphzWoCxoNaiaJcQUWKCMqUAT041Q8UqUgM7rSzIwYZb7FhttKJwNgtrFf-r7EgzXHFom4UjLl2ltk/pub?gid=563902602&single=true&output=csv')
-
-# # Employed workers data frame
-# df_workers <- readr::read_csv('C:/Users/Cao/Documents/Github/Atlas-Research/Atlas_database.csv')
-
-# Select only necessary variables
-df_occupations %>%
-  select(
-    occupation
-    , ends_with('.l')
-  ) %>%
-  mutate(
-    across(
-      .cols = ends_with('.l')
-      , .fns = function(x){x/100}
-    )
-  ) -> df_occupations
-
-# df_workers %>% view()
-#   select(
-#     title
-#     , quick_facts.qf_number_of_jobs.value
-#   ) %>% 
-#   rename(
-#     occupation = title
-#     , workers = quick_facts.qf_number_of_jobs.value
-#   ) -> df_workers
-#   
-#   
-# df_workers %>% 
-#   filter(str_detect(tolower(title), 'agricult'))
-# 
-# df_workers %>% 
-#   group_by(occupation) %>% 
-#   tally() %>% 
-#   arrange(desc(n)) -> dsds
-# 
-# df_occupations %>% 
-#   group_by(occupation) %>% 
-#   tally() -> dsds
-# 
-# all(dsds$n == 1)
-
-# # DATA --------------------------------------------------------------------
-# # Occupations data frame
-# df_occupations <- readr::read_csv('https://docs.google.com/spreadsheets/d/e/2PACX-1vSphzWoCxoNaiaJcQUWKCMqUAT041Q8UqUgM7rSzIwYZb7FhttKJwNgtrFf-r7EgzXHFom4UjLl2ltk/pub?gid=563902602&single=true&output=csv')
-# 
-# # Labels character vector
-# chr_labels <- scan(
-#   url('https://docs.google.com/spreadsheets/d/e/2PACX-1vSphzWoCxoNaiaJcQUWKCMqUAT041Q8UqUgM7rSzIwYZb7FhttKJwNgtrFf-r7EgzXHFom4UjLl2ltk/pub?gid=1223197022&single=true&output=csv')
-#   , sep=','
-#   , what = ''
-#   , quiet = T
-# )
-# 
-# # Apply labels
-# df_occupations %>%
-#   labelled::set_variable_labels(
-#     .labels = chr_labels
-#   ) -> df_occupations
-# 
-# # Only numeric variables
-# df_occupations %>%
-#   select(
-#     occupation
-#     , where(function(x){str_detect(attributes(x)$label, '_skill')})
-#     , where(function(x){str_detect(attributes(x)$label, 'abilities.')})
-#     , where(function(x){str_detect(attributes(x)$label, 'knowledge.')})
-#     , where(function(x){str_detect(attributes(x)$label, 'work_context.')})
-#     , where(function(x){str_detect(attributes(x)$label, 'work_activities.')})
-#     , -ends_with('.i') #Using recommended levels
-#     # , -ends_with('.l') #Using importance levels
-#   ) %>% 
-#   mutate(#0 to 100 => 0 to 1 (helps calculate similarity later on)
-#     across(
-#       .cols = where(is.numeric)
-#       ,.fns = function(x){x/100}
-#     )
-#   ) -> df_occupations
-
-# # POPULATION-WEIGHTED DATA FRAME ------------------------------------------
-# df_occupations %>% 
-#   left_join(df_workers)
-# 
-#   mutate(workers = work.force / pmin(workers, na.rm = T)) %>% 
-#   group_by(occupation) %>% 
-#   slice(1:workers)
+source('C:/Users/Cao/Documents/Github/Atlas-Research/Data/df_occupations.R')
 
 # -------- CAPITAL FLEXIBLITY ---------------------------------------------
 # APPLY FUNCTION -----------------------------------------------------------
-df_occupations %>%
+df_occupations.pop %>% 
   summarise(
     across(
-      .cols = where(is.numeric)
+      .cols = ends_with('.l')
       ,.fns = fun_capital.flex
-    )) %>% 
+    )) %>%
   pivot_longer(
     cols = everything()
     , names_to = 'attribute'
@@ -121,10 +37,9 @@ df_occupations %>%
   ) -> df_kflex.long
 
 # FLEXIBLE CAPITAL PER OCCUPATION -----------------------------------------
-# df_occupations.pct %>%
 df_occupations %>%
   pivot_longer(
-    cols = where(is.numeric)
+    cols = ends_with('.l')
     , names_to = 'attribute'
     , values_to = 'level'
   ) %>% 
@@ -135,12 +50,230 @@ df_occupations %>%
     occupation
   ) %>% 
   summarise(
-    capital.flex.pct = sum(capital.flex * level) / sum(capital.flex)
-    # capital.flex.pct = sum(capital.flex * level) / sum(level)
+    capital.flex.pct = sum(capital.flex * level) / sum(level)
   ) %>% 
   full_join(
     df_occupations
   ) %>% 
   arrange(
     desc(capital.flex.pct)
-    ) -> df_occupations.kflex
+  ) -> df_occupations.kflex
+
+# -------- VISUALIZATIONS -------------------------------------------------
+# CAPITAL FLEXIBILITY DISTRIBUTION -----------------------------------------------------
+# Density
+df_kflex.long %>%
+  fun_plot.histogram(aes(
+    x = capital.flex
+    , y = ..density..
+  )
+  , .list_labs = list(
+    title = str_to_title('distribution of capital flexibility')
+    , subtitle = str_to_title('understanding the degree of transferability of professional attributes')
+    , x = str_to_title('capital flexiblity score')
+    , y = str_to_title('density')
+  )
+  , .dbl_limits.x = c(0,1)
+  ) + 
+  stat_function(
+    fun = dnorm
+    , args = list(
+      mean = mean(df_kflex.long$capital.flex)
+      , sd = sd(df_kflex.long$capital.flex)
+    )
+    , col = '#212121'
+    , size = 1.5
+  ) +
+  annotate(
+    geom = 'text'
+    , x = median(c(0.75, 1))
+    , y = 2.8
+    , label = str_wrap(
+      'Capital Flexibility is normally distributed. 
+      This means that most values concentrate in the middle of the Capital Flexibility bell curve.
+      Thus, attributes have a reasonable degree of carryover to different professions.'
+      , width = 28
+      )
+    , fontface = 'plain'
+  )
+  
+# CAPITAL FLEXIBILITY OF EACH ATTRIBUTE ------------------------------------
+# Backup
+df_kflex.long2 <- df_kflex.long
+
+# Add lines to the initial dataset
+empty_bar <- 27
+to_add <- matrix(NA, empty_bar, ncol(df_kflex.long))
+colnames(to_add) <- colnames(df_kflex.long)
+df_kflex.long2 <- rbind(to_add, df_kflex.long2)
+df_kflex.long2$id <- factor(seq(1, nrow(df_kflex.long2)))
+
+# Circular bar plot
+df_kflex.long2 %>% 
+  fun_plot.bar(aes(
+    # x = occupation
+    x = id
+    , y = capital.flex
+  )
+  , .list_labs = list(
+    title = str_to_title('capital flexibility by attribute')
+    , subtitle = str_to_title("how much of each attribute is transferable across occupations")
+  )
+  , .coord_polar = T
+  , .reorder_fct = T
+  , .fun_axis.y = scale_y_continuous
+  , .list_axis.y.args = list(
+    limits = c(-0.5,1.1)
+  )
+  , .theme = ggridges::theme_ridges() + 
+    theme(
+      plot.title = element_text(hjust = 0.5)
+      , axis.title = element_blank()
+      , axis.text = element_blank()
+      , axis.ticks = element_blank()
+      , panel.grid = element_blank()
+      , plot.subtitle = element_text(hjust = 0.5)
+    ) 
+  ) + 
+  coord_polar(
+    # start = -6.12
+    start = -12.21
+  ) +
+  map(
+    seq(0,1,0.25)
+    , function(y){
+      
+      annotate(
+        x = '14'
+        , y = y + 0.1
+        , label = percent(y) 
+        , geom = 'text'
+        , color = '#212121'
+        , fontface = 'bold'
+        , size = 3
+      )
+      
+    }) + 
+  annotate(
+    x = 1
+    , y = -.5
+    , label = str_wrap(
+      'Many skills have a fair degree of carryover to other activities.'
+      , width = 20
+    ) 
+    , geom = 'text'
+    , color = '#212121'
+    , fontface = 'bold'
+    , size = 3.33
+  ) -> plt_attributes.kflex
+
+plt_attributes.kflex$layers <- c(
+  geom_hline(
+    yintercept = c(0, 0.25, 0.5, 0.75)
+    , color = '#D4D5D8'
+    , size = 0.5
+  )
+  , plt_attributes.kflex$layers
+)
+
+plt_attributes.kflex$layers <- c(
+  geom_hline(
+    yintercept = 1
+    , color = '#D4D5D8'
+    , size = 2
+  )
+  , plt_attributes.kflex$layers
+)
+
+plt_attributes.kflex
+
+# CAPITAL FLEXIBILITY IN EACH OCCUPATION ------------------------------------
+# Backup
+df_occupations.kflex2 <- df_occupations.kflex
+
+# Add lines to the initial dataset
+empty_bar <- 51
+to_add <- matrix(NA, empty_bar, ncol(df_occupations.kflex))
+colnames(to_add) <- colnames(df_occupations.kflex)
+df_occupations.kflex2 <- rbind(to_add, df_occupations.kflex2)
+df_occupations.kflex2$id <- factor(seq(1, nrow(df_occupations.kflex2)))
+
+# Circular bar plot
+df_occupations.kflex2 %>%
+  fun_plot.bar(aes(
+    # x = occupation
+    x = id
+    , y = capital.flex.pct
+  )
+  , .list_labs = list(
+    title = str_to_title('capital flexibility by occupation')
+    , subtitle = str_to_title("how much of each occupation's requirements is transferable to other occupations")
+  )
+  , .coord_polar = T
+  , .reorder_fct = T
+  , .fun_axis.y = scale_y_continuous
+  , .list_axis.y.args = list(
+    limits = c(-0.5,1.1)
+  )
+  , .theme = ggridges::theme_ridges() + 
+    theme(
+      plot.title = element_text(hjust = 0.5)
+      , axis.title = element_blank()
+      , axis.text = element_blank()
+      , axis.ticks = element_blank()
+      , panel.grid = element_blank()
+      , plot.subtitle = element_text(hjust = 0.5)
+    ) 
+  ) + 
+  coord_polar(
+    # start = -6.12
+    start = -6.1
+  ) +
+  map(
+    seq(0,1,0.25)
+    , function(y){
+      
+      annotate(
+        x = '26'
+        , y = y + 0.1
+        , label = percent(y)
+        , geom = 'text'
+        , color = '#212121'
+        , fontface = 'bold'
+        , size = 3
+      )
+      
+    }) + 
+  annotate(
+    x = 1
+    , y = -.5
+    , label = str_wrap(
+      'HALF OF ALL PROFESSIONS ARE COMMON SENSE!'
+      , width = 20
+    ) 
+    , geom = 'text'
+    , color = '#212121'
+    , fontface = 'bold'
+    , size = 3.33
+  ) -> plt_occupations.kflex
+
+plt_occupations.kflex$layers <- c(
+  geom_hline(
+    yintercept = c(0, 0.25, 0.5, 0.75)
+    , color = '#D4D5D8'
+    , size = 0.5
+  )
+  , plt_occupations.kflex$layers
+)
+
+plt_occupations.kflex$layers <- c(
+  geom_hline(
+    yintercept = 1
+    , color = '#D4D5D8'
+    , size = 2
+  )
+  , plt_occupations.kflex$layers
+)
+
+
+plt_occupations.kflex

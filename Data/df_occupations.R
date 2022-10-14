@@ -74,35 +74,16 @@ if(ncol(df_employment) == length(chr_employment.labels)){
 # Select only necessary variables
 df_occupations %>% 
   mutate(code = substr(code, 1, 7)) %>% 
-  rename_with(
-    .cols = where(function(x){
-      str_detect(
-        attributes(x)$label
-        , 'work_context.'
-      )})
-      , .fn = function(x){paste0(x, '.l')}
-  )
-
   select(
     occupation
     , code
     , entry_level_education
     , annual_wage_2021
     , ends_with('.l') #Using recommended levels
-    | where(function(x){
-      str_detect(
-        attributes(x)$label
-        , 'work_context.'
-      )})
   ) %>% 
   mutate(
     across(
       .cols = ends_with('.l') #Using recommended levels
-      | where(function(x){
-        str_detect(
-          attributes(x)$label
-          , 'work_context.'
-        )})
       , .fns = function(x){x/100}
     )
   ) -> df_occupations
@@ -145,58 +126,12 @@ df_employment %>%
 df_occupations %>% 
   drop_na() %>% 
   group_by(code) %>% 
-  mutate(employment = employment / n()) %>% 
+  mutate(employment2 = employment / n()) %>% 
   ungroup() %>%
   mutate(
-    employment = employment / min(employment, na.rm = T)
-    , employment = round(employment)
+    employment2 = employment2 / min(employment2, na.rm = T)
+    , employment2 = round(employment2)
     ) %>% 
   group_by(occupation) %>%
-  slice(rep(1:n(), first(employment))) %>% 
-  ungroup() -> lalala
-
-# APPLY FUNCTION -----------------------------------------------------------
-lalala %>% 
-  summarise(
-  # mutate(
-    across(
-      .cols = where(
-        ends_with('.l') #Using recommended levels
-        | function(x){
-          str_detect(
-            attributes(x)$label
-            , 'work_context.'
-          )}
-      ) 
-      ,.fns = fun_capital.flex
-    )) %>% 
-  pivot_longer(
-    cols = everything()
-    , names_to = 'attribute'
-    , values_to = 'capital.flex'
-  ) -> df_kflex.long
-
-# FLEXIBLE CAPITAL PER OCCUPATION -----------------------------------------
-lalala %>%
-  pivot_longer(
-    cols = where(is.numeric)
-    , names_to = 'attribute'
-    , values_to = 'level'
-  ) %>% 
-  full_join(
-    df_kflex.long
-  ) %>% 
-  group_by(
-    occupation
-  ) %>% 
-  summarise(
-    capital.flex.pct = sum(capital.flex * level) / sum(capital.flex)
-    # capital.flex.pct = sum(capital.flex * level) / sum(level)
-  ) %>% 
-  full_join(
-    df_occupations
-  ) %>% 
-  arrange(
-    desc(capital.flex.pct)
-  ) -> df_occupations.kflex
-  
+  slice(rep(1:n(), first(employment2))) %>% 
+  ungroup() -> df_occupations.pop

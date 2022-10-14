@@ -46,10 +46,7 @@ df_occupations %>%
     occupation
   ) %>% 
   mutate(
-    capital.cost.12m = annual_wage_2021 * (level / sum(level))
+    capital.cost.12m = annual_wage_2021 * (level  / sum(level))
     , capital.cost.m = capital.cost.12m / 12
-  ) %>% 
-  select(-c(
-    annual_wage_2021
-    , level
-    )) -> df_kcost.long
+  ) %>%
+  ungroup() -> df_kcost.long
