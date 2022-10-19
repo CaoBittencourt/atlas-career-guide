@@ -2,6 +2,7 @@
 # PACKAGES ----------------------------------------------------------------
 pkg <- c(
   'tidyverse' #Data wrangling
+  , 'openxlsx' #Export excel
 )
 
 # Activate / install packages
@@ -51,10 +52,10 @@ df_occupations %>%
   ) %>% 
   summarise(
     capital.flex.pct = sum(capital.flex * level) / sum(level)
-  ) %>% 
-  full_join(
-    df_occupations
-  ) %>% 
+  ) %>% view
+full_join(
+  df_occupations
+) %>% 
   arrange(
     desc(capital.flex.pct)
   ) -> df_occupations.kflex
@@ -93,10 +94,10 @@ df_kflex.long %>%
       This means that most values concentrate in the middle of the Capital Flexibility bell curve.
       Thus, attributes have a fair degree of transferability to different professions.'
       , width = 28
-      )
+    )
     , fontface = 'plain'
   )
-  
+
 # CAPITAL FLEXIBILITY OF EACH ATTRIBUTE ------------------------------------
 # Backup
 df_kflex.long2 <- df_kflex.long
@@ -277,3 +278,32 @@ plt_occupations.kflex$layers <- c(
 
 
 plt_occupations.kflex
+
+# -------- EXPORT DATA ----------------------------------------------------
+# # EXCEL -------------------------------------------------------------------
+# # Attributes
+# df_kflex.long %>%
+#   arrange(desc(
+#     capital.flex
+#   )) %>% 
+#   write.xlsx(
+#     'df_attributes.kflex.xlsx'
+#   )
+# 
+# # Occupations
+# df_occupations.kflex %>%
+#   select(
+#     occupation
+#     , code
+#     , code.variants
+#     , employment
+#     , entry_level_education
+#     , annual_wage_2021
+#     , capital.flex.pct
+#   ) %>% 
+#   arrange(desc(
+#     capital.flex.pct
+#   )) %>% 
+#   write.xlsx(
+#     'df_occupations.kflex.xlsx'
+#   )
