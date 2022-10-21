@@ -68,8 +68,16 @@ fun_factor.scores <- function(
         , items = .df_data.numeric
         , totals = .lgc_totals #Average scores
       ) %>% 
-        as_tibble() %>% 
-        colMeans()
+        as_tibble() -> df_temp
+      
+      if(nrow(.df_data.numeric) == 1){
+        
+        df_temp %>% 
+          colMeans() -> df_temp
+        
+      }
+      
+      return(df_temp)
       
     } 
   ) %>% 

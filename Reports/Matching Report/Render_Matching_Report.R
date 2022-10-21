@@ -24,18 +24,21 @@ if(!tinytex::is_tinytex()){
 #   {citation(package = x)})
 
 # FUNCTIONS ---------------------------------------------------------------
+# KNN matching
 source('C:/Users/Cao/Documents/Github/Atlas-Research/Functions/KNN_Matching.R')
+# Factor scores
 source('C:/Users/Cao/Documents/Github/Atlas-Research/Functions/Factor_Scores.R')
+# Automated plotting
+source('C:/Users/Cao/Documents/Github/Atlas-Research/Functions/Auto_plots.R')
 
 # PARAMETERS --------------------------------------------------------------
 # Selected respondent
-# chr_user <- 'Martijn'
-chr_user <- 'Cao'
+chr_user <- 'Martijn'
+# chr_user <- 'Cao'
 # chr_user <- 'Gabriel'
 
 # KNN parameters
 # dbl_threshold <- 0.33
-# dbl_threshold <- 0
 dbl_threshold <- 0.17
 
 # DATA --------------------------------------------------------------------
@@ -79,31 +82,7 @@ df_occupations %>%
                , '7' = 1.00
         )}
     )
-  # ) -> df_occupations.test2
-  ) -> df_occupations.test
-
-df_occupations.test %>%
-  slice(1) %>% 
-  select(all_of(
-    list_factors %>%
-      flatten() %>%
-      flatten_chr()
-  )) %>% 
-  mutate(
-    across(
-      .cols = everything()
-      ,.fns = function(x){
-        recode(x
-               , '1' = 0.00
-               , '2' = 0.17
-               , '3' = 0.33
-               , '4' = 0.50
-               , '5' = 0.67
-               , '6' = 0.83
-               , '7' = 1.00
-        )}
-    )
-  )
+  ) -> df_occupations
 
 # EFA-REDUCED QUERY VECTOR -----------------------------------------------
 # Select user
@@ -127,7 +106,7 @@ df_input %>%
           flatten_chr()
       )
       , .fns = function(x){
-        recode(x
+        recode((x + 2)
                , '1' = 0.00
                , '2' = 0.17
                , '3' = 0.33
@@ -142,7 +121,7 @@ df_input %>%
 # ------- RESULTS --------------------------------------------------------
 # KNN MATCHING ---------------------------------------------------------------
 fun_KNN.matching(
-  .df_data.numeric = df_occupations.test
+  .df_data.numeric = df_occupations
   , .vec_query.numeric = df_input
   , .int_k = nrow(df_occupations)
   , .imput.over_qualification = T
@@ -150,100 +129,352 @@ fun_KNN.matching(
   , .dbl_decimals = 4
 ) -> df_KNN.output
 
-df_KNN.output %>% 
-  # df_occupations %>%
-  filter(
-    entry_level_education %in% c(
-      "Bachelor's degree"
-      , "Doctoral or professional degree"
-      # , "Associate's degree"i
-      , "Master's degree"
-    )
-  ) %>%
-  View()
+# df_KNN.output %>%
+#   # df_occupations %>%
+#   filter(
+#     entry_level_education %in% c(
+#       "Bachelor's degree"
+#       , "Doctoral or professional degree"
+#       # , "Associate's degree"i
+#       , "Master's degree"
+#     )
+#   ) %>%
+#   View()
 
 # FACTOR SCORES (USER) -----------------------------------------------------------
 fun_factor.scores(
   .df_data.numeric = df_input
   , .list_factor.keys = list_factors
+  , .lgc_pivot.long = T
 ) -> list_factor.scores
 
-
-
-
-lapply(
-  list_factors
-  , function(scales){
-    
-    psych::scoreVeryFast(
-      keys = scales
-      , items = df_input 
-      , totals = F #Average scores
-    ) %>% 
-      as_tibble() %>% 
-      colMeans()
-    
-  } 
-) %>% 
-  flatten_df() -> df_factor.scores
-
-df_input %>% 
-  pivot_longer(
-    cols = everything()
-    , names_to = 'item'
-    , values_to = 'score'
-  ) %>% 
-  full_join(
-    df_factors.names
-  ) -> df_input.long
-
-df_factor.scores %>% 
-  pivot_longer(
-    cols = everything()
-    , names_to = 'factor'
-    , values_to = 'factor.score'
-  ) %>% 
-  full_join(
-    df_input.long
-  ) -> df_input.long
-
 # # FACTOR SCORES (POPULATION) -----------------------------------------------------------
-# lapply(
-#   list_factors
-#   , function(scales){
-# 
-#     psych::scoreVeryFast(
-#       keys = scales
-#       , items = df_occupations.pop
-#       , totals = F #Average scores
-#     ) %>%
-#       as_tibble() %>%
-#       colMeans()
-# 
-#   }
-# ) %>%
-#   flatten_df() -> df_occupations.scores
-# 
-# df_occupations.pop %>%
-#   pivot_longer(
-#     cols = everything()
-#     , names_to = 'item'
-#     , values_to = 'score'
-#   ) %>%
-#   full_join(
-#     df_factors.names
-#   ) -> df_input.long
-# 
-# df_factor.scores %>%
-#   pivot_longer(
-#     cols = everything()
-#     , names_to = 'factor'
-#     , values_to = 'factor.score'
-#   ) %>%
-#   full_join(
-#     df_input.long
-#   ) -> df_input.long
+# fun_factor.scores(
+#   .df_data.numeric = df_occupations.pop
+#   , .list_factor.keys = list_factors
+#   , .lgc_pivot.long = F
+# ) -> list_factor.scores.pop
 
+# -------- PLOTS ----------------------------------------------------------
+# [LINE CHART] PROFESSIONAL COMPATIBILITY CURVE -------------------------------------------------------------------
+df_KNN.output %>% 
+  arrange(similarity) %>% 
+  mutate(n = row_number()) %>% 
+  fun_plot.line(aes(
+    x = n
+    , y = similarity
+  )
+  , .dbl_limits.y = c(0,1)
+  , .fun_format.y = label_percent()
+  , .reorder_fct = F
+  , .reorder_desc = F
+  # , .reorder_fun = max
+  , .theme = ggridges::theme_ridges(center_axis_labels = T) +
+    theme(axis.text.x = element_blank())
+  , .list_labs = list(
+    title = str_to_title('professional compatibility curve')
+    , subtitle = str_to_title('these are your professional matches ranked lowest to highest:')
+    , x = str_to_title('ranking')
+    , y = str_to_title('professional compatibility')
+  )) -> plt_line.rank
+
+# [LOLLIPOP CHART] TOP 3, BOTTOM 3 AND 6 SAMPLE MATCHES -----------------------------
+df_KNN.output %>% 
+  mutate(n = row_number()) %>% 
+  filter(
+    n %in% c(1:3, (nrow(.) - 2):nrow(.))
+    | (#Get good matches with shorter names
+      str_length(occupation) < 40
+      & between(
+        similarity
+        , quantile(
+          similarity, probs = 0.2 
+        )
+        , quantile(
+          similarity, probs = 0.8
+        )
+    ))
+  ) %>% 
+  arrange(desc(similarity)) %>%
+  slice(
+    1:3 #Top 3 matches
+    , sample(4:(nrow(.) - 3), 6) #6 sample matches
+    , (nrow(.) - 2):nrow(.) #Bottom 3 matches
+  ) %>% 
+  fun_plot.lollipop(aes(
+    x = occupation
+    , y = similarity
+    , label = percent(similarity)
+  )
+  , .fun_format.x = function(x){str_wrap(x, width = 40)}
+  , .fun_format.y = label_percent()
+  , .dbl_limits.y = c(0,1)
+  , .list_labs = list(
+    title = str_to_title(glue('a sample of your {nrow(df_KNN.output)} professional matches'))
+    , subtitle = str_to_title('these are 10 of your career matches, including the top 3 and bottom 3:')
+    # Substitute caption for note in R Markdown later
+    , caption = 'To access your full professional matching report, visit https://www.go2atlas.com/ and become a member today.'
+    , x = str_to_title('factor score')
+    , y = str_to_title('professional compatibility')
+  )
+  ) -> plt_match.10
+
+# [DUMBBELL PLOT] USER VS TOP MATCH / BOTTOM MATCH ------------------------------------
+# Factor scores of top and bottom matches
+df_KNN.output %>%
+  slice(1, nrow(.)) -> df_matches.topbot
+
+df_matches.topbot %>%
+  pull(occupation) -> chr_matches.topbot
+
+df_matches.topbot %>%
+  fun_factor.scores(
+    .list_factor.keys = list_factors
+  ) %>%
+  first() %>%
+  mutate(
+    occupation = chr_matches.topbot
+    , .before = 1
+  ) %>%
+  # User, top match and bottom match data frame
+  bind_rows(
+    list_factor.scores$factor.scores %>%
+      mutate(
+        occupation = 'you'
+        , .before = 1
+      )
+  ) %>%
+  pivot_longer(
+    cols = -occupation
+    , names_to = 'factor'
+    , values_to = 'score'
+  ) %>%
+  pivot_wider(
+    id_cols = factor
+    , names_from = occupation
+    , values_from = score
+  ) %>%
+  rename(
+    top.match = 2
+    , bot.match = 3
+  ) -> df_dumbbell
+
+# Top match comparison
+df_dumbbell %>%
+  fun_plot.dumbbell(aes(
+    x = you
+    , xend = top.match
+    , y = factor
+  )
+  , .dbl_limits.x = c(0,1)
+  , .list_labs = list(
+    title = str_to_title('best professional match')
+    , subtitle = str_to_title(glue(
+      'your most compatible occupation is: {chr_matches.topbot[1]}.'
+      
+    ))
+    , x = str_to_title('factor score')
+    , y = NULL
+  )
+  ) -> plt_top.match
+
+# Bottom match comparison
+df_dumbbell %>%
+  fun_plot.dumbbell(aes(
+    x = you
+    , xend = bot.match
+    , y = factor
+  )
+  , .list_geom.param = list(
+    color = 'lightgrey'
+    , colour_x = '#182766'
+    , colour_xend = '#CE3527'
+    , size_x = 5.4
+    , size_xend = 5.4
+    , size = 2
+  )
+  , .list_labels1.param = list(
+    fontface = 'bold'
+    , color = '#182766'
+    , size = 3.33
+    , vjust = -1.5
+    , hjust = 0.5
+  )
+  , .list_labels2.param = list(
+    fontface = 'bold'
+    , color = '#CE3527'
+    , size = 3.33
+    , vjust = 2.25
+    , hjust = 0.5
+  )
+  , .dbl_limits.x = c(0,1)
+  , .list_labs = list(
+    title = str_to_title('worst professional match')
+    , subtitle = str_to_title(glue(
+      'your least compatible occupation is: {chr_matches.topbot[2]}.'
+    ))
+    , x = str_to_title('factor score')
+    , y = NULL
+  )
+  ) -> plt_bot.match
+
+# # [CIRCULAR BAR PLOT] MATCHING PERCENTAGES -----------------------------------------------------
+# # Empty columns
+# int_NA <- 51
+# mtx_NA <- matrix(NA, int_NA, ncol(df_KNN.output))
+# colnames(mtx_NA) <- colnames(df_KNN.output)
+# 
+# # Circular bar plot
+# mtx_NA %>% 
+#   rbind(df_KNN.output) %>%
+#   mutate(
+#     n = row_number()
+#     , n = factor(n)
+#   ) %>%
+#   fun_plot.bar(aes(
+#     x = n
+#     , y = similarity
+#     # , fill = similarity
+#   )
+#   # , .scale_colors = scale_fill_viridis()
+#   , .list_labs = list(
+#     title = str_to_title('Your career matches')
+#     , subtitle = str_to_title("how compatible are you with each occupation?")
+#   )
+#   , .coord_polar = T
+#   , .reorder_fct = T
+#   , .reorder_desc = T
+#   , .fun_axis.y = scale_y_continuous
+#   , .list_axis.y.args = list(
+#     limits = c(-0.55,1.1)
+#   )
+#   , .theme = ggridges::theme_ridges() + 
+#     theme(
+#       plot.title = element_text(hjust = 0.5)
+#       , axis.title = element_blank()
+#       , axis.text = element_blank()
+#       , axis.ticks = element_blank()
+#       , panel.grid = element_blank()
+#       , plot.subtitle = element_text(hjust = 0.5)
+#     ) 
+#   ) + 
+#   coord_polar(
+#     # start = -6.12
+#     start = -6.1
+#   ) +
+#   map(
+#     seq(0,1,0.25)
+#     , function(y){
+#       
+#       annotate(
+#         x = '26'
+#         , y = y + 0.1
+#         , label = percent(y)
+#         , geom = 'text'
+#         , color = '#212121'
+#         , fontface = 'bold'
+#         , size = 3
+#       )
+#       
+#     }) -> plt_match.polar
+# 
+# plt_match.polar$layers <- c(
+#   geom_hline(
+#     yintercept = c(0, 0.25, 0.5, 0.75)
+#     , color = '#D4D5D8'
+#     , size = 0.5
+#   )
+#   , plt_match.polar$layers
+# )
+# 
+# plt_match.polar$layers <- c(
+#   geom_hline(
+#     yintercept = 1
+#     , color = '#D4D5D8'
+#     , size = 2
+#   )
+#   , plt_match.polar$layers
+# )
+
+# # [DENSITY] SAMPLE DENSITY (TUTORIAL) -------------------------------------
+# map(
+#   df_occupations.pop %>% select(ends_with('.l'))
+#   , ~ fun_plot.density(
+#     .df_data = df_occupations.pop
+#     , .aes_mapping = aes(x = .x)
+#   )
+# ) -> list_densities
+# 
+# list_densities[1]
+# list_densities[2]
+# list_densities[3]
+# list_densities[4]
+# list_densities[5]
+# list_densities[6]
+# list_densities[7]
+# list_densities[8]
+# list_densities[9]
+# list_densities[10]
+# list_densities[11]
+# list_densities[12]
+# list_densities[13]
+# list_densities[14]
+# list_densities[15]
+# list_densities[16]
+# list_densities[17]
+# list_densities[18]
+# list_densities[19]
+# list_densities[20]
+# list_densities[21]
+# list_densities[22]
+# list_densities[23]
+# list_densities[24]
+# list_densities[25]
+# list_densities[26]
+# list_densities[27]
+# list_densities[28]
+# list_densities[29]
+# list_densities[30]
+# list_densities[31]
+# list_densities[32]
+# list_densities[33]
+# 
+# 
+# df_KNN.output %>%
+#   select(ends_with('.l')) %>%
+#   colnames() %>% 
+#   sample(1) -> chr_sample
+# 
+# df_input %>% 
+#   select(chr_sample) %>% 
+#   mutate(
+#     occupation = 'you'
+#     , .before = 1
+#   ) %>%
+#   bind_rows(
+#     df_occupations.pop %>%
+#       select(
+#         occupation
+#         , chr_sample
+#       )
+#   ) %>% 
+#   rename(value = 2) %>% 
+#   fun_plot.density(aes(
+#     x = value
+#   ))
+# 
+# 
+
+# [DENSITIES] DENSITIES FOR EACH ITEM -------------------------------------
+
+# RENDER PLOTS ------------------------------------------------------------
+plt_line.rank
+plt_match.polar
+plt_match.10
+plt_top.match
+plt_bot.match
+
+# -------- DYNAMIC TEXTS --------------------------------------------------
 # DYNAMIC TEXT ------------------------------------------------------------
 # Report Title
 chr_report.title <- glue('Professional Profile — {chr_user}')
@@ -252,25 +483,6 @@ chr_report.title <- glue('Professional Profile — {chr_user}')
 
 # Captions for dynamic reporting with R Markdown
 
-# PLOTS -------------------------------------------------------------------
-
-
-df_input.long %>% 
-  filter(
-    competency == 'Skills'
-  ) %>% 
-  ggplot(aes(
-    x = item
-    , y = score
-    , fill = factor
-  )) + 
-  geom_col() + 
-  facet_wrap(
-    facets = vars(factor)
-  ) + 
-  guides(
-    fill = F
-  )
 
 # RENDER R MARKDOWN REPORT --------------------------------------------------
 rmarkdown::render('C:/Users/Cao/Documents/Github/Atlas-Research/Reports/Factor_Scores_Report.Rmd')

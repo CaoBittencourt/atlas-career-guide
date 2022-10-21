@@ -1773,8 +1773,10 @@ fun_plot.lollipop <- function(
     fontface = 'bold'
     , color = '#3854FB'
     , size = 3.33
-    , vjust = -1.25
-    , hjust = -0.25
+    # , vjust = -1.25
+    , vjust = -1.5
+    # , hjust = -0.25
+    , hjust = -0.5
   )
   
   # Facets
