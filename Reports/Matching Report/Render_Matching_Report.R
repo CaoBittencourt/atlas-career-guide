@@ -30,16 +30,22 @@ source('C:/Users/Cao/Documents/Github/Atlas-Research/Functions/KNN_Matching.R')
 source('C:/Users/Cao/Documents/Github/Atlas-Research/Functions/Factor_Scores.R')
 # Automated plotting
 source('C:/Users/Cao/Documents/Github/Atlas-Research/Functions/Auto_plots.R')
+# Dynamic text
+source('C:/Users/Cao/Documents/Github/Atlas-Research/Functions/Dynamic_text.R')
+# Capital flexibility => Variance-adjusted skewness of professional compatibility curve
+source('C:/Users/Cao/Documents/Github/Atlas-Research/Functions/Capital_Flexibility.R')
 
 # PARAMETERS --------------------------------------------------------------
 # Selected respondent
-chr_user <- 'Martijn'
-# chr_user <- 'Cao'
-# chr_user <- 'Gabriel'
+# chr_text.user <- 'Martijn'
+chr_text.user <- 'Cao'
+# chr_text.user <- 'Gabriel'
 
 # KNN parameters
-# dbl_threshold <- 0.33
 dbl_threshold <- 0.17
+
+# Dynamic text parameters
+chr_text.blank <- '___'
 
 # DATA --------------------------------------------------------------------
 # EFA-REDUCED OCCUPATIONS DATA FRAME
@@ -50,6 +56,9 @@ source('C:/Users/Cao/Documents/Github/Atlas-Research/Data/df_occupations.pop.EFA
 
 # USER INPUT DATA FRAME
 df_input <- readr::read_csv('https://docs.google.com/spreadsheets/d/e/2PACX-1vSphzWoCxoNaiaJcQUWKCMqUAT041Q8UqUgM7rSzIwYZb7FhttKJwNgtrFf-r7EgzXHFom4UjLl2ltk/pub?gid=725827850&single=true&output=csv')
+
+# DEFAULT TEXTS FOR IMPUTATION
+source('C:/Users/Cao/Documents/Github/Atlas-Research/Reports/Matching Report/Default_texts.R')
 
 # ------- DATA -----------------------------------------------------------
 # EFA-REDUCED OCCUPATIONS DATA FRAME -----------------------------------------------
@@ -87,7 +96,7 @@ df_occupations %>%
 # EFA-REDUCED QUERY VECTOR -----------------------------------------------
 # Select user
 df_input %>% 
-  filter(Name == chr_user) -> df_input
+  filter(Name == chr_text.user) -> df_input
 
 # EFA-reduced data frame
 df_input %>% 
@@ -193,7 +202,7 @@ df_KNN.output %>%
         , quantile(
           similarity, probs = 0.8
         )
-    ))
+      ))
   ) %>% 
   arrange(desc(similarity)) %>%
   slice(
@@ -214,7 +223,7 @@ df_KNN.output %>%
     , subtitle = str_to_title('these are 10 of your career matches, including the top 3 and bottom 3:')
     # Substitute caption for note in R Markdown later
     , caption = 'To access your full professional matching report, visit https://www.go2atlas.com/ and become a member today.'
-    , x = str_to_title('factor score')
+    , x = NULL
     , y = str_to_title('professional compatibility')
   )
   ) -> plt_match.10
@@ -318,83 +327,83 @@ df_dumbbell %>%
   )
   ) -> plt_bot.match
 
-# # [CIRCULAR BAR PLOT] MATCHING PERCENTAGES -----------------------------------------------------
-# # Empty columns
-# int_NA <- 51
-# mtx_NA <- matrix(NA, int_NA, ncol(df_KNN.output))
-# colnames(mtx_NA) <- colnames(df_KNN.output)
-# 
-# # Circular bar plot
-# mtx_NA %>% 
-#   rbind(df_KNN.output) %>%
-#   mutate(
-#     n = row_number()
-#     , n = factor(n)
-#   ) %>%
-#   fun_plot.bar(aes(
-#     x = n
-#     , y = similarity
-#     # , fill = similarity
-#   )
-#   # , .scale_colors = scale_fill_viridis()
-#   , .list_labs = list(
-#     title = str_to_title('Your career matches')
-#     , subtitle = str_to_title("how compatible are you with each occupation?")
-#   )
-#   , .coord_polar = T
-#   , .reorder_fct = T
-#   , .reorder_desc = T
-#   , .fun_axis.y = scale_y_continuous
-#   , .list_axis.y.args = list(
-#     limits = c(-0.55,1.1)
-#   )
-#   , .theme = ggridges::theme_ridges() + 
-#     theme(
-#       plot.title = element_text(hjust = 0.5)
-#       , axis.title = element_blank()
-#       , axis.text = element_blank()
-#       , axis.ticks = element_blank()
-#       , panel.grid = element_blank()
-#       , plot.subtitle = element_text(hjust = 0.5)
-#     ) 
-#   ) + 
-#   coord_polar(
-#     # start = -6.12
-#     start = -6.1
-#   ) +
-#   map(
-#     seq(0,1,0.25)
-#     , function(y){
-#       
-#       annotate(
-#         x = '26'
-#         , y = y + 0.1
-#         , label = percent(y)
-#         , geom = 'text'
-#         , color = '#212121'
-#         , fontface = 'bold'
-#         , size = 3
-#       )
-#       
-#     }) -> plt_match.polar
-# 
-# plt_match.polar$layers <- c(
-#   geom_hline(
-#     yintercept = c(0, 0.25, 0.5, 0.75)
-#     , color = '#D4D5D8'
-#     , size = 0.5
-#   )
-#   , plt_match.polar$layers
-# )
-# 
-# plt_match.polar$layers <- c(
-#   geom_hline(
-#     yintercept = 1
-#     , color = '#D4D5D8'
-#     , size = 2
-#   )
-#   , plt_match.polar$layers
-# )
+# [CIRCULAR BAR PLOT] MATCHING PERCENTAGES -----------------------------------------------------
+# Empty columns
+int_NA <- 51
+mtx_NA <- matrix(NA, int_NA, ncol(df_KNN.output))
+colnames(mtx_NA) <- colnames(df_KNN.output)
+
+# Circular bar plot
+mtx_NA %>%
+  rbind(df_KNN.output) %>%
+  mutate(
+    n = row_number()
+    , n = factor(n)
+  ) %>%
+  fun_plot.bar(aes(
+    x = n
+    , y = similarity
+    # , fill = similarity
+  )
+  # , .scale_colors = scale_fill_viridis()
+  , .list_labs = list(
+    title = str_to_title('Your career matches')
+    , subtitle = str_to_title("how compatible are you with each occupation?")
+  )
+  , .coord_polar = T
+  , .reorder_fct = T
+  , .reorder_desc = T
+  , .fun_axis.y = scale_y_continuous
+  , .list_axis.y.args = list(
+    limits = c(-0.55,1.1)
+  )
+  , .theme = ggridges::theme_ridges() +
+    theme(
+      plot.title = element_text(hjust = 0.5)
+      , axis.title = element_blank()
+      , axis.text = element_blank()
+      , axis.ticks = element_blank()
+      , panel.grid = element_blank()
+      , plot.subtitle = element_text(hjust = 0.5)
+    )
+  ) +
+  coord_polar(
+    # start = -6.12
+    start = -6.1
+  ) +
+  map(
+    seq(0,1,0.25)
+    , function(y){
+      
+      annotate(
+        x = '26'
+        , y = y + 0.1
+        , label = percent(y)
+        , geom = 'text'
+        , color = '#212121'
+        , fontface = 'bold'
+        , size = 3
+      )
+      
+    }) -> plt_match.polar
+
+plt_match.polar$layers <- c(
+  geom_hline(
+    yintercept = c(0, 0.25, 0.5, 0.75)
+    , color = '#D4D5D8'
+    , size = 0.5
+  )
+  , plt_match.polar$layers
+)
+
+plt_match.polar$layers <- c(
+  geom_hline(
+    yintercept = 1
+    , color = '#D4D5D8'
+    , size = 2
+  )
+  , plt_match.polar$layers
+)
 
 # # [DENSITY] SAMPLE DENSITY (TUTORIAL) -------------------------------------
 # map(
@@ -442,11 +451,11 @@ df_dumbbell %>%
 # 
 # df_KNN.output %>%
 #   select(ends_with('.l')) %>%
-#   colnames() %>% 
+#   colnames() %>%
 #   sample(1) -> chr_sample
 # 
-# df_input %>% 
-#   select(chr_sample) %>% 
+# df_input %>%
+#   select(chr_sample) %>%
 #   mutate(
 #     occupation = 'you'
 #     , .before = 1
@@ -457,32 +466,146 @@ df_dumbbell %>%
 #         occupation
 #         , chr_sample
 #       )
-#   ) %>% 
-#   rename(value = 2) %>% 
+#   ) %>%
+#   rename(value = 2) %>%
 #   fun_plot.density(aes(
 #     x = value
 #   ))
 # 
 # 
+# 
+# # [DENSITIES] DENSITIES FOR EACH ITEM -------------------------------------
 
-# [DENSITIES] DENSITIES FOR EACH ITEM -------------------------------------
-
-# RENDER PLOTS ------------------------------------------------------------
-plt_line.rank
-plt_match.polar
-plt_match.10
-plt_top.match
-plt_bot.match
+# # RENDER PLOTS ------------------------------------------------------------
+# plt_line.rank
+# plt_match.polar
+# plt_match.10
+# plt_top.match
+# plt_bot.match
 
 # -------- DYNAMIC TEXTS --------------------------------------------------
-# DYNAMIC TEXT ------------------------------------------------------------
+# NUMBERS FOR DYNAMIC TEXTS -----------------------------------------------
+# Number of occupations
+int_n.occupations <- nrow(df_KNN.output)
+
+# Top match
+df_KNN.output %>% 
+  slice(1) %>% 
+  select(
+    occupation
+    , similarity
+  ) -> df_top.match
+
+# Bottom match
+df_KNN.output %>% 
+  slice(int_n.occupations) %>% 
+  select(
+    occupation
+    , similarity
+  ) -> df_bot.match
+
+# Median match
+df_KNN.output %>% 
+  filter(
+    similarity == quantile(
+      similarity, .50
+    )
+  ) %>% 
+  select(
+    occupation
+    , similarity
+  ) -> df_med.match
+
+# Higher than 50% compatibility
+df_KNN.output %>% 
+  filter(round(similarity, 1) > 0.5) %>%
+  nrow() -> int_n.above50pct
+
+# Percent of compatibility scores > 50%
+(int_n.above50pct / int_n.occupations) %>% 
+  findInterval(
+    # vec = round(seq(0, 1, 1/6), 2)
+    vec = round(seq(0, .95, 1/6), 2)
+  ) %>% 
+  # recode(
+  #   '1' = 'extremely narrow'
+  #   , '2' = 'very narrow'
+  #   , '3' = 'rather narrow'
+  #   , '4' = 'medium'
+  #   , '5' = 'rather wide'
+  #   , '6' = 'very wide'
+  #   , '7' = 'extremely wide'
+  # ) -> chr_n.above50pct
+  recode(
+    '1' = 'extremely narrow'
+    , '2' = 'very narrow'
+    , '3' = 'rather narrow'
+    , '4' = 'rather wide'
+    , '5' = 'very wide'
+    , '6' = 'extremely wide'
+  ) -> chr_n.above50pct
+
+# Variance-adjusted skewness of professional compatibility curve interpretation
+fun_capital.flex(df_KNN.output$similarity) %>%
+  findInterval(
+    # vec = round(seq(0, 1, 1/6), 2)
+    vec = round(seq(0, .9, 1/6), 2)
+  ) %>% 
+  recode(
+    '1' = 'exceptionally right-skewed and invariant'
+    , '2' = 'largely right-skewed and invariant'
+    , '3' = 'somewhat right-skewed and invariant'
+    , '4' = 'somewhat left-skewed and varied'
+    , '5' = 'largely left-skewed and varied'
+    , '6' = 'exceptionally left-skewed and varied'
+  ) -> chr_text.broadness
+
+# niche occupations
+chr_text.broadness %>%
+  recode(
+    'exceptionally right-skewed and invariant' = 'your professional profile is specialized to an enormous extent, and it is almost certainly best for you to stick to a niche career path in which you excel, all else being equal'
+    , 'largely right-skewed and invariant' = 'your professional profile is quite a bit specialized, and you would likely do better pursuing a niche career path, all else being equal'
+    , 'somewhat right-skewed and invariant' = 'your professional profile is a little bit specialized, and you would likely do better not investing in too many different career paths, all else being equal'
+    , 'somewhat left-skewed and varied' = 'your professional profile is not too specialized, and you can likely thrive in a few different career paths, all else being equal'
+    , 'largely left-skewed and varied' = 'you could thrive in many different career paths, all else being equal'
+    , 'exceptionally left-skewed and varied' = 'you should fare essentially the same in most career paths, all else being equal'
+  ) -> chr_text.broadness.interpretation
+
+# GENERATE DYNAMIC TEXTS ------------------------------------------------------------
 # Report Title
-chr_report.title <- glue('Professional Profile — {chr_user}')
+chr_text.report.title <- glue('Professional Profile — {chr_text.user}')
+
+# Introduction dynamic text
+fun_text.dynamic(
+  .chr_text = chr_text.intro
+  , .chr_pattern = chr_text.blank
+  , chr_text.user
+  , int_n.occupations
+  , int_n.occupations
+) -> chr_text.intro.dynamic
+
+# Professional compatibility curve commentary
+fun_text.dynamic(
+  .chr_text = chr_text.compatibility.curve
+  , .chr_pattern = chr_text.blank
+  , df_top.match$occupation
+  , 100 * df_top.match$similarity
+  , df_bot.match$occupation
+  , 100 * df_bot.match$similarity
+  , df_med.match$occupation
+  , 100 * df_med.match$similarity
+  , chr_n.above50pct
+  , int_n.above50pct
+  , int_n.occupations
+  , chr_text.broadness
+  , chr_text.broadness.interpretation
+) -> chr_text.compatibility_curve.dynamic
+
 
 # Numbers for dynamic reporting with R Markdown
 
 # Captions for dynamic reporting with R Markdown
-
+chr_text.caption1 <- 'Note: dsds'
 
 # RENDER R MARKDOWN REPORT --------------------------------------------------
-rmarkdown::render('C:/Users/Cao/Documents/Github/Atlas-Research/Reports/Factor_Scores_Report.Rmd')
+rmarkdown::render('C:/Users/Cao/Documents/Github/Atlas-Research/Reports/Matching Report/Matching_Report.Rmd')

@@ -1,11 +1,11 @@
 ---
-title: "`r chr_report.title`"
-subtitle: "Factor Scores Report" 
+title: "`r chr_text.report.title`"
+subtitle: "Professional Matching Report" 
 author: "Atlas Research Team"
 date: "`r Sys.Date()`"
 output:
-  #pdf_document:
-  ipsum_pdf:
+  pdf_document:
+  # ipsum_pdf:
     toc: TRUE
     number_sections: TRUE
     toc_depth: 4
@@ -22,13 +22,17 @@ knitr::opts_chunk$set(warning = F)
 
 # Introduction
 
-## Factor Analysis
+`r chr_text.intro.dynamic`
 
-[text briefly explaining the concept of factor analysis]
+\newpage
 
-## Factor Scores
+# Professional Compatibility Curve
 
-[text briefly explaining the concept of factor analysis]
+```{r, message=FALSE, fig.cap=chr_text.caption1, fig.dim=c(6,3)}
+plt_line.rank
+```
+
+`r chr_text.compatibility_curve.dynamic`
 
 # Skills Assessment
 
