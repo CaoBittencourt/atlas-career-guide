@@ -843,12 +843,181 @@ fun_reorder <- function(
 }
 
 # -------- PLOTS -----------------------------------------------------------
+# # HISTOGRAM FUNCTION --------------------------------------------
+# fun_plot.histogram <- function(
+#     
+#   # Data
+#   .df_data
+#   , .aes_mapping
+#   
+#   # Reorder
+#   , .reorder_fct = T
+#   , .reorder_desc = F
+#   , .reorder_fun = sum
+#   
+#   # Labels
+#   , .list_labs = list()
+#   
+#   # Geom default parameters
+#   , .list_geom.param = list(
+#     fill = '#3854FB'
+#     , bins = 30
+#   )
+#   
+#   # Facets
+#   , .sym_facets = NULL
+#   , .int_facets = NULL
+#   
+#   # Color Mapping
+#   , .scale_colors = list(
+#     viridis::scale_color_viridis(discrete = T)
+#     , viridis::scale_fill_viridis(discrete = T)
+#   )  
+#   , .chr_manual.pal = NULL
+#   , .chr_manual.aes = 'fill'
+#   
+#   # Legend
+#   , .list_legend = list()
+#   
+#   # Axes
+#   , .fun_axis.x = scale_x_continuous
+#   , .fun_axis.y = scale_y_continuous
+#   , .list_axis.x.args = list(
+#     breaks = breaks_extended(5)
+#   )
+#   , .list_axis.y.args = list(
+#     breaks = breaks_extended(5)
+#   )
+#   , .fun_format.x = label_number(accuracy = .01)
+#   , .fun_format.y = label_number()
+#   
+#   # Coordinates
+#   , .dbl_limits.x = NULL
+#   , .dbl_limits.y = NULL
+#   
+#   # Theme
+#   , .theme = ggridges::theme_ridges(center_axis_labels = T)
+#   
+# ){
+#   
+#   # Errors
+#   # Data frame
+#   if(!is.data.frame(.df_data)){
+#     
+#     stop("'.df_data' must be a data frame.")
+#     
+#   }
+#   
+#   
+#   # Quo vars
+#   enquo(.sym_facets) -> enq_facets
+#   
+#   
+#   # Aes Mapping
+#   fun_aes.map(
+#     .aes_mapping
+#     , .chr_required_aes = 'x'
+#   ) -> aes_mapping
+#   
+#   # Facets
+#   fun_facets(
+#     .enq_facets = enq_facets
+#     , .int_facets = .int_facets
+#   ) -> plt_facets
+#   
+#   # Reordering
+#   if(.reorder_fct & length(plt_facets)){
+#     
+#     fun_reorder(
+#       .df_data = .df_data
+#       , .enq_var.fct = enq_facets
+#       , .enq_var.dbl = aes_mapping$x
+#       , .fun_ord = .reorder_fun
+#       , .desc = .reorder_desc
+#     ) -> .df_data
+#     
+#   }
+#   
+#   # Color mapping
+#   fun_colors(
+#     .scale_color = .scale_colors
+#     , .chr_manual.pal = .chr_manual.pal
+#     , .chr_manual.aes = .chr_manual.aes
+#   ) -> plt_colors
+#   
+#   # Axes format
+#   fun_axis.format(
+#     .fun_axis = .fun_axis.x
+#     , .list_axis.args = .list_axis.x.args
+#     , .fun_format = .fun_format.x
+#   ) -> plt_axis.x
+#   
+#   fun_axis.format(
+#     .fun_axis = .fun_axis.y
+#     , .list_axis.args = .list_axis.y.args
+#     , .fun_format = .fun_format.y
+#   ) -> plt_axis.y
+#   
+#   
+#   # Coordinates
+#   fun_coordinates(
+#     .dbl_limits.x = .dbl_limits.x
+#     , .dbl_limits.y = .dbl_limits.y
+#     , .coord_flip = F
+#     , .coord_polar = F
+#   ) -> plt_coord
+#   
+#   # Theme
+#   fun_theme(.theme) -> plt_theme
+#   
+#   # Legend
+#   fun_legends(.list_legend) -> plt_legend
+#   
+#   # Labs
+#   fun_labs(.list_labs) -> plt_labs
+#   
+#   
+#   # Histogram plot
+#   # geom_histogram with default parameters
+#   fun_geom.params(
+#     .fun_geom = geom_histogram
+#     , .list_default = .list_geom.param
+#     , .aes_mapping = aes_mapping
+#   ) -> plt_geom
+#   
+#   # ggplot
+#   .df_data %>%
+#     # Plot
+#     ggplot() +
+#     plt_geom + 
+#     plt_facets +
+#     # Colors
+#     plt_colors + 
+#     # Axes
+#     plt_axis.x +
+#     plt_axis.y +
+#     plt_coord + 
+#     # Theme
+#     plt_theme +
+#     plt_legend +
+#     # Labels
+#     plt_labs -> plt_histogram
+#   
+#   
+#   # Output
+#   return(plt_histogram)
+#   
+# }
+
 # HISTOGRAM FUNCTION --------------------------------------------
 fun_plot.histogram <- function(
     
   # Data
   .df_data
   , .aes_mapping
+  
+  # Overlay density
+  , .overlay_density = T
   
   # Reorder
   , .reorder_fct = T
@@ -978,12 +1147,38 @@ fun_plot.histogram <- function(
   
   
   # Histogram plot
-  # geom_histogram with default parameters
-  fun_geom.params(
-    .fun_geom = geom_histogram
-    , .list_default = .list_geom.param
-    , .aes_mapping = aes_mapping
-  ) -> plt_geom
+  # With density overlay
+  # Without density overlay
+  if(.overlay_density){ 
+    
+    aes_mapping$y <- ..density..
+    
+    fun_geom.params(
+      .fun_geom = geom_histogram
+      , .list_default = .list_geom.param
+      , .aes_mapping = aes_mapping
+    ) -> plt_geom
+    
+    plt_geom +
+      stat_function(
+      fun = dnorm
+      # , args = list(
+      #   mean = mean(.df_data$aes_mapping$x)
+      #   , sd = sd(.df_data$aes_mapping$x)
+      # )
+      , col = '#212121'
+      , size = 1.5
+    ) -> plt_geom
+    
+  } else { 
+    
+    fun_geom.params(
+      .fun_geom = geom_histogram
+      , .list_default = .list_geom.param
+      , .aes_mapping = aes_mapping
+    ) -> plt_geom
+    
+    }
   
   # ggplot
   .df_data %>%

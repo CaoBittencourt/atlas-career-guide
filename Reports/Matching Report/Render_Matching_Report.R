@@ -46,6 +46,23 @@ dbl_threshold <- 0.17
 
 # Dynamic text parameters
 chr_text.blank <- '___'
+seq_scale.1_6 <- round(seq(0, 0.9, 1/6), 2)
+dbl_recommended.cutff <- 0.67
+
+# Colors
+list(
+  'green' = '#4AF7B0'
+  , 'purple1' = '#753AF9'
+  , 'purple2' = '#301866'
+  , 'purple3' = '#3854FB'
+  , 'blue1' = '#56D0F5'
+  , 'blue2' = '#ABF4D4'
+  , 'blue3' = '#43DED1'
+  , 'blue4' = '#182766'
+  , 'red' = '#CE3527'
+  , 'black' = '#212121'
+  , 'grey' = '#D4D5D8'
+) -> list_atlas.pal
 
 # DATA --------------------------------------------------------------------
 # EFA-REDUCED OCCUPATIONS DATA FRAME
@@ -164,20 +181,140 @@ fun_factor.scores(
 #   , .lgc_pivot.long = F
 # ) -> list_factor.scores.pop
 
+# -------- DYNAMIC TEXTS --------------------------------------------------
+# NUMBERS FOR DYNAMIC TEXTS -----------------------------------------------
+# Number of occupations
+int_n.occupations <- nrow(df_KNN.output)
+
+# Top match
+df_KNN.output %>% 
+  slice(1) %>% 
+  select(
+    occupation
+    , similarity
+    , rank
+  ) -> df_top.match
+
+# Bottom match
+df_KNN.output %>% 
+  slice(int_n.occupations) %>% 
+  select(
+    occupation
+    , similarity
+    , rank
+  ) -> df_bot.match
+
+# Median match
+df_KNN.output %>% 
+  filter(
+    similarity == quantile(
+      similarity, .50
+    )
+  ) %>% 
+  select(
+    occupation
+    , similarity
+    , rank
+  ) -> df_med.match
+
+# Recommended occupations (higher than cutff)
+df_KNN.output %>% 
+  filter(round(similarity, 1) > dbl_recommended.cutff) %>%
+  nrow() -> int_n.recommended
+
+# Percent of compatibility scores > cutff
+(int_n.recommended / int_n.occupations) %>% 
+  round(1) %>%
+  findInterval(
+    vec = seq_scale.1_6
+  ) %>% 
+  recode(
+    '1' = 'extremely narrow'
+    , '2' = 'very narrow'
+    , '3' = 'rather narrow'
+    , '4' = 'rather wide'
+    , '5' = 'very wide'
+    , '6' = 'extremely wide'
+  ) -> chr_n.recommended
+
+# Variance-adjusted skewness of professional compatibility curve interpretation
+fun_capital.flex(df_KNN.output$similarity) %>%
+  round(1) %>% 
+  findInterval(
+    vec = seq_scale.1_6
+  ) %>% 
+  recode(
+    '1' = 'exceptionally right-skewed and invariant'
+    , '2' = 'largely right-skewed'
+    , '3' = 'somewhat right-skewed and invariant'
+    , '4' = 'somewhat left-skewed and varied'
+    , '5' = 'largely left-skewed and varied'
+    , '6' = 'exceptionally left-skewed and varied'
+  ) -> chr_text.broadness
+
+chr_text.broadness %>%
+  recode(
+    'exceptionally right-skewed and invariant' = 'your professional profile is specialized to an enormous extent, and it is almost certainly best for you to stick to a niche career path in which you excel, all else being equal'
+    , 'largely right-skewed and invariant' = 'your professional profile is quite a bit specialized, and you would likely do better pursuing a niche career path, all else being equal'
+    , 'somewhat right-skewed and invariant' = 'your professional profile is a little bit specialized, and you would likely do better not investing in too many different career paths, all else being equal'
+    , 'somewhat left-skewed and varied' = 'your professional profile is not too specialized, and you can likely thrive in a few different career paths, all else being equal'
+    , 'largely left-skewed and varied' = 'you could thrive in many different career paths, all else being equal'
+    , 'exceptionally left-skewed and varied' = 'you should fare essentially the same in most career paths, all else being equal'
+  ) -> chr_text.broadness.interpretation
+
+# GENERATE DYNAMIC TEXTS ------------------------------------------------------------
+# Report Title
+chr_text.report.title <- glue('Professional Profile — {chr_text.user}')
+
+# Introduction dynamic text
+fun_text.dynamic(
+  .chr_text = chr_text.intro
+  , .chr_pattern = chr_text.blank
+  , chr_text.user
+  , int_n.occupations
+  , int_n.occupations
+) -> chr_text.intro.dynamic
+
+# Professional compatibility curve commentary
+fun_text.dynamic(
+  .chr_text = chr_text.compatibility.curve
+  , .chr_pattern = chr_text.blank
+  , df_top.match$occupation
+  , 100 * df_top.match$similarity
+  , df_bot.match$occupation
+  , 100 * df_bot.match$similarity
+  , df_med.match$occupation
+  , 100 * df_med.match$similarity
+  , chr_n.recommended
+  , int_n.recommended
+  , int_n.occupations
+  , chr_text.broadness
+  , chr_text.broadness.interpretation
+) -> chr_text.compatibility_curve.dynamic
+
+
+# Numbers for dynamic reporting with R Markdown
+
+# Captions for dynamic reporting with R Markdown
+chr_text.caption1 <- 'Note: dsds'
+
 # -------- PLOTS ----------------------------------------------------------
 # [LINE CHART] PROFESSIONAL COMPATIBILITY CURVE -------------------------------------------------------------------
+df_KNN.output %>%
+  filter(similarity >= dbl_recommended.cutff) %>% 
+  slice_min(similarity) %>% 
+  pull(rank) -> int_recommended.index
+
 df_KNN.output %>% 
-  arrange(similarity) %>% 
-  mutate(n = row_number()) %>% 
   fun_plot.line(aes(
-    x = n
+    x = rank
     , y = similarity
   )
   , .dbl_limits.y = c(0,1)
   , .fun_format.y = label_percent()
+  , .fun_axis.x = scale_x_reverse
   , .reorder_fct = F
   , .reorder_desc = F
-  # , .reorder_fun = max
   , .theme = ggridges::theme_ridges(center_axis_labels = T) +
     theme(axis.text.x = element_blank())
   , .list_labs = list(
@@ -185,7 +322,66 @@ df_KNN.output %>%
     , subtitle = str_to_title('these are your professional matches ranked lowest to highest:')
     , x = str_to_title('ranking')
     , y = str_to_title('professional compatibility')
-  )) -> plt_line.rank
+  )) + 
+  geom_segment(
+    x = int_recommended.index
+    , xend = int_recommended.index
+    , y = 0
+    , yend = 1
+    # , linetype = 5
+    , color = '#212121'
+    , size = 1
+  ) -> plt_line.rank
+
+
+# plt_line.rank$layers <- c(
+#   geom_segment(
+#     x = int_recommended.index
+#     , xend = int_recommended.index
+#     , y = 0
+#     , yend = 1
+#     # , linetype = 5
+#     , color = '#212121'
+#     , size = 1
+#   )
+#   , plt_line.rank$layers
+# )
+
+# plt_line.rank$layers <- c(
+#   geom_vline(
+#     xintercept = int_recommended.index
+#     # , linetype = 5
+#     , color = '#212121'
+#     , size = 1
+#   )
+#   , plt_line.rank$layers
+# )
+
+# plt_line.rank$layers <- c(
+#   annotate(
+#     geom = 'text'
+#     , label = 'Recommended Occupations'
+#     , x = int_recommended.index - 20
+#     , y = 0.25
+#     , angle = -90
+#   )
+#   , plt_line.rank$layers
+# )
+# 
+# plt_line.rank$layers <- c(
+#   geom_rect(aes(
+#     xmin = 1
+#     , xmax = int_recommended.index
+#     , ymin = 0
+#     , ymax = 1
+#   )
+#   , fill = list_atlas.pal$green
+#   , alpha = 0.25
+#   )
+#   , plt_line.rank$layers
+# )
+
+plt_line.rank
 
 # [LOLLIPOP CHART] TOP 3, BOTTOM 3 AND 6 SAMPLE MATCHES -----------------------------
 df_KNN.output %>% 
@@ -296,22 +492,22 @@ df_dumbbell %>%
   )
   , .list_geom.param = list(
     color = 'lightgrey'
-    , colour_x = '#182766'
-    , colour_xend = '#CE3527'
+    , colour_x = list_atlas.pal$blue4
+    , colour_xend = list_atlas.pal$red
     , size_x = 5.4
     , size_xend = 5.4
     , size = 2
   )
   , .list_labels1.param = list(
     fontface = 'bold'
-    , color = '#182766'
+    , color = list_atlas.pal$blue4
     , size = 3.33
     , vjust = -1.5
     , hjust = 0.5
   )
   , .list_labels2.param = list(
     fontface = 'bold'
-    , color = '#CE3527'
+    , color = list_atlas.pal$red
     , size = 3.33
     , vjust = 2.25
     , hjust = 0.5
@@ -390,7 +586,7 @@ mtx_NA %>%
 plt_match.polar$layers <- c(
   geom_hline(
     yintercept = c(0, 0.25, 0.5, 0.75)
-    , color = '#D4D5D8'
+    , color = list_atlas.pal$grey
     , size = 0.5
   )
   , plt_match.polar$layers
@@ -399,7 +595,7 @@ plt_match.polar$layers <- c(
 plt_match.polar$layers <- c(
   geom_hline(
     yintercept = 1
-    , color = '#D4D5D8'
+    , color = list_atlas.pal$grey
     , size = 2
   )
   , plt_match.polar$layers
@@ -483,129 +679,8 @@ plt_match.polar$layers <- c(
 # plt_top.match
 # plt_bot.match
 
-# -------- DYNAMIC TEXTS --------------------------------------------------
-# NUMBERS FOR DYNAMIC TEXTS -----------------------------------------------
-# Number of occupations
-int_n.occupations <- nrow(df_KNN.output)
-
-# Top match
-df_KNN.output %>% 
-  slice(1) %>% 
-  select(
-    occupation
-    , similarity
-  ) -> df_top.match
-
-# Bottom match
-df_KNN.output %>% 
-  slice(int_n.occupations) %>% 
-  select(
-    occupation
-    , similarity
-  ) -> df_bot.match
-
-# Median match
-df_KNN.output %>% 
-  filter(
-    similarity == quantile(
-      similarity, .50
-    )
-  ) %>% 
-  select(
-    occupation
-    , similarity
-  ) -> df_med.match
-
-# Higher than 50% compatibility
-df_KNN.output %>% 
-  filter(round(similarity, 1) > 0.5) %>%
-  nrow() -> int_n.above50pct
-
-# Percent of compatibility scores > 50%
-(int_n.above50pct / int_n.occupations) %>% 
-  findInterval(
-    # vec = round(seq(0, 1, 1/6), 2)
-    vec = round(seq(0, .95, 1/6), 2)
-  ) %>% 
-  # recode(
-  #   '1' = 'extremely narrow'
-  #   , '2' = 'very narrow'
-  #   , '3' = 'rather narrow'
-  #   , '4' = 'medium'
-  #   , '5' = 'rather wide'
-  #   , '6' = 'very wide'
-  #   , '7' = 'extremely wide'
-  # ) -> chr_n.above50pct
-  recode(
-    '1' = 'extremely narrow'
-    , '2' = 'very narrow'
-    , '3' = 'rather narrow'
-    , '4' = 'rather wide'
-    , '5' = 'very wide'
-    , '6' = 'extremely wide'
-  ) -> chr_n.above50pct
-
-# Variance-adjusted skewness of professional compatibility curve interpretation
-fun_capital.flex(df_KNN.output$similarity) %>%
-  findInterval(
-    # vec = round(seq(0, 1, 1/6), 2)
-    vec = round(seq(0, .9, 1/6), 2)
-  ) %>% 
-  recode(
-    '1' = 'exceptionally right-skewed and invariant'
-    , '2' = 'largely right-skewed and invariant'
-    , '3' = 'somewhat right-skewed and invariant'
-    , '4' = 'somewhat left-skewed and varied'
-    , '5' = 'largely left-skewed and varied'
-    , '6' = 'exceptionally left-skewed and varied'
-  ) -> chr_text.broadness
-
-# niche occupations
-chr_text.broadness %>%
-  recode(
-    'exceptionally right-skewed and invariant' = 'your professional profile is specialized to an enormous extent, and it is almost certainly best for you to stick to a niche career path in which you excel, all else being equal'
-    , 'largely right-skewed and invariant' = 'your professional profile is quite a bit specialized, and you would likely do better pursuing a niche career path, all else being equal'
-    , 'somewhat right-skewed and invariant' = 'your professional profile is a little bit specialized, and you would likely do better not investing in too many different career paths, all else being equal'
-    , 'somewhat left-skewed and varied' = 'your professional profile is not too specialized, and you can likely thrive in a few different career paths, all else being equal'
-    , 'largely left-skewed and varied' = 'you could thrive in many different career paths, all else being equal'
-    , 'exceptionally left-skewed and varied' = 'you should fare essentially the same in most career paths, all else being equal'
-  ) -> chr_text.broadness.interpretation
-
-# GENERATE DYNAMIC TEXTS ------------------------------------------------------------
-# Report Title
-chr_text.report.title <- glue('Professional Profile — {chr_text.user}')
-
-# Introduction dynamic text
-fun_text.dynamic(
-  .chr_text = chr_text.intro
-  , .chr_pattern = chr_text.blank
-  , chr_text.user
-  , int_n.occupations
-  , int_n.occupations
-) -> chr_text.intro.dynamic
-
-# Professional compatibility curve commentary
-fun_text.dynamic(
-  .chr_text = chr_text.compatibility.curve
-  , .chr_pattern = chr_text.blank
-  , df_top.match$occupation
-  , 100 * df_top.match$similarity
-  , df_bot.match$occupation
-  , 100 * df_bot.match$similarity
-  , df_med.match$occupation
-  , 100 * df_med.match$similarity
-  , chr_n.above50pct
-  , int_n.above50pct
-  , int_n.occupations
-  , chr_text.broadness
-  , chr_text.broadness.interpretation
-) -> chr_text.compatibility_curve.dynamic
-
-
-# Numbers for dynamic reporting with R Markdown
-
-# Captions for dynamic reporting with R Markdown
-chr_text.caption1 <- 'Note: dsds'
-
+# -------- RENDER -----------------------------------------------------------
 # RENDER R MARKDOWN REPORT --------------------------------------------------
 rmarkdown::render('C:/Users/Cao/Documents/Github/Atlas-Research/Reports/Matching Report/Matching_Report.Rmd')
+
+
