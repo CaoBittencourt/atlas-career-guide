@@ -180,6 +180,7 @@ df_occupations %>%
   select(
     occupation
     , entry_level_education #Filter will be applied later on in Bubble via user input
+    , annual_wage_2021
     , all_of(
       list_factors %>%
         flatten() %>% 

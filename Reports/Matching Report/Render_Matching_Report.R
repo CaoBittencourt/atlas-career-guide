@@ -7,6 +7,7 @@ pkg <- c(
   , 'ggthemes' #Data visualization
   , 'tidyverse', 'glue' #Data wrangling
   , 'tinytex' #LaTeX
+  , 'knitr' #Knitr
 )
 
 # Activate / install packages
@@ -68,9 +69,6 @@ list(
 # EFA-REDUCED OCCUPATIONS DATA FRAME
 source('C:/Users/Cao/Documents/Github/Atlas-Research/Data/df_occupations.EFA.R')
 
-# EFA-REDUCED POPULATION-WEIGHTED OCCUPATIONS DATA FRAME
-source('C:/Users/Cao/Documents/Github/Atlas-Research/Data/df_occupations.pop.EFA.R')
-
 # USER INPUT DATA FRAME
 df_input <- readr::read_csv('https://docs.google.com/spreadsheets/d/e/2PACX-1vSphzWoCxoNaiaJcQUWKCMqUAT041Q8UqUgM7rSzIwYZb7FhttKJwNgtrFf-r7EgzXHFom4UjLl2ltk/pub?gid=725827850&single=true&output=csv')
 
@@ -81,15 +79,16 @@ source('C:/Users/Cao/Documents/Github/Atlas-Research/Reports/Matching Report/Def
 # EFA-REDUCED OCCUPATIONS DATA FRAME -----------------------------------------------
 # Select only necessary variables
 df_occupations %>% 
-  select(
-    occupation
-    , entry_level_education
-    , all_of(
-      list_factors %>%
-        flatten() %>% 
-        flatten_chr()
-    )
-  ) %>%
+  # select(
+  #   occupation
+  #   , entry_level_education
+  #   , annual_wage_2021
+  #   , all_of(
+  #     list_factors %>%
+  #       flatten() %>% 
+  #       flatten_chr()
+  #   )
+  # ) %>%
   mutate(
     across(
       .cols = all_of(
@@ -147,13 +146,21 @@ df_input %>%
 # ------- RESULTS --------------------------------------------------------
 # KNN MATCHING ---------------------------------------------------------------
 fun_KNN.matching(
-  .df_data.numeric = df_occupations
+  .df_data.numeric = df_occupations %>% 
+    select(
+      occupation
+      , all_of(
+        list_factors %>%
+          flatten() %>% 
+          flatten_chr()
+      ))
   , .vec_query.numeric = df_input
   , .int_k = nrow(df_occupations)
   , .imput.over_qualification = T
   , .dbl_over_qualification.threshold = dbl_threshold
   , .dbl_decimals = 4
-) -> df_KNN.output
+) %>% 
+  full_join(df_occupations) -> df_KNN.output
 
 # df_KNN.output %>%
 #   # df_occupations %>%
@@ -174,15 +181,8 @@ fun_factor.scores(
   , .lgc_pivot.long = T
 ) -> list_factor.scores
 
-# # FACTOR SCORES (POPULATION) -----------------------------------------------------------
-# fun_factor.scores(
-#   .df_data.numeric = df_occupations.pop
-#   , .list_factor.keys = list_factors
-#   , .lgc_pivot.long = F
-# ) -> list_factor.scores.pop
-
 # -------- DYNAMIC TEXTS --------------------------------------------------
-# NUMBERS FOR DYNAMIC TEXTS -----------------------------------------------
+# VALUES FOR DYNAMIC TEXTS -----------------------------------------------
 # Number of occupations
 int_n.occupations <- nrow(df_KNN.output)
 
@@ -193,6 +193,7 @@ df_KNN.output %>%
     occupation
     , similarity
     , rank
+    , rank.norm
   ) -> df_top.match
 
 # Bottom match
@@ -202,6 +203,7 @@ df_KNN.output %>%
     occupation
     , similarity
     , rank
+    , rank.norm
   ) -> df_bot.match
 
 # Median match
@@ -215,11 +217,12 @@ df_KNN.output %>%
     occupation
     , similarity
     , rank
+    , rank.norm
   ) -> df_med.match
 
 # Recommended occupations (higher than cutff)
 df_KNN.output %>% 
-  filter(round(similarity, 1) > dbl_recommended.cutff) %>%
+  filter(similarity >= dbl_recommended.cutff) %>% 
   nrow() -> int_n.recommended
 
 # Percent of compatibility scores > cutff
@@ -275,9 +278,16 @@ fun_text.dynamic(
   , int_n.occupations
 ) -> chr_text.intro.dynamic
 
-# Professional compatibility curve commentary
+# Circular bar plot commentary
 fun_text.dynamic(
-  .chr_text = chr_text.compatibility.curve
+  .chr_text = chr_text.circular_plot
+  , .chr_pattern = chr_text.blank
+  , int_n.occupations
+) -> chr_text.circular_plot.dynamic
+
+# Top / bot matches table commentary
+fun_text.dynamic(
+  .chr_text = chr_text.topbot.table
   , .chr_pattern = chr_text.blank
   , df_top.match$occupation
   , 100 * df_top.match$similarity
@@ -287,142 +297,285 @@ fun_text.dynamic(
   , 100 * df_med.match$similarity
   , chr_n.recommended
   , int_n.recommended
-  , int_n.occupations
+) -> chr_text.topbot.table.dynamic
+
+# Professional compatibility curve
+fun_text.dynamic(
+  .chr_text = chr_text.compatibility.curve.intro
+  , .chr_pattern = chr_text.blank
+) -> chr_text.compatibility.curve.intro.dynamic
+
+fun_text.dynamic(
+  .chr_text = chr_text.compatibility.curve
+  , .chr_pattern = chr_text.blank
+  # , chr_text.broadness
+  # , chr_text.broadness.interpretation
+) -> chr_text.compatibility.curve.dynamic
+
+# Professional compatibility distribution
+fun_text.dynamic(
+  .chr_text = chr_text.distribution.intro
+  , .chr_pattern = chr_text.blank
+) -> chr_text.distribution.intro.dynamic
+
+fun_text.dynamic(
+  .chr_text = chr_text.distribution
+  , .chr_pattern = chr_text.blank
   , chr_text.broadness
   , chr_text.broadness.interpretation
-) -> chr_text.compatibility_curve.dynamic
-
-
-# Numbers for dynamic reporting with R Markdown
+) -> chr_text.distribution.dynamic
 
 # Captions for dynamic reporting with R Markdown
-chr_text.caption1 <- 'Note: dsds'
+chr_text.caption.circular <- 'Professional Compatibility Ranking'
+chr_text.caption.table <- 'Your Top 7 and Bottom 3 Career Matches'
+chr_text.caption.line <- 'Professional Compatibility Curve'
+chr_text.caption.dist <- 'Professional Compatibility Distribution'
+
+# -------- TABLES ---------------------------------------------------------
+# TOP 7, BOTTOM 3 MATCHES ----------------------------------------------------------
+df_KNN.output %>%
+  slice(1:7, seq(max(rank) - 2, max(rank))) %>%
+  mutate(
+    similarity = percent(similarity, accuracy = .01)
+    , annual_wage_2021 = dollar(annual_wage_2021, accuracy = .01)
+    ) %>% 
+  select(
+    rank
+    , occupation
+    , annual_wage_2021
+    , similarity
+  ) %>% 
+  rename(
+    Rank = rank
+    , Occupation = occupation
+    , Wage = annual_wage_2021
+    , Compatibility = similarity
+  ) -> df_top7.bot3
 
 # -------- PLOTS ----------------------------------------------------------
+# [CIRCULAR BAR PLOT] MATCHING PERCENTAGES -----------------------------------------------------
+# Empty columns
+int_NA <- 51
+mtx_NA <- matrix(NA, int_NA, ncol(df_KNN.output))
+colnames(mtx_NA) <- colnames(df_KNN.output)
+
+# Circular bar plot
+mtx_NA %>%
+  rbind(df_KNN.output) %>%
+  mutate(
+    n = row_number()
+    , n = factor(n)
+    , recommended = if_else(
+      round(similarity, 2) >= dbl_recommended.cutff
+      | is.na(similarity)
+      , true = 'Recommended'
+      , false = 'Not Recommended'
+    )
+  ) %>% 
+  fun_plot.bar(aes(
+    x = n
+    , y = similarity
+    , fill = recommended
+  ) 
+  , .list_labs = list(
+    title = NULL
+    , subtitle = NULL
+    , fill = NULL
+  )
+  , .chr_manual.pal = c(
+    'Recommended' = list_atlas.pal$purple3
+    , 'Not Recommended' = list_atlas.pal$grey
+  )
+  , .coord_polar = T
+  , .reorder_fct = T
+  , .reorder_desc = T
+  , .fun_axis.y = scale_y_continuous
+  , .list_axis.y.args = list(
+    limits = c(-0.55,1.1)
+  )
+  # , .theme = ggridges::theme_ridges() +
+  , .theme = theme_void() + 
+    theme(
+      # legend.position = 'bottom'
+      legend.position = c(0.5,0.05)
+      , legend.direction = 'horizontal'
+      , panel.grid = element_blank()
+      , panel.border = element_blank()
+      , plot.margin = margin(0, 0, 0, 0)
+      # , plot.margin = margin(
+      #   t = 0, b = 0, l = 0, r = 0
+      #   , unit = 'cm'
+      # )
+      , plot.title = element_blank()
+      , plot.subtitle = element_blank()
+      , axis.title = element_blank()
+      , axis.text = element_blank()
+      , axis.ticks = element_blank()
+      , axis.line = element_blank()
+      # , axis.ticks.length = unit(0, "pt")
+    ) 
+  ) -> plt_match.polar
+# ) #+ 
+# geom_textpath(
+#   label = '100%'
+#   , x = '26'
+#   , y = 1.1
+# )
+# geom_texthline(
+#   yintercept = 1
+#   , label = percent(1)
+#   , color = list_atlas.pal$black
+#   , hjust = 5
+#   , size = 3
+# )
+
+plt_match.polar +
+  coord_polar(
+    # start = -6.12
+    start = -6.1
+  ) +
+  map(
+    seq(0,1,0.25)
+    , function(y){
+      
+      annotate(
+        x = '26'
+        , y = y + 0.1
+        , label = percent(y)
+        , geom = 'text'
+        , color = '#212121'
+        , fontface = 'bold'
+        , size = 3
+      )
+      
+    }) + 
+  annotate(
+    x = '26'
+    , y = -0.55
+    , label = str_replace_all(
+      'Professional Compatibility'
+      , ' ', '\n')
+    , geom = 'text'
+    , color = list_atlas.pal$purple3
+    , fontface = 'bold'
+    , size = 4
+  ) -> plt_match.polar
+
+plt_match.polar$layers <- c(
+  geom_hline(
+    yintercept = c(0, 0.25, 0.5, 0.75)
+    , color = list_atlas.pal$grey
+    , size = 0.5
+  )
+  , plt_match.polar$layers
+)
+
+plt_match.polar$layers <- c(
+  geom_hline(
+    # geomtextpath::geom_labelhline(
+    # geomtextpath::geom_(
+    yintercept = 1
+    , color = list_atlas.pal$grey
+    , size = 2
+  )
+  , plt_match.polar$layers
+)
+
+# plt_match.polar$layers <- c(
+#   geom_texthline(aes(
+#     label = percent(y)
+#   )
+#     , yintercept = 1
+#     , hjust = 0
+#     , vjust = -0.2
+#     , color = list_atlas.pal$black
+#     )
+#   , plt_match.polar$layers
+# )
+
 # [LINE CHART] PROFESSIONAL COMPATIBILITY CURVE -------------------------------------------------------------------
 df_KNN.output %>%
-  filter(similarity >= dbl_recommended.cutff) %>% 
-  slice_min(similarity) %>% 
-  pull(rank) -> int_recommended.index
-
-df_KNN.output %>% 
   fun_plot.line(aes(
-    x = rank
+    x = rank.norm
     , y = similarity
+    , color = similarity >= dbl_recommended.cutff
   )
   , .dbl_limits.y = c(0,1)
+  , .chr_manual.pal = c(
+    list_atlas.pal$grey
+    , list_atlas.pal$purple3
+  )
+  , .list_legend = list(color = 'none')
   , .fun_format.y = label_percent()
-  , .fun_axis.x = scale_x_reverse
   , .reorder_fct = F
   , .reorder_desc = F
   , .theme = ggridges::theme_ridges(center_axis_labels = T) +
-    theme(axis.text.x = element_blank())
+    theme(
+      plot.margin = margin(
+        t = 1.5, b = 1.5, l = 0, r = 0
+        , unit = 'cm'
+      )
+      , axis.text.x = element_blank()
+    )
   , .list_labs = list(
-    title = str_to_title('professional compatibility curve')
-    , subtitle = str_to_title('these are your professional matches ranked lowest to highest:')
+    title = NULL
+    , subtitle = NULL
     , x = str_to_title('ranking')
     , y = str_to_title('professional compatibility')
-  )) + 
+  )) +
   geom_segment(
-    x = int_recommended.index
-    , xend = int_recommended.index
-    , y = 0
+    x = 0
+    , xend = 1 - df_bot.match$similarity
+    , y = df_bot.match$similarity
     , yend = 1
-    # , linetype = 5
-    , color = '#212121'
-    , size = 1
+    , size = 0.25
+    , color = list_atlas.pal$black
+    , linetype = 2
   ) -> plt_line.rank
 
+c(
+  plt_line.rank$layers
+  , geom_textvline(
+    xintercept = (int_n.occupations - int_n.recommended) / (int_n.occupations - 1)
+    , label = 'Recommended'
+    , color = list_atlas.pal$purple3
+    , fontface = 'bold'
+    , linetype = 1
+    , linewidth = 1.35
+    , hjust = 0.1
+    , vjust = -0.5
+  )
+) -> plt_line.rank$layers
 
-# plt_line.rank$layers <- c(
-#   geom_segment(
-#     x = int_recommended.index
-#     , xend = int_recommended.index
-#     , y = 0
-#     , yend = 1
-#     # , linetype = 5
-#     , color = '#212121'
-#     , size = 1
-#   )
-#   , plt_line.rank$layers
-# )
-
-# plt_line.rank$layers <- c(
-#   geom_vline(
-#     xintercept = int_recommended.index
-#     # , linetype = 5
-#     , color = '#212121'
-#     , size = 1
-#   )
-#   , plt_line.rank$layers
-# )
-
-# plt_line.rank$layers <- c(
-#   annotate(
-#     geom = 'text'
-#     , label = 'Recommended Occupations'
-#     , x = int_recommended.index - 20
-#     , y = 0.25
-#     , angle = -90
-#   )
-#   , plt_line.rank$layers
-# )
-# 
-# plt_line.rank$layers <- c(
-#   geom_rect(aes(
-#     xmin = 1
-#     , xmax = int_recommended.index
-#     , ymin = 0
-#     , ymax = 1
-#   )
-#   , fill = list_atlas.pal$green
-#   , alpha = 0.25
-#   )
-#   , plt_line.rank$layers
-# )
-
-plt_line.rank
-
-# [LOLLIPOP CHART] TOP 3, BOTTOM 3 AND 6 SAMPLE MATCHES -----------------------------
+# [DENSITY] PROFESSIONAL COMPATIBILITY DISTRIBUTION -----------------------
 df_KNN.output %>% 
-  mutate(n = row_number()) %>% 
-  filter(
-    n %in% c(1:3, (nrow(.) - 2):nrow(.))
-    | (#Get good matches with shorter names
-      str_length(occupation) < 40
-      & between(
-        similarity
-        , quantile(
-          similarity, probs = 0.2 
-        )
-        , quantile(
-          similarity, probs = 0.8
-        )
-      ))
-  ) %>% 
-  arrange(desc(similarity)) %>%
-  slice(
-    1:3 #Top 3 matches
-    , sample(4:(nrow(.) - 3), 6) #6 sample matches
-    , (nrow(.) - 2):nrow(.) #Bottom 3 matches
-  ) %>% 
-  fun_plot.lollipop(aes(
-    x = occupation
-    , y = similarity
-    , label = percent(similarity)
+  fun_plot.histogram(aes(
+    x = similarity
+    , y = after_stat(density)
   )
-  , .fun_format.x = function(x){str_wrap(x, width = 40)}
-  , .fun_format.y = label_percent()
-  , .dbl_limits.y = c(0,1)
+  , .list_axis.x.args = list(
+    # limits = c(0,1)
+    limits = c(-0.15,1)
+    , breaks = breaks_extended(5)
+  )
+  , .fun_format.x = percent_format(accuracy = 1)
   , .list_labs = list(
-    title = str_to_title(glue('a sample of your {nrow(df_KNN.output)} professional matches'))
-    , subtitle = str_to_title('these are 10 of your career matches, including the top 3 and bottom 3:')
-    # Substitute caption for note in R Markdown later
-    , caption = 'To access your full professional matching report, visit https://www.go2atlas.com/ and become a member today.'
-    , x = NULL
-    , y = str_to_title('professional compatibility')
+    title = NULL
+    , subtitle = NULL
+    , x = str_to_title('professional compatibility')
+    , y = NULL
   )
-  ) -> plt_match.10
+  , .theme = ggridges::theme_ridges(center_axis_labels = T) + 
+    theme(
+      plot.margin = margin(0, 0, 0, 0)
+      , axis.text.y = element_blank()
+    )
+  ) + 
+  geom_density(aes(
+    x = similarity
+  )
+  , size = 1.2
+  ) -> plt_density
 
 # [DUMBBELL PLOT] USER VS TOP MATCH / BOTTOM MATCH ------------------------------------
 # Factor scores of top and bottom matches
@@ -522,162 +675,6 @@ df_dumbbell %>%
     , y = NULL
   )
   ) -> plt_bot.match
-
-# [CIRCULAR BAR PLOT] MATCHING PERCENTAGES -----------------------------------------------------
-# Empty columns
-int_NA <- 51
-mtx_NA <- matrix(NA, int_NA, ncol(df_KNN.output))
-colnames(mtx_NA) <- colnames(df_KNN.output)
-
-# Circular bar plot
-mtx_NA %>%
-  rbind(df_KNN.output) %>%
-  mutate(
-    n = row_number()
-    , n = factor(n)
-  ) %>%
-  fun_plot.bar(aes(
-    x = n
-    , y = similarity
-    # , fill = similarity
-  )
-  # , .scale_colors = scale_fill_viridis()
-  , .list_labs = list(
-    title = str_to_title('Your career matches')
-    , subtitle = str_to_title("how compatible are you with each occupation?")
-  )
-  , .coord_polar = T
-  , .reorder_fct = T
-  , .reorder_desc = T
-  , .fun_axis.y = scale_y_continuous
-  , .list_axis.y.args = list(
-    limits = c(-0.55,1.1)
-  )
-  , .theme = ggridges::theme_ridges() +
-    theme(
-      plot.title = element_text(hjust = 0.5)
-      , axis.title = element_blank()
-      , axis.text = element_blank()
-      , axis.ticks = element_blank()
-      , panel.grid = element_blank()
-      , plot.subtitle = element_text(hjust = 0.5)
-    )
-  ) +
-  coord_polar(
-    # start = -6.12
-    start = -6.1
-  ) +
-  map(
-    seq(0,1,0.25)
-    , function(y){
-      
-      annotate(
-        x = '26'
-        , y = y + 0.1
-        , label = percent(y)
-        , geom = 'text'
-        , color = '#212121'
-        , fontface = 'bold'
-        , size = 3
-      )
-      
-    }) -> plt_match.polar
-
-plt_match.polar$layers <- c(
-  geom_hline(
-    yintercept = c(0, 0.25, 0.5, 0.75)
-    , color = list_atlas.pal$grey
-    , size = 0.5
-  )
-  , plt_match.polar$layers
-)
-
-plt_match.polar$layers <- c(
-  geom_hline(
-    yintercept = 1
-    , color = list_atlas.pal$grey
-    , size = 2
-  )
-  , plt_match.polar$layers
-)
-
-# # [DENSITY] SAMPLE DENSITY (TUTORIAL) -------------------------------------
-# map(
-#   df_occupations.pop %>% select(ends_with('.l'))
-#   , ~ fun_plot.density(
-#     .df_data = df_occupations.pop
-#     , .aes_mapping = aes(x = .x)
-#   )
-# ) -> list_densities
-# 
-# list_densities[1]
-# list_densities[2]
-# list_densities[3]
-# list_densities[4]
-# list_densities[5]
-# list_densities[6]
-# list_densities[7]
-# list_densities[8]
-# list_densities[9]
-# list_densities[10]
-# list_densities[11]
-# list_densities[12]
-# list_densities[13]
-# list_densities[14]
-# list_densities[15]
-# list_densities[16]
-# list_densities[17]
-# list_densities[18]
-# list_densities[19]
-# list_densities[20]
-# list_densities[21]
-# list_densities[22]
-# list_densities[23]
-# list_densities[24]
-# list_densities[25]
-# list_densities[26]
-# list_densities[27]
-# list_densities[28]
-# list_densities[29]
-# list_densities[30]
-# list_densities[31]
-# list_densities[32]
-# list_densities[33]
-# 
-# 
-# df_KNN.output %>%
-#   select(ends_with('.l')) %>%
-#   colnames() %>%
-#   sample(1) -> chr_sample
-# 
-# df_input %>%
-#   select(chr_sample) %>%
-#   mutate(
-#     occupation = 'you'
-#     , .before = 1
-#   ) %>%
-#   bind_rows(
-#     df_occupations.pop %>%
-#       select(
-#         occupation
-#         , chr_sample
-#       )
-#   ) %>%
-#   rename(value = 2) %>%
-#   fun_plot.density(aes(
-#     x = value
-#   ))
-# 
-# 
-# 
-# # [DENSITIES] DENSITIES FOR EACH ITEM -------------------------------------
-
-# # RENDER PLOTS ------------------------------------------------------------
-# plt_line.rank
-# plt_match.polar
-# plt_match.10
-# plt_top.match
-# plt_bot.match
 
 # -------- RENDER -----------------------------------------------------------
 # RENDER R MARKDOWN REPORT --------------------------------------------------

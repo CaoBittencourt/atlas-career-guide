@@ -164,7 +164,11 @@ fun_KNN.matching <- function(
         
       ) %>%
       arrange(desc(similarity)) %>%
-      mutate(rank = row_number()) %>% 
+      mutate(
+        rank = row_number()
+        , rank.norm = seq(1, 0, - 1 / (n() - 1))
+        , .before = everything()
+        ) %>% 
       return(.)
     
   } else {
@@ -189,7 +193,11 @@ fun_KNN.matching <- function(
         
       ) %>% 
       arrange(desc(similarity)) %>%
-      mutate(rank = row_number()) %>% 
+      mutate(
+        rank = row_number()
+        , rank.norm = seq(1, 0, - 1 / (n() - 1))
+        , .before = everything()
+      ) %>% 
       return(.)
     
   }
