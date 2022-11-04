@@ -24,7 +24,8 @@ fun_capital.flex <- function(.dbl_var){
   # Calculate capital flexibility score
   # Adjust skewness by variance
   # Convert skewness to a 0 to 1 metric
-  (1 - sk * (1 - vr)) / 2 -> kflex
+  # (1 - sk * (1 - vr)) / 2 -> kflex
+  (1 - sk) * (1 - vr) / 2 -> kflex
   
   # Output
   return(kflex)

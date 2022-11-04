@@ -82,7 +82,19 @@ cat(chr_text.distribution.dynamic)
 
 # Brief Compatibility Analysis
 
+```{r factors.intro, results='asis'}
+cat(chr_text.factors.intro.dynamic)
+```
+
 ## Categories and Factors
+
+```{r factors1, results='asis'}
+cat(chr_text.factors1.dynamic)
+```
+
+```{r factors2, results='asis'}
+cat(chr_text.factors2.dynamic)
+```
 
 ## Your Best and Worst Matches
 
@@ -91,7 +103,7 @@ plt_top.match
 ```
 
 ```{r best.comments, results='asis'}
-'dsds'
+cat(chr_text.top.dynamic)
 ```
 
 ```{r worst.plot}

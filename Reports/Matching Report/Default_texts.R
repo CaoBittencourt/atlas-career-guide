@@ -26,8 +26,8 @@ And because connecting all the points on the graph yields a progression of profe
 Again, the recommended occupations are highlighted in purple, and the unhighlighted ones (in grey) are not recommend, at least not in terms of basic similarity."
 
 chr_text.compatibility.curve <- "Now, one important thing to comment on is the shape of your professional compatibility curve.
-The slope of the curve is an indirect measure of how spread apart is your professional profile.
-For if the curve is flat, then all values are identical.
+For the slope of the curve is an indirect measure of how spread apart is your professional profile.
+If the curve is flat, then all values are identical.
 But, in contrast, as the angle of the line increases to 45 degrees (as in the dashed black line), all observations become evenly spaced out and well distributed.
 And since the distribution in question concerns the viability of different types of employment options, 
 the slope of the professional compatibility curve, in conjunction with the range of recommended occupations, 
@@ -50,10 +50,40 @@ then most occupations are a poor match and viable career paths will be limited; 
 then the opposite is true. It bears mentioning that although graphically the 50% mark appears to be \"the middle\" of the scale,
 this analysis is related to the distribution of *recommended* occupations, which is itself centered further to the right. 
 \nStatistically, we can assess how dispersed is the compatibility curve by calculating the variance of your compatibility scores.
-In addition, the skewness of the curve tells us if your profile is more restricted to a few niche occupations or if it is less defined.
+In addition, the skewness of the curve tells us if your profile is restricted to a few niche occupations or if it is less defined.
 By doing these calculations, we find you have ___ matching percentages across all occupations.
-This means ___."
+This means that, after accounting for the variance of compatibility scores, ___."
 
-# COMMENT ON TOP MATCH ----------------------------------------------------
+# COMMENT ON CATEGORIES AND FACTORS  ----------------------------------------------------
+chr_text.factors.intro <- "We now move to an analysis of your top and bottom career matches. 
+However, before this can be done, we must clarify some terminology."
+
+# chr_text.factors1 <- "The most important thing to understand are categories and factors.
+chr_text.factors1 <- "Our psychometric questionnaire for professional profiling is based upon ___ different categories: ___. 
+By this we mean that any given item in the questionnaire is associated with one of ___ \"very general types\" of attributes.
+\nThese categories, in turn, are divided into individual factors.
+In psychometrics, factor analysis is a technique to group variables according to how they correlate to one another.
+These groups of variables are called factors, and all items in our professional profiling questionnaire have been empirically assigned to one of ___ factors.
+Thus, categories are divided into factors, which are themselves divided into items.
+This is how the Atlas Professional Profiling Questionnaire is organized."
+
+chr_text.factors2 <- "Since explaining the intricate statistical procedures employed in the construction of our psychometric models is not the main focus of this brief report,
+we limit ourselves to listing the categories of analysis, with their respective factors.
+Firstly, the \"___\" category is composed of ___ factors: ___. 
+Secondly, the \"___\" category splits into: ___. 
+And finally, the category \"___\" contains ___ factors: ___.
+These are the categories and factors in the model covered by the ___ items
+which help us characterize each occupation in our database."
+
+# COMMENT ON TOP MATCH -------------------------------------------------
+chr_text.top.intro <- "Having understood this, we take a look at how your own professional profile compares to that of the occupation with which you're most similar:"
+
+chr_text.top <- "Figure 4 gives us a glimpse of your professional compatibility with \"___\", your best career match.
+Here, we immediately see that you're most similar with respect to the ___ factor___, and most dissimilar with respect to ___,
+the differences comprised within ___ and ___ percentage points.
+We also observe that you're underqualified for exercizing this occupation in ___ factor___, and overqualified in ___.
+Lastly, your three biggest strengths are ___, while those of \"___\" are ___.
+"
+
 # COMMENT ON BOTTOM MATCH -------------------------------------------------
 # FINISHING REMARKS --------------------------------------------------------------
