@@ -410,6 +410,89 @@ if_else(
   , chr_top.match.3str
 ) -> chr_top.match.3str
   
+# Bot match comments
+df_dumbbell %>% 
+  filter(bot.match > you) %>% 
+  pull(factor) -> chr_bot.underqualified
+
+df_dumbbell %>% 
+  filter(bot.match < you) %>% 
+  pull(factor) -> chr_bot.overqualified
+
+case_when(
+  length(chr_bot.underqualified) == 0 ~ 'no particular'
+  , length(chr_bot.underqualified) == nrow(df_dumbbell) ~ 'all'
+  , T ~ chr_bot.underqualified %>%
+    paste0('"',.,'"') %>%
+    paste0(collapse = ', ') %>%
+    stri_replace_last_fixed(', ', ', and ') %>%
+    paste('the', .)
+) -> chr_bot.underqualified.viz 
+
+case_when(
+  length(chr_bot.overqualified) == 0 ~ 'none'
+  , length(chr_bot.overqualified) == nrow(df_dumbbell) ~ 'every aspect'
+  , length(chr_bot.overqualified) >= (nrow(df_dumbbell) - 3) &
+    length(chr_bot.overqualified) != nrow(df_dumbbell) ~ 'the rest of them'
+  , T ~ chr_bot.overqualified %>%
+    paste0('"',.,'"') %>%
+    paste0(collapse = ', ') %>%
+    stri_replace_last_fixed(', ', ', and ')
+) -> chr_bot.overqualified.viz
+
+df_dumbbell %>% 
+  slice_max(you, n = 3) %>% 
+  pull(factor) %>% 
+  str_sort() -> chr_bot.3str
+
+df_dumbbell %>% 
+  slice_max(bot.match, n = 3) %>% 
+  pull(factor) -> chr_bot.match.3str
+
+intersect(
+  chr_bot.3str
+  , chr_bot.match.3str
+) -> chr_bot.3str
+
+case_when(
+  length(chr_bot.3str) == length(chr_bot.match.3str) ~ 'everything'
+  , length(chr_bot.3str) == 0 ~ 'nothing'
+  , T ~ chr_bot.3str %>%
+    str_sort() %>% 
+    paste0('"', . , '"') %>% 
+    paste0(collapse = ', ') %>% 
+    stri_replace_last_fixed(', ', ', and ')
+) -> chr_bot.3str
+
+chr_bot.match.3str %>%
+  str_sort() %>% 
+  paste0('"', . , '"') %>% 
+  paste0(collapse = ', ') %>% 
+  stri_replace_last_fixed(', ', ', and ') -> chr_bot.match.3str
+
+# Finishing remarks
+chr_text.broadness %>%
+  recode(
+  '1' = 'an exceptionally specialized or niche'
+  , '2' = 'a very specialized or niche'
+  , '3' = 'a somewhat specialized or niche'
+  , '4' = 'fairly distributed'
+  , '5' = 'somewhat extensive or scattered'
+  , '6' = 'a very extensive or scattered'
+  , '7' = 'an exceptionally extensive or scattered'
+) -> chr_text.broadness
+chr_text.broadness2
+
+chr_text.broadness2.interpretation
+
+df_top.match$occupation
+
+df_bot.match$occupation
+
+chr_top.capacity
+
+chr_bot.capacity
+
 # GENERATE DYNAMIC TEXTS ------------------------------------------------------------
 # Report Title
 chr_text.report.title <- glue('Professional Profile — {chr_text.user}')
@@ -540,12 +623,12 @@ fun_text.dynamic(
     paste0(collapse = ', ') %>% 
     stri_replace_last_fixed(', ', ', and ')
   , df_dumbbell %>% 
-    slice_max(bot.match.diff) %>% 
+    slice_min(bot.match.diff) %>% 
     slice() %>% 
     pull(bot.match.diff) %>% 
     round(4) * 100
   , df_dumbbell %>% 
-    slice_min(top.match.diff) %>% 
+    slice_max(top.match.diff) %>% 
     slice() %>% 
     pull(top.match.diff) %>% 
     round(4) * 100
@@ -557,11 +640,86 @@ fun_text.dynamic(
   , chr_top.match.3str
 ) -> chr_text.top.dynamic
 
+# Bottom match
+fun_text.dynamic(
+  .chr_text = chr_text.bot.intro
+  , .chr_pattern = chr_text.blank
+  , df_bot.match$occupation
+) -> chr_text.bot.intro.dynamic
+
+fun_text.dynamic(
+  .chr_text = chr_text.bot
+  , .chr_pattern = chr_text.blank
+  , df_dumbbell %>% 
+    slice_min(bot.match.diff) %>% 
+    pull(factor) %>% 
+    paste0('"',.,'"') %>% 
+    paste0(collapse = ', ') %>% 
+    stri_replace_last_fixed(', ', ', and ')
+  , (df_dumbbell %>% 
+       slice_min(bot.match.diff) %>% 
+       nrow() > 1) %>%
+    if_else('s','')
+  , (df_dumbbell %>% 
+       slice_min(bot.match.diff) %>% 
+       nrow() > 1) %>%
+    if_else('are','is')
+  , (df_dumbbell %>% 
+       slice_min(bot.match.diff) %>% 
+       nrow() > 1) %>%
+    if_else('s','')
+  , (df_dumbbell %>% 
+       slice_max(bot.match.diff) %>% 
+       nrow() > 1) %>%
+    if_else('are','is')
+  , df_dumbbell %>% 
+    slice_max(bot.match.diff) %>% 
+    pull(factor) %>% 
+    paste0('"',.,'"') %>% 
+    paste0(collapse = ', ') %>% 
+    stri_replace_last_fixed(', ', ', and ')
+  , df_dumbbell %>% 
+    slice_min(bot.match.diff) %>% 
+    slice() %>% 
+    pull(bot.match.diff) %>% 
+    round(4) * 100
+  , df_dumbbell %>% 
+    slice_max(bot.match.diff) %>% 
+    slice() %>% 
+    pull(bot.match.diff) %>% 
+    round(4) * 100
+  , chr_bot.underqualified.viz
+  , (length(chr_bot.underqualified) > 1) %>% 
+    if_else('s', '')
+  , chr_bot.overqualified.viz
+  , df_bot.match$occupation
+  , chr_bot.match.3str
+  , chr_bot.3str
+) -> chr_text.bot.dynamic
+
+# Finishing remarks
+fun_text.dynamic(
+  .chr_text = chr_finishing.remarks
+  , .chr_pattern = chr_text.blank
+  , int_n.recommended
+  , chr_n.recommended
+  , chr_text.broadness2
+  , chr_text.broadness2.interpretation
+  , df_top.match$occupation
+  , df_bot.match$occupation
+  , chr_top.capacity
+  , chr_bot.capacity
+  , chr_text.user
+) -> chr_finishing.remarks.dynamic
+
+
 # Captions for dynamic reporting with R Markdown
 chr_text.caption.circular <- 'Professional Compatibility Ranking'
 chr_text.caption.table <- 'Your Top 7 and Bottom 3 Career Matches'
 chr_text.caption.line <- 'Professional Compatibility Curve'
 chr_text.caption.dist <- 'Professional Compatibility Distribution'
+chr_text.caption.dumbbell.top <- paste('Your Best Career Match:', str_to_title(chr_matches.topbot[1]))
+chr_text.caption.dumbbell.bot <- paste('Your Worst Career Match:', str_to_title(chr_matches.topbot[2]))
 
 # -------- TABLES ---------------------------------------------------------
 # TOP 7, BOTTOM 3 MATCHES ----------------------------------------------------------
@@ -862,13 +1020,17 @@ df_dumbbell %>%
   )
   , .dbl_limits.x = c(0,1)
   , .fun_format.x = label_percent()
+  , .fun_format.y = function(y){y}
   , .fun_format.labels = label_percent()
   , .list_labs = list(
-    title = str_to_title('best professional match')
-    , subtitle = str_to_title(glue(
-      'your most compatible occupation is: {chr_matches.topbot[1]}.'
-      
-    ))
+    # title = str_to_title('best career match')
+    title = NULL
+    # , subtitle = str_to_title(glue(
+    #   'your most compatible occupation is: {chr_matches.topbot[1]}.'
+    #   
+    # ))
+    # , subtitle = str_to_title(chr_matches.topbot[1])
+    , subtitle = NULL
     , x = str_to_title('factor score')
     , y = NULL
   )
@@ -905,16 +1067,27 @@ df_dumbbell %>%
   )
   , .dbl_limits.x = c(0,1)
   , .fun_format.x = label_percent()
+  , .fun_format.y = function(y){y}
   , .fun_format.labels = label_percent()
   , .list_labs = list(
-    title = str_to_title('worst professional match')
-    , subtitle = str_to_title(glue(
-      'your least compatible occupation is: {chr_matches.topbot[2]}.'
-    ))
+    # title = str_to_title('worst career match')
+    title = NULL
+    # , subtitle = str_to_title(glue(
+    #   'your least compatible occupation is: {chr_matches.topbot[2]}.'
+    # ))
+    # , subtitle = str_to_title(chr_matches.topbot[2])
+    , subtitle = NULL
     , x = str_to_title('factor score')
     , y = NULL
   )
   ) -> plt_bot.match
+
+# patchwork::wrap_plots(
+#   plt_top.match
+#   , plt_bot.match + 
+#     theme(axis.text.y = element_blank())
+#   , ncol = 2
+# ) -> plt_topbot.match
 
 # -------- RENDER -----------------------------------------------------------
 # RENDER R MARKDOWN REPORT --------------------------------------------------

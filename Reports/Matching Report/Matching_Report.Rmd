@@ -98,7 +98,7 @@ cat(chr_text.factors2.dynamic)
 
 ## Your Best and Worst Matches
 
-```{r best.plot}
+```{r best.plot, fig.cap=chr_text.caption.dumbbell.top}
 plt_top.match
 ```
 
@@ -106,12 +106,20 @@ plt_top.match
 cat(chr_text.top.dynamic)
 ```
 
-```{r worst.plot}
+```{r worst.comments.intro, results='asis'}
+cat(chr_text.bot.intro.dynamic)
+```
+
+```{r worst.plot, fig.cap=chr_text.caption.dumbbell.bot}
 plt_bot.match
 ```
 
 ```{r worst.comments, results='asis'}
-'dsds'
+cat(chr_text.bot.dynamic)
 ```
 
 # Finishing Remarks
+
+```{r finishing.remarks, results='asis'}
+cat(chr_finishing.remarks)
+```

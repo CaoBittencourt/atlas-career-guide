@@ -82,8 +82,38 @@ chr_text.top <- "Figure 4 gives us a glimpse of your professional compatibility 
 Here, we immediately see that you're most similar with respect to the ___ factor___, and most dissimilar with respect to ___,
 the differences comprised within ___ and ___ percentage points.
 We also observe that you're underqualified for exercizing this occupation in ___ factor___, and overqualified in ___.
-Lastly, your three biggest strengths are ___, while those of \"___\" are ___.
-"
+Lastly, your three biggest strengths are ___, while those of \"___\" are ___."
 
 # COMMENT ON BOTTOM MATCH -------------------------------------------------
+chr_text.bot.intro <- "Finally, the figure below features an analysis of your least compatible occupation, \"___\":"
+
+chr_text.bot <- "Again, it is immediate to notice that the ___ factor___ ___ the highest point___ of similarity,
+while the lowest ___ ___.
+In this case, the differences range from ___ to ___ percentage points.
+In terms of your current capacity to exercize this profession,
+we assess you to be underqualified in ___ factor___, and overqualified in ___.
+The three biggest strengths of \"___\" are ___, which have ___ in common with yours."
+
 # FINISHING REMARKS --------------------------------------------------------------
+chr_finishing.remarks <- "In this report, we went over your results in the Atlas Professional Profiling Questionnaire.
+We began examining a ranking of occupations, based on similarity of job-related attributes,
+and underscoring the ___ career paths that constitute your ___ scope of recommended occupations. 
+After that, we looked at the professional compatibility curve and its shape, 
+also indicative of your degree of specialization. 
+Investing further the distribution of compatibility scores,
+we found that you have a ___ professional profile, meaning ___.
+At last, we briefly analyzed your best and worst career matches: \"___\", and \"___\", respectively.
+Concerning the first of these, you seem to be ___. 
+And as regards the second, ___.
+\nHaving considered all of this, we now conclude your career matching report.
+Again, this is but a brief overview of your professional profile, 
+and you can have access to much more detailed, in-depth reports
+by registering at https://www.go2atlas.com/ today.
+There, we also offer many different career support programs, 
+including highly qualified curated mentorships, career roadmaps, and more.
+Thank you for your time, ___. The Atlas Team wishes you well. 
+May you find your best professional future ahead!"
+
+
+
+
