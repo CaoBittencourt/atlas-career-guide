@@ -31,7 +31,7 @@ If the curve is flat, then all values are identical.
 But, in contrast, as the angle of the line increases to 45 degrees (as in the dashed black line), all observations become evenly spaced out and well distributed.
 And since the distribution in question concerns the viability of different types of employment options, 
 the slope of the professional compatibility curve, in conjunction with the range of recommended occupations, 
-is a strong indicator of how broad or specialized is your professional profile."
+is a strong indicator of the broadness of your professional profile."
 
 # COMMENT ON PROFESSIONAL COMPATIBILITY DISTRIBUTION ------------------------------------------------
 chr_text.distribution.intro <- "It is straightforward to understand the above-mentioned distribution of viable careers by looking at a histogram of professional compatibility scores (Figure 3).
@@ -60,7 +60,7 @@ However, before this can be done, we must clarify some terminology."
 
 # chr_text.factors1 <- "The most important thing to understand are categories and factors.
 chr_text.factors1 <- "Our psychometric questionnaire for professional profiling is based upon ___ different categories: ___. 
-By this we mean that any given item in the questionnaire is associated with one of ___ \"very general types\" of attributes.
+By this we mean that any given item in the questionnaire is associated with one of ___ \"very general types\" of attributes, or categories.
 \nThese categories, in turn, are divided into individual factors.
 In psychometrics, factor analysis is a technique to group variables according to how they correlate to one another.
 These groups of variables are called factors, and all items in our professional profiling questionnaire have been empirically assigned to one of ___ factors.
@@ -72,8 +72,7 @@ we limit ourselves to listing the categories of analysis, with their respective 
 Firstly, the \"___\" category is composed of ___ factors: ___. 
 Secondly, the \"___\" category splits into: ___. 
 And finally, the category \"___\" contains ___ factors: ___.
-These are the categories and factors in the model covered by the ___ items
-which help us characterize each occupation in our database."
+These are the categories and factors covered by the ___ items in the model."
 
 # COMMENT ON TOP MATCH -------------------------------------------------
 chr_text.top.intro <- "Having understood this, we take a look at how your own professional profile compares to that of the occupation with which you're most similar:"
@@ -96,20 +95,20 @@ The three biggest strengths of \"___\" are ___, which have ___ in common with yo
 
 # FINISHING REMARKS --------------------------------------------------------------
 chr_finishing.remarks <- "In this report, we went over your results in the Atlas Professional Profiling Questionnaire.
-We began examining a ranking of occupations, based on similarity of job-related attributes,
+We began by examining a ranking of occupations, based on similarity of job-related attributes,
 and underscoring the ___ career paths that constitute your ___ scope of recommended occupations. 
 After that, we looked at the professional compatibility curve and its shape, 
 also indicative of your degree of specialization. 
-Investing further the distribution of compatibility scores,
-we found that you have a ___ professional profile, meaning ___.
-At last, we briefly analyzed your best and worst career matches: \"___\", and \"___\", respectively.
+Investigating further the distribution of compatibility scores,
+we found that you have ___ professional profile, meaning ___.
+At last, we briefly analyzed your best and worst career matches, respectively: \"___\", and \"___\".
 Concerning the first of these, you seem to be ___. 
 And as regards the second, ___.
 \nHaving considered all of this, we now conclude your career matching report.
 Again, this is but a brief overview of your professional profile, 
-and you can have access to much more detailed, in-depth reports
+and you can access much more detailed, in-depth reports
 by registering at https://www.go2atlas.com/ today.
-There, we also offer many different career support programs, 
+There, we offer a suite of varied career support programs,
 including highly qualified curated mentorships, career roadmaps, and more.
 Thank you for your time, ___. The Atlas Team wishes you well. 
 May you find your best professional future ahead!"

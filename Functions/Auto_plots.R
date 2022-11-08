@@ -912,7 +912,7 @@ fun_plot.histogram <- function(
   , .dbl_limits.y = NULL
   
   # Theme
-  , .theme = ggridges::theme_ridges(center_axis_labels = T)
+  , .theme = ggridges::theme_ridges(font_size = 12, center_axis_labels = T)
   
 ){
   
@@ -1082,7 +1082,7 @@ fun_plot.histogram <- function(
 #   , .dbl_limits.y = NULL
 #   
 #   # Theme
-#   , .theme = ggridges::theme_ridges(center_axis_labels = T)
+#   , .theme = ggridges::theme_ridges(font_size = 12, center_axis_labels = T)
 #   
 # ){
 #   
@@ -1279,7 +1279,7 @@ fun_plot.density <- function(
   , .dbl_limits.y = NULL
   
   # Theme
-  , .theme = ggridges::theme_ridges(center_axis_labels = T)
+  , .theme = ggridges::theme_ridges(font_size = 12, center_axis_labels = T)
   
 ){
   
@@ -1450,7 +1450,7 @@ fun_plot.heatmap <- function(
   , .coord_polar = F
   
   # Theme
-  , .theme = ggridges::theme_ridges(center_axis_labels = T)
+  , .theme = ggridges::theme_ridges(font_size = 12, center_axis_labels = T)
   
 ){
   
@@ -1648,7 +1648,7 @@ fun_plot.line <- function(
   , .coord_polar = F
   
   # Theme
-  , .theme = ggridges::theme_ridges(center_axis_labels = T)
+  , .theme = ggridges::theme_ridges(font_size = 12, center_axis_labels = T)
   
 ){
   
@@ -1822,7 +1822,7 @@ fun_plot.bar <- function(
   , .coord_polar = F
   
   # Theme
-  , .theme = ggridges::theme_ridges(center_axis_labels = T)
+  , .theme = ggridges::theme_ridges(font_size = 12, center_axis_labels = T)
   
 ){
   
@@ -2033,7 +2033,7 @@ fun_plot.lollipop <- function(
   , .coord_polar = F
   
   # Theme
-  , .theme = ggridges::theme_ridges(center_axis_labels = T)
+  , .theme = ggridges::theme_ridges(font_size = 12, center_axis_labels = T)
   
 ){
   
@@ -2255,7 +2255,7 @@ fun_plot.dumbbell <- function(
   , .coord_polar = F
   
   # Theme
-  , .theme = ggridges::theme_ridges(center_axis_labels = T)
+  , .theme = ggridges::theme_ridges(font_size = 12, center_axis_labels = T)
   
 ){
   

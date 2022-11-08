@@ -10,6 +10,8 @@ output:
     toc: TRUE
     number_sections: TRUE
     toc_depth: 4
+    extra_dependencies: ["float"]
+
 header-includes:
    - \usepackage{floatrow}
    - \floatsetup[figure]{capposition=top}
@@ -19,6 +21,7 @@ header-includes:
 knitr::opts_chunk$set(echo = F)
 knitr::opts_chunk$set(message = F)
 knitr::opts_chunk$set(warning = F)
+knitr::opts_chunk$set(fig.pos = "H", out.extra = "")
 ```
 
 # Introduction
@@ -33,7 +36,7 @@ cat(chr_text.intro.dynamic)
 
 ## Ranking
 
-```{r circular_plot, fig.width=4.8, fig.height=4.8, fig.cap=chr_text.caption.circular}
+```{r, fig.width=4.8, fig.height=4.8, fig.cap=chr_text.caption.circular}
 plt_match.polar
 ```
 
@@ -56,7 +59,7 @@ cat(chr_text.topbot.table.dynamic)
 cat(chr_text.compatibility.curve.intro.dynamic)
 ```
 
-```{r line.plot, fig.width=6, fig.height=3.5, fig.cap=chr_text.caption.line}
+```{r line.plot, fig.width=6.3, fig.height=2.5, fig.cap=chr_text.caption.line}
 plt_line.rank
 ```
 
@@ -70,15 +73,13 @@ cat(chr_text.compatibility.curve.dynamic)
 cat(chr_text.distribution.intro.dynamic)
 ```
 
-```{r distribution.plot, fig.cap=chr_text.caption.dist}
+```{r distribution.plot, fig.width=6.3, fig.height=2.5, fig.cap=chr_text.caption.dist}
 plt_density
 ```
 
 ```{r distribution.commentary, results='asis'}
 cat(chr_text.distribution.dynamic)
 ```
-
-\newpage
 
 # Brief Compatibility Analysis
 
@@ -98,7 +99,7 @@ cat(chr_text.factors2.dynamic)
 
 ## Your Best and Worst Matches
 
-```{r best.plot, fig.cap=chr_text.caption.dumbbell.top}
+```{r best.plot, fig.width=6.3, fig.height=4.8, fig.cap=chr_text.caption.dumbbell.top}
 plt_top.match
 ```
 
@@ -110,7 +111,7 @@ cat(chr_text.top.dynamic)
 cat(chr_text.bot.intro.dynamic)
 ```
 
-```{r worst.plot, fig.cap=chr_text.caption.dumbbell.bot}
+```{r worst.plot,  fig.width=6.3, fig.height=4.8, fig.cap=chr_text.caption.dumbbell.bot}
 plt_bot.match
 ```
 
@@ -121,5 +122,5 @@ cat(chr_text.bot.dynamic)
 # Finishing Remarks
 
 ```{r finishing.remarks, results='asis'}
-cat(chr_finishing.remarks)
+cat(chr_finishing.remarks.dynamic)
 ```

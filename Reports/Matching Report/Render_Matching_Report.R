@@ -41,7 +41,12 @@ source('C:/Users/Cao/Documents/Github/Atlas-Research/Functions/Capital_Flexibili
 # chr_text.user <- 'Martijn'
 # chr_text.user <- 'Cao'
 # chr_text.user <- 'Acilio'
-chr_text.user <- 'Gabriel'
+# chr_text.user <- 'Gabriel'
+# chr_text.user <- 'Random'
+# chr_text.user <- 'Random2'
+# chr_text.user <- 'Random3'
+# chr_text.user <- 'Random4'
+chr_text.user <- 'Random5'
 
 # KNN parameters
 dbl_threshold <- 0.17
@@ -51,6 +56,8 @@ chr_text.blank <- '___'
 seq_scale.1_6 <- round(seq(0, 0.9, 1/6), 2)
 # seq_scale.1_5 <- seq_scale.1_6[-c(1,2)]
 seq_scale.1_7 <- c(.33, .33 + .17/2, .50, .50 + .17/2, .67, .67 + .17/2)
+seq_scale.1_5 <- seq(0,1,.25)
+
 
 dbl_recommended.cutff <- 0.67
 
@@ -119,7 +126,7 @@ df_input %>%
   filter(Name == chr_text.user) -> df_input
 
 # EFA-reduced data frame
-df_input %>% 
+df_input %>%
   select(
     all_of(
       list_factors %>%
@@ -135,7 +142,8 @@ df_input %>%
           flatten_chr()
       )
       , .fns = function(x){
-        recode((x + 2)
+        # recode((x + 2)
+        recode(x
                , '1' = 0.00
                , '2' = 0.17
                , '3' = 0.33
@@ -261,6 +269,7 @@ df_KNN.output %>%
       similarity, .50
     )
   ) %>% 
+  slice(1) %>%
   select(
     occupation
     , similarity
@@ -371,6 +380,13 @@ chr_top.underqualified %>%
 case_when(
   length(chr_top.underqualified) == 0 ~ ' whatsover'
   , length(chr_top.underqualified) == nrow(df_dumbbell) ~ 's'
+  , length(chr_top.underqualified) == 1 ~ 
+    chr_top.underqualified %>%
+    paste0('"',.,'"') %>%
+    paste0(collapse = ', ') %>%
+    stri_replace_last_fixed(', ', ', and ') %>%
+    paste0('(viz. ',.,')') %>% 
+    paste('', .)
   , T ~ chr_top.underqualified %>%
     paste0('"',.,'"') %>%
     paste0(collapse = ', ') %>%
@@ -382,14 +398,23 @@ case_when(
 case_when(
   length(chr_top.overqualified) == 0 ~ 'none whatsover'
   , length(chr_top.overqualified) == nrow(df_dumbbell) ~ 'all of them'
-  , T ~ chr_top.overqualified %>%
+  , length(chr_top.overqualified) == (nrow(df_dumbbell) - 1) ~ 'all the others' 
+  , length(chr_top.overqualified) <= 4 & 
+    length(chr_top.overqualified) > 0 ~ 
+    chr_top.overqualified %>%
     paste0('"',.,'"') %>%
     paste0(collapse = ', ') %>%
-    stri_replace_last_fixed(', ', ', and ')
+    stri_replace_last_fixed(', ', ', and ') 
+  , T ~ chr_top.overqualified %>%
+    head(3) %>% 
+    paste0('"',.,'"') %>%
+    paste0(collapse = ', ') %>%
+    paste0(., ', and so on')
 ) -> chr_top.overqualified.viz
 
 df_dumbbell %>% 
   slice_max(you, n = 3) %>% 
+  slice(1:3) %>% 
   pull(factor) %>% 
   str_sort() %>% 
   paste0('"', . , '"') %>% 
@@ -398,6 +423,7 @@ df_dumbbell %>%
 
 df_dumbbell %>% 
   slice_max(top.match, n = 3) %>% 
+  slice(1:3) %>% 
   pull(factor) %>%
   str_sort() %>% 
   paste0('"', . , '"') %>% 
@@ -442,11 +468,13 @@ case_when(
 
 df_dumbbell %>% 
   slice_max(you, n = 3) %>% 
+  slice(1:3) %>% 
   pull(factor) %>% 
   str_sort() -> chr_bot.3str
 
 df_dumbbell %>% 
   slice_max(bot.match, n = 3) %>% 
+  slice(1:3) %>%  
   pull(factor) -> chr_bot.match.3str
 
 intersect(
@@ -473,25 +501,55 @@ chr_bot.match.3str %>%
 # Finishing remarks
 chr_text.broadness %>%
   recode(
-  '1' = 'an exceptionally specialized or niche'
-  , '2' = 'a very specialized or niche'
-  , '3' = 'a somewhat specialized or niche'
-  , '4' = 'fairly distributed'
-  , '5' = 'somewhat extensive or scattered'
-  , '6' = 'a very extensive or scattered'
-  , '7' = 'an exceptionally extensive or scattered'
-) -> chr_text.broadness
-chr_text.broadness2
+  'exceptionally right-skewed' = 'an exceptionally specialized or niche'
+  , 'largely right-skewed' = 'a very specialized or niche'
+  , 'somewhat right-skewed' = 'a somewhat specialized or niche'
+  , 'somewhat normally distributed' = 'a not too broad, nor too specialized, but fairly distributed'
+  , 'somewhat left-skewed' = 'a somewhat broad or multidisciplinary'
+  , 'largely left-skewed' = 'a very broad or multidisciplinary'
+  , 'exceptionally left-skewed' = 'an exceptionally broad or multidisciplinary'
+) -> chr_text.broadness2
 
-chr_text.broadness2.interpretation
+chr_text.broadness %>%
+  recode(
+  'exceptionally right-skewed' = 'it is almost definitely wiser for you to invest in one, maybe two, fields of expertise in which you have more ability'
+  , 'largely right-skewed' = 'it is probably wiser for you to invest in not many different fields of expertise, but concentrate on those in which you have more ability'
+  , 'somewhat right-skewed' = 'that even though it is still possible for you to have more than one field of expertise, it would be probably wiser not to spread out your efforts too much, but concentrate on those fields in which you have more ability'
+  , 'somewhat normally distributed' = 'you have reasonable similarity with many different careers, but actually good or bad matches are reduced in quantity. However, despite having adequate matching percentages with many occupations, you should probably focus on those fields in which you have more ability'
+  , 'somewhat left-skewed' = 'you may actually find yourself to be a good fit for more than a single career path'
+  , 'largely left-skewed' = 'you can probably benefit quite a bit from investing in more than a single career path'
+  , 'exceptionally left-skewed' = 'you will almost definitely benefit from investing in more than a single career path, and specialization may actually hinder your ability to exercize all of your different competencies'
+) -> chr_text.broadness2.interpretation
 
-df_top.match$occupation
+(length(chr_top.overqualified) / nrow(df_dumbbell)) %>% 
+  findInterval(
+    vec = seq_scale.1_5
+  ) %>% 
+  recode(
+    '1' = 'mostly underqualified'
+    , '2' = 'somewhat underqualified'
+    , '3' = 'somewhat overqualified'
+    , '4' = 'mostly overqualified'
+    , '5' = 'completely overqualified'
+  ) -> chr_top.capacity
 
-df_bot.match$occupation
+(length(chr_bot.overqualified) / nrow(df_dumbbell)) %>% 
+  findInterval(
+    vec = seq_scale.1_5
+  ) %>% 
+  recode(
+    '1' = 'mostly underqualified'
+    , '2' = 'somewhat underqualified'
+    , '3' = 'somewhat overqualified'
+    , '4' = 'mostly overqualified'
+    , '5' = 'completely overqualified'
+  ) -> chr_bot.capacity
 
-chr_top.capacity
-
-chr_bot.capacity
+if_else(
+  chr_top.capacity == chr_bot.capacity
+  , paste(chr_bot.capacity, 'as well')
+  , chr_bot.capacity
+) -> chr_bot.capacity
 
 # GENERATE DYNAMIC TEXTS ------------------------------------------------------------
 # Report Title
@@ -623,13 +681,13 @@ fun_text.dynamic(
     paste0(collapse = ', ') %>% 
     stri_replace_last_fixed(', ', ', and ')
   , df_dumbbell %>% 
-    slice_min(bot.match.diff) %>% 
-    slice() %>% 
-    pull(bot.match.diff) %>% 
+    slice_min(top.match.diff) %>% 
+    slice(1) %>% 
+    pull(top.match.diff) %>% 
     round(4) * 100
   , df_dumbbell %>% 
     slice_max(top.match.diff) %>% 
-    slice() %>% 
+    slice(1) %>% 
     pull(top.match.diff) %>% 
     round(4) * 100
   , chr_top.underqualified.n
@@ -680,12 +738,12 @@ fun_text.dynamic(
     stri_replace_last_fixed(', ', ', and ')
   , df_dumbbell %>% 
     slice_min(bot.match.diff) %>% 
-    slice() %>% 
+    slice(1) %>% 
     pull(bot.match.diff) %>% 
     round(4) * 100
   , df_dumbbell %>% 
     slice_max(bot.match.diff) %>% 
-    slice() %>% 
+    slice(1) %>% 
     pull(bot.match.diff) %>% 
     round(4) * 100
   , chr_bot.underqualified.viz
@@ -712,14 +770,13 @@ fun_text.dynamic(
   , chr_text.user
 ) -> chr_finishing.remarks.dynamic
 
-
 # Captions for dynamic reporting with R Markdown
 chr_text.caption.circular <- 'Professional Compatibility Ranking'
 chr_text.caption.table <- 'Your Top 7 and Bottom 3 Career Matches'
 chr_text.caption.line <- 'Professional Compatibility Curve'
 chr_text.caption.dist <- 'Professional Compatibility Distribution'
-chr_text.caption.dumbbell.top <- paste('Your Best Career Match:', str_to_title(chr_matches.topbot[1]))
-chr_text.caption.dumbbell.bot <- paste('Your Worst Career Match:', str_to_title(chr_matches.topbot[2]))
+chr_text.caption.dumbbell.top <- paste('Your Best Career Match —', str_to_title(chr_matches.topbot[1]))
+chr_text.caption.dumbbell.bot <- paste('Your Worst Career Match —', str_to_title(chr_matches.topbot[2]))
 
 # -------- TABLES ---------------------------------------------------------
 # TOP 7, BOTTOM 3 MATCHES ----------------------------------------------------------
@@ -783,7 +840,7 @@ mtx_NA %>%
   , .list_axis.y.args = list(
     limits = c(-0.55,1.1)
   )
-  # , .theme = ggridges::theme_ridges() +
+  # , .theme = ggridges::theme_ridges(font_size = 11, ) +
   , .theme = theme_void() + 
     theme(
       # legend.position = 'bottom'
@@ -792,32 +849,14 @@ mtx_NA %>%
       , panel.grid = element_blank()
       , panel.border = element_blank()
       , plot.margin = margin(0, 0, 0, 0)
-      # , plot.margin = margin(
-      #   t = 0, b = 0, l = 0, r = 0
-      #   , unit = 'cm'
-      # )
       , plot.title = element_blank()
       , plot.subtitle = element_blank()
       , axis.title = element_blank()
       , axis.text = element_blank()
       , axis.ticks = element_blank()
       , axis.line = element_blank()
-      # , axis.ticks.length = unit(0, "pt")
     ) 
   ) -> plt_match.polar
-# ) #+ 
-# geom_textpath(
-#   label = '100%'
-#   , x = '26'
-#   , y = 1.1
-# )
-# geom_texthline(
-#   yintercept = 1
-#   , label = percent(1)
-#   , color = list_atlas.pal$black
-#   , hjust = 5
-#   , size = 3
-# )
 
 plt_match.polar +
   coord_polar(
@@ -862,26 +901,12 @@ plt_match.polar$layers <- c(
 
 plt_match.polar$layers <- c(
   geom_hline(
-    # geomtextpath::geom_labelhline(
-    # geomtextpath::geom_(
     yintercept = 1
     , color = list_atlas.pal$grey
     , size = 2
   )
   , plt_match.polar$layers
 )
-
-# plt_match.polar$layers <- c(
-#   geom_texthline(aes(
-#     label = percent(y)
-#   )
-#     , yintercept = 1
-#     , hjust = 0
-#     , vjust = -0.2
-#     , color = list_atlas.pal$black
-#     )
-#   , plt_match.polar$layers
-# )
 
 # [LINE CHART] PROFESSIONAL COMPATIBILITY CURVE -------------------------------------------------------------------
 df_KNN.output %>%
@@ -899,7 +924,7 @@ df_KNN.output %>%
   , .fun_format.y = label_percent()
   , .reorder_fct = F
   , .reorder_desc = F
-  , .theme = ggridges::theme_ridges(center_axis_labels = T) +
+  , .theme = ggridges::theme_ridges(font_size = 11, center_axis_labels = T) +
     theme(
       plot.margin = margin(0, 0, 0, 0)
       # plot.margin = margin(
@@ -935,40 +960,10 @@ c(
     , fontface = 'bold'
     , linetype = 1
     , linewidth = 1.35
-    , hjust = 0.1
+    , hjust = 0.125
     , vjust = -0.5
   )
 ) -> plt_line.rank$layers
-
-# # [DENSITY] PROFESSIONAL COMPATIBILITY DISTRIBUTION -----------------------
-# df_KNN.output %>%
-#   fun_plot.histogram(aes(
-#     x = similarity
-#     , y = after_stat(density)
-#   )
-#   , .list_axis.x.args = list(
-#     # limits = c(0,1)
-#     limits = c(-0.15,1)
-#     , breaks = breaks_extended(5)
-#   )
-#   , .fun_format.x = percent_format(accuracy = 1)
-#   , .list_labs = list(
-#     title = NULL
-#     , subtitle = NULL
-#     , x = str_to_title('professional compatibility')
-#     , y = NULL
-#   )
-#   , .theme = ggridges::theme_ridges(center_axis_labels = T) +
-#     theme(
-#       plot.margin = margin(0, 0, 0, 0)
-#       , axis.text.y = element_blank()
-#     )
-#   ) +
-#   geom_density(aes(
-#     x = similarity
-#   )
-#   , size = 1.2
-#   ) -> plt_density
 
 # [DENSITY] PROFESSIONAL COMPATIBILITY DISTRIBUTION -----------------------
 df_KNN.output %>%
@@ -978,8 +973,8 @@ df_KNN.output %>%
   )
   , .dbl_limits.y = c(0,1.25*max(density(df_KNN.output$similarity)$y))
   , .list_axis.x.args = list(
-    limits = c(-0.15,1)
-    , breaks = breaks_extended(5)
+    limits = c(-0.1,1.1)
+    , breaks = seq(0,1,.25)
   )
   , .fun_format.x = percent_format(accuracy = 1)
   , .list_labs = list(
@@ -988,7 +983,7 @@ df_KNN.output %>%
     , x = str_to_title('professional compatibility')
     , y = NULL
   )
-  , .theme = ggridges::theme_ridges(center_axis_labels = T) +
+  , .theme = ggridges::theme_ridges(font_size = 11, center_axis_labels = T) +
     theme(
       plot.margin = margin(0, 0, 0, 0)
       , axis.text.y = element_blank()
@@ -1006,7 +1001,7 @@ df_KNN.output %>%
     , fontface = 'bold'
     , linetype = 1
     , linewidth = 1.35
-    , hjust = 0.1
+    , hjust = 0.125
     , vjust = -0.5
   ) -> plt_density
 
@@ -1018,16 +1013,19 @@ df_dumbbell %>%
     , xend = top.match
     , y = factor
   )
-  , .dbl_limits.x = c(0,1)
+  , .list_axis.x.args = list(
+    limits = c(-.1,1.1)
+    , breaks = seq(0,1,.25)
+  )
   , .fun_format.x = label_percent()
   , .fun_format.y = function(y){y}
-  , .fun_format.labels = label_percent()
+  , .fun_format.labels = label_percent(accuracy = .01)
   , .list_labs = list(
     # title = str_to_title('best career match')
     title = NULL
     # , subtitle = str_to_title(glue(
     #   'your most compatible occupation is: {chr_matches.topbot[1]}.'
-    #   
+    #
     # ))
     # , subtitle = str_to_title(chr_matches.topbot[1])
     , subtitle = NULL
@@ -1065,10 +1063,13 @@ df_dumbbell %>%
     , vjust = 2.25
     , hjust = 0.5
   )
-  , .dbl_limits.x = c(0,1)
+  , .list_axis.x.args = list(
+    limits = c(-.1,1.1)
+    , breaks = seq(0,1,.25)
+  )
   , .fun_format.x = label_percent()
   , .fun_format.y = function(y){y}
-  , .fun_format.labels = label_percent()
+  , .fun_format.labels = label_percent(accuracy = .01)
   , .list_labs = list(
     # title = str_to_title('worst career match')
     title = NULL
@@ -1084,7 +1085,7 @@ df_dumbbell %>%
 
 # patchwork::wrap_plots(
 #   plt_top.match
-#   , plt_bot.match + 
+#   , plt_bot.match +
 #     theme(axis.text.y = element_blank())
 #   , ncol = 2
 # ) -> plt_topbot.match
