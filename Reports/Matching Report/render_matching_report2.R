@@ -5,9 +5,11 @@ pkg <- c(
   , 'FNN' #Fast K-NN Algorithm (faster than the 'class' package)
   , 'jsonify' #Work with JSON (faster than jsonlite)
   , 'ggthemes' #Data visualization
-  , 'tidyverse', 'glue', 'stringi' #Data wrangling
+  , 'tidyverse', 'glue', 'stringi', 'english' #Data wrangling
   , 'tinytex' #LaTeX
+  , 'moments' #Skewness
   , 'knitr' #Knitr
+  , 'readxl' #Import excel (use other package?)
 )
 
 # Activate / install packages
@@ -33,32 +35,36 @@ source('C:/Users/Cao/Documents/Github/Atlas-Research/Functions/Factor_Scores.R')
 source('C:/Users/Cao/Documents/Github/Atlas-Research/Functions/Auto_plots.R')
 # Dynamic text
 source('C:/Users/Cao/Documents/Github/Atlas-Research/Functions/Dynamic_text.R')
-# Capital flexibility => Variance-adjusted skewness of professional compatibility curve
-source('C:/Users/Cao/Documents/Github/Atlas-Research/Functions/Capital_Flexibility.R')
+# Percentage of data within N standard deviations
+source('C:/Users/Cao/Documents/Github/Atlas-Research/Functions/Pct_within_nsd.R')
 
 # PARAMETERS --------------------------------------------------------------
 # Selected respondent
 # chr_text.user <- 'Martijn'
-# chr_text.user <- 'Cao'
+chr_text.user <- 'Cao'
 # chr_text.user <- 'Acilio'
 # chr_text.user <- 'Gabriel'
 # chr_text.user <- 'Random'
 # chr_text.user <- 'Random2'
 # chr_text.user <- 'Random3'
 # chr_text.user <- 'Random4'
-chr_text.user <- 'Random5'
+# chr_text.user <- 'Random5'
 
 # KNN parameters
 dbl_threshold <- 0.17
 
 # Dynamic text parameters
 chr_text.blank <- '___'
-seq_scale.1_6 <- round(seq(0, 0.9, 1/6), 2)
-# seq_scale.1_5 <- seq_scale.1_6[-c(1,2)]
-seq_scale.1_7 <- c(.33, .33 + .17/2, .50, .50 + .17/2, .67, .67 + .17/2)
+
+# Scales
 seq_scale.1_5 <- seq(0,1,.25)
+seq_scale.1_6 <- round(seq(0, 0.9, 1/6), 2)
+seq_scale.1_7 <- c(.33, .33 + .17/2, .50, .50 + .17/2, .67, .67 + .17/2)
+seq_scale.1_8 <- round(seq(0,1,1/7), 2)
+seq_scale.skew <- c(-1.5, -1, -0.5, 0, 0.5, 1, 1.5)
 
 
+# Recommendation cutoff
 dbl_recommended.cutff <- 0.67
 
 # Colors
@@ -84,7 +90,32 @@ source('C:/Users/Cao/Documents/Github/Atlas-Research/Data/df_occupations.EFA.R')
 df_input <- readr::read_csv('https://docs.google.com/spreadsheets/d/e/2PACX-1vSphzWoCxoNaiaJcQUWKCMqUAT041Q8UqUgM7rSzIwYZb7FhttKJwNgtrFf-r7EgzXHFom4UjLl2ltk/pub?gid=725827850&single=true&output=csv')
 
 # DEFAULT TEXTS FOR IMPUTATION
-source('C:/Users/Cao/Documents/Github/Atlas-Research/Reports/Matching Report/Default_texts.R')
+map(
+  excel_sheets('C:/Users/Cao/Documents/Github/Atlas-Research/Reports/Matching Report/career_finder_report.xlsx')
+  , ~ read_excel('C:/Users/Cao/Documents/Github/Atlas-Research/Reports/Matching Report/career_finder_report.xlsx', sheet = .x)
+) -> list_df_text
+
+names(list_df_text) <- excel_sheets('C:/Users/Cao/Documents/Github/Atlas-Research/Reports/Matching Report/career_finder_report.xlsx')
+
+# Remove carriage returns
+list_df_text %>%
+  map(function(df){
+    
+    df %>% 
+      mutate(across(
+        where(is.character)
+        , ~ str_remove_all(.x, "\r") %>% 
+          str_remove_all("\\\\n") %>% 
+          str_replace_all("\n", "  \n")
+      ))
+    
+  }) -> list_df_text
+
+# Section list
+list_df_text$sections$text %>% 
+  as.list() -> list_sections
+
+names(list_sections) <- list_df_text$sections$section
 
 # ------- DATA -----------------------------------------------------------
 # EFA-REDUCED OCCUPATIONS DATA FRAME -----------------------------------------------
@@ -123,8 +154,8 @@ df_input %>%
           flatten_chr()
       )
       , .fns = function(x){
-        # recode((x + 2)
-        recode(x
+        recode((x + 2)
+        # recode(x
                , '1' = 0.00
                , '2' = 0.17
                , '3' = 0.33
@@ -259,85 +290,58 @@ df_KNN.output %>%
   ) -> df_med.match
 
 # Recommended occupations (higher than cutff)
-df_KNN.output %>% 
-  filter(similarity >= dbl_recommended.cutff) %>% 
-  nrow() -> int_n.recommended
-
-# Percent of compatibility scores > cutff
-(int_n.recommended / int_n.occupations) %>% 
-  round(1) %>%
-  findInterval(
-    vec = seq_scale.1_6
+list_df_text$recommended %>% 
+  mutate(
+    n.recommended = 
+      df_KNN.output %>% 
+      filter(similarity >= dbl_recommended.cutff) %>% 
+      nrow()
+    # Percent of compatibility scores > cutff
+    , pct.recommended = n.recommended / nrow(df_KNN.output)
+    , n.interval = 
+      pct.recommended %>% 
+      round(1) %>% 
+      findInterval(
+        vec = seq_scale.1_6
+        , all.inside = T
+      )
   ) %>% 
-  recode(
-    '1' = 'extremely narrow'
-    , '2' = 'very narrow'
-    , '3' = 'rather narrow'
-    , '4' = 'rather wide'
-    , '5' = 'very wide'
-    , '6' = 'extremely wide'
-  ) -> chr_n.recommended
+  filter(interval == n.interval) -> df_text.recommended
 
-# Variance-adjusted skewness of professional compatibility curve interpretation
-fun_capital.flex(df_KNN.output$similarity) %>%
-  round(1) %>% 
-  findInterval(
-    # vec = seq_scale.1_6
-    # vec = seq_scale.1_5
-    vec = seq_scale.1_7
-    , all.inside = T
+# Mean
+list_df_text$centrality %>%
+  mutate(
+    mean = mean(df_KNN.output$similarity) 
+    , n.interval = 
+      mean %>%
+      round(1) %>%
+      recode(
+        '0' = -Inf
+        , '1' = Inf
+      ) %>%
+      findInterval(
+        vec = seq_scale.1_8
+        , rightmost.closed = F
+        , left.open = F
+      )
   ) %>% 
-  recode(
-    '1' = 'exceptionally right-skewed'
-    , '2' = 'largely right-skewed'
-    , '3' = 'somewhat right-skewed'
-    , '4' = 'somewhat normally distributed'
-    , '5' = 'somewhat left-skewed'
-    , '6' = 'largely left-skewed'
-    , '7' = 'exceptionally left-skewed'
-  ) -> chr_text.broadness
-# recode(
-#   '1' = 'exceptionally right-skewed'
-#   , '2' = 'largely right-skewed'
-#   , '3' = 'somewhat right-skewed'
-#   , '4' = 'somewhat left-skewed'
-#   , '5' = 'largely left-skewed'
-#   , '6' = 'exceptionally left-skewed'
-# ) -> chr_text.broadness
-# recode(
-#   '1' = 'largely right-skewed'
-#   , '2' = 'somewhat right-skewed'
-#   , '3' = 'somewhat normally distributed'
-#   , '4' = 'somewhat left-skewed'
-#   , '5' = 'largely left-skewed'
-# ) -> chr_text.broadness
+  filter(interval == n.interval) -> df_text.mean
 
+# Standard deviation
 
-chr_text.broadness %>%
-  recode(
-    'exceptionally right-skewed' = 'your professional profile is specialized to an enormous extent, and it is almost certainly best for you to stick to a niche career path in which you excel, all else being equal'
-    , 'largely right-skewed' = 'your professional profile is quite a bit specialized, and you would likely do better pursuing a niche career path, all else being equal'
-    , 'somewhat right-skewed' = 'your professional profile is a little bit specialized, and you would likely do better not investing in too many different career paths, all else being equal'
-    , 'somewhat normally distributed' = 'your professional profile is neither too broad nor too specialized, and your range of both highly recommended or highly incompatible occupations is limited, as your compatibility scores concentrate in the middle of the distribution. In other words, you\'re unlikely to be very good at many different career paths, and also unlikely to be very bad, having a reasonable compatibility with most occupations. But generally speaking, it is wiser to focus on the right end of the distribution, where you will probably excel'
-    , 'somewhat left-skewed' = 'your professional profile is not too specialized, and you can likely thrive in a few different career paths, all else being equal'
-    , 'largely left-skewed' = 'you could thrive in many different career paths, all else being equal'
-    , 'exceptionally left-skewed' = 'you should fare essentially the same in most career paths, all else being equal'
-  ) -> chr_text.broadness.interpretation
-# recode(
-#   'exceptionally right-skewed' = 'your professional profile is specialized to an enormous extent, and it is almost certainly best for you to stick to a niche career path in which you excel, all else being equal'
-#   , 'largely right-skewed' = 'your professional profile is quite a bit specialized, and you would likely do better pursuing a niche career path, all else being equal'
-#   , 'somewhat right-skewed' = 'your professional profile is a little bit specialized, and you would likely do better not investing in too many different career paths, all else being equal'
-#   , 'somewhat left-skewed' = 'your professional profile is not too specialized, and you can likely thrive in a few different career paths, all else being equal'
-#   , 'largely left-skewed' = 'you could thrive in many different career paths, all else being equal'
-#   , 'exceptionally left-skewed' = 'you should fare essentially the same in most career paths, all else being equal'
-# ) -> chr_text.broadness.interpretation
-# recode(
-#     'largely right-skewed' = 'your professional profile is specialized to a significant extent, and it is almost certainly best for you to stick to a niche career path in which you excel, all else being equal'
-#     , 'somewhat right-skewed' = 'your professional profile is quite a bit specialized, and you would likely do better pursuing a niche career path, all else being equal'
-# , 'somewhat normally distributed' = 'your professional profile is not too specialized nor is it too broad as well, and your range of either recommended or incompatible occupations will be restricted, as most of your compatibility scores concentrate in the middle of the distribution. In other words, you\'re unlikely to be very good at many different career paths, and also unlikely to be very bad. But generally speaking, it is wiser to focus on the right end of the distribution, where you\'ll probably excel'
-#     , 'somewhat left-skewed' = 'your professional profile is not too specialized, and you can likely thrive in a few different career paths, all else being equal'
-#     , 'largely left-skewed' = 'you could thrive in many different career paths, all else being equal'
-#   ) -> chr_text.broadness.interpretation
+# Skewness
+list_df_text$skewness %>% 
+  mutate(
+    skewness = (mean(df_KNN.output$similarity) - dbl_recommended.cutff) / sd(df_KNN.output$similarity)
+    , n.interval = 
+      skewness %>% 
+      round(1) %>% 
+      findInterval(
+        vec = seq_scale.skew
+        , all.inside = T
+      ) 
+  ) %>% 
+  filter(interval == n.interval) -> df_text.skewness
 
 # Top match comments
 df_dumbbell %>% 
@@ -348,30 +352,24 @@ df_dumbbell %>%
   filter(top.match < you) %>% 
   pull(factor) -> chr_top.overqualified
 
-chr_top.underqualified %>% 
-  length() %>% 
-  as.character() %>%
-  str_replace('0', 'not a single') %>% 
-  str_replace(
-    as.character(
-      nrow(df_dumbbell)
-    ), 'all'
-  ) -> chr_top.underqualified.n
+case_when(
+  length(chr_top.underqualified) == 0 ~ 'not a single'
+  , length(chr_top.underqualified) == nrow(df_dumbbell) ~ 'all'
+  , T ~ length(chr_top.underqualified) %>% 
+    english() %>% 
+    as.character()
+) -> chr_top.underqualified.n
 
 case_when(
   length(chr_top.underqualified) == 0 ~ ' whatsover'
   , length(chr_top.underqualified) == nrow(df_dumbbell) ~ 's'
   , length(chr_top.underqualified) == 1 ~ 
     chr_top.underqualified %>%
-    paste0('"',.,'"') %>%
-    paste0(collapse = ', ') %>%
-    stri_replace_last_fixed(', ', ', and ') %>%
+    fun_text.commas() %>% 
     paste0('(viz. ',.,')') %>% 
     paste('', .)
   , T ~ chr_top.underqualified %>%
-    paste0('"',.,'"') %>%
-    paste0(collapse = ', ') %>%
-    stri_replace_last_fixed(', ', ', and ') %>%
+    fun_text.commas() %>% 
     paste0('(viz. ',.,')') %>%
     paste('s', .)
 ) -> chr_top.underqualified.viz
@@ -383,14 +381,11 @@ case_when(
   , length(chr_top.overqualified) <= 4 & 
     length(chr_top.overqualified) > 0 ~ 
     chr_top.overqualified %>%
-    paste0('"',.,'"') %>%
-    paste0(collapse = ', ') %>%
-    stri_replace_last_fixed(', ', ', and ') 
+    fun_text.commas()
   , T ~ chr_top.overqualified %>%
     head(3) %>% 
-    paste0('"',.,'"') %>%
-    paste0(collapse = ', ') %>%
-    paste0(., ', and so on')
+    fun_text.commas(.chr_last.comma = ', ') %>% 
+    paste('and so on')
 ) -> chr_top.overqualified.viz
 
 df_dumbbell %>% 
@@ -398,25 +393,21 @@ df_dumbbell %>%
   slice(1:3) %>% 
   pull(factor) %>% 
   str_sort() %>% 
-  paste0('"', . , '"') %>% 
-  paste0(collapse = ', ') %>% 
-  stri_replace_last_fixed(', ', ', and ') -> chr_top.3str
+  fun_text.commas() -> chr_top.3str
 
 df_dumbbell %>% 
   slice_max(top.match, n = 3) %>% 
   slice(1:3) %>% 
   pull(factor) %>%
   str_sort() %>% 
-  paste0('"', . , '"') %>% 
-  paste0(collapse = ', ') %>% 
-  stri_replace_last_fixed(', ', ', and ') -> chr_top.match.3str
+  fun_text.commas()  -> chr_top.match.3str
 
 if_else(
   chr_top.3str == chr_top.match.3str
   , 'the exact same'
   , chr_top.match.3str
 ) -> chr_top.match.3str
-  
+
 # Bot match comments
 df_dumbbell %>% 
   filter(bot.match > you) %>% 
@@ -430,9 +421,7 @@ case_when(
   length(chr_bot.underqualified) == 0 ~ 'no particular'
   , length(chr_bot.underqualified) == nrow(df_dumbbell) ~ 'all'
   , T ~ chr_bot.underqualified %>%
-    paste0('"',.,'"') %>%
-    paste0(collapse = ', ') %>%
-    stri_replace_last_fixed(', ', ', and ') %>%
+    fun_text.commas() %>%
     paste('the', .)
 ) -> chr_bot.underqualified.viz 
 
@@ -442,9 +431,7 @@ case_when(
   , length(chr_bot.overqualified) >= (nrow(df_dumbbell) - 3) &
     length(chr_bot.overqualified) != nrow(df_dumbbell) ~ 'the rest of them'
   , T ~ chr_bot.overqualified %>%
-    paste0('"',.,'"') %>%
-    paste0(collapse = ', ') %>%
-    stri_replace_last_fixed(', ', ', and ')
+    fun_text.commas()
 ) -> chr_bot.overqualified.viz
 
 df_dumbbell %>% 
@@ -468,69 +455,59 @@ case_when(
   , length(chr_bot.3str) == 0 ~ 'nothing'
   , T ~ chr_bot.3str %>%
     str_sort() %>% 
-    paste0('"', . , '"') %>% 
-    paste0(collapse = ', ') %>% 
-    stri_replace_last_fixed(', ', ', and ')
+    fun_text.commas()
 ) -> chr_bot.3str
 
 chr_bot.match.3str %>%
   str_sort() %>% 
-  paste0('"', . , '"') %>% 
-  paste0(collapse = ', ') %>% 
-  stri_replace_last_fixed(', ', ', and ') -> chr_bot.match.3str
+  fun_text.commas() -> chr_bot.match.3str
 
 # Finishing remarks
-chr_text.broadness %>%
-  recode(
-  'exceptionally right-skewed' = 'an exceptionally specialized or niche'
-  , 'largely right-skewed' = 'a very specialized or niche'
-  , 'somewhat right-skewed' = 'a somewhat specialized or niche'
-  , 'somewhat normally distributed' = 'a not too broad, nor too specialized, but fairly distributed'
-  , 'somewhat left-skewed' = 'a somewhat broad or multidisciplinary'
-  , 'largely left-skewed' = 'a very broad or multidisciplinary'
-  , 'exceptionally left-skewed' = 'an exceptionally broad or multidisciplinary'
-) -> chr_text.broadness2
-
-chr_text.broadness %>%
-  recode(
-  'exceptionally right-skewed' = 'it is almost definitely wiser for you to invest in one, maybe two, fields of expertise in which you have more ability'
-  , 'largely right-skewed' = 'it is probably wiser for you to invest in not many different fields of expertise, but concentrate on those in which you have more ability'
-  , 'somewhat right-skewed' = 'that even though it is still possible for you to have more than one field of expertise, it would be probably wiser not to spread out your efforts too much, but concentrate on those fields in which you have more ability'
-  , 'somewhat normally distributed' = 'you have reasonable similarity with many different careers, but actually good or bad matches are reduced in quantity. However, despite having adequate matching percentages with many occupations, you should probably focus on those fields in which you have more ability'
-  , 'somewhat left-skewed' = 'you may actually find yourself to be a good fit for more than a single career path'
-  , 'largely left-skewed' = 'you can probably benefit quite a bit from investing in more than a single career path'
-  , 'exceptionally left-skewed' = 'you will almost definitely benefit from investing in more than a single career path, and specialization may actually hinder your ability to exercize all of your different competencies'
-) -> chr_text.broadness2.interpretation
-
-(length(chr_top.overqualified) / nrow(df_dumbbell)) %>% 
-  findInterval(
-    vec = seq_scale.1_5
+list_df_text$capacity %>% 
+  mutate(
+    pct.over.top = length(chr_top.overqualified) / nrow(df_dumbbell)
+    , n.interval = 
+      pct.over.top %>% 
+      round(1) %>% 
+      findInterval(
+        vec = seq_scale.1_5
+        , all.inside = T
+      ) 
   ) %>% 
-  recode(
-    '1' = 'mostly underqualified'
-    , '2' = 'somewhat underqualified'
-    , '3' = 'somewhat overqualified'
-    , '4' = 'mostly overqualified'
-    , '5' = 'completely overqualified'
-  ) -> chr_top.capacity
+  filter(interval == n.interval) -> df_text.top.capacity
 
-(length(chr_bot.overqualified) / nrow(df_dumbbell)) %>% 
-  findInterval(
-    vec = seq_scale.1_5
-  ) %>% 
-  recode(
-    '1' = 'mostly underqualified'
-    , '2' = 'somewhat underqualified'
-    , '3' = 'somewhat overqualified'
-    , '4' = 'mostly overqualified'
-    , '5' = 'completely overqualified'
-  ) -> chr_bot.capacity
+map(
+  list(
+    'top.match' = chr_top.overqualified
+    , 'bot.match' = chr_bot.overqualified
+  )
+  , function(x){
+    
+    list_df_text$capacity %>% 
+      mutate(
+        pct.over = length(x) / nrow(df_dumbbell)
+        , n.interval = 
+          pct.over %>% 
+          round(1) %>% 
+          findInterval(
+            vec = seq_scale.1_5
+            , all.inside = T
+          ) 
+      ) %>% 
+      filter(interval == n.interval) %>% 
+      return()
+    
+  }
+) -> list_df_text.capacity
 
-if_else(
-  chr_top.capacity == chr_bot.capacity
-  , paste(chr_bot.capacity, 'as well')
-  , chr_bot.capacity
-) -> chr_bot.capacity
+list_df_text.capacity$bot.match %>% 
+  mutate(
+    text = if_else(
+      text == list_df_text.capacity$top.match$text
+      , paste(text, 'as well')
+      , text
+    )
+  ) -> list_df_text.capacity$bot.match
 
 # GENERATE DYNAMIC TEXTS ------------------------------------------------------------
 # Report Title
@@ -538,7 +515,7 @@ chr_text.report.title <- glue('Professional Profile — {chr_text.user}')
 
 # Introduction dynamic text
 fun_text.dynamic(
-  .chr_text = chr_text.intro
+  .chr_text = list_sections$introduction
   , .chr_pattern = chr_text.blank
   , chr_text.user
   , int_n.occupations
@@ -547,110 +524,87 @@ fun_text.dynamic(
 
 # Circular bar plot commentary
 fun_text.dynamic(
-  .chr_text = chr_text.circular_plot
+  .chr_text = list_sections$circular_bar_chart
   , .chr_pattern = chr_text.blank
   , int_n.occupations
 ) -> chr_text.circular_plot.dynamic
 
 # Top / bot matches table commentary
 fun_text.dynamic(
-  .chr_text = chr_text.topbot.table
+  .chr_text = list_sections$top_bot_table
   , .chr_pattern = chr_text.blank
-  , df_top.match$occupation
-  , 100 * df_top.match$similarity
-  , df_bot.match$occupation
-  , 100 * df_bot.match$similarity
-  , df_med.match$occupation
-  , 100 * df_med.match$similarity
-  , chr_n.recommended
-  , int_n.recommended
+  , df_top.match$occupation %>% fun_text.commas()
+  , percent(df_top.match$similarity, accuracy = .01)
+  , df_bot.match$occupation %>% fun_text.commas()
+  , percent(df_bot.match$similarity, accuracy = .01)
+  , df_med.match$occupation %>% fun_text.commas()
+  , percent(df_med.match$similarity, accuracy = .01)
+  , df_text.recommended$text
+  , df_text.recommended$n.recommended
 ) -> chr_text.topbot.table.dynamic
 
 # Professional compatibility curve
 fun_text.dynamic(
-  .chr_text = chr_text.compatibility.curve.intro
+  .chr_text = list_sections$line_chart_intro
   , .chr_pattern = chr_text.blank
 ) -> chr_text.compatibility.curve.intro.dynamic
 
 fun_text.dynamic(
-  .chr_text = chr_text.compatibility.curve
+  .chr_text = list_sections$line_chart
   , .chr_pattern = chr_text.blank
 ) -> chr_text.compatibility.curve.dynamic
 
 # Professional compatibility distribution
 fun_text.dynamic(
-  .chr_text = chr_text.distribution.intro
+  .chr_text = list_sections$distribution_intro
   , .chr_pattern = chr_text.blank
 ) -> chr_text.distribution.intro.dynamic
 
 fun_text.dynamic(
-  .chr_text = chr_text.distribution
+  .chr_text = list_sections$distribution
   , .chr_pattern = chr_text.blank
-  , chr_text.broadness
-  , chr_text.broadness.interpretation
+  , df_text.skewness$text1
+  , df_text.skewness$text2
 ) -> chr_text.distribution.dynamic
 
 # Categories and factors
 fun_text.dynamic(
-  .chr_text = chr_text.factors.intro
+  .chr_text = list_sections$factors_intro
   , .chr_pattern = chr_text.blank
 ) -> chr_text.factors.intro.dynamic
 
 fun_text.dynamic(
-  .chr_text = chr_text.factors1
+  .chr_text = list_sections$factors
   , .chr_pattern = chr_text.blank
-  , length(list_factors)
-  , paste0(
-    paste0('"', names(list_factors), '"') 
-    , collapse = ', '
-  ) %>% 
-    stri_replace_last_fixed(', ', ', and ')
-  , length(list_factors)
-  , length(flatten(list_factors))
-) -> chr_text.factors1.dynamic
-
-fun_text.dynamic(
-  .chr_text = chr_text.factors2
-  , .chr_pattern = chr_text.blank
-  , names(list_factors)[1]
-  , length(names(list_factors[[1]]))
-  , paste0(
-    paste0('"', names(list_factors[[1]]), '"') 
-    , collapse = ', '
-  ) %>% 
-    stri_replace_last_fixed(', ', ', and ')
-  , names(list_factors)[2]
-  , paste0(
-    paste0('"', names(list_factors[[2]]), '"') 
-    , collapse = ', '
-  ) %>% 
-    stri_replace_last_fixed(', ', ', and ')
-  , names(list_factors)[3]
-  , length(names(list_factors[[3]]))
-  , paste0(
-    paste0('"', names(list_factors[[3]]), '"') 
-    , collapse = ', '
-  ) %>% 
-    stri_replace_last_fixed(', ', ', and ')
-  , length(flatten_chr(list_factors))
-) -> chr_text.factors2.dynamic
+  , length(list_factors) %>% english() %>% as.character()
+  , names(list_factors) %>% fun_text.commas()
+  , length(list_factors) %>% english() %>% as.character()
+  , length(flatten(list_factors)) %>% english() %>% as.character()
+  , names(list_factors)[1] %>% fun_text.commas()
+  , length(names(list_factors[[1]])) %>% english() %>% as.character()
+  , names(list_factors[[1]]) %>% fun_text.commas()
+  , names(list_factors)[2] %>% fun_text.commas()
+  , names(list_factors[[2]]) %>% fun_text.commas()
+  , names(list_factors)[3] %>% fun_text.commas()
+  , length(names(list_factors[[3]])) %>% english() %>% as.character()
+  , names(list_factors[[3]]) %>% fun_text.commas()
+  , length(flatten_chr(list_factors)) %>% english() %>% as.character()
+) -> chr_text.factors.dynamic
 
 # Top match
 fun_text.dynamic(
-  .chr_text = chr_text.top.intro
+  .chr_text = list_sections$top_match_intro
   , .chr_pattern = chr_text.blank
 ) -> chr_text.top.intro.dynamic
 
 fun_text.dynamic(
-  .chr_text = chr_text.top
+  .chr_text = list_sections$top_match
   , .chr_pattern = chr_text.blank
-  , df_top.match$occupation
+  , df_top.match$occupation %>% fun_text.commas()
   , df_dumbbell %>% 
     slice_min(top.match.diff) %>% 
     pull(factor) %>% 
-    paste0('"',.,'"') %>% 
-    paste0(collapse = ', ') %>% 
-    stri_replace_last_fixed(', ', ', and ')
+    fun_text.commas()
   , (df_dumbbell %>% 
        slice_min(top.match.diff) %>% 
        nrow() > 1) %>%
@@ -658,9 +612,7 @@ fun_text.dynamic(
   , df_dumbbell %>% 
     slice_max(top.match.diff) %>% 
     pull(factor) %>% 
-    paste0('"',.,'"') %>% 
-    paste0(collapse = ', ') %>% 
-    stri_replace_last_fixed(', ', ', and ')
+    fun_text.commas()
   , df_dumbbell %>% 
     slice_min(top.match.diff) %>% 
     slice(1) %>% 
@@ -675,26 +627,24 @@ fun_text.dynamic(
   , chr_top.underqualified.viz
   , chr_top.overqualified.viz
   , chr_top.3str
-  , df_top.match$occupation
+  , df_top.match$occupation %>% fun_text.commas()
   , chr_top.match.3str
 ) -> chr_text.top.dynamic
 
 # Bottom match
 fun_text.dynamic(
-  .chr_text = chr_text.bot.intro
+  .chr_text = list_sections$bot_match_intro
   , .chr_pattern = chr_text.blank
-  , df_bot.match$occupation
+  , df_bot.match$occupation %>% fun_text.commas()
 ) -> chr_text.bot.intro.dynamic
 
 fun_text.dynamic(
-  .chr_text = chr_text.bot
+  .chr_text = list_sections$bot_match
   , .chr_pattern = chr_text.blank
   , df_dumbbell %>% 
     slice_min(bot.match.diff) %>% 
     pull(factor) %>% 
-    paste0('"',.,'"') %>% 
-    paste0(collapse = ', ') %>% 
-    stri_replace_last_fixed(', ', ', and ')
+    fun_text.commas()
   , (df_dumbbell %>% 
        slice_min(bot.match.diff) %>% 
        nrow() > 1) %>%
@@ -714,9 +664,7 @@ fun_text.dynamic(
   , df_dumbbell %>% 
     slice_max(bot.match.diff) %>% 
     pull(factor) %>% 
-    paste0('"',.,'"') %>% 
-    paste0(collapse = ', ') %>% 
-    stri_replace_last_fixed(', ', ', and ')
+    fun_text.commas()
   , df_dumbbell %>% 
     slice_min(bot.match.diff) %>% 
     slice(1) %>% 
@@ -731,23 +679,23 @@ fun_text.dynamic(
   , (length(chr_bot.underqualified) > 1) %>% 
     if_else('s', '')
   , chr_bot.overqualified.viz
-  , df_bot.match$occupation
+  , df_bot.match$occupation %>% fun_text.commas()
   , chr_bot.match.3str
   , chr_bot.3str
 ) -> chr_text.bot.dynamic
 
 # Finishing remarks
 fun_text.dynamic(
-  .chr_text = chr_finishing.remarks
+  .chr_text = list_sections$finishing_remarks
   , .chr_pattern = chr_text.blank
-  , int_n.recommended
-  , chr_n.recommended
-  , chr_text.broadness2
-  , chr_text.broadness2.interpretation
-  , df_top.match$occupation
-  , df_bot.match$occupation
-  , chr_top.capacity
-  , chr_bot.capacity
+  , df_text.recommended$n.recommended
+  , df_text.recommended$text
+  , df_text.skewness$text3
+  , df_text.skewness$text4
+  , df_top.match$occupation %>% fun_text.commas()
+  , df_bot.match$occupation %>% fun_text.commas()
+  , list_df_text.capacity$top.match$text
+  , list_df_text.capacity$bot.match$text
   , chr_text.user
 ) -> chr_finishing.remarks.dynamic
 
@@ -935,7 +883,7 @@ df_KNN.output %>%
 c(
   plt_line.rank$layers
   , geom_textvline(
-    xintercept = (int_n.occupations - int_n.recommended) / (int_n.occupations - 1)
+    xintercept = (int_n.occupations - df_text.recommended$n.recommended) / (int_n.occupations - 1)
     , label = 'Recommended'
     , color = list_atlas.pal$purple3
     , fontface = 'bold'
@@ -1074,7 +1022,7 @@ df_dumbbell %>%
 # -------- RENDER -----------------------------------------------------------
 # RENDER R MARKDOWN REPORT --------------------------------------------------
 rmarkdown::render(
-  'C:/Users/Cao/Documents/Github/Atlas-Research/Reports/Matching Report/Matching_Report.Rmd'
+  'C:/Users/Cao/Documents/Github/Atlas-Research/Reports/Matching Report/matching_report2.Rmd'
   , output_file = paste0('Matching Report (', chr_text.user, ').pdf')
 )
 

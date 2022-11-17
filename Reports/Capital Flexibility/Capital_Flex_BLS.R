@@ -21,7 +21,7 @@ source('C:/Users/Cao/Documents/Github/Atlas-Research/Functions/Capital_Flexibili
 source('C:/Users/Cao/Documents/Github/Atlas-Research/Functions/Auto_plots.R')
 
 # DATA --------------------------------------------------------------------
-source('C:/Users/Cao/Documents/Github/Atlas-Research/Data/df_occupations.R')
+source('C:/Users/Cao/Documents/Github/Atlas-Research/Data/df_occupations.pop.R')
 
 # -------- CAPITAL FLEXIBLITY ---------------------------------------------
 # APPLY FUNCTION -----------------------------------------------------------
@@ -52,7 +52,7 @@ df_occupations %>%
   ) %>% 
   summarise(
     capital.flex.pct = sum(capital.flex * level) / sum(level)
-  ) %>% view
+  ) %>% 
 full_join(
   df_occupations
 ) %>% 
@@ -74,7 +74,10 @@ df_kflex.long %>%
     , x = str_to_title('capital flexiblity score')
     , y = str_to_title('density')
   )
-  , .dbl_limits.x = c(0,1)
+  , .list_axis.x.args = list(
+    breaks = seq(0,1,.25)
+    , limits = c(-.1,1.05)
+  )
   ) + 
   stat_function(
     fun = dnorm
@@ -90,13 +93,13 @@ df_kflex.long %>%
     , x = median(c(0.75, 1))
     , y = 2.8
     , label = str_wrap(
-      'Capital Flexibility is normally distributed. 
+      'Capital Flexibility is somewhat normally distributed. 
       This means that most values concentrate in the middle of the Capital Flexibility bell curve.
       Thus, attributes have a fair degree of transferability to different professions.'
       , width = 28
     )
     , fontface = 'plain'
-  )
+  ) -> plt_kflex.dist
 
 # CAPITAL FLEXIBILITY OF EACH ATTRIBUTE ------------------------------------
 # Backup
