@@ -61,6 +61,7 @@ seq_scale.1_5 <- seq(0,1,.25)
 seq_scale.1_6 <- round(seq(0, 0.9, 1/6), 2)
 seq_scale.1_7 <- c(.33, .33 + .17/2, .50, .50 + .17/2, .67, .67 + .17/2)
 seq_scale.1_8 <- round(seq(0,1,1/7), 2)
+seq_scale.std <- seq(0,0.5,0.1)
 seq_scale.skew <- c(-1.5, -1, -0.5, 0, 0.5, 1, 1.5)
 
 

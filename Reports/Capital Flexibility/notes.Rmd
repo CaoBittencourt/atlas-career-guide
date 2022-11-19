@@ -1,0 +1,154 @@
+---
+title: "Professional Capital Flexibility"
+subtitle: "Quantifying professional competencies's amplitude of applicability" 
+author: "Atlas Research Team"
+date: "`r Sys.Date()`"
+geometry: a4paper, margin = 1in
+output:
+  pdf_document:
+  # ipsum_pdf:
+    toc: TRUE
+    number_sections: TRUE
+    toc_depth: 4
+    extra_dependencies: ["float"]
+
+header-includes:
+   - \usepackage{floatrow}
+   - \floatsetup[figure]{capposition=top}
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+# Professional capital
+
+# Professional capital flexibility
+
+## Preliminary comparison of distributions
+
+## Preliminary equations
+
+### Bounds for percentage data metrics
+
+$$
+\mu = \frac{1}{n}\sum_{i=1}^{n}x_i
+$$
+
+If $x_i \in [0,1]$ holds for all $i$, then $\frac{1}{n}\sum_{i=1}^{n}x_i \in [0,1]$ as well. Likewise, the median ($Q_2$) and the mode ($M$) cannot fall away of the scale of the data from which they are calculated. Thus, when $x_i \in [0,1] \forall i$, $\mu$, $Q_2$, and $M$ are all contained within this very same interval.\
+In addition, the above implies that the maximum value of the population standard deviation ($\sigma$) is `r round(sqrt(1/2) * sd(c(0,1)), 2)`, while that of the sample approximation ($s$) is around `r round(sd(c(0,1)), 2)`. These results are trivial and can be verified by estimating both metrics on a vector containing only the lower and upper limits of the scale in question, thus yielding the maximum possible dispersion within it. In the case of strict zero-to-one percentage scales, such as the ones we're interested in studying, this vector is simply $(0,1)$. Therefore, the bounds of the first and second moments of the data we're modeling are known beforehand.\
+Finally, the third moment, or skewness ($S_k$), although not as neatly bound as the previous metrics, can have predictable intervals, depending on the method of estimation. For instance, Pearson's (citations) first coefficient of skewness is one such measurement, as
+
+$$
+S_{kp_1}=\frac{\mu-M}{\sigma} \implies S_{kp_1} \in [-1,1].
+$$
+
+Pearson's second coefficient, on the other hand, is not bound at a closed interval:
+
+$$
+S_{kp_2}=\frac{3(\mu-Q_2)}{\sigma} \implies S_{kp_1} \in [-1,1].
+$$
+
+However, the nonparametric skew, which is simply $S_{kp_2}$ divided by 3, is bound at the same interval as $S_{kp_1}$.
+
+At first glance, Bowley's (1901, 1912) coefficient of skewness is also a good candidate for estimating capital flexibility as a percentage, since
+
+$$
+S_{kb}=\frac{Q_3+Q_1-2Q_2}{Q_3-Q_1} 
+$$
+
+and even further generalizations (cite Kelly's metric; Groeneveld; Meeden, 1984), all satisfy the desired constraint of being contained in the $[0,1]$ interval.
+
+That said, all of these metrics fail at different aspects. Firstly, as made clear in the previous exercise of visualization, capital flexibility is a function of dispersion. And both Pearson's coefficients of skewness involve dividing by $\sigma$, making it, in a sense, redundant. In addition, capital flexibility ought to be defined for whatever value of $\sigma$, even zero,
+
+### Initial idea of mathematical formulation
+
+$$
+k_{f}(S_k,\sigma) = \frac{1-S_k(1-\sigma)}{2} 
+$$
+
+$$
+k_{f}(M,\sigma) = M(1-\sigma)
+$$
+
+## Necessary adjustments
+
+### Required mathematical properties
+
+$$
+k_f(M,\sigma) \in [0,1]
+$$
+
+$$
+\frac{\partial k_f(M,\sigma)}{\partial M} > 0
+$$
+
+$$
+S_k > 0 \implies \frac{\partial k_f(M,\sigma)}{\partial \sigma} > 0
+$$
+
+$$
+S_k < 0 \implies \frac{\partial k_f(M,\sigma)}{\partial \sigma} < 0
+$$
+
+$$
+k_f(M,\sigma=0)=M
+$$
+
+$$
+k_f(M=0,\sigma=\sigma_u)=1-k_f(M=1,\sigma=\sigma_u)
+$$
+
+$$
+(implied) k_f(M_1,\sigma = c) \geq k_f(M_2,\sigma = c) \iff M_1 \geq M_2
+$$
+
+### Sketch of capital flexibility plane (side views)
+
+### Sketch of capital flexibility plane
+
+## Revised mathematical formulation
+
+$$
+k_f(M,\sigma)=0.25+0.75M-0.25\sqrt{2\sigma}-0.25(1-M)(1-\sqrt{2\sigma})
+$$
+
+### Sample Capital Flexibility for percentage data
+
+[use $s$]
+
+### Population Capital Flexibility for percentage data
+
+[use $\sigma$]
+
+### Visualizing Capital Flexibility planes
+
+## Intuition for mathematical formulation
+
+## Generalization for any truncated distribution
+
+Although the present analysis is exclusively concerned with percentage data, equations (X) and (Y) can be generalized to any kind of data for which bounds are known and defined. Thus, we could say that capital flexibility or rather, in general terms, "degree of specialization" is calculated as:
+
+[general equation for any bounded data]
+
+[rewrite using upper and lower bounds for sigma and mode]
+
+$$
+k_f(M,\sigma)=\lambda+(1-\lambda)M-\lambda\sqrt{2\sigma}-\lambda(1-M)(1-\sqrt{2\sigma})
+$$
+
+for any given variable $x$, **truncated** at a known interval $[x_{l},x_{u}]$.
+
+It is useful to write down this generalized version (Z) of the capital flexibility estimator, for the concepts involved in capital flexibility have a fairly wide range of applications. Ironically then, capital flexibility itself seems to have a reasonable degree of carry-over as a mathematical instrument.
+
+# Testing
+
+## Data
+
+## Parameters
+
+## Results
+
+## Discussion
+
+# Conclusion
