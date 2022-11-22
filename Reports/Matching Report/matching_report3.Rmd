@@ -1,0 +1,122 @@
+---
+title: "`r chr_text.report.title`"
+subtitle: "Professional Matching Report" 
+author: "Atlas Research Team"
+date: "`r Sys.Date()`"
+geometry: a4paper, margin = 1in
+output:
+  pdf_document:
+  # ipsum_pdf:
+    toc: TRUE
+    number_sections: TRUE
+    toc_depth: 4
+    extra_dependencies: ["float"]
+
+header-includes:
+   - \usepackage{floatrow}
+   - \floatsetup[figure]{capposition=top}
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = F)
+knitr::opts_chunk$set(message = F)
+knitr::opts_chunk$set(warning = F)
+knitr::opts_chunk$set(fig.pos = "H", out.extra = "")
+```
+
+# Introduction
+
+```{r introduction, results='asis'}
+cat(chr_text.intro.dynamic)
+```
+
+\newpage
+
+# Professional Compatibility Overview
+
+## Ranking
+
+```{r, fig.width=4.8, fig.height=4.8, fig.cap=chr_text.caption.circular}
+plt_match.polar
+```
+
+```{r circular_plot.comments, results='asis'}
+cat(chr_text.circular_plot.dynamic)
+```
+
+```{r compatibility.table}
+kable(
+  df_top7.bot3
+  , caption = chr_text.caption.table
+  )
+```
+
+```{r compatibility.table.comments, results='asis'}
+cat(chr_text.topbot.table.dynamic)
+```
+
+```{r line.plot.intro, results='asis'}
+cat(chr_text.compatibility.curve.intro.dynamic)
+```
+
+```{r line.plot, fig.width=6.3, fig.height=2.5, fig.cap=chr_text.caption.line}
+plt_line.rank
+```
+
+```{r line.comments, results='asis'}
+cat(chr_text.compatibility.curve.dynamic)
+```
+
+## Distribution
+
+```{r distribution.intro, results='asis'}
+cat(chr_text.distribution.intro.dynamic)
+```
+
+```{r distribution.plot, fig.width=6.3, fig.height=2.5, fig.cap=chr_text.caption.dist}
+plt_density
+```
+
+```{r distribution.commentary, results='asis'}
+cat(chr_text.distribution.dynamic)
+```
+
+# Brief Compatibility Analysis
+
+```{r factors.intro, results='asis'}
+cat(chr_text.factors.intro.dynamic)
+```
+
+## Categories and Factors
+
+```{r factors, results='asis'}
+cat(chr_text.factors.dynamic)
+```
+
+## Your Best and Worst Matches
+
+```{r best.plot, fig.width=6.3, fig.height=4.8, fig.cap=chr_text.caption.dumbbell.top}
+plt_top.match
+```
+
+```{r best.comments, results='asis'}
+cat(chr_text.top.dynamic)
+```
+
+```{r worst.comments.intro, results='asis'}
+cat(chr_text.bot.intro.dynamic)
+```
+
+```{r worst.plot,  fig.width=6.3, fig.height=4.8, fig.cap=chr_text.caption.dumbbell.bot}
+plt_bot.match
+```
+
+```{r worst.comments, results='asis'}
+cat(chr_text.bot.dynamic)
+```
+
+# Finishing Remarks
+
+```{r finishing.remarks, results='asis'}
+cat(chr_finishing.remarks.dynamic)
+```

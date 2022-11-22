@@ -1,5 +1,5 @@
 ---
-title: "Professional Capital Flexibility"
+title: "Human Capital Flexibility"
 subtitle: "Quantifying professional competencies's amplitude of applicability" 
 author: "Atlas Research Team"
 date: "`r Sys.Date()`"
@@ -14,6 +14,7 @@ output:
 
 header-includes:
    - \usepackage{floatrow}
+   # - \usepackage{mathtools}
    - \floatsetup[figure]{capposition=top}
 ---
 
@@ -21,9 +22,9 @@ header-includes:
 knitr::opts_chunk$set(echo = TRUE)
 ```
 
-# Professional capital
+# Human capital
 
-# Professional capital flexibility
+# Human capital flexibility
 
 ## Preliminary comparison of distributions
 
@@ -57,18 +58,18 @@ $$
 S_{kb}=\frac{Q_3+Q_1-2Q_2}{Q_3-Q_1} 
 $$
 
-and even further generalizations (cite Kelly's metric; Groeneveld; Meeden, 1984), all satisfy the desired constraint of being contained in the $[0,1]$ interval.
+and even further generalizations (cite Kelly's metric; Groeneveld; Meeden, 1984), all satisfy the desired constraint of being contained in a known interval.
 
 That said, all of these metrics fail at different aspects. Firstly, as made clear in the previous exercise of visualization, capital flexibility is a function of dispersion. And both Pearson's coefficients of skewness involve dividing by $\sigma$, making it, in a sense, redundant. In addition, capital flexibility ought to be defined for whatever value of $\sigma$, even zero,
 
 ### Initial idea of mathematical formulation
 
 $$
-k_{f}(S_k,\sigma) = \frac{1-S_k(1-\sigma)}{2} 
+k_{f}(S_k,\sigma) = \frac{1-S_k(1-\sigma)}{2}, S_k \in [-1,1], \sigma \in [0, `r round(sqrt(1/2) * sd(c(0,1)), 2)`] 
 $$
 
 $$
-k_{f}(M,\sigma) = M(1-\sigma)
+k_{f}(M,\sigma) = M(1-\sigma), M \in [0,1], \sigma \in [0, `r round(sqrt(1/2) * sd(c(0,1)), 2)`] 
 $$
 
 ## Necessary adjustments
@@ -77,6 +78,26 @@ $$
 
 $$
 k_f(M,\sigma) \in [0,1]
+$$
+
+$$
+k_f(\alpha x) = k_f(x)
+$$
+
+$$
+k_f(M=x_u,\sigma=0)=1
+$$
+
+$$
+k_f(M=0,\sigma=0)=0
+$$
+
+$$
+k_f(M=x_u,\sigma=\sigma_u)=(1-\lambda)x_u
+$$
+
+$$
+k_f(M=0,\sigma=\sigma_u)=\lambda x_u
 $$
 
 $$
@@ -92,11 +113,15 @@ S_k < 0 \implies \frac{\partial k_f(M,\sigma)}{\partial \sigma} < 0
 $$
 
 $$
+(Alternatively) \frac{\partial k_f(S_k,\sigma)}{\partial S_k} < 0
+$$
+
+$$
 k_f(M,\sigma=0)=M
 $$
 
 $$
-k_f(M=0,\sigma=\sigma_u)=1-k_f(M=1,\sigma=\sigma_u)
+M_1 + M_2 = 1, \space \sigma_1=\sigma_2 \implies k_f(M=M_1,\sigma=\sigma_1)+k_f(M=M_2,\sigma=\sigma_2) = 1
 $$
 
 $$
@@ -109,17 +134,23 @@ $$
 
 ## Revised mathematical formulation
 
+### Population Capital Flexibility for percentage data
+
 $$
-k_f(M,\sigma)=0.25+0.75M-0.25\sqrt{2\sigma}-0.25(1-M)(1-\sqrt{2\sigma})
+k_f(M,\sigma)=0.25+0.75M-0.25\sqrt{2\sigma}-0.25(1-M)(1-2\sqrt{2\sigma})
+$$
+
+$$
+k_f(M,\sigma)=0.25+0.75M-0.25(2\sigma)-0.25(1-M)[1-2(2\sigma)]
 $$
 
 ### Sample Capital Flexibility for percentage data
 
+$$
+k_f(M,s)=0.25+0.75M-0.25\sqrt{`r 1/sd(c(0,1))`s}-0.25(1-M)(1-2\sqrt{`r 1/sd(c(0,1))`s})
+$$
+
 [use $s$]
-
-### Population Capital Flexibility for percentage data
-
-[use $\sigma$]
 
 ### Visualizing Capital Flexibility planes
 
@@ -127,19 +158,53 @@ $$
 
 ## Generalization for any truncated distribution
 
-Although the present analysis is exclusively concerned with percentage data, equations (X) and (Y) can be generalized to any kind of data for which bounds are known and defined. Thus, we could say that capital flexibility or rather, in general terms, "degree of specialization" is calculated as:
+Although the present analysis is exclusively concerned with percentage data, equations (X) and (Y) can be generalized to any kind of data for which bounds are previously known and defined. Thus, we could say that capital flexibility or rather, in general terms, "degree of specialization" is calculated as:
 
-[general equation for any bounded data]
+$$
+k_f(M,\sigma_u,x_u,\lambda) =
+\lambda+(1-\lambda)\frac{M}{x_u}-\lambda\sqrt{\frac{\sigma}{\sigma_u}}-\lambda(1-\frac{M}{x_u})(1-2\sqrt{\frac{\sigma}{\sigma_u}}), \lambda \in [0,1]
+$$
+
+$$
+k_f(M,\sigma_u,x_u,\lambda) = 
+\lambda+(1-\lambda)(M/x_u)-\lambda{(\sigma/\sigma_u})^{\frac{1}{2}}-\lambda[1-(M/x_u)][1-2(\sigma/\sigma_u)^\frac{1}{2}], \lambda \in [0,1]
+$$
+
+$$
+k_f(M,\sigma_u,x_u,\lambda) = 
+\lambda+(1-\lambda)(M/x_u)-\lambda{(\sigma/\sigma_u})-\lambda[1-(M/x_u)][1-2(\sigma/\sigma_u)], \lambda \in [0,1]
+$$
+
+$$
+\sigma_u = 
+\sigma(x_l,x_u)
+$$
+
+[M calculated by the Verter, Shorths, or the Meanshift methods]
 
 [rewrite using upper and lower bounds for sigma and mode]
 
+It is useful to write down this generalized version (Z) of the capital flexibility estimator (X), for the concepts involved in capital flexibility have a potentially wide range of applications. Indeed, we can easily remove equation (Z) out of its initial micro-economic context, and take if for what it is: essentially, a relative measure of dispersion-adjusted mode for any given variable $x$, truncated at a known interval $[x_{l},x_{u}]$. After we understand it as such, then multiple applications of this simple concept come forward. Some obvious examples include [cite obvious examples]
+
+[psychometrics, where scale lengths are previously known]
+
+[any analysis of percentage data]
+
+The parameter $\lambda$ is the dispersion discount factor, that is the rate at which $M$ is adjusted by $\sigma$. It seems intuitive this parameter should not allow for "overcompensation" when discounting the mode, at least in most cases. It is possible that in some applications of equation (Z) high $\lambda$ values could be appropriate, but as a rule, $\lambda$ should be such that
+
 $$
-k_f(M,\sigma)=\lambda+(1-\lambda)M-\lambda\sqrt{2\sigma}-\lambda(1-M)(1-\sqrt{2\sigma})
+1-\lambda \geq \lambda \iff \lambda \leq 1/2
 $$
 
-for any given variable $x$, **truncated** at a known interval $[x_{l},x_{u}]$.
+In other words, although greater dispersion ought to increase the final flexibility estimate in right-skewed distributions, and, alternatively, ought to decrease the score when a left skew is present, the adjustment should not be so strong as to elevate the flexibility of a very low mode value to that of a very high one. For instance, at the ends of the scale, the following should hold:
 
-It is useful to write down this generalized version (Z) of the capital flexibility estimator, for the concepts involved in capital flexibility have a fairly wide range of applications. Ironically then, capital flexibility itself seems to have a reasonable degree of carry-over as a mathematical instrument.
+$$
+k_f(M=x_u,\sigma=\sigma_u,\lambda) \geq k_f(M=x_l,\sigma=\sigma_u,\lambda) \iff \lambda \leq 1/2
+$$
+
+This said, the dispersion discount factor does not have to be a constant, but could be determined in relation to the other variables, leading to interesting results. If we define, say, $\lambda = \sigma/2$, then as $\sigma$ increases, so does the absolute value of dispersion compensation.
+
+[plot of plane with $\lambda = \sigma / 2$]
 
 # Testing
 
@@ -152,3 +217,5 @@ It is useful to write down this generalized version (Z) of the capital flexibili
 ## Discussion
 
 # Conclusion
+
+Ironically then, capital flexibility itself seems to have a reasonable degree of carry-over as a mathematical instrument.

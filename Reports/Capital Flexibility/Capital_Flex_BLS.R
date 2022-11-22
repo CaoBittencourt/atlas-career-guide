@@ -26,6 +26,7 @@ source('C:/Users/Cao/Documents/Github/Atlas-Research/Data/df_occupations.pop.R')
 # -------- CAPITAL FLEXIBLITY ---------------------------------------------
 # APPLY FUNCTION -----------------------------------------------------------
 df_occupations.pop %>% 
+  select(1:127) %>% 
   summarise(
     across(
       .cols = ends_with('.l')
@@ -35,10 +36,14 @@ df_occupations.pop %>%
     cols = everything()
     , names_to = 'attribute'
     , values_to = 'capital.flex'
-  ) -> df_kflex.long
+  ) %>% 
+  arrange(desc(
+    capital.flex
+  )) -> df_kflex.long
 
 # FLEXIBLE CAPITAL PER OCCUPATION -----------------------------------------
 df_occupations %>%
+  select(1:126) %>% 
   pivot_longer(
     cols = ends_with('.l')
     , names_to = 'attribute'
@@ -61,45 +66,90 @@ full_join(
   ) -> df_occupations.kflex
 
 # -------- VISUALIZATIONS -------------------------------------------------
-# CAPITAL FLEXIBILITY DISTRIBUTION -----------------------------------------------------
-# Density
+# # CAPITAL FLEXIBILITY DISTRIBUTION -----------------------------------------------------
+# # Density
+# df_kflex.long %>%
+#   fun_plot.histogram(aes(
+#     x = capital.flex
+#     , y = ..density..
+#   )
+#   , .list_labs = list(
+#     title = str_to_title('distribution of capital flexibility')
+#     , subtitle = str_to_title('understanding the degree of transferability of professional attributes')
+#     , x = str_to_title('capital flexiblity score')
+#     , y = str_to_title('density')
+#   )
+#   , .list_axis.x.args = list(
+#     breaks = seq(0,1,.25)
+#     , limits = c(-.1,1.05)
+#   )
+#   ) + 
+#   stat_function(
+#     fun = dnorm
+#     , args = list(
+#       mean = mean(df_kflex.long$capital.flex)
+#       , sd = sd(df_kflex.long$capital.flex)
+#     )
+#     , col = '#212121'
+#     , size = 1.5
+#   ) +
+#   annotate(
+#     geom = 'text'
+#     , x = median(c(0.75, 1))
+#     , y = 2.8
+#     , label = str_wrap(
+#       'Capital Flexibility is somewhat normally distributed. 
+#       This means that most values concentrate in the middle of the Capital Flexibility bell curve.
+#       Thus, attributes have a fair degree of transferability to different professions.'
+#       , width = 28
+#     )
+#     , fontface = 'plain'
+#   ) -> plt_kflex.dist
+
+# CAPITAL FLEXIBILITY DISTRIBUTION -----------------------
 df_kflex.long %>%
   fun_plot.histogram(aes(
     x = capital.flex
-    , y = ..density..
+    , y = after_stat(density)
   )
+  , .dbl_limits.y = c(0,1.25*max(density(df_kflex.long$capital.flex)$y))
+  , .list_axis.x.args = list(
+    limits = c(-0.1,1.1)
+    , breaks = seq(0,1,.25)
+  )
+  , .fun_format.x = percent_format(accuracy = 1)
   , .list_labs = list(
     title = str_to_title('distribution of capital flexibility')
     , subtitle = str_to_title('understanding the degree of transferability of professional attributes')
-    , x = str_to_title('capital flexiblity score')
-    , y = str_to_title('density')
+    , x = str_to_title('human capital flexiblity score')
+    , y = str_to_title('frequency')
   )
-  , .list_axis.x.args = list(
-    breaks = seq(0,1,.25)
-    , limits = c(-.1,1.05)
-  )
-  ) + 
-  stat_function(
-    fun = dnorm
-    , args = list(
-      mean = mean(df_kflex.long$capital.flex)
-      , sd = sd(df_kflex.long$capital.flex)
+  , .theme = ggridges::theme_ridges(font_size = 11, center_axis_labels = T) +
+    theme(
+      plot.margin = margin(0, 0, 0, 0)
+      , axis.text.y = element_blank()
     )
-    , col = '#212121'
-    , size = 1.5
   ) +
+  geom_density(aes(
+    x = capital.flex
+  )
+  , size = 1.2
+  ) + 
   annotate(
     geom = 'text'
-    , x = median(c(0.75, 1))
-    , y = 2.8
+    , x = median(c(0.7, 1))
+    , y = mean(c(0, 1.25*max(density(df_kflex.long$capital.flex)$y)))
     , label = str_wrap(
-      'Capital Flexibility is somewhat normally distributed. 
-      This means that most values concentrate in the middle of the Capital Flexibility bell curve.
-      Thus, attributes have a fair degree of transferability to different professions.'
-      , width = 28
+      'Human Capital Flexibility follows a somewhat right-skewed bimodal distribution.
+      This means that most values concentrate on the lower end of the scale,
+      clustering around two basic groups: 
+      one with medium-low transferability, 
+      and the other with even lower.
+      Thus, job-related attributes with high carry-over across multiple occupations are not common.'
+      , width = 40
     )
     , fontface = 'plain'
-  ) -> plt_kflex.dist
+  )
 
 # CAPITAL FLEXIBILITY OF EACH ATTRIBUTE ------------------------------------
 # Backup
@@ -288,7 +338,7 @@ plt_occupations.kflex
 # df_kflex.long %>%
 #   arrange(desc(
 #     capital.flex
-#   )) %>% 
+#   )) %>%
 #   write.xlsx(
 #     'df_attributes.kflex.xlsx'
 #   )
@@ -303,10 +353,10 @@ plt_occupations.kflex
 #     , entry_level_education
 #     , annual_wage_2021
 #     , capital.flex.pct
-#   ) %>% 
+#   ) %>%
 #   arrange(desc(
 #     capital.flex.pct
-#   )) %>% 
+#   )) %>%
 #   write.xlsx(
 #     'df_occupations.kflex.xlsx'
 #   )

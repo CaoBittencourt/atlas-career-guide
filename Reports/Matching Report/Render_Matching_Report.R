@@ -38,6 +38,7 @@ source('C:/Users/Cao/Documents/Github/Atlas-Research/Functions/Capital_Flexibili
 
 # PARAMETERS --------------------------------------------------------------
 # Selected respondent
+chr_text.user <- 'Alexandre'
 # chr_text.user <- 'Martijn'
 # chr_text.user <- 'Cao'
 # chr_text.user <- 'Acilio'
@@ -46,7 +47,7 @@ source('C:/Users/Cao/Documents/Github/Atlas-Research/Functions/Capital_Flexibili
 # chr_text.user <- 'Random2'
 # chr_text.user <- 'Random3'
 # chr_text.user <- 'Random4'
-chr_text.user <- 'Random5'
+# chr_text.user <- 'Random5'
 
 # KNN parameters
 dbl_threshold <- 0.17
@@ -123,8 +124,8 @@ df_input %>%
           flatten_chr()
       )
       , .fns = function(x){
-        # recode((x + 2)
-        recode(x
+        recode((x + 2)
+        # recode(x
                , '1' = 0.00
                , '2' = 0.17
                , '3' = 0.33
@@ -285,7 +286,7 @@ fun_capital.flex(df_KNN.output$similarity) %>%
     # vec = seq_scale.1_6
     # vec = seq_scale.1_5
     vec = seq_scale.1_7
-    , all.inside = T
+    , all.inside = F #Fix this
   ) %>% 
   recode(
     '1' = 'exceptionally right-skewed'
