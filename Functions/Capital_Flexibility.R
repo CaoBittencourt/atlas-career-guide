@@ -187,6 +187,7 @@ fun_capital.flex <- function(
 #   
 #   # Check if var is numeric
 #   if(all(is.na(.dbl_var))){
+#     
 #     return(NA)
 #     
 #   } else if(!is.numeric(.dbl_var)){
