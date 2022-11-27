@@ -35,19 +35,20 @@ source('C:/Users/Cao/Documents/Github/Atlas-Research/Functions/Factor_Scores.R')
 source('C:/Users/Cao/Documents/Github/Atlas-Research/Functions/Auto_plots.R')
 # Dynamic text
 source('C:/Users/Cao/Documents/Github/Atlas-Research/Functions/Dynamic_text.R')
-# Percentage of data within N standard deviations
-source('C:/Users/Cao/Documents/Github/Atlas-Research/Functions/Pct_within_nsd.R')
+# Capital flexibility
+source('C:/Users/Cao/Documents/Github/Atlas-Research/Functions/Capital_Flexibility.R')
 
 # PARAMETERS --------------------------------------------------------------
 # Selected respondent
 # chr_text.user <- 'Martijn'
 # chr_text.user <- 'Cao'
+chr_text.user <- 'Alexandre'
 # chr_text.user <- 'Acilio'
 # chr_text.user <- 'Gabriel'
 # chr_text.user <- 'Random'
 # chr_text.user <- 'Random2'
 # chr_text.user <- 'Random3'
-chr_text.user <- 'Random4'
+# chr_text.user <- 'Random4'
 # chr_text.user <- 'Random5'
 
 # KNN parameters
@@ -155,8 +156,8 @@ df_input %>%
           flatten_chr()
       )
       , .fns = function(x){
-        # recode((x + 2)
-        recode(x
+        recode((x + 2)
+        # recode(x
                , '1' = 0.00
                , '2' = 0.17
                , '3' = 0.33
@@ -300,12 +301,9 @@ list_df_text$recommended %>%
     # Percent of compatibility scores > cutff
     , pct.recommended = n.recommended / nrow(df_KNN.output)
     , n.interval = 
-      pct.recommended %>% 
-      round(1) %>% 
-      findInterval(
-        vec = seq_scale.1_6
-        , all.inside = T
-      )
+      pct.recommended %>%
+      round(1) %>%
+      findInterval(vec = seq_scale.1_6)
   ) %>% 
   filter(interval == n.interval) -> df_text.recommended
 
@@ -320,29 +318,20 @@ list_df_text$centrality %>%
         '0' = -Inf
         , '1' = Inf
       ) %>%
-      findInterval(
-        vec = seq_scale.1_8
-        , rightmost.closed = F
-        , left.open = F
-      )
+      findInterval(vec = seq_scale.1_8)
   ) %>% 
   filter(interval == n.interval) -> df_text.mean
 
-# Standard deviation
-
-# Skewness
-list_df_text$skewness %>% 
+# Specialization
+list_df_text$flexibility %>% 
   mutate(
-    skewness = (mean(df_KNN.output$similarity) - dbl_recommended.cutff) / sd(df_KNN.output$similarity)
+    capital.flex = fun_capital.flex(df_KNN.output$similarity)
     , n.interval = 
-      skewness %>% 
+      capital.flex %>% 
       round(1) %>% 
-      findInterval(
-        vec = seq_scale.skew
-        , all.inside = T
-      ) 
+      findInterval(vec = seq_scale.1_7) 
   ) %>% 
-  filter(interval == n.interval) -> df_text.skewness
+  filter(interval == n.interval) -> df_text.flexibility
 
 # Top match comments
 df_dumbbell %>% 
@@ -468,12 +457,9 @@ list_df_text$capacity %>%
   mutate(
     pct.over.top = length(chr_top.overqualified) / nrow(df_dumbbell)
     , n.interval = 
-      pct.over.top %>% 
-      round(1) %>% 
-      findInterval(
-        vec = seq_scale.1_5
-        , all.inside = T
-      ) 
+      pct.over.top %>%
+      round(1) %>%
+      findInterval(vec = seq_scale.1_5) 
   ) %>% 
   filter(interval == n.interval) -> df_text.top.capacity
 
@@ -490,10 +476,7 @@ map(
         , n.interval = 
           pct.over %>% 
           round(1) %>% 
-          findInterval(
-            vec = seq_scale.1_5
-            , all.inside = T
-          ) 
+          findInterval(vec = seq_scale.1_5) 
       ) %>% 
       filter(interval == n.interval) %>% 
       return()
@@ -534,11 +517,11 @@ fun_text.dynamic(
 fun_text.dynamic(
   .chr_text = list_sections$top_bot_table
   , .chr_pattern = chr_text.blank
-  , df_top.match$occupation %>% fun_text.commas()
+  , df_top.match$occupation
   , percent(df_top.match$similarity, accuracy = .01)
-  , df_bot.match$occupation %>% fun_text.commas()
+  , df_bot.match$occupation
   , percent(df_bot.match$similarity, accuracy = .01)
-  , df_med.match$occupation %>% fun_text.commas()
+  , df_med.match$occupation
   , percent(df_med.match$similarity, accuracy = .01)
   , df_text.recommended$text
   , df_text.recommended$n.recommended
@@ -564,8 +547,8 @@ fun_text.dynamic(
 fun_text.dynamic(
   .chr_text = list_sections$distribution
   , .chr_pattern = chr_text.blank
-  , df_text.skewness$text1
-  , df_text.skewness$text2
+  , df_text.flexibility$text1
+  , df_text.flexibility$text2
 ) -> chr_text.distribution.dynamic
 
 # Categories and factors
@@ -581,12 +564,12 @@ fun_text.dynamic(
   , names(list_factors) %>% fun_text.commas()
   , length(list_factors) %>% english() %>% as.character()
   , length(flatten(list_factors)) %>% english() %>% as.character()
-  , names(list_factors)[1] %>% fun_text.commas()
+  , names(list_factors)[1]
   , length(names(list_factors[[1]])) %>% english() %>% as.character()
   , names(list_factors[[1]]) %>% fun_text.commas()
-  , names(list_factors)[2] %>% fun_text.commas()
+  , names(list_factors)[2]
   , names(list_factors[[2]]) %>% fun_text.commas()
-  , names(list_factors)[3] %>% fun_text.commas()
+  , names(list_factors)[3]
   , length(names(list_factors[[3]])) %>% english() %>% as.character()
   , names(list_factors[[3]]) %>% fun_text.commas()
   , length(flatten_chr(list_factors)) %>% english() %>% as.character()
@@ -601,7 +584,7 @@ fun_text.dynamic(
 fun_text.dynamic(
   .chr_text = list_sections$top_match
   , .chr_pattern = chr_text.blank
-  , df_top.match$occupation %>% fun_text.commas()
+  , df_top.match$occupation
   , df_dumbbell %>% 
     slice_min(top.match.diff) %>% 
     pull(factor) %>% 
@@ -628,7 +611,7 @@ fun_text.dynamic(
   , chr_top.underqualified.viz
   , chr_top.overqualified.viz
   , chr_top.3str
-  , df_top.match$occupation %>% fun_text.commas()
+  , df_top.match$occupation
   , chr_top.match.3str
 ) -> chr_text.top.dynamic
 
@@ -636,7 +619,7 @@ fun_text.dynamic(
 fun_text.dynamic(
   .chr_text = list_sections$bot_match_intro
   , .chr_pattern = chr_text.blank
-  , df_bot.match$occupation %>% fun_text.commas()
+  , df_bot.match$occupation
 ) -> chr_text.bot.intro.dynamic
 
 fun_text.dynamic(
@@ -680,7 +663,7 @@ fun_text.dynamic(
   , (length(chr_bot.underqualified) > 1) %>% 
     if_else('s', '')
   , chr_bot.overqualified.viz
-  , df_bot.match$occupation %>% fun_text.commas()
+  , df_bot.match$occupation
   , chr_bot.match.3str
   , chr_bot.3str
 ) -> chr_text.bot.dynamic
@@ -691,10 +674,10 @@ fun_text.dynamic(
   , .chr_pattern = chr_text.blank
   , df_text.recommended$n.recommended
   , df_text.recommended$text
-  , df_text.skewness$text3
-  , df_text.skewness$text4
-  , df_top.match$occupation %>% fun_text.commas()
-  , df_bot.match$occupation %>% fun_text.commas()
+  , df_text.flexibility$text3
+  , df_text.flexibility$text4
+  , df_top.match$occupation
+  , df_bot.match$occupation
   , list_df_text.capacity$top.match$text
   , list_df_text.capacity$bot.match$text
   , chr_text.user
@@ -1023,7 +1006,7 @@ df_dumbbell %>%
 # -------- RENDER -----------------------------------------------------------
 # RENDER R MARKDOWN REPORT --------------------------------------------------
 rmarkdown::render(
-  'C:/Users/Cao/Documents/Github/Atlas-Research/Reports/Matching Report/matching_report2.Rmd'
+  'C:/Users/Cao/Documents/Github/Atlas-Research/Reports/Matching Report/matching_report3.Rmd'
   , output_file = paste0('Matching Report (', chr_text.user, ').pdf')
 )
 

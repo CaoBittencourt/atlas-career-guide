@@ -517,14 +517,11 @@ fun_text.dynamic(
 fun_text.dynamic(
   .chr_text = list_sections$top_bot_table
   , .chr_pattern = chr_text.blank
-  , df_top.match$occupation %>% 
-    fun_text.commas(.chr_last.comma = ', ')
+  , df_top.match$occupation
   , percent(df_top.match$similarity, accuracy = .01)
-  , df_bot.match$occupation %>% 
-    fun_text.commas(.chr_last.comma = ', ')
+  , df_bot.match$occupation
   , percent(df_bot.match$similarity, accuracy = .01)
-  , df_med.match$occupation %>% 
-    fun_text.commas(.chr_last.comma = ', ')
+  , df_med.match$occupation
   , percent(df_med.match$similarity, accuracy = .01)
   , df_text.recommended$text
   , df_text.recommended$n.recommended
@@ -567,12 +564,12 @@ fun_text.dynamic(
   , names(list_factors) %>% fun_text.commas()
   , length(list_factors) %>% english() %>% as.character()
   , length(flatten(list_factors)) %>% english() %>% as.character()
-  , names(list_factors)[1] %>% fun_text.commas()
+  , names(list_factors)[1]
   , length(names(list_factors[[1]])) %>% english() %>% as.character()
   , names(list_factors[[1]]) %>% fun_text.commas()
-  , names(list_factors)[2] %>% fun_text.commas()
+  , names(list_factors)[2]
   , names(list_factors[[2]]) %>% fun_text.commas()
-  , names(list_factors)[3] %>% fun_text.commas()
+  , names(list_factors)[3]
   , length(names(list_factors[[3]])) %>% english() %>% as.character()
   , names(list_factors[[3]]) %>% fun_text.commas()
   , length(flatten_chr(list_factors)) %>% english() %>% as.character()
@@ -587,8 +584,7 @@ fun_text.dynamic(
 fun_text.dynamic(
   .chr_text = list_sections$top_match
   , .chr_pattern = chr_text.blank
-  , df_top.match$occupation %>% 
-    fun_text.commas(.chr_last.comma = ', ')
+  , df_top.match$occupation
   , df_dumbbell %>% 
     slice_min(top.match.diff) %>% 
     pull(factor) %>% 
@@ -615,7 +611,7 @@ fun_text.dynamic(
   , chr_top.underqualified.viz
   , chr_top.overqualified.viz
   , chr_top.3str
-  , df_top.match$occupation %>% fun_text.commas()
+  , df_top.match$occupation
   , chr_top.match.3str
 ) -> chr_text.top.dynamic
 
@@ -623,8 +619,7 @@ fun_text.dynamic(
 fun_text.dynamic(
   .chr_text = list_sections$bot_match_intro
   , .chr_pattern = chr_text.blank
-  , df_bot.match$occupation %>% 
-    fun_text.commas(.chr_last.comma = ', ')
+  , df_bot.match$occupation
 ) -> chr_text.bot.intro.dynamic
 
 fun_text.dynamic(
@@ -668,7 +663,7 @@ fun_text.dynamic(
   , (length(chr_bot.underqualified) > 1) %>% 
     if_else('s', '')
   , chr_bot.overqualified.viz
-  , df_bot.match$occupation %>% fun_text.commas()
+  , df_bot.match$occupation
   , chr_bot.match.3str
   , chr_bot.3str
 ) -> chr_text.bot.dynamic
@@ -681,10 +676,8 @@ fun_text.dynamic(
   , df_text.recommended$text
   , df_text.flexibility$text3
   , df_text.flexibility$text4
-  , df_top.match$occupation %>% 
-    fun_text.commas(.chr_last.comma = ', ')
-  , df_bot.match$occupation %>% 
-    fun_text.commas(.chr_last.comma = ', ')
+  , df_top.match$occupation
+  , df_bot.match$occupation
   , list_df_text.capacity$top.match$text
   , list_df_text.capacity$bot.match$text
   , chr_text.user
@@ -924,6 +917,244 @@ df_KNN.output %>%
     , hjust = 0.125
     , vjust = -0.5
   ) -> plt_density
+
+# # dsdsds -----------------------
+# df_KNN.output %>%
+#   fun_plot.histogram(aes(
+#     x = similarity
+#     , y = after_stat(density)
+#   )
+#   , .dbl_limits.y = c(0,1.25*max(density(df_KNN.output$similarity)$y))
+#   , .list_axis.x.args = list(
+#     limits = c(-0.1,1.1)
+#     , breaks = seq(0,1,.25)
+#   )
+#   , .fun_format.x = percent_format(accuracy = 1)
+#   , .list_labs = list(
+#     title = NULL
+#     , subtitle = NULL
+#     , x = str_to_title('professional compatibility')
+#     , y = NULL
+#   )
+#   , .theme = ggridges::theme_ridges(font_size = 11, center_axis_labels = T) +
+#     theme(
+#       plot.margin = margin(0, 0, 0, 0)
+#       , axis.text.y = element_blank()
+#     )
+#   ) +
+#   geom_density(aes(
+#     x = similarity
+#   )
+#   , size = 1.2
+#   ) + 
+#   geom_textvline(
+#     xintercept = dbl_recommended.cutff
+#     , label = 'Recommended'
+#     , color = list_atlas.pal$green
+#     , fontface = 'bold'
+#     , linetype = 1
+#     , linewidth = 1.35
+#     , hjust = 0.125
+#     , vjust = -0.5
+#   ) -> plt_density
+# 
+# rbeta(10000, 1,1, 2) %>% qplot(geom = 'density')
+# rbeta(10000, 1, 1.5) %>% qplot(geom = 'density')
+# rbeta(10000, 1, 0.25) %>% qplot(geom = 'density')
+# 
+# 
+# 
+# tibble(
+#   # user = df_KNN.output$similarity, 
+#   very.niche = 
+#     rbeta(
+#       n = 10000
+#       , shape1 = 1
+#       , shape2 = 5
+#       , ncp = 0
+#     ) 
+#   , niche = 
+#     rbeta(
+#       n = 10000
+#       , shape1 = 2.5
+#       , shape2 = 5
+#       , ncp = 0
+#     ) 
+#   , normal = 
+#     rbeta(
+#       n = 10000
+#       , shape1 = 5
+#       , shape2 = 5
+#       , ncp = 0
+#     )
+#   , broad =
+#     rbeta(
+#       n = 10000
+#       , shape1 = 5
+#       , shape2 = 2.5
+#       , ncp = 0
+#     ) 
+#   , very.broad =
+#     rbeta(
+#       n = 10000
+#       , shape1 = 5
+#       , shape2 = 1
+#       , ncp = 0
+#     ) 
+# ) %>% 
+#   pivot_longer(
+#     cols = everything()
+#     , names_to = 'profile'
+#     , values_to = 'similarity'
+#   ) %>% 
+#   mutate(profile = fct_inorder(profile)) %>% 
+#   ggplot(aes(
+#     x = similarity
+#     , color = profile
+#     , fill = profile
+#     , label = profile
+#   )) +
+#   geom_textdensity() + 
+#   facet_wrap(
+#     facets = vars(profile)
+#     , nrow = 1
+#   )
+#   
+#   fun_plot.histogram(aes(
+#     x = similarity
+#     , y = after_stat(density)
+#     , fill = profile
+#   )
+#   , .sym_facets = profile
+#   , .list_axis.x.args = list(
+#     limits = c(-0.1,1.1)
+#     , breaks = seq(0,1,.25)
+#   )
+#   , .fun_format.x = percent_format(accuracy = 1)
+#   , .list_labs = list(
+#     title = NULL
+#     , subtitle = NULL
+#     , x = str_to_title('professional compatibility')
+#     , y = NULL
+#   )
+#   , .theme = ggridges::theme_ridges(font_size = 11, center_axis_labels = T) +
+#     theme(
+#       plot.margin = margin(0, 0, 0, 0)
+#       , axis.text.y = element_blank()
+#     )
+#   ) +
+#   geom_density(aes(
+#     x = similarity
+#   )
+#   , size = 1.2
+#   ) + 
+#   geom_textvline(
+#     xintercept = dbl_recommended.cutff
+#     , label = 'Recommended'
+#     , color = list_atlas.pal$green
+#     , fontface = 'bold'
+#     , linetype = 1
+#     , linewidth = 1.35
+#     , hjust = 0.125
+#     , vjust = -0.5
+#   )
+# 
+# tibble(
+#   # user = df_KNN.output$similarity, 
+#   very.niche = 
+#     TruncatedNormal::rtnorm(
+#       n = 873
+#       , mu = 0
+#       , sd = 0.125
+#       , lb = 0 
+#       , ub = 1
+#     )
+#   , niche = 
+#     TruncatedNormal::rtnorm(
+#       n = 873
+#       , mu = 0.125
+#       , sd = 0.25
+#       , lb = 0 
+#       , ub = 1
+#     )
+#   , normal = 
+#     TruncatedNormal::rtnorm(
+#       n = 873
+#       , mu = 0.5
+#       , sd = 0.125
+#       , lb = 0 
+#       , ub = 1
+#     )
+#   , broad = 
+#     TruncatedNormal::rtnorm(
+#       n = 873
+#       , mu = 0.625
+#       , sd = 0.25
+#       , lb = 0 
+#       , ub = 1
+#     )
+#   , very.broad = 
+#     TruncatedNormal::rtnorm(
+#       n = 873
+#       , mu = 1
+#       , sd = 0.125
+#       , lb = 0 
+#       , ub = 1
+#     )
+# ) %>% 
+#   pivot_longer(
+#     cols = everything()
+#     , names_to = 'profile'
+#     , values_to = 'similarity'
+#   ) %>% 
+#   fun_plot.histogram(aes(
+#     x = similarity
+#     , y = after_stat(density)
+#     , fill = profile
+#   )
+#   , .sym_facets = profile
+#   , .list_axis.x.args = list(
+#     limits = c(-0.1,1.1)
+#     , breaks = seq(0,1,.25)
+#   )
+#   , .fun_format.x = percent_format(accuracy = 1)
+#   , .list_labs = list(
+#     title = NULL
+#     , subtitle = NULL
+#     , x = str_to_title('professional compatibility')
+#     , y = NULL
+#   )
+#   , .theme = ggridges::theme_ridges(font_size = 11, center_axis_labels = T) +
+#     theme(
+#       plot.margin = margin(0, 0, 0, 0)
+#       , axis.text.y = element_blank()
+#     )
+#   ) +
+#   geom_density(aes(
+#     x = similarity
+#   )
+#   , size = 1.2
+#   ) + 
+#   geom_textvline(
+#     xintercept = dbl_recommended.cutff
+#     , label = 'Recommended'
+#     , color = list_atlas.pal$green
+#     , fontface = 'bold'
+#     , linetype = 1
+#     , linewidth = 1.35
+#     , hjust = 0.125
+#     , vjust = -0.5
+#   ) -> dsdsds
+# 
+# c(
+#   dsdsds$layers
+#   , geom_histogram(
+#     data = df_KNN.output
+#     , aes(x = similarity)
+#   )
+# ) -> dsdsds$layers
+# 
+# dsdsds
 
 # [DUMBBELL PLOT] USER VS TOP MATCH / BOTTOM MATCH ------------------------------------
 # Top match comparison

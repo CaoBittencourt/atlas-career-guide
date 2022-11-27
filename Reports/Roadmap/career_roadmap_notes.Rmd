@@ -1,0 +1,483 @@
+---
+title: "Career Roadmap"
+subtitle: "Optimizing Career Choice and Development" 
+author: "Atlas Research Team"
+date: "`r Sys.Date()`"
+geometry: a4paper, margin = 1in
+output:
+  pdf_document:
+  # ipsum_pdf:
+    # toc: TRUE
+    # number_sections: TRUE
+    # toc_depth: 4
+    # extra_dependencies: ["float"]
+    # extra_dependencies: ["flafter"]
+
+header-includes:
+   - \usepackage{titlesec}
+   - \usepackage{floatrow}
+   - \usepackage{physics}
+   - \usepackage{mathtools}
+   - \floatsetup[figure]{capposition=top}
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+# knitr::opts_chunk$set(fig.pos = "H", out.extra = "")
+```
+
+\newpage
+
+\titleformat{\paragraph}{\normalfont\normalsize\bfseries}{\theparagraph}{1em}{}
+
+\titlespacing{\paragraph}{0pt}{3.25ex plus 1ex minus .2ex}{1.5ex plus .2ex}
+
+\setcounter{secnumdepth}{5}
+
+\setcounter{tocdepth}{5}
+
+\tableofcontents
+
+\newpage
+
+# Career choice theory
+
+## Definition of the problem
+
+conceptual definition
+
+## Aspects involved in career choice
+
+conceptual definition
+
+### Subjective aspects
+
+#### Personality
+
+Even though personality has been and continues to be modeled and quantified with many different psychometric constructs (e.g. Big Five, EPI, MBTI, etc), we consider it to be a subjective aspect in career choice and development.
+
+For one thing, market conditions and demand don't seem to have much consideration for individual's personalities, provided that they are capable of contributing to an enterprise and accomplishing meaningful objectives. It could also be said that individuals who emphasize their own personality to an excessive extent in employment prospecting will find themselves continuously frustrated, as most - if not all - career paths require quite a bit of compromise between expected job performance and output, and what could be called innate tendencies of cognition, attitude, feeling, and behavior. That is, whatever individual's personalities may be, most daily tasks and necessary skills are basically the same for everybody in a given field.
+
+This is not to say personality cannot have a profound impact on the way people are perceived in the workplace and go about achieving their professional goals; but that, in most cases, this factor can be somewhat ignored, and focusing on it too much is probably detrimental to fulfilling career development.
+
+In addition, personality by itself does not seem to be that good of an indicator of employment choice, and given a few exceptions (e.g. to the Big Five's conscientiousness factor), also cannot predict job performance [citations]. For instance, in the case of the Myers and Briggs Type Indicator (MBTI), assessment results have repeatedly shown that people of the same personality type can and do exercise a significant variety of occupations [citations]. Thus, relying solely on such constructs is not an optimal strategy to choose a career.
+
+#### Interests
+
+Holland
+
+Personal preference proper
+
+P.S.: personal choice always trumps the numeric aspects below. however, it is our duty to provide the most reliable quantitative information to assist in educated career decisions. This said, the following metrics can be used, if desired, to automatically pick the "optimal" career path (disregarding all personal decision-making aspects)
+
+### Objective aspects
+
+#### Wage
+
+\$
+
+#### Professional compatibility
+
+knn matching percentage
+
+#### Time investment
+
+time to achieve satisfactory matching %, i.e. time distance from starting point to desired occupation
+
+# Career development theory
+
+## Aspects involved in career development
+
+having decided on a given career path, how should the individual go about attaining the required competencies? how to prioritize training?
+
+### Marginal cost of human capital
+
+how much does each additional point pay? i.e. market price of a given skill per point
+
+### Marginal time investment
+
+how long does each additional point take to develop? i.e. time investment on a given skill per point
+
+### Human capital flexibility
+
+what is the carry-over of this particular attribute? is it obligatory, or optional?
+
+### Relationship between career development aspects
+
+#### Marginal cost of human capital vs Human capital flexibility
+
+|                       | **high carry-over** | **low carry-over** |
+|-----------------------|---------------------|--------------------|
+| **high capital cost** | in-demand skills    | niche              |
+| **low capital cost**  | expected            | hobby / useless    |
+
+do the same comparison for the other combinations of aspects
+
+# Quantitatively optimizing career choice and development
+
+## Presupposed metrics
+
+### Estimation of career compatibility
+
+Career compatibility is estimated by means of the k-nearest neighbors algorithm (KNN), a non-parametric supervised machine learning method. KNN works simply by minimizing the Euclidean distances between a vector in multidimensional space and a given matrix.
+
+[etc etc implementation via the `FNN` package]
+
+$$
+d_{q,u}^2=\|\vb{A} - \vb{U} \|_2^2 
+= \sum_{i=1}^n{(a_i^q - a_i^u)^2}
+$$
+
+[etc etc convert distance to similarity score many things to comment]
+
+$$
+s_q =
+1 - \left[ \frac{\min(d_{q,u}, 2.5)}{2.5} \right] ^2
+$$
+
+### Estimation of marginal cost of human capital
+
+Prices cannot be negative, therefore OLS (ordinary least squares) is not an option. In addition, the regression shouldn't have an intercept. Thus, the NNLS (non-negative least squares) model is the right methodology to calculate marginal cost of human capital. Therefore, let
+
+$$
+\begin{gathered}
+w_q= \sum_{i=1}^{n}p_ia_i^{q}, 
+\\ p_i \geq 0, 
+\\ a_i^{q} \in [0,100]
+\end{gathered}
+$$
+
+where $w_q$ is the wage of occupation $q$, $a_i^{q}$ the competency level required of attribute $a_i$ to exercise occupation $q$, and $p_i$ is the market price of each additional point gained in this attribute.
+
+If we define $\vb{A}$ as the matrix of all $a_i^q$ attributes for each occupation, $\vb{p}$ the vector of prices, and $\vb{w}$ the vector of wages, then the NNLS solution is given by the minimization of squared Euclidean distances, like so
+
+$$
+\begin{gathered}
+\arg \min_{\vb{p}} \| \vb{A}\vb{p} - \vb{w} ||_2^2, 
+\\ \text{s.t.} \ \vb{p} \geq \vb{0}
+\end{gathered}
+$$
+
+The resulting parameters from this regression (which can be easily carried out using the `nnls` or `bvls` packages in R), is the non-negative price vector $\vb{p}$, that is the marginal expected payoff of additional points in each attribute. In other words, $\vb{p}$ denotes the market prices of professional competencies.
+
+### Estimation of marginal time investment
+
+Likewise, the time investment required to develop each additional point of an attribute cannot be negative. Also, this model too should not have an intercept (i.e. baseline time investment). Again, the NNLS regression is the appropriate solution:
+
+$$
+\begin{gathered}
+\arg \min_{\vb{t}} 
+|| \vb{A}\vb{t} - \boldsymbol{\tau}
+||_2^2, 
+\\ \text{s.t.} 
+\ \vb{t},
+\ \boldsymbol{\tau} \geq \vb{0}
+\end{gathered}
+$$
+
+where $\boldsymbol{\tau}$ is the vector of total time invested to adequately exercise an occupation (i.e. average years of education). Finally, the solution is given by the non-negative vector $\vb{t}$ of marginal time investment to develop each additional point in a particular attribute.
+
+### Estimation of total time investment
+
+The total time investment to attain the required competencies for adequate exercise of an occupation is found by taking the difference between the user's professional profile and the desired career, multiplied by the marginal time investment, then aggregating the results.
+
+Mathematically, we begin by writing the competency gap function:
+
+$$
+\begin{gathered}
+\delta_i^{q}(a^q_i,a^u_i) = 
+ \max(a_i^q - a_i^u,0), 
+\\ a_i^{x} \in [0,100] 
+\ \forall \ x
+\end{gathered}
+$$
+
+where $a_i^q - a_i^u$ measures the ability gap between the user $u$ and occupation $q$. Here, the maxima operator is utilized to address the issue of over-qualification (i.e. when user's scores are greater than needed). Taking the maximum between the difference $a_i^q - a_i^u$ and zero assures that only attributes where the user is under-qualified are counted.
+
+With this and the marginal time investment vector $\vb{t}$, at last we have total time invesment:
+
+$$
+\begin{gathered}
+\eta_q(t_i,\delta_i^q) = \sum_{i=1}^{n}
+t_i \delta_i^q, 
+\\ t_i \geq 0
+\end{gathered}
+$$
+
+Intuitively, we can interpret this equation in a similar way to the *expected time of arrival* (ETA) displayed in many different mobile applications (e.g. in food and package delivery services; traffic, navigation, and ride-hailing apps, etc). Therefore, by aggregating time-investment-weighted competency gaps, we estimate the user's "ETA" to his chosen occupation: how long can he expect to take to achieve his professional goals. We call this metric $\eta_q$, as the Greek letter's name (eta) is a homograph of expected time of arrival.
+
+Now, this equation refers to the total time to *maximize* professional compatibility with an occupation. Nevertheless, we could write a generalization for any arbitrary career similarity percentage $s_q^*$, by adjusting the competency gap function:
+
+$$
+\begin{gathered}
+\delta_i^{q}(a^q_i,a^u_i,s_q^*) = 
+ \max(s_q^*a_i^q - a_i^u,0), 
+\\ a_i^{x} \in [0,100] 
+\ \forall \ x,
+\\ s_q^* \in [0,1]
+\end{gathered}
+$$
+
+This way, individuals are only considered to be under-qualified when their current abilities $a_i^u$ are lesser than a $s_q^*$ fraction of required competency levels for occupation $q$, which may significantly reduce total time investment, when professional compatibility objectives are not as rigorous as completely maximizing the career similarity metric $s_q$. This generalization can be useful in some career development strategies, as will be exemplified ahead.
+
+### Estimation of capital flexibility
+
+[see separate notes on capital flexibility]
+
+Capital flexibility is the degree of carry-over of professional competencies. It is a function of the symmetry and dispersion of required competency levels. Thus, the capital flexibility of the $i$-nth attribute is:
+
+$$
+\begin{gathered}
+k_f^i(M_i,\sigma_i,\sigma_i^{ub},a_i^{ub},\lambda) = 
+\lambda+(1-\lambda)(M_i/a_i^{ub})
+-\lambda{(\sigma_i/\sigma_i^{ub}})
+-\lambda[1-(M_i/a_i^{ub})][1-2(\sigma_i/\sigma_i^{ub})], 
+\\ \lambda \in [0,1]
+\end{gathered}
+$$
+
+where $M_i$ is the mode (most likely value) of the given attribute, calculated by either the Verter's [citations], Shorths's [citations], or mean shift [citations] methods (in R this is implemented with the `modeest` package), $\sigma$ is the standard deviation of required competency levels across all occupations, $a_i^{ub}$ the attribute's upper bound, $\sigma_i^{ub}$ the standard deviation's upper bound, and $\lambda$ is the dispersion discount parameter, that is the rate at which the mode is compensated by the standard deviation.
+
+In our particular case (percentage data), $a_i^{ub} = 1, \ \text{and} \ \sigma_i^{ub}=0.5 \ \forall \ i$. Therefore, defining the dispersion discount parameter $\lambda = 0.25$, the capital flexibility estimator becomes:
+
+$$
+k_f^i(M_i,\sigma_i) = 
+0.25+0.75M_i-0.25(2\sigma_i)-0.25(1-M_i)[1-2(2\sigma_i)]
+$$
+
+## Career choice optimization
+
+Given the above, we can now write a final career recommendation coefficient:
+
+$$
+R_q(s_q,\eta_q,w_q) = s_q \left( 1 - \frac{\eta_q}{\max \eta_q } \right) \left(  \frac{w_q}{\max w_q } \right)
+$$
+
+where $s_q$ is the similarity of the user's professional profile with occupation $q$, $\eta_q$ is the total time investment required to achieve maximum similarity, and $w_q$ the expected yearly wage. Now, $\eta_q$ and $w_q$ are normalized by their maximum values, so as to guarantee the recommendation coefficient $R_q \in [0,1]$. However, this normalization can be done in a myriad of different ways. For instance, in the case of total time investment, we could have:
+
+$$
+R_q(s_q, \eta_q, w_q, \alpha) = 
+s_q \left( \frac{\alpha}{\alpha+\eta_q} \right) \left(  \frac{w_q}{\max w_q } \right), 
+\ \alpha > 0
+$$
+
+where $\alpha$ is the minimum legal age to work, which is 14 years old in the United States. Thus, we could call $\alpha$ "formative years", and $\eta_q$ then would be "years of training beyond formative years". For occupations that require no formal education, this number is zero.
+
+It should also be stated that the above equation is a deliberate simplification of the problem, for any other functional form $R_q=f(s_q,\eta_q,w_q,...)$ could be used to construct this weighted recommendation coefficient $R_q$, provided it satisfies the following constraints:
+
+$$
+\begin{gathered}
+\frac{\partial f(s_q,\eta_q,w_q,...)}{\partial s_q} > 0
+\\ \frac{\partial f(s_q,\eta_q,w_q,...)}{\partial \eta_q} < 0
+\\ \frac{\partial f(s_q,\eta_q,w_q,...)}{\partial w_q} > 0
+\end{gathered}
+$$
+
+These conditions require the career recommendation coefficient $R_q$ to be increasing in both professional compatibility and wages, and decreasing in total time investment. In addition, it seem appropriate that such a functional form should satisfy some further constraints as well:
+
+$$
+\frac{\partial^2 f(s_q, \eta_q, w_q, ...)}{\partial s_q^2} \leq 0
+$$
+
+$$
+\frac{\partial^2 f(s_q, \eta_q, w_q, ...)}{\partial \eta_q^2} \geq 0
+$$
+
+$$
+\frac{\partial^2 f(s_q, \eta_q, w_q, ...)}{\partial w_q^2} \leq 0
+$$
+
+$$
+\lim_{\eta_q \rightarrow \infty} 
+[ 
+f(s_q, \eta_q, w_q, ...) 
+] = 0
+$$
+
+$$
+\lim_{w_q \rightarrow 0} 
+[ 
+f(s_q, \eta_q, w_q, ...) 
+] = 0
+$$
+
+which signify that $R_q$ should be decreasingly increasing in professional compatibility and wages, meaning the higher career similarity scores and earnings are, the lower their relative importance in decision-making should be (i.e. after given compatibility and wage thresholds, these variables ought to become less and less relevant, although still important).
+
+Again, the opposite should hold for time investment: as time invested to exercise an occupation increases, the greater the "penalty" to recommendation scores; that is, the initial time investments in education are considered "cheaper" than the later investments. The rationale for this is very simple, just like in the case of life insurance policies: with each passing year, the individual has fewer years to live, which therefore become increasingly more valuable, making educational career investments all the more "expensive".
+
+The last two constraints mean, simply, that as time investment increases to infinity, the recommendation coefficient should approach zero; and, alternatively, as wages decrease to zero (i.e. slave labor), the recommendation coefficient should also approach zero.
+
+An example of a functional form that satisfies all of these constraints is:
+
+$$
+R_q(s_q,\eta_q,w_q,\alpha) = 
+\left( \frac{\alpha}{\alpha+\eta_q} \right) 
+\left[s_q \left( \frac{w_q}{\max w_q } \right) \right]^\frac{1}{2}
+, \ \alpha > 0
+$$
+
+The intuition behind this formulation is as follows: optimal career choices ought to combine high professional compatibility scores with maximum wages, and minimum time investment. Therefore, the "optimal" career choice (statistically speaking) is found by maximizing $R_q$:
+
+$$
+\arg \max_{q} 
+\left\{
+\left( \frac{\alpha}{\alpha+\eta_q} \right) 
+\left[s_q \left( \frac{w_q}{\max w_q } \right) \right]^\frac{1}{2} \right\}
+$$
+
+Or, in the case of the simpler initial expression,
+
+$$
+\arg \max_{q} \left[ s_q \left( 1- \frac{\eta_q}{\max \eta_q } \right) \left(  \frac{w_q}{\max w_q } \right) \right]
+$$
+
+One last comment on this subject. Although, firstly, it appears "less sophisticated", the earlier normalization technique may actually find some utility to remedy complexities associated with formulating the weighted recommendation coefficient $R_q$, since normalizing variables by the maxima maintains the calculation's frame of reference within the same scope (i.e. the original sample). In our case this means comparing the user exclusively with himself, which could be helpful when, say, user's $\eta_q$ scores are considerably and systematically higher than the population average. This problem can easily happen with youngsters taking the assessments, but can also just as easily be avoided by applying the maxima normalization.
+
+This said, such an adjustment is probably unnecessary, as comparisons of different $R_q$ scores with the aim of choosing an individual's career have to be made on relative terms anyway, and the coefficient's scale is only a factor in so far as aesthetics and easiness of reading are concerned. Furthermore, performing such normalizations on the individual-level would hinder population-level analyses. In fact, if the $R_q$ metric is to be used in the context of corporate training or even in recruitment and selection as a means to contrast candidates against one another, then the maxima normalization would definitely harm the overall process.
+
+## Career development optimization
+
+Once the user has decided on his career path - either by subjective preference, automated statistical recommendation, or both -, then we must also optimize the required steps to achieve this goal.
+
+This is done by prioritizing training in competencies with the highest values of marginal cost of human capital, and human capital flexibility, and lowest values of marginal time investment. Hence, professional development is optimized by focusing on learning high-paying skills, with carry-over to multiple occupations, in the shortest time frame possible (i.e. "quick wins"). We could say this involves maximizing the acquisition of "flexible dollars per hour" ($\$_f/h$), that is profitability, when choosing which attributes to develop first.
+
+Mathematically, we can write down a coefficient of recommendation similar to the one above, now aiming to optimize competency development, instead of career choice. In order to do so, we quantify the desired properties described using a functional form such as
+
+$$
+\rho_i = 
+\frac{\delta_i^q}{100}
+\left[
+k_f^i \left( 1- \frac{t_i}{\max t_i } \right) 
+\left(  \frac{p_i}{\max p_i } \right)
+\right]
+$$
+
+or even
+
+$$
+\rho_i = 
+\frac{\delta_i^q}{100}
+\left[
+\frac{1}{2} \left( 1- \frac{t_i}{\max t_i } \right) 
++ \frac{k_f^i}{2} \left( \frac{p_i}{\max p_i } \right)
+\right]
+$$
+
+since $p_i = 0$ for most attributes. In addition, it should be noted that in all of these formulations $\delta_i^q$ could be substituted for $\delta_i^q(s_q^*)$, if the desired goal is not to fully maximize matching percentage with a given occupation, but only to reach an arbitrary $s_q^*$ compatibility.
+
+Another interesting option would be to approximate the present value estimator widely used in Finance, which seems to be very much applicable to the topic at hand:
+
+$$
+PV=FV \exp[-r(t_1-t_0)]
+$$
+
+In this case, the coefficient becomes:
+
+$$
+\rho_i =
+k_f^i
+p_i 
+\delta_i^q
+\exp(
+-t_i  
+\delta_i^q
+)
+$$
+
+which is an unbounded version, expressing the present value of future "flexible dollars" ($k_f^i p_i \delta_i^q$) obtained from investing $t_i$ time units to close the $\delta_i^q$ competency gap.
+
+Therefore, in this model, individuals discount the expected future value of human capital taking into consideration the time it would take to develop such capital, then compare the present values of different payoffs so as to rationally decide on which competencies to develop.
+
+The advantage of this unbounded formulation is that it is expressed in the variables's original units, and thus it yields the actual estimation of expected "flexible dollars per hour", instead of a dimensionless percentage. However, there are many different ways of constructing the recommendation coefficient, and a dimensionless model can be useful too. One example for the bounded percentage-based metric is:
+
+$$
+\rho_i =
+\left[ 
+k_f^i
+\left(  \frac{p_i}{\max p_i } \right)
+\left(
+\frac{\delta_i^q}{100}
+\right)
+\right]
+ \exp 
+\left[ 
+-\left(
+\frac{t_i}{\max t_i} 
+\right)
+\left(
+\frac{\delta_i^q}{100}
+\right)
+\right]
+$$
+
+All of this said, other economic strategies for training optimization are possible. For, as already stated, the above-mentioned strategy seeks to anticipate the acquisition of "flexible dollars per hour" by training firstly and most intensively those competencies that are transferable, pay well, and take the least amount of time to learn, so as to boost the individual's morale with the sense of accomplishment derived from "quick wins" and greater initial payoffs. But one unintentional consequence of this method can be the delay in achieving "acceptable" compatibility with the desired occupation.
+
+Thus, an alternative strategy, emphasizing training in the competencies lagging the most, could have a place in the career development algorithm. The effect of this approach would be to increase matching percentage faster, by focusing on those attributes with the largest competency gaps, so as to more promptly decrease the Euclidean distance between the user and his chosen occupation, and as a result provide greater initial gains of similarity (i.e. matching percentage). In other words, the *missing* core competencies would be prioritized.
+
+The obvious appeal of this strategy is that some people could want (or need) to join the labor force as soon as possible, postponing the refinement of secondary, or least lagging skills. In these cases, reaching the minimum "acceptable" matching percentage with an occupation would be key to secure employment in the field earlier.
+
+However, for the very same reason, this strategy lacks the morale-building benefits of "quick wins" (i.e. from mastering faster to learn, higher paying and more applicable skills first). It is also more vulnerable to changes in individuals's motivations and preferences (should they decide to switch courses, which frequently happens).
+
+At last, laborers who prioritize training according to the first strategy, maximizing the obtainment of "flexible dollars per hour", should more quickly be perceived in the marketplace as "valuable", as their most developed competencies would have higher marginal cost of human capital and high carry-over (i.e. in-demand skills).
+
+It seems the first strategy is more adequate for younger people, and the second, for seasoned workers transitioning to other fields. Either way, the total time investment to achieve *maximum* career compatibility is the same whichever route is taken: since total time investment $\eta_q$ is the sum of marginal-time-investment-weighted competency gaps, the final duration must be equal in both strategies. The question is: "Which would the individual prefer *first*: faster gains of 'flexible dollars per hour', or faster achievement of minimum 'acceptable' career compatibility?"
+
+Having understood this, an example of how this similarity-maximizing strategy can be written is:
+
+$$
+\rho_i = 
+t_i\delta_i^q(s_q^*),
+$$
+
+which corresponds to the total time investment necessary to close the individual's competency gap $\delta_i^q(s_q^*,a_i^q,a_i^u)=\max(s_q^*a_i^q - a_i^u ,0)$ in a given attribute to adequately exercise occupation $q$ at the minimum "acceptable" compatibility level $s_q^m$, after adjusting for over-qualification.
+
+In other words, using this economic strategy, individuals will attempt to reach "acceptable" matching percentages with their chosen occupations by developing the most lagging abilities first, up to the optimum point $a_i^u = s_q^m a_i^q$, where minimum "acceptable" similarity score $s_q^m$ is attained.
+
+Of course, it is also possible to provide a middle-ground approach as a linear combination of different strategies. For instance, taking the above functional forms, we could have:
+
+$$
+\rho_i=
+\pi \left\{ \left[ 
+k_f^i p_i
+\left(
+\frac{\delta_i^q}{100}
+\right)
+\right]
+ \exp 
+\left[ 
+-\left(
+\frac{t_i}{\max t_i} 
+\right)
+\left(
+\frac{\delta_i^q}{100}
+\right)
+\right]
+\right\}
++ (1-\pi)[t_i\max(s_q^m a_i^q-a_i^u, 0)]
+, \pi \in [0,1]
+$$
+
+where $\pi$ is the parameter indicating preference for faster acquisition of "flexible dollars per hour", and $1-\pi$, the preference for faster attainment of minimum "acceptable" professional compatibility, both of which can be defined beforehand, or by user input.
+
+Again, whatever may be the functional form of this competency training recommendation coefficient $\rho_i$, optimal career development should always aim to maximize it at each and every stage of an individual's working life.
+
+Thus, it is established a career progression cycle of continuous iterations of parameterized competency training *planning* and *execution*, where current and optimal $a_i^u$ skill levels are measured and evaluated by periodically retaking the assessments and recalculating the $\rho_i$ training recommendation coefficients. This process is illustrated with the diagram below, on steps 4, 5, and 8:
+
+![Career Roadmap Progression Cycle](development_cycle.jpg)
+
+We can optimize career development even further by estimating not only the order of competency training, but the recommended time allocation as well, resulting in parameterized schedules, and hours of study targets. Say an individual has $H$ hours to study each week. The optimal time allocation, then, for him to achieve maximum similarity with his desired occupation would be:
+
+$$
+h_i^* =
+H  \left(
+\frac{\rho_i} {\sum_{j=1}^n \rho_j}
+\right)
+$$
+
+Of course, it is wiser to select a subset of the $n$ competencies to be trained at a particular time period when making use of this equation for study scheduling. But, in either case, the method still applies.
+
+Finally, supposing we can determine a list of training tasks of increasing difficulty (that is, a list of competency development milestones), then we could also recommend *specific* training, providing initial guidelines and direction for professional development, reducing dependency on mentors's potentially biased judgments, and simultaneously any costs associated with mentoring.
+
+The result of all of these procedures will be: 1) an increase in credibility, through the use of robust mathematical processes, minimizing subjective mentoring bias; and 2) an increase in corporate profits, due to cost reductions.
+
+P.S.: Depending on how far we would like to take the idea of providing specific competency development milestones and training, Atlas could itself become a decentralized learning environment, even a sort of online school. We could partner with online courses platforms, such as Udemy, Coursera, Code Academy, and many others, to outsource part of specific training, as well as increase advertisement revenue, and the in-flow of clients from other domains. In addition, such an application could find great marketing potential among the home-schooling community, which has grown enormously in recent years.

@@ -1,0 +1,228 @@
+---
+title: "Human Capital Flexibility"
+subtitle: "Quantifying professional competencies's amplitude of application" 
+author: "Atlas Research Team"
+date: "`r Sys.Date()`"
+geometry: a4paper, margin = 1in
+output:
+  pdf_document:
+  # ipsum_pdf:
+    toc: TRUE
+    number_sections: TRUE
+    toc_depth: 4
+    extra_dependencies: ["float"]
+
+header-includes:
+   - \usepackage{floatrow}
+   # - \usepackage{mathtools}
+   - \floatsetup[figure]{capposition=top}
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+# Human capital flexibility theory
+
+## Definition of human capital
+
+[conceptual definition]
+
+## Definition of human capital flexibility
+
+[conceptual definition]
+
+## Preliminary comparison of distributions
+
+## Preliminary equations
+
+### Bounds for percentage data metrics
+
+$$
+\mu = \frac{1}{n}\sum_{i=1}^{n}x_i
+$$
+
+If $x_i \in [0,1]$ holds for all $i$, then $\frac{1}{n}\sum_{i=1}^{n}x_i \in [0,1]$ as well. Likewise, the median ($Q_2$) and the mode ($M$) cannot fall away of the scale of the data from which they are calculated. Thus, when $x_i \in [0,1] \forall i$, $\mu$, $Q_2$, and $M$ are all contained within this very same interval.\
+In addition, the above implies that the maximum value of the population standard deviation ($\sigma$) is `r round(sqrt(1/2) * sd(c(0,1)), 2)`, while that of the sample approximation ($s$) is around `r round(sd(c(0,1)), 2)`. These results are trivial and can be verified by estimating both metrics on a vector containing only the lower and upper limits of the scale in question, thus yielding the maximum possible dispersion within it. In the case of strict zero-to-one percentage scales, such as the ones we're interested in studying, this vector is simply $(0,1)$. Therefore, the bounds of the first and second moments of the data we're modeling are known beforehand.\
+Finally, the third moment, or skewness ($S_k$), although not as neatly bound as the previous metrics, can have predictable intervals, depending on the method of estimation. For instance, Pearson's (citations) first coefficient of skewness is one such measurement, as
+
+$$
+S_{kp_1}=\frac{\mu-M}{\sigma} \implies S_{kp_1} \in [-1,1]
+$$
+
+Pearson's second coefficient, on the other hand, is not bound at a closed interval:
+
+$$
+S_{kp_2}=\frac{3(\mu-Q_2)}{\sigma}
+$$
+
+However, the nonparametric skew, which is simply $S_{kp_2}$ divided by 3, is bound at the same interval as $S_{kp_1}$.
+
+At first glance, Bowley's (1901, 1912) coefficient of skewness is also a good candidate for estimating human capital flexibility as a percentage, since
+
+$$
+S_{kb}=\frac{Q_3+Q_1-2Q_2}{Q_3-Q_1} 
+$$
+
+and even further generalizations (cite Kelly's metric; Groeneveld; Meeden, 1984), all satisfy the desired constraint of being contained in a known interval.
+
+That said, all of these metrics fail at different aspects. Firstly, as made clear in the previous exercise of visualization, human capital flexibility is a function of dispersion. And both Pearson's coefficients of skewness involve dividing by $\sigma$, making it, in a sense, redundant. In addition, this flexibility estimator ought to be defined for whatever value of $\sigma$, even zero. As regards the quantile-based metrics, they sometimes suffer from the same problem, that is when $Q_3=Q_1$ (in the case of Bowley's coefficient). Therefore, it seems that skewness, although very much related to the concept of human capital flexibility, is not itself the right tool calculate it. So, the obvious alternative is to use the mode.
+
+### Initial idea of mathematical formulation
+
+$$
+k_{f}(S_k,\sigma) = \frac{1-S_k(1-\sigma)}{2}, S_k \in [-1,1], \sigma \in [0, `r round(sqrt(1/2) * sd(c(0,1)), 2)`] 
+$$
+
+$$
+k_{f}(M,\sigma) = M(1-\sigma), M \in [0,1], \sigma \in [0, `r round(sqrt(1/2) * sd(c(0,1)), 2)`] 
+$$
+
+### Necessary adjustments
+
+### Required mathematical properties
+
+$$
+k_f(M,\sigma) \in [0,1]
+$$
+
+$$
+k_f(\alpha x) = k_f(x)
+$$
+
+$$
+k_f(M=x_u,\sigma=0)=1
+$$
+
+$$
+k_f(M=0,\sigma=0)=0
+$$
+
+$$
+k_f(M=x_u,\sigma=\sigma_u)=(1-\lambda)x_u
+$$
+
+$$
+k_f(M=0,\sigma=\sigma_u)=\lambda x_u
+$$
+
+$$
+\frac{\partial k_f(M,\sigma)}{\partial M} > 0
+$$
+
+$$
+S_k > 0 \implies \frac{\partial k_f(M,\sigma)}{\partial \sigma} > 0
+$$
+
+$$
+S_k < 0 \implies \frac{\partial k_f(M,\sigma)}{\partial \sigma} < 0
+$$
+
+$$
+(Alternatively) \frac{\partial k_f(S_k,\sigma)}{\partial S_k} < 0
+$$
+
+$$
+k_f(M,\sigma=0)=M
+$$
+
+$$
+M_1 + M_2 = 1, \space \sigma_1=\sigma_2 \implies k_f(M=M_1,\sigma=\sigma_1)+k_f(M=M_2,\sigma=\sigma_2) = 1
+$$
+
+$$
+(implied) k_f(M_1,\sigma = c) \geq k_f(M_2,\sigma = c) \iff M_1 \geq M_2
+$$
+
+## Revised mathematical formulation
+
+### Population Human Capital Flexibility Estimator for percentage data
+
+$$
+k_f(M,\sigma)=0.25+0.75M-0.25\sqrt{2\sigma}-0.25(1-M)(1-2\sqrt{2\sigma})
+$$
+
+$$
+k_f(M,\sigma)=0.25+0.75M-0.25(2\sigma)-0.25(1-M)[1-2(2\sigma)]
+$$
+
+### Sample Human Capital Flexibility Estimator for percentage data
+
+$$
+k_f(M,s)=0.25+0.75M-0.25\sqrt{`r 1/sd(c(0,1))`s}-0.25(1-M)(1-2\sqrt{`r 1/sd(c(0,1))`s})
+$$
+
+[use $s$]
+
+### Visualizing Human Capital Flexibility planes
+
+## Intuition for mathematical formulation
+
+## Generalization for any truncated variable
+
+Although the present analysis is exclusively concerned with percentage data of job-related attributes, equations (X) and (Y) can be generalized to any kind of distribution for which bounds are previously known and defined. For this, we need only normalize the given truncated variable $x$, bound at $[x_{l},x_{u}]$, by the intervals's upper limit, $x_u$, and apply equations (X) and (Y) as usual. Or, if preferred, the calculation can be done directly as such:
+
+$$
+k_f(M,\sigma, \sigma_u,x_u,\lambda) =
+\lambda+(1-\lambda)\frac{M}{x_u}-\lambda\sqrt{\frac{\sigma}{\sigma_u}}-\lambda(1-\frac{M}{x_u})(1-2\sqrt{\frac{\sigma}{\sigma_u}}), \lambda \in [0,1]
+$$
+
+$$
+k_f(M,\sigma,\sigma_u,x_u,\lambda) = 
+\lambda+(1-\lambda)(M/x_u)-\lambda{(\sigma/\sigma_u})^{\frac{1}{2}}-\lambda[1-(M/x_u)][1-2(\sigma/\sigma_u)^\frac{1}{2}], \lambda \in [0,1]
+$$
+
+$$
+k_f(M,\sigma,\sigma_u,x_u,\lambda) = 
+\lambda+(1-\lambda)(M/x_u)-\lambda{(\sigma/\sigma_u})-\lambda[1-(M/x_u)][1-2(\sigma/\sigma_u)], \lambda \in [0,1]
+$$
+
+$$
+\sigma_u = 
+\sigma(x_l,x_u)
+$$
+
+[M calculated by the Verter, Shorths, or the Meanshift methods]
+
+[rewrite using upper and lower bounds for sigma and mode]
+
+It is useful to write down this generalized version (Z) of the human capital flexibility estimator (X), for the concepts involved in human capital flexibility have a potentially wide range of applications. Indeed, we can easily remove equation (Z) out of its initial micro-economic context, and take it for what it is: essentially, a relative metric of dispersion-adjusted mode, indicating the broadness of observed values, as well as their distance from the limits of the measurement scale. After we understand it as such, then multiple applications of this simple concept come forward. Some obvious examples include [cite obvious examples]
+
+[psychometrics, where scale lengths are previously known]
+
+[any analysis of percentage data]
+
+### Dispersion discount factor
+
+In the previous equation (Z), the parameter $\lambda$ is the dispersion discount factor, that is the rate at which $M$ is adjusted by $\sigma$. Thus, it too determines the highest level of "compensation" or "penalty" applicable to the mode, resulting in the highest and lowest flexibility scores when $\sigma=\sigma_u$, at either end of the scale, as already stated in [restrictions above]:
+
+$$
+k_f(M=x_u,\sigma=\sigma_u,\lambda)=(1-\lambda)x_u \\
+k_f(M=0,\sigma=\sigma_u,\lambda)=\lambda x_u,
+$$
+
+where the first equation is the lowest possible flexibility score for the highest value of the mode in the $[x_l,x_u]$ interval, when dispersion is also the highest; and the second equation, the highest possible flexibility score for the lowest mode, considering the same dispersion. Now, looking at these equations, we notice that for greater values of $\lambda$, the flexibility score of the lowest mode surpasses that of the highest, which is unreasonable, and could be called "overcompensation". In other words, although dispersion ought to increase the final flexibility estimate in right-skewed distributions, and, alternatively, decrease the score when a left skew is present, the adjustment should not be so strong as to elevate the flexibility of a very low mode value to that of a very high one. Hence, to prevent the "overcompensation" issue, the following should always hold:
+
+$$
+k_f(M=x_u,\sigma=\sigma_u,\lambda) \geq k_f(M=0,\sigma=\sigma_u,\lambda) \iff \lambda \leq 1/2
+$$
+
+This said, the dispersion discount factor does not have to be a constant, but could be determined in relationship to the other variables, leading to interesting results. If we define, say, $\lambda = \frac{1}{2}\frac{\sigma}{x_u}$, then as $\sigma$ increases, so does the absolute value of dispersion compensation. This, however, does not violate the above restriction, as $\sigma$ cannot exceed the upper limit of the interval, $x_u$.
+
+[ps: all of this is implied in the enunciated restrictions at beginning]
+
+[plot of plane with $\lambda = \sigma / 2$]
+
+# Example of empirical application
+
+## Data
+
+## Parameters
+
+## Results
+
+## Discussion
+
+# Conclusion
+
+Ironically then, human capital flexibility itself seems to have a reasonable degree of carry-over as a mathematical instrument.
