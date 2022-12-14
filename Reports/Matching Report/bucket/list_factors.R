@@ -1,21 +1,3 @@
-# --- SETUP -----------------------------------------------------------
-# PACKAGES ----------------------------------------------------------------
-pkg <- c(
-  'tidyverse' #Data wrangling
-)
-
-# Activate / install packages
-lapply(pkg, function(x)
-  if(!require(x, character.only = T))
-  {install.packages(x); require(x)})
-
-# Package citation
-# lapply(pkg, function(x)
-#   {citation(package = x)})
-
-# DATA --------------------------------------------------------------------
-source('C:/Users/Cao/Documents/Github/Atlas-Research/Data/df_occupations.R')
-
 # --- DATA -----------------------------------------------------------
 # SKILLS FACTOR LIST -----------------------------------------------------------------
 list_skill.factors <- list(
@@ -173,21 +155,3 @@ list_factors %>%
   ) %>%
   drop_na() %>%
   ungroup() -> df_factors.names
-
-# EFA-REDUCED OCCUPATIONS DATA FRAME -------------------------------------------
-# Select only necessary variables
-df_occupations %>%
-  select(
-    occupation
-    , entry_level_education #Filter will be applied later on in Bubble via user input
-    , annual_wage_2021
-    , all_of(
-      list_factors %>%
-        flatten() %>% 
-        flatten_chr()
-    )
-  ) -> df_occupations
-
-# # --- EXPORT FILE -------------------------------------------------------
-# # WRITE CSV ---------------------------------------------------------------------
-# write_csv(df_occupations, file = 'occupations.csv')

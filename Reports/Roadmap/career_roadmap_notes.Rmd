@@ -124,14 +124,14 @@ Career compatibility is estimated by means of the k-nearest neighbors algorithm 
 [etc etc implementation via the `FNN` package]
 
 $$
-d_{q,u}^2=\|\vb{A} - \vb{U} \|_2^2 
+d_{q,u}^2 = \|\vb{A} - \vb{U} \|_2^2 
 = \sum_{i=1}^n{(a_i^q - a_i^u)^2}
 $$
 
 [etc etc convert distance to similarity score many things to comment]
 
 $$
-s_q =
+s_q(d_{q,u}) =
 1 - \left[ \frac{\min(d_{q,u}, 2.5)}{2.5} \right] ^2
 $$
 
@@ -141,7 +141,7 @@ Prices cannot be negative, therefore OLS (ordinary least squares) is not an opti
 
 $$
 \begin{gathered}
-w_q= \sum_{i=1}^{n}p_ia_i^{q}, 
+w_q(p_i,a_i^q) = \sum_{i=1}^{n}p_ia_i^{q}, 
 \\ p_i \geq 0, 
 \\ a_i^{q} \in [0,100]
 \end{gathered}
@@ -187,8 +187,7 @@ $$
 \begin{gathered}
 \delta_i^{q}(a^q_i,a^u_i) = 
  \max(a_i^q - a_i^u,0), 
-\\ a_i^{x} \in [0,100] 
-\ \forall \ x
+\\ a_i^q, \ a_i^u \in [0,100] 
 \end{gathered}
 $$
 
@@ -212,8 +211,7 @@ $$
 \begin{gathered}
 \delta_i^{q}(a^q_i,a^u_i,s_q^*) = 
  \max(s_q^*a_i^q - a_i^u,0), 
-\\ a_i^{x} \in [0,100] 
-\ \forall \ x,
+\\ a_i^q, \ a_i^u \in [0,100],
 \\ s_q^* \in [0,1]
 \end{gathered}
 $$
@@ -288,14 +286,14 @@ $$
 $$
 
 $$
-\lim_{\eta_q \rightarrow \infty} 
+\lim_{\eta_q \to \infty} 
 [ 
 f(s_q, \eta_q, w_q, ...) 
 ] = 0
 $$
 
 $$
-\lim_{w_q \rightarrow 0} 
+\lim_{w_q \to 0} 
 [ 
 f(s_q, \eta_q, w_q, ...) 
 ] = 0
@@ -331,7 +329,7 @@ $$
 \arg \max_{q} \left[ s_q \left( 1- \frac{\eta_q}{\max \eta_q } \right) \left(  \frac{w_q}{\max w_q } \right) \right]
 $$
 
-One last comment on this subject. Although, firstly, it appears "less sophisticated", the earlier normalization technique may actually find some utility to remedy complexities associated with formulating the weighted recommendation coefficient $R_q$, since normalizing variables by the maxima maintains the calculation's frame of reference within the same scope (i.e. the original sample). In our case this means comparing the user exclusively with himself, which could be helpful when, say, user's $\eta_q$ scores are considerably and systematically higher than the population average. This problem can easily happen with youngsters taking the assessments, but can also just as easily be avoided by applying the maxima normalization.
+One last comment on this subject. Although, firstly, it appears "less sophisticated", the earlier normalization technique may actually find some utility to remedy complexities associated with formulating the weighted recommendation coefficient $R_q$, since normalizing variables by the maxima maintains the calculation's frame of reference within the same scope (i.e. the original sample). In our case this means comparing the user exclusively with himself, which could be helpful when, say, user's $\eta_q$ scores are considerably and systematically higher than the population average. This problem can easily occur with youngsters taking the assessments, but can also just as easily be avoided by applying the maxima normalization.
 
 This said, such an adjustment is probably unnecessary, as comparisons of different $R_q$ scores with the aim of choosing an individual's career have to be made on relative terms anyway, and the coefficient's scale is only a factor in so far as aesthetics and easiness of reading are concerned. Furthermore, performing such normalizations on the individual-level would hinder population-level analyses. In fact, if the $R_q$ metric is to be used in the context of corporate training or even in recruitment and selection as a means to contrast candidates against one another, then the maxima normalization would definitely harm the overall process.
 
@@ -339,12 +337,12 @@ This said, such an adjustment is probably unnecessary, as comparisons of differe
 
 Once the user has decided on his career path - either by subjective preference, automated statistical recommendation, or both -, then we must also optimize the required steps to achieve this goal.
 
-This is done by prioritizing training in competencies with the highest values of marginal cost of human capital, and human capital flexibility, and lowest values of marginal time investment. Hence, professional development is optimized by focusing on learning high-paying skills, with carry-over to multiple occupations, in the shortest time frame possible (i.e. "quick wins"). We could say this involves maximizing the acquisition of "flexible dollars per hour" ($\$_f/h$), that is profitability, when choosing which attributes to develop first.
+This is done by prioritizing training in attributes with the highest values of marginal cost of human capital, and human capital flexibility, and lowest values of marginal time investment. Hence, professional development is optimized by focusing on learning high-paying skills, with carry-over to multiple occupations, in the shortest time frame possible (i.e. "quick wins"). We could say this involves maximizing the acquisition of "flexible dollars per hour" ($\$_f/h$), that is profitability, when choosing which competencies to develop first.
 
 Mathematically, we can write down a coefficient of recommendation similar to the one above, now aiming to optimize competency development, instead of career choice. In order to do so, we quantify the desired properties described using a functional form such as
 
 $$
-\rho_i = 
+\rho_i(\delta_i^q,k_f^i,t_i,p_i) = 
 \frac{\delta_i^q}{100}
 \left[
 k_f^i \left( 1- \frac{t_i}{\max t_i } \right) 
@@ -355,7 +353,7 @@ $$
 or even
 
 $$
-\rho_i = 
+\rho_i(\delta_i^q,k_f^i,t_i,p_i) = 
 \frac{\delta_i^q}{100}
 \left[
 \frac{1}{2} \left( 1- \frac{t_i}{\max t_i } \right) 
@@ -363,7 +361,7 @@ $$
 \right]
 $$
 
-since $p_i = 0$ for most attributes. In addition, it should be noted that in all of these formulations $\delta_i^q$ could be substituted for $\delta_i^q(s_q^*)$, if the desired goal is not to fully maximize matching percentage with a given occupation, but only to reach an arbitrary $s_q^*$ compatibility.
+since $p_i = 0$ for most attributes. In addition, it should be noted that in all of these formulations $\delta_i^q$ could be substituted for $\delta_i^q(s_q^*)$, if the current goal is not to fully maximize matching percentage with a given occupation, but only to reach an arbitrary $s_q^*$ compatibility.
 
 Another interesting option would be to approximate the present value estimator widely used in Finance, which seems to be very much applicable to the topic at hand:
 
@@ -371,95 +369,194 @@ $$
 PV=FV \exp[-r(t_1-t_0)]
 $$
 
-In this case, the coefficient becomes:
+In this case, we must first find the present and future values of individuals's professional profiles:
 
 $$
-\rho_i =
-k_f^i
-p_i 
-\delta_i^q
-\exp(
--t_i  
-\delta_i^q
-)
+\begin{gathered}
+PV = \sum_{j=1}^{n} {p_j a_j^u}
+\\ FV = pi\delta_i^q + \sum_{j=1}^{n} {p_j a_j^u}
+\end{gathered}
 $$
 
-which is an unbounded version, expressing the present value of future "flexible dollars" ($k_f^i p_i \delta_i^q$) obtained from investing $t_i$ time units to close the $\delta_i^q$ competency gap.
-
-Therefore, in this model, individuals discount the expected future value of human capital taking into consideration the time it would take to develop such capital, then compare the present values of different payoffs so as to rationally decide on which competencies to develop.
-
-The advantage of this unbounded formulation is that it is expressed in the variables's original units, and thus it yields the actual estimation of expected "flexible dollars per hour", instead of a dimensionless percentage. However, there are many different ways of constructing the recommendation coefficient, and a dimensionless model can be useful too. One example for the bounded percentage-based metric is:
+where $p_i \delta_i^q$ is the added value of closing skill gap $\delta_i^q$ at market prices $p_i$, which could itself be used as an unbounded recommendation coefficient, providing an estimation of the total expected payoff to be obtained from investing $t_i$ time units to close the $\delta_i^q$ competency gap:
 
 $$
-\rho_i =
-\left[ 
-k_f^i
-\left(  \frac{p_i}{\max p_i } \right)
-\left(
-\frac{\delta_i^q}{100}
+\begin{gathered}
+\rho_i(\delta_i^q,p_i) = p_i \delta_i^q \\ \rho_i(\delta_i^q,k_f^i,t_i,p_i) = \frac{k_f^i p_i \delta_i^q}{t_i} 
+\end{gathered}
+$$
+
+The second equation is a relative version of the coefficient taking into account the other relevant variables, but as the first one it is not contained in any particular limits. Hence, the advantage of this unbounded formulation is that it is expressed in the variables's original units, and thus it yields an actual estimation of expected gain of "flexible dollars per hour", instead of a dimensionless percentage.
+
+However, there are many different ways of constructing this career development coefficient, and a percentage-based metric could be useful too. For instance, solving the present value estimator for the interest rate $r$, we have:
+
+$$
+\begin{gathered}PV=FV \exp[-r(t_1-t_0)]\ \therefore
+\\ \log(PV) = \log(FV) + \log\{\exp[-r(t_1-t_0)]\}
+\ \therefore\\ \log(PV) = \log(FV) - r(t_1-t_0) \ \therefore \\ r(t_1 - t_0)=  \log(FV) - \log(PV) \ \therefore\\ r = \frac{\log(FV) - \log(PV)}{t_1-t_0} 
+\end{gathered}
+$$
+
+And substituting the present and future values previously determined,
+
+$$
+\begin{aligned}
+\rho_i(\delta_i^q,t_i,p_i,p_j,a_j^u) = 
+\frac
+{\log 
+\left( 
+pi\delta_i^q + \sum_{j=1}^{n} {p_j a_j^u}
 \right)
-\right]
- \exp 
-\left[ 
--\left(
-\frac{t_i}{\max t_i} 
+- 
+\log 
+\left( 
+\sum_{j=1}^{n} {p_j a_j^u} 
 \right)
-\left(
-\frac{\delta_i^q}{100}
+}
+{t_i \delta_i^q - 0}
+\\ \ = 
+\frac
+{\log 
+\left( 
+\frac{pi\delta_i^q + \sum_{j=1}^{n} {p_j a_j^u}}{\sum_{j=1}^{n} {p_j a_j^u}}
 \right)
-\right]
+}
+{t_i \delta_i^q}
+\\ = 
+\frac
+{\log 
+\left( 
+1 +\frac{pi\delta_i^q}{\sum_{j=1}^{n} {p_j a_j^u}}
+\right)
+}
+{t_i \delta_i^q}
+\end{aligned}
 $$
 
-All of this said, other economic strategies for training optimization are possible. For, as already stated, the above-mentioned strategy seeks to anticipate the acquisition of "flexible dollars per hour" by training firstly and most intensively those competencies that are transferable, pay well, and take the least amount of time to learn, so as to boost the individual's morale with the sense of accomplishment derived from "quick wins" and greater initial payoffs. But one unintentional consequence of this method can be the delay in achieving "acceptable" compatibility with the desired occupation.
+which is the internal rate of return (IRR) of closing skill gap $\delta_i^q$, expressed as a percentage of profitability. Again, capital flexibility could be added as a multiplier of $p_i \delta_i^q$ if desired. In addition, an expected growth of human capital prices parameter could be added as well. However, this modification would introduce a predictive aspect to the model, beyond the exclusively descriptive ones.
+
+Now, the great advantage of this formulation, as opposed to the earlier ones, is that it can be contrasted with any other type of investment. For example, say an individual can expect to earn 12% a year on his current stock portfolio. With the relative IRR $\rho_i$ estimator, this individual can compare his returns on stocks with the expected return on education.
+
+Therefore, in this model, individuals discount the expected future value of human capital considering the time it would take to develop such capital, then compare the present values of different payoffs so as to rationally decide on which competencies to develop.
+
+All of this said, other economic strategies for training optimization are possible. For, as already stated, the above-mentioned strategy seeks to anticipate the acquisition of "flexible dollars per hour" by training firstly and most intensively those competencies that are transferable, pay well, and take the least amount of time to learn, so as to boost the individual's morale with the sense of accomplishment derived from "quick wins" and greater initial payoffs. But one unintentional consequence of this method can be the delay in achieving "acceptable" compatibility with the desired occupation. For example, when $p_i = 0$, the IRR estimator becomes:
+
+$$
+\\ \rho_i(\delta_i^q,t_i,0,p_j,a_j^u) = 
+\frac
+{\log 
+\left( 
+1 +\frac{0 \ \times \ \delta_i^q}{\sum_{j=1}^{n} {p_j a_j^u}}
+\right)
+}
+{t_i \delta_i^q}  = 
+\frac
+{\log(1)}
+{t_i \delta_i^q}
+\implies
+\rho_i = 0
+\ \forall \ t_i, \delta_i^q
+$$
+
+In other words, competencies which provide little to no monetary benefit are completely disregarded in this analysis, independent of their marginal time investment $t_i$, or even the size of the $\delta_i^q$ skill gap. This can be a problem for two reasons: 1) Most competencies, in fact, do not have any substantial marginal cost of human capital (i.e. it is not uncommon at all that $p_i = 0$); 2) If closing skill gaps at a rapid pace is the highest priority, then focusing on monetary payoff may be detrimental to the overall goal.
 
 Thus, an alternative strategy, emphasizing training in the competencies lagging the most, could have a place in the career development algorithm. The effect of this approach would be to increase matching percentage faster, by focusing on those attributes with the largest competency gaps, so as to more promptly decrease the Euclidean distance between the user and his chosen occupation, and as a result provide greater initial gains of similarity (i.e. matching percentage). In other words, the *missing* core competencies would be prioritized.
 
 The obvious appeal of this strategy is that some people could want (or need) to join the labor force as soon as possible, postponing the refinement of secondary, or least lagging skills. In these cases, reaching the minimum "acceptable" matching percentage with an occupation would be key to secure employment in the field earlier.
 
-However, for the very same reason, this strategy lacks the morale-building benefits of "quick wins" (i.e. from mastering faster to learn, higher paying and more applicable skills first). It is also more vulnerable to changes in individuals's motivations and preferences (should they decide to switch courses, which frequently happens).
+However, for the very same reason, this strategy lacks the morale-building benefits of "quick wins" (i.e. from mastering faster to learn, higher paying and more applicable skills *first*). It is also more vulnerable to changes in individuals's motivations and preferences (should they decide to switch courses, which frequently happens).
 
 At last, laborers who prioritize training according to the first strategy, maximizing the obtainment of "flexible dollars per hour", should more quickly be perceived in the marketplace as "valuable", as their most developed competencies would have higher marginal cost of human capital and high carry-over (i.e. in-demand skills).
 
 It seems the first strategy is more adequate for younger people, and the second, for seasoned workers transitioning to other fields. Either way, the total time investment to achieve *maximum* career compatibility is the same whichever route is taken: since total time investment $\eta_q$ is the sum of marginal-time-investment-weighted competency gaps, the final duration must be equal in both strategies. The question is: "Which would the individual prefer *first*: faster gains of 'flexible dollars per hour', or faster achievement of minimum 'acceptable' career compatibility?"
 
-Having understood this, an example of how this similarity-maximizing strategy can be written is:
+Having understood this, an example of this similarity-maximizing strategy is:
 
 $$
-\rho_i = 
-t_i\delta_i^q(s_q^*),
-$$
-
-which corresponds to the total time investment necessary to close the individual's competency gap $\delta_i^q(s_q^*,a_i^q,a_i^u)=\max(s_q^*a_i^q - a_i^u ,0)$ in a given attribute to adequately exercise occupation $q$ at the minimum "acceptable" compatibility level $s_q^m$, after adjusting for over-qualification.
-
-In other words, using this economic strategy, individuals will attempt to reach "acceptable" matching percentages with their chosen occupations by developing the most lagging abilities first, up to the optimum point $a_i^u = s_q^m a_i^q$, where minimum "acceptable" similarity score $s_q^m$ is attained.
-
-Of course, it is also possible to provide a middle-ground approach as a linear combination of different strategies. For instance, taking the above functional forms, we could have:
-
-$$
-\rho_i=
-\pi \left\{ \left[ 
-k_f^i p_i
+\begin{gathered}
+\rho_i(\delta_i^q(s_q^*),t_i,a_i^q,a_j^q) = 
+\beta_i
 \left(
+\frac{1}{1+t_i}
+\right)
+\left[
+\frac{\delta_i^q(s_q^*)}{100}
+\right],
+\\ \beta_i = {\frac{a_i^q}{\sum_{j=1}^{n}{a_j^q}}} \implies \sum_{i=1}^{n}\beta_i=1
+\end{gathered}
+$$
+
+which is a bounded, percentage-based estimator, chiefly concerned with closing the core competency gaps $\delta_i^q(s_q^*,a_i^q,a_i^u)=\max(s_q^*a_i^q - a_i^u ,0)$ to exercise occupation $q$ at the minimum "acceptable" compatibility level $s_q^*$, after adjusting for over-qualification. Here, the gap function is multiplied by two terms: the first, $\beta_i$, is the competency share, or relative importance, of attribute $a_i^q$ for occupation $q$, compared to the other attributes; the second term adjusts $\rho_i$ with regards to time investment, emphasizing training in faster to learn skills.
+
+Put simply, utilizing this economic strategy, individuals will attempt to reach "acceptable" matching percentages with their chosen occupations by developing the most lagging abilities first, up to the optimum point $a_i^u = s_q^* a_i^q$, where minimum "acceptable" similarity score $s_q^*$ is attained. They will also prioritize rapid-learning in the core competencies (i.e. those with highest relative importance).
+
+Finally, a refined version of the strategy is:
+
+$$
+\begin{gathered}
+\rho_i(\delta_i^q(s_q^*),t_i,a_i^q,a_j^q) = 
+\left\{
+\frac{1}{1+t_i}
+\left[
+\frac{\delta_i^q(s_q^*)}{100}
+\right]
+\right\} ^
+{\beta_i},
+\\ \beta_i = {\frac{a_i^q}{\sum_{j=1}^{n}{a_j^q}}}
+\end{gathered}
+$$
+
+where all the terms are defined as previously. Now, it is noticeable this coefficient is analogous to typical Cobb-Douglas [citation] functions used in Economics. Intuitively speaking, however, the two coefficients are interpreted the same, and each parameter in this refined equation still has the same purpose as well.
+
+Of course, it is also possible to provide a middle-ground approach combining different strategies. For instance, taking the above functional forms, we could have:
+
+$$
+\begin{gathered}
+\rho_i(\delta_i^q,t_i,p_i,p_j,a_j^u,a_i^q,a_j^q,\pi) =
+\left\{
+{
+\left[
+1 +
+\frac
+{\log 
+\left( 
+1 +\frac{pi\delta_i^q}{\sum_{j=1}^{n} {p_j a_j^u}}
+\right)
+}
+{t_i \delta_i^q}
+\right]
+}^\pi
+{
+\left[
+1 + 
+\beta_i
+\left(
+\frac{1}{1+t_i}
+\right)
+\left( 
 \frac{\delta_i^q}{100}
 \right)
 \right]
- \exp 
-\left[ 
--\left(
-\frac{t_i}{\max t_i} 
-\right)
-\left(
-\frac{\delta_i^q}{100}
-\right)
-\right]
+}^{1-\pi}
 \right\}
-+ (1-\pi)[t_i\max(s_q^m a_i^q-a_i^u, 0)]
-, \pi \in [0,1]
+- 1
+, 
+\\ \beta_i = {\frac{a_i^q}{\sum_{j=1}^{n}{a_j^q}}},
+\\ \pi \in [0,1]
+\end{gathered}
 $$
 
-where $\pi$ is the parameter indicating preference for faster acquisition of "flexible dollars per hour", and $1-\pi$, the preference for faster attainment of minimum "acceptable" professional compatibility, both of which can be defined beforehand, or by user input.
+where $\pi$ is the parameter indicating preference for faster acquisition of "flexible dollars per hour", and $1-\pi$, the preference for faster attainment of minimum "acceptable" professional compatibility, both of which can be determined beforehand, or by user input.
 
-Again, whatever may be the functional form of this competency training recommendation coefficient $\rho_i$, optimal career development should always aim to maximize it at each and every stage of an individual's working life.
+In this case, individuals prioritize immediate monetary benefit if $\pi > 1 - \pi \iff \pi > 1/2$; and, alternatively, prioritize immediate gain of professional compatibility if $\pi < 1/2$; and, in the case where $\pi=1-\pi=1/2$, the two strategies are equally appreciated.
+
+It should also be stated that this procedure can include any number of decision-making variables, provided they are coerced into a numerical value. Consequently, a general form of the weighted competency development coefficient, accounting for $m$ quantity of economic strategies $\{\epsilon_1,...,\epsilon_m\}$ is:
+
+$$
+\begin{gathered}
+\rho_i(\epsilon_i,\gamma_i) = \left[ \prod_{i=1}^{m}(1+\epsilon_i)^{\gamma_i} \right] -1,\\ \sum_{i=1}^{m}{\gamma_i}=1 
+\end{gathered}
+$$Again, whatever may be the functional forms of these partial competencies training suggesting strategies $\epsilon_i$, and user's $\gamma_i$ preferences for them, optimal career development should always aim to maximize the final weighted estimator $\rho_i$ at each and every stage of an individual's working life.
 
 Thus, it is established a career progression cycle of continuous iterations of parameterized competency training *planning* and *execution*, where current and optimal $a_i^u$ skill levels are measured and evaluated by periodically retaking the assessments and recalculating the $\rho_i$ training recommendation coefficients. This process is illustrated with the diagram below, on steps 4, 5, and 8:
 
@@ -468,7 +565,7 @@ Thus, it is established a career progression cycle of continuous iterations of p
 We can optimize career development even further by estimating not only the order of competency training, but the recommended time allocation as well, resulting in parameterized schedules, and hours of study targets. Say an individual has $H$ hours to study each week. The optimal time allocation, then, for him to achieve maximum similarity with his desired occupation would be:
 
 $$
-h_i^* =
+h_i^*(H,\rho_i,\rho_j) =
 H  \left(
 \frac{\rho_i} {\sum_{j=1}^n \rho_j}
 \right)

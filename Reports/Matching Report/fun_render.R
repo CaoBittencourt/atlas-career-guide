@@ -1,56 +1,5 @@
-# ------- SETUP -----------------------------------------------------------
-# PACKAGES ----------------------------------------------------------------
-pkg <- c(
-  'psych' #Factor Analysis
-  , 'FNN' #Fast K-NN Algorithm (faster than the 'class' package)
-  , 'jsonify' #Work with JSON (faster than jsonlite)
-  , 'ggthemes' #Data visualization
-  , 'tidyverse', 'stringi', 'english' #Data wrangling
-  , 'tinytex' #LaTeX
-  , 'modeest' #Mode
-  , 'knitr' #Knitr
-  , 'readxl' #Import excel (use other package?)
-)
-
-# Activate / install packages
-lapply(pkg, function(x)
-  if(!require(x, character.only = T))
-  {install.packages(x); require(x)})
-
-# Install TinyTex
-if(!tinytex::is_tinytex()){
-  tinytex::install_tinytex()
-}
-
-# Package citation
-# lapply(pkg, function(x)
-#   {citation(package = x)})
-
-# FUNCTIONS ---------------------------------------------------------------
-# KNN matching
-source('C:/Users/Cao/Documents/Github/Atlas-Research/Functions/KNN_Matching.R')
-# Factor scores
-source('C:/Users/Cao/Documents/Github/Atlas-Research/Functions/Factor_Scores.R')
-# Automated plotting
-source('C:/Users/Cao/Documents/Github/Atlas-Research/Functions/Auto_plots.R')
-# Dynamic text
-source('C:/Users/Cao/Documents/Github/Atlas-Research/Functions/Dynamic_text.R')
-# Capital flexibility
-source('C:/Users/Cao/Documents/Github/Atlas-Research/Functions/Capital_Flexibility.R')
-
-# PARAMETERS --------------------------------------------------------------
-# Selected respondent
-# chr_text.user <- 'Martijn'
-# chr_text.user <- 'Cao'
-chr_text.user <- 'Alexandre'
-# chr_text.user <- 'Acilio'
-# chr_text.user <- 'Gabriel'
-# chr_text.user <- 'Random'
-# chr_text.user <- 'Random2'
-# chr_text.user <- 'Random3'
-# chr_text.user <- 'Random4'
-# chr_text.user <- 'Random5'
-
+# --- SETUP -----------------------------------------------------------
+# PARAMETERS  --------------------------------------------------------------
 # KNN parameters
 dbl_threshold <- 0.17
 
@@ -81,63 +30,11 @@ list(
   , 'grey' = '#D4D5D8'
 ) -> list_atlas.pal
 
-# DATA --------------------------------------------------------------------
-# EFA-REDUCED OCCUPATIONS DATA FRAME
-source('C:/Users/Cao/Documents/Github/Atlas-Research/Data/df_occupations.EFA.R')
-
-# USER INPUT DATA FRAME
-df_input <- readr::read_csv('https://docs.google.com/spreadsheets/d/e/2PACX-1vSphzWoCxoNaiaJcQUWKCMqUAT041Q8UqUgM7rSzIwYZb7FhttKJwNgtrFf-r7EgzXHFom4UjLl2ltk/pub?gid=725827850&single=true&output=csv')
-
-# DEFAULT TEXTS FOR IMPUTATION
-map(
-  excel_sheets('C:/Users/Cao/Documents/Github/Atlas-Research/Reports/Matching Report/career_finder_report.xlsx')
-  , ~ read_excel('C:/Users/Cao/Documents/Github/Atlas-Research/Reports/Matching Report/career_finder_report.xlsx', sheet = .x)
-) -> list_df_text
-
-names(list_df_text) <- excel_sheets('C:/Users/Cao/Documents/Github/Atlas-Research/Reports/Matching Report/career_finder_report.xlsx')
-
-# Remove carriage returns
-list_df_text %>%
-  map(function(df){
-    
-    df %>% 
-      mutate(across(
-        where(is.character)
-        , ~ str_remove_all(.x, "\r") %>% 
-          str_remove_all("\\\\n") %>% 
-          str_replace_all("\n", "  \n")
-      ))
-    
-  }) -> list_df_text
-
-# Section list
-list_df_text$sections$text %>% 
-  as.list() -> list_sections
-
-names(list_sections) <- list_df_text$sections$section
-
-# ------- DATA -----------------------------------------------------------
-# EFA-REDUCED OCCUPATIONS DATA FRAME -----------------------------------------------
-# Select only necessary variables
-df_occupations %>% 
-  select(
-    occupation
-    , entry_level_education
-    , annual_wage_2021
-    , all_of(
-      list_factors %>%
-        flatten() %>%
-        flatten_chr()
-    )
-  ) -> df_occupations
-
+# --- DATA -----------------------------------------------------------
 # EFA-REDUCED QUERY VECTOR -----------------------------------------------
-# Select user
-df_input %>% 
-  filter(Name == chr_text.user) -> df_input
-
-# EFA-reduced data frame
-df_input %>%
+# User questionnaire data frame
+from_json(body) %>%
+  as_tibble() %>%
   select(
     all_of(
       list_factors %>%
@@ -153,8 +50,7 @@ df_input %>%
           flatten_chr()
       )
       , .fns = function(x){
-        recode((x + 2)
-        # recode(x
+        recode(x
                , '1' = 0.00
                , '2' = 0.17
                , '3' = 0.33
@@ -166,17 +62,10 @@ df_input %>%
     )
   ) -> df_input
 
-# ------- RESULTS --------------------------------------------------------
+# --- RESULTS --------------------------------------------------------
 # KNN MATCHING ---------------------------------------------------------------
 fun_KNN.matching(
-  .df_data.numeric = df_occupations %>% 
-    select(
-      occupation
-      , all_of(
-        list_factors %>%
-          flatten() %>% 
-          flatten_chr()
-      ))
+  .df_data.numeric = df_occupations
   , .vec_query.numeric = df_input
   , .int_k = nrow(df_occupations)
   , .imput.over_qualification = T
@@ -184,18 +73,6 @@ fun_KNN.matching(
   , .dbl_decimals = 4
 ) %>% 
   full_join(df_occupations) -> df_KNN.output
-
-# df_KNN.output %>%
-#   # df_occupations %>%
-#   filter(
-#     entry_level_education %in% c(
-#       "Bachelor's degree"
-#       , "Doctoral or professional degree"
-#       # , "Associate's degree"i
-#       , "Master's degree"
-#     )
-#   ) %>%
-#   View()
 
 # FACTOR SCORES (USER) -----------------------------------------------------------
 fun_factor.scores(
@@ -248,7 +125,7 @@ df_matches.topbot %>%
     , bot.match.diff = abs(bot.match - you)
   ) -> df_dumbbell
 
-# -------- DYNAMIC TEXTS --------------------------------------------------
+# --- DYNAMIC TEXTS --------------------------------------------------
 # VALUES FOR DYNAMIC TEXTS -----------------------------------------------
 # Number of occupations
 int_n.occupations <- nrow(df_KNN.output)
@@ -372,7 +249,7 @@ case_when(
   , T ~ chr_top.overqualified %>%
     head(3) %>% 
     fun_text.commas(.chr_last.comma = ', ') %>% 
-    paste0(', and so on')
+    paste('and so on')
 ) -> chr_top.overqualified.viz
 
 df_dumbbell %>% 
@@ -688,7 +565,7 @@ chr_text.caption.dist <- 'Professional Compatibility Distribution'
 chr_text.caption.dumbbell.top <- paste('Your Best Career Match —', str_to_title(chr_matches.topbot[1]))
 chr_text.caption.dumbbell.bot <- paste('Your Worst Career Match —', str_to_title(chr_matches.topbot[2]))
 
-# -------- TABLES ---------------------------------------------------------
+# --- TABLES ---------------------------------------------------------
 # TOP 7, BOTTOM 3 MATCHES ----------------------------------------------------------
 df_KNN.output %>%
   slice(1:7, seq(max(rank) - 2, max(rank))) %>%
@@ -709,7 +586,7 @@ df_KNN.output %>%
     , Compatibility = similarity
   ) -> df_top7.bot3
 
-# -------- PLOTS ----------------------------------------------------------
+# --- PLOTS ----------------------------------------------------------
 # [CIRCULAR BAR PLOT] MATCHING PERCENTAGES -----------------------------------------------------
 # Empty columns
 int_NA <- 51
@@ -837,10 +714,6 @@ df_KNN.output %>%
   , .theme = ggridges::theme_ridges(font_size = 11, center_axis_labels = T) +
     theme(
       plot.margin = margin(0, 0, 0, 0)
-      # plot.margin = margin(
-      #   t = 1.5, b = 1.5, l = 0, r = 0
-      #   , unit = 'cm'
-      # )
       , axis.text.x = element_blank()
     )
   , .list_labs = list(
@@ -851,9 +724,7 @@ df_KNN.output %>%
   )) +
   geom_segment(
     x = 0
-    # , xend = 1 - df_bot.match$similarity
     , xend = 1
-    # , y = df_bot.match$similarity
     , y = 0
     , yend = 1
     , size = 0.25
@@ -982,17 +853,10 @@ df_dumbbell %>%
   )
   ) -> plt_bot.match
 
-# patchwork::wrap_plots(
-#   plt_top.match
-#   , plt_bot.match +
-#     theme(axis.text.y = element_blank())
-#   , ncol = 2
-# ) -> plt_topbot.match
-
-# -------- RENDER -----------------------------------------------------------
+# --- RENDER -----------------------------------------------------------
 # RENDER R MARKDOWN REPORT --------------------------------------------------
 rmarkdown::render(
-  'C:/Users/Cao/Documents/Github/Atlas-Research/Reports/Matching Report/matching_report.Rmd'
+  './matching_report.Rmd'
   , output_file = paste0('Matching Report (', chr_text.user, ').pdf')
 )
 

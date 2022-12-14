@@ -5,7 +5,7 @@ author: "Atlas Research Team"
 date: "`r Sys.Date()`"
 geometry: a4paper, margin = 1in
 output:
-hpdf_document:
+  pdf_document:
   # ipsum_pdf:
     toc: TRUE
     number_sections: TRUE
@@ -89,8 +89,12 @@ cat(chr_text.factors.intro.dynamic)
 
 ## Categories and Factors
 
-```{r factors, results='asis'}
-cat(chr_text.factors.dynamic)
+```{r factors1, results='asis'}
+cat(chr_text.factors1.dynamic)
+```
+
+```{r factors2, results='asis'}
+cat(chr_text.factors2.dynamic)
 ```
 
 ## Your Best and Worst Matches

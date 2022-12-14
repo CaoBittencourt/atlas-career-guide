@@ -1,56 +1,5 @@
-# ------- SETUP -----------------------------------------------------------
-# PACKAGES ----------------------------------------------------------------
-pkg <- c(
-  'psych' #Factor Analysis
-  , 'FNN' #Fast K-NN Algorithm (faster than the 'class' package)
-  , 'jsonify' #Work with JSON (faster than jsonlite)
-  , 'ggthemes' #Data visualization
-  , 'tidyverse', 'glue', 'stringi', 'english' #Data wrangling
-  , 'tinytex' #LaTeX
-  , 'moments' #Skewness
-  , 'knitr' #Knitr
-  , 'readxl' #Import excel (use other package?)
-)
-
-# Activate / install packages
-lapply(pkg, function(x)
-  if(!require(x, character.only = T))
-  {install.packages(x); require(x)})
-
-# Install TinyTex
-if(!tinytex::is_tinytex()){
-  tinytex::install_tinytex()
-}
-
-# Package citation
-# lapply(pkg, function(x)
-#   {citation(package = x)})
-
-# FUNCTIONS ---------------------------------------------------------------
-# KNN matching
-source('C:/Users/Cao/Documents/Github/Atlas-Research/Functions/KNN_Matching.R')
-# Factor scores
-source('C:/Users/Cao/Documents/Github/Atlas-Research/Functions/Factor_Scores.R')
-# Automated plotting
-source('C:/Users/Cao/Documents/Github/Atlas-Research/Functions/Auto_plots.R')
-# Dynamic text
-source('C:/Users/Cao/Documents/Github/Atlas-Research/Functions/Dynamic_text.R')
-# Capital flexibility
-source('C:/Users/Cao/Documents/Github/Atlas-Research/Functions/Capital_Flexibility.R')
-
-# PARAMETERS --------------------------------------------------------------
-# Selected respondent
-# chr_text.user <- 'Martijn'
-# chr_text.user <- 'Cao'
-chr_text.user <- 'Alexandre'
-# chr_text.user <- 'Acilio'
-# chr_text.user <- 'Gabriel'
-# chr_text.user <- 'Random'
-# chr_text.user <- 'Random2'
-# chr_text.user <- 'Random3'
-# chr_text.user <- 'Random4'
-# chr_text.user <- 'Random5'
-
+# --- SETUP -----------------------------------------------------------
+# PARAMETERS  --------------------------------------------------------------
 # KNN parameters
 dbl_threshold <- 0.17
 
@@ -62,9 +11,6 @@ seq_scale.1_5 <- seq(0,1,.25)
 seq_scale.1_6 <- round(seq(0, 0.9, 1/6), 2)
 seq_scale.1_7 <- c(.33, .33 + .17/2, .50, .50 + .17/2, .67, .67 + .17/2)
 seq_scale.1_8 <- round(seq(0,1,1/7), 2)
-seq_scale.std <- seq(0,0.5,0.1)
-seq_scale.skew <- c(-1.5, -1, -0.5, 0, 0.5, 1, 1.5)
-
 
 # Recommendation cutoff
 dbl_recommended.cutff <- 0.67
@@ -84,92 +30,7 @@ list(
   , 'grey' = '#D4D5D8'
 ) -> list_atlas.pal
 
-# DATA --------------------------------------------------------------------
-# EFA-REDUCED OCCUPATIONS DATA FRAME
-source('C:/Users/Cao/Documents/Github/Atlas-Research/Data/df_occupations.EFA.R')
-
-# USER INPUT DATA FRAME
-df_input <- readr::read_csv('https://docs.google.com/spreadsheets/d/e/2PACX-1vSphzWoCxoNaiaJcQUWKCMqUAT041Q8UqUgM7rSzIwYZb7FhttKJwNgtrFf-r7EgzXHFom4UjLl2ltk/pub?gid=725827850&single=true&output=csv')
-
-# DEFAULT TEXTS FOR IMPUTATION
-map(
-  excel_sheets('C:/Users/Cao/Documents/Github/Atlas-Research/Reports/Matching Report/career_finder_report.xlsx')
-  , ~ read_excel('C:/Users/Cao/Documents/Github/Atlas-Research/Reports/Matching Report/career_finder_report.xlsx', sheet = .x)
-) -> list_df_text
-
-names(list_df_text) <- excel_sheets('C:/Users/Cao/Documents/Github/Atlas-Research/Reports/Matching Report/career_finder_report.xlsx')
-
-# Remove carriage returns
-list_df_text %>%
-  map(function(df){
-    
-    df %>% 
-      mutate(across(
-        where(is.character)
-        , ~ str_remove_all(.x, "\r") %>% 
-          str_remove_all("\\\\n") %>% 
-          str_replace_all("\n", "  \n")
-      ))
-    
-  }) -> list_df_text
-
-# Section list
-list_df_text$sections$text %>% 
-  as.list() -> list_sections
-
-names(list_sections) <- list_df_text$sections$section
-
-# ------- DATA -----------------------------------------------------------
-# EFA-REDUCED OCCUPATIONS DATA FRAME -----------------------------------------------
-# Select only necessary variables
-df_occupations %>% 
-  select(
-    occupation
-    , entry_level_education
-    , annual_wage_2021
-    , all_of(
-      list_factors %>%
-        flatten() %>%
-        flatten_chr()
-    )
-  ) -> df_occupations
-
-# EFA-REDUCED QUERY VECTOR -----------------------------------------------
-# Select user
-df_input %>% 
-  filter(Name == chr_text.user) -> df_input
-
-# EFA-reduced data frame
-df_input %>%
-  select(
-    all_of(
-      list_factors %>%
-        flatten() %>% 
-        flatten_chr()
-    )
-  ) %>%  
-  mutate(
-    across(
-      .cols = all_of(
-        list_factors %>%
-          flatten() %>% 
-          flatten_chr()
-      )
-      , .fns = function(x){
-        recode((x + 2)
-        # recode(x
-               , '1' = 0.00
-               , '2' = 0.17
-               , '3' = 0.33
-               , '4' = 0.50
-               , '5' = 0.67
-               , '6' = 0.83
-               , '7' = 1.00
-        )}
-    )
-  ) -> df_input
-
-# ------- RESULTS --------------------------------------------------------
+# --- RESULTS --------------------------------------------------------
 # KNN MATCHING ---------------------------------------------------------------
 fun_KNN.matching(
   .df_data.numeric = df_occupations %>% 
@@ -187,18 +48,6 @@ fun_KNN.matching(
   , .dbl_decimals = 4
 ) %>% 
   full_join(df_occupations) -> df_KNN.output
-
-# df_KNN.output %>%
-#   # df_occupations %>%
-#   filter(
-#     entry_level_education %in% c(
-#       "Bachelor's degree"
-#       , "Doctoral or professional degree"
-#       # , "Associate's degree"i
-#       , "Master's degree"
-#     )
-#   ) %>%
-#   View()
 
 # FACTOR SCORES (USER) -----------------------------------------------------------
 fun_factor.scores(
@@ -251,7 +100,7 @@ df_matches.topbot %>%
     , bot.match.diff = abs(bot.match - you)
   ) -> df_dumbbell
 
-# -------- DYNAMIC TEXTS --------------------------------------------------
+# --- DYNAMIC TEXTS --------------------------------------------------
 # VALUES FOR DYNAMIC TEXTS -----------------------------------------------
 # Number of occupations
 int_n.occupations <- nrow(df_KNN.output)
@@ -291,14 +140,14 @@ df_KNN.output %>%
     , rank.norm
   ) -> df_med.match
 
-# Recommended occupations (higher than cutff)
+# Recommended occupations (higher than cutoff)
 list_df_text$recommended %>% 
   mutate(
     n.recommended = 
       df_KNN.output %>% 
       filter(similarity >= dbl_recommended.cutff) %>% 
       nrow()
-    # Percent of compatibility scores > cutff
+    # Percent of compatibility scores > cutoff
     , pct.recommended = n.recommended / nrow(df_KNN.output)
     , n.interval = 
       pct.recommended %>%
@@ -390,7 +239,7 @@ df_dumbbell %>%
   slice(1:3) %>% 
   pull(factor) %>%
   str_sort() %>% 
-  fun_text.commas()  -> chr_top.match.3str
+  fun_text.commas() -> chr_top.match.3str
 
 if_else(
   chr_top.3str == chr_top.match.3str
@@ -495,13 +344,13 @@ list_df_text.capacity$bot.match %>%
 
 # GENERATE DYNAMIC TEXTS ------------------------------------------------------------
 # Report Title
-chr_text.report.title <- glue('Professional Profile — {chr_text.user}')
+chr_text.report.title <- paste0('Professional Profile — ', df_input$user_name)
 
 # Introduction dynamic text
 fun_text.dynamic(
   .chr_text = list_sections$introduction
   , .chr_pattern = chr_text.blank
-  , chr_text.user
+  , df_input$user_name
   , int_n.occupations
   , int_n.occupations
 ) -> chr_text.intro.dynamic
@@ -680,7 +529,7 @@ fun_text.dynamic(
   , df_bot.match$occupation
   , list_df_text.capacity$top.match$text
   , list_df_text.capacity$bot.match$text
-  , chr_text.user
+  , df_input$user_name
 ) -> chr_finishing.remarks.dynamic
 
 # Captions for dynamic reporting with R Markdown
@@ -691,7 +540,7 @@ chr_text.caption.dist <- 'Professional Compatibility Distribution'
 chr_text.caption.dumbbell.top <- paste('Your Best Career Match —', str_to_title(chr_matches.topbot[1]))
 chr_text.caption.dumbbell.bot <- paste('Your Worst Career Match —', str_to_title(chr_matches.topbot[2]))
 
-# -------- TABLES ---------------------------------------------------------
+# --- TABLES ---------------------------------------------------------
 # TOP 7, BOTTOM 3 MATCHES ----------------------------------------------------------
 df_KNN.output %>%
   slice(1:7, seq(max(rank) - 2, max(rank))) %>%
@@ -712,7 +561,7 @@ df_KNN.output %>%
     , Compatibility = similarity
   ) -> df_top7.bot3
 
-# -------- PLOTS ----------------------------------------------------------
+# --- PLOTS ----------------------------------------------------------
 # [CIRCULAR BAR PLOT] MATCHING PERCENTAGES -----------------------------------------------------
 # Empty columns
 int_NA <- 51
@@ -840,10 +689,6 @@ df_KNN.output %>%
   , .theme = ggridges::theme_ridges(font_size = 11, center_axis_labels = T) +
     theme(
       plot.margin = margin(0, 0, 0, 0)
-      # plot.margin = margin(
-      #   t = 1.5, b = 1.5, l = 0, r = 0
-      #   , unit = 'cm'
-      # )
       , axis.text.x = element_blank()
     )
   , .list_labs = list(
@@ -854,9 +699,7 @@ df_KNN.output %>%
   )) +
   geom_segment(
     x = 0
-    # , xend = 1 - df_bot.match$similarity
     , xend = 1
-    # , y = df_bot.match$similarity
     , y = 0
     , yend = 1
     , size = 0.25
@@ -918,244 +761,6 @@ df_KNN.output %>%
     , vjust = -0.5
   ) -> plt_density
 
-# # dsdsds -----------------------
-# df_KNN.output %>%
-#   fun_plot.histogram(aes(
-#     x = similarity
-#     , y = after_stat(density)
-#   )
-#   , .dbl_limits.y = c(0,1.25*max(density(df_KNN.output$similarity)$y))
-#   , .list_axis.x.args = list(
-#     limits = c(-0.1,1.1)
-#     , breaks = seq(0,1,.25)
-#   )
-#   , .fun_format.x = percent_format(accuracy = 1)
-#   , .list_labs = list(
-#     title = NULL
-#     , subtitle = NULL
-#     , x = str_to_title('professional compatibility')
-#     , y = NULL
-#   )
-#   , .theme = ggridges::theme_ridges(font_size = 11, center_axis_labels = T) +
-#     theme(
-#       plot.margin = margin(0, 0, 0, 0)
-#       , axis.text.y = element_blank()
-#     )
-#   ) +
-#   geom_density(aes(
-#     x = similarity
-#   )
-#   , size = 1.2
-#   ) + 
-#   geom_textvline(
-#     xintercept = dbl_recommended.cutff
-#     , label = 'Recommended'
-#     , color = list_atlas.pal$green
-#     , fontface = 'bold'
-#     , linetype = 1
-#     , linewidth = 1.35
-#     , hjust = 0.125
-#     , vjust = -0.5
-#   ) -> plt_density
-# 
-# rbeta(10000, 1,1, 2) %>% qplot(geom = 'density')
-# rbeta(10000, 1, 1.5) %>% qplot(geom = 'density')
-# rbeta(10000, 1, 0.25) %>% qplot(geom = 'density')
-# 
-# 
-# 
-# tibble(
-#   # user = df_KNN.output$similarity, 
-#   very.niche = 
-#     rbeta(
-#       n = 10000
-#       , shape1 = 1
-#       , shape2 = 5
-#       , ncp = 0
-#     ) 
-#   , niche = 
-#     rbeta(
-#       n = 10000
-#       , shape1 = 2.5
-#       , shape2 = 5
-#       , ncp = 0
-#     ) 
-#   , normal = 
-#     rbeta(
-#       n = 10000
-#       , shape1 = 5
-#       , shape2 = 5
-#       , ncp = 0
-#     )
-#   , broad =
-#     rbeta(
-#       n = 10000
-#       , shape1 = 5
-#       , shape2 = 2.5
-#       , ncp = 0
-#     ) 
-#   , very.broad =
-#     rbeta(
-#       n = 10000
-#       , shape1 = 5
-#       , shape2 = 1
-#       , ncp = 0
-#     ) 
-# ) %>% 
-#   pivot_longer(
-#     cols = everything()
-#     , names_to = 'profile'
-#     , values_to = 'similarity'
-#   ) %>% 
-#   mutate(profile = fct_inorder(profile)) %>% 
-#   ggplot(aes(
-#     x = similarity
-#     , color = profile
-#     , fill = profile
-#     , label = profile
-#   )) +
-#   geom_textdensity() + 
-#   facet_wrap(
-#     facets = vars(profile)
-#     , nrow = 1
-#   )
-#   
-#   fun_plot.histogram(aes(
-#     x = similarity
-#     , y = after_stat(density)
-#     , fill = profile
-#   )
-#   , .sym_facets = profile
-#   , .list_axis.x.args = list(
-#     limits = c(-0.1,1.1)
-#     , breaks = seq(0,1,.25)
-#   )
-#   , .fun_format.x = percent_format(accuracy = 1)
-#   , .list_labs = list(
-#     title = NULL
-#     , subtitle = NULL
-#     , x = str_to_title('professional compatibility')
-#     , y = NULL
-#   )
-#   , .theme = ggridges::theme_ridges(font_size = 11, center_axis_labels = T) +
-#     theme(
-#       plot.margin = margin(0, 0, 0, 0)
-#       , axis.text.y = element_blank()
-#     )
-#   ) +
-#   geom_density(aes(
-#     x = similarity
-#   )
-#   , size = 1.2
-#   ) + 
-#   geom_textvline(
-#     xintercept = dbl_recommended.cutff
-#     , label = 'Recommended'
-#     , color = list_atlas.pal$green
-#     , fontface = 'bold'
-#     , linetype = 1
-#     , linewidth = 1.35
-#     , hjust = 0.125
-#     , vjust = -0.5
-#   )
-# 
-# tibble(
-#   # user = df_KNN.output$similarity, 
-#   very.niche = 
-#     TruncatedNormal::rtnorm(
-#       n = 873
-#       , mu = 0
-#       , sd = 0.125
-#       , lb = 0 
-#       , ub = 1
-#     )
-#   , niche = 
-#     TruncatedNormal::rtnorm(
-#       n = 873
-#       , mu = 0.125
-#       , sd = 0.25
-#       , lb = 0 
-#       , ub = 1
-#     )
-#   , normal = 
-#     TruncatedNormal::rtnorm(
-#       n = 873
-#       , mu = 0.5
-#       , sd = 0.125
-#       , lb = 0 
-#       , ub = 1
-#     )
-#   , broad = 
-#     TruncatedNormal::rtnorm(
-#       n = 873
-#       , mu = 0.625
-#       , sd = 0.25
-#       , lb = 0 
-#       , ub = 1
-#     )
-#   , very.broad = 
-#     TruncatedNormal::rtnorm(
-#       n = 873
-#       , mu = 1
-#       , sd = 0.125
-#       , lb = 0 
-#       , ub = 1
-#     )
-# ) %>% 
-#   pivot_longer(
-#     cols = everything()
-#     , names_to = 'profile'
-#     , values_to = 'similarity'
-#   ) %>% 
-#   fun_plot.histogram(aes(
-#     x = similarity
-#     , y = after_stat(density)
-#     , fill = profile
-#   )
-#   , .sym_facets = profile
-#   , .list_axis.x.args = list(
-#     limits = c(-0.1,1.1)
-#     , breaks = seq(0,1,.25)
-#   )
-#   , .fun_format.x = percent_format(accuracy = 1)
-#   , .list_labs = list(
-#     title = NULL
-#     , subtitle = NULL
-#     , x = str_to_title('professional compatibility')
-#     , y = NULL
-#   )
-#   , .theme = ggridges::theme_ridges(font_size = 11, center_axis_labels = T) +
-#     theme(
-#       plot.margin = margin(0, 0, 0, 0)
-#       , axis.text.y = element_blank()
-#     )
-#   ) +
-#   geom_density(aes(
-#     x = similarity
-#   )
-#   , size = 1.2
-#   ) + 
-#   geom_textvline(
-#     xintercept = dbl_recommended.cutff
-#     , label = 'Recommended'
-#     , color = list_atlas.pal$green
-#     , fontface = 'bold'
-#     , linetype = 1
-#     , linewidth = 1.35
-#     , hjust = 0.125
-#     , vjust = -0.5
-#   ) -> dsdsds
-# 
-# c(
-#   dsdsds$layers
-#   , geom_histogram(
-#     data = df_KNN.output
-#     , aes(x = similarity)
-#   )
-# ) -> dsdsds$layers
-# 
-# dsdsds
-
 # [DUMBBELL PLOT] USER VS TOP MATCH / BOTTOM MATCH ------------------------------------
 # Top match comparison
 df_dumbbell %>%
@@ -1172,13 +777,7 @@ df_dumbbell %>%
   , .fun_format.y = function(y){y}
   , .fun_format.labels = label_percent(accuracy = .01)
   , .list_labs = list(
-    # title = str_to_title('best career match')
     title = NULL
-    # , subtitle = str_to_title(glue(
-    #   'your most compatible occupation is: {chr_matches.topbot[1]}.'
-    #
-    # ))
-    # , subtitle = str_to_title(chr_matches.topbot[1])
     , subtitle = NULL
     , x = str_to_title('factor score')
     , y = NULL
@@ -1222,29 +821,16 @@ df_dumbbell %>%
   , .fun_format.y = function(y){y}
   , .fun_format.labels = label_percent(accuracy = .01)
   , .list_labs = list(
-    # title = str_to_title('worst career match')
     title = NULL
-    # , subtitle = str_to_title(glue(
-    #   'your least compatible occupation is: {chr_matches.topbot[2]}.'
-    # ))
-    # , subtitle = str_to_title(chr_matches.topbot[2])
     , subtitle = NULL
     , x = str_to_title('factor score')
     , y = NULL
   )
   ) -> plt_bot.match
 
-# patchwork::wrap_plots(
-#   plt_top.match
-#   , plt_bot.match +
-#     theme(axis.text.y = element_blank())
-#   , ncol = 2
-# ) -> plt_topbot.match
-
-# -------- RENDER -----------------------------------------------------------
+# --- RENDER -----------------------------------------------------------
 # RENDER R MARKDOWN REPORT --------------------------------------------------
 rmarkdown::render(
-  'C:/Users/Cao/Documents/Github/Atlas-Research/Reports/Matching Report/matching_report3.Rmd'
-  , output_file = paste0('Matching Report (', chr_text.user, ').pdf')
+  './matching_report.Rmd'
+  , output_file = chr_file.name
 )
-
