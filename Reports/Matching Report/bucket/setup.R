@@ -51,6 +51,7 @@ fun_handler <- function(body, ...){
     , 'fun_unique_name.R'
   ) -> list_fun
   
+  # Data files
   list(
     # Default texts
     'list_df_text.R'
