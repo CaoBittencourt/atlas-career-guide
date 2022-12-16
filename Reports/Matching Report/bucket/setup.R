@@ -11,13 +11,13 @@ fun_handler <- function(body, ...){
     , 'FNN' #Fast K-NN Algorithm (faster than the 'class' package)
     , 'jsonify' #Work with JSON (faster than jsonlite)
     , 'ggthemes' #Data visualization
-    , 'tidyverse', 'stringi', 'english' #Data wrangling
     , 'tinytex' #LaTeX
     , 'modeest' #Mode
     , 'knitr' #Knitr
     , 'readxl' #Import excel (use other package?)
     , 'aws.s3' #Work with AWS Lambda and R
     # , 'lambdr'
+    , 'stringi', 'english', 'tidyverse' #Data wrangling
   )
   
   # Activate / install packages
@@ -85,9 +85,6 @@ fun_handler <- function(body, ...){
     'BUCKETNAME'
   ) -> list_bucket.render
   
-  # OUTPUT NAME -------------------------------------------------------------
-  fun_name.unique(chr_suffix = '.pdf') -> chr_file.name
-  
   # --- S3 SOURCE (SETUP) ----------------------------------------------------------
   # CREDENTIALS -------------------------------------------------------------
   # Key
@@ -95,6 +92,9 @@ fun_handler <- function(body, ...){
   
   # Secret
   chr_secret <- 'lalala'
+  
+  # Region
+  chr_region <- 'dsdsds'
   
   # RUN SETUP FILES FROM S3 BUCKET ------------------------------------------------
   # Source function files
@@ -106,6 +106,7 @@ fun_handler <- function(body, ...){
       , bucket = get_bucket(.y)
       , key = chr_key
       , secret = chr_secret
+      , region = chr_region
     )
   )
   
@@ -118,6 +119,7 @@ fun_handler <- function(body, ...){
       , bucket = get_bucket(.y)
       , key = chr_key
       , secret = chr_secret
+      , region = chr_region
     )
   )
   
@@ -157,6 +159,9 @@ fun_handler <- function(body, ...){
       )
     ) -> df_input
   
+  # OUTPUT NAME -------------------------------------------------------------
+  fun_name.unique(chr_suffix = '.pdf') -> chr_file.name
+  
   # --- S3 SOURCE (RENDER) ----------------------------------------------------------
   # RENDER RMD FROM S3 BUCKET ------------------------------------------------
   # Source render files
@@ -168,6 +173,7 @@ fun_handler <- function(body, ...){
       , bucket = get_bucket(.y)
       , key = chr_key
       , secret = chr_secret
+      , region = chr_region
     )
   )
   
