@@ -156,21 +156,6 @@ list_df_text$recommended %>%
   ) %>% 
   filter(interval == n.interval) -> df_text.recommended
 
-# Mean
-list_df_text$centrality %>%
-  mutate(
-    mean = mean(df_KNN.output$similarity) 
-    , n.interval = 
-      mean %>%
-      round(1) %>%
-      recode(
-        '0' = -Inf
-        , '1' = Inf
-      ) %>%
-      findInterval(vec = seq_scale.1_8)
-  ) %>% 
-  filter(interval == n.interval) -> df_text.mean
-
 # Specialization
 list_df_text$flexibility %>% 
   mutate(
