@@ -1,10 +1,11 @@
 # --- SETUP ------------------------------------------------------------
 # PACKAGES ----------------------------------------------------------------
-pkg <- c(
-  'tidyverse' #Data wrangling
-)
-install.packages('systemfit')
-install.packages('ivreg')
+c(
+  'sandwich', 'lmtest', #Diagnósticos e ajustes
+  'ivreg', #Modelos 
+  # 'np', 'Matching', 'systemfit', # Para as escalas semi/não-paramétricas e sistemas de dispêndio
+  'plyr', 'glue', 'broom', 'purrr', 'tidyverse' #Manipulação de dados
+) -> pkg
 
 # library(systemfit)
 library(ivreg)
@@ -17,9 +18,6 @@ lapply(pkg, function(x)
 # Package citation
 # lapply(pkg, function(x)
 #   {citation(package = x)})
-
-# TEST DATA ---------------------------------------------------------------
-read_csv('C:/Users/Cao/Documents/Github/Atlas-Research/Reports/Matching Report/bucket/occupations.csv') -> occupations
 
 # --- FUNCTIONS -----------------------------------------------------------
 # ARGUMENT NAMES AS VECTOR (AUXILIARY FUNCTION) ----------------------------------------------------------
@@ -120,119 +118,123 @@ fun_r2 <- function(
   
 }
 
-# HETEROSKEDASTICITY DIAGNOSIS AND TREATMENT ------------------------------
-fun_heteroskedasticity <- function(
-    .model 
-    , .chr_type = 'HC3'
-    , .dbl_significance = 0.05
-){
-  
-  if(bptest(model)$p.value <= significance){
-    
-    model %>%
-      coeftest(
-        vcov = vcovHC(., type = .type)
-      )
-    
-  }
-  else
-    model
-}
-
-# GENERIC REGRESSION FUNCTION: OLS & 2SLS ---------------------------------------------
-iv.engel.rothbarth <- function(
-    .df_data
-    , .chr_regression.type = c(
-      'ols', '2sls', 'nnls', 'bvls'
-    )
-    , .dbl_vars.dependent
-    , .dbl_vars.independent
-    , .dbl_vars.iv = c()
-    , .dbl_vars.control = c()
-    , .dbl_upper.bounds = c()
-    , .dbl_lower.bounds = c()
-    , .dbl_vars.weights = NULL
-    , .lgc_diagnostics = F
-){
-  
-  # Regression type 
-  # NNLS with weights 
-  # => sqrt(weights) * independent variable = independent variable
-  # => sqrt(weights) * dependent variable = dependent variable
-  
-  # Sample weights
-  
-  # Dependent variable
-  
-  # Independent variables
-  
-  # Run model
-  
-  # R squared
-  
-  # F test
-  
-  # 
-  
-  # Output
-  
-}
-
-# GENERIC REGRESSION FUNCTION: NNLS ---------------------------------------------
-fun_regression.truncated <- function(
-    .df_data
-    , .dbl_vars.dependent
-    , .dbl_vars.independent
-    # , .dbl_vars.control = c()
-    , .dbl_vars.weights = NULL
-    , .lgc_diagnostics = F
-){
-  
-  # Sample weights
-  # NNLS with weights 
-  # => sqrt(weights) * independent variable = independent variable
-  # => sqrt(weights) * dependent variable = dependent variable
-  if(length(.dbl_vars.weights)){
-    
-    .df_data %>%
-      mutate(across(
-        .cols = c(
-          .dbl_vars.dependent
-          , .dbl_vars.independent
-        )
-        ,.fns = function(x){x * sqrt(.dbl_vars.weights)}
-      )) -> .df_data
-    
-  }
-  
-  # Dependent variable
-  .dbl_vars.dependent %>%
-    paste0('~') -> chr_formula.right
-  
-  # Independent variables
-  .dbl_vars.independent %>%
-    paste0(collapse = '+') -> chr_formula.left
-  
-  # Formula
-  chr_formula.right %>%
-    paste0(chr_formula.left) %>%
-    as.formula() -> fml_formula
-  
-  # Run model
-  
-  
-  # R squared
-  
-  # F test
-  
-  # 
-  
-  # Output
-  
-}
+# # HETEROSKEDASTICITY DIAGNOSIS AND TREATMENT ------------------------------
+# fun_heteroskedasticity.lm <- function(
+    #     .model 
+#     , .chr_type = 'HC3'
+#     , .dbl_significance = 0.05
+# ){
+#   
+#   if(bptest(.model)$p.value <= .dbl_significance){
+#     
+#     .model %>%
+#       coeftest(
+#         vcov = vcovHC(.model, type = .chr_type)
+#       ) %>% 
+#       return()
+#     
+#   }
+#   else {
+#     
+#     return(.model)
+#     
+#   }
+#   
+# }
+# 
+# # read_csv('C:/Users/Cao/Documents/Github/Atlas-Research/Data/occupations.csv') %>%
+# #   mutate(
+# #     across(
+# #       .cols = ends_with('.l')
+# #       ,.fns = function(x){100*x}
+# #     )
+# #   ) -> df_occupations
+# 
+# df_occupations %>% 
+#   mutate(
+#     annual_wage_2021 = annual_wage_2021 / 12
+#   ) %>% 
+#   fun_lm(
+#     .sym_vars.dependent = 'annual_wage_2021'
+#     , .sym_vars.independent = 
+#       df_occupations %>% 
+#       select(ends_with('.l')) %>% 
+#       names()
+#     , .dbl_lower.bounds = 0
+#     , .lgc_intercept = F
+#     , .lgc_diagnostics = F
+#   ) -> mdl_kcost
+# 
+# 
+#   dsds %>% 
+#     summary()
+# 
+# mdl_kcost$model.tidy
+# mdl_kcost$r2
+# mdl_kcost$r2.adjusted
+# 
+# 
+# fun_heteroskedasticity.nls <- function(.nls_model){
+#   
+#   b <- coef(.nls_model)
+#   
+#   m <- .nls_model$m
+#   
+#   resid <- m$resid()
+#   
+#   hmat <- m$gradient()
+#   
+#   x <- hmat
+#   
+#   y <- resid + hmat %*% b
+#   
+#   lm(y ~ x + 0) %>%
+#     vcovHC() %>% 
+#     return()
+#   
+# }
+# 
+# 
+# vcov(mdl_kcost$model.fit) = fun_heteroskedasticity.nls(mdl_kcost$model.fit)
+# 
+# fun_heteroskedasticity2 <- function(
+    #     .model 
+#     , .chr_type = 'HC3'
+#     , .dbl_significance = 0.05
+# ){
+#   
+#   if(bptest(.model)$p.value <= .dbl_significance){
+#     
+#     .model %>%
+#       coeftest(
+#         vcov = vcovHC(.model, type = .chr_type)
+#       )
+#     
+#   }
+#   else {
+#     
+#     return(.model)
+#     
+#   }
+#   
+# }
+# 
+# bptest(mdl_kcost$model.fit)
+# b <- coef(mdl_kcost$model.fit)
+# m <- mdl_kcost$model.fit$m
+# resid <- m$resid()
+# hmat <- m$gradient()
+# fakex <- hmat
+# fakey <- resid + hmat %*% b
+# lmout <- lm(fakey ~ fakex + 0)
+# vcovHC(lmout)
+# 
+# 
+# mdl_kcost$model.fit 
+#   fun_heteroskedasticity()
 
 # GENERIC REGRESSION FUNCTION: NNLS & BVLS ---------------------------------------------
-fun_regression.truncated <- function(
+fun_lm <- function(
     .df_data
     , .sym_vars.dependent
     , .sym_vars.independent
@@ -450,7 +452,8 @@ fun_regression.truncated <- function(
   
   # Output
   return(list(
-    'model' = mdl_fit.tidy
+    'model.tidy' = mdl_fit.tidy
+    , 'model.fit' = mdl_fit
     , 'r2' = list_r2[[1]]
     , 'r2.adjusted' = list_r2[[2]]
   ))
@@ -458,107 +461,36 @@ fun_regression.truncated <- function(
 }
 
 # test --------------------------------------------------------------------
-# lm(
-#   formula = price ~ carat + x + y + z 
-#   , data = diamonds %>% slice(1:100)
-# ) -> lalala
-# 
-# lalala %>% summary()
-# lalala %>% broom::tidy()
-# 
-# lalala$coefficients
-# # lalala$effects
-# lalala$rank
-# lalala$qr$qr
-# names(lalala)
-# 
-# 
-# dsdsdsds$model %>% view
-# 
-# fun_r2(
-#   .int_vars.independent = lalala$rank
-#   , .lgc_intercept = F
-#   , .dbl_observations = diamonds %>% slice(1:100) %>% pull(price)
-#   , .dbl_fitted = lalala$fitted.values
-# )
-# 
-# nnls::nnls(
-#   A = diamonds %>% slice(1:100) %>% select(carat) %>% as.matrix() * sqrt(diamonds$y)[1:100]
-#   , b = diamonds %>% slice(1:100) %>% select(price) %>% as.matrix() * sqrt(diamonds$y)[1:100]
-# )
-# 
-# nls(
-#   formula = price ~ a + b1 * carat
-#   , data = diamonds %>% slice(1:100)
-#   , weights = NULL
-#   # , upper = 10000
-#   # , lower = 0
-#   # , algorithm = 'port'
-# ) 
-# 
-# lm(
-#   formula = price ~ carat
-#   , weights = y
-#   , data = diamonds %>% slice(1:100)
-# )
-# 
-# nls(
-#   formula = price ~ `(Intercept)` + b1 * carat
-#   , data = diamonds %>% slice(1:100)
-#   , weights = y
-#   # , upper = 1000
-#   , lower = 0
-#   , algorithm = 'port'
-# ) %>% broom::tidy() -> dsds
-# 
-# 
-# dsdsds$m$trace()
-# 
-# fun_r2(
-#   .int_vars.independent = length(dsds$x)
-#   , .lgc_intercept = F
-#   , .dbl_observations = diamonds %>% slice(1:100) %>% select(price) %>% as.matrix()
-#   , .dbl_fitted = dsds$fitted
-# )
-# 
-# dsds$fitted
-# dsds$residuals
-# 
-# 
-# 1 - (lala$m$deviance() / sum((dsds[[1]] - mean(dsds[[1]]))^2))
-# 
-# lala$data
-# 
-# 
-# 1 - (sum((lalala$residuals)^2) / sum((dsds[[1]] - mean(dsds[[1]]))^2))
-# 
-# 1 - (sum((model$residuals)^2) / sum((data$var - mean(data$var))^2))
-# 
-# p = #vars
-#   n = #obs
-#   1 - (1 - r2)(n-1)/(n-p)
-# 
-# lalala$deviance
-# 
-# lalala$x
+source('C:/Users/Cao/Documents/Github/Atlas-Research/Data/df_occupations.pop.R')
+df_occupations <- read_csv('C:/Users/Cao/Documents/Github/Atlas-Research/Data/occupations.csv')
 
-occupations %>% 
+df_occupations %>%
   mutate(
-    across(
+    annual_wage_2021 = annual_wage_2021 / 12
+    , across(
       .cols = ends_with('.l')
-      , ~ 100 * .x)
-    , annual_wage_2021 = annual_wage_2021 / 12
-  ) %>%
-  fun_regression.truncated(
+      ,.fns = function(x){100*x}
+    )) %>%
+  fun_lm(
     .sym_vars.dependent = 'annual_wage_2021'
-    , .sym_vars.independent = 
-      occupations %>% 
-      select(ends_with('.l')) %>% 
-      names() %>%
-      head(2)
+    , .sym_vars.independent =  
+      df_occupations %>%
+      select(ends_with('.l')) %>%
+      names()
     , .dbl_lower.bounds = 0
     , .lgc_intercept = F
-    , .lgc_diagnostics = T
-  )
+  ) -> list_kcost
 
-systemfit()
+# -------- EXPORT ----------------------------------------------------
+# XLSX --------------------------------------------------------------------
+list_kcost$model.tidy %>% 
+  arrange(desc(estimate), desc(p.value)) %>%
+  mutate(p.value = round(p.value, 4)) %>% 
+  openxlsx::write.xlsx('kcost.xlsx')
+
+
+list_kcost$model.tidy %>% view
+list_kcost$r2
+list_kcost$r2.adjusted
+
+

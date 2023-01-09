@@ -157,11 +157,7 @@ fun_KNN.matching <- function(
       mutate(#Add euclidean distances and convert them to similarities
         euclidean_distance = as.vector(KNN.output$nn.dist)
         , similarity = fun_similarity(euclidean_distance)
-        , across(
-          .cols = starts_with('similarity')
-          ,.fns = function(x){round(x,.dbl_decimals)}
-        )
-        
+        , similarity = round(similarity, .dbl_decimals)
       ) %>%
       arrange(desc(similarity)) %>%
       mutate(
@@ -186,11 +182,7 @@ fun_KNN.matching <- function(
       mutate(#Add euclidean distances and convert them to similarities
         euclidean_distance = as.vector(KNN.output$nn.dist)
         , similarity = fun_similarity(euclidean_distance)
-        , across(
-          .cols = starts_with('similarity')
-          ,.fns = function(x){round(x,.dbl_decimals)}
-        )
-        
+        , similarity = round(similarity, .dbl_decimals)
       ) %>% 
       arrange(desc(similarity)) %>%
       mutate(
