@@ -239,10 +239,10 @@ fun_lm <- function(
     , .sym_vars.dependent
     , .sym_vars.independent
     , .sym_vars.instrumental = c()
+    , .sym_vars.weights = NULL
     , .lgc_intercept = T
     , .dbl_upper.bounds = c()
     , .dbl_lower.bounds = c()
-    , .sym_vars.weights = NULL
     , .lgc_diagnostics = F
 ){
   
@@ -346,7 +346,10 @@ fun_lm <- function(
     ivreg(
       formula = fml_formula
       , data = .df_data
-      , weights = .sym_vars.weights
+      , weights = 
+        if(length(.sym_vars.weights)){
+          .df_data[[.sym_vars.weights]]
+          } else { NULL }
     ) -> mdl_fit
     
   } else {
@@ -387,7 +390,10 @@ fun_lm <- function(
     nls(
       formula = fml_formula
       , data = .df_data
-      , weights = .sym_vars.weights
+      , weights = 
+        if(length(.sym_vars.weights)){
+          .df_data[[.sym_vars.weights]]
+        } else { NULL }
       , upper = .dbl_upper.bounds
       , lower = .dbl_lower.bounds
       , algorithm = 'port'
@@ -462,7 +468,28 @@ fun_lm <- function(
 
 # test --------------------------------------------------------------------
 source('C:/Users/Cao/Documents/Github/Atlas-Research/Data/df_occupations.pop.R')
-df_occupations <- read_csv('C:/Users/Cao/Documents/Github/Atlas-Research/Data/occupations.csv')
+
+dsds <- 'sample_weight'
+dsds <- 'active_listening.l'
+dsds <- NULL
+
+nls(
+  formula = annual_wage_2021 ~ a + b1 * active_listening.l + b2 * basic.mathematics.l
+  , weights = if(length(dsds)){df_occupations[[dsds]]} else {NULL}
+  # , weights = df_occupations[['active_listening.l']]
+  , algorithm = 'port'
+  , data = 
+    df_occupations %>%
+    mutate(
+      annual_wage_2021 = annual_wage_2021 / 12
+      , across(
+        .cols = ends_with('.l')
+        ,.fns = function(x){100*x}
+      )
+      , sample_weight = sum(employment) / employment
+    )
+) -> dsdsds
+
 
 df_occupations %>%
   mutate(
@@ -470,16 +497,21 @@ df_occupations %>%
     , across(
       .cols = ends_with('.l')
       ,.fns = function(x){100*x}
-    )) %>%
+    )
+    , sample_weight = sum(employment) / employment
+    ) %>% 
   fun_lm(
     .sym_vars.dependent = 'annual_wage_2021'
     , .sym_vars.independent =  
       df_occupations %>%
       select(ends_with('.l')) %>%
-      names()
+      names() %>% 
+      head(2)
+    , .sym_vars.weights = 'sample_weight'
     , .dbl_lower.bounds = 0
     , .lgc_intercept = F
-  ) -> list_kcost
+  # ) -> list_kcost
+  )
 
 # -------- EXPORT ----------------------------------------------------
 # XLSX --------------------------------------------------------------------

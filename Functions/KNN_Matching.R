@@ -164,7 +164,7 @@ fun_KNN.matching <- function(
         rank = row_number()
         , rank.norm = seq(1, 0, - 1 / (n() - 1))
         , .before = everything()
-        ) %>% 
+      ) %>% 
       return(.)
     
   } else {
