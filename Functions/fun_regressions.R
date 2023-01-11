@@ -1,14 +1,10 @@
 # --- SETUP ------------------------------------------------------------
 # PACKAGES ----------------------------------------------------------------
 c(
-  'sandwich', 'lmtest', #Diagnósticos e ajustes
-  'ivreg', #Modelos 
-  # 'np', 'Matching', 'systemfit', # Para as escalas semi/não-paramétricas e sistemas de dispêndio
-  'plyr', 'glue', 'broom', 'purrr', 'tidyverse' #Manipulação de dados
+  'sandwich', 'lmtest' #Diagnósticos e ajustes
+  , 'ivreg', 'minpack.lm' #Modelos 
+  , 'broom', 'tidyverse' #Manipulação de dados
 ) -> pkg
-
-# library(systemfit)
-library(ivreg)
 
 # Activate / install packages
 lapply(pkg, function(x)
@@ -233,6 +229,240 @@ fun_r2 <- function(
 # mdl_kcost$model.fit 
 #   fun_heteroskedasticity()
 
+# # GENERIC REGRESSION FUNCTION: NNLS & BVLS ---------------------------------------------
+# fun_lm <- function(
+    #     .df_data
+#     , .sym_vars.dependent
+#     , .sym_vars.independent
+#     , .sym_vars.instrumental = c()
+#     , .sym_vars.weights = NULL
+#     , .lgc_intercept = T
+#     , .dbl_upper.bounds = c()
+#     , .dbl_lower.bounds = c()
+#     , .lgc_diagnostics = F
+# ){
+#   
+#   # # Argument names
+#   # if(
+#   #   fun_args.aux(!!enexpr(.sym_vars.independent)) %>% 
+#   #   as.character() %>% 
+#   #   intersect(names(.df_data)) %>%
+#   #   length()
+#   # ){
+#   #   
+#   #   fun_args.aux(!!enexpr(.sym_vars.independent)) %>% 
+#   #     as.character() %>% 
+#   #     intersect(names(.df_data)) %>% 
+#   #     return()
+#   #   
+#   # } else { 
+#   #   
+#   #   args %>% 
+#   #     enexpr() %>% 
+#   #     eval() %>% 
+#   #     return()
+#   # } -> .sym_vars.independent
+#   # 
+#   # # fun_args(.df_data, !!enexpr(.sym_vars.dependent)) -> .sym_vars.dependent
+#   # # 
+#   # # fun_args(.df_data, !!enexpr(.sym_vars.independent)) -> .sym_vars.independent
+#   # # 
+#   # # fun_args(.df_data, !!enexpr(.sym_vars.weights)) -> .sym_vars.weights
+#   # 
+#   # return(list(
+#   #   # .sym_vars.dependent
+#   #   .sym_vars.independent
+#   #   # , .sym_vars.weights
+#   # ))
+#   
+#   # fun_args.aux(!!enexpr(.sym_vars.dependent)) -> .sym_vars.dependent
+#   # 
+#   # fun_args.aux(!!enexpr(.sym_vars.independent)) -> .sym_vars.independent
+#   # 
+#   # fun_args.aux(!!enexpr(.sym_vars.weights)) -> .sym_vars.weights
+#   
+#   # Sample weights
+#   # NNLS with weights
+#   # => sqrt(weights) * independent variable = independent variable
+#   # => sqrt(weights) * dependent variable = dependent variable
+#   
+#   # Bounds
+#   if(!length(.dbl_upper.bounds)){
+#     
+#     rep(Inf, length(.sym_vars.independent)) -> .dbl_upper.bounds 
+#     
+#   } else if(length(.dbl_upper.bounds) == 1){
+#     
+#     rep(.dbl_upper.bounds, length(.sym_vars.independent)) -> .dbl_upper.bounds 
+#     
+#   }
+#   
+#   if(!length(.dbl_lower.bounds)){
+#     
+#     rep(-Inf, length(.sym_vars.independent)) -> .dbl_lower.bounds 
+#     
+#   } else if(length(.dbl_upper.bounds) == 1){
+#     
+#     rep(.dbl_lower.bounds, length(.sym_vars.independent)) -> .dbl_lower.bounds 
+#     
+#   }
+#   
+#   
+#   # Methods of estimation
+#   if(length(.sym_vars.instrumental)){
+#     # 2SLS
+#     # Dependent variable
+#     .sym_vars.dependent[[1]] %>%
+#       paste('~') -> chr_formula.right
+#     
+#     if(!.lgc_intercept){
+#       
+#       paste0(chr_formula.right, '0 + ') -> chr_formula.right
+#       
+#     } 
+#     
+#     # Independent variables
+#     paste(
+#       .sym_vars.independent
+#       , collapse = '+'
+#     ) %>% 
+#       paste('|') %>% 
+#       paste(
+#         paste(
+#           .sym_vars.instrumental
+#           , collapse = ' + '
+#         )) -> chr_formula.left
+#     
+#     # Formula
+#     chr_formula.right %>%
+#       paste0(chr_formula.left) %>%
+#       as.formula() -> fml_formula
+#     
+#     # Run model
+#     ivreg(
+#       formula = fml_formula
+#       , data = .df_data
+#       , weights = 
+#         if(length(.sym_vars.weights)){
+#           .df_data[[.sym_vars.weights]]
+#           } else { NULL }
+#     ) -> mdl_fit
+#     
+#   } else {
+#     # Other methods
+#     # Dependent variable
+#     .sym_vars.dependent[[1]] %>%
+#       paste('~') -> chr_formula.right
+#     
+#     if(.lgc_intercept){
+#       
+#       paste0(chr_formula.right, '(Intercept) + ') -> chr_formula.right
+#       
+#     } 
+#     
+#     # Independent variables
+#     paste0('b', 1:length(.sym_vars.independent), '*') %>%
+#       paste(.sym_vars.independent, collapse = '+') -> chr_formula.left
+#     
+#     # Instrumental variables
+#     if(length(.sym_vars.instrumental)){
+#       
+#       chr_formula.left %>%
+#         paste('|') %>% 
+#         paste(
+#           paste(
+#             .sym_vars.instrumental
+#             , collapse = ' + '
+#           )) -> chr_formula.left
+#       
+#     }
+#     
+#     # Formula
+#     chr_formula.right %>%
+#       paste0(chr_formula.left) %>%
+#       as.formula() -> fml_formula
+#     
+#     # Run model
+#     nls(
+#       formula = fml_formula
+#       , data = .df_data
+#       , weights = 
+#         if(length(.sym_vars.weights)){
+#           .df_data[[.sym_vars.weights]]
+#         } else { NULL }
+#       , upper = .dbl_upper.bounds
+#       , lower = .dbl_lower.bounds
+#       , algorithm = 'port'
+#       , control = list(scaleOffset = 1)
+#     ) -> mdl_fit
+#     
+#   }
+#   
+#   # Tidy model
+#   if(.lgc_intercept){
+#     
+#     c(
+#       '(Intercept)'
+#       , .sym_vars.independent
+#     ) -> chr_term
+#     
+#   } else { 
+#     
+#     .sym_vars.independent -> chr_term
+#     
+#   }
+#   
+#   mdl_fit %>% 
+#     broom::tidy() %>% 
+#     mutate(
+#       term = chr_term
+#       , significance = 
+#         findInterval(
+#           x = p.value
+#           , vec = c(0, 0.001, 0.01, 0.05, 0.1, 1)
+#         ) %>% 
+#         recode(
+#           .default = ''
+#           , '4' = '.'
+#           , '3' = '*'
+#           , '2' = '**'
+#           , '1' = '***'
+#         )
+#     ) -> mdl_fit.tidy
+#   
+#   # R squared
+#   fun_r2(
+#     .int_vars.independent = length(.sym_vars.independent)
+#     , .dbl_observations = .df_data %>% pull(.sym_vars.dependent[[1]])
+#     , .dbl_fitted = 
+#       if(length(.sym_vars.instrumental)){
+#         mdl_fit$fitted.values
+#       } else { mdl_fit$m$fitted() }
+#     , .lgc_intercept = .lgc_intercept
+#   ) -> list_r2
+#   
+#   # F test
+#   
+#   # Summary
+#   if(.lgc_diagnostics){
+#     
+#     mdl_fit %>% 
+#       summary(diagnostics = T) %>%
+#       print()
+#     
+#   }
+#   
+#   
+#   # Output
+#   return(list(
+#     'model.tidy' = mdl_fit.tidy
+#     , 'model.fit' = mdl_fit
+#     , 'r2' = list_r2[[1]]
+#     , 'r2.adjusted' = list_r2[[2]]
+#   ))
+#   
+# }
+
 # GENERIC REGRESSION FUNCTION: NNLS & BVLS ---------------------------------------------
 fun_lm <- function(
     .df_data
@@ -291,26 +521,46 @@ fun_lm <- function(
   # => sqrt(weights) * dependent variable = dependent variable
   
   # Bounds
-  if(!length(.dbl_upper.bounds)){
+  if(length(.dbl_upper.bounds) == 1){
     
-    rep(Inf, length(.sym_vars.independent)) -> .dbl_upper.bounds 
-    
-  } else if(length(.dbl_upper.bounds) == 1){
-    
-    rep(.dbl_upper.bounds, length(.sym_vars.independent)) -> .dbl_upper.bounds 
-    
-  }
-  
-  if(!length(.dbl_lower.bounds)){
-    
-    rep(-Inf, length(.sym_vars.independent)) -> .dbl_lower.bounds 
-    
-  } else if(length(.dbl_upper.bounds) == 1){
-    
-    rep(.dbl_lower.bounds, length(.sym_vars.independent)) -> .dbl_lower.bounds 
+    rep(
+      .dbl_upper.bounds
+      , as.numeric(.lgc_intercept) + length(.sym_vars.independent)
+    ) -> .dbl_upper.bounds 
     
   }
   
+  if(length(.dbl_lower.bounds) == 1){
+    
+    rep(
+      .dbl_lower.bounds
+      , as.numeric(.lgc_intercept) +  length(.sym_vars.independent)
+    ) -> .dbl_lower.bounds 
+    
+  }
+  
+  
+  # # Bounds
+  #   if(!length(.dbl_upper.bounds)){
+  #     
+  #     rep(Inf, length(.sym_vars.independent)) -> .dbl_upper.bounds 
+  #     
+  #   } else if(length(.dbl_upper.bounds) == 1){
+  #     
+  #     rep(.dbl_upper.bounds, length(.sym_vars.independent)) -> .dbl_upper.bounds 
+  #     
+  #   }
+  #   
+  #   if(!length(.dbl_lower.bounds)){
+  #     
+  #     rep(-Inf, length(.sym_vars.independent)) -> .dbl_lower.bounds 
+  #     
+  #   } else if(length(.dbl_upper.bounds) == 1){
+  #     
+  #     rep(.dbl_lower.bounds, length(.sym_vars.independent)) -> .dbl_lower.bounds 
+  #     
+  #   }
+  #   
   
   # Methods of estimation
   if(length(.sym_vars.instrumental)){
@@ -349,7 +599,7 @@ fun_lm <- function(
       , weights = 
         if(length(.sym_vars.weights)){
           .df_data[[.sym_vars.weights]]
-          } else { NULL }
+        } else { NULL }
     ) -> mdl_fit
     
   } else {
@@ -360,7 +610,8 @@ fun_lm <- function(
     
     if(.lgc_intercept){
       
-      paste0(chr_formula.right, '(Intercept) + ') -> chr_formula.right
+      # paste0(chr_formula.right, '(Intercept) + ') -> chr_formula.right
+      paste0(chr_formula.right, 'a + ') -> chr_formula.right
       
     } 
     
@@ -387,18 +638,42 @@ fun_lm <- function(
       as.formula() -> fml_formula
     
     # Run model
-    nls(
-      formula = fml_formula
-      , data = .df_data
-      , weights = 
-        if(length(.sym_vars.weights)){
-          .df_data[[.sym_vars.weights]]
-        } else { NULL }
-      , upper = .dbl_upper.bounds
-      , lower = .dbl_lower.bounds
-      , algorithm = 'port'
-    ) -> mdl_fit
-    
+    if(length(.sym_vars.weights)){
+      
+      nlsLM(
+        formula = fml_formula
+        , data = .df_data
+        , weights = .df_data[[.sym_vars.weights]]
+        , upper = .dbl_upper.bounds
+        , lower = .dbl_lower.bounds
+        , control = list(scaleOffset = 1)
+      ) -> mdl_fit 
+      
+    } else { 
+      
+      nlsLM(
+        formula = fml_formula
+        , data = .df_data
+        , upper = .dbl_upper.bounds
+        , lower = .dbl_lower.bounds
+        , control = list(scaleOffset = 1)
+      ) -> mdl_fit 
+      
+      }
+
+    # # Run model
+    # nlsLM(
+    #   formula = fml_formula
+    #   , data = .df_data
+    #   , weights = 
+    #     if(length(.sym_vars.weights)){
+    #       .df_data[[.sym_vars.weights]]
+    #     } else { NULL }
+    #   , upper = .dbl_upper.bounds
+    #   , lower = .dbl_lower.bounds
+    #   , control = list(scaleOffset = 1)
+    # ) -> mdl_fit
+    # 
   }
   
   # Tidy model
@@ -467,28 +742,28 @@ fun_lm <- function(
 }
 
 # test --------------------------------------------------------------------
-source('C:/Users/Cao/Documents/Github/Atlas-Research/Data/df_occupations.pop.R')
+# source('C:/Users/Cao/Documents/Github/Atlas-Research/Data/df_occupations.pop.R')
 
-dsds <- 'sample_weight'
-dsds <- 'active_listening.l'
-dsds <- NULL
-
-nls(
-  formula = annual_wage_2021 ~ a + b1 * active_listening.l + b2 * basic.mathematics.l
-  , weights = if(length(dsds)){df_occupations[[dsds]]} else {NULL}
-  # , weights = df_occupations[['active_listening.l']]
-  , algorithm = 'port'
-  , data = 
-    df_occupations %>%
-    mutate(
-      annual_wage_2021 = annual_wage_2021 / 12
-      , across(
-        .cols = ends_with('.l')
-        ,.fns = function(x){100*x}
-      )
-      , sample_weight = sum(employment) / employment
-    )
-) -> dsdsds
+# dsds <- 'sample_weight'
+# dsds <- 'active_listening.l'
+# dsds <- NULL
+# 
+# nls(
+#   formula = annual_wage_2021 ~ a + b1 * active_listening.l + b2 * basic.mathematics.l
+#   , weights = if(length(dsds)){df_occupations[[dsds]]} else {NULL}
+#   # , weights = df_occupations[['active_listening.l']]
+#   , algorithm = 'port'
+#   , data = 
+#     df_occupations %>%
+#     mutate(
+#       annual_wage_2021 = annual_wage_2021 / 12
+#       , across(
+#         .cols = ends_with('.l')
+#         ,.fns = function(x){100*x}
+#       )
+#       , sample_weight = sum(employment) / employment
+#     )
+# ) -> dsdsds
 
 
 df_occupations %>%
@@ -499,19 +774,76 @@ df_occupations %>%
       ,.fns = function(x){100*x}
     )
     , sample_weight = sum(employment) / employment
-    ) %>% 
+  ) %>% 
   fun_lm(
     .sym_vars.dependent = 'annual_wage_2021'
     , .sym_vars.independent =  
       df_occupations %>%
       select(ends_with('.l')) %>%
-      names() %>% 
-      head(2)
+      names()
+    # , .sym_vars.weights = 'sample_weight'
+    # , .dbl_lower.bounds = 0
+    , .lgc_intercept = T
+  ) -> list_kcost
+
+list_kcost$model.tidy
+
+
+
+paste(
+  'annual_wage_2021 ~ '
+  , df_occupations %>%
+    mutate(
+      across(
+        .cols = ends_with('.l')
+        ,.fns = function(x){100*x}
+      )
+    ) %>% 
+    select(ends_with('.l')) %>% 
+    names() %>% 
+    paste(collapse = ' + ')
+  ) %>% 
+  as.formula() %>% 
+  lm(
+    data = 
+      df_occupations %>%
+      mutate(
+        annual_wage_2021 = annual_wage_2021 / 12
+        , across(
+          .cols = ends_with('.l')
+          ,.fns = function(x){100*x}
+        )
+        , sample_weight = sum(employment) / employment
+      )
+      
+      )
+
+
+
+df_occupations %>%
+  mutate(
+    annual_wage_2021 = annual_wage_2021 / 12
+    , across(
+      .cols = ends_with('.l')
+      ,.fns = function(x){100*x}
+    )
+    , sample_weight = sum(employment) / employment
+  ) %>% 
+  fun_lm(
+    .sym_vars.dependent = 'annual_wage_2021'
+    , .sym_vars.independent =  
+      df_occupations %>%
+      select(ends_with('.l')) %>%
+      names() 
     , .sym_vars.weights = 'sample_weight'
     , .dbl_lower.bounds = 0
     , .lgc_intercept = F
-  # ) -> list_kcost
-  )
+  ) -> list_kcost
+
+# list_kcost$model.fit$weights
+list_kcost$model.tidy %>% 
+  view
+
 
 # -------- EXPORT ----------------------------------------------------
 # XLSX --------------------------------------------------------------------
