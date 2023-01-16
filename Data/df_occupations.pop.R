@@ -39,6 +39,10 @@ rename(
   ) %>% 
   right_join(
     df_occupations
+  ) %>% 
+  mutate(
+    employment2 = employment / code.variants
+    , .after = employment
   ) -> df_occupations
 
 # # MISSING OCCUPATIONS -----------------------------------------------------
@@ -61,10 +65,8 @@ rename(
 df_occupations %>% 
   drop_na() %>% 
   mutate(
-    employment2 = employment / code.variants
-    , employment2 = employment2 / min(employment2, na.rm = T)
+    employment2 = employment2 / min(employment2, na.rm = T)
     , employment2 = round(employment2)
-    , .after = employment
   ) %>% 
   group_by(occupation) %>%
   slice(rep(1:n(), first(employment2))) %>% 

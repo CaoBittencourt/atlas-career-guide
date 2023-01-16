@@ -1,7 +1,8 @@
 # --- SETUP ------------------------------------------------------------
 # PACKAGES ----------------------------------------------------------------
 c(
-  'sandwich', 'lmtest' #Diagnósticos e ajustes
+  'fastDummies' #Dummy variables
+  , 'sandwich', 'lmtest' #Diagnósticos e ajustes
   , 'ivreg', 'minpack.lm' #Modelos 
   , 'broom', 'tidyverse' #Manipulação de dados
 ) -> pkg
@@ -113,6 +114,12 @@ fun_r2 <- function(
   )
   
 }
+
+# DUMMY VARIABLES ---------------------------------------------------------
+fastDummies::dummy_cols(
+  .data = df_occupations
+  , select_columns = c('entry_level_education', 'code.variants')
+) -> lalala
 
 # # HETEROSKEDASTICITY DIAGNOSIS AND TREATMENT ------------------------------
 # fun_heteroskedasticity.lm <- function(
@@ -287,26 +294,46 @@ fun_r2 <- function(
 #   # => sqrt(weights) * dependent variable = dependent variable
 #   
 #   # Bounds
-#   if(!length(.dbl_upper.bounds)){
+#   if(length(.dbl_upper.bounds) == 1){
 #     
-#     rep(Inf, length(.sym_vars.independent)) -> .dbl_upper.bounds 
-#     
-#   } else if(length(.dbl_upper.bounds) == 1){
-#     
-#     rep(.dbl_upper.bounds, length(.sym_vars.independent)) -> .dbl_upper.bounds 
-#     
-#   }
-#   
-#   if(!length(.dbl_lower.bounds)){
-#     
-#     rep(-Inf, length(.sym_vars.independent)) -> .dbl_lower.bounds 
-#     
-#   } else if(length(.dbl_upper.bounds) == 1){
-#     
-#     rep(.dbl_lower.bounds, length(.sym_vars.independent)) -> .dbl_lower.bounds 
+#     rep(
+#       .dbl_upper.bounds
+#       , as.numeric(.lgc_intercept) + length(.sym_vars.independent)
+#     ) -> .dbl_upper.bounds 
 #     
 #   }
 #   
+#   if(length(.dbl_lower.bounds) == 1){
+#     
+#     rep(
+#       .dbl_lower.bounds
+#       , as.numeric(.lgc_intercept) +  length(.sym_vars.independent)
+#     ) -> .dbl_lower.bounds 
+#     
+#   }
+#   
+#   
+#   # # Bounds
+#   #   if(!length(.dbl_upper.bounds)){
+#   #     
+#   #     rep(Inf, length(.sym_vars.independent)) -> .dbl_upper.bounds 
+#   #     
+#   #   } else if(length(.dbl_upper.bounds) == 1){
+#   #     
+#   #     rep(.dbl_upper.bounds, length(.sym_vars.independent)) -> .dbl_upper.bounds 
+#   #     
+#   #   }
+#   #   
+#   #   if(!length(.dbl_lower.bounds)){
+#   #     
+#   #     rep(-Inf, length(.sym_vars.independent)) -> .dbl_lower.bounds 
+#   #     
+#   #   } else if(length(.dbl_upper.bounds) == 1){
+#   #     
+#   #     rep(.dbl_lower.bounds, length(.sym_vars.independent)) -> .dbl_lower.bounds 
+#   #     
+#   #   }
+#   #   
 #   
 #   # Methods of estimation
 #   if(length(.sym_vars.instrumental)){
@@ -345,7 +372,7 @@ fun_r2 <- function(
 #       , weights = 
 #         if(length(.sym_vars.weights)){
 #           .df_data[[.sym_vars.weights]]
-#           } else { NULL }
+#         } else { NULL }
 #     ) -> mdl_fit
 #     
 #   } else {
@@ -356,7 +383,8 @@ fun_r2 <- function(
 #     
 #     if(.lgc_intercept){
 #       
-#       paste0(chr_formula.right, '(Intercept) + ') -> chr_formula.right
+#       # paste0(chr_formula.right, '(Intercept) + ') -> chr_formula.right
+#       paste0(chr_formula.right, 'a + ') -> chr_formula.right
 #       
 #     } 
 #     
@@ -383,19 +411,42 @@ fun_r2 <- function(
 #       as.formula() -> fml_formula
 #     
 #     # Run model
-#     nls(
-#       formula = fml_formula
-#       , data = .df_data
-#       , weights = 
-#         if(length(.sym_vars.weights)){
-#           .df_data[[.sym_vars.weights]]
-#         } else { NULL }
-#       , upper = .dbl_upper.bounds
-#       , lower = .dbl_lower.bounds
-#       , algorithm = 'port'
-#       , control = list(scaleOffset = 1)
-#     ) -> mdl_fit
-#     
+#     if(length(.sym_vars.weights)){
+#       
+#       nlsLM(
+#         formula = fml_formula
+#         , data = .df_data
+#         , weights = .df_data[[.sym_vars.weights]]
+#         , upper = .dbl_upper.bounds
+#         , lower = .dbl_lower.bounds
+#         , control = list(scaleOffset = 1)
+#       ) -> mdl_fit 
+#       
+#     } else { 
+#       
+#       nlsLM(
+#         formula = fml_formula
+#         , data = .df_data
+#         , upper = .dbl_upper.bounds
+#         , lower = .dbl_lower.bounds
+#         , control = list(scaleOffset = 1)
+#       ) -> mdl_fit 
+#       
+#       }
+# 
+#     # # Run model
+#     # nlsLM(
+#     #   formula = fml_formula
+#     #   , data = .df_data
+#     #   , weights = 
+#     #     if(length(.sym_vars.weights)){
+#     #       .df_data[[.sym_vars.weights]]
+#     #     } else { NULL }
+#     #   , upper = .dbl_upper.bounds
+#     #   , lower = .dbl_lower.bounds
+#     #   , control = list(scaleOffset = 1)
+#     # ) -> mdl_fit
+#     # 
 #   }
 #   
 #   # Tidy model
@@ -462,12 +513,14 @@ fun_r2 <- function(
 #   ))
 #   
 # }
+# 
 
 # GENERIC REGRESSION FUNCTION: NNLS & BVLS ---------------------------------------------
 fun_lm <- function(
     .df_data
     , .sym_vars.dependent
     , .sym_vars.independent
+    , .sym_vars.dummies = c()
     , .sym_vars.instrumental = c()
     , .sym_vars.weights = NULL
     , .lgc_intercept = T
@@ -475,6 +528,37 @@ fun_lm <- function(
     , .dbl_lower.bounds = c()
     , .lgc_diagnostics = F
 ){
+  
+  
+  # Dummy variables for non-numerical data
+  if(length(.sym_vars.dummies)){
+    
+    .df_data %>% 
+      select(.sym_vars.dummies) %>% 
+      names() -> chr_dummies
+    
+    .df_data %>% 
+      dummy_cols(
+        select_columns = chr_dummies
+        , remove_selected_columns = T
+        , remove_most_frequent_dummy = T
+      ) -> .df_data
+    
+    .df_data %>% 
+      select(starts_with(chr_dummies)) %>%
+      names() -> chr_dummies
+    
+    c(.sym_vars.independent, chr_dummies) -> .sym_vars.independent
+    
+    if(length(.sym_vars.instrumental)){
+      
+      c(.sym_vars.instrumental, chr_dummies) -> .sym_vars.instrumental
+      
+    }
+    
+    
+  }
+  
   
   # # Argument names
   # if(
@@ -562,11 +646,30 @@ fun_lm <- function(
   #   }
   #   
   
+  # Troublesome variable names
+  make.names(.sym_vars.dependent) -> .sym_vars.dependent.names
+  
+  make.names(.sym_vars.independent) -> .sym_vars.independent.names
+  
+  make.names(names(.df_data)) -> names(.df_data)
+  
+  # .sym_vars.dependent %>% 
+  #   str_replace_all(' ', '_') -> .sym_vars.dependent
+  # 
+  # .sym_vars.independent
+  # str_replace_all(' ', '_') -> .sym_vars.independent
+  
   # Methods of estimation
   if(length(.sym_vars.instrumental)){
+    # Troublesome variable names
+    make.names(.sym_vars.instrumental) -> .sym_vars.instrumental.names
+    
+    # .sym_vars.instrumental %>% 
+    #   str_replace_all(' ', '_') -> .sym_vars.instrumental
+    
     # 2SLS
     # Dependent variable
-    .sym_vars.dependent[[1]] %>%
+    .sym_vars.dependent.names[[1]] %>%
       paste('~') -> chr_formula.right
     
     if(!.lgc_intercept){
@@ -577,13 +680,13 @@ fun_lm <- function(
     
     # Independent variables
     paste(
-      .sym_vars.independent
+      .sym_vars.independent.names
       , collapse = '+'
     ) %>% 
       paste('|') %>% 
       paste(
         paste(
-          .sym_vars.instrumental
+          .sym_vars.instrumental.names
           , collapse = ' + '
         )) -> chr_formula.left
     
@@ -598,14 +701,14 @@ fun_lm <- function(
       , data = .df_data
       , weights = 
         if(length(.sym_vars.weights)){
-          .df_data[[.sym_vars.weights]]
+          .df_data[[make.names(.sym_vars.weights)]]
         } else { NULL }
     ) -> mdl_fit
     
   } else {
     # Other methods
     # Dependent variable
-    .sym_vars.dependent[[1]] %>%
+    .sym_vars.dependent.names[[1]] %>%
       paste('~') -> chr_formula.right
     
     if(.lgc_intercept){
@@ -616,21 +719,8 @@ fun_lm <- function(
     } 
     
     # Independent variables
-    paste0('b', 1:length(.sym_vars.independent), '*') %>%
-      paste(.sym_vars.independent, collapse = '+') -> chr_formula.left
-    
-    # Instrumental variables
-    if(length(.sym_vars.instrumental)){
-      
-      chr_formula.left %>%
-        paste('|') %>% 
-        paste(
-          paste(
-            .sym_vars.instrumental
-            , collapse = ' + '
-          )) -> chr_formula.left
-      
-    }
+    paste0('b', 1:length(.sym_vars.independent.names), '*') %>%
+      paste(.sym_vars.independent.names, collapse = '+') -> chr_formula.left
     
     # Formula
     chr_formula.right %>%
@@ -643,7 +733,7 @@ fun_lm <- function(
       nlsLM(
         formula = fml_formula
         , data = .df_data
-        , weights = .df_data[[.sym_vars.weights]]
+        , weights = .df_data[[make.names(.sym_vars.weights)]]
         , upper = .dbl_upper.bounds
         , lower = .dbl_lower.bounds
         , control = list(scaleOffset = 1)
@@ -659,8 +749,8 @@ fun_lm <- function(
         , control = list(scaleOffset = 1)
       ) -> mdl_fit 
       
-      }
-
+    }
+    
     # # Run model
     # nlsLM(
     #   formula = fml_formula
@@ -710,8 +800,8 @@ fun_lm <- function(
   
   # R squared
   fun_r2(
-    .int_vars.independent = length(.sym_vars.independent)
-    , .dbl_observations = .df_data %>% pull(.sym_vars.dependent[[1]])
+    .int_vars.independent = length(.sym_vars.independent.names)
+    , .dbl_observations = .df_data %>% pull(.sym_vars.dependent.names[[1]])
     , .dbl_fitted = 
       if(length(.sym_vars.instrumental)){
         mdl_fit$fitted.values
@@ -740,121 +830,3 @@ fun_lm <- function(
   ))
   
 }
-
-# test --------------------------------------------------------------------
-# source('C:/Users/Cao/Documents/Github/Atlas-Research/Data/df_occupations.pop.R')
-
-# dsds <- 'sample_weight'
-# dsds <- 'active_listening.l'
-# dsds <- NULL
-# 
-# nls(
-#   formula = annual_wage_2021 ~ a + b1 * active_listening.l + b2 * basic.mathematics.l
-#   , weights = if(length(dsds)){df_occupations[[dsds]]} else {NULL}
-#   # , weights = df_occupations[['active_listening.l']]
-#   , algorithm = 'port'
-#   , data = 
-#     df_occupations %>%
-#     mutate(
-#       annual_wage_2021 = annual_wage_2021 / 12
-#       , across(
-#         .cols = ends_with('.l')
-#         ,.fns = function(x){100*x}
-#       )
-#       , sample_weight = sum(employment) / employment
-#     )
-# ) -> dsdsds
-
-
-df_occupations %>%
-  mutate(
-    annual_wage_2021 = annual_wage_2021 / 12
-    , across(
-      .cols = ends_with('.l')
-      ,.fns = function(x){100*x}
-    )
-    , sample_weight = sum(employment) / employment
-  ) %>% 
-  fun_lm(
-    .sym_vars.dependent = 'annual_wage_2021'
-    , .sym_vars.independent =  
-      df_occupations %>%
-      select(ends_with('.l')) %>%
-      names()
-    # , .sym_vars.weights = 'sample_weight'
-    # , .dbl_lower.bounds = 0
-    , .lgc_intercept = T
-  ) -> list_kcost
-
-list_kcost$model.tidy
-
-
-
-paste(
-  'annual_wage_2021 ~ '
-  , df_occupations %>%
-    mutate(
-      across(
-        .cols = ends_with('.l')
-        ,.fns = function(x){100*x}
-      )
-    ) %>% 
-    select(ends_with('.l')) %>% 
-    names() %>% 
-    paste(collapse = ' + ')
-  ) %>% 
-  as.formula() %>% 
-  lm(
-    data = 
-      df_occupations %>%
-      mutate(
-        annual_wage_2021 = annual_wage_2021 / 12
-        , across(
-          .cols = ends_with('.l')
-          ,.fns = function(x){100*x}
-        )
-        , sample_weight = sum(employment) / employment
-      )
-      
-      )
-
-
-
-df_occupations %>%
-  mutate(
-    annual_wage_2021 = annual_wage_2021 / 12
-    , across(
-      .cols = ends_with('.l')
-      ,.fns = function(x){100*x}
-    )
-    , sample_weight = sum(employment) / employment
-  ) %>% 
-  fun_lm(
-    .sym_vars.dependent = 'annual_wage_2021'
-    , .sym_vars.independent =  
-      df_occupations %>%
-      select(ends_with('.l')) %>%
-      names() 
-    , .sym_vars.weights = 'sample_weight'
-    , .dbl_lower.bounds = 0
-    , .lgc_intercept = F
-  ) -> list_kcost
-
-# list_kcost$model.fit$weights
-list_kcost$model.tidy %>% 
-  view
-
-
-# -------- EXPORT ----------------------------------------------------
-# XLSX --------------------------------------------------------------------
-list_kcost$model.tidy %>% 
-  arrange(desc(estimate), desc(p.value)) %>%
-  mutate(p.value = round(p.value, 4)) %>% 
-  openxlsx::write.xlsx('kcost.xlsx')
-
-
-list_kcost$model.tidy %>% view
-list_kcost$r2
-list_kcost$r2.adjusted
-
-

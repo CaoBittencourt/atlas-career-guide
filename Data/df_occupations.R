@@ -58,7 +58,9 @@ df_occupations %>%
     occupation
     , code
     , code.variants
+    , career_cluster
     , entry_level_education
+    , typical_on_the_job_training
     , annual_wage_2021
     , ends_with('.l') #Using recommended levels
   ) %>% 
