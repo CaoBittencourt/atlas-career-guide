@@ -62,6 +62,7 @@ df_occupations %>%
     , entry_level_education
     , typical_on_the_job_training
     , annual_wage_2021
+    , projected_growth_2020.2030
     , ends_with('.l') #Using recommended levels
   ) %>% 
   mutate(

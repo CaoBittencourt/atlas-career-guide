@@ -151,6 +151,7 @@ list_activities.factors <- list(
   )
   
 )
+
 # ALL CATEGORIES FACTOR LIST -------------------------------------------------------------
 # Factors list
 list(
@@ -160,6 +161,19 @@ list(
   , 'Work Contexts' = list_context.factors
   , 'Work Activities' = list_activities.factors
 ) -> list_factors
+
+list(
+  'Skills' = list_skill.factors
+  , 'Abilities' = list_ablt.factors
+  , 'Fields of Knowledge' = list_know.factors
+) -> list_factors.competencies
+
+list(
+  'Skills' = list_skill.factors
+  , 'Abilities' = list_ablt.factors
+  , 'Fields of Knowledge' = list_know.factors
+  , 'Work Contexts' = list_context.factors
+) -> list_factors.context
 
 # Factor names data frame
 list_factors %>%
@@ -187,7 +201,7 @@ df_occupations %>%
         flatten() %>% 
         flatten_chr()
     ))
-  ) -> df_occupations
+  ) -> df_occupations.efa
 
 df_occupations.pop %>% 
   select(!(
@@ -200,7 +214,87 @@ df_occupations.pop %>%
         flatten() %>% 
         flatten_chr()
     ))
-  ) -> df_occupations.pop
+  ) -> df_occupations.pop.efa
+
+# df_occupations.pop %>%
+#   select(
+#     occupation
+#     , entry_level_education #Filter will be applied later on in Bubble via user input
+#     , all_of(
+#       list_factors %>%
+#         flatten() %>% 
+#         flatten_chr()
+#     )
+#   ) -> df_occupations.pop
+
+
+# EFA-REDUCED OCCUPATIONS DATA FRAME (COMPETENCIES ONLY) -------------------------------------------
+# Select only necessary variables
+df_occupations %>% 
+  select(!(
+    setdiff(
+      names(df_occupations)[
+        str_detect(names(df_occupations), '\\.l')
+      ]
+      , 
+      list_factors.competencies %>%
+        flatten() %>% 
+        flatten_chr()
+    ))
+  ) -> df_occupations.efa.comp
+
+df_occupations.pop %>% 
+  select(!(
+    setdiff(
+      names(df_occupations.pop)[
+        str_detect(names(df_occupations.pop), '\\.l')
+      ]
+      , 
+      list_factors.competencies %>%
+        flatten() %>% 
+        flatten_chr()
+    ))
+  ) -> df_occupations.pop.efa.comp
+
+# df_occupations.pop %>%
+#   select(
+#     occupation
+#     , entry_level_education #Filter will be applied later on in Bubble via user input
+#     , all_of(
+#       list_factors %>%
+#         flatten() %>% 
+#         flatten_chr()
+#     )
+#   ) -> df_occupations.pop
+
+
+# EFA-REDUCED OCCUPATIONS DATA FRAME (COMPETENCIES + CONTEXT) -------------------------------------------
+# Select only necessary variables
+df_occupations %>% 
+  select(!(
+    setdiff(
+      names(df_occupations)[
+        str_detect(names(df_occupations), '\\.l')
+      ]
+      , 
+      list_factors.context %>%
+        flatten() %>% 
+        flatten_chr()
+    ))
+  ) -> df_occupations.efa.context
+
+df_occupations.pop %>% 
+  select(!(
+    setdiff(
+      names(df_occupations.pop)[
+        str_detect(names(df_occupations.pop), '\\.l')
+      ]
+      , 
+      list_factors.context %>%
+        flatten() %>% 
+        flatten_chr()
+    ))
+  ) -> df_occupations.pop.efa.context
 
 # df_occupations.pop %>%
 #   select(
