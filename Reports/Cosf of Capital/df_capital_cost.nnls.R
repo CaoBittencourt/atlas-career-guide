@@ -24,15 +24,19 @@ source('C:/Users/Cao/Documents/Github/Atlas-Research/Functions/Auto_plots.R')
 # # POPULATION-WEIGHTED OCCUPATIONS DATA FRAME
 # source('C:/Users/Cao/Documents/Github/Atlas-Research/Data/df_occupations.pop.R')
 
+# POPULATION-WEIGHTED COMPETENCIES ONLY OCCUPATIONS DATA FRAME
+source('C:/Users/Cao/Documents/Github/Atlas-Research/Data/df_occupations.pop.comp.R')
+
 # POPULATION-WEIGHTED EFA-REDUCED OCCUPATIONS DATA FRAME
 source('C:/Users/Cao/Documents/Github/Atlas-Research/Data/df_occupations.pop.EFA.R')
 
 # List of test data
 list(
   'all' = df_occupations
+  , 'all.comp' = df_occupations.comp
   , 'efa' = df_occupations.efa
-  , 'efa.comp' = df_occupations.efa.comp
   , 'efa.context' = df_occupations.efa.context
+  , 'efa.comp' = df_occupations.efa.comp
 ) -> list_df_occupations
 
 # --- HUMAN CAPITAL COST ESTIMATION ---------------------------------------------
@@ -95,14 +99,16 @@ Map(
   }
   , chr_dummies = list(
     'all' = character()
+    , 'all.comp' = character()
     , 'efa' = character()
-    , 'efa.comp' = character()
     , 'efa.context' = character()
+    , 'efa.comp' = character()
     # Control
     , 'all.control' = 'entry_level_education'
+    , 'all.comp.control' = 'entry_level_education'
     , 'efa.control' = 'entry_level_education'
-    , 'efa.comp.control' = 'entry_level_education'
     , 'efa.context.control' = 'entry_level_education'
+    , 'efa.comp.control' = 'entry_level_education'
     # 
     # , 'all.control' = c('entry_level_education', 'projected_growth_2020.2030')
     # , 'efa.control' = c('entry_level_education', 'projected_growth_2020.2030')
@@ -114,77 +120,89 @@ Map(
     # , 'efa.comp.control' = 'projected_growth_2020.2030'
     # , 'efa.context.control' = 'projected_growth_2020.2030'
   )
-  , dbl_lb = rep(0, 8)
-  , lgc_intercept = rep(F, 8)
+  , dbl_lb = rep(0, 10)
+  , lgc_intercept = rep(F, 10)
   , df_data = rep(list_df_occupations, 2)
 ) -> list_models
 
 # REGRESSION STATISTICS COMPARISON ---------------------------------------------------
 # R2
 list_models$all$r2
+list_models$all.comp$r2
 list_models$efa$r2
-list_models$efa.comp$r2
 list_models$efa.context$r2
+list_models$efa.comp$r2
 
 list_models$all.control$r2
+list_models$all.comp.control$r2
 list_models$efa.control$r2
-list_models$efa.comp.control$r2
 list_models$efa.context.control$r2
+list_models$efa.comp.control$r2
 
 # RMSE
 list_models$all$rmse
+list_models$all.comp$rmse
 list_models$efa$rmse
-list_models$efa.comp$rmse
 list_models$efa.context$rmse
+list_models$efa.comp$rmse
 
 list_models$all.control$rmse
+list_models$all.comp.control$rmse
 list_models$efa.control$rmse
-list_models$efa.comp.control$rmse
 list_models$efa.context.control$rmse
+list_models$efa.comp.control$rmse
 
 # MAE
 list_models$all$mae
+list_models$all.comp$mae
 list_models$efa$mae
-list_models$efa.comp$mae
 list_models$efa.context$mae
+list_models$efa.comp$mae
 
 list_models$all.control$mae
+list_models$all.comp.control$mae
 list_models$efa.control$mae
-list_models$efa.comp.control$mae
 list_models$efa.context.control$mae
+list_models$efa.comp.control$mae
 
 # Fitted mean
 list_models$all$fitted.mean
+list_models$all.comp$fitted.mean
 list_models$efa$fitted.mean
-list_models$efa.comp$fitted.mean
 list_models$efa.context$fitted.mean
+list_models$efa.comp$fitted.mean
 
 list_models$all.control$fitted.mean
+list_models$all.comp.control$fitted.mean
 list_models$efa.control$fitted.mean
-list_models$efa.comp.control$fitted.mean
 list_models$efa.context.control$fitted.mean
+list_models$efa.comp.control$fitted.mean
 
 # Fitted standard deviation
 list_models$all$fitted.sd
+list_models$all.comp$fitted.sd
 list_models$efa$fitted.sd
-list_models$efa.comp$fitted.sd
 list_models$efa.context$fitted.sd
+list_models$efa.comp$fitted.sd
 
 list_models$all.control$fitted.sd
+list_models$all.comp.control$fitted.sd
 list_models$efa.control$fitted.sd
-list_models$efa.comp.control$fitted.sd
 list_models$efa.context.control$fitted.sd
+list_models$efa.comp.control$fitted.sd
 
 # Parameters
 list_models$all$model.tidy %>% view
+list_models$all.comp$model.tidy %>% view
 list_models$efa$model.tidy %>% view
-list_models$efa.comp$model.tidy %>% view
 list_models$efa.context$model.tidy %>% view
+list_models$efa.comp$model.tidy %>% view
 
 list_models$all.control$model.tidy %>% view
+list_models$all.comp.control$model.tidy %>% view
 list_models$efa.control$model.tidy %>% view
-list_models$efa.comp.control$model.tidy %>% view
 list_models$efa.context.control$model.tidy %>% view
+list_models$efa.comp.control$model.tidy %>% view
 
 # EXPECTED WAGE -----------------------------------------------------------
 # Expected wage data frames
