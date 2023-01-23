@@ -54,6 +54,12 @@ chr_text.user <- 'Alexandre'
 # KNN parameters
 dbl_threshold <- 0.17
 
+# Highly qualified careers
+lgc_education.high = T
+
+# Unqualified careers
+lgc_education.low = F
+
 # Dynamic text parameters
 chr_text.blank <- '___'
 
@@ -117,6 +123,47 @@ list_df_text$sections$text %>%
 names(list_sections) <- list_df_text$sections$section
 
 # ------- DATA -----------------------------------------------------------
+# LEVEL OF EDUCATION FILTER -----------------------------------------------
+# All levels of education
+df_occupations %>% 
+  pull(entry_level_education) %>% 
+  unique() -> chr_education.levels
+
+# Highly qualified only
+if(
+  lgc_education.high & 
+  !lgc_education.low
+){
+  
+  chr_education.levels[!(
+    
+    chr_education.levels %in%
+      c(
+        "Some college, no degree"
+        , "High school diploma or equivalent"
+        , "Associate's degree"
+        , "No formal educational credential"
+      )
+    
+  )] -> chr_education.levels
+  
+}
+
+# Unqualified only
+if(
+  !lgc_education.high & 
+  lgc_education.low
+){
+  
+  c(
+    "Some college, no degree"
+    , "High school diploma or equivalent"
+    , "Associate's degree"
+    , "No formal educational credential"
+  ) -> chr_education.levels
+  
+}
+
 # EFA-REDUCED OCCUPATIONS DATA FRAME -----------------------------------------------
 # Select only necessary variables
 df_occupations %>% 
@@ -129,6 +176,10 @@ df_occupations %>%
         flatten() %>%
         flatten_chr()
     )
+  ) %>% 
+  filter(
+    entry_level_education %in% 
+      all_of(chr_education.levels)
   ) -> df_occupations
 
 # EFA-REDUCED QUERY VECTOR -----------------------------------------------
@@ -154,7 +205,7 @@ df_input %>%
       )
       , .fns = function(x){
         recode((x + 2)
-        # recode(x
+               # recode(x
                , '1' = 0.00
                , '2' = 0.17
                , '3' = 0.33
@@ -169,7 +220,8 @@ df_input %>%
 # ------- RESULTS --------------------------------------------------------
 # KNN MATCHING ---------------------------------------------------------------
 fun_KNN.matching(
-  .df_data.numeric = df_occupations %>% 
+  .df_data.numeric = 
+    df_occupations %>% 
     select(
       occupation
       , all_of(
@@ -184,18 +236,6 @@ fun_KNN.matching(
   , .dbl_decimals = 4
 ) %>% 
   full_join(df_occupations) -> df_KNN.output
-
-# df_KNN.output %>%
-#   # df_occupations %>%
-#   filter(
-#     entry_level_education %in% c(
-#       "Bachelor's degree"
-#       , "Doctoral or professional degree"
-#       # , "Associate's degree"i
-#       , "Master's degree"
-#     )
-#   ) %>%
-#   View()
 
 # FACTOR SCORES (USER) -----------------------------------------------------------
 fun_factor.scores(
@@ -712,7 +752,8 @@ df_KNN.output %>%
 # -------- PLOTS ----------------------------------------------------------
 # [CIRCULAR BAR PLOT] MATCHING PERCENTAGES -----------------------------------------------------
 # Empty columns
-int_NA <- 51
+# int_NA <- 51
+int_NA <- round(nrow(df_occupations) * (51 / 873))
 mtx_NA <- matrix(NA, int_NA, ncol(df_KNN.output))
 colnames(mtx_NA) <- colnames(df_KNN.output)
 
@@ -778,7 +819,7 @@ plt_match.polar +
     , function(y){
       
       annotate(
-        x = '26'
+        x = as.character(round(int_NA / 2))
         , y = y + 0.1
         , label = percent(y)
         , geom = 'text'
@@ -789,7 +830,7 @@ plt_match.polar +
       
     }) + 
   annotate(
-    x = '26'
+    x = as.character(round(int_NA / 2))
     , y = -0.55
     , label = str_replace_all(
       'Professional Compatibility'

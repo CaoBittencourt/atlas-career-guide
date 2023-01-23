@@ -165,7 +165,8 @@ fun_handler <- function(body, ...){
   # --- RESULTS --------------------------------------------------------
   # KNN MATCHING ---------------------------------------------------------------
   fun_KNN.matching(
-    .df_data.numeric = df_occupations %>% 
+    .df_data.numeric = 
+      df_occupations %>% 
       select(
         occupation
         , all_of(

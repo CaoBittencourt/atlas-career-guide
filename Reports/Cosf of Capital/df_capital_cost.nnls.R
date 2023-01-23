@@ -52,6 +52,9 @@ list_df_occupations %>%
             .cols = ends_with('.l')
             ,.fns = function(x){100*x}
           )
+          , work_week = 80 * df_occupations$duration_of_typical_work_week.l
+          #, hierarchy1 = 100 * df_occupations$impact_of_decisions_on_co_workers_or_company_results.l
+          , hierarchy2 = 100 * df_occupations$coordinate_or_lead_others.l
           , sample_weight = sum(employment2) / employment2
           # , entry_level_education = recode(
           #   entry_level_education
@@ -70,7 +73,187 @@ list_df_occupations %>%
     }
   ) -> list_df_occupations
 
-# NNLS REGRESSION ---------------------------------------------------
+# # NNLS REGRESSION ---------------------------------------------------
+# Map(
+#   function(
+#     chr_dummies
+#     , df_data
+#     , dbl_lb
+#     , lgc_intercept
+#   ){
+# 
+#     df_data %>%
+#       fun_lm(
+#         .sym_vars.dependent = 'annual_wage_2021'
+#         , .sym_vars.independent =
+#           df_data %>%
+#           select(
+#             ends_with('.l')
+#           ) %>%
+#           names()
+#         , .sym_vars.dummies = chr_dummies
+#         , .sym_vars.weights = 'sample_weight'
+#         , .dbl_lower.bounds = dbl_lb
+#         , .lgc_intercept = lgc_intercept
+#         , .lgc_dummy.remove = F
+#       ) %>%
+#       return()
+# 
+#   }
+#   , chr_dummies = list(
+#     'all' = character()
+#     , 'all.comp' = character()
+#     , 'efa' = character()
+#     , 'efa.context' = character()
+#     , 'efa.comp' = character()
+#     # Control
+#     , 'all.control' = 'entry_level_education'
+#     , 'all.comp.control' = 'entry_level_education'
+#     , 'efa.control' = 'entry_level_education'
+#     , 'efa.context.control' = 'entry_level_education'
+#     , 'efa.comp.control' = 'entry_level_education'
+#     #
+#     # , 'all.control' = c('entry_level_education', 'projected_growth_2020.2030')
+#     # , 'efa.control' = c('entry_level_education', 'projected_growth_2020.2030')
+#     # , 'efa.comp.control' = c('entry_level_education', 'projected_growth_2020.2030')
+#     # , 'efa.context.control' = c('entry_level_education', 'projected_growth_2020.2030')
+#     #
+#     # , 'all.control' = 'projected_growth_2020.2030'
+#     # , 'efa.control' = 'projected_growth_2020.2030'
+#     # , 'efa.comp.control' = 'projected_growth_2020.2030'
+#     # , 'efa.context.control' = 'projected_growth_2020.2030'
+#   )
+#   # , dbl_lb = rep(0, 10)
+#   , dbl_lb = rep(1, 10)
+#   , lgc_intercept = rep(F, 10)
+#   , df_data = rep(list_df_occupations, 2)
+# ) -> list_models
+
+# # NNLS REGRESSION (WITH HIERARCHY AND WORK WEEK PROXIES) ---------------------------------------------------
+# Map(
+#   function(
+#     chr_dummies
+#     , df_data
+#     , dbl_lb
+#     , lgc_intercept
+#   ){
+# 
+#     df_data %>%
+#       fun_lm(
+#         .sym_vars.dependent = 'annual_wage_2021'
+#         , .sym_vars.independent =
+#           df_data %>%
+#           select(
+#             ends_with('.l')
+#           ) %>%
+#           names() %>%
+#           c(
+#             'work_week'
+#             # , 'hierarchy1'
+#             , 'hierarchy2'
+#           )
+#         , .sym_vars.dummies = chr_dummies
+#         , .sym_vars.weights = 'sample_weight'
+#         , .dbl_lower.bounds = dbl_lb
+#         , .lgc_intercept = lgc_intercept
+#         , .lgc_dummy.remove = F
+#       ) %>%
+#       return()
+# 
+#   }
+#   , chr_dummies = list(
+#     'all' = character()
+#     , 'all.comp' = character()
+#     , 'efa' = character()
+#     , 'efa.context' = character()
+#     , 'efa.comp' = character()
+#     # Control
+#     , 'all.control' = 'entry_level_education'
+#     , 'all.comp.control' = 'entry_level_education'
+#     , 'efa.control' = 'entry_level_education'
+#     , 'efa.context.control' = 'entry_level_education'
+#     , 'efa.comp.control' = 'entry_level_education'
+#     #
+#     # , 'all.control' = c('entry_level_education', 'projected_growth_2020.2030')
+#     # , 'efa.control' = c('entry_level_education', 'projected_growth_2020.2030')
+#     # , 'efa.comp.control' = c('entry_level_education', 'projected_growth_2020.2030')
+#     # , 'efa.context.control' = c('entry_level_education', 'projected_growth_2020.2030')
+#     #
+#     # , 'all.control' = 'projected_growth_2020.2030'
+#     # , 'efa.control' = 'projected_growth_2020.2030'
+#     # , 'efa.comp.control' = 'projected_growth_2020.2030'
+#     # , 'efa.context.control' = 'projected_growth_2020.2030'
+#   )
+#   # , dbl_lb = rep(0, 10)
+#   # , dbl_lb = rep(1, 10)
+#   , dbl_lb = rep(0.01, 10)
+#   , lgc_intercept = rep(F, 10)
+#   , df_data = rep(list_df_occupations, 2)
+# ) -> list_models
+
+# # NNLS REGRESSION (WITH HIERARCHY PROXY) ---------------------------------------------------
+# Map(
+#   function(
+#     chr_dummies
+#     , df_data
+#     , dbl_lb
+#     , lgc_intercept
+#   ){
+# 
+#     df_data %>%
+#       fun_lm(
+#         .sym_vars.dependent = 'annual_wage_2021'
+#         , .sym_vars.independent =
+#           df_data %>%
+#           select(
+#             ends_with('.l')
+#           ) %>%
+#           names() %>%
+#           c(
+#             # 'work_week'
+#             # , 'hierarchy1'
+#             'hierarchy2'
+#           )
+#         , .sym_vars.dummies = chr_dummies
+#         , .sym_vars.weights = 'sample_weight'
+#         , .dbl_lower.bounds = dbl_lb
+#         , .lgc_intercept = lgc_intercept
+#         , .lgc_dummy.remove = F
+#       ) %>%
+#       return()
+# 
+#   }
+#   , chr_dummies = list(
+#     'all' = character()
+#     , 'all.comp' = character()
+#     , 'efa' = character()
+#     , 'efa.context' = character()
+#     , 'efa.comp' = character()
+#     # Control
+#     , 'all.control' = 'entry_level_education'
+#     , 'all.comp.control' = 'entry_level_education'
+#     , 'efa.control' = 'entry_level_education'
+#     , 'efa.context.control' = 'entry_level_education'
+#     , 'efa.comp.control' = 'entry_level_education'
+#     #
+#     # , 'all.control' = c('entry_level_education', 'projected_growth_2020.2030')
+#     # , 'efa.control' = c('entry_level_education', 'projected_growth_2020.2030')
+#     # , 'efa.comp.control' = c('entry_level_education', 'projected_growth_2020.2030')
+#     # , 'efa.context.control' = c('entry_level_education', 'projected_growth_2020.2030')
+#     #
+#     # , 'all.control' = 'projected_growth_2020.2030'
+#     # , 'efa.control' = 'projected_growth_2020.2030'
+#     # , 'efa.comp.control' = 'projected_growth_2020.2030'
+#     # , 'efa.context.control' = 'projected_growth_2020.2030'
+#   )
+#   # , dbl_lb = rep(0, 10)
+#   # , dbl_lb = rep(1, 10)
+#   , dbl_lb = rep(0.01, 10)
+#   , lgc_intercept = rep(F, 10)
+#   , df_data = rep(list_df_occupations, 2)
+# ) -> list_models
+
+# NNLS REGRESSION (WITH WORK WEEK PROXY) ---------------------------------------------------
 Map(
   function(
     chr_dummies
@@ -78,24 +261,27 @@ Map(
     , dbl_lb
     , lgc_intercept
   ){
-    
-    df_data %>% 
+
+    df_data %>%
       fun_lm(
         .sym_vars.dependent = 'annual_wage_2021'
-        , .sym_vars.independent =  
-          df_data %>% 
+        , .sym_vars.independent =
+          df_data %>%
           select(
             ends_with('.l')
-          ) %>% 
-          names()
+          ) %>%
+          names() %>%
+          c(
+            'work_week'
+          )
         , .sym_vars.dummies = chr_dummies
         , .sym_vars.weights = 'sample_weight'
         , .dbl_lower.bounds = dbl_lb
         , .lgc_intercept = lgc_intercept
         , .lgc_dummy.remove = F
-      ) %>% 
+      ) %>%
       return()
-    
+
   }
   , chr_dummies = list(
     'all' = character()
@@ -109,18 +295,20 @@ Map(
     , 'efa.control' = 'entry_level_education'
     , 'efa.context.control' = 'entry_level_education'
     , 'efa.comp.control' = 'entry_level_education'
-    # 
+    #
     # , 'all.control' = c('entry_level_education', 'projected_growth_2020.2030')
     # , 'efa.control' = c('entry_level_education', 'projected_growth_2020.2030')
     # , 'efa.comp.control' = c('entry_level_education', 'projected_growth_2020.2030')
     # , 'efa.context.control' = c('entry_level_education', 'projected_growth_2020.2030')
-    # 
+    #
     # , 'all.control' = 'projected_growth_2020.2030'
     # , 'efa.control' = 'projected_growth_2020.2030'
     # , 'efa.comp.control' = 'projected_growth_2020.2030'
     # , 'efa.context.control' = 'projected_growth_2020.2030'
   )
-  , dbl_lb = rep(0, 10)
+  # , dbl_lb = rep(0, 10)
+  # , dbl_lb = rep(1, 10)
+  , dbl_lb = rep(0.01, 10)
   , lgc_intercept = rep(F, 10)
   , df_data = rep(list_df_occupations, 2)
 ) -> list_models
