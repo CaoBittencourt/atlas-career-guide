@@ -3,7 +3,13 @@ source('C:/Users/Cao/Documents/Github/Atlas-Research/Functions/Factor_Scores.R')
 # Automated plotting
 source('C:/Users/Cao/Documents/Github/Atlas-Research/Functions/Auto_plots.R')
 # EFA-REDUCED OCCUPATIONS DATA FRAME
-source('C:/Users/Cao/Documents/Github/Atlas-Research/Data/df_occupations.EFA.R')
+source('C:/Users/Cao/Documents/Github/Atlas-Research/Data/df_occupations.pop.EFA.R')
+# Commas
+source('C:/Users/Cao/Documents/Github/Atlas-Research/Functions/fun_commas.R')
+
+library(Hmisc)
+
+df_occupations
 
 fun_plot.comparisons <- function(
     
@@ -13,7 +19,7 @@ fun_plot.comparisons <- function(
   , ...
   # # Comparisons
   # , lgc_factors.dumbbell = T
-  # , lgc_factors.heatmap = T
+  , lgc_factors.heatmap = T
   # , lgc_items.heatmap = T
   # , lgc_items.circular.bar = T
   # , lgc_items.circular.heatmap = T
@@ -28,7 +34,7 @@ fun_plot.comparisons <- function(
   list_terms %>% 
     map(unique) -> list_terms
   
-  # Terms validation
+  # Arguments validation
   list_terms %>% 
     map(
       ~ stopifnot(
@@ -44,8 +50,18 @@ fun_plot.comparisons <- function(
               flatten_chr()
           )
       ))
-
-    
+  
+  
+  # Term names
+  list_terms %>%
+    map(
+      ~ fun_text.commas(
+        .x
+        , .chr_sep = '; '
+        , .chr_last.sep = '; and '
+        , .lgc_quote = F
+      )) -> names(list_terms)
+  
   # Comparison columns
   list_terms %>%
     map(
@@ -63,10 +79,11 @@ fun_plot.comparisons <- function(
               | any(.x %in% terms)
             )) %>%
           return()
+        
       }
     ) -> list_df
   
-  # Factor scores
+  # Factor scores (list)
   list_df %>%
     map(
       ~ bind_cols(
@@ -76,21 +93,29 @@ fun_plot.comparisons <- function(
           , .list_factor.keys = list_factors
           , .lgc_pivot.long = F
           , .lgc_totals = F
-        )) %>% 
-        # first() %>% 
+        ))
+    ) -> list_df_factor.scores
+  
+  # Factor scores by terms (data frame)
+  list_df_factor.scores %>%
+    map(
+      ~ .x %>%
         # group_by(across(
         #   where(
         #     ~ !is.numeric(.x)
-        #   ))) %>% 
+        #   ))) %>%
         summarise(across(
           .cols = where(is.numeric)
-          ,.fns = mean
-        )) %>% 
-        ungroup()
-    ) -> list_df_factors.scores
-  
-  return(list_df_factors.scores)
-  
+          ,.fns = ~ wtd.mean(
+            .x
+            , weights = 
+              employment2 / sum(employment2)
+          ))
+          , n = n()
+        ) #%>%
+      # ungroup()
+    ) %>% 
+    bind_rows(.id = 'term') -> df_factor.scores
   
   # # Comparison terms data frames
   #   Map(
@@ -145,14 +170,40 @@ fun_plot.comparisons <- function(
   #   ) %>%
   #   return()
   
-  # Factor scores
-  # list_terms %>% 
-  #   map(
-  #     fun_factor.scores
-  #   )
+  # FACTORS HEATMAP
+  if(lgc_factors.heatmap){
+    
+    df_factor.scores %>%
+      select(
+        term
+        , list_factors %>% 
+          flatten() %>% 
+          names()
+      ) %>% 
+      pivot_longer(
+        cols = -term
+        , names_to = 'factor'
+        , values_to = 'score'
+      ) %>% 
+      fun_plot.heatmap(aes(
+        x = term
+        , y = factor
+        , fill = score
+      )) -> plt_factor.scores
+    
+  } else {
+    
+    NULL -> plt_factor.scores
+    
+  }
   
+  return(compact(list(
+    # 'factor.scores' = plt_factor.scores
+    'factor.scores' = df_factor.scores
+  )))
   
 }
+
 
 fun_plot.comparisons(
   .df_data = tibble()
@@ -160,8 +211,43 @@ fun_plot.comparisons(
   , sample(df_occupations$occupation, 10)
   , sample(df_occupations$occupation, 2)
   , sample(df_occupations$occupation, 1)
-) %>% bind_rows() %>% view()
+  , 'Finance'
+  , 'Financial Managers'
+  , lgc_factors.heatmap = F
+) -> dsds
 
+dsds$factor.scores %>% view
+
+dsds$factor.scores$`Financial Managers`
+df_occupations %>% 
+  filter(occupation == 'Financial Managers') %>% 
+  pull(annual_wage_2021)
+
+dsds$factor.scores$Finance
+dsds$factor.scores
+
+dsds$factor.scores$Finance %>% view
+
+intersect(
+  'Financial'
+  , df_occupations$occupation
+)
+
+intersect(
+  df_occupations$career_cluster
+  , df_occupations$occupation
+)
+
+
+
+sample(df_occupations$occupation, 10) %>% 
+  fun_text.commas(.lgc_quote = F) %>% 
+  
+  
+  str_trunc(
+    width = 40
+    , ellipsis = ' ...'
+  )
 
 # fun_factor.scores()
 # scoreVeryFast()
