@@ -1,3 +1,18 @@
+# --- SETUP -----------------------------------------------------------
+# PACKAGES ----------------------------------------------------------------
+pkg <- c(
+  'stringi' #Data wrangling
+)
+
+# Activate / install packages
+lapply(pkg, function(x)
+  if(!require(x, character.only = T))
+  {install.packages(x); require(x)})
+
+# Package citation
+# lapply(pkg, function(x)
+#   {citation(package = x)})
+
 # --- FUNCTION -----------------------------------------------------------
 # --- RANDOM NAME FUNCTION ---------------------------------------------------------
 fun_name.unique <- function(

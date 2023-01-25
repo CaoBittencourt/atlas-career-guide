@@ -1,3 +1,4 @@
+
 # ------ CODE -------------------------------------------------------------
 # --- SETUP -------------------------------------------------------------------------
 # PACKAGES ----------------------------------------------------------------
@@ -80,6 +81,19 @@ fun_handler <- function(body, ...){
   save_object("db/career_finder_report.xlsx", file = "/tmp/career_finder_report.xlsx", bucket = list_bucket.data, region = 'us-east-2')
   df_occupations <- read_csv('/tmp/occupations.csv', show_col_types = FALSE)
   
+  # Select only necessary variables
+  df_occupations %>%
+    mutate(
+      across(
+        .cols = all_of(
+          list_factors %>%
+            flatten() %>% 
+            flatten_chr()
+        )
+        , .fns = function(x){x/100}
+      )
+    ) -> df_occupations
+  
   # --- S3 SOURCE (SETUP) ----------------------------------------------------------
   save_object('R/fun_kflex.R', file = '/tmp/fun_kflex.R', bucket = list_bucket.fun, region = 'us-east-2')
   save_object('R/fun_matching.R', file = '/tmp/fun_matching.R', bucket = list_bucket.fun, region = 'us-east-2')
@@ -104,6 +118,7 @@ fun_handler <- function(body, ...){
     as_tibble() %>% 
     dplyr::select(
       user_name
+      , chr_education
       , all_of(
         list_factors %>%
           flatten() %>%
@@ -130,6 +145,69 @@ fun_handler <- function(body, ...){
       )
     ) -> df_input
   
+  # Level of education filter
+  df_input %>% 
+    pull(chr_education) -> chr_education
+  
+  df_input %>%
+    select(-chr_education) -> df_input
+  
+  toupper(chr_education[[1]]) -> chr_education
+  
+  # LEVEL OF EDUCATION FILTER -----------------------------------------------
+  # All levels of education
+  df_occupations %>% 
+    pull(entry_level_education) %>% 
+    unique() -> chr_education.levels
+  
+  # Highly qualified only
+  if(chr_education %in% 'HIGH'){
+    
+    chr_education.levels[!(
+      
+      chr_education.levels %in%
+        c(
+          "Some college, no degree"
+          , "High school diploma or equivalent"
+          , "Associate's degree"
+          , "No formal educational credential"
+        )
+      
+    )] -> chr_education.levels
+    
+  }
+  
+  # Unqualified only
+  if(chr_education %in% 'LOW'){
+    
+    c(
+      "Some college, no degree"
+      , "High school diploma or equivalent"
+      , "Associate's degree"
+      , "No formal educational credential"
+    ) -> chr_education.levels
+    
+  }
+  
+  
+  # APPLY LEVEL OF EDUCATION FILTER -----------------------------------------
+  # Select necessary variables and filter by level of education
+  df_occupations %>% 
+    select(
+      occupation
+      , entry_level_education
+      , annual_wage_2021
+      , all_of(
+        list_factors %>%
+          flatten() %>%
+          flatten_chr()
+      )
+    ) %>% 
+    filter(
+      entry_level_education %in% 
+        all_of(chr_education.levels)
+    ) -> df_occupations
+  
   # --- SETUP -----------------------------------------------------------
   # PARAMETERS  --------------------------------------------------------------
   # KNN parameters
@@ -145,7 +223,7 @@ fun_handler <- function(body, ...){
   seq_scale.1_8 <- round(seq(0,1,1/7), 2)
   
   # Recommendation cutoff
-  dbl_recommended.cutff <- 0.67
+  dbl_recommended.cutoff <- 0.67
   
   # Colors
   list(
@@ -174,7 +252,11 @@ fun_handler <- function(body, ...){
             flatten() %>% 
             flatten_chr()
         ))
-    , .vec_query.numeric = df_input
+    , .vec_query.numeric = 
+      df_input %>% 
+      select(
+        where(is.numeric)
+      )
     , .int_k = nrow(df_occupations)
     , .imput.over_qualification = T
     , .dbl_over_qualification.threshold = dbl_threshold
@@ -184,7 +266,11 @@ fun_handler <- function(body, ...){
   
   # FACTOR SCORES (USER) -----------------------------------------------------------
   fun_factor.scores(
-    .df_data.numeric = df_input
+    .df_data.numeric = 
+      df_input %>% 
+      select(
+        where(is.numeric)
+      )
     , .list_factor.keys = list_factors
     , .lgc_pivot.long = T
   ) -> list_factor.scores
@@ -259,26 +345,40 @@ fun_handler <- function(body, ...){
     ) -> df_bot.match
   
   # Median match
-  df_KNN.output %>% 
-    filter(
-      similarity == quantile(
-        similarity, .50
-      )
-    ) %>% 
-    slice(1) %>%
-    select(
-      occupation
-      , similarity
-      , rank
-      , rank.norm
-    ) -> df_med.match
+  if(nrow(df_KNN.output) %% 2 == 0){
+    
+    df_KNN.output %>%
+      slice(n()/2) %>%
+      select(
+        occupation
+        , similarity
+        , rank
+        , rank.norm
+      ) -> df_med.match
+    
+  } else {
+    
+    df_KNN.output %>% 
+      dplyr::filter(
+        similarity == quantile(
+          similarity, 0.50
+        )) %>% 
+      slice(1) %>%
+      select(
+        occupation
+        , similarity
+        , rank
+        , rank.norm
+      ) -> df_med.match
+    
+  }
   
   # Recommended occupations (higher than cutoff)
   list_df_text$recommended %>% 
     mutate(
       n.recommended = 
         df_KNN.output %>% 
-        filter(similarity >= dbl_recommended.cutff) %>% 
+        filter(similarity >= dbl_recommended.cutoff) %>% 
         nrow()
       # Percent of compatibility scores > cutoff
       , pct.recommended = n.recommended / nrow(df_KNN.output)
@@ -661,7 +761,7 @@ fun_handler <- function(body, ...){
   # --- TABLES ---------------------------------------------------------
   # TOP 7, BOTTOM 3 MATCHES ----------------------------------------------------------
   df_KNN.output %>%
-    slice(1:7, seq(max(rank) - 2, max(rank))) %>%
+    slice(1:type.convert(Sys.getenv('MAX_NUMBER_OF_OCCUPATIONS'), numerals = c("allow.loss")), seq(max(rank) - 2, max(rank))) %>%
     mutate(
       similarity = percent(similarity, accuracy = .01)
       , annual_wage_2021 = dollar(annual_wage_2021, accuracy = .01)
@@ -682,7 +782,8 @@ fun_handler <- function(body, ...){
   # --- PLOTS ----------------------------------------------------------
   # [CIRCULAR BAR PLOT] MATCHING PERCENTAGES -----------------------------------------------------
   # Empty columns
-  int_NA <- 51
+  # int_NA <- 51
+  int_NA <- round(nrow(df_occupations) * (51 / 873))
   mtx_NA <- matrix(NA, int_NA, ncol(df_KNN.output))
   colnames(mtx_NA) <- colnames(df_KNN.output)
   
@@ -693,7 +794,7 @@ fun_handler <- function(body, ...){
       n = row_number()
       , n = factor(n)
       , recommended = if_else(
-        round(similarity, 2) >= dbl_recommended.cutff
+        round(similarity, 2) >= dbl_recommended.cutoff
         | is.na(similarity)
         , true = 'Recommended'
         , false = 'Not Recommended'
@@ -748,7 +849,7 @@ fun_handler <- function(body, ...){
       , function(y){
         
         annotate(
-          x = '26'
+          x = as.character(round(int_NA / 2))
           , y = y + 0.1
           , label = percent(y)
           , geom = 'text'
@@ -759,7 +860,7 @@ fun_handler <- function(body, ...){
         
       }) + 
     annotate(
-      x = '26'
+      x = as.character(round(int_NA / 2))
       , y = -0.55
       , label = str_replace_all(
         'Professional Compatibility'
@@ -793,7 +894,7 @@ fun_handler <- function(body, ...){
     fun_plot.line(aes(
       x = rank.norm
       , y = similarity
-      , color = similarity >= dbl_recommended.cutff
+      , color = similarity >= dbl_recommended.cutoff
     )
     , .dbl_limits.y = c(0,1)
     , .chr_manual.pal = c(
@@ -869,7 +970,7 @@ fun_handler <- function(body, ...){
     , size = 1.2
     ) + 
     geom_textvline(
-      xintercept = dbl_recommended.cutff
+      xintercept = dbl_recommended.cutoff
       , label = 'Recommended'
       , color = list_atlas.pal$green
       , fontface = 'bold'
@@ -948,7 +1049,6 @@ fun_handler <- function(body, ...){
   
   # --- RENDER -----------------------------------------------------------
   # RENDER R MARKDOWN REPORT --------------------------------------------------
-  #source('pandoc.R')
   
   Sys.setenv(HOME='/opt/pandoc/bin')
   Sys.setenv(FONTCONFIG_PATH='/opt/fonts')
@@ -957,29 +1057,24 @@ fun_handler <- function(body, ...){
     , chr_file.name
   )
   save_object('Rmd/matching_report.Rmd', file = '/tmp/matching_report.Rmd', bucket = list_bucket.data, region = 'us-east-2')
-  putfile <- file.path(
-    '/tmp'
-    , chr_file.name
-  )
-  #on.exit(unlink(outfile)) # delete file when we're done
   rmarkdown::render(
     '/tmp/matching_report.Rmd'
     , output_file = outfile
     , output_dir = '/tmp'
     , intermediates_dir = '/tmp'
     , knit_root_dir = '/tmp'
-    , quiet = TRUE
+    , quiet = type.convert(Sys.getenv('PANDOC_QUIET'), as.is = TRUE)
   )
   logger::log_debug("Rendering complete for", chr_file.name)
   chr_s3_object = paste0("user-pdf-reports/", chr_file.name)
   put_object(outfile, object = chr_s3_object, bucket = list_bucket.render, region = 'us-east-2')
   
   # ------ OUTPUT -----------------------------------------------------------
-  filename <- chr_file.name
+  #filename <- chr_file.name
   return(list(
     "statusCode" = 200
     , "headers" = list("Content-Type" = "application/json")
-    , "body" = pretty_json(paste0('{ "filename": "', filename , '" }' ))
+    , "body" = pretty_json(paste0('{ "filename": "', chr_s3_object , '" }' ))
   ))
   
 }

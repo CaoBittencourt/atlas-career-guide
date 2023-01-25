@@ -54,11 +54,13 @@ chr_text.user <- 'Alexandre'
 # KNN parameters
 dbl_threshold <- 0.17
 
-# Highly qualified careers
-lgc_education.high = T
+# Level of education filter
+# chr_education <- c('ALL', 'HIGH', 'LOW')
+chr_education <- 'HIGH'
 
-# Unqualified careers
-lgc_education.low = F
+chr_education <- toupper(chr_education)
+
+chr_education <- sample(chr_education, 1)
 
 # Dynamic text parameters
 chr_text.blank <- '___'
@@ -123,65 +125,6 @@ list_df_text$sections$text %>%
 names(list_sections) <- list_df_text$sections$section
 
 # ------- DATA -----------------------------------------------------------
-# LEVEL OF EDUCATION FILTER -----------------------------------------------
-# All levels of education
-df_occupations %>% 
-  pull(entry_level_education) %>% 
-  unique() -> chr_education.levels
-
-# Highly qualified only
-if(
-  lgc_education.high & 
-  !lgc_education.low
-){
-  
-  chr_education.levels[!(
-    
-    chr_education.levels %in%
-      c(
-        "Some college, no degree"
-        , "High school diploma or equivalent"
-        , "Associate's degree"
-        , "No formal educational credential"
-      )
-    
-  )] -> chr_education.levels
-  
-}
-
-# Unqualified only
-if(
-  !lgc_education.high & 
-  lgc_education.low
-){
-  
-  c(
-    "Some college, no degree"
-    , "High school diploma or equivalent"
-    , "Associate's degree"
-    , "No formal educational credential"
-  ) -> chr_education.levels
-  
-}
-
-# EFA-REDUCED OCCUPATIONS DATA FRAME -----------------------------------------------
-# Select only necessary variables
-df_occupations %>% 
-  select(
-    occupation
-    , entry_level_education
-    , annual_wage_2021
-    , all_of(
-      list_factors %>%
-        flatten() %>%
-        flatten_chr()
-    )
-  ) %>% 
-  filter(
-    entry_level_education %in% 
-      all_of(chr_education.levels)
-  ) -> df_occupations
-
 # EFA-REDUCED QUERY VECTOR -----------------------------------------------
 # Select user
 df_input %>% 
@@ -216,6 +159,59 @@ df_input %>%
         )}
     )
   ) -> df_input
+
+# LEVEL OF EDUCATION FILTER -----------------------------------------------
+# All levels of education
+df_occupations %>% 
+  pull(entry_level_education) %>% 
+  unique() -> chr_education.levels
+
+# Highly qualified only
+if(chr_education %in% 'HIGH'){
+  
+  chr_education.levels[!(
+    
+    chr_education.levels %in%
+      c(
+        "Some college, no degree"
+        , "High school diploma or equivalent"
+        , "Associate's degree"
+        , "No formal educational credential"
+      )
+    
+  )] -> chr_education.levels
+  
+}
+
+# Unqualified only
+if(chr_education %in% 'LOW'){
+  
+  c(
+    "Some college, no degree"
+    , "High school diploma or equivalent"
+    , "Associate's degree"
+    , "No formal educational credential"
+  ) -> chr_education.levels
+  
+}
+
+# EFA-REDUCED OCCUPATIONS DATA FRAME -----------------------------------------------
+# Select only necessary variables
+df_occupations %>% 
+  select(
+    occupation
+    , entry_level_education
+    , annual_wage_2021
+    , all_of(
+      list_factors %>%
+        flatten() %>%
+        flatten_chr()
+    )
+  ) %>% 
+  filter(
+    entry_level_education %in% 
+      all_of(chr_education.levels)
+  ) -> df_occupations
 
 # ------- RESULTS --------------------------------------------------------
 # KNN MATCHING ---------------------------------------------------------------
@@ -313,20 +309,35 @@ df_KNN.output %>%
     , rank.norm
   ) -> df_bot.match
 
+
 # Median match
-df_KNN.output %>% 
-  filter(
-    similarity == quantile(
-      similarity, .50
-    )
-  ) %>% 
-  slice(1) %>%
-  select(
-    occupation
-    , similarity
-    , rank
-    , rank.norm
-  ) -> df_med.match
+if(nrow(df_KNN.output) %% 2 == 0){
+  
+  df_KNN.output %>%
+    slice(n()/2) %>%
+    select(
+      occupation
+      , similarity
+      , rank
+      , rank.norm
+    ) -> df_med.match
+  
+} else {
+  
+  df_KNN.output %>% 
+    dplyr::filter(
+      similarity == quantile(
+        similarity, 0.50
+      )) %>% 
+    slice(1) %>%
+    select(
+      occupation
+      , similarity
+      , rank
+      , rank.norm
+    ) -> df_med.match
+  
+}
 
 # Recommended occupations (higher than cutff)
 list_df_text$recommended %>% 
@@ -343,21 +354,6 @@ list_df_text$recommended %>%
       findInterval(vec = seq_scale.1_6)
   ) %>% 
   filter(interval == n.interval) -> df_text.recommended
-
-# Mean
-list_df_text$centrality %>%
-  mutate(
-    mean = mean(df_KNN.output$similarity) 
-    , n.interval = 
-      mean %>%
-      round(1) %>%
-      recode(
-        '0' = -Inf
-        , '1' = Inf
-      ) %>%
-      findInterval(vec = seq_scale.1_8)
-  ) %>% 
-  filter(interval == n.interval) -> df_text.mean
 
 # Specialization
 list_df_text$flexibility %>% 
