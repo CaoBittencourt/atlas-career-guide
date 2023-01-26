@@ -67,7 +67,7 @@ fun_KNN.matching <- function(
     , .int_k = 1
     , .auto_select.k = F
     , .imput.over_qualification = T
-    , .dbl_over_qualification.threshold = 0.1
+    , .dbl_over_qualification.threshold = 0
     , .dbl_decimals = 4
 ){
   
@@ -159,7 +159,8 @@ fun_KNN.matching <- function(
         , similarity = fun_similarity(euclidean_distance)
         , similarity = round(similarity, .dbl_decimals)
       ) %>%
-      arrange(desc(similarity)) %>%
+      # arrange(desc(similarity)) %>%
+      arrange(euclidean_distance) %>%
       mutate(
         rank = row_number()
         , rank.norm = seq(1, 0, - 1 / (n() - 1))
@@ -184,7 +185,8 @@ fun_KNN.matching <- function(
         , similarity = fun_similarity(euclidean_distance)
         , similarity = round(similarity, .dbl_decimals)
       ) %>% 
-      arrange(desc(similarity)) %>%
+      # arrange(desc(similarity)) %>%
+      arrange(euclidean_distance) %>%
       mutate(
         rank = row_number()
         , rank.norm = seq(1, 0, - 1 / (n() - 1))

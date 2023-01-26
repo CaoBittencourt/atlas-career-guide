@@ -211,7 +211,7 @@ fun_handler <- function(body, ...){
   # --- SETUP -----------------------------------------------------------
   # PARAMETERS  --------------------------------------------------------------
   # KNN parameters
-  dbl_threshold <- 0.17
+  dbl_threshold <- 0
   
   # Dynamic text parameters
   chr_text.blank <- '___'

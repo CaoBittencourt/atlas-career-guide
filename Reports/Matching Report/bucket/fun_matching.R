@@ -148,7 +148,8 @@ fun_KNN.matching <- function(
         )
         
       ) %>%
-      arrange(desc(similarity)) %>%
+      # arrange(desc(similarity)) %>%
+      arrange(euclidean_distance) %>%
       mutate(
         rank = row_number()
         , rank.norm = seq(1, 0, - 1 / (n() - 1))
@@ -177,7 +178,8 @@ fun_KNN.matching <- function(
         )
         
       ) %>% 
-      arrange(desc(similarity)) %>%
+      # arrange(desc(similarity)) %>%
+      arrange(euclidean_distance) %>%
       mutate(
         rank = row_number()
         , rank.norm = seq(1, 0, - 1 / (n() - 1))

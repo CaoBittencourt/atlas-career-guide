@@ -14,16 +14,15 @@ df_occupations
 fun_plot.comparisons <- function(
     
   # Data
-  .df_data
+  .df_data.user = NULL
+  , .df_data.comparison
   # Terms of comparison (character vectors)
   , ...
-  # # Comparisons
-  # , lgc_factors.dumbbell = T
-  , lgc_factors.heatmap = T
-  # , lgc_items.heatmap = T
-  # , lgc_items.circular.bar = T
-  # , lgc_items.circular.heatmap = T
-  # , lgc_etc = T
+  # Comparisons
+  , lgc_compare.items = T
+  , lgc_compare.items.average = T
+  , lgc_compare.factors = T
+  , lgc_compare.factors.average = T
   
 ){
   
@@ -35,6 +34,18 @@ fun_plot.comparisons <- function(
     map(unique) -> list_terms
   
   # Arguments validation
+  # Data frames
+  stopifnot(
+    "'.df_data.user' must be a data frame containing the user's item scores." = 
+      is.data.frame(.df_data.user) | !length(.df_data.user)
+  )
+  
+  stopifnot(
+    "'.df_data.comparison' must be a data frame containing the item scores for all comparison terms." = 
+      is.data.frame(.df_data.comparison)
+  )
+  
+  # Terms
   list_terms %>% 
     map(
       ~ stopifnot(
@@ -51,6 +62,39 @@ fun_plot.comparisons <- function(
           )
       ))
   
+  # Logical
+  stopifnot(
+    "'lgc_compare.items' must be either TRUE or FALSE." = 
+      isTRUE(lgc_compare.items) | !isTRUE(lgc_compare.items)
+  )
+  
+  stopifnot(
+    "'lgc_compare.items.average' must be either TRUE or FALSE." = 
+      isTRUE(lgc_compare.items.average) | !isTRUE(lgc_compare.items.average)
+  )
+  
+  stopifnot(
+    "'lgc_compare.factors' must be either TRUE or FALSE." = 
+      isTRUE(lgc_compare.factors) | !isTRUE(lgc_compare.factors)
+  )
+  
+  stopifnot(
+    "'lgc_compare.factors.average' must be either TRUE or FALSE." = 
+      isTRUE(lgc_compare.factors.average) | !isTRUE(lgc_compare.factors.average)
+  )
+  
+  
+  # User term
+  if(length(.df_data.user)){
+    
+    .df_data.user %>% 
+      mutate(
+        term = 'user'
+        , n = n()
+        , .before = everything()
+      ) -> .df_data.user
+    
+  }
   
   # Term names
   list_terms %>%
@@ -62,7 +106,7 @@ fun_plot.comparisons <- function(
         , .lgc_quote = F
       )) -> names(list_terms)
   
-  # Comparison columns
+  # Actual individual item and factor scores
   list_terms %>%
     map(
       function(terms){
@@ -78,118 +122,61 @@ fun_plot.comparisons <- function(
               ~ is.numeric(.x)
               | any(.x %in% terms)
             )) %>%
+          mutate(n = n()) %>% 
           return()
         
       }
-    ) -> list_df
-  
-  # Factor scores (list)
-  list_df %>%
-    map(
-      ~ bind_cols(
-        .x
-        , fun_factor.scores(
-          .df_data.numeric = .x
-          , .list_factor.keys = list_factors
-          , .lgc_pivot.long = F
-          , .lgc_totals = F
-        ))
-    ) -> list_df_factor.scores
-  
-  # Factor scores by terms (data frame)
-  list_df_factor.scores %>%
-    map(
-      ~ .x %>%
-        # group_by(across(
-        #   where(
-        #     ~ !is.numeric(.x)
-        #   ))) %>%
-        summarise(across(
-          .cols = where(is.numeric)
-          ,.fns = ~ wtd.mean(
-            .x
-            , weights = 
-              employment2 / sum(employment2)
-          ))
-          , n = n()
-        ) #%>%
-      # ungroup()
     ) %>% 
-    bind_rows(.id = 'term') -> df_factor.scores
+    bind_rows(.id = 'term') %>%
+    mutate(
+      term = factor(term, levels = names(list_terms))
+    ) -> df_scores.individual
   
-  # # Comparison terms data frames
-  #   Map(
-  #     function(chr_cols, chr_terms){
-  # 
-  #       df_occupations %>%
-  #         select(
-  #           chr_cols
-  #           , where(is.numeric)
-  #           ) %>%
-  #       filter(
-  #         !!sym(all_of(chr_cols)) %in% chr_terms
-  #       )
-  #     }
-  #     , chr_cols = list_cols
-  #     , chr_terms = list_terms
-  #   ) %>%
-  #   return()
-  
-  # # Comparison columns
-  # list_terms %>% 
-  #   map(
-  #     function(x){
-  #       
-  #       df_occupations %>% 
-  #         select(
-  #           where(
-  #             ~ any(x %in% .x)
-  #           # )) %>%
-  #           )) %>%
-  #         # select(1) %>% 
-  #         names()
-  #     }
-  #   ) -> list_cols
-  # 
-  # 
-  # # Comparison terms data frames
-  #   Map(
-  #     function(chr_cols, chr_terms){
-  # 
-  #       df_occupations %>%
-  #         select(
-  #           chr_cols
-  #           , where(is.numeric)
-  #           ) %>%
-  #       filter(
-  #         !!sym(all_of(chr_cols)) %in% chr_terms
-  #       )
-  #     }
-  #     , chr_cols = list_cols
-  #     , chr_terms = list_terms
-  #   ) %>%
-  #   return()
-  
-  # FACTORS HEATMAP
-  if(lgc_factors.heatmap){
+  if(length(.df_data.user)){
     
-    df_factor.scores %>%
-      select(
-        term
-        , list_factors %>% 
-          flatten() %>% 
-          names()
-      ) %>% 
-      pivot_longer(
-        cols = -term
-        , names_to = 'factor'
-        , values_to = 'score'
-      ) %>% 
-      fun_plot.heatmap(aes(
-        x = term
-        , y = factor
-        , fill = score
-      )) -> plt_factor.scores
+    df_scores.individual %>% 
+      bind_rows(
+        .df_data.user
+      ) -> df_scores.individual
+    
+  }
+  
+  df_scores.individual %>% 
+    bind_cols(
+      fun_factor.scores(
+        .df_data.numeric = .
+        , .list_factor.keys = list_factors
+        , .lgc_pivot.long = F
+        , .lgc_totals = F
+      )) %>% 
+    mutate(
+      employment2 = ifelse(
+        is.na(employment2)
+        , 1
+        , employment2
+      )
+    ) -> df_scores.individual
+  
+  # Average item and factor scores
+  df_scores.individual %>% 
+    group_by(term) %>% 
+    summarise(across(
+      .cols = where(is.numeric)
+      ,.fns = ~ wtd.mean(
+        .x
+        , weights = 
+          employment2 / sum(employment2)
+        , na.rm = T
+      ))
+      , n = n
+    ) %>%
+    ungroup() -> df_scores.average
+  
+  # Comparison plots
+  # 
+  if(lgc_compare.items){
+    
+    
     
   } else {
     
@@ -198,15 +185,16 @@ fun_plot.comparisons <- function(
   }
   
   return(compact(list(
-    # 'factor.scores' = plt_factor.scores
-    'factor.scores' = df_factor.scores
+    'actual' = df_scores.individual
+    , 'average' = df_scores.average
   )))
   
 }
 
 
 fun_plot.comparisons(
-  .df_data = tibble()
+  .df_data.user = df_input
+  , .df_data.comparison = df_occupations
   , sample(df_occupations$occupation, 1)
   , sample(df_occupations$occupation, 10)
   , sample(df_occupations$occupation, 2)
@@ -214,7 +202,24 @@ fun_plot.comparisons(
   , 'Finance'
   , 'Financial Managers'
   , lgc_factors.heatmap = F
+  # ) %>% view
 ) -> dsds
+
+dsds$actual %>% view
+dsds$average %>% view
+
+dsds$user
+dsds$data
+dsds$scores %>% view
+
+dsds$average.scores %>% view
+
+dsds$individual.scores %>% view
+dsds$average.scores %>% view
+
+dsds$items.average
+dsds$factor_scores
+dsds$factor_scores.average
 
 dsds$factor.scores %>% view
 
