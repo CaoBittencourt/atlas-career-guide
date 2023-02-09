@@ -940,7 +940,8 @@ fun_factor.scores2 <- function(
         summarise(across(
           .cols = where(is.numeric)
           ,.fns = ~ mean(.x, na.rm = T)
-        )) -> df_factor.scores.average.long
+        )) %>% 
+        ungroup() -> df_factor.scores.average.long
       
     }
     
@@ -948,11 +949,11 @@ fun_factor.scores2 <- function(
   
   # Output
   return(compact(list(
-    'factor.names' = df_factor.names
-    , 'factor.scores' = df_factor.scores
-    , 'factor.scores.long' = df_factor.scores.long
-    , 'factor.scores.average' = df_factor.scores.average
-    , 'factor.scores.average.long' = df_factor.scores.average.long
+    'names' = df_factor.names
+    , 'scores' = df_factor.scores
+    , 'scores.long' = df_factor.scores.long
+    , 'scores.average' = df_factor.scores.average
+    , 'scores.average.long' = df_factor.scores.average.long
     
   )))
   

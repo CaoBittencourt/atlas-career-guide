@@ -9,6 +9,7 @@ source('C:/Users/Cao/Documents/Github/Atlas-Research/Data/df_occupations.pop.EFA
 source('C:/Users/Cao/Documents/Github/Atlas-Research/Functions/fun_commas.R')
 
 library(Hmisc)
+# library(ids)
 library(stringi)
 
 # [DATA] EFA-REDUCED QUERY VECTOR -----------------------------------------------
@@ -884,7 +885,7 @@ df_input %>%
 #         , .lgc_sample.averages = .lgc_compare.averages
 #         , .lgc_pivot.long = T
 #         , .lgc_totals = F
-#       ) -> list_df_scores.individual
+#       ) -> list_scores
 #     
 #   } else {
 #     
@@ -919,17 +920,17 @@ df_input %>%
 #     
 #   }
 #   
-#   return(list_df_scores.individual)
+#   return(list_scores)
 #   stop()
 #   
 #   # # Average item and factor scores
-#   # list_df_scores.individual$factor.scores %>% 
+#   # list_scores$factor.scores %>% 
 #   #   summarise(across(
 #   #     .cols = where(is.numeric)
 #   #     ,.fns = ~ mean(.x, na.rm = T)
 #   #   )) -> df_scores.average
 #   # 
-#   # list_df_scores.individual$factor.scores.long %>% 
+#   # list_scores$factor.scores.long %>% 
 #   #   group_by(category, factor, item) %>% 
 #   #   summarise(across(
 #   #     .cols = where(is.numeric)
@@ -1279,10 +1280,14 @@ fun_plot.comparisons.mvp <- function(
       !isTRUE(.lgc_compare.averages)
   )
   
-  # Random user id (for confidentiality purposes)
+  # Unique user id (for confidentiality purposes)
   .df_data.users %>%
     mutate(
-      id.random = stri_rand_strings(nrow(.), 10)
+      id.unique = paste0(
+        row_number()
+        , stri_rand_strings(nrow(.), 1)
+      )
+      , .before = everything()
     ) -> .df_data.users
   
   # Individual scores, factor scores, and averages
@@ -1292,23 +1297,7 @@ fun_plot.comparisons.mvp <- function(
       , .lgc_sample.averages = .lgc_compare.averages
       , .lgc_pivot.long = T
       , .lgc_totals = F
-    ) -> list_df_scores.individual
-  
-  # # Comparison variables
-  # if(length(.list_factors)){
-  #   
-  #   .list_factors %>%
-  #     flatten_chr() -> chr_items
-  #   
-  # } else {
-  #   
-  #   .df_data.users %>%
-  #     select(
-  #       where(is.numeric)
-  #     ) %>% 
-  #     names() -> chr_items
-  #   
-  # }
+    ) -> list_scores
   
   # Comparison plots
   NULL -> plt_items
@@ -1319,11 +1308,11 @@ fun_plot.comparisons.mvp <- function(
   # Item by item comparison
   if(.lgc_compare.scores){
     
-    list_df_scores.individual$factor.scores.long %>%
+    list_scores$scores.long %>%
       fun_plot.heatmap(aes(
-        x = user
-        , y = attribute
-        , fill = value
+        x = id.unique
+        , y = item
+        , fill = item.score
       )
       # , .coord_polar = T
       ) -> plt_items
@@ -1333,24 +1322,31 @@ fun_plot.comparisons.mvp <- function(
   # User vs user by item comparison (each item, one plot, all users)
   if(.lgc_compare.scores){
     
+    list_scores$scores.average.long %>%
+      mutate(
+        id.unique = 'Average'
+      ) %>% 
+      bind_rows(
+        list_scores$scores.long
+      ) -> df_average.long
+    
     map(
       setNames(
-        unique(df_scores.individual.long$user)
-        , unique(df_scores.individual.long$user)
+        .df_data.users$id.unique
+        , .df_data.users$id.unique
       )
       , ~
-        df_scores.individual_average.long %>%
+        df_average.long %>%
         filter(
-          attribute %in% chr_items
-          , user %in% c(.x, 'Average')
+          id.unique %in% c(.x, 'Average')
         ) %>%
-        mutate(user = fct_inorder(user)) %>%
+        mutate(id.unique = fct_inorder(id.unique)) %>%
         fun_plot.bar(aes(
-          x = attribute
-          , y = value
-          , label = percent(value, accuracy = .01)
-          , fill = user
-          , color = user
+          x = item
+          , y = item.score
+          , label = percent(item.score, accuracy = .01)
+          , fill = id.unique
+          , color = id.unique
         )
         , .list_labs = list(
           x = NULL
@@ -1358,9 +1354,10 @@ fun_plot.comparisons.mvp <- function(
           , fill = NULL
           , color = NULL
         )
+        , .reorder_fct = T
         , .chr_manual.pal = c(
-          list_atlas.pal$purple3
-          , list_atlas.pal$grey
+          list_atlas.pal$grey
+          , list_atlas.pal$purple3
         )
         , .chr_manual.aes = c(
           'fill', 'color'
@@ -1388,6 +1385,9 @@ fun_plot.comparisons.mvp <- function(
         )
         )
     ) -> list_plt_items.users
+    
+    return(list_plt_items.users)
+    stop()
     
   }
   
@@ -1496,7 +1496,7 @@ fun_plot.comparisons.mvp <- function(
       ) %>% 
       rename(factor = attribute) %>% 
       fun_plot.heatmap(aes(
-        x = user
+        x = id.unique
         , y = factor
         , fill = value
       )
@@ -1531,7 +1531,6 @@ fun_plot.comparisons.mvp <- function(
           , names_to = 'factor'
           , values_to = 'value'
         ) %>%
-        rename(user = 1) %>%
         fun_plot.lollipop(aes(
           x = factor
           , y = value
@@ -1575,16 +1574,69 @@ fun_plot.comparisons.mvp <- function(
 # [TEST] ------------------------------------------------------------------
 fun_plot.comparisons.mvp(
   .df_data.users = df_input
-  , .chr_var.id = 'Name'
   # df_input %>% 
   # select(
   #   Name
   #   , flatten_chr(list_factors.competencies)
   # )
   , .df_data.comparison = NULL
-  , .list_factors = list_factors.competencies
+  , .list_factors = map(list_factors.competencies, unname) 
   , .lgc_compare.averages = T
 ) -> dsds
+
+dsds
+
+dsds %>% 
+  filter(
+    id.unique %in% c(last(id.unique), 'Average')
+  ) %>% 
+  mutate(id.unique = fct_inorder(id.unique)) %>%
+  ungroup() %>%
+  fun_plot.bar(aes(
+    x = item
+    , y = item.score
+    , label = percent(item.score, accuracy = .01)
+    , fill = id.unique
+    , color = id.unique
+  )
+  , .list_labs = list(
+    x = NULL
+    , y = 'Item Score'
+    , fill = NULL
+    , color = NULL
+  )
+  , .reorder_fct = T
+  , .chr_manual.pal = c(
+    list_atlas.pal$grey
+    , list_atlas.pal$purple3
+  )
+  , .chr_manual.aes = c(
+    'fill', 'color'
+  )
+  , .dbl_limits.y = c(0,1)
+  , .fun_format.y = percent_format(accuracy = 1)
+  , .reorder_fun = max
+  # , .coord_flip = F
+  , .list_labels.param = list(
+    position = 'dodge'
+    , fontface = 'bold'
+    , color = '#3854FB'
+    , size = 3.33
+    , vjust = -1.15
+    , hjust = -0.15
+    # , vjust = -1
+    # , hjust = 0
+    
+  )
+  , .theme = ggridges::theme_ridges(center_axis_labels = T) +
+    theme(panel.grid.major.y = element_blank())
+  , .list_geom.param = list(
+    position = c(position_dodge2(0.8, 'single'))
+    , width = 0.7
+  )
+  )
+  
+  
 
 dsds$factor.names %>% view
 dsds$factor.scores %>% view
