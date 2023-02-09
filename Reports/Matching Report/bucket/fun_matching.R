@@ -146,7 +146,6 @@ fun_KNN.matching <- function(
           .cols = starts_with('similarity')
           ,.fns = function(x){round(x,.dbl_decimals)}
         )
-        
       ) %>%
       # arrange(desc(similarity)) %>%
       arrange(euclidean_distance) %>%
@@ -176,7 +175,6 @@ fun_KNN.matching <- function(
           .cols = starts_with('similarity')
           ,.fns = function(x){round(x,.dbl_decimals)}
         )
-        
       ) %>% 
       # arrange(desc(similarity)) %>%
       arrange(euclidean_distance) %>%

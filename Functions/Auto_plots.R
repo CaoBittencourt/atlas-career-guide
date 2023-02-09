@@ -291,7 +291,7 @@ fun_geom.params <- function(
   # Aes mapping
   , .aes_mapping = aes()
   
-){
+){c
   
   # Function
   if(!(
