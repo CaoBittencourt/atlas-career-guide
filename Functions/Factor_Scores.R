@@ -652,6 +652,19 @@ fun_factor.scores2 <- function(
   
   if(vec_depth(.list_factor.keys) == 3){
     
+    # If unnamed categories, apply generic names
+    if(!length(names(.list_factor.keys))){
+      
+      setNames(
+        .list_factor.keys
+        , paste0(
+          'Category'
+          , 1:length(.list_factor.keys)
+        )
+      ) -> .list_factor.keys
+      
+    }
+    
     # If unnamed factors, apply generic name
     if(!length(names(flatten(.list_factor.keys)))){
       
@@ -667,19 +680,6 @@ fun_factor.scores2 <- function(
           
         }
       ) -> .list_factor.keys
-      
-      # If unnamed categories, apply generic names
-      if(!length(names(.list_factor.keys))){
-        
-        setNames(
-          .list_factor.keys
-          , paste0(
-            'Category'
-            , 1:length(.list_factor.keys)
-          )
-        ) -> .list_factor.keys
-        
-      }
       
     }
     
@@ -697,7 +697,7 @@ fun_factor.scores2 <- function(
   # Category scores
   psych::scoreVeryFast(
     keys = .list_factor.keys
-    , items = .df_data %>% select(where(is.numeric))
+    , items = .df_data %>% select(where(is.numeric)) %>% rbind()
     , totals = .lgc_totals #Average scores
   ) %>% 
     as_tibble() -> df_category.scores

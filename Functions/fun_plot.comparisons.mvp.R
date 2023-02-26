@@ -5,6 +5,8 @@ source('C:/Users/Cao/Documents/Github/Atlas-Research/Functions/Factor_Scores.R')
 source('C:/Users/Cao/Documents/Github/Atlas-Research/Functions/Auto_plots.R')
 # EFA-REDUCED OCCUPATIONS DATA FRAME
 source('C:/Users/Cao/Documents/Github/Atlas-Research/Data/df_occupations.pop.EFA.R')
+# ACRONYMS
+source('C:/Users/Cao/Documents/Github/Atlas-Research/Data/df_acronyms.R')
 # Commas
 source('C:/Users/Cao/Documents/Github/Atlas-Research/Functions/fun_commas.R')
 
@@ -39,1183 +41,6 @@ df_input %>%
     )
   ) -> df_input
 
-# # [FUNCTION] PLOT COMPARISON ----------------------------------------------
-# fun_plot.comparisons.mvp <- function(
-    # 
-#   # Data
-#   .df_data.users
-#   , .df_data.comparison = NULL
-#   # Factor list
-#   , .list_factors = list()
-#   # Comparisons
-#   , .lgc_compare.scores = T
-#   , .lgc_compare.averages = T
-# 
-# ){
-# 
-#   # Colors
-#   list(
-#     'green' = '#4AF7B0'
-#     , 'purple1' = '#753AF9'
-#     , 'purple2' = '#301866'
-#     , 'purple3' = '#3854FB'
-#     , 'blue1' = '#56D0F5'
-#     , 'blue2' = '#ABF4D4'
-#     , 'blue3' = '#43DED1'
-#     , 'blue4' = '#182766'
-#     , 'red' = '#CE3527'
-#     , 'black' = '#212121'
-#     , 'grey' = '#D4D5D8'
-#   ) -> list_atlas.pal
-# 
-#   # Arguments validation
-#   # Data frames
-#   stopifnot(
-#     "'.df_data.users' must be a data frame containing the users' item scores." =
-#       is.data.frame(.df_data.users)
-#   )
-# 
-#   stopifnot(
-#     "'.df_data.comparison' must be a data frame containing the item scores for all comparison terms." =
-#       is.data.frame(.df_data.comparison) |
-#       !length(.df_data.comparison)
-#   )
-# 
-#   # List
-#   stopifnot(
-#     "'.list_factors' must be a list of factor keys." = c(
-#       is.list(.list_factors)
-#       | !length(.list_factors)
-#       , !is.data.frame(.list_factors)
-#     ))
-# 
-#   # Logical
-#   stopifnot(
-#     "'.lgc_compare.scores' must be either TRUE or FALSE." =
-#       isTRUE(.lgc_compare.scores) |
-#       !isTRUE(.lgc_compare.scores)
-#   )
-# 
-#   stopifnot(
-#     "'.lgc_compare.averages' must be either TRUE or FALSE." =
-#       isTRUE(.lgc_compare.averages) |
-#       !isTRUE(.lgc_compare.averages)
-#   )
-# 
-# 
-#   # Actual individual item and factor scores
-#   if(length(.list_factors)){
-# 
-#     .df_data.users %>%
-#       bind_cols(
-#         fun_factor.scores(
-#           .df_data.numeric = .
-#           , .list_factor.keys = .list_factors
-#           , .lgc_pivot.long = F
-#           , .lgc_totals = F
-#         )) -> df_scores.individual
-# 
-#   }
-# 
-#   # Average item and factor scores
-#   df_scores.individual %>%
-#     summarise(across(
-#       .cols = where(is.numeric)
-#       ,.fns = ~ mean(.x, na.rm = T)
-#     )) -> df_scores.average
-# 
-#   # Comparison variables
-#   if(length(.list_factors)){
-# 
-#     .list_factors %>%
-#       flatten_chr() -> chr_items
-# 
-#   } else {
-# 
-#     .df_data.users %>%
-#       select(
-#         where(is.numeric)
-#       ) %>%
-#       names() -> chr_items
-# 
-#   }
-# 
-#   # Long data frames
-#   df_scores.individual %>%
-#     select(
-#       -where(is.numeric)
-#       , all_of(c(
-#         chr_items
-#       ))
-#     ) %>%
-#     pivot_longer(
-#       cols = where(is.numeric)
-#       , names_to = 'attribute'
-#       , values_to = 'value'
-#     ) %>%
-#     rename(user = 1) -> df_scores.individual.long
-# 
-#   df_scores.average %>%
-#     select(
-#       -where(is.numeric)
-#       , all_of(c(
-#         chr_items
-#       ))
-#     ) %>%
-#     pivot_longer(
-#       cols = where(is.numeric)
-#       , names_to = 'attribute'
-#       , values_to = 'value'
-#     ) -> df_scores.average.long
-# 
-#   df_scores.individual.long %>%
-#     bind_rows(
-#       df_scores.average.long %>%
-#         mutate(user = 'Average')
-#     ) -> df_scores.individual_average.long
-# 
-#   # Comparison plots
-#   NULL -> plt_items
-#   NULL -> plt_items.average
-#   NULL -> plt_factors
-#   NULL -> plt_factors.average
-# 
-#   # Item by item comparison
-#   if(.lgc_compare.scores){
-# 
-#     df_scores.individual.long %>%
-#       fun_plot.heatmap(aes(
-#         x = user
-#         , y = attribute
-#         , fill = value
-#       )
-#       # , .coord_polar = T
-#       ) -> plt_items
-# 
-#   }
-# 
-#   # User vs user by item comparison (each item, one plot, all users)
-#   if(.lgc_compare.scores){
-# 
-#     map(
-#       setNames(
-#         unique(df_scores.individual.long$user)
-#         , unique(df_scores.individual.long$user)
-#       )
-#       , ~
-#         df_scores.individual_average.long %>%
-#         filter(user %in% c(.x, 'Average')) %>%
-#         mutate(user = fct_inorder(user)) %>%
-#         fun_plot.bar(aes(
-#           x = attribute
-#           , y = value
-#           , label = percent(value, accuracy = .01)
-#           , fill = user
-#           , color = user
-#         )
-#         , .list_labs = list(
-#           x = NULL
-#           , y = 'Item Score'
-#           , fill = NULL
-#           , color = NULL
-#         )
-#         , .chr_manual.pal = c(
-#           list_atlas.pal$purple3
-#           , list_atlas.pal$grey
-#         )
-#         , .chr_manual.aes = c(
-#           'fill', 'color'
-#         )
-#         , .dbl_limits.y = c(0,1)
-#         , .fun_format.y = percent_format(accuracy = 1)
-#         , .reorder_fun = max
-#         , .coord_flip = T
-#         , .list_labels.param = list(
-#           position = 'dodge'
-#           , fontface = 'bold'
-#           , color = '#3854FB'
-#           , size = 3.33
-#           # , vjust = -1.15
-#           # , hjust = -0.15
-#           , vjust = -1
-#           , hjust = 0
-# 
-#         )
-#         , .theme = ggridges::theme_ridges(center_axis_labels = T) +
-#           theme(panel.grid.major.y = element_blank())
-#         , .list_geom.param = list(
-#           position = c(position_dodge2(0.8, 'single'))
-#           , width = 0.7
-#         )
-#         )
-#     ) -> list_plt_items.users
-# 
-#   }
-# 
-#   # if(.lgc_compare.scores){
-#   #
-#   #   df_scores.individual.long %>%
-#   #     bind_rows(
-#   #       df_scores.average.long %>%
-#   #         mutate(user = 'average')
-#   #     ) %>%
-#   #     pivot_wider(
-#   #       id_cols = attribute
-#   #       , names_from = user
-#   #       , values_from = value
-#   #     ) -> df_scores.dumbbell
-#   #
-#   #   map(
-#   #     setNames(
-#   #       unique(df_scores.individual.long$user)
-#   #       , unique(df_scores.individual.long$user)
-#   #     )
-#   #     , ~
-#   #       df_scores.dumbbell %>%
-#   #       select(attribute, .x, average) %>%
-#   #       fun_plot.dumbbell(aes(
-#   #         x = !!sym(.x)
-#   #         , xend = average
-#   #         , y = attribute
-#   #       )
-#   #       , .list_geom.param = list(
-#   #         color = 'lightgrey'
-#   #         , colour_x = list_atlas.pal$blue4
-#   #         , colour_xend = list_atlas.pal$red
-#   #         , size_x = 5.4
-#   #         , size_xend = 5.4
-#   #         , size = 2
-#   #       )
-#   #       , .list_labels1.param = list(
-#   #         fontface = 'bold'
-#   #         , color = list_atlas.pal$blue4
-#   #         , size = 3.33
-#   #         , vjust = -1.5
-#   #         , hjust = 0.5
-#   #       )
-#   #       , .list_labels2.param = list(
-#   #         fontface = 'bold'
-#   #         , color = list_atlas.pal$red
-#   #         , size = 3.33
-#   #         , vjust = 2.25
-#   #         , hjust = 0.5
-#   #       )
-#   #       , .list_axis.x.args = list(
-#   #         limits = c(-.1,1.1)
-#   #         , breaks = seq(0,1,.25)
-#   #       )
-#   #       , .fun_format.x = label_percent()
-#   #       , .fun_format.y = function(y){y}
-#   #       , .fun_format.labels = label_percent(accuracy = .01)
-#   #       , .list_labs = list(
-#   #         title = NULL
-#   #         , subtitle = NULL
-#   #         , x = str_to_title('item score')
-#   #         , y = NULL
-#   #       )
-#   #       )
-#   #   ) -> list_plt_items.users
-#   #
-#   # }
-# 
-# 
-#   # User individual profiles (each user one plot, all items)
-# 
-#   # Average item by item comparison
-#   if(.lgc_compare.averages){
-# 
-#     df_scores.average.long %>%
-#       fun_plot.lollipop(aes(
-#         x = attribute
-#         , y = value
-#         , label = percent(value, accuracy = .01)
-#         # , color = factor
-#       )
-#       , .list_labs = list(
-#         x = NULL
-#         , y = 'Average Item Score'
-#         , color = NULL
-#       )
-#       , .dbl_limits.y = c(0,1)
-#       , .fun_format.y = percent_format(accuracy = 1)
-#       , .reorder_fun = max
-#       , .coord_flip = T
-#       , .theme = ggridges::theme_ridges(center_axis_labels = T) +
-#         theme(panel.grid.major.y = element_blank())
-#       ) -> plt_items.average
-# 
-#   }
-# 
-#   # Factor scores comparison
-#   if(length(.list_factors)){
-# 
-#     df_scores.individual %>%
-#       select(
-#         -where(is.numeric)
-#         , .list_factors %>%
-#           flatten() %>%
-#           names()
-#       ) %>%
-#       pivot_longer(
-#         cols = where(is.numeric)
-#         , names_to = 'factor'
-#         , values_to = 'value'
-#       ) %>%
-#       rename(user = 1) %>%
-#       fun_plot.heatmap(aes(
-#         x = user
-#         , y = factor
-#         , fill = value
-#       )
-#       # , .coord_polar = T
-#       ) -> plt_factors
-# 
-#     # Average factor scores comparison
-#     if(.lgc_compare.averages){
-# 
-#       # df_scores.average %>%
-#       #   select(
-#       #     -where(is.numeric)
-#       #     , .list_factors %>%
-#       #       flatten() %>%
-#       #       names()
-#       #   ) %>%
-#       #   pivot_longer(
-#       #     cols = where(is.numeric)
-#       #     , names_to = 'factor'
-#       #     , values_to = 'value'
-#       #   ) %>%
-#       #   rename(user = 1) %>%
-#       #   fun_plot.lollipop(aes(
-#       #     x = factor
-#       #     , y = value
-#       #     , label = percent(value, accuracy = .01)
-#       #     # , color = category
-#       #   )
-#       #   , .list_labs = list(
-#       #     x = NULL
-#       #     , y = 'Average Factor Score'
-#       #     , color = NULL
-#       #   )
-#       #   , .dbl_limits.y = c(0,1)
-#       #   , .fun_format.y = percent_format(accuracy = 1)
-#       #   , .reorder_fun = max
-#       #   , .coord_flip = T
-#       #   , .theme = ggridges::theme_ridges(center_axis_labels = T) +
-#       #     theme(panel.grid.major.y = element_blank())
-#       #   ) -> plt_factors.average
-# 
-#     }
-# 
-#   }
-# 
-# 
-#   # Output
-#   return(compact(list(
-#     'actual' = df_scores.individual
-#     , 'actual.long' = df_scores.individual.long
-#     , 'vars' = chr_items
-#     , 'average' = df_scores.average
-#     , 'average.long' = df_scores.average.long
-#     , 'items' = plt_items
-#     , 'items.users' = list_plt_items.users
-#     , 'items.average' = plt_items.average
-#     , 'factors' = plt_factors
-#     , 'factors.average' = plt_factors.average
-#   )))
-# 
-# }
-
-# # [FUNCTION] PLOT COMPARISON ----------------------------------------------
-# fun_plot.comparisons.mvp <- function(
-    # 
-#   # Data
-#   .df_data.users
-#   , .df_data.comparison = NULL
-#   # Factor list
-#   , .list_factors = list()
-#   # Comparisons
-#   , .lgc_compare.scores = T
-#   , .lgc_compare.averages = T
-# 
-# ){
-# 
-#   # Colors
-#   list(
-#     'green' = '#4AF7B0'
-#     , 'purple1' = '#753AF9'
-#     , 'purple2' = '#301866'
-#     , 'purple3' = '#3854FB'
-#     , 'blue1' = '#56D0F5'
-#     , 'blue2' = '#ABF4D4'
-#     , 'blue3' = '#43DED1'
-#     , 'blue4' = '#182766'
-#     , 'red' = '#CE3527'
-#     , 'black' = '#212121'
-#     , 'grey' = '#D4D5D8'
-#   ) -> list_atlas.pal
-# 
-#   # Arguments validation
-#   # Data frames
-#   stopifnot(
-#     "'.df_data.users' must be a data frame containing the users' item scores." =
-#       is.data.frame(.df_data.users)
-#   )
-# 
-#   stopifnot(
-#     "'.df_data.comparison' must be a data frame containing the item scores for all comparison terms." =
-#       is.data.frame(.df_data.comparison) |
-#       !length(.df_data.comparison)
-#   )
-# 
-#   # List
-#   stopifnot(
-#     "'.list_factors' must be a list of factor keys." = c(
-#       is.list(.list_factors)
-#       | !length(.list_factors)
-#       , !is.data.frame(.list_factors)
-#     ))
-# 
-#   # Logical
-#   stopifnot(
-#     "'.lgc_compare.scores' must be either TRUE or FALSE." =
-#       isTRUE(.lgc_compare.scores) |
-#       !isTRUE(.lgc_compare.scores)
-#   )
-# 
-#   stopifnot(
-#     "'.lgc_compare.averages' must be either TRUE or FALSE." =
-#       isTRUE(.lgc_compare.averages) |
-#       !isTRUE(.lgc_compare.averages)
-#   )
-# 
-# 
-#   # Actual individual item and factor scores
-#   if(length(.list_factors)){
-# 
-#     .df_data.users %>%
-#       bind_cols(
-#         fun_factor.scores(
-#           .df_data.numeric = .
-#           , .list_factor.keys = .list_factors
-#           , .lgc_pivot.long = F
-#           , .lgc_totals = F
-#         )) -> df_scores.individual
-# 
-#   }
-# 
-#   # Average item and factor scores
-#   df_scores.individual %>%
-#     summarise(across(
-#       .cols = where(is.numeric)
-#       ,.fns = ~ mean(.x, na.rm = T)
-#     )) -> df_scores.average
-# 
-#   # Comparison variables
-#   if(length(.list_factors)){
-# 
-#     .list_factors %>%
-#       flatten_chr() -> chr_items
-# 
-#   } else {
-# 
-#     .df_data.users %>%
-#       select(
-#         where(is.numeric)
-#       ) %>%
-#       names() -> chr_items
-# 
-#   }
-# 
-#   # Long data frames
-#   df_scores.individual %>%
-#     pivot_longer(
-#       cols = where(is.numeric)
-#       , names_to = 'attribute'
-#       , values_to = 'value'
-#     ) %>%
-#     rename(user = 1) -> df_scores.individual.long
-# 
-#   df_scores.average %>%
-#     pivot_longer(
-#       cols = where(is.numeric)
-#       , names_to = 'attribute'
-#       , values_to = 'value'
-#     ) -> df_scores.average.long
-# 
-#   df_scores.individual.long %>%
-#     bind_rows(
-#       df_scores.average.long %>%
-#         mutate(user = 'Average')
-#     ) -> df_scores.individual_average.long
-# 
-#   # Comparison plots
-#   NULL -> plt_items
-#   NULL -> plt_items.average
-#   NULL -> plt_factors
-#   NULL -> plt_factors.average
-# 
-#   # Item by item comparison
-#   if(.lgc_compare.scores){
-# 
-#     df_scores.individual.long %>%
-#       filter(attribute %in% chr_items) %>%
-#       fun_plot.heatmap(aes(
-#         x = user
-#         , y = attribute
-#         , fill = value
-#       )
-#       # , .coord_polar = T
-#       ) -> plt_items
-# 
-#   }
-# 
-#   # User vs user by item comparison (each item, one plot, all users)
-#   if(.lgc_compare.scores){
-# 
-#     map(
-#       setNames(
-#         unique(df_scores.individual.long$user)
-#         , unique(df_scores.individual.long$user)
-#       )
-#       , ~
-#         df_scores.individual_average.long %>%
-#         filter(
-#           attribute %in% chr_items
-#           , user %in% c(.x, 'Average')
-#         ) %>%
-#         mutate(user = fct_inorder(user)) %>%
-#         fun_plot.bar(aes(
-#           x = attribute
-#           , y = value
-#           , label = percent(value, accuracy = .01)
-#           , fill = user
-#           , color = user
-#         )
-#         , .list_labs = list(
-#           x = NULL
-#           , y = 'Item Score'
-#           , fill = NULL
-#           , color = NULL
-#         )
-#         , .chr_manual.pal = c(
-#           list_atlas.pal$purple3
-#           , list_atlas.pal$grey
-#         )
-#         , .chr_manual.aes = c(
-#           'fill', 'color'
-#         )
-#         , .dbl_limits.y = c(0,1)
-#         , .fun_format.y = percent_format(accuracy = 1)
-#         , .reorder_fun = max
-#         , .coord_flip = T
-#         , .list_labels.param = list(
-#           position = 'dodge'
-#           , fontface = 'bold'
-#           , color = '#3854FB'
-#           , size = 3.33
-#           , vjust = -1.15
-#           , hjust = -0.15
-#           # , vjust = -1
-#           # , hjust = 0
-# 
-#         )
-#         , .theme = ggridges::theme_ridges(center_axis_labels = T) +
-#           theme(panel.grid.major.y = element_blank())
-#         , .list_geom.param = list(
-#           position = c(position_dodge2(0.8, 'single'))
-#           , width = 0.7
-#         )
-#         )
-#     ) -> list_plt_items.users
-# 
-#   }
-# 
-#   # if(.lgc_compare.scores){
-#   #
-#   #   df_scores.individual.long %>%
-#   #     bind_rows(
-#   #       df_scores.average.long %>%
-#   #         mutate(user = 'average')
-#   #     ) %>%
-#   #     pivot_wider(
-#   #       id_cols = attribute
-#   #       , names_from = user
-#   #       , values_from = value
-#   #     ) -> df_scores.dumbbell
-#   #
-#   #   map(
-#   #     setNames(
-#   #       unique(df_scores.individual.long$user)
-#   #       , unique(df_scores.individual.long$user)
-#   #     )
-#   #     , ~
-#   #       df_scores.dumbbell %>%
-#   #       select(attribute, .x, average) %>%
-#   #       fun_plot.dumbbell(aes(
-#   #         x = !!sym(.x)
-#   #         , xend = average
-#   #         , y = attribute
-#   #       )
-#   #       , .list_geom.param = list(
-#   #         color = 'lightgrey'
-#   #         , colour_x = list_atlas.pal$blue4
-#   #         , colour_xend = list_atlas.pal$red
-#   #         , size_x = 5.4
-#   #         , size_xend = 5.4
-#   #         , size = 2
-#   #       )
-#   #       , .list_labels1.param = list(
-#   #         fontface = 'bold'
-#   #         , color = list_atlas.pal$blue4
-#   #         , size = 3.33
-#   #         , vjust = -1.5
-#   #         , hjust = 0.5
-#   #       )
-#   #       , .list_labels2.param = list(
-#   #         fontface = 'bold'
-#   #         , color = list_atlas.pal$red
-#   #         , size = 3.33
-#   #         , vjust = 2.25
-#   #         , hjust = 0.5
-#   #       )
-#   #       , .list_axis.x.args = list(
-#   #         limits = c(-.1,1.1)
-#   #         , breaks = seq(0,1,.25)
-#   #       )
-#   #       , .fun_format.x = label_percent()
-#   #       , .fun_format.y = function(y){y}
-#   #       , .fun_format.labels = label_percent(accuracy = .01)
-#   #       , .list_labs = list(
-#   #         title = NULL
-#   #         , subtitle = NULL
-#   #         , x = str_to_title('item score')
-#   #         , y = NULL
-#   #       )
-#   #       )
-#   #   ) -> list_plt_items.users
-#   #
-#   # }
-# 
-# 
-#   # User individual profiles (each user one plot, all items)
-# 
-#   # Average item by item comparison
-#   if(.lgc_compare.averages){
-# 
-#     df_scores.average.long %>%
-#       filter(attribute %in% chr_items) %>%
-#       fun_plot.lollipop(aes(
-#         x = attribute
-#         , y = value
-#         , label = percent(value, accuracy = .01)
-#         # , color = factor
-#       )
-#       , .list_labs = list(
-#         x = NULL
-#         , y = 'Average Item Score'
-#         , color = NULL
-#       )
-#       , .dbl_limits.y = c(0,1)
-#       , .fun_format.y = percent_format(accuracy = 1)
-#       , .reorder_fun = max
-#       , .coord_flip = T
-#       , .theme = ggridges::theme_ridges(center_axis_labels = T) +
-#         theme(panel.grid.major.y = element_blank())
-#       ) -> plt_items.average
-# 
-#   }
-# 
-#   # Factor scores comparison
-#   if(length(.list_factors)){
-# 
-#     df_scores.individual.long %>%
-#       filter(
-#         attribute %in%
-#           names(flatten(.list_factors))
-#       ) %>%
-#       rename(factor = attribute) %>%
-#       fun_plot.heatmap(aes(
-#         x = user
-#         , y = factor
-#         , fill = value
-#       )
-#       , .scale_colors = list(
-#         scale_color_stepsn(
-#           colors = viridis(length(c(0, 0.17, 0.33, 0.5, 0.67, 0.83, 1)))
-#           , breaks = c(0, 0.17, 0.33, 0.5, 0.67, 0.83, 1)
-#           , limits = c(0,1)
-#         )
-#         , scale_fill_stepsn(
-#           colors = viridis(length(c(0, 0.17, 0.33, 0.5, 0.67, 0.83, 1)))
-#           , breaks = c(0, 0.17, 0.33, 0.5, 0.67, 0.83, 1)
-#           , limits = c(0,1)
-#         )
-#       )
-#       # , .coord_polar = T
-#       ) -> plt_factors
-# 
-# 
-#     # Average factor scores comparison
-#     if(.lgc_compare.averages){
-# 
-#       df_scores.average %>%
-#         select(
-#           -where(is.numeric)
-#           , .list_factors %>%
-#             flatten() %>%
-#             names()
-#         ) %>%
-#         pivot_longer(
-#           cols = where(is.numeric)
-#           , names_to = 'factor'
-#           , values_to = 'value'
-#         ) %>%
-#         rename(user = 1) %>%
-#         fun_plot.lollipop(aes(
-#           x = factor
-#           , y = value
-#           , label = percent(value, accuracy = .01)
-#           # , color = category
-#         )
-#         , .list_labs = list(
-#           x = NULL
-#           , y = 'Average Factor Score'
-#           , color = NULL
-#         )
-#         , .dbl_limits.y = c(0,1)
-#         , .fun_format.y = percent_format(accuracy = 1)
-#         , .reorder_fun = max
-#         , .coord_flip = T
-#         , .theme = ggridges::theme_ridges(center_axis_labels = T) +
-#           theme(panel.grid.major.y = element_blank())
-#         ) -> plt_factors.average
-# 
-#     }
-# 
-#   }
-# 
-# 
-#   # Output
-#   return(compact(list(
-#     'actual' = df_scores.individual
-#     , 'actual.long' = df_scores.individual.long
-#     , 'vars' = chr_items
-#     , 'average' = df_scores.average
-#     , 'average.long' = df_scores.average.long
-#     , 'items' = plt_items
-#     , 'items.users' = list_plt_items.users
-#     , 'items.average' = plt_items.average
-#     , 'factors' = plt_factors
-#     , 'factors.average' = plt_factors.average
-#   )))
-# 
-# }
-
-# # [FUNCTION] PLOT COMPARISON ----------------------------------------------
-# fun_plot.comparisons.mvp <- function(
-    #     
-#   # Data
-#   .df_data.users
-#   , .df_data.comparison = NULL
-#   # Factor list
-#   , .list_factors = list()
-#   # Comparisons
-#   , .lgc_compare.scores = T
-#   , .lgc_compare.averages = T
-#   
-# ){
-#   
-#   # Colors
-#   list(
-#     'green' = '#4AF7B0'
-#     , 'purple1' = '#753AF9'
-#     , 'purple2' = '#301866'
-#     , 'purple3' = '#3854FB'
-#     , 'blue1' = '#56D0F5'
-#     , 'blue2' = '#ABF4D4'
-#     , 'blue3' = '#43DED1'
-#     , 'blue4' = '#182766'
-#     , 'red' = '#CE3527'
-#     , 'black' = '#212121'
-#     , 'grey' = '#D4D5D8'
-#   ) -> list_atlas.pal
-#   
-#   # Arguments validation
-#   # Data frames
-#   stopifnot(
-#     "'.df_data.users' must be a data frame containing the users' item scores." = 
-#       is.data.frame(.df_data.users)
-#   )
-#   
-#   stopifnot(
-#     "'.df_data.comparison' must be a data frame containing the item scores for all comparison terms." = 
-#       is.data.frame(.df_data.comparison) |
-#       !length(.df_data.comparison)
-#   )
-#   
-#   # List
-#   stopifnot(
-#     "'.list_factors' must be a list of factor keys." = c(
-#       is.list(.list_factors)
-#       | !length(.list_factors)
-#       , !is.data.frame(.list_factors)
-#     ))
-#   
-#   # Logical
-#   stopifnot(
-#     "'.lgc_compare.scores' must be either TRUE or FALSE." = 
-#       isTRUE(.lgc_compare.scores) |
-#       !isTRUE(.lgc_compare.scores)
-#   )
-#   
-#   stopifnot(
-#     "'.lgc_compare.averages' must be either TRUE or FALSE." = 
-#       isTRUE(.lgc_compare.averages) |
-#       !isTRUE(.lgc_compare.averages)
-#   )
-#   
-#   
-#   # Actual individual item and factor scores
-#   if(length(.list_factors)){
-#     
-#     .df_data.users %>% 
-#       fun_factor.scores2(
-#         .list_factor.keys = .list_factors
-#         , .lgc_sample.averages = .lgc_compare.averages
-#         , .lgc_pivot.long = T
-#         , .lgc_totals = F
-#       ) -> list_scores
-#     
-#   } else {
-#     
-#     # Long data frames
-#     df_scores.individual %>%
-#       pivot_longer(
-#         cols = where(is.numeric)
-#         , names_to = 'attribute'
-#         , values_to = 'value'
-#       ) %>%
-#       rename(user = 1) -> df_scores.individual.long
-#     
-#     .df_data.users %>% 
-#       summarise(across(
-#         .cols = where(is.numeric)
-#         ,.fns = ~ mean(.x, na.rm = T))
-#       )
-#     
-#     df_scores.average %>%
-#       pivot_longer(
-#         cols = where(is.numeric)
-#         , names_to = 'attribute'
-#         , values_to = 'value'
-#       ) -> df_scores.average.long
-#     
-#     df_scores.individual.long %>%
-#       bind_rows(
-#         df_scores.average.long %>%
-#           mutate(user = 'Average')
-#       ) -> df_scores.individual_average.long
-#     
-#     
-#   }
-#   
-#   return(list_scores)
-#   stop()
-#   
-#   # # Average item and factor scores
-#   # list_scores$factor.scores %>% 
-#   #   summarise(across(
-#   #     .cols = where(is.numeric)
-#   #     ,.fns = ~ mean(.x, na.rm = T)
-#   #   )) -> df_scores.average
-#   # 
-#   # list_scores$factor.scores.long %>% 
-#   #   group_by(category, factor, item) %>% 
-#   #   summarise(across(
-#   #     .cols = where(is.numeric)
-#   #     ,.fns = ~ mean(.x, na.rm = T)
-#   #   )) -> df_scores.average.long
-#   
-#   # Comparison variables
-#   if(length(.list_factors)){
-#     
-#     .list_factors %>%
-#       flatten_chr() -> chr_items
-#     
-#   } else {
-#     
-#     .df_data.users %>%
-#       select(
-#         where(is.numeric)
-#       ) %>% 
-#       names() -> chr_items
-#     
-#   }
-#   
-#   # Comparison plots
-#   NULL -> plt_items
-#   NULL -> plt_items.average
-#   NULL -> plt_factors
-#   NULL -> plt_factors.average
-#   
-#   # Item by item comparison
-#   if(.lgc_compare.scores){
-#     
-#     df_scores.individual.long %>%
-#       filter(attribute %in% chr_items) %>% 
-#       fun_plot.heatmap(aes(
-#         x = user
-#         , y = attribute
-#         , fill = value
-#       )
-#       # , .coord_polar = T
-#       ) -> plt_items
-#     
-#   }
-#   
-#   # User vs user by item comparison (each item, one plot, all users)
-#   if(.lgc_compare.scores){
-#     
-#     map(
-#       setNames(
-#         unique(df_scores.individual.long$user)
-#         , unique(df_scores.individual.long$user)
-#       )
-#       , ~
-#         df_scores.individual_average.long %>%
-#         filter(
-#           attribute %in% chr_items
-#           , user %in% c(.x, 'Average')
-#         ) %>%
-#         mutate(user = fct_inorder(user)) %>%
-#         fun_plot.bar(aes(
-#           x = attribute
-#           , y = value
-#           , label = percent(value, accuracy = .01)
-#           , fill = user
-#           , color = user
-#         )
-#         , .list_labs = list(
-#           x = NULL
-#           , y = 'Item Score'
-#           , fill = NULL
-#           , color = NULL
-#         )
-#         , .chr_manual.pal = c(
-#           list_atlas.pal$purple3
-#           , list_atlas.pal$grey
-#         )
-#         , .chr_manual.aes = c(
-#           'fill', 'color'
-#         )
-#         , .dbl_limits.y = c(0,1)
-#         , .fun_format.y = percent_format(accuracy = 1)
-#         , .reorder_fun = max
-#         , .coord_flip = T
-#         , .list_labels.param = list(
-#           position = 'dodge'
-#           , fontface = 'bold'
-#           , color = '#3854FB'
-#           , size = 3.33
-#           , vjust = -1.15
-#           , hjust = -0.15
-#           # , vjust = -1
-#           # , hjust = 0
-#           
-#         )
-#         , .theme = ggridges::theme_ridges(center_axis_labels = T) +
-#           theme(panel.grid.major.y = element_blank())
-#         , .list_geom.param = list(
-#           position = c(position_dodge2(0.8, 'single'))
-#           , width = 0.7
-#         )
-#         )
-#     ) -> list_plt_items.users
-#     
-#   }
-#   
-#   # if(.lgc_compare.scores){
-#   #   
-#   #   df_scores.individual.long %>% 
-#   #     bind_rows(
-#   #       df_scores.average.long %>% 
-#   #         mutate(user = 'average')
-#   #     ) %>%
-#   #     pivot_wider(
-#   #       id_cols = attribute
-#   #       , names_from = user
-#   #       , values_from = value
-#   #     ) -> df_scores.dumbbell
-#   #   
-#   #   map(
-#   #     setNames(
-#   #       unique(df_scores.individual.long$user)
-#   #       , unique(df_scores.individual.long$user)
-#   #     )
-#   #     , ~ 
-#   #       df_scores.dumbbell %>%
-#   #       select(attribute, .x, average) %>% 
-#   #       fun_plot.dumbbell(aes(
-#   #         x = !!sym(.x)
-#   #         , xend = average
-#   #         , y = attribute
-#   #       )
-#   #       , .list_geom.param = list(
-#   #         color = 'lightgrey'
-#   #         , colour_x = list_atlas.pal$blue4
-#   #         , colour_xend = list_atlas.pal$red
-#   #         , size_x = 5.4
-#   #         , size_xend = 5.4
-#   #         , size = 2
-#   #       )
-#   #       , .list_labels1.param = list(
-#   #         fontface = 'bold'
-#   #         , color = list_atlas.pal$blue4
-#   #         , size = 3.33
-#   #         , vjust = -1.5
-#   #         , hjust = 0.5
-#   #       )
-#   #       , .list_labels2.param = list(
-#   #         fontface = 'bold'
-#   #         , color = list_atlas.pal$red
-#   #         , size = 3.33
-#   #         , vjust = 2.25
-#   #         , hjust = 0.5
-#   #       )
-#   #       , .list_axis.x.args = list(
-#   #         limits = c(-.1,1.1)
-#   #         , breaks = seq(0,1,.25)
-#   #       )
-#   #       , .fun_format.x = label_percent()
-#   #       , .fun_format.y = function(y){y}
-#   #       , .fun_format.labels = label_percent(accuracy = .01)
-#   #       , .list_labs = list(
-#   #         title = NULL
-#   #         , subtitle = NULL
-#   #         , x = str_to_title('item score')
-#   #         , y = NULL
-#   #       )
-#   #       )
-#   #   ) -> list_plt_items.users
-#   #   
-#   # } 
-#   
-#   
-#   # User individual profiles (each user one plot, all items)
-#   
-#   # Average item by item comparison
-#   if(.lgc_compare.averages){
-#     
-#     df_scores.average.long %>%
-#       filter(attribute %in% chr_items) %>% 
-#       fun_plot.lollipop(aes(
-#         x = attribute
-#         , y = value
-#         , label = percent(value, accuracy = .01)
-#         # , color = factor
-#       )
-#       , .list_labs = list(
-#         x = NULL
-#         , y = 'Average Item Score'
-#         , color = NULL
-#       )
-#       , .dbl_limits.y = c(0,1)
-#       , .fun_format.y = percent_format(accuracy = 1)
-#       , .reorder_fun = max
-#       , .coord_flip = T
-#       , .theme = ggridges::theme_ridges(center_axis_labels = T) +
-#         theme(panel.grid.major.y = element_blank())
-#       ) -> plt_items.average
-#     
-#   }
-#   
-#   # Factor scores comparison
-#   if(length(.list_factors)){
-#     
-#     df_scores.individual.long %>% 
-#       filter(
-#         attribute %in% 
-#           names(flatten(.list_factors))
-#       ) %>% 
-#       rename(factor = attribute) %>% 
-#       fun_plot.heatmap(aes(
-#         x = user
-#         , y = factor
-#         , fill = value
-#       )
-#       , .scale_colors = list(
-#         scale_color_stepsn(
-#           colors = viridis(length(c(0, 0.17, 0.33, 0.5, 0.67, 0.83, 1)))
-#           , breaks = c(0, 0.17, 0.33, 0.5, 0.67, 0.83, 1)
-#           , limits = c(0,1)
-#         )
-#         , scale_fill_stepsn(
-#           colors = viridis(length(c(0, 0.17, 0.33, 0.5, 0.67, 0.83, 1)))
-#           , breaks = c(0, 0.17, 0.33, 0.5, 0.67, 0.83, 1)
-#           , limits = c(0,1)
-#         ) 
-#       )
-#       # , .coord_polar = T
-#       ) -> plt_factors
-#     
-#     
-#     # Average factor scores comparison
-#     if(.lgc_compare.averages){
-#       
-#       df_scores.average %>%
-#         select(
-#           -where(is.numeric)
-#           , .list_factors %>%
-#             flatten() %>%
-#             names()
-#         ) %>%
-#         pivot_longer(
-#           cols = where(is.numeric)
-#           , names_to = 'factor'
-#           , values_to = 'value'
-#         ) %>%
-#         rename(user = 1) %>%
-#         fun_plot.lollipop(aes(
-#           x = factor
-#           , y = value
-#           , label = percent(value, accuracy = .01)
-#           # , color = category
-#         )
-#         , .list_labs = list(
-#           x = NULL
-#           , y = 'Average Factor Score'
-#           , color = NULL
-#         )
-#         , .dbl_limits.y = c(0,1)
-#         , .fun_format.y = percent_format(accuracy = 1)
-#         , .reorder_fun = max
-#         , .coord_flip = T
-#         , .theme = ggridges::theme_ridges(center_axis_labels = T) +
-#           theme(panel.grid.major.y = element_blank())
-#         ) -> plt_factors.average
-#       
-#     }
-#     
-#   }
-#   
-#   
-#   # Output
-#   return(compact(list(
-#     'actual' = df_scores.individual
-#     , 'actual.long' = df_scores.individual.long
-#     , 'vars' = chr_items
-#     , 'average' = df_scores.average
-#     , 'average.long' = df_scores.average.long
-#     , 'items' = plt_items
-#     , 'items.users' = list_plt_items.users
-#     , 'items.average' = plt_items.average
-#     , 'factors' = plt_factors
-#     , 'factors.average' = plt_factors.average
-#   )))
-#   
-# }
-
 # [FUNCTION] PLOT COMPARISON ----------------------------------------------
 fun_plot.comparisons.mvp <- function(
     
@@ -1224,9 +49,6 @@ fun_plot.comparisons.mvp <- function(
   , .df_data.comparison = NULL
   # Factor list
   , .list_factors = list()
-  # Comparisons
-  , .lgc_compare.scores = T
-  , .lgc_compare.averages = T
   
 ){
   
@@ -1241,9 +63,14 @@ fun_plot.comparisons.mvp <- function(
     , 'blue3' = '#43DED1'
     , 'blue4' = '#182766'
     , 'red' = '#CE3527'
+    
+    , 'abilities' = '#C92618'
+    , 'knowledge' = '#FF9E1F'
+    , 'skills' = '#50915D'
+    
     , 'black' = '#212121'
     , 'grey' = '#D4D5D8'
-  ) -> list_atlas.pal
+  ) -> list_pal.atlas
   
   # Arguments validation
   # Data frames
@@ -1267,19 +94,6 @@ fun_plot.comparisons.mvp <- function(
   #     , !is.data.frame(.list_factors)
   #   ))
   
-  # Logical
-  stopifnot(
-    "'.lgc_compare.scores' must be either TRUE or FALSE." = 
-      isTRUE(.lgc_compare.scores) |
-      !isTRUE(.lgc_compare.scores)
-  )
-  
-  stopifnot(
-    "'.lgc_compare.averages' must be either TRUE or FALSE." = 
-      isTRUE(.lgc_compare.averages) |
-      !isTRUE(.lgc_compare.averages)
-  )
-  
   # Unique user id (for confidentiality purposes)
   .df_data.users %>%
     mutate(
@@ -1294,278 +108,378 @@ fun_plot.comparisons.mvp <- function(
   .df_data.users %>% 
     fun_factor.scores2(
       .list_factor.keys = .list_factors
-      , .lgc_sample.averages = .lgc_compare.averages
+      , .lgc_sample.averages = T
       , .lgc_pivot.long = T
       , .lgc_totals = F
     ) -> list_scores
   
+  # Acronyms
+  list_scores$scores.long %>%
+    # full_join(df_acronyms) -> list_scores$scores.long
+    left_join(df_acronyms) -> list_scores$scores.long
+  
+  list_scores$scores.average.long %>% 
+    # full_join(df_acronyms) -> list_scores$scores.average.long
+    left_join(df_acronyms) -> list_scores$scores.average.long
+  
   # Comparison plots
   NULL -> plt_items
+  NULL -> list_plt_items.users
   NULL -> plt_items.average
   NULL -> plt_factors
+  NULL -> list_plt_factors.users
   NULL -> plt_factors.average
   
   # Item by item comparison
-  if(.lgc_compare.scores){
-    
-    list_scores$scores.long %>%
-      fun_plot.heatmap(aes(
-        x = id.unique
-        , y = item
-        , fill = item.score
-      )
-      # , .coord_polar = T
-      ) -> plt_items
-    
-  }
+  list_scores$scores.long %>%
+    # full_join(df_acronyms) %>%
+    fun_plot.heatmap(aes(
+      x = id.unique
+      , y = item.name
+      , fill = item.score
+    )
+    , .fun_format.y = function(x){x}
+    # , .coord_polar = T
+    ) -> plt_items
   
-  # User vs user by item comparison (each item, one plot, all users)
-  if(.lgc_compare.scores){
-    
-    list_scores$scores.average.long %>%
-      mutate(
-        id.unique = 'Average'
-      ) %>% 
-      bind_rows(
-        list_scores$scores.long
-      ) -> df_average.long
-    
-    map(
-      setNames(
-        .df_data.users$id.unique
-        , .df_data.users$id.unique
-      )
-      , ~
-        df_average.long %>%
+  # Item by item comparison (one plot per user)
+  list_scores$scores.average.long %>%
+    mutate(
+      id.unique = 'Average'
+    ) %>%
+    bind_rows(
+      list_scores$scores.long
+    ) -> df_average.long
+
+  map(
+    setNames(
+      .df_data.users$id.unique
+      , .df_data.users$id.unique
+    )
+    , function(.x){
+
+      list_scores$scores.long %>%
+        filter(
+          id.unique %in% .x
+        ) %>%
+        arrange(item.score) %>%
+        pull(item.name) %>%
+        unique() -> chr_order
+
+      df_average.long %>%
         filter(
           id.unique %in% c(.x, 'Average')
         ) %>%
-        mutate(id.unique = fct_inorder(id.unique)) %>%
+        mutate(
+          item.name = factor(item.name, levels = chr_order)
+          , id.unique = fct_inorder(id.unique)
+        ) %>%
+        group_by(id.unique) %>%
+        arrange(item.name) %>%
+        mutate(
+          column = row_number() < (n() / 2)
+          , column = factor(column)
+        ) %>%
+        ungroup() %>%
         fun_plot.bar(aes(
-          x = item
+          x = item.name
           , y = item.score
-          , label = percent(item.score, accuracy = .01)
+          , label = percent(item.score, accuracy = 1)
           , fill = id.unique
           , color = id.unique
         )
+        , .sym_facets = column
+        , .chr_scales = 'free'
         , .list_labs = list(
-          x = NULL
+          title = paste0('Item scores — ', .x)
+          , x = NULL
           , y = 'Item Score'
           , fill = NULL
           , color = NULL
         )
-        , .reorder_fct = T
+        , .coord_polar = F
+        , .coord_flip = T
+        , .reorder_fct = F
         , .chr_manual.pal = c(
-          list_atlas.pal$grey
-          , list_atlas.pal$purple3
+          list_pal.atlas$grey
+          , list_pal.atlas$purple3
         )
         , .chr_manual.aes = c(
           'fill', 'color'
         )
-        , .dbl_limits.y = c(0,1)
+        , .list_axis.y.args = list(
+          limits = c(0, 1.1)
+          , breaks = seq(0, 1, 0.25)
+        )
         , .fun_format.y = percent_format(accuracy = 1)
-        , .reorder_fun = max
-        , .coord_flip = T
         , .list_labels.param = list(
-          position = 'dodge'
-          , fontface = 'bold'
-          , color = '#3854FB'
-          , size = 3.33
-          , vjust = -1.15
+          position = c(position_dodge2(0.5, 'single'))
           , hjust = -0.15
-          # , vjust = -1
-          # , hjust = 0
-          
         )
-        , .theme = ggridges::theme_ridges(center_axis_labels = T) +
-          theme(panel.grid.major.y = element_blank())
+        , .theme = theme_ridges(center_axis_labels = T) +
+          theme(
+            panel.grid.major.y = element_blank()
+            , axis.text.y = element_blank()
+            , axis.ticks.y = element_blank()
+            , legend.position = 'bottom'
+            , strip.background = element_blank()
+            , strip.text = element_blank()
+            , plot.margin = margin(1, 1, 1, 1,'cm')
+          )
         , .list_geom.param = list(
-          position = c(position_dodge2(0.8, 'single'))
-          , width = 0.7
+          position = c(position_dodge2(0.5, 'single'))
+          , width = 0.5
         )
+        ) +
+        geom_text(aes(
+          label = item.name
+          , x = item.name
+          , y = 0
         )
-    ) -> list_plt_items.users
-    
-    return(list_plt_items.users)
-    stop()
-    
-  }
-  
-  # if(.lgc_compare.scores){
-  #   
-  #   df_scores.individual.long %>% 
-  #     bind_rows(
-  #       df_scores.average.long %>% 
-  #         mutate(user = 'average')
-  #     ) %>%
-  #     pivot_wider(
-  #       id_cols = attribute
-  #       , names_from = user
-  #       , values_from = value
-  #     ) -> df_scores.dumbbell
-  #   
-  #   map(
-  #     setNames(
-  #       unique(df_scores.individual.long$user)
-  #       , unique(df_scores.individual.long$user)
-  #     )
-  #     , ~ 
-  #       df_scores.dumbbell %>%
-  #       select(attribute, .x, average) %>% 
-  #       fun_plot.dumbbell(aes(
-  #         x = !!sym(.x)
-  #         , xend = average
-  #         , y = attribute
-  #       )
-  #       , .list_geom.param = list(
-  #         color = 'lightgrey'
-  #         , colour_x = list_atlas.pal$blue4
-  #         , colour_xend = list_atlas.pal$red
-  #         , size_x = 5.4
-  #         , size_xend = 5.4
-  #         , size = 2
-  #       )
-  #       , .list_labels1.param = list(
-  #         fontface = 'bold'
-  #         , color = list_atlas.pal$blue4
-  #         , size = 3.33
-  #         , vjust = -1.5
-  #         , hjust = 0.5
-  #       )
-  #       , .list_labels2.param = list(
-  #         fontface = 'bold'
-  #         , color = list_atlas.pal$red
-  #         , size = 3.33
-  #         , vjust = 2.25
-  #         , hjust = 0.5
-  #       )
-  #       , .list_axis.x.args = list(
-  #         limits = c(-.1,1.1)
-  #         , breaks = seq(0,1,.25)
-  #       )
-  #       , .fun_format.x = label_percent()
-  #       , .fun_format.y = function(y){y}
-  #       , .fun_format.labels = label_percent(accuracy = .01)
-  #       , .list_labs = list(
-  #         title = NULL
-  #         , subtitle = NULL
-  #         , x = str_to_title('item score')
-  #         , y = NULL
-  #       )
-  #       )
-  #   ) -> list_plt_items.users
-  #   
-  # } 
-  
-  
-  # User individual profiles (each user one plot, all items)
-  
-  # Average item by item comparison
-  if(.lgc_compare.averages){
-    
-    df_scores.average.long %>%
-      filter(attribute %in% chr_items) %>% 
-      fun_plot.lollipop(aes(
-        x = attribute
-        , y = value
-        , label = percent(value, accuracy = .01)
-        # , color = factor
-      )
-      , .list_labs = list(
-        x = NULL
-        , y = 'Average Item Score'
-        , color = NULL
-      )
-      , .dbl_limits.y = c(0,1)
-      , .fun_format.y = percent_format(accuracy = 1)
-      , .reorder_fun = max
-      , .coord_flip = T
-      , .theme = ggridges::theme_ridges(center_axis_labels = T) +
-        theme(panel.grid.major.y = element_blank())
-      ) -> plt_items.average
-    
-  }
-  
-  # Factor scores comparison
-  if(length(.list_factors)){
-    
-    df_scores.individual.long %>% 
-      filter(
-        attribute %in% 
-          names(flatten(.list_factors))
-      ) %>% 
-      rename(factor = attribute) %>% 
-      fun_plot.heatmap(aes(
-        x = id.unique
-        , y = factor
-        , fill = value
-      )
-      , .scale_colors = list(
-        scale_color_stepsn(
-          colors = viridis(length(c(0, 0.17, 0.33, 0.5, 0.67, 0.83, 1)))
-          , breaks = c(0, 0.17, 0.33, 0.5, 0.67, 0.83, 1)
-          , limits = c(0,1)
+        , vjust = -2
+        , hjust = 0
         )
-        , scale_fill_stepsn(
-          colors = viridis(length(c(0, 0.17, 0.33, 0.5, 0.67, 0.83, 1)))
-          , breaks = c(0, 0.17, 0.33, 0.5, 0.67, 0.83, 1)
-          , limits = c(0,1)
-        ) 
-      )
-      # , .coord_polar = T
-      ) -> plt_factors
-    
-    
-    # Average factor scores comparison
-    if(.lgc_compare.averages){
-      
-      df_scores.average %>%
+
+    }
+  ) -> list_plt_items.users
+  
+  # Factor by factor comparison (one plot per user)
+  list_scores$scores.average.long %>%
+    mutate(
+      id.unique = 'Average'
+    ) %>%
+    bind_rows(
+      list_scores$scores.long
+    ) -> df_average.long
+  
+  map(
+    setNames(
+      .df_data.users$id.unique
+      , .df_data.users$id.unique
+    )
+    , function(.x){
+
+      list_scores$scores.long %>%
+        filter(
+          id.unique %in% .x
+        ) %>%
+        arrange(factor.score) %>%
+        pull(factor) %>%
+        unique() -> chr_order
+
+      df_average.long %>%
+        filter(
+          id.unique %in% c(.x, 'Average')
+        ) %>%
+        mutate(
+          factor = factor(factor, levels = chr_order)
+          , id.unique = fct_inorder(id.unique)
+        ) %>%
+        group_by(id.unique) %>%
+        arrange(factor) %>%
+        mutate(
+          column = row_number() < (n() / 2)
+          , column = factor(column)
+        ) %>%
+        ungroup() %>%
         select(
-          -where(is.numeric)
-          , .list_factors %>%
-            flatten() %>%
-            names()
+          id.unique
+          , factor
+          , category
+          , factor.score
         ) %>%
-        pivot_longer(
-          cols = where(is.numeric)
-          , names_to = 'factor'
-          , values_to = 'value'
+        unique() %>%
+        pivot_wider(
+          names_from = id.unique
+          , values_from = factor.score
         ) %>%
-        fun_plot.lollipop(aes(
-          x = factor
-          , y = value
-          , label = percent(value, accuracy = .01)
-          # , color = category
+        fun_plot.dumbbell(aes(
+          x = !!sym(.x)
+          , xend = Average
+          , y = factor
         )
+        , .list_geom.param = list(
+          color = 'lightgrey'
+          , colour_x = list_pal.atlas$blue4
+          , colour_xend = list_pal.atlas$grey
+          , size_x = 5.4
+          , size_xend = 5.4
+          , size = 2
+        )
+        , .list_labels1.param = list(
+          fontface = 'bold'
+          , color = list_pal.atlas$blue4
+          , size = 3.33
+          , vjust = -1.5
+          , hjust = 0.5
+        )
+        , .list_labels2.param = list(
+          fontface = 'bold'
+          , color = list_pal.atlas$grey
+          , size = 3.33
+          , vjust = 2.25
+          , hjust = 0.5
+        )
+        , .list_axis.x.args = list(
+          limits = c(-.1,1.1)
+          , breaks = seq(0,1,.25)
+        )
+        , .fun_format.x = label_percent()
+        , .fun_format.y = function(y){y}
+        , .fun_format.labels = label_percent(accuracy = 1)
         , .list_labs = list(
-          x = NULL
-          , y = 'Average Factor Score'
+          title = paste0('Factor scores — ', .x)
+          , x = 'Factor Score'
+          , y = NULL
+          , fill = NULL
           , color = NULL
         )
-        , .dbl_limits.y = c(0,1)
-        , .fun_format.y = percent_format(accuracy = 1)
-        , .reorder_fun = max
-        , .coord_flip = T
-        , .theme = ggridges::theme_ridges(center_axis_labels = T) +
-          theme(panel.grid.major.y = element_blank())
-        ) -> plt_factors.average
-      
+        )
+
     }
-    
-  }
+  ) -> list_plt_factors.users
   
+  # Average item by item comparison
+  list_scores$scores.average.long %>% 
+    # full_join(df_acronyms) %>% 
+    fun_plot.bar(aes(
+      x = item.name
+      , y = item.score
+      , label = item.acronym
+      , fill = category
+      , color = category
+    )
+    , .coord_polar = T
+    , .fun_polar.labels = percent
+    , .list_axis.y.args = list(
+      breaks = seq(0, 1, length.out = 5)
+    )
+    , .list_labels.param = list(
+      color = list_pal.atlas$black
+    )
+    , .chr_manual.pal = c(
+      list_pal.atlas$abilities
+      , list_pal.atlas$knowledge
+      , list_pal.atlas$skills
+    )
+    , .chr_manual.aes = c(
+      'fill', 'color'
+    )
+    , .list_legend = list(
+      color = 'none'
+    )
+    , .list_labs = list(
+      y = 'Average Item Scores'
+      , fill = NULL
+    )
+    ) -> plt_items.average
+  
+  
+  # if(.lgc_compare.averages){
+  #   
+  #   list_scores$scores.average.long %>%
+  #     filter(attribute %in% chr_items) %>% 
+  #     fun_plot.lollipop(aes(
+  #       x = attribute
+  #       , y = value
+  #       , label = percent(value, accuracy = .01)
+  #       # , color = factor
+  #     )
+  #     , .list_labs = list(
+  #       x = NULL
+  #       , y = 'Average Item Score'
+  #       , color = NULL
+  #     )
+  #     , .dbl_limits.y = c(0,1)
+  #     , .fun_format.y = percent_format(accuracy = 1)
+  #     , .reorder_fun = max
+  #     , .coord_flip = T
+  #     , .theme = ggridges::theme_ridges(center_axis_labels = T) +
+  #       theme(panel.grid.major.y = element_blank())
+  #     ) -> plt_items.average
+  #   
+  # }
+  
+  # # Factor scores comparison
+  # if(length(.list_factors)){
+  #   
+  #   list_scores$scores.average.long %>% 
+  #     filter(
+  #       attribute %in% 
+  #         names(flatten(.list_factors))
+  #     ) %>% 
+  #     rename(factor = attribute) %>% 
+  #     fun_plot.heatmap(aes(
+  #       x = id.unique
+  #       , y = factor
+  #       , fill = value
+  #     )
+  #     , .scale_colors = list(
+  #       scale_color_stepsn(
+  #         colors = viridis(length(c(0, 0.17, 0.33, 0.5, 0.67, 0.83, 1)))
+  #         , breaks = c(0, 0.17, 0.33, 0.5, 0.67, 0.83, 1)
+  #         , limits = c(0,1)
+  #       )
+  #       , scale_fill_stepsn(
+  #         colors = viridis(length(c(0, 0.17, 0.33, 0.5, 0.67, 0.83, 1)))
+  #         , breaks = c(0, 0.17, 0.33, 0.5, 0.67, 0.83, 1)
+  #         , limits = c(0,1)
+  #       ) 
+  #     )
+  #     # , .coord_polar = T
+  #     ) -> plt_factors
+  #   
+  #   
+  #   # Average factor scores comparison
+  #   # if(.lgc_compare.averages){
+  #   #   
+  #   #   df_scores.average %>%
+  #   #     select(
+  #   #       -where(is.numeric)
+  #   #       , .list_factors %>%
+  #   #         flatten() %>%
+  #   #         names()
+  #   #     ) %>%
+  #   #     pivot_longer(
+  #   #       cols = where(is.numeric)
+  #   #       , names_to = 'factor'
+  #   #       , values_to = 'value'
+  #   #     ) %>%
+  #   #     fun_plot.lollipop(aes(
+  #   #       x = factor
+  #   #       , y = value
+  #   #       , label = percent(value, accuracy = .01)
+  #   #       # , color = category
+  #   #     )
+  #   #     , .list_labs = list(
+  #   #       x = NULL
+  #   #       , y = 'Average Factor Score'
+  #   #       , color = NULL
+  #   #     )
+  #   #     , .dbl_limits.y = c(0,1)
+  #   #     , .fun_format.y = percent_format(accuracy = 1)
+  #   #     , .reorder_fun = max
+  #   #     , .coord_flip = T
+  #   #     , .theme = ggridges::theme_ridges(center_axis_labels = T) +
+  #   #       theme(panel.grid.major.y = element_blank())
+  #   #     ) -> plt_factors.average
+  #   #   
+  #   # }
+  #   
+  # }
+  # 
   
   # Output
   return(compact(list(
-    'actual' = df_scores.individual
-    , 'actual.long' = df_scores.individual.long
-    , 'vars' = chr_items
-    , 'average' = df_scores.average
-    , 'average.long' = df_scores.average.long
+    'actual' = list_scores$scores
+    , 'actual.long' = list_scores$scores.long
+    , 'average' = list_scores$scores.average
+    , 'average.long' = list_scores$scores.average.long
     , 'items' = plt_items
     , 'items.users' = list_plt_items.users
     , 'items.average' = plt_items.average
     , 'factors' = plt_factors
+    , 'factors.users' = list_plt_factors.users
     , 'factors.average' = plt_factors.average
   )))
   
@@ -1574,83 +488,330 @@ fun_plot.comparisons.mvp <- function(
 # [TEST] ------------------------------------------------------------------
 fun_plot.comparisons.mvp(
   .df_data.users = df_input
-  # df_input %>% 
-  # select(
-  #   Name
-  #   , flatten_chr(list_factors.competencies)
-  # )
   , .df_data.comparison = NULL
-  , .list_factors = map(list_factors.competencies, unname) 
-  , .lgc_compare.averages = T
+  , .list_factors = list_factors.competencies
+  # , .list_factors = unname(list_factors.competencies)
+  # , .list_factors = unname(map(list_factors.competencies, unname))
 ) -> dsds
 
-dsds
+dsds$items.average
+dsds$items
+sample(dsds$items.users, 1)
+sample(dsds$factors.users, 1)
 
-dsds %>% 
-  filter(
-    id.unique %in% c(last(id.unique), 'Average')
-  ) %>% 
-  mutate(id.unique = fct_inorder(id.unique)) %>%
-  ungroup() %>%
+df_occupations %>%
+  slice_sample(n = 10) %>%
+  # slice(1:50) %>% 
   fun_plot.bar(aes(
-    x = item
-    , y = item.score
-    , label = percent(item.score, accuracy = .01)
-    , fill = id.unique
-    , color = id.unique
+    x = occupation
+    , y = economics_and_accounting.l
+    , label = economics_and_accounting.l
+  )
+  # , .list_labels.param = list(
+  #   size = 1
+  #   , color = '#212121'
+  #   # , hjust = 2
+  # )
+  , .coord_flip = T
+  , .coord_polar = T
+  , .fun_polar.labels = percent
+  , .list_axis.y.args = list(
+    breaks = seq(0, 1, length.out = 5)
   )
   , .list_labs = list(
-    x = NULL
-    , y = 'Item Score'
-    , fill = NULL
-    , color = NULL
+    y = 'Economics & Accounting'
   )
-  , .reorder_fct = T
+  )
+  # ) + 
+  geom_textpath(
+    aes(
+      x = occupation
+      , y = economics_and_accounting.l
+      , label = economics_and_accounting.l
+    )
+    # , nudge_y = 0.1
+    , angle = -90
+    , hjust = 1.15
+    , size = 2
+  )
+
+lalala$layers[[4]]$aes_params
+lalala$layers[[4]]$geom_params
+
+
+df_occupations %>%
+  slice_sample(n = 150) %>% 
+  mutate(
+    relevance = case_when(
+      economics_and_accounting.l >= 0.83 ~ 'Obligatory'
+      , between(economics_and_accounting.l, 0.5, 0.83) ~ 'Dominant'
+      , between(economics_and_accounting.l, 0.17, 0.5) ~ 'Auxiliary'
+      , economics_and_accounting.l <= 0.17 ~ 'Irrelevant'
+    )
+  ) %>%
+  fun_plot.bar(aes(
+    x = occupation
+    , y = economics_and_accounting.l
+    , fill = relevance
+  )
   , .chr_manual.pal = c(
-    list_atlas.pal$grey
-    , list_atlas.pal$purple3
+    'Obligatory' = viridis(4)[4]
+    , 'Dominant' = viridis(4)[3]
+    , 'Auxiliary' = 'lightgrey'
+    , 'Irrelevant' = 'red'
   )
-  , .chr_manual.aes = c(
-    'fill', 'color'
+  , .coord_polar = T
+  , .fun_polar.labels = percent
+  , .list_axis.y.args = list(
+    breaks = seq(0, 1, length.out = 5)
   )
-  , .dbl_limits.y = c(0,1)
-  , .fun_format.y = percent_format(accuracy = 1)
-  , .reorder_fun = max
-  # , .coord_flip = F
-  , .list_labels.param = list(
-    position = 'dodge'
-    , fontface = 'bold'
-    , color = '#3854FB'
-    , size = 3.33
-    , vjust = -1.15
-    , hjust = -0.15
-    # , vjust = -1
-    # , hjust = 0
+  , .list_labs = list(
+    y = 'Economics & Accounting'
+    , fill = 'Role'
+  )
+  )
+
+df_occupations %>% 
+  slice_sample(n = 50) %>% 
+  mutate(
+    dsds = economics_and_accounting.l > 0.1
+  ) %>%
+  fun_plot.bar(aes(
+    x = occupation
+    , y = economics_and_accounting.l
+    , fill = dsds
+    # , fill = economics_and_accounting.l > 0.1
+    # , label = n
+  )
+  , .coord_polar = T
+  , .reorder_fct = T
+  , .fun_polar.labels = percent
+  , .list_axis.y.args = list(
+    breaks = seq(0, 1, length.out = 5)
+  )
+  , .list_labs = list(
+    y = 'Economics & Accounting'
+    , fill = 'dsds'
+  )
+  )
+
+dsdsds %>% view
+
+if(
+  all(
+    length(dsdsds$fill)
+    , last(as.character(dsdsds$fill)) %in% 
+    names(df_occupations)
     
   )
-  , .theme = ggridges::theme_ridges(center_axis_labels = T) +
-    theme(panel.grid.major.y = element_blank())
-  , .list_geom.param = list(
-    position = c(position_dodge2(0.8, 'single'))
-    , width = 0.7
-  )
-  )
+  ){
+  
+  'lalala'
   
   
+} else {
+  
+  'dsds'
+  
+}
 
-dsds$factor.names %>% view
-dsds$factor.scores %>% view
-dsds$factor.scores.long %>% view
-dsds$factor.scores.average %>% view
-dsds$factor.scores.average.long %>% view
 
-dsds[[1]] %>% view
-dsds[[2]] %>% view
+dsds$average.long %>% 
+  # select(-c(
+  #   item
+  #   , item.score
+  # )) %>%
+  fun_plot.bar(aes(
+    # x = factor
+    # , y = factor.score
+    x = item
+    , y = item.score
+    # , label = percent(item.score)
+    # , color = item.score > 0.5
+    , fill = item.score > 0.5
+  )
+  , .coord_polar = T
+  , .reorder_fct = F
+  , .reorder_desc = T
+  , .reorder_fun = max
+  , .list_labs = list(
+    y = 'dsds'
+  )
+  # , .scale_colors = list(
+  #   scale_fill_viridis(discrete = T, na.translate = T)
+  #   , scale_color_viridis(discrete = T, na.translate = T)
+  # )
+  # , .dbl_limits.y = c(0,1)
+  , .list_axis.y.args = list(
+    breaks = seq(0,1,length.out = 5)
+  )
+  , .fun_polar.labels = percent
+  )
 
-dsds$items
-dsds$items.users$Random
-dsds$items.average
-dsds$factors
+df_occupations %>% 
+  fun_plot.bar(aes(
+    x = occupation
+    , y = annual_wage_2021
+    # x = item
+    # , y = item.score
+    # , label = percent(item.score)
+    # , color = item.score > 0.5
+    # , fill = item.score > 0.5
+  )
+  , .coord_polar = T
+  , .reorder_fct = F
+  , .reorder_desc = T
+  , .reorder_fun = max
+  , .list_labs = list(
+    y = 'dsds'
+  )
+  # , .scale_colors = list(
+  #   scale_fill_viridis(discrete = T, na.translate = T)
+  #   , scale_color_viridis(discrete = T, na.translate = T)
+  # )
+  # , .dbl_limits.y = c(0,1)
+  , .list_axis.y.args = list(
+    breaks = seq(0,max(df_occupations$annual_wage_2021),length.out = 5)
+  )
+  , .fun_polar.labels = dollar
+  )
+
+empty_bar <- 4
+to_add <- data.frame( matrix(NA, empty_bar*nlevels(data$group), ncol(data)) )
+colnames(to_add) <- colnames(data)
+to_add$group <- rep(levels(data$group), each=empty_bar)
+data <- rbind(data, to_add)
+data <- data %>% arrange(group)
+data$id <- seq(1, nrow(data))
+
+# # [TEST] ------------------------------------------------------------------
+# fun_plot.comparisons.mvp(
+#   .df_data.users = df_input
+#   , .df_data.comparison = NULL
+#   , .list_factors = map(list_factors.competencies, unname) 
+#   , .lgc_compare.averages = T
+# ) -> dsds
+# 
+# dsds$items.users[[1]]
+# last(dsds$items.users)
+# 
+# dsds$actual
+# dsds$actual.long
+# dsds$average
+# dsds$average.long
+# dsds$items + 
+#   geomtextpath::coord_curvedpolar()
+# 
+# dsds[[1]]
+# dsds[[2]]
+# dsds[[3]]
+# dsds[[4]]
+# 
+# fun_factor.scores2(
+#   .df_data = df_occupations
+#   , .list_factor.keys = list_factors.competencies
+#   , .lgc_sample.averages = T
+#   , .lgc_pivot.long = T
+# ) -> dsdsds
+# 
+# dsdsds$scores.long %>%
+#   mutate(
+#     item.score = case_when(
+#       item.score >= 0.67 ~ 'Dominant'
+#       , item.score < 0.67 & 
+#         item.score >= 0.33 ~ 'Auxiliary'
+#       , T ~ 'Irrelevant'
+#     ) 
+#   ) %>% 
+#   group_by(occupation, factor) %>% 
+#   mutate(factor.score = sum(str_count(item.score, 'Dominant')) / n()) %>% 
+#   ungroup() %>% 
+#   group_by(occupation, category) %>% 
+#   mutate(category.score = sum(str_count(item.score, 'Dominant')) / n()) %>% 
+#   ungroup() %>%
+#   mutate(across(
+#     .cols = c(category.score, factor.score)
+#     ,.fns = ~ ifelse(.x >= 0.67, 'Dominant', 'Auxiliary')
+#   )) %>% 
+#   filter(item.score != 'Irrelevant') %>% view
+# 
+# # mutate(across(
+# #   .cols = ends_with('.score')
+# #   ,.fns = ~ case_when(
+# #     .x < 0.67 ~ 'Auxiliary'
+# #     , .x >= 0.67 ~ 'Dominant'
+# #   )
+# # )) %>% view
+# 
+# 
+# 
+# dsds[[1]]
+# 
+# dsds %>% 
+#   filter(
+#     id.unique %in% c(last(id.unique), 'Average')
+#   ) %>% 
+#   mutate(id.unique = fct_inorder(id.unique)) %>%
+#   ungroup() %>%
+#   fun_plot.bar(aes(
+#     x = item
+#     , y = item.score
+#     , label = percent(item.score, accuracy = .01)
+#     , fill = id.unique
+#     , color = id.unique
+#   )
+#   , .list_labs = list(
+#     x = NULL
+#     , y = 'Item Score'
+#     , fill = NULL
+#     , color = NULL
+#   )
+#   , .reorder_fct = T
+#   , .chr_manual.pal = c(
+#     list_pal.atlas$grey
+#     , list_pal.atlas$purple3
+#   )
+#   , .chr_manual.aes = c(
+#     'fill', 'color'
+#   )
+#   , .dbl_limits.y = c(0,1)
+#   , .fun_format.y = percent_format(accuracy = 1)
+#   , .reorder_fun = max
+#   # , .coord_flip = F
+#   , .list_labels.param = list(
+#     position = 'dodge'
+#     , fontface = 'bold'
+#     , color = '#3854FB'
+#     , size = 3.33
+#     , vjust = -1.15
+#     , hjust = -0.15
+#     # , vjust = -1
+#     # , hjust = 0
+#     
+#   )
+#   , .theme = ggridges::theme_ridges(center_axis_labels = T) +
+#     theme(panel.grid.major.y = element_blank())
+#   , .list_geom.param = list(
+#     position = c(position_dodge2(0.8, 'single'))
+#     , width = 0.7
+#   )
+#   )
+# 
+# 
+# 
+# dsds$factor.names %>% view
+# dsds$factor.scores %>% view
+# dsds$factor.scores.long %>% view
+# dsds$factor.scores.average %>% view
+# dsds$factor.scores.average.long %>% view
+# 
+# dsds[[1]] %>% view
+# dsds[[2]] %>% view
+# 
+# dsds$items
+# dsds$items.users$Random
+# dsds$items.average
+# dsds$factors
 
 # [TEST] PLOT -------------------------------------------------------------
 dsds$actual %>% 

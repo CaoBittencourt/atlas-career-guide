@@ -55,8 +55,8 @@ chr_text.user <- 'Alexandre'
 dbl_threshold <- 0.17
 
 # Level of education filter
-# chr_education <- c('ALL', 'HIGH', 'LOW')
-chr_education <- 'HIGH'
+chr_education <- c('ALL', 'HIGH', 'LOW')
+# chr_education <- 'HIGH'
 
 chr_education <- toupper(chr_education)
 
