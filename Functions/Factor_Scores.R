@@ -695,19 +695,27 @@ fun_factor.scores2 <- function(
     ) -> .df_data
   
   # Category scores
-  psych::scoreVeryFast(
-    keys = .list_factor.keys
-    , items = .df_data %>% select(where(is.numeric)) %>% rbind()
-    , totals = .lgc_totals #Average scores
-  ) %>% 
-    as_tibble() -> df_category.scores
-  
   if(nrow(.df_data) == 1){
     
-    df_category.scores %>% 
-      colMeans() -> df_category.scores
+    psych::scoreVeryFast(
+      keys = list_factors.competencies
+      , items = rbind(.df_data, .df_data)
+      , totals = F #Average scores
+    ) %>% 
+      head(1) %>%
+      as_tibble() -> df_category.scores
+    
+  } else {
+    
+    psych::scoreVeryFast(
+      keys = .list_factor.keys
+      , items = .df_data %>% select(where(is.numeric))
+      , totals = .lgc_totals #Average scores
+    ) %>%
+      as_tibble() -> df_category.scores
     
   }
+  
   
   # Category scores
   .df_data %>%
