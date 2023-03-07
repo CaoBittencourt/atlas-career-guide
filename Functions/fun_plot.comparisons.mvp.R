@@ -320,12 +320,11 @@ fun_plot.comparisons.mvp <- function(
         fun_plot.dumbbell2(aes(
           x = item.score
           , y = item.name
-          , label = percent(item.score, accuracy = 1)
+          # , label = percent(item.score, accuracy = 1)
           , color = id.unique
         )
         , .sym_facets = item.name
-        , .int_facets = 3
-        # , .int_facets = 2
+        , .int_facets = 2
         , .chr_scales = 'free_y'
         , .list_labs = list(
           title = paste0('Item Scores — ', .x)
