@@ -3,8 +3,6 @@
 source('C:/Users/Cao/Documents/Github/Atlas-Research/Functions/Auto_plots.R')
 # Output name
 source('C:/Users/Cao/Documents/Github/Atlas-Research/Functions/fun_unique_name.R')
-# ACRONYMS
-source('C:/Users/Cao/Documents/Github/Atlas-Research/Data/df_acronyms.R')
 # REGULAR OCCUPATIONS DATA FRAME
 source('C:/Users/Cao/Documents/Github/Atlas-Research/Data/df_occupations.R')
 
@@ -27,36 +25,6 @@ list(
   , 'black' = '#212121'
   , 'grey' = '#D4D5D8'
 ) -> list_pal.atlas
-
-colorRampPalette(c(
-  list_pal.atlas$purple2
-  , list_pal.atlas$green
-)) -> fun_gradient
-
-# [DATA] LIST OF COGNITIVE ABILITIES --------------------------------------
-list(
-  'time_sharing.l'
-  , 'selective_attention.l'
-  , 'problem_sensitivity.l'
-  , 'fluency_of_ideas.l'
-  , 'originality.l'
-  , 'deductive_reasoning.l'
-  , 'inductive_reasoning.l'
-  , 'category_flexibility.l'
-  , 'information_ordering.l'
-  , 'perceptual_speed.l'
-  , 'flexibility_of_closure.l'
-  , 'speed_of_closure.l'
-  , 'number_facility.l'
-  , 'mathematical_reasoning.l'
-  , 'spatial_orientation.l'
-  , 'visualization.l'
-  , 'written_expression.l'
-  , 'oral_expression.l'
-  , 'oral_comprehension.l'
-  , 'written_comprehension.l'
-  , 'memorization.l'
-) -> list_abilities.cognitive
 
 # [FUNCTION] PLOT COMPARISON ----------------------------------------------
 fun_cognitive.dumbbell <- function(
@@ -82,7 +50,7 @@ fun_cognitive.dumbbell <- function(
   
   # User's name
   .df_data.user %>% 
-    pull(name) %>%
+    pull(user.name) %>%
     unique() -> chr_user
   
   # Add occupation to user data
@@ -105,19 +73,22 @@ fun_cognitive.dumbbell <- function(
       , where(is.numeric)
     ) %>% 
     rename(
-      name = occupation.title
+      user.name = occupation
     ) %>% 
     slice(
       match(
-        .df_data.user$occupation.title
-        , name
+        .df_data.user$occupation
+        , user.name
       )
+    ) %>%
+    mutate(
+      user.name = .df_data.user$occupation.title
     ) %>% 
     bind_rows(
       .df_data.user
     ) -> .df_data.user
   
-  # Acronyms
+  # Pretty names
   .df_data.user %>% 
     pivot_longer(
       cols = where(is.numeric)
@@ -134,7 +105,7 @@ fun_cognitive.dumbbell <- function(
   # Item by item comparison
   .df_data.user %>%
     filter(
-      name %in% chr_user
+      user.name %in% chr_user
     ) %>%
     arrange(desc(item.score)) %>%
     pull(item) %>% 
@@ -143,20 +114,20 @@ fun_cognitive.dumbbell <- function(
   c(
     chr_user
     , .df_data.user %>%
-      filter(name != chr_user) %>%
-      pull(name) %>% 
+      filter(user.name != chr_user) %>%
+      pull(user.name) %>% 
       unique()
   ) -> chr_ids
   
   .df_data.user %>%
     mutate(
       item = factor(item, levels = chr_order)
-      , name = fct_inorder(name)
+      , user.name = fct_inorder(user.name)
     ) %>%
     fun_plot.dumbbell2(aes(
       x = item.score
       , y = item
-      , color = name
+      , color = user.name
     )
     , .sym_facets = item
     , .int_facets = 2
@@ -207,25 +178,109 @@ fun_cognitive.dumbbell <- function(
   # Save plot
   ggplot2::ggsave(
     filename = chr_filename
-    # filename = unique name
     , bg = 'white'
     , plot = plt_items
     , height = 11.69
     , width = 8.27
     , units = 'in'
     , device = 'png'
-    , dpi = 1000
+    , dpi = 700
   )
+  
+  return(
+    paste0(
+      getwd()
+      , chr_filename
+    ))
   
 }
 
 
-# test --------------------------------------------------------------------
+# # [DATA] LIST OF COGNITIVE ABILITIES --------------------------------------
+# list(
+#   'time_sharing.l'
+#   , 'selective_attention.l'
+#   , 'problem_sensitivity.l'
+#   , 'fluency_of_ideas.l'
+#   , 'originality.l'
+#   , 'deductive_reasoning.l'
+#   , 'inductive_reasoning.l'
+#   , 'category_flexibility.l'
+#   , 'information_ordering.l'
+#   , 'perceptual_speed.l'
+#   , 'flexibility_of_closure.l'
+#   , 'speed_of_closure.l'
+#   , 'number_facility.l'
+#   , 'mathematical_reasoning.l'
+#   , 'spatial_orientation.l'
+#   , 'visualization.l'
+#   , 'written_expression.l'
+#   , 'oral_expression.l'
+#   , 'oral_comprehension.l'
+#   , 'written_comprehension.l'
+#   , 'memorization.l'
+# ) -> list_abilities.cognitive
+
+# [TEST] --------------------------------------------------------------------
+df_input %>%
+  select(!c(1,2)) %>%
+  slice_sample(n = 1) %>%
+  mutate(
+    occupation = sample(df_occupations$occupation, 1)
+    , occupation.title = stringi::stri_rand_shuffle(occupation)
+    , .after = 1
+  ) %>%
+  rename_with(
+    ~ str_to_lower(.x)
+  ) %>%
+  select(
+    1:3
+    , flatten_chr(list_abilities.cognitive)
+  ) -> dsds
+
+
+df_occupations %>% 
+  filter(if_any(
+    .cols = !where(is.numeric)
+    ,.fns = 
+      ~ .x %in% all_of(dsds$occupation)
+  )) %>% 
+  select(
+    where(
+      ~ is.numeric(.x)
+      | any(.x %in% dsds$occupation)
+    )) %>% 
+  select(any_of(
+    names(dsds)
+  )) %>% 
+  relocate(
+    !where(is.numeric)
+    , where(is.numeric)
+  ) %>% 
+  rename(
+    # name = occupation.title
+    name = occupation
+  ) %>% 
+  slice(
+    match(
+      # dsds$occupation.title
+      dsds$occupation
+      , name
+    )
+  ) %>% 
+  mutate(
+    name = dsds$occupation.title
+  ) %>%
+  bind_rows(
+    dsds
+  )
+
+
 fun_cognitive.dumbbell(
-  .df_data.user = 
-    df_input %>% 
-    select(!c(1,2)) %>% 
-    slice_sample(n = 1) %>% 
+  .df_data.user =
+    df_input %>%
+    select(!c(1,2)) %>%
+    slice_sample(n = 1) %>%
     mutate(
       occupation = sample(df_occupations$occupation, 1)
       , occupation.title = occupation
@@ -233,12 +288,12 @@ fun_cognitive.dumbbell(
     ) %>%
     rename_with(
       ~ str_to_lower(.x)
-    ) %>% 
+    ) %>%
     select(
       1:3
       , flatten_chr(list_abilities.cognitive)
     )
-  , .df_data.comparison = 
+  , .df_data.comparison =
     df_occupations %>%
     mutate(
       occupation.title = occupation
