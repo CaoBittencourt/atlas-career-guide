@@ -698,7 +698,7 @@ fun_factor.scores2 <- function(
   if(nrow(.df_data) == 1){
     
     psych::scoreVeryFast(
-      keys = list_factors.competencies
+      keys = .list_factor.keys
       , items = rbind(.df_data, .df_data)
       , totals = F #Average scores
     ) %>% 

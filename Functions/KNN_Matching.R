@@ -197,3 +197,194 @@ fun_KNN.matching <- function(
   }
   
 }
+# # DISTANCE TO SIMILARITY FUNCTION 2 ------------------------------
+# fun_similarity2 <- function(.dbl_distance, .dbl_scale.max = NULL){
+#   
+#   # Numeric
+#   stopifnot(
+#     "'.dbl_distance' must be a numeric vector of distances between numeric vectors." = 
+#         is.numeric(.dbl_distance)
+#   )
+#   
+#   stopifnot(
+#     "'.dbl_scale.max' must be a single number indicating the maximum value of the scale, if there is any." =
+#         !length(.dbl_scale.max) 
+#         | is.numeric(.dbl_scale.max)
+#         & length(.dbl_scale.max) == 1
+#         & .dbl_scale.max > 0
+#   )
+#   
+#   # Scale
+#   if(length(.dbl_scale.max)){
+#     
+#     .dbl_distance / .dbl_scale.max -> .dbl_distance
+#     
+#   }
+#   
+#   # Similarity
+#   1 - .dbl_distance -> dbl_similarity
+#   
+#   # Output 
+#   return(dbl_similarity)
+#   
+# }
+
+# # KNN MATCHING FUNCTION 2 -------------------------------------------------------------------------
+# fun_KNN.matching2 <- function(
+#     .df_data.numeric
+#     , .vec_query.numeric
+#     , .int_k = 1
+#     , .auto_select.k = F
+# ){
+#   
+#   # Data frame
+#   
+#   # Numeric
+#   
+#   # Get numeric data only
+#   .df_data.numeric %>%
+#     select(where(is.numeric)) -> .df_data.numeric.temp
+#   
+#   if(is.data.frame(.vec_query.numeric)){
+#     .vec_query.numeric %>%
+#       select(where(is.numeric)) -> .vec_query.numeric
+#   }
+#   
+#   # Define k
+#   if(.auto_select.k){
+#     # Typical suggested value for k is sqrt(nrow(df))
+#     
+#     .df_data.numeric %>%
+#       nrow() %>%
+#       sqrt() %>%
+#       round() -> .int_k
+#     
+#   }
+#   
+#     # Find the k nearest neighbors
+#     FNN::get.knnx(
+#       data = .df_data.numeric.temp
+#       , query = .vec_query.numeric
+#       , k = .int_k
+#     ) -> KNN.output
+#     
+#     # Arrange original data frame with KNN output
+#     .df_data.numeric %>%
+#       slice(as.vector(KNN.output$nn.index)) %>%
+#       mutate(#Add euclidean distances and convert them to similarities
+#         euclidean_distance = as.vector(KNN.output$nn.dist)
+#         , similarity = fun_similarity2(euclidean_distance)
+#       ) %>% 
+#       arrange(euclidean_distance) %>%
+#       mutate(
+#         rank = row_number()
+#         , rank.norm = seq(1, 0, - 1 / (n() - 1))
+#         , .before = 1
+#       ) -> df_data.knn
+#     
+#     # Output
+#     return(df_data.knn)
+#     
+# }
+# # KNN MATCHING FUNCTION 3 -------------------------------------------------------------------------
+# fun_KNN.matching3 <- function(
+#     .df_data.numeric
+#     , .vec_query.numeric
+#     , .int_k = 1
+#     , .auto_select.k = F
+# ){
+#   
+#   # Data frame
+#   
+#   # Numeric
+#   
+#   # Get numeric data only
+#   .df_data.numeric %>%
+#     select(where(is.numeric)) %>% 
+#     as.matrix() -> mtx_data
+#   
+#   # Square root of data for normalization
+#   mtx_data %>%
+#     sqrt() -> mtx_data.sqrt
+#   
+#   rbind(c(1,2,3), c(3,2,1)) * rbind(c(1,0,1), c(1,0,1))
+#   
+#   if(is.data.frame(.vec_query.numeric)){
+#     .vec_query.numeric %>%
+#       select(where(is.numeric)) %>% 
+#       slice(1) %>%
+#       as.numeric() -> .vec_query.numeric
+#   }
+#   
+#   # Replicate query vector n times
+#   rbind(.vec_query.numeric) %x% 
+#     rep(1, nrow(mtx_data)) -> mtx_query
+#   
+#   # Define k
+#   if(.auto_select.k){
+#     # Typical suggested value for k is sqrt(nrow(df))
+#     
+#     .df_data.numeric %>%
+#       nrow() %>%
+#       sqrt() %>%
+#       round() -> .int_k
+#     
+#   }
+#   
+#     # Find the k nearest neighbors
+#     FNN::get.knnx(
+#       data = mtx_data * mtx_data.sqrt
+#       , query = mtx_query * mtx_data.sqrt
+#       , k = .int_k
+#     ) -> list_KNN.output
+#     
+#     # Divide distance by the sum of weights
+#     # Square weights because euclidean distance is not squared
+#     list_KNN.output$nn.dist / 
+#       sqrt(rowSums(mtx_data)) -> list_KNN.output$nn.dist
+#     
+#     return(list(
+#       'data' = mtx_data
+#       , 'user' = mtx_query
+#       , 'knn' = list_KNN.output
+#       , 'dist' = list_KNN.output$nn.dist
+#     ))
+#     stop()
+#     
+#     # Arrange original data frame with KNN output
+#     .df_data.numeric %>%
+#       slice(as.vector(list_KNN.output$nn.index)) %>%
+#       mutate(#Add euclidean distances and convert them to similarities
+#         euclidean_distance = as.vector(list_KNN.output$nn.dist)
+#         , similarity = fun_similarity2(euclidean_distance)
+#       ) %>% 
+#       arrange(euclidean_distance) %>%
+#       mutate(
+#         rank = row_number()
+#         , rank.norm = seq(1, 0, - 1 / (n() - 1))
+#         , .before = 1
+#       ) -> df_data.knn
+#     
+#     # Output
+#     return(df_data.knn)
+#     
+# }
+
+# # test --------------------------------------------------------------------
+# fun_KNN.matching3(
+#   .df_data.numeric = 
+#     df_occupations %>% 
+#     select(
+#       occupation
+#       , names(df_input)
+#       )
+#   , .vec_query.numeric = 
+#     df_input * .005
+#   , .auto_select.k = F
+# ) -> lalala
+# 
+# lalala$data %>% nrow
+# lalala$user %>% nrow
+# lalala$knn$nn.index
+# lalala$knn$nn.dist
+# sort(fun_similarity2(lalala$dist, 1), decreasing = T) %>% view 

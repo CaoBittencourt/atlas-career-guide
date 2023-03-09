@@ -40,9 +40,9 @@ source('C:/Users/Cao/Documents/Github/Atlas-Research/Functions/Capital_Flexibili
 
 # PARAMETERS --------------------------------------------------------------
 # Selected respondent
-# chr_text.user <- 'Martijn'
+chr_text.user <- 'Martijn'
 # chr_text.user <- 'Cao'
-chr_text.user <- 'Alexandre'
+# chr_text.user <- 'Alexandre'
 # chr_text.user <- 'Acilio'
 # chr_text.user <- 'Gabriel'
 # chr_text.user <- 'Random'

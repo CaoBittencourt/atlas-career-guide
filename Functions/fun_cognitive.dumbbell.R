@@ -221,83 +221,25 @@ fun_cognitive.dumbbell <- function(
 #   , 'memorization.l'
 # ) -> list_abilities.cognitive
 
-# [TEST] --------------------------------------------------------------------
-df_input %>%
-  select(!c(1,2)) %>%
-  slice_sample(n = 1) %>%
-  mutate(
-    occupation = sample(df_occupations$occupation, 1)
-    , occupation.title = stringi::stri_rand_shuffle(occupation)
-    , .after = 1
-  ) %>%
-  rename_with(
-    ~ str_to_lower(.x)
-  ) %>%
-  select(
-    1:3
-    , flatten_chr(list_abilities.cognitive)
-  ) -> dsds
-
-
-df_occupations %>% 
-  filter(if_any(
-    .cols = !where(is.numeric)
-    ,.fns = 
-      ~ .x %in% all_of(dsds$occupation)
-  )) %>% 
-  select(
-    where(
-      ~ is.numeric(.x)
-      | any(.x %in% dsds$occupation)
-    )) %>% 
-  select(any_of(
-    names(dsds)
-  )) %>% 
-  relocate(
-    !where(is.numeric)
-    , where(is.numeric)
-  ) %>% 
-  rename(
-    # name = occupation.title
-    name = occupation
-  ) %>% 
-  slice(
-    match(
-      # dsds$occupation.title
-      dsds$occupation
-      , name
-    )
-  ) %>% 
-  mutate(
-    name = dsds$occupation.title
-  ) %>%
-  bind_rows(
-    dsds
-  )
-
-
-fun_cognitive.dumbbell(
-  .df_data.user =
-    df_input %>%
-    select(!c(1,2)) %>%
-    slice_sample(n = 1) %>%
-    mutate(
-      occupation = sample(df_occupations$occupation, 1)
-      , occupation.title = occupation
-      , .after = 1
-    ) %>%
-    rename_with(
-      ~ str_to_lower(.x)
-    ) %>%
-    select(
-      1:3
-      , flatten_chr(list_abilities.cognitive)
-    )
-  , .df_data.comparison =
-    df_occupations %>%
-    mutate(
-      occupation.title = occupation
-      , .after = occupation
-    )
-)
-
+# # [TEST] --------------------------------------------------------------------
+# fun_cognitive.dumbbell(
+#   .df_data.user =
+#     df_input %>%
+#     select(!c(1,2)) %>%
+#     slice_sample(n = 1) %>%
+#     mutate(
+#       occupation = sample(df_occupations$occupation, 1)
+#       , occupation.title = stringi::stri_rand_shuffle(occupation)
+#       , .after = 1
+#     ) %>%
+#     rename_with(
+#       ~ str_to_lower(.x)
+#     ) %>%
+#     rename(user.name = name) %>% 
+#     select(
+#       1:3
+#       , flatten_chr(list_abilities.cognitive)
+#     )
+#   , .df_data.comparison = df_occupations
+# )
+# 

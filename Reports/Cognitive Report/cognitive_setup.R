@@ -132,36 +132,16 @@ fun_handler <- function(body, ...){
   
   # --- DUMBBELL PLOT --------------------------------------------------------
   fun_cognitive.dumbbell(
-    .df_data.user = 
-      df_input %>% 
-      select(!c(1,2)) %>% 
-      slice_sample(n = 1) %>% 
-      mutate(
-        occupation = sample(df_occupations$occupation, 1)
-        , occupation.title = occupation
-        , .after = 1
-      ) %>%
-      rename_with(
-        ~ str_to_lower(.x)
-      ) %>% 
-      select(
-        1:3
-        , flatten_chr(list_abilities.cognitive)
-      )
-    , .df_data.comparison = 
-      df_occupations %>%
-      mutate(
-        occupation.title = occupation
-        , .after = occupation
-      )
-  )
+    .df_data.user = df_input
+    , .df_data.comparison = df_occupations
+  ) -> chr_s3.filename
   
   # ------ OUTPUT -----------------------------------------------------------
   #filename <- chr_file.name
   return(list(
     "statusCode" = 200
     , "headers" = list("Content-Type" = "application/json")
-    , "body" = pretty_json(paste0('{ "filename": "', chr_s3_object , '" }' ))
+    , "body" = pretty_json(paste0('{ "filename": "', chr_s3.filename, '" }' ))
   ))
   
 }
