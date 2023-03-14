@@ -147,6 +147,12 @@ fun_capital.flex <- function(
   # Sample standard deviation
   sd(.dbl_var, na.rm = T) -> dbl_std
   
+  if(is.na(dbl_std)){
+    
+    0 -> dbl_std
+    
+  }
+  
   if(!.lgc_sample){
     # Population standard deviation
     sqrt((length(.dbl_var) - 1) / length(.dbl_var)) * dbl_std -> dbl_std
@@ -168,7 +174,6 @@ fun_capital.flex <- function(
     -.dbl_lambda * (dbl_std / dbl_std.u) +
     -.dbl_lambda * (1 - (dbl_mode / .dbl_ub)) *
     (1 - 2 * (dbl_std / dbl_std.u)) -> dbl_kflex
-  
   
   # Output
   return(dbl_kflex)

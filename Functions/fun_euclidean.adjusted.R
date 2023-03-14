@@ -24,8 +24,10 @@ fun_euclidean.adjusted <- function(.dbl_x, .dbl_y){
   )
   
   # Adjusted squared euclidean distance
-  sum(.dbl_y*(.dbl_x-.dbl_y)^2, na.rm = T) / 
-    sum(.dbl_y, na.rm = T) -> dbl_distance.squared
+  # sum(.dbl_y*(.dbl_x-.dbl_y)^2, na.rm = T) / 
+  #   sum(.dbl_y, na.rm = T) -> dbl_distance.squared
+  # 
+  sum(.dbl_y*(.dbl_x-.dbl_y)^2, na.rm = T) -> dbl_distance.squared
   
   # dbl_distance.squared = NA <=> sum(.dbl_y) = 0
   if(!is.na(dbl_distance.squared)){
@@ -42,6 +44,7 @@ fun_euclidean.adjusted <- function(.dbl_x, .dbl_y){
   return(dbl_distance)
   
 } 
+
 fun_euclidean.adjusted2 <- function(.dbl_x, .dbl_y){
   
   # Numeric vectors of same length
@@ -86,7 +89,8 @@ fun_euclidean.adjusted2 <- function(.dbl_x, .dbl_y){
   sqrt(.dbl_y) * .dbl_y -> .dbl_y
   
   # Adjusted squared euclidean distance
-  sum((.dbl_x - .dbl_y)^2) / sum_y -> dbl_distance.squared
+  # sum((.dbl_x - .dbl_y)^2) / sum_y -> dbl_distance.squared
+  sum((.dbl_x - .dbl_y)^2) -> dbl_distance.squared
   
   # dbl_distance.squared = NA <=> sum(.dbl_y) = 0
   if(!is.na(dbl_distance.squared)){
@@ -104,12 +108,12 @@ fun_euclidean.adjusted2 <- function(.dbl_x, .dbl_y){
   
 } 
 
-
 map(
   1:nrow(df_occupations)
   , function(occ){
     
-    fun_euclidean.adjusted(
+    # fun_euclidean.adjusted(
+    fun_euclidean.adjusted2(
       .dbl_x = 
         # as.numeric(df_input)
         rep(0, ncol(df_input))
@@ -125,6 +129,13 @@ map(
   }
 ) %>% 
   flatten_dbl() -> dsdsds
+
+qplot(
+  fun_similarity(
+  # fun_similarity2(
+    dsdsds
+  # , .dbl_scale.max = 1
+))
 
 qplot(dsdsds)
 qplot(1 - dsdsds)
