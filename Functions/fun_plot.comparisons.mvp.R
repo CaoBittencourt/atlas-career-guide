@@ -41,12 +41,12 @@ colorRampPalette(c(
   , list_pal.atlas$green
 )) -> fun_gradient
 
-# [DATA] DYNAMIC TEXT -----------------------------------------------------
+# [DATA] DYNAMIC TEXTS -----------------------------------------------------
 df_texts.sections <- read_csv('https://docs.google.com/spreadsheets/d/e/2PACX-1vTui3FuBxa4USYdgPYdX8sK0Ow6LnMhDLMzVKXf01oqGJ9dMcpsv0pOSv77djlbgMQmyp_3B0_kghJg/pub?gid=1661033231&single=true&output=csv')
 
 df_texts.overall <- read_csv('https://docs.google.com/spreadsheets/d/e/2PACX-1vTui3FuBxa4USYdgPYdX8sK0Ow6LnMhDLMzVKXf01oqGJ9dMcpsv0pOSv77djlbgMQmyp_3B0_kghJg/pub?gid=780395980&single=true&output=csv')
 
-df_texts.kflex <- read_csv('https://docs.google.com/spreadsheets/d/e/2PACX-1vTui3FuBxa4USYdgPYdX8sK0Ow6LnMhDLMzVKXf01oqGJ9dMcpsv0pOSv77djlbgMQmyp_3B0_kghJg/pub?gid=944813287&single=true&output=csv')
+df_texts.kflex <- read_csv('https://docs.google.com/spreadsheets/d/e/2PACX-1vTui3FuBxa4USYdgPYdX8sK0Ow6LnMhDLMzVKXf01oqGJ9dMcpsv0pOSv77djlbgMQmyp_3B0_kghJg/pub?gid=872198732&single=true&output=csv')
 
 df_texts.sections
 df_texts.overall
@@ -2798,14 +2798,14 @@ dsds$actual.long %>%
     )
     , interval.kflex = findInterval(
       kflex
-      , seq_scale.1_7
+      , c(.33, .33 + .17/2, .50, .50 + .17/2, .67, .67 + .17/2)
       # , round(seq(0, 1, 1/6), 2)[
       #   -c(1,length(seq(0, 1, 1/6)))
       # ]
     )
     , interval.score = findInterval(
       overall.score
-      # , seq_scale.1_7
+      # , c(.33, .33 + .17/2, .50, .50 + .17/2, .67, .67 + .17/2)
       , round(seq(0, 1, 1/6), 2)[
         -c(1,length(seq(0, 1, 1/6)))
       ]
@@ -2826,6 +2826,9 @@ dsds$actual.long %>%
 
 lalala[is.na(lalala)] <- ''
 
+# lalala %>% 
+#   filter(id.unique == sample(id.unique,1))
+
 lalala %>% 
   group_by(across(
     starts_with('text.')
@@ -2843,7 +2846,7 @@ lalala %>%
       text.order == 1 ~ 
         paste(text.adjective, noun, verb, users)
       , text.order == 2 ~ 
-        paste(noun, text.adjective, users)
+        paste(noun, text.adjective, users, noun)
       , text.order == 3 ~ 
         paste(users, verb, text.adjective)
       , text.order == 4 ~ 
@@ -2855,6 +2858,88 @@ lalala %>%
   arrange(desc(interval.score)) %>% 
   pull(text) %>% 
   paste0(collapse = ' ') -> chr_text.overall
+
+dsds$actual.long %>% 
+  bind_rows(
+    tibble(
+      id.unique = c('dsds', 'lalala')
+      , item.score = c(0,1)
+    )
+  ) %>%
+  select(id.unique, item.score) %>% 
+  group_by(id.unique) %>%
+  mutate(kflex = fun_capital.flex(item.score)) %>%
+  reframe(
+    n.67 = sum(item.score >= .67) / n()
+    , overall.score = mean(item.score)
+    , kflex = unique(kflex)
+  ) %>% 
+  arrange(desc(n.67)) %>% 
+  mutate(
+    n.67 = round(n.67, 2)
+    , interval.67 = findInterval(
+      n.67
+      , round(seq(0, 1, 1/6), 2)[
+        -c(1,length(seq(0, 1, 1/6)))
+      ]
+    )
+    , interval.kflex = findInterval(
+      kflex
+      , c(.33, .33 + .17/2, .50, .50 + .17/2, .67, .67 + .17/2)
+      # , round(seq(0, 1, 1/6), 2)[
+      #   -c(1,length(seq(0, 1, 1/6)))
+      # ]
+    )
+    , interval.score = findInterval(
+      overall.score
+      # , c(.33, .33 + .17/2, .50, .50 + .17/2, .67, .67 + .17/2)
+      , round(seq(0, 1, 1/6), 2)[
+        -c(1,length(seq(0, 1, 1/6)))
+      ]
+    )
+    , diff.67 = interval.kflex - interval.67
+    , diff.score = interval.kflex - interval.score
+  ) %>% 
+  left_join(
+    df_texts.kflex
+    , by = c('interval.kflex' = 'interval')
+  ) -> dsdsds
+
+
+dsdsds[is.na(dsdsds)] <- ''
+
+dsdsds %>% 
+  group_by(across(
+    starts_with('text.')
+  )
+  , interval.kflex
+  ) %>% 
+  reframe(
+    users = fun_text.commas(id.unique)
+    , plural = n() > 1
+  ) %>% 
+  mutate(
+    noun = ifelse(plural, text.noun.plural, text.noun.singular)
+    , verb = ifelse(plural, text.verb.plural, text.verb.singular)
+    , text = case_when(
+      text.order == 1 ~ 
+        paste(text.adjective, noun, verb, users)
+      , text.order == 2 ~ 
+        paste(noun, text.adjective, users, noun)
+      , text.order == 3 ~ 
+        paste(users, verb, text.adjective, noun)
+      , text.order == 4 ~ 
+        paste(noun, users, verb, text.adjective)
+    )
+    , text = paste0(text, '.')
+    , text = str_squish(text)
+  ) %>%
+  arrange(desc(interval.kflex)) %>% 
+  pull(text) %>% 
+  paste0(collapse = ' ') -> chr_text.kflex
+
+chr_text.overall
+chr_text.kflex
 
 # text.order
 # 1	text	noun	verb	names
@@ -2895,7 +2980,7 @@ dsds %>%
     , profile
     , sep = ' '
   ) %>% view
-view
+
 
 # ) %>% 
 # unite(

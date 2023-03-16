@@ -374,7 +374,7 @@ In this case, we must first find the present and future values of individuals's 
 $$
 \begin{gathered}
 PV = \sum_{j=1}^{n} {p_j a_j^u}
-\\ FV = pi\delta_i^q + \sum_{j=1}^{n} {p_j a_j^u}
+\\ FV = p_i\delta_i^q + \sum_{j=1}^{n} {p_j a_j^u}
 \end{gathered}
 $$
 
@@ -495,13 +495,14 @@ Finally, a refined version of the strategy is:
 $$
 \begin{gathered}
 \rho_i(\delta_i^q(s_q^*),t_i,a_i^q,a_j^q) = 
+\beta_i
 \left\{
 \frac{1}{1+t_i}
 \left[
 \frac{\delta_i^q(s_q^*)}{100}
 \right]
 \right\} ^
-{\beta_i},
+{1 - \beta_i},
 \\ \beta_i = {\frac{a_i^q}{\sum_{j=1}^{n}{a_j^q}}}
 \end{gathered}
 $$
@@ -554,7 +555,8 @@ It should also be stated that this procedure can include any number of decision-
 
 $$
 \begin{gathered}
-\rho_i(\epsilon_i,\gamma_i) = \left[ \prod_{i=1}^{m}(1+\epsilon_i)^{\gamma_i} \right] -1,\\ \sum_{i=1}^{m}{\gamma_i}=1 
+\rho_i(\epsilon_i,\gamma_i) = \left[ \prod_{i=1}^{m}
+(1+\epsilon_i)^{\gamma_i} \right] -1,\\ \sum_{i=1}^{m}{\gamma_i}=1 
 \end{gathered}
 $$Again, whatever may be the functional forms of these partial competencies training suggesting strategies $\epsilon_i$, and user's $\gamma_i$ preferences for them, optimal career development should always aim to maximize the final weighted estimator $\rho_i$ at each and every stage of an individual's working life.
 
