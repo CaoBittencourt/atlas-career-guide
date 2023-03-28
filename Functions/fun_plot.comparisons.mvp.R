@@ -2829,7 +2829,7 @@ lalala[is.na(lalala)] <- ''
 # lalala %>% 
 #   filter(id.unique == sample(id.unique,1))
 
-lalala %>% 
+lalala %>% view
   group_by(across(
     starts_with('text.')
   )
