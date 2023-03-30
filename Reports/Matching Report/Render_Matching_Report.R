@@ -41,10 +41,10 @@ source('C:/Users/Cao/Documents/Github/Atlas-Research/Functions/Capital_Flexibili
 # PARAMETERS --------------------------------------------------------------
 # Selected respondent
 # chr_text.user <- 'Martijn'
-# chr_text.user <- 'Cao'
+chr_text.user <- 'Cao'
 # chr_text.user <- 'Alexandre'
 # chr_text.user <- 'Acilio'
-chr_text.user <- 'Gabriel'
+# chr_text.user <- 'Gabriel'
 # chr_text.user <- 'Random'
 # chr_text.user <- 'Random2'
 # chr_text.user <- 'Random3'
@@ -486,7 +486,7 @@ chr_bot.match.3str %>%
   fun_text.commas() -> chr_bot.match.3str
 
 # Finishing remarks
-list_df_text$capacity %>% 
+Olist_df_text$capacity %>% 
   mutate(
     pct.over.top = length(chr_top.overqualified) / nrow(df_dumbbell)
     , n.interval = 
