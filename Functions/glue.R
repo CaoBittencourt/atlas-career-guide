@@ -124,7 +124,7 @@ fun_text.dynamic <- function(
   .df_text %>% 
     rowwise() %>%
     mutate(across(
-      .cols = !is.numeric
+      .cols = !where(is.numeric)
       ,.fns = function(text){
         
         glue_data(
@@ -139,8 +139,10 @@ fun_text.dynamic <- function(
   
 }
 
-
 # VALUES FOR DYNAMIC TEXTS -----------------------------------------------
+# Last comma 
+paste0(list_df.glue$last_comma.$text, ' ') -> chr_last.comma
+
 # Preliminary analyses
 # Top match
 df_KNN.output %>% 
@@ -279,13 +281,33 @@ flatten(list(
     ) %>% 
     pull(factor) %>% 
     fun_text.commas()
+  # Top match overqualified factors
   , top_match.overqualified = 
     df_dumbbell %>% 
     filter(
       top.match <= you
     ) %>% 
-    pull(factor) %>% 
-    fun_text.commas()
+    mutate(
+      lgc_n = all(
+        n() >= round(0.5 * nrow(df_dumbbell)) 
+        , n() < nrow(df_dumbbell) - 1
+      )
+      , int_n = ifelse(first(lgc_n), 3, n())
+      , chr_comma = ifelse(
+        first(lgc_n)
+        , ', '
+        , chr_last.comma
+      )
+    ) %>% 
+    slice(1:first(int_n)) %>% 
+    mutate(
+      factor = 
+        fun_text.commas(
+          factor
+          , .chr_last.comma = first(chr_comma))
+    ) %>% 
+    slice(1) %>%
+    pull(factor)
   # Bot match most similar and dissimilar factor tallies
   , bot_match.factors.similar.tally =  
     df_dumbbell %>% 
@@ -317,6 +339,22 @@ flatten(list(
     slice_max(bot.match.diff) %>% 
     pull(bot.match.diff) %>%
     round(4) * 100
+  # Bot match underqualified factors
+  , bot_match.underqualified = 
+    df_dumbbell %>% 
+    filter(
+      bot.match > you
+    ) %>% 
+    pull(factor) %>% 
+    fun_text.commas()
+  # Bot match overqualified factors
+  , bot_match.overqualified = 
+    df_dumbbell %>% 
+    filter(
+      bot.match <= you
+    ) %>% 
+    pull(factor) %>%
+    fun_text.commas()
   # Top 3 strengths
   , user.strengths = 
     df_dumbbell %>%
@@ -334,6 +372,27 @@ flatten(list(
     df_dumbbell %>%
     slice_max(bot.match, n = 3) %>% 
     slice(1:3) %>% 
+    pull(factor) %>% 
+    fun_text.commas()
+  , bot_match.strengths.common.n = 
+    inner_join(
+      df_dumbbell %>% 
+        slice_max(you, n = 3) %>%
+        select(factor)
+      , df_dumbbell %>% 
+        slice_max(bot.match, n = 3) %>%
+        select(factor)
+    ) %>%
+    nrow()
+  , bot_match.strengths.common = 
+    inner_join(
+      df_dumbbell %>% 
+        slice_max(you, n = 3) %>%
+        select(factor)
+      , df_dumbbell %>% 
+        slice_max(bot.match, n = 3) %>%
+        select(factor)
+    ) %>%
     pull(factor) %>% 
     fun_text.commas()
   # Top and bot matches capacity
@@ -371,96 +430,31 @@ map_if(
 ) -> list_df.glue
 
 # Top match factor similarity analysis
-list_df.glue$top_match.similar %>% 
-  fun_text.dynamic(list_text) %>% 
-  mutate(
-    factors.tally = as.numeric(factors.tally)
-  ) %>% 
-  slice(
-    1
-    , rep(
-      which(is.na(.))
-      , each = 
-        max(factors.tally, na.rm = T) -
-        min(factors.tally, na.rm = T) - 1
-    )
-    , n()
-  ) %>% 
-  mutate(
-    factors.tally = 
-      min(factors.tally, na.rm = T):
-      max(factors.tally, na.rm = T)
-  ) %>% 
+list_df.glue$top_match.similar %>%
   filter(
-    factors.tally == list_text$top_match.factors.similar.tally
+    list_text$top_match.factors.similar.tally >= factors.tally
   ) %>% 
+  slice(n()) %>%
   pull(text) -> list_text$top_match.factors.similar
 
-# Top match factor dissimilarity analysis
-list_df.glue$top_match.dissimilar %>% 
-  fun_text.dynamic(list_text) %>% 
-  mutate(
-    factors.tally = as.numeric(factors.tally)
-  ) %>% 
-  slice(
-    1
-    , rep(
-      which(is.na(.))
-      , each = 
-        max(factors.tally, na.rm = T) -
-        min(factors.tally, na.rm = T) - 1
-    )
-    , n()
-  ) %>% 
-  mutate(
-    factors.tally = 
-      min(factors.tally, na.rm = T):
-      max(factors.tally, na.rm = T)
-  ) %>% 
-  filter(
-    factors.tally == list_text$top_match.factors.dissimilar.tally
-  ) %>% 
-  pull(text) -> list_text$top_match.factors.dissimilar
-
-list_df.glue$sections.glue %>% 
-  filter(
-    section == 'finishing_remarks'
-  ) %>% 
-  # pull(text)
-  pull(text)
-
-# list_df_text.capacity$bot.match %>% 
-#   mutate(
-#     text = if_else(
-#       text == list_df_text.capacity$top.match$text
-#       , paste(text, 'as well')
-#       , text
-#     )
-#   ) -> list_df_text.capacity$bot.match
-
 # Top match underqualification analysis
-list_df.glue$top_match.underqualified %>%
-  fun_text.dynamic(list_text) %>% 
+list_df.glue$top_match.underqualified %>% 
   mutate(
     factors.tally = as.numeric(factors.tally)
-  ) %>% 
-  slice(
-    1
-    , rep(
-      which(is.na(.))
-      , each = 
-        max(factors.tally, na.rm = T) -
-        min(factors.tally, na.rm = T) - 1
-    )
-    , n()
-  ) %>% 
-  mutate(
-    factors.tally = 
-      min(factors.tally, na.rm = T):
-      max(factors.tally, na.rm = T)
+    , factors.interval = 
+      findInterval(
+        factors.tally
+        , factors.tally
+      )
+    , interval = 
+      findInterval(
+        x = list_text$top_match.underqualified.n
+        , vec = factors.tally
+      )
+    , .before = 1
   ) %>% 
   filter(
-    factors.tally == list_text$top_match.underqualified.n
+    factors.interval == interval
   ) %>% 
   pull(text) -> list_text$top_match.underqualified
 
@@ -487,14 +481,7 @@ if(list_text$top_match.underqualified.n > 0){
           map_dbl(
             factors.tally
             , ~ eval(parse(text = .x))
-          )
-        , factors.tally = 
-          ifelse(
-            is.na(factors.tally)
-            , min(factors.tally, na.rm = T) + 1
-            , factors.tally
-          )
-      )
+          ))
     
   } %>% 
     mutate(
@@ -517,10 +504,88 @@ if(list_text$top_match.underqualified.n > 0){
   
 }
 
+# Bot match factor (dis)similarity analysis
+list_df.glue$bot_match.similar %>%
+  filter(
+    list_text$bot_match.factors.similar.tally >= factors.tally
+  ) %>% 
+  slice(n()) %>%
+  pull(text) -> list_text$bot_match.factors.similar
+
+list_df.glue$bot_match.dissimilar %>%
+  filter(
+    list_text$bot_match.factors.dissimilar.tally >= factors.tally
+  ) %>% 
+  slice(n()) %>%
+  pull(text) -> list_text$bot_match.factors.dissimilar
+
 # Bot match underqualification analysis
+list_df.glue$bot_match.underqualified %>% 
+  mutate(
+    factors.tally = as.numeric(factors.tally)
+    , factors.interval = 
+      findInterval(
+        factors.tally
+        , factors.tally
+      )
+    , interval = 
+      findInterval(
+        x = list_text$bot_match.underqualified.n
+        , vec = factors.tally
+      )
+    , .before = 1
+  ) %>%
+  filter(
+    factors.interval == interval
+  ) %>% 
+  pull(text) -> list_text$bot_match.underqualified
+
 # Bot match overqualification analysis
+if(
+  list_df.glue$bot_match.overqualified %>% 
+  pull(factors.tally) %>%
+  as.numeric() %>% 
+  max(na.rm = T) <= 2
+){
+  
+  list_df.glue$bot_match.overqualified %>% 
+    filter(as.numeric(factors.tally) <= 2)
+  
+} else {
+  
+  list_df.glue$bot_match.overqualified %>%
+    mutate(
+      factors.tally = 
+        map_dbl(
+          factors.tally
+          , ~ eval(parse(text = .x))
+        ))
+  
+} %>% 
+  mutate(
+    factors.interval = 
+      findInterval(
+        factors.tally
+        , factors.tally
+      )
+    , interval = 
+      findInterval(
+        x = list_text$bot_match.overqualified.n
+        , vec = factors.tally
+      )
+    , .before = 1
+  ) %>% 
+  filter(
+    factors.interval == interval
+  ) %>% 
+  pull(text) -> list_text$bot_match.overqualified
 
 # Bot match common strengths analysis
+list_df.glue$bot_match.strengths.common %>% 
+  filter(
+    factors.tally == list_text$bot_match.strengths.common.n
+    ) %>% 
+  pull(text) -> list_text$bot_match.strengths.common
 
 # Capacity analysis
 map(
@@ -565,6 +630,10 @@ map(
   list_df.glue
   , ~ fun_text.dynamic(.x, list_text)
 ) -> list_df.glue
+
+list_df.glue$sections.glue %>% 
+  filter(!str_detect(text, "___")) %>% 
+  pull(text)
 
 # 
 # map(
