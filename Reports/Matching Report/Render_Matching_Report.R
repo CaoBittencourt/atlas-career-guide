@@ -40,8 +40,8 @@ source('C:/Users/Cao/Documents/Github/Atlas-Research/Functions/Capital_Flexibili
 
 # PARAMETERS --------------------------------------------------------------
 # Selected respondent
-# chr_text.user <- 'Martijn'
-chr_text.user <- 'Cao'
+chr_text.user <- 'Martijn'
+# chr_text.user <- 'Cao'
 # chr_text.user <- 'Alexandre'
 # chr_text.user <- 'Acilio'
 # chr_text.user <- 'Gabriel'
@@ -167,7 +167,7 @@ df_occupations %>%
   unique() -> chr_education.levels
 
 # Highly qualified only
-if(chr_education %in% 'HIGH'){
+if(chr_education == 'HIGH'){
   
   chr_education.levels[!(
     
@@ -184,7 +184,7 @@ if(chr_education %in% 'HIGH'){
 }
 
 # Unqualified only
-if(chr_education %in% 'LOW'){
+if(chr_education == 'LOW'){
   
   c(
     "Some college, no degree"
@@ -486,7 +486,7 @@ chr_bot.match.3str %>%
   fun_text.commas() -> chr_bot.match.3str
 
 # Finishing remarks
-Olist_df_text$capacity %>% 
+list_df_text$capacity %>% 
   mutate(
     pct.over.top = length(chr_top.overqualified) / nrow(df_dumbbell)
     , n.interval = 
