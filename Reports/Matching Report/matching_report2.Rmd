@@ -1,0 +1,127 @@
+---
+title: "`r list_report.texts[[1]]`"
+subtitle: "`r list_report.texts[[2]]`"
+author: "Atlas Research Team"
+date: "`r list_report.texts[[3]]`"
+geometry: a4paper, margin = 1in
+output:
+  pdf_document:
+  # ipsum_pdf:
+    toc: TRUE
+    number_sections: TRUE
+    toc_depth: 4
+    extra_dependencies: ["float"]
+
+toc-title: "`r list_text.elements[[1]]`"
+header-includes:
+   - \usepackage{floatrow}
+   - \floatsetup[figure]{capposition=top}
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = F)
+knitr::opts_chunk$set(message = F)
+knitr::opts_chunk$set(warning = F)
+knitr::opts_chunk$set(fig.pos = "H", out.extra = "")
+```
+
+\renewcommand{\figurename}{`r list_text.elements[[2]]`}
+
+\renewcommand{\tablename}{`r list_text.elements[[3]]`}
+
+`r list_report.titles[[1]]`
+
+```{r introduction, results='asis'}
+cat(list_report.texts[[4]])
+```
+
+\newpage
+
+`r list_report.titles[[2]]`
+
+`r list_report.titles[[3]]`
+
+```{r, fig.width=4.8, fig.height=4.8, fig.align='center', fig.cap=list_plots.caption[[1]]}
+plt_match.polar
+```
+
+```{r circular_plot.comments, results='asis'}
+cat(list_report.texts[[5]])
+```
+
+```{r compatibility.table}
+kable(
+  df_top7.bot3
+  , caption = "chr_text.caption.table"
+  )
+```
+
+```{r compatibility.table.comments, results='asis'}
+cat(list_report.texts[[6]])
+```
+
+```{r line.plot.intro, results='asis'}
+cat(list_report.texts[[7]])
+```
+
+```{r line.plot, fig.width=6.3, fig.height=2.5, fig.align='center', fig.cap=list_plots.caption[[2]]}
+plt_line.rank
+```
+
+```{r line.comments, results='asis'}
+cat(list_report.texts[[8]])
+```
+
+`r list_report.titles[[4]]`
+
+```{r distribution.intro, results='asis'}
+cat(list_report.texts[[9]])
+```
+
+```{r distribution.plot, fig.width=6.3, fig.height=2.5, fig.align='center', fig.cap=list_plots.caption[[3]]}
+plt_density
+```
+
+```{r distribution.commentary, results='asis'}
+cat(list_report.texts[[10]])
+```
+
+`r list_report.titles[[5]]`
+
+```{r factors.intro, results='asis'}
+cat(list_report.texts[[11]])
+```
+
+`r list_report.titles[[6]]`
+
+```{r factors, results='asis'}
+cat(list_report.texts[[12]])
+```
+
+`r list_report.titles[[7]]`
+
+```{r best.plot, fig.width=6.3, fig.height=4.8, fig.align='center', fig.cap=list_plots.caption[[4]]}
+list_plt.dumbbells$top_match
+```
+
+```{r best.comments, results='asis'}
+cat(list_report.texts[[14]])
+```
+
+```{r worst.comments.intro, results='asis'}
+cat(list_report.texts[[15]])
+```
+
+```{r worst.plot,  fig.width=6.3, fig.height=4.8, fig.align='center', fig.cap=list_plots.caption[[5]]}
+list_plt.dumbbells$bot_match
+```
+
+```{r worst.comments, results='asis'}
+cat(list_report.texts[[16]])
+```
+
+`r list_report.titles[[8]]`
+
+```{r finishing.remarks, results='asis'}
+cat(list_report.texts[[17]])
+```

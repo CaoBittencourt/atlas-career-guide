@@ -41,16 +41,16 @@ colorRampPalette(c(
   , list_pal.atlas$green
 )) -> fun_gradient
 
-# [DATA] DYNAMIC TEXTS -----------------------------------------------------
-df_texts.sections <- read_csv('https://docs.google.com/spreadsheets/d/e/2PACX-1vTui3FuBxa4USYdgPYdX8sK0Ow6LnMhDLMzVKXf01oqGJ9dMcpsv0pOSv77djlbgMQmyp_3B0_kghJg/pub?gid=1661033231&single=true&output=csv')
-
-df_texts.overall <- read_csv('https://docs.google.com/spreadsheets/d/e/2PACX-1vTui3FuBxa4USYdgPYdX8sK0Ow6LnMhDLMzVKXf01oqGJ9dMcpsv0pOSv77djlbgMQmyp_3B0_kghJg/pub?gid=780395980&single=true&output=csv')
-
-df_texts.kflex <- read_csv('https://docs.google.com/spreadsheets/d/e/2PACX-1vTui3FuBxa4USYdgPYdX8sK0Ow6LnMhDLMzVKXf01oqGJ9dMcpsv0pOSv77djlbgMQmyp_3B0_kghJg/pub?gid=872198732&single=true&output=csv')
-
-df_texts.sections
-df_texts.overall
-df_texts.kflex
+# # [DATA] DYNAMIC TEXTS -----------------------------------------------------
+# df_texts.sections <- read_csv('https://docs.google.com/spreadsheets/d/e/2PACX-1vTui3FuBxa4USYdgPYdX8sK0Ow6LnMhDLMzVKXf01oqGJ9dMcpsv0pOSv77djlbgMQmyp_3B0_kghJg/pub?gid=1661033231&single=true&output=csv')
+# 
+# df_texts.overall <- read_csv('https://docs.google.com/spreadsheets/d/e/2PACX-1vTui3FuBxa4USYdgPYdX8sK0Ow6LnMhDLMzVKXf01oqGJ9dMcpsv0pOSv77djlbgMQmyp_3B0_kghJg/pub?gid=780395980&single=true&output=csv')
+# 
+# df_texts.kflex <- read_csv('https://docs.google.com/spreadsheets/d/e/2PACX-1vTui3FuBxa4USYdgPYdX8sK0Ow6LnMhDLMzVKXf01oqGJ9dMcpsv0pOSv77djlbgMQmyp_3B0_kghJg/pub?gid=872198732&single=true&output=csv')
+# 
+# df_texts.sections
+# df_texts.overall
+# df_texts.kflex
 
 # [DATA] EFA-REDUCED QUERY VECTOR -----------------------------------------------
 # USER INPUT DATA FRAME
@@ -2530,7 +2530,7 @@ fun_plot.comparisons.mvp <- function(
         fun_plot.dumbbell2(aes(
           x = factor.score
           , y = factor
-          , label = percent(factor.score, accuracy = 1)
+          # , label = percent(factor.score, accuracy = 1)
           , color = id.unique
         )
         , .sym_facets = category

@@ -63,8 +63,8 @@ fun_text.commas <- function(..., .chr_last.comma = ', and ', .lgc_quote = T){
   
   # Dynamic dots
   c(...) -> chr_text
-
-    
+  
+  
   # Logical
   if(!(
     is.logical(.lgc_quote) &
@@ -83,22 +83,30 @@ fun_text.commas <- function(..., .chr_last.comma = ', and ', .lgc_quote = T){
   
   
   # Add quotes and commas
-  if(.lgc_quote){
+  if(length(chr_text)){
     
-    chr_text %>% 
-      paste0('"',., '"') %>% 
-      paste0(collapse = ', ') -> chr_text
+    if(.lgc_quote){
+      
+      chr_text %>% 
+        paste0('"',., '"') %>% 
+        paste0(collapse = ', ') -> chr_text
+      
+    } else {
+      
+      chr_text %>% 
+        paste0(collapse = ', ') -> chr_text
+    }
     
-  } else {
+    if(length(chr_last.comma)){
+      
+      chr_text %>%
+        stri_replace_last_fixed(', ', chr_last.comma) -> chr_text
+    }
     
-    chr_text %>% 
-      paste0(collapse = ', ') -> chr_text
-  }
-  
-  if(length(chr_last.comma)){
-
-    chr_text %>%
-      stri_replace_last_fixed(', ', chr_last.comma) -> chr_text
+  } else { 
+    
+    '' -> chr_text
+    
   }
   
   
