@@ -41,7 +41,7 @@ cat(list_report.texts[[4]])
 
 `r list_report.titles[[3]]`
 
-```{r, fig.width=4.8, fig.height=4.8, fig.align='center', fig.cap=list_plots.caption[[1]]}
+```{r, fig.dim=c(7.3,5.8), fig.align='center', fig.cap=list_plots.caption[[1]]}
 plt_match.polar
 ```
 
@@ -50,9 +50,17 @@ cat(list_report.texts[[5]])
 ```
 
 ```{r compatibility.table}
+# kbl(
+#   df_top7.bot3
+#   , caption = unique(list_df.glue$matching.table$caption)
+#   , booktabs = T
+#   # , longtable = T
+#   ) %>%
+#   kable_styling(full_width = T)
+
 kable(
   df_top7.bot3
-  , caption = "chr_text.caption.table"
+  , caption = unique(list_df.glue$matching.table$caption)
   )
 ```
 
@@ -64,7 +72,7 @@ cat(list_report.texts[[6]])
 cat(list_report.texts[[7]])
 ```
 
-```{r line.plot, fig.width=6.3, fig.height=2.5, fig.align='center', fig.cap=list_plots.caption[[2]]}
+```{r line.plot, fig.dim=c(7.3,2.9), fig.align='center', fig.cap=list_plots.caption[[2]]}
 plt_line.rank
 ```
 
@@ -78,7 +86,7 @@ cat(list_report.texts[[8]])
 cat(list_report.texts[[9]])
 ```
 
-```{r distribution.plot, fig.width=6.3, fig.height=2.5, fig.align='center', fig.cap=list_plots.caption[[3]]}
+```{r distribution.plot, fig.dim=c(7.3,2.9), fig.align='center', fig.cap=list_plots.caption[[3]]}
 plt_density
 ```
 
@@ -100,7 +108,7 @@ cat(list_report.texts[[12]])
 
 `r list_report.titles[[7]]`
 
-```{r best.plot, fig.width=6.3, fig.height=4.8, fig.align='center', fig.cap=list_plots.caption[[4]]}
+```{r best.plot, fig.dim=c(7.3,4.8), fig.align='center', fig.cap=list_plots.caption[[4]]}
 list_plt.dumbbells$top_match
 ```
 
@@ -112,7 +120,7 @@ cat(list_report.texts[[14]])
 cat(list_report.texts[[15]])
 ```
 
-```{r worst.plot,  fig.width=6.3, fig.height=4.8, fig.align='center', fig.cap=list_plots.caption[[5]]}
+```{r worst.plot,  fig.dim=c(7.3,4.8), fig.align='center', fig.cap=list_plots.caption[[5]]}
 list_plt.dumbbells$bot_match
 ```
 

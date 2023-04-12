@@ -8,7 +8,7 @@ pkg <- c(
   , 'tidyverse', 'stringi', 'glue' #Data wrangling
   , 'tinytex' #LaTeX
   , 'modeest' #Mode
-  , 'knitr' #Knitr
+  , 'knitr' #, 'kableExtra' #Knitr
   , 'readxl' #Import excel (use other package?)
 )
 
@@ -34,17 +34,20 @@ source('C:/Users/Cao/Documents/Github/Atlas-Research/Functions/Factor_Scores.R')
 # Automated plotting
 source('C:/Users/Cao/Documents/Github/Atlas-Research/Functions/Auto_plots.R')
 # Dynamic text
-source('C:/Users/Cao/Documents/Github/Atlas-Research/Functions/Dynamic_text.R')
+source('C:/Users/Cao/Documents/Github/Atlas-Research/Functions/fun_dynamic_text.R')
+# Commas and quotations
+source('C:/Users/Cao/Documents/Github/Atlas-Research/Functions/fun_commas.R')
 # Capital flexibility
 source('C:/Users/Cao/Documents/Github/Atlas-Research/Functions/Capital_Flexibility.R')
 
 # PARAMETERS --------------------------------------------------------------
 # Selected respondent
 # chr_text.user <- 'Martijn'
-chr_text.user <- 'Cao'
+# chr_text.user <- 'Cao'
 # chr_text.user <- 'Alexandre'
 # chr_text.user <- 'Acilio'
 # chr_text.user <- 'Gabriel'
+chr_text.user <- 'Milena'
 # chr_text.user <- 'Random'
 # chr_text.user <- 'Random2'
 # chr_text.user <- 'Random3'
@@ -55,7 +58,8 @@ chr_text.user <- 'Cao'
 dbl_threshold <- 0.17
 
 # Level of education filter
-chr_education <- c('ALL', 'HIGH', 'LOW')
+# chr_education <- c('ALL', 'HIGH', 'LOW')
+chr_education <- 'ALL'
 # chr_education <- 'HIGH'
 
 chr_education <- toupper(chr_education)
@@ -132,60 +136,6 @@ list_df.glue %>%
   # map(~ .x %>% filter(language == 'en')) -> list_df.glue
   map(~ .x %>% filter(language == 'pt')) -> list_df.glue
 # map(~ .x %>% filter(language == 'es')) -> list_df.glue
-
-# [FUNCTION] DYNAMIC TEXT DATA FRAME --------------------------------------
-fun_text.dynamic <- function(
-    
-  # Data frame
-  .df_text = tibble()
-  # Input list
-  , .list_input = list()
-  # NA action
-  # , .chr_na = NULL
-  , .chr_na = ''
-  
-){
-  
-  # Data types
-  stopifnot(
-    "'.df_text' must be a data frame." = 
-      is.data.frame(.df_text)
-  )
-  
-  stopifnot(
-    "'.list_input' must be a list of textual inputs." = 
-      c(
-        is.list(.list_input)
-        , !is.data.frame(.list_input)
-      )
-  )
-  
-  stopifnot(
-    "'.chr_na' must be either NULL or a character element." =
-      !length(.chr_na) |
-      length(.chr_na) &
-      is.character(.chr_na)
-  )
-  
-  # Glue texts
-  .df_text %>% 
-    rowwise() %>%
-    mutate(across(
-      .cols = !where(is.numeric)
-      ,.fns = function(text){
-        
-        glue_data(
-          .list_input
-          , text
-          , .na = .chr_na
-          , .trim = T
-        )
-        
-      })) %>% 
-    ungroup() %>% 
-    return()
-  
-}
 
 # ------- DATA -----------------------------------------------------------
 # EFA-REDUCED QUERY VECTOR -----------------------------------------------
@@ -271,7 +221,7 @@ df_occupations %>%
     entry_level_education %in% 
       all_of(chr_education.levels)
   ) -> df_occupations
-
+fun_text.dynamic
 # ------- RESULTS --------------------------------------------------------
 # KNN MATCHING ---------------------------------------------------------------
 fun_KNN.matching(
@@ -859,7 +809,9 @@ df_KNN.output %>%
   slice(1:7, seq(max(rank) - 2, max(rank))) %>%
   mutate(
     similarity = percent(similarity, accuracy = .01)
-    , annual_wage_2021 = dollar(annual_wage_2021, accuracy = .01)
+    , annual_wage_2021 = dollar(
+      annual_wage_2021, accuracy = 1, prefix = 'USD '
+    )
   ) %>% 
   select(
     rank
@@ -961,11 +913,8 @@ df_KNN.output %>%
   , .theme = ggridges::theme_ridges(font_size = 11, center_axis_labels = T) +
     theme(
       plot.margin = margin(0, 0, 0, 0)
-      # plot.margin = margin(
-      #   t = 1.5, b = 1.5, l = 0, r = 0
-      #   , unit = 'cm'
-      # )
       , axis.text.x = element_blank()
+      , axis.text.y = element_text(vjust = 0.5)
     )
   , .list_labs = list(
     title = NULL
@@ -1115,7 +1064,6 @@ map(
         , legend.position = 'bottom'
         , legend.justification = 'center'
         , strip.background = element_blank()
-        # , plot.margin = margin(1, 1, 1, 1,'cm')
         , plot.margin = margin(0, 0, 0, 0,'cm')
         , axis.text.y = element_text(vjust = 0.5)
       ))
@@ -1127,4 +1075,3 @@ rmarkdown::render(
   'C:/Users/Cao/Documents/Github/Atlas-Research/Reports/Matching Report/matching_report2.Rmd'
   , output_file = paste0('Matching Report (', chr_text.user, ').pdf')
 )
-
