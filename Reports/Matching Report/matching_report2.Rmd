@@ -50,17 +50,9 @@ cat(list_report.texts[[5]])
 ```
 
 ```{r compatibility.table}
-# kbl(
-#   df_top7.bot3
-#   , caption = unique(list_df.glue$matching.table$caption)
-#   , booktabs = T
-#   # , longtable = T
-#   ) %>%
-#   kable_styling(full_width = T)
-
 kable(
   df_top7.bot3
-  , caption = unique(list_df.glue$matching.table$caption)
+  , caption = unique(list_df.text$matching.table$caption)
   )
 ```
 

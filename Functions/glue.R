@@ -8,7 +8,7 @@ pkg <- c(
   , 'tidyverse', 'stringi', 'glue' #Data wrangling
   , 'tinytex' #LaTeX
   , 'modeest' #Mode
-  , 'knitr' #, 'kableExtra' #Knitr
+  , 'knitr'#, 'kableExtra' #Knitr
   , 'readxl' #Import excel (use other package?)
 )
 
@@ -45,9 +45,9 @@ source('C:/Users/Cao/Documents/Github/Atlas-Research/Functions/Capital_Flexibili
 # chr_text.user <- 'Martijn'
 # chr_text.user <- 'Cao'
 # chr_text.user <- 'Alexandre'
-# chr_text.user <- 'Acilio'
+chr_text.user <- 'Acilio'
 # chr_text.user <- 'Gabriel'
-chr_text.user <- 'Milena'
+# chr_text.user <- 'Milena'
 # chr_text.user <- 'Random'
 # chr_text.user <- 'Random2'
 # chr_text.user <- 'Random3'
@@ -65,9 +65,6 @@ chr_education <- 'ALL'
 chr_education <- toupper(chr_education)
 
 chr_education <- sample(chr_education, 1)
-
-# Dynamic text parameters
-chr_text.blank <- '___'
 
 # Scales
 seq_scale.1_5 <- seq(0,1,.25)
@@ -109,15 +106,16 @@ df_input <- readr::read_csv('https://docs.google.com/spreadsheets/d/e/2PACX-1vSp
 map(
   excel_sheets('C:/Users/Cao/Documents/Github/Atlas-Research/Reports/Matching Report/career_finder_report2.xlsx')
   , ~ read_excel(
-    'C:/Users/Cao/Documents/Github/Atlas-Research/Reports/Matching Report/career_finder_report2.xlsx', sheet = .x
+    'C:/Users/Cao/Documents/Github/Atlas-Research/Reports/Matching Report/career_finder_report2.xlsx'
+    , sheet = .x
     , trim_ws = F
   )
-) -> list_df_text
+) -> list_df.text
 
-names(list_df_text) <- excel_sheets('C:/Users/Cao/Documents/Github/Atlas-Research/Reports/Matching Report/career_finder_report2.xlsx')
+names(list_df.text) <- excel_sheets('C:/Users/Cao/Documents/Github/Atlas-Research/Reports/Matching Report/career_finder_report2.xlsx')
 
 # Remove carriage returns
-list_df_text %>%
+list_df.text %>%
   map(function(df){
     
     df %>% 
@@ -128,14 +126,12 @@ list_df_text %>%
           str_replace_all("\n", "  \n")
       ))
     
-  }) -> list_df_text
+  }) -> list_df.text
 
-list_df_text[str_detect(names(list_df_text),'\\.')] -> list_df.glue
-
-list_df.glue %>%
-  # map(~ .x %>% filter(language == 'en')) -> list_df.glue
-  map(~ .x %>% filter(language == 'pt')) -> list_df.glue
-# map(~ .x %>% filter(language == 'es')) -> list_df.glue
+list_df.text %>%
+  # map(~ .x %>% filter(language == 'en')) -> list_df.text
+  map(~ .x %>% filter(language == 'pt')) -> list_df.text
+  # map(~ .x %>% filter(language == 'es')) -> list_df.text
 
 # ------- DATA -----------------------------------------------------------
 # EFA-REDUCED QUERY VECTOR -----------------------------------------------
@@ -152,11 +148,10 @@ df_input %>%
   ) %>%  
   mutate(
     across(
-      .cols = all_of(
+      .cols = 
         list_factors %>%
           flatten() %>% 
           flatten_chr()
-      )
       , .fns = function(x){
         recode((x + 2)
                # recode(x
@@ -218,10 +213,10 @@ df_occupations %>%
       flatten_chr()
   ) %>% 
   filter(
-    entry_level_education %in% 
-      all_of(chr_education.levels)
+    entry_level_education %in%
+      chr_education.levels
   ) -> df_occupations
-fun_text.dynamic
+
 # ------- RESULTS --------------------------------------------------------
 # KNN MATCHING ---------------------------------------------------------------
 fun_KNN.matching(
@@ -309,9 +304,6 @@ list_factor.scores$scores.long %>%
 
 # -------- DYNAMIC TEXTS --------------------------------------------------
 # DYNAMIC TEXTS -----------------------------------------------
-# Last comma 
-# paste0(list_df.glue$last.comma$text, ' ') ->list_df.glue$last.comma$text
-
 # Preliminary values for analyses
 flatten(list(
   # Username
@@ -322,7 +314,7 @@ flatten(list(
   , chr_categories = 
     fun_text.commas(
       names(list_factors)
-      , .chr_last.comma =list_df.glue$last.comma$text
+      , .chr_last.comma = list_df.text$last.comma$text
     )
   , ncategories = length(list_factors)
   , nfactors = length(flatten(list_factors))
@@ -330,13 +322,13 @@ flatten(list(
     1:length(list_factors)
     , paste0('chr_category', 1:length(list_factors)))
     , ~ names(list_factors[.x]) %>%
-      fun_text.commas(.chr_last.comma =list_df.glue$last.comma$text)
+      fun_text.commas(.chr_last.comma = list_df.text$last.comma$text)
   )
   , map(setNames(
     1:length(list_factors)
     , paste0('chr_category', 1:length(list_factors), '.factors'))
     , ~ names(flatten(list_factors[.x])) %>%
-      fun_text.commas(.chr_last.comma =list_df.glue$last.comma$text)
+      fun_text.commas(.chr_last.comma = list_df.text$last.comma$text)
   )
   , map(setNames(
     1:length(list_factors)
@@ -357,7 +349,7 @@ flatten(list(
   , n_recommended = sum(df_KNN.output$similarity >= dbl_recommended.cutff)
   # Scope analysis
   , text.scope = 
-    list_df.glue$recommended %>% 
+    list_df.text$recommended %>% 
     mutate(
       n.recommended = 
         df_KNN.output %>% 
@@ -375,7 +367,7 @@ flatten(list(
   # Number of factors in the model
   , nfactors = length(flatten(list_factors))
   # Capital flexibility analysis
-  , list_df.glue$flexibility.glue %>% 
+  , list_df.text$flexibility %>% 
     mutate(
       capital.flex = fun_capital.flex(df_KNN.output$similarity)
       , kflex.interval = 
@@ -400,13 +392,13 @@ flatten(list(
     df_dumbbell %>% 
     slice_min(top_match.diff) %>% 
     pull(factor) %>% 
-    fun_text.commas(.chr_last.comma =list_df.glue$last.comma$text)
+    fun_text.commas(.chr_last.comma = list_df.text$last.comma$text)
   # , top_match.factors.dissimilar = 
   , top_match.dissimilar = 
     df_dumbbell %>% 
     slice_max(top_match.diff) %>% 
     pull(factor) %>% 
-    fun_text.commas(.chr_last.comma =list_df.glue$last.comma$text)
+    fun_text.commas(.chr_last.comma = list_df.text$last.comma$text)
   # Top match most similar and dissimilar factors differences
   , top_match.diff.min = 
     df_dumbbell %>% 
@@ -427,7 +419,7 @@ flatten(list(
       top_match > you
     ) %>%
     pull(factor) %>%
-    fun_text.commas(.chr_last.comma =list_df.glue$last.comma$text)
+    fun_text.commas(.chr_last.comma = list_df.text$last.comma$text)
   
   # Top match overqualified factors
   , top_match.overqualified = 
@@ -444,7 +436,7 @@ flatten(list(
       , chr_comma = ifelse(
         first(lgc_n)
         , ', '
-        ,list_df.glue$last.comma$text
+        ,list_df.text$last.comma$text
       )
     ) %>% 
     slice(1:first(int_n)) %>% 
@@ -470,12 +462,12 @@ flatten(list(
     df_dumbbell %>% 
     slice_min(bot_match.diff) %>% 
     pull(factor) %>% 
-    fun_text.commas(.chr_last.comma =list_df.glue$last.comma$text)
+    fun_text.commas(.chr_last.comma = list_df.text$last.comma$text)
   , bot_match.factors.dissimilar = 
     df_dumbbell %>% 
     slice_max(bot_match.diff) %>% 
     pull(factor) %>% 
-    fun_text.commas(.chr_last.comma =list_df.glue$last.comma$text)
+    fun_text.commas(.chr_last.comma = list_df.text$last.comma$text)
   # Bot match most similar and dissimilar factors differences
   , bot_match.diff.min = 
     df_dumbbell %>% 
@@ -496,7 +488,7 @@ flatten(list(
       bot_match > you
     ) %>% 
     pull(factor) %>% 
-    fun_text.commas(.chr_last.comma =list_df.glue$last.comma$text)
+    fun_text.commas(.chr_last.comma = list_df.text$last.comma$text)
   # Bot match overqualified factors
   , bot_match.overqualified = 
     df_dumbbell %>% 
@@ -504,26 +496,26 @@ flatten(list(
       bot_match <= you
     ) %>% 
     pull(factor) %>%
-    fun_text.commas(.chr_last.comma =list_df.glue$last.comma$text)
+    fun_text.commas(.chr_last.comma = list_df.text$last.comma$text)
   # Top 3 strengths
   , user.strengths = 
     df_dumbbell %>%
     slice_max(you, n = 3) %>% 
     slice(1:3) %>% 
     pull(factor) %>% 
-    fun_text.commas(.chr_last.comma =list_df.glue$last.comma$text)
+    fun_text.commas(.chr_last.comma = list_df.text$last.comma$text)
   , top_match.strengths = 
     df_dumbbell %>%
     slice_max(top_match, n = 3) %>% 
     slice(1:3) %>% 
     pull(factor) %>% 
-    fun_text.commas(.chr_last.comma =list_df.glue$last.comma$text)
+    fun_text.commas(.chr_last.comma = list_df.text$last.comma$text)
   , bot_match.strengths = 
     df_dumbbell %>%
     slice_max(bot_match, n = 3) %>% 
     slice(1:3) %>% 
     pull(factor) %>% 
-    fun_text.commas(.chr_last.comma =list_df.glue$last.comma$text)
+    fun_text.commas(.chr_last.comma = list_df.text$last.comma$text)
   , bot_match.strengths.common.n = 
     inner_join(
       df_dumbbell %>% 
@@ -544,7 +536,7 @@ flatten(list(
         select(factor)
     ) %>%
     pull(factor) %>% 
-    fun_text.commas(.chr_last.comma =list_df.glue$last.comma$text)
+    fun_text.commas(.chr_last.comma = list_df.text$last.comma$text)
   # Top and bot matches capacity
   , top_match.underqualified.n = 
     df_dumbbell %>% 
@@ -574,13 +566,13 @@ flatten(list(
 
 # Preliminary imputations
 map_if(
-  list_df.glue
+  list_df.text
   , ~ !any(.x$complexity == 'complex', na.rm = T)
   , ~ fun_text.dynamic(.x, list_text)
-) -> list_df.glue
+) -> list_df.text
 
 # Top match factor similarity analysis
-list_df.glue$top_match.similar %>%
+list_df.text$top_match.similar %>%
   filter(
     list_text$top_match.factors.similar.tally >= factors.tally
   ) %>% 
@@ -588,7 +580,7 @@ list_df.glue$top_match.similar %>%
   pull(text) -> list_text$top_match.similar
 
 # Top match underqualification analysis
-list_df.glue$top_match.underqualified %>% 
+list_df.text$top_match.underqualified %>% 
   mutate(
     factors.tally = as.numeric(factors.tally)
     , factors.interval = 
@@ -614,18 +606,18 @@ list_text$top_match.overqualified <- ''
 if(list_text$top_match.underqualified.n > 0){
   
   if(
-    list_df.glue$top_match.overqualified %>% 
+    list_df.text$top_match.overqualified %>% 
     pull(factors.tally) %>%
     as.numeric() %>% 
     max(na.rm = T) <= 2
   ){
     
-    list_df.glue$top_match.overqualified %>% 
+    list_df.text$top_match.overqualified %>% 
       filter(as.numeric(factors.tally) <= 2)
     
   } else {
     
-    list_df.glue$top_match.overqualified %>%
+    list_df.text$top_match.overqualified %>%
       mutate(
         factors.tally = 
           map_dbl(
@@ -655,14 +647,14 @@ if(list_text$top_match.underqualified.n > 0){
 }
 
 # Bot match factor (dis)similarity analysis
-list_df.glue$bot_match.similar %>%
+list_df.text$bot_match.similar %>%
   filter(
     list_text$bot_match.factors.similar.tally >= factors.tally
   ) %>% 
   slice(n()) %>%
   pull(text) -> list_text$bot_match.similar
 
-list_df.glue$bot_match.dissimilar %>%
+list_df.text$bot_match.dissimilar %>%
   filter(
     list_text$bot_match.factors.dissimilar.tally >= factors.tally
   ) %>% 
@@ -670,7 +662,7 @@ list_df.glue$bot_match.dissimilar %>%
   pull(text) -> list_text$bot_match.dissimilar
 
 # Bot match underqualification analysis
-list_df.glue$bot_match.underqualified %>% 
+list_df.text$bot_match.underqualified %>% 
   mutate(
     factors.tally = as.numeric(factors.tally)
     , factors.interval = 
@@ -692,18 +684,18 @@ list_df.glue$bot_match.underqualified %>%
 
 # Bot match overqualification analysis
 if(
-  list_df.glue$bot_match.overqualified %>% 
+  list_df.text$bot_match.overqualified %>% 
   pull(factors.tally) %>%
   as.numeric() %>% 
   max(na.rm = T) <= 2
 ){
   
-  list_df.glue$bot_match.overqualified %>% 
+  list_df.text$bot_match.overqualified %>% 
     filter(as.numeric(factors.tally) <= 2)
   
 } else {
   
-  list_df.glue$bot_match.overqualified %>%
+  list_df.text$bot_match.overqualified %>%
     mutate(
       factors.tally = 
         map_dbl(
@@ -731,7 +723,7 @@ if(
   pull(text) -> list_text$bot_match.overqualified
 
 # Bot match common strengths analysis
-list_df.glue$bot_match.strengths.common %>% 
+list_df.text$bot_match.strengths.common %>% 
   filter(
     factors.tally == list_text$bot_match.strengths.common.n
   ) %>% 
@@ -744,7 +736,7 @@ map(
     , 'bot_match.capacity' = list_text$bot_match.overqualified.n
   )
   , ~
-    list_df.glue$capacity.glue %>% 
+    list_df.text$capacity %>% 
     mutate(
       pct.over = .x / list_text$nfactors
       , n.interval = 
@@ -758,7 +750,7 @@ map(
 ) %>% 
   c(list_text) -> list_text
 
-list_df.glue$capacity.same %>%
+list_df.text$capacity.same %>%
   mutate(
     'same' = 
       list_text$top_match.overqualified.n == 
@@ -771,34 +763,34 @@ list_df.glue$capacity.same %>%
 
 # Apply remaining textual input
 map(
-  list_df.glue
+  list_df.text
   , ~ fun_text.dynamic(.x, list_text)
-) -> list_df.glue
+) -> list_df.text
 
-list_df.glue$sections.glue %>% 
+list_df.text$sections %>% 
   mutate(text = ifelse(
     section == 'date'
     , format(Sys.Date(), text)
     , text
-  )) -> list_df.glue$sections.glue
+  )) -> list_df.text$sections
 
 # Text list
-as.list(list_df.glue$sections.glue$text) -> list_report.texts
+as.list(list_df.text$sections$text) -> list_report.texts
 
 # Section titles
-list_df.glue$sections.title %>% 
+list_df.text$sections.title %>% 
   mutate(title = paste(strrep('#', level), title)) %>% 
   pull(title) %>%
   as.list() -> list_report.titles
 
 # Captions
-list_df.glue$plots.glue %>% 
+list_df.text$plots %>% 
   pull(plot.caption) %>% 
   unique() %>% 
   as.list() -> list_plots.caption
 
 # Text elements
-list_df.glue$text.elements %>% 
+list_df.text$text.elements %>% 
   pull(title) %>% 
   as.list() -> list_text.elements
 
@@ -810,7 +802,9 @@ df_KNN.output %>%
   mutate(
     similarity = percent(similarity, accuracy = .01)
     , annual_wage_2021 = dollar(
-      annual_wage_2021, accuracy = 1, prefix = 'USD '
+      annual_wage_2021, accuracy = .01
+    #   # # annual_wage_2021, accuracy = 1, prefix = 'U$ '
+    #   # annual_wage_2021, accuracy = 1, prefix = 'USD '
     )
   ) %>% 
   select(
@@ -820,7 +814,7 @@ df_KNN.output %>%
     , similarity
   ) -> df_top7.bot3
 
-list_df.glue$matching.table %>% 
+list_df.text$matching.table %>% 
   pull(text) -> names(df_top7.bot3)
 
 # -------- PLOTS ----------------------------------------------------------
@@ -830,11 +824,11 @@ df_KNN.output %>%
     recommended = ifelse(
       round(similarity, 2) >= dbl_recommended.cutff
       | is.na(similarity)
-      , list_df.glue$plots.glue %>% 
+      , list_df.text$plots %>% 
         filter(order == min(order)) %>% 
         pull(plot.color) %>%
         nth(1)
-      , list_df.glue$plots.glue %>% 
+      , list_df.text$plots %>% 
         filter(order == min(order)) %>% 
         pull(plot.color) %>%
         nth(2)
@@ -874,7 +868,7 @@ df_KNN.output %>%
       list_pal.atlas$purple3
       , list_pal.atlas$grey
     )
-    , list_df.glue$plots.glue %>% 
+    , list_df.text$plots %>% 
       filter(order == min(order)) %>% 
       pull(plot.color) %>%
       unique()
@@ -887,7 +881,7 @@ df_KNN.output %>%
   )
   , .list_labs = list(
     y = 
-      list_df.glue$plots.glue %>% 
+      list_df.text$plots %>% 
       filter(order == unique(order)[1]) %>% 
       pull(plot.y) %>%
       unique()
@@ -920,11 +914,11 @@ df_KNN.output %>%
     title = NULL
     , subtitle = NULL
     , x = 
-      list_df.glue$plots.glue %>% 
+      list_df.text$plots %>% 
       filter(order == unique(order)[2]) %>%
       pull(plot.x)
     , y = 
-      list_df.glue$plots.glue %>% 
+      list_df.text$plots %>% 
       filter(order == unique(order)[2]) %>%
       pull(plot.y)
   )) +
@@ -947,7 +941,7 @@ c(
       (list_text$nrow_occupations - list_text$n_recommended) / 
       (list_text$nrow_occupations - 1)
     , label = 
-      list_df.glue$plots.glue %>% 
+      list_df.text$plots %>% 
       filter(order == unique(order)[2]) %>%
       pull(plot.color)
     , color = list_pal.atlas$purple3
@@ -975,7 +969,7 @@ df_KNN.output %>%
     title = NULL
     , subtitle = NULL
     , x = 
-      list_df.glue$plots.glue %>% 
+      list_df.text$plots %>% 
       filter(order == unique(order)[3]) %>%
       pull(plot.x)
     , y = NULL
@@ -994,7 +988,7 @@ df_KNN.output %>%
   geom_textvline(
     xintercept = dbl_recommended.cutff
     , label = 
-      list_df.glue$plots.glue %>% 
+      list_df.text$plots %>% 
       filter(order == unique(order)[3]) %>%
       pull(plot.color)
     , color = list_pal.atlas$green
@@ -1031,7 +1025,7 @@ map(
     , .list_labs = list(
       title = NULL
       , x = 
-        list_df.glue$plots.glue %>% 
+        list_df.text$plots %>% 
         filter(plot.section == 'top_match') %>% 
         pull(plot.x) %>% 
         unique()
@@ -1073,5 +1067,5 @@ map(
 # RENDER R MARKDOWN REPORT --------------------------------------------------
 rmarkdown::render(
   'C:/Users/Cao/Documents/Github/Atlas-Research/Reports/Matching Report/matching_report2.Rmd'
-  , output_file = paste0('Matching Report (', chr_text.user, ').pdf')
+  , output_file = paste0('Matching Report (', list_text$username, ').pdf')
 )
