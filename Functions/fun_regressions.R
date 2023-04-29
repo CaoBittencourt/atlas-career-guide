@@ -441,7 +441,7 @@ fun_lm <- function(
     
     rep(
       .dbl_lower.bounds
-      , as.numeric(.lgc_intercept) +  length(.sym_vars.independent)
+      , as.numeric(.lgc_intercept) + length(.sym_vars.independent)
     ) -> .dbl_lower.bounds 
     
   }
@@ -607,18 +607,18 @@ fun_lm <- function(
     broom::tidy() %>% 
     mutate(
       term = chr_term
-      , significance = 
-        findInterval(
-          x = p.value
-          , vec = c(0, 0.001, 0.01, 0.05, 0.1, 1)
-        ) %>% 
-        recode(
-          .default = ''
-          , '4' = '.'
-          , '3' = '*'
-          , '2' = '**'
-          , '1' = '***'
-        )
+      # , significance = 
+      #   findInterval(
+      #     x = p.value
+      #     , vec = c(0, 0.001, 0.01, 0.05, 0.1, 1)
+      #   ) %>% 
+      #   recode(
+      #     .default = ''
+      #     , '4' = '.'
+      #     , '3' = '*'
+      #     , '2' = '**'
+      #     , '1' = '***'
+      #   )
     ) -> mdl_fit.tidy
   
   # Fitted values

@@ -26,16 +26,11 @@ source('C:/Users/Cao/Documents/Github/Atlas-Research/Data/df_occupations.pop.R')
 # -------- CAPITAL FLEXIBLITY ---------------------------------------------
 # APPLY FUNCTION -----------------------------------------------------------
 df_occupations.pop %>% 
-  select(1:127) %>% 
-  summarise(
-    across(
-      .cols = ends_with('.l')
-      ,.fns = fun_capital.flex
-    )) %>%
+  select(1:127) %>%
   pivot_longer(
     cols = everything()
     , names_to = 'attribute'
-    , values_to = 'capital.flex'
+    , values_to = 'level'
   ) %>% 
   arrange(desc(
     capital.flex

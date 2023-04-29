@@ -21,7 +21,8 @@ lapply(pkg, function(x)
 setwd('C:/Users/Cao/Documents/Github/Atlas-Research/Career-Choice-Models')
 
 # AUTO-EFA FUNCTIONS ----------------------------------------------------------------
-source('./Auto_EFA.R')
+# source('./Auto_EFA.R')
+source('C:/Users/Cao/Documents/Github/Atlas-Research/Functions/Auto_EFA.R')
 
 # DATA --------------------------------------------------------------------
 # Occupations data frame
@@ -714,96 +715,243 @@ df_occupations.numeric.activities %>%
 .show_results <- T
 
 # ----- EFA ---------------------------------------------------------------
-# # FULLY AUTOMATED EFA WORKFLOW (ONLY STAGE ONE) --------------------------------------------
-# # Skills
-# fun_best.model.workflow(
-#   # Basic
-#   .df_data.numeric = df_occupations.numeric.skill
-#   , .auto_select.nfactors = .auto_select.nfactors
-#   , .int_min.factor_size = .int_min.factor_size
-#   , .chr_rotation = .chr_rotation.skill
-#   , .remove_unacceptable_MSAi.items = .remove_unacceptable_MSAi.items
-#   # Underloadings and crossloadings
-#   , .remove_under_loading.items = .remove_under_loading.items
-#   , .remove_cross_loading.items = .remove_cross_loading.items
-#   , .dbl_under_loading.threshold = .dbl_under_loading.threshold
-#   , .dbl_cross_loading.threshold = .dbl_cross_loading.threshold
-#   # Diagrams and tests
-#   , .show_diagrams = .show_diagrams
-#   , .show_results = .show_results
-# ) -> EFA_skill.1
-# 
-# # Abilities
-# fun_best.model.workflow(
-#   # Basic
-#   .df_data.numeric = df_occupations.numeric.ablt
-#   , .auto_select.nfactors = .auto_select.nfactors
-#   , .int_min.factor_size = .int_min.factor_size
-#   , .chr_rotation = .chr_rotation.ablt
-#   , .remove_unacceptable_MSAi.items = .remove_unacceptable_MSAi.items
-#   # Underloadings and crossloadings
-#   , .remove_under_loading.items = .remove_under_loading.items
-#   , .remove_cross_loading.items = .remove_cross_loading.items
-#   , .dbl_under_loading.threshold = .dbl_under_loading.threshold
-#   , .dbl_cross_loading.threshold = .dbl_cross_loading.threshold
-#   # Diagrams and tests
-#   , .show_diagrams = .show_diagrams
-#   , .show_results = .show_results
-# ) -> EFA_ablt.1
-# 
-# # Knowledge
-# fun_best.model.workflow(
-#   # Basic
-#   .df_data.numeric = df_occupations.numeric.know
-#   , .auto_select.nfactors = .auto_select.nfactors
-#   , .int_min.factor_size = .int_min.factor_size
-#   , .chr_rotation = .chr_rotation.know
-#   , .remove_unacceptable_MSAi.items = .remove_unacceptable_MSAi.items
-#   # Underloadings and crossloadings
-#   , .remove_under_loading.items = .remove_under_loading.items
-#   , .remove_cross_loading.items = .remove_cross_loading.items
-#   , .dbl_under_loading.threshold = .dbl_under_loading.threshold
-#   , .dbl_cross_loading.threshold = .dbl_cross_loading.threshold
-#   # Diagrams and tests
-#   , .show_diagrams = .show_diagrams
-#   , .show_results = .show_results
-# ) -> EFA_know.1
-# 
-# # Work context
-# fun_best.model.workflow(
-#   # Basic
-#   .df_data.numeric = df_occupations.numeric.context
-#   , .auto_select.nfactors = .auto_select.nfactors
-#   , .int_min.factor_size = .int_min.factor_size
-#   , .chr_rotation = .chr_rotation.context
-#   , .remove_unacceptable_MSAi.items = .remove_unacceptable_MSAi.items
-#   # Underloadings and crossloadings
-#   , .remove_under_loading.items = .remove_under_loading.items
-#   , .remove_cross_loading.items = .remove_cross_loading.items
-#   , .dbl_under_loading.threshold = .dbl_under_loading.threshold
-#   , .dbl_cross_loading.threshold = .dbl_cross_loading.threshold
-#   # Diagrams and tests
-#   , .show_diagrams = .show_diagrams
-#   , .show_results = .show_results
-# ) -> EFA_context.1
-# 
-# # Work activities
-# fun_best.model.workflow(
-#   # Basic
-#   .df_data.numeric = df_occupations.numeric.activities
-#   , .auto_select.nfactors = .auto_select.nfactors
-#   , .int_min.factor_size = .int_min.factor_size
-#   , .chr_rotation = .chr_rotation.activities
-#   , .remove_unacceptable_MSAi.items = .remove_unacceptable_MSAi.items
-#   # Underloadings and crossloadings
-#   , .remove_under_loading.items = .remove_under_loading.items
-#   , .remove_cross_loading.items = .remove_cross_loading.items
-#   , .dbl_under_loading.threshold = .dbl_under_loading.threshold
-#   , .dbl_cross_loading.threshold = .dbl_cross_loading.threshold
-#   # Diagrams and tests
-#   , .show_diagrams = .show_diagrams
-#   , .show_results = .show_results
-# ) -> EFA_activities.1
+# FULLY AUTOMATED EFA WORKFLOW (ONLY STAGE ONE) --------------------------------------------
+# Skills
+fun_best.model.workflow(
+  # Basic
+  .df_data.numeric = df_occupations.numeric.skill
+  , .auto_select.nfactors = .auto_select.nfactors
+  , .int_min.factor_size = .int_min.factor_size
+  , .chr_rotation = .chr_rotation.skill
+  , .remove_unacceptable_MSAi.items = .remove_unacceptable_MSAi.items
+  # Underloadings and crossloadings
+  , .remove_under_loading.items = .remove_under_loading.items
+  , .remove_cross_loading.items = .remove_cross_loading.items
+  , .dbl_under_loading.threshold = .dbl_under_loading.threshold
+  , .dbl_cross_loading.threshold = .dbl_cross_loading.threshold
+  # Diagrams and tests
+  , .show_diagrams = .show_diagrams
+  , .show_results = .show_results
+) -> EFA_skill.1
+
+EFA_skill.1$EFA.workflow$EFA$EFA.2Factors$model$loadings
+
+EFA_skill.1$EFA.workflow$EFA$EFA.2Factors$loadings.long %>% 
+  full_join(
+    tibble(
+      Factor = paste0('Factor',1:2)
+      , factor.label = c('discernment', 'technical skills')
+      # , factor.ai = c(0.17, 0.67)
+      # , factor.ai = c(0.17, 0.5)
+      # , factor.ai = c(0, 0.5)
+      # , factor.ai = c(0.17, 0.83)
+      , factor.ai = c(0.17/4, 0.83)
+    )
+    , multiple = 'all'
+  ) %>%
+  ungroup() %>% 
+  mutate(
+    # Loading = Loading - min(Loading)
+    # , Loading = Loading / max(Loading)
+    , item.ai = Loading * factor.ai
+  ) %>% 
+  group_by(Item) %>% 
+  reframe(
+    item.ai = sum(item.ai)
+    , item.ai = pmax(item.ai, 0)
+    , item.ai = pmin(item.ai, 1)
+    ) %>% 
+  arrange(desc(item.ai)) %>% 
+  print(n = nrow(.))
+  
+# Abilities
+fun_best.model.workflow(
+  # Basic
+  .df_data.numeric = df_occupations.numeric.ablt
+  , .auto_select.nfactors = .auto_select.nfactors
+  , .int_min.factor_size = .int_min.factor_size
+  , .chr_rotation = .chr_rotation.ablt
+  , .remove_unacceptable_MSAi.items = .remove_unacceptable_MSAi.items
+  # Underloadings and crossloadings
+  , .remove_under_loading.items = .remove_under_loading.items
+  , .remove_cross_loading.items = .remove_cross_loading.items
+  , .dbl_under_loading.threshold = .dbl_under_loading.threshold
+  , .dbl_cross_loading.threshold = .dbl_cross_loading.threshold
+  # Diagrams and tests
+  , .show_diagrams = .show_diagrams
+  , .show_results = .show_results
+) -> EFA_ablt.1
+
+EFA_ablt.1$EFA.workflow$EFA$EFA.3Factors$loadings.long %>% 
+  full_join(
+    tibble(
+      Factor = paste0('Factor',1:3)
+      , factor.label = c('intelligence', 'dexterity', 'perception')
+      # , factor.ai = c(0.25, 0.33, 0.5)
+      # , factor.ai = c(0.17, 0.67, 0.67)
+      # , factor.ai = c(0.33, 0.5, 0.83)
+      , factor.ai = c(0.17, 0.5, 0.83)
+      # , factor.ai = c(0.17, 0.83, 0.83)
+      # , factor.ai = c(0.17, 0.67, 0.83)
+      # , factor.ai = c(0.33, 0.67, 0.83)
+    )
+    , multiple = 'all'
+  ) %>% 
+  ungroup() %>% 
+  mutate(
+    # Loading = Loading - min(Loading)
+    # , Loading = Loading / max(Loading)
+    , item.ai = Loading * factor.ai
+  ) %>% 
+  group_by(Item) %>% 
+  reframe(
+    item.ai = sum(item.ai)
+    , item.ai = pmax(item.ai, 0)
+    , item.ai = pmin(item.ai, 1)
+  ) %>% 
+  arrange(desc(item.ai)) %>% 
+  print(n = nrow(.))
+
+# Knowledge
+fun_best.model.workflow(
+  # Basic
+  .df_data.numeric = df_occupations.numeric.know
+  , .auto_select.nfactors = .auto_select.nfactors
+  , .int_min.factor_size = .int_min.factor_size
+  , .chr_rotation = .chr_rotation.know
+  , .remove_unacceptable_MSAi.items = .remove_unacceptable_MSAi.items
+  # Underloadings and crossloadings
+  , .remove_under_loading.items = .remove_under_loading.items
+  , .remove_cross_loading.items = .remove_cross_loading.items
+  , .dbl_under_loading.threshold = .dbl_under_loading.threshold
+  , .dbl_cross_loading.threshold = .dbl_cross_loading.threshold
+  # Diagrams and tests
+  , .show_diagrams = .show_diagrams
+  , .show_results = .show_results
+) -> EFA_know.1
+
+EFA_know.1$EFA.workflow$EFA$EFA.4Factors$loadings.long %>% 
+  full_join(
+    tibble(
+      Factor = paste0('Factor',1:4)
+      , factor.label = c('building', 'business', 'health science', 'arts & humanities')
+      # , factor.ai = c(0.17, 0.33, 0.17, 0)
+      , factor.ai = c(0.33, 0.33, 0.17, 0)
+      # , factor.ai = c(0.33*0.75, 0.33, 0.17, 0)
+      # , factor.ai = c(0.33*1.25, 0.33, 0.17, 0)
+      # , factor.ai = c(0.33*1.25, 0.33*1.25, 0.17, 0)
+      # , factor.ai = c(0.33, 0.33*1.25, 0.17, 0)
+    )
+    , multiple = 'all'
+  ) %>% 
+  ungroup() %>% 
+  mutate(
+    # Loading = Loading - min(Loading)
+    # , Loading = Loading / max(Loading)
+    , item.ai = Loading * factor.ai
+  ) %>% 
+  group_by(Item) %>% 
+  reframe(
+    item.ai = sum(item.ai)
+    , item.ai = pmax(item.ai, 0)
+    , item.ai = pmin(item.ai, 1)
+  ) %>% 
+  arrange(desc(item.ai)) %>% 
+  print(n = nrow(.))
+
+# Work context
+fun_best.model.workflow(
+  # Basic
+  .df_data.numeric = df_occupations.numeric.context
+  , .auto_select.nfactors = .auto_select.nfactors
+  , .int_min.factor_size = .int_min.factor_size
+  , .chr_rotation = .chr_rotation.context
+  , .remove_unacceptable_MSAi.items = .remove_unacceptable_MSAi.items
+  # Underloadings and crossloadings
+  , .remove_under_loading.items = .remove_under_loading.items
+  , .remove_cross_loading.items = .remove_cross_loading.items
+  , .dbl_under_loading.threshold = .dbl_under_loading.threshold
+  , .dbl_cross_loading.threshold = .dbl_cross_loading.threshold
+  # Diagrams and tests
+  , .show_diagrams = .show_diagrams
+  , .show_results = .show_results
+) -> EFA_context.1
+
+EFA_context.1$EFA.workflow$EFA$EFA.3Factors$loadings.long %>% 
+  full_join(
+    tibble(
+      Factor = paste0('Factor',1:3)
+      , factor.label = c('hazards', 'physical effort', 'people')
+      # , factor.ai = c(0.83, 0.83, 0.17)
+      # , factor.ai = c(0.83, 0.5, 0.17)
+      # , factor.ai = c(0.83, 0.5, 0.17/2)
+      # , factor.ai = c(1, 0.5, 0.17/2)
+      # , factor.ai = c(0.83, 0.5, 0.33)
+      # , factor.ai = c(1, 0.5, 0.33)
+      # , factor.ai = c(0.83, 0.33, 0.17)
+      # , factor.ai = c(1, 0.33, 0.33)
+      , factor.ai = c(1, 0.33, 0.33*0.75)
+    )
+    , multiple = 'all'
+  ) %>% 
+  ungroup() %>% 
+  mutate(
+    # Loading = Loading - min(Loading)
+    # , Loading = Loading / max(Loading)
+    , item.ai = Loading * factor.ai
+  ) %>% 
+  group_by(Item) %>% 
+  reframe(
+    item.ai = sum(item.ai)
+    , item.ai = pmax(item.ai, 0)
+    , item.ai = pmin(item.ai, 1)
+  ) %>% 
+  arrange(desc(item.ai)) %>% 
+  print(n = nrow(.))
+
+# Work activities
+fun_best.model.workflow(
+  # Basic
+  .df_data.numeric = df_occupations.numeric.activities
+  , .auto_select.nfactors = .auto_select.nfactors
+  , .int_min.factor_size = .int_min.factor_size
+  , .chr_rotation = .chr_rotation.activities
+  , .remove_unacceptable_MSAi.items = .remove_unacceptable_MSAi.items
+  # Underloadings and crossloadings
+  , .remove_under_loading.items = .remove_under_loading.items
+  , .remove_cross_loading.items = .remove_cross_loading.items
+  , .dbl_under_loading.threshold = .dbl_under_loading.threshold
+  , .dbl_cross_loading.threshold = .dbl_cross_loading.threshold
+  # Diagrams and tests
+  , .show_diagrams = .show_diagrams
+  , .show_results = .show_results
+) -> EFA_activities.1
+
+EFA_activities.1$EFA.workflow$EFA$EFA.3Factors$loadings.long %>% 
+  full_join(
+    tibble(
+      Factor = paste0('Factor',1:3)
+      , factor.label = c('analytical', 'managerial', 'mechanical')
+      # , factor.ai = c(0.33, 0.17, 0.67)
+      , factor.ai = c(0.33, 0.17/4, 0.83)
+      # , factor.ai = c(mean(c(0.17, 0.33)), 0.17/4, 0.83)
+    )
+    , multiple = 'all'
+  ) %>% 
+  ungroup() %>% 
+  mutate(
+    # Loading = Loading - min(Loading)
+    # , Loading = Loading / max(Loading)
+    , item.ai = Loading * factor.ai
+  ) %>% 
+  group_by(Item) %>% 
+  reframe(
+    item.ai = sum(item.ai)
+    , item.ai = pmax(item.ai, 0)
+    , item.ai = pmin(item.ai, 1)
+  ) %>% 
+  arrange(desc(item.ai)) %>% 
+  print(n = nrow(.))
 
 # FULLY AUTOMATED EFA WORKFLOW (WITH TOP ITEMS) --------------------------------------------
 # Skills

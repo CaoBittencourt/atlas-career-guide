@@ -329,7 +329,7 @@ fun_nfactors.selection <- function(.df_numeric){
 #       
 #       # Do all factors have at least three - or, better, four - or more variables loading onto them?
 #       df_loadings.sufficient %>% 
-#         summarise(
+#         reframe(
 #           across(
 #             .cols = -starts_with(c('Item','Load.Sufficient'))
 #             , .fns = function(x){sum(x)}
@@ -574,7 +574,7 @@ fun_nfactors.selection <- function(.df_numeric){
 #       
 #       # Do all factors have at least three - or, better, four - or more variables loading onto them?
 #       df_loadings.sufficient %>% 
-#         summarise(
+#         reframe(
 #           across(
 #             .cols = -starts_with(c('Item','Load.Sufficient'))
 #             , .fns = function(x){sum(x)}
@@ -969,7 +969,7 @@ fun_EFA <- function(
       
       # Do all factors have at least three - or, better, four - or more variables loading onto them?
       df_loadings.sufficient %>% 
-        summarise(
+        reframe(
           across(
             .cols = -starts_with(c('Item','Load.Sufficient'))
             , .fns = function(x){sum(x)}
@@ -1218,7 +1218,7 @@ fun_EFA <- function(
       
       # Do all factors have at least three - or, better, four - or more variables loading onto them?
       df_loadings.sufficient %>% 
-        summarise(
+        reframe(
           across(
             .cols = -starts_with(c('Item','Load.Sufficient'))
             , .fns = function(x){sum(x)}
@@ -1566,9 +1566,10 @@ fun_EFA.multi <- function(
     function(facts.int, facts.name){
       
       list_EFA.multi[[facts.name]]$reliability.metrics %>%
-        summarise(
+        reframe(
           Factors = facts.int
           , Useful_Factors = nrow(.)
+          # , Useful_Factors = n()
           , Unused_Factors = Factors - Useful_Factors
           , Items.Min = min(Items)
           , Items.Avg = mean(Items)
@@ -1982,7 +1983,7 @@ fun_top.items.workflow <- function(
 #     function(facts.int, facts.name){
 #       
 #       list_EFA.top.items[[facts.name]]$reliability.metrics %>%
-#         summarise(
+#         reframe(
 #           Factors = facts.int
 #           , Useful_Factors = nrow(.)
 #           , Unused_Factors = Factors - Useful_Factors
@@ -2181,9 +2182,10 @@ fun_top.items.multi.workflow <- function(
     function(facts.int, facts.name){
 
       list_EFA.top.items[[facts.name]]$reliability.metrics %>%
-        summarise(
+        reframe(
           Factors = facts.int
           , Useful_Factors = nrow(.)
+          # , Useful_Factors = n()
           , Unused_Factors = Factors - Useful_Factors
           , Items.Min = min(Items)
           , Items.Avg = mean(Items)
