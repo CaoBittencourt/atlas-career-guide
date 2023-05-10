@@ -96,16 +96,24 @@ fun_text.dynamic <- function(
     rowwise() %>%
     mutate(across(
       .cols = !where(is.numeric)
-      ,.fns = function(text){
-        
-        glue_data(
+      ,.fns = 
+        ~ glue_data(
           .list_input
-          , text
+          , .x
           , .na = .chr_na
           , .trim = T
         )
-        
-      })) %>% 
+      # ,.fns = function(text){
+      #   
+      #   glue_data(
+      #     .list_input
+      #     , text
+      #     , .na = .chr_na
+      #     , .trim = T
+      #   )
+      #   
+      # })) %>%
+      )) %>%
     ungroup() %>% 
     return()
   

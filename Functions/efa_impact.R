@@ -1,21 +1,40 @@
 # [SETUP] -----------------------------------------------------------------
+# # - Packages ----------------------------------------------------------------
+# pkg <- c(
+#   # 'labelled', 
+#   'tidyverse' #Data wrangling
+#   # , 'openxlsx' #Export excel
+#   # , 'blsR' #BLS API
+# )
+# 
+# # Activate / install packages
+# lapply(pkg, function(x)
+#   if(!require(x, character.only = T))
+#   {install.packages(x); require(x)})
+# 
+# # Package citation
+# # lapply(pkg, function(x)
+# #   {citation(package = x)})
+
+# - Data --------------------------------------------------------------------
+# Occupations data frame
+# source('C:/Users/Cao/Documents/Github/Atlas-Research/Data/df_occupations.R')
+source('C:/Users/Cao/Documents/Github/Atlas-Research/Data/df_occupations.pop.R')
+# Acronyms
+source('C:/Users/Cao/Documents/Github/Atlas-Research/Data/df_acronyms.R')
+
+# - Functions ---------------------------------------------------------------
 # Factor scores
 source('C:/Users/Cao/Documents/Github/Atlas-Research/Functions/Factor_Scores.R')
 # Automated plotting
 source('C:/Users/Cao/Documents/Github/Atlas-Research/Functions/Auto_plots.R')
-# EFA-REDUCED OCCUPATIONS DATA FRAME
-source('C:/Users/Cao/Documents/Github/Atlas-Research/Data/df_occupations.pop.EFA.R')
-# ACRONYMS
-source('C:/Users/Cao/Documents/Github/Atlas-Research/Data/df_acronyms.R')
-# Commas
-source('C:/Users/Cao/Documents/Github/Atlas-Research/Functions/fun_commas.R')
 # Capital flexibility
 source('C:/Users/Cao/Documents/Github/Atlas-Research/Functions/Capital_Flexibility.R')
+# EFA
+# source('C:/Users/Cao/Documents/Github/Atlas-Research/Functions/Auto_EFA.R')
+source('C:/Users/Cao/Documents/Github/Atlas-Research/Functions/auto_efa_fa.R')
 
-library(Hmisc)
-# library(ids)
-library(stringi)
-
+# - Parameters --------------------------------------------------------------
 # Colors
 list(
   'green' = '#4AF7B0'
@@ -36,10 +55,26 @@ list(
   , 'grey' = '#D4D5D8'
 ) -> list_pal.atlas
 
-colorRampPalette(c(
-  list_pal.atlas$purple2
-  , list_pal.atlas$green
-)) -> fun_gradient
+# EFA parameters
+.chr_rotation <- 'promax'
+# quartimax
+
+# Number of factors
+.auto_select.nfactors <- T
+
+# Minimum factor size
+.int_min.factor_size <- 3
+
+.remove_unacceptable_MSAi.items <- F
+# Underloadings and crossloadings
+.remove_under_loading.items <- F
+.remove_cross_loading.items <- F
+.dbl_under_loading.threshold <- 0.5
+.dbl_cross_loading.threshold <- 0.2
+
+# Diagrams and tests
+.show_diagrams <- T
+.show_results <- T
 
 # [FUNCTION] EFA-BASED IMPACT ANALYSIS ----------------------------------------------
 fun_EFA.impact <- function(
@@ -230,23 +265,59 @@ fun_EFA.impact <- function(
           -where(is.numeric)
           , -item
         ))) %>% 
+      mutate(
+        .before = item.score 
+        , item.weight = 
+          item.score / 
+          sum(item.score)
+      ) %>% 
+      ungroup() -> df_impact.weighted
+    
+    df_impact.weighted %>% 
+      group_by(
+        across(c(
+          -where(is.numeric)
+          , -item
+        ))) %>%
       reframe(across(
         .cols = is.numeric
-        ,.fns = mean
+        # ,.fns = mean
+        ,.fns = ~ weighted.mean(
+          .x, item.weight
+        )
       )) -> df_impact.agg
     
-    df_impact %>% 
-      group_by(item) %>% 
+    # df_impact.weighted %>%
+    #   group_by(item) %>%
+    #   reframe(across(
+    #     .cols = is.numeric
+    #     # ,.fns = mean
+    #     ,.fns = ~ weighted.mean(
+    #       .x, item.weight
+    #     )
+    #   )) -> df_impact.items
+    
+    df_impact %>%
+      group_by(item) %>%
       reframe(across(
         .cols = is.numeric
         ,.fns = mean
       )) -> df_impact.items
     
-    df_impact %>% 
+    df_impact.weighted %>%
       reframe(across(
         .cols = is.numeric
-        ,.fns = mean
+        # ,.fns = mean
+        ,.fns = ~ weighted.mean(
+          .x, item.weight
+        )
       )) -> df_impact.all
+    
+    # df_impact %>%
+    #   reframe(across(
+    #     .cols = is.numeric
+    #     ,.fns = mean
+    #   )) -> df_impact.all
     
   }
   
@@ -266,14 +337,282 @@ fun_EFA.impact <- function(
   
 }
 
+# # [EFA] RUN FACTOR ANALYSIS ON THE WHOLE DATA FRAME -----------------------
+# # Occupations data frame on a 0 to 100 scale
+# df_occupations.pop %>%
+#   # select(
+#   #   ends_with('.l')
+#   # ) %>% 
+#   mutate(across(
+#     .cols = ends_with('.l')
+#     ,.fns = ~ .x * 100
+#   )) -> df_occupations.pop
+# 
+# # [x] Try the fa() function from the psych package
+# # [ ] Try competencies-only model and a 
+# # [ ] work-related-only (context, activities) model
+# 
+# fun_best.model.top.items.workflow(
+#   .df_data.numeric = 
+#     df_occupations %>% 
+#     select(ends_with('.l'))
+#   , .auto_select.nfactors = T
+#   , .int_min.factor_size = 
+#     .int_min.factor_size
+#   , .int_n.items.total = 60
+#   , .chr_rotation =
+#     .chr_rotation
+#   , .remove_unacceptable_MSAi.items =
+#     .remove_unacceptable_MSAi.items
+#   , .remove_under_loading.items =
+#     .remove_under_loading.items
+#   , .remove_cross_loading.items =
+#     .remove_cross_loading.items
+#   , .dbl_under_loading.threshold =
+#     .dbl_under_loading.threshold
+#   , .dbl_cross_loading.threshold =
+#     .dbl_cross_loading.threshold
+#   , .show_diagrams =
+#     .show_diagrams 
+#   , .show_results =
+#     .show_results
+# ) -> list_efa.models
+# 
+# list_efa.models$all.models.reliability
+# list_efa.models$EFA.workflow$EFA$reliability.evaluation %>% 
+#   filter(items.Min >= 3) %>% view
+# 
+# 
+# fun_top.items.multi.workflow(
+#   .df_data.numeric = 
+#     df_occupations %>% 
+#     select(ends_with('.l'))
+#   , .int_n.items.total = 15 * 10
+#   , .auto_select.nfactors = F
+#   , .int_nfactors.vector = c(1,15)
+#   , .chr_rotation = 'promax'
+#   , .remove_unacceptable_MSAi.items = F
+#   , .remove_under_loading.items = F
+#   , .remove_cross_loading.items = F
+#   , .show_diagrams = F
+#   , .show_results = F
+# ) -> list_efa.models
+# 
+# 
+# dsds$sufficient.loadings
+# dsds$reliability.evaluation
+# 
+# 
+# 
+# loadings(dsds)[,] %>% 
+#   as_tibble(
+#     rownames = 'item'
+#   ) %>% 
+#   set_names(
+#     c(
+#       'item'
+#       , loadings(dsds) %>%
+#         # as.matrix() %>%
+#         colnames() %>% 
+#         str_extract(
+#           '[[:digit:]]+'
+#         ) %>%
+#         paste0('Factor',.)
+#     )
+#   ) %>% 
+#   relocate(
+#     item
+#     , str_sort(
+#       names(.)
+#       , numeric = T
+#     )
+#   )
+# 
+# 
+# 
+# 
+# # Run EFA on occupations data frame
+# fun_best.model.workflow(
+#   .df_data.numeric = 
+#     df_occupations
+#   , .chr_rotation = 
+#     .chr_rotation
+#   , .auto_select.nfactors = 
+#     .auto_select.nfactors
+#   , .int_min.factor_size = 
+#     .int_min.factor_size
+#   , .remove_unacceptable_MSAi.items = 
+#     .remove_unacceptable_MSAi.items
+#   , .remove_under_loading.items = 
+#     .remove_under_loading.items
+#   , .remove_cross_loading.items = 
+#     .remove_cross_loading.items
+#   , .dbl_under_loading.threshold =  
+#     .dbl_under_loading.threshold 
+#   , .dbl_cross_loading.threshold =
+#     .dbl_cross_loading.threshold
+#   , .show_diagrams = 
+#     .show_diagrams 
+#   , .show_results = 
+#     .show_results
+# ) -> list_efa.models
+# 
+# fun_EFA(
+#   .df_data.numeric = 
+#     df_occupations
+#   , .chr_rotation = 
+#     .chr_rotation
+#   # , .int_nfactors = 21
+#   , .int_nfactors = 15
+#   , .remove_unacceptable_MSAi.items =
+#     .remove_unacceptable_MSAi.items
+#   , .remove_under_loading.items =
+#     .remove_under_loading.items
+#   , .remove_cross_loading.items =
+#     .remove_cross_loading.items
+#   , .dbl_under_loading.threshold =
+#     .dbl_under_loading.threshold
+#   , .dbl_cross_loading.threshold =
+#     .dbl_cross_loading.threshold 
+#   , .show_diagrams =
+#     .show_diagrams
+#   , .show_results =
+#     , .show_results 
+# ) -> list_efa.15factors
+# 
+# 
+# fun_nfactors.selection(
+#   df_occupations
+# ) -> df_factors.recommended
+# 
+# fun_EFA.multi(
+#   .df_data.numeric = 
+#     df_occupations
+#   , .auto_select.nfactors = F
+#   , .int_nfactors.vector =
+#     df_factors.recommended$Factors.Suggested
+#   , .chr_rotation =
+#     .chr_rotation
+#   , .remove_unacceptable_MSAi.items =
+#     .remove_unacceptable_MSAi.items
+#   , .remove_under_loading.items =
+#     .remove_under_loading.items
+#   , .remove_cross_loading.items =
+#     .remove_cross_loading.items
+#   , .dbl_under_loading.threshold =
+#     .dbl_under_loading.threshold
+#   , .dbl_cross_loading.threshold =
+#     .dbl_cross_loading.threshold 
+#   , .show_diagrams =
+#     .show_diagrams
+#   , .show_results =
+#     , .show_results 
+# ) -> list_efa
+# 
+# list_efa.models$EFA.workflow$reliability.metrics %>% view
+# list_efa.models$EFA.workflow$reliability.evaluation %>% view
+
 # DSDS --------------------------------------------------------------------
+# P.S.:
+# partial replacement ~ 50, not 83!
+# 83 == structural unemployment
+# Auxiliary level ~ 25
+tibble(
+  'label' = 
+    c(
+      'Complete replacement'
+      , 'Severe replacement'
+      , 'Very high replacement'
+      , 'Partial replacement'
+      , 'Medium impact'
+      , 'Auxiliary impact'
+      , 'No impact'
+    )
+  , 'desc' = 
+    c(
+      'Unemployed'
+      , 'Monitor machines'
+      , 'Prepare machines'
+      , 'Setup machines'
+      , 'Reallocate time'
+      , 'Increase speed'
+      , 'Business as usual'
+    )
+  , 'impact' = round(seq(-100, 0, length.out = 7))
+) %>% 
+  mutate(
+    .before = 1
+    , interval = 
+      findInterval(
+        impact
+        , impact
+      )) %>% 
+  mutate(
+    .after = impact
+    , hours.saved = 
+      (-(impact / 100)) * 8
+    , hours.worked = 
+      8 - hours.saved
+    , across(
+      .cols = starts_with('hours.')
+      ,.fns = ~ 
+        paste(
+          floor(.x)
+          , round((
+            .x - floor(.x)
+          ) * 60)
+          , sep = 'h'
+        )
+    )
+  ) -> df_labels
+
+view(df_labels)
+
+tibble(
+  'factor' = 
+    loadings(
+      EFA_skill.1$EFA.workflow$EFA$EFA.2Factors$model
+    )[,] %>% 
+    colnames()
+  , 'factor.impact' = c(
+    'Discernment' = -17/4
+    , 'Technical Skills' = -50
+  )
+) -> df_impact
+
+df_impact %>% 
+  mutate(
+    .after = 1
+    , factor.name = 
+      c(
+        'Discernment'
+        , 'Technical Skills'
+      )
+  ) %>% 
+  mutate(
+    impact.interval = 
+      findInterval(
+        factor.impact
+        , df_labels$impact
+      )) %>% 
+  left_join(
+    df_labels
+    , by = c(
+      'impact.interval' = 'interval'
+    )
+  ) %>% view
+
 fun_EFA.impact(
   .df_data = 
     df_occupations %>% 
     select(
       occupation
       , ends_with('.l')
-    )
+    ) %>% 
+    mutate(across(
+      .cols = is.numeric
+      ,.fns = ~ .x * 100
+    ))
   , .efa_model = EFA_skill.1$EFA.workflow$EFA$EFA.2Factors$model
   , .df_factors.impact = df_impact
   , .dbl_scale.lb = 0
@@ -284,64 +623,92 @@ fun_EFA.impact(
 ) -> dsds
 
 dsds$individual.impact
-dsds$items.impact %>% view
+dsds$items.impact
 dsds$aggregate.impact
 dsds$overall.impact
 
-dsds$factors.loadings %>% 
-  mutate(
-    item2_item = 
-      if_else(
-        item.score == 0
-        , item.score2 / 100
-        , item.score2 / item.score
-      )
-  ) %>%
-  group_by(occupation) %>% 
-  reframe(
-    dsds = mean(item.impact)
-    , lalala = mean(item2_item) - 1
-  ) -> lalala
-
-qplot(lalala$dsds, xlim = c(-1,1))
-qplot(lalala$lalala, xlim = c(-1,1))
-
-dsds$factors.loadings %>% 
-  group_by(
-    occupation
-    , item
-  ) %>% 
-  slice(1) %>% 
-  ungroup() %>% 
-  group_by(occupation) %>% 
-  reframe(
-    dsds1 = mean(
-      if_else(
-        item.score == 0
-        , item.score2 / 100
-        , item.score2 / item.score
-      )
-    ) - 1
-    , dsds2 = mean(item.impact)
+dsds$items.impact %>% 
+  fun_plot.histogram(aes(
+    x = item.impact.rate
+  )
+  , .list_axis.x.args = list(
+    limits = c(-1, 1)
+    , breaks = c(
+      -round(seq(0,1,1/6), 2)
+      , round(seq(0,1,1/6), 2)
+    )
+  )
+  , .fun_format.x = percent
+  , .list_labs = list(
+    title = 'Average item impact'
+  )
   )
 
-tibble(
-  'factor' = 
-    loadings(EFA_skill.1$EFA.workflow$EFA$EFA.2Factors$model)[,] %>% 
-    colnames()
-  , 'factor.impact' = 
-    runif(
-      loadings(EFA_skill.1$EFA.workflow$EFA$EFA.2Factors$model)[,] %>% 
-        ncol()
-      , -50
-      , 25
+dsds$individual.impact %>% 
+  fun_plot.histogram(aes(
+    x = item.impact.rate
+  )
+  , .list_axis.x.args = list(
+    limits = c(-1, 1)
+    , breaks = c(
+      -round(seq(0,1,1/6), 2)
+      , round(seq(0,1,1/6), 2)
     )
-) -> df_impact
+  )
+  , .fun_format.x = percent
+  , .list_labs = list(
+    title = 'Individual impact (items vs occupations)'
+  )
+  )
 
-dsds$data
-dsds$scale.lb
-dsds$scale.ub
-dsds$impact.lb
-dsds$impact.ub
-dsds$factors.impact
-dsds$factors.loadings
+dsds$aggregate.impact %>% 
+  fun_plot.histogram(aes(
+    x = item.impact.rate
+  )
+  , .list_axis.x.args = list(
+    limits = c(-1, 1)
+    , breaks = c(
+      -round(seq(0,1,1/6), 2)
+      , round(seq(0,1,1/6), 2)
+    )
+  )
+  , .fun_format.x = percent
+  , .list_labs = list(
+    title = 'Aggregate impact (occupations)'
+  )
+  )
+
+sum(
+  ncol(df_occupations.numeric.ablt)
+  , ncol(df_occupations.numeric.skill)
+  , ncol(df_occupations.numeric.know)
+) * .3
+
+sum(
+  ncol(df_occupations.numeric.context)
+  , ncol(df_occupations.numeric.activities)
+)
+
+dsds$aggregate.impact %>% 
+  select(
+    occupation
+    , item.impact.rate
+  ) %>% 
+  full_join(
+    df_occupations.pop
+  ) %>% 
+  fun_plot.histogram(aes(
+    x = item.impact.rate
+  )
+  , .list_axis.x.args = list(
+    limits = c(-1, 1)
+    , breaks = c(
+      -round(seq(0,1,1/6), 2)
+      , round(seq(0,1,1/6), 2)
+    )
+  )
+  , .fun_format.x = percent
+  , .list_labs = list(
+    title = 'Aggregate impact (occupations)'
+  )
+  )

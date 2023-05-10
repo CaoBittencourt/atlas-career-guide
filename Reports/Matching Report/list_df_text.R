@@ -1,6 +1,9 @@
 # --- SETUP -----------------------------------------------------------
 # DATA --------------------------------------------------------------------
 # DEFAULT TEXTS FOR IMPUTATION
+# setwd(
+#   'C:/Users/Cao/Documents/Github/Atlas-Research/Reports/Matching Report'
+# )
 map(
   excel_sheets('./career_finder_report2.xlsx')
   , ~ read_excel(

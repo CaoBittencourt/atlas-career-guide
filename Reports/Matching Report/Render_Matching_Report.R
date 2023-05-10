@@ -40,10 +40,12 @@ source('C:/Users/Cao/Documents/Github/Atlas-Research/Functions/Capital_Flexibili
 
 # PARAMETERS --------------------------------------------------------------
 # Selected respondent
-chr_text.user <- 'Martijn'
-# chr_text.user <- 'Cao'
+# chr_text.user <- 'Maurício'
+# chr_text.user <- 'Martijn'
+chr_text.user <- 'Cao'
 # chr_text.user <- 'Alexandre'
 # chr_text.user <- 'Acilio'
+# chr_text.user <- 'Milena'
 # chr_text.user <- 'Gabriel'
 # chr_text.user <- 'Random'
 # chr_text.user <- 'Random2'
@@ -91,7 +93,8 @@ list(
 
 # DATA --------------------------------------------------------------------
 # EFA-REDUCED OCCUPATIONS DATA FRAME
-source('C:/Users/Cao/Documents/Github/Atlas-Research/Data/df_occupations.EFA.R')
+# source('C:/Users/Cao/Documents/Github/Atlas-Research/Data/df_occupations.EFA.R')
+source('C:/Users/Cao/Documents/Github/Atlas-Research/Data/df_occupations.R')
 
 # USER INPUT DATA FRAME
 df_input <- readr::read_csv('https://docs.google.com/spreadsheets/d/e/2PACX-1vSphzWoCxoNaiaJcQUWKCMqUAT041Q8UqUgM7rSzIwYZb7FhttKJwNgtrFf-r7EgzXHFom4UjLl2ltk/pub?gid=725827850&single=true&output=csv')
@@ -128,24 +131,32 @@ names(list_sections) <- list_df_text$sections$section
 # EFA-REDUCED QUERY VECTOR -----------------------------------------------
 # Select user
 df_input %>% 
-  filter(Name == chr_text.user) -> df_input
+  filter(Name == chr_text.user) -> df_input.user
 
 # EFA-reduced data frame
-df_input %>%
+df_input.user %>% 
   select(
-    all_of(
-      list_factors %>%
-        flatten() %>% 
-        flatten_chr()
-    )
-  ) %>%  
+    df_occupations %>% 
+      select(ends_with('.l')) %>% 
+      select(1:120) %>% 
+      names()
+  ) %>% 
+  # df_input %>%
+  #   select(
+  #     all_of(
+  #       list_factors %>%
+  #         flatten() %>% 
+  #         flatten_chr()
+  #     )
+  #   ) %>%  
   mutate(
     across(
-      .cols = all_of(
-        list_factors %>%
-          flatten() %>% 
-          flatten_chr()
-      )
+      .cols = is.numeric
+      # .cols = all_of(
+      #   list_factors %>%
+      #     flatten() %>% 
+      #     flatten_chr()
+      # )
       , .fns = function(x){
         recode((x + 2)
                # recode(x
@@ -158,7 +169,7 @@ df_input %>%
                , '7' = 1.00
         )}
     )
-  ) -> df_input
+  ) -> df_input.user
 
 # LEVEL OF EDUCATION FILTER -----------------------------------------------
 # All levels of education
@@ -215,23 +226,86 @@ df_occupations %>%
 
 # ------- RESULTS --------------------------------------------------------
 # KNN MATCHING ---------------------------------------------------------------
-fun_KNN.matching(
+# fun_KNN.matching(
+fun_KNN.matching3(
   .df_data.numeric = 
     df_occupations %>% 
     select(
       occupation
-      , all_of(
-        list_factors %>%
-          flatten() %>% 
-          flatten_chr()
-      ))
-  , .vec_query.numeric = df_input
+      , ends_with('.l')
+      # , all_of(
+      #   list_factors %>%
+      #     flatten() %>% 
+      #     flatten_chr()
+      # )
+    ) %>%
+    select(1:121)
+  , .vec_query.numeric = df_input.user
   , .int_k = nrow(df_occupations)
-  , .imput.over_qualification = T
-  , .dbl_over_qualification.threshold = dbl_threshold
-  , .dbl_decimals = 4
+  # , .imput.over_qualification = T
+  # , .dbl_over_qualification.threshold = dbl_threshold
+  # , .dbl_decimals = 4
 ) %>% 
-  full_join(df_occupations) -> df_KNN.output
+  full_join(
+    df_occupations
+  ) -> df_KNN.output
+
+df_KNN.output %>% 
+  select(
+    occupation
+    , euclidean_distance
+  ) %>% 
+  tail(20)
+
+# df_KNN.output %>% slice(1) %>% bind_rows(df_input.user) %>% view
+df_KNN.output %>%
+  select(
+    occupation
+    , euclidean_distance
+  ) %>%
+  head(20)
+
+df_KNN.output %>% 
+  select(
+    rank
+    , occupation
+    , euclidean_distance
+  ) %>%
+  filter(
+    occupation == 'Chief Executives'
+  )
+
+df_KNN.output$similarity %>% 
+  fun_capital.flex()
+
+df_KNN.output$similarity %>% 
+  fun_capital.flex() %>% 
+  findInterval(
+    vec = round(seq(0,1,length.out = 7),2)[-c(1,7)]
+  ) %>% 
+  recode(
+    '1' = 'very specialized'
+    , '2' = 'specialized'
+    , '3' = 'normally distributed'
+    , '4' = 'generalist'
+    , '5' = 'very generalist'
+  )
+
+df_KNN.output %>% 
+  select(
+    occupation
+    , similarity
+    , euclidean_distance
+  ) %>%
+  fun_plot.density(aes(
+    x = similarity
+  )
+  , .list_axis.x.args = list(
+    limits = c(-0.1, 1.1)
+    , breaks = seq(0,1,length.out = 7)
+  )
+  , .fun_format.x = percent
+  )
 
 # FACTOR SCORES (USER) -----------------------------------------------------------
 fun_factor.scores(
@@ -1032,5 +1106,3 @@ rmarkdown::render(
   'C:/Users/Cao/Documents/Github/Atlas-Research/Reports/Matching Report/matching_report.Rmd'
   , output_file = paste0('Matching Report (', chr_text.user, ').pdf')
 )
-
- 

@@ -10,7 +10,7 @@ source('C:/Users/Cao/Documents/Github/Atlas-Research/Data/df_acronyms.R')
 # Commas
 source('C:/Users/Cao/Documents/Github/Atlas-Research/Functions/fun_commas.R')
 # Capital flexibility
-source('C:/Users/Cao/Documents/Github/Atlas-Research/Functions/Capital_Flexibility.R')
+source('C:/Users/Cao/Documentis/Github/Atlas-Research/Functions/Capital_Flexibility.R')
 
 library(Hmisc)
 # library(ids)
