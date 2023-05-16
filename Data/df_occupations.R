@@ -64,11 +64,13 @@ df_occupations %>%
     , annual_wage_2021
     , projected_growth_2020.2030
     , ends_with('.l') #Using recommended levels
+    # , ends_with('.i') #Using importance levels
   ) %>% 
   mutate(
     across(
       .cols = ends_with('.l') #Using recommended levels
-      , .fns = function(x){x/100}
+      # .cols = ends_with(c('.l', '.i'))
+      ,.fns = function(x){x/100}
     )
   ) -> df_occupations
 

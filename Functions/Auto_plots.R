@@ -3,7 +3,6 @@
 pkg <- c(
   'ggthemes', 'ggridges', 'gghighlight', 'scales' , 'viridis', 'ggalt', 'geomtextpath'
   # , 'circlize' #'paletteer' #Data visualization
-  , 'devtools' #Dev Tools
   # , 'ggalt', 'hrbrthemes', 'extrafont' #Data visualization
   # , 'ggthemr' #Data visualization
   , 'tidyverse', 'rlang' #Data wrangling

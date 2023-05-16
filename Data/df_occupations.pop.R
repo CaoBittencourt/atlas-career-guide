@@ -25,10 +25,10 @@ df_employment <- readr::read_csv('https://docs.google.com/spreadsheets/d/e/2PACX
 # -------- DATA --------------------------------------------
 # EMPLOYMENT DATA FRAME ---------------------------------------------------
 df_employment %>% 
-rename(
-  code = OCC_CODE
-  , employment = TOT_EMP
-) %>% 
+  rename(
+    code = OCC_CODE
+    , employment = TOT_EMP
+  ) %>% 
   select(
     code
     , employment
