@@ -176,9 +176,9 @@ list_efa.equamax.15$
 # - Top items -------------------------------------------------------------
 # Top items selection
 list(
-  int_atlas.mini = round(ncol(df_occupations) / 4)
-  , int_atlas.pro = round(ncol(df_occupations) / 2)
-  , int_atlas.complete = ncol(df_occupations)
+  atlas.mini = round(ncol(df_occupations) / 4)
+  , atlas.pro = round(ncol(df_occupations) / 2)
+  , atlas.complete = ncol(df_occupations)
 ) %>%
   map(
     ~ fun_efa.topitems(
@@ -216,9 +216,9 @@ list_questionnaires %>%
       arrange(desc(n))
   )
 
-list_questionnaires$int_atlas.mini %>% view
-list_questionnaires$int_atlas.pro %>% view
-list_questionnaires$int_atlas.complete %>% view
+list_questionnaires$atlas.mini %>% view
+list_questionnaires$atlas.pro %>% view
+list_questionnaires$atlas.complete %>% view
 
 df_occupations.pop %>% 
   group_by(occupation) %>%
@@ -233,9 +233,9 @@ fun_KNN.matching(
     select(
       occupation
       , list_questionnaires$
-        int_atlas.mini$
-        # int_atlas.pro$
-        # int_atlas.complete$
+        atlas.mini$
+        # atlas.pro$
+        # atlas.complete$
         item
     )
   , .vec_query.numeric = 
