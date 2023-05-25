@@ -1,0 +1,136 @@
+sample-weighted efa: equamax rotation with competencies only (120 items)
+
+Use no less than 13 factors (Kaiser criterion), otherwise:
+1) Insufficiently differentiated factors
+2) Odd groups (including e.g. medicine + philosophy)
+P.S.: Use no more than 16 factors due to factor granularity.
+
+13 factor model
+factor1 = rhetoric (12 items)
+factor2 = building (10 items)
+factor3 = health science (8 items) *odd items
+factor4 = administrative (6 items) *odd items
+factor5 = operation (11 items)
+factor6 = arts & humanities (9 items)
+factor7 = reasoning / intelligence / technological / systems skills (17 items)
+factor8 = physical competencies (11 items) *odd item = food production
+factor9 = mathematics (8 items) *odd item = near vision (for reading)
+factor10 = management (8 items)
+factor11 = dexterity (9 items)
+factor12 = technical / mechanical skills (5 items)
+factor13 = technological / systems skills (13 items)
+factor14 = perception (7 items)
+
+14 factor model
+factor1 = rhetoric (8 items)
+factor2 = perception (8 items) 
+factor3 = arts & humanities (9 items)
+factor4 = administrative (6 items) *odd items
+factor5 = operation (10 items)
+factor6 = building (9 items)
+factor7 = health science (8 items) *odd item = foreign language (e.g. latin, medical handwriting / hieroglyphs)
+factor8 = reading / communications / interpretation (10 items) *somewhat odd items
+factor9 = mathematics (7 items)
+factor10 = management (8 items)
+factor11 = dexterity (9 items)
+factor12 = technical / mechanical skills (5 items)
+factor13 = technological / systems skills (13 items)
+factor14 = physical competencies (11 items) *odd item = food production
+
+15 factor model
+factor1 = rhetoric (10 items)
+factor2 = perception (10 items) 
+factor3 = arts & humanities (8 items)
+factor4 = business (7 items)
+factor5 = operation (10 items)
+factor6 = building (9 items)
+factor7 = health science (8 items) *odd items
+factor8 = administrative (4 items) *suboptimal items
+factor9 = mathematics (5 items)
+factor10 = management (6 items)
+factor11 = dexterity (7 items)
+factor12 = technical / mechanical skills (5 items)
+factor13 = technological / systems skills (9 items)
+factor14 = physical competencies (11 items) *odd item = food production
+factor15 = intelligence (11 items) *odd item = near vision (for reading)
+
+16 factor model
+factor1 = rhetoric (9 items)
+factor2 = perception (7 items) 
+factor3 = arts & humanities (8 items)
+factor4 = business (7 items)
+factor5 = operation (9 items)
+factor6 = building (9 items)
+factor7 = health science (8 items) *odd items
+factor8 = administrative (5 items) *suboptimal items
+factor9 = mathematics (5 items)
+factor10 = management (6 items)
+factor11 = dexterity (6 items)
+factor12 = technical / mechanical skills (5 items)
+factor13 = technological / systems skills (8 items)
+factor14 = physical competencies (11 items) *odd item = food production
+factor15 = intelligence (11 items) *odd item = near vision (for reading)
+factor16 = operation (again, 5 items)
+
+17 factor model [no]
+factor1 = speaking (6 items)
+factor2 = perception (10 items) 
+factor3 = arts & humanities (6 items)
+factor4 = business (7 items)
+factor5 = operation (10 items)
+factor6 = building (9 items)
+factor7 = health science (7 items)
+factor8 = ??? (2 items) *incoherent factor, not enough items
+factor9 = mathematics (5 items)
+factor10 = management (5 items)
+factor11 = dexterity (6 items)
+factor12 = technical / mechanical skills (5 items)
+factor13 = technological / systems skills (8 items)
+factor14 = physical competencies (10 items)
+factor15 = intelligence (13 items) *odd item = near vision (for reading)
+factor16 = rhetoric (4 items)
+factor17 = instructing (7 items)
+
+sample-weighted efa: equamax rotation with competencies, work context, and work activities (217 items)
+
+10 factor model [no]: medicine + philosophy
+11 factor model [no]: medicine + philosophy
+12 factor model [no]: medicine + philosophy
+13 factor model [no]: medicine + philosophy
+14 factor model [no]: medicine + philosophy
+P.S.: 20+ factor models are too granular. And even with these complex factor structures, many troublesome items (near vision, foreign language, etc) still cluster on the "wrong" factors (in terms of interpretability). It is probably more adequate to  simply remove such items and rerun the smaller factor structures.
+
+15 factor model [minimum to separate medicine and philosophy]
+factor1 = intelligence (16 items) *odd item = near vision (for reading) 
+factor2 = technical / mechanical skills (19 items) *somewhat underdifferentiated
+factor3 = health science (15 items) *odd items = foreing language, time sharing
+factor4 = operation (20 items) *somewhat underdifferentiated
+factor5 = management (16 items)
+factor6 = social skills (14 items) *odd item = importance of repeating the same tasks
+factor7 = analytical skills (18 items) *odd item = interpersonal relationships (high crossloading with factor6)
+factor8 = business (9 items) *mostly marketing (economics is odd in this factor)
+factor9 = industrial (10 items)
+factor10 = physical prowess (11 items) *odd item = food production
+factor11 = building (15 items)
+factor12 = discernment (21 items) *somewhat odd items
+factor13 = arts & humanities (12 items)
+factor14 = administrative (11 items) *odd items = programming, computers & electronics
+factor15 = physical exertion / job hazards (10 items)
+
+16 factor model
+factor1 = intelligence (14 items) *programming finally clusters here 
+factor2 = perception / dexterity / operation (15 items) *somewhat underdifferentiated
+factor3 = health science (13 items) *odd item = foreing language (time sharing no longer clusters here)
+factor4 = operation (17 items)
+factor5 = management (15 items)
+factor6 = office / social skills (16 items) *odd item = importance of repeating the same tasks
+factor7 = analytical skills (18 items) *odd item = interpersonal relationships (high crossloading with factor6)
+factor8 = business (9 items) *mostly marketing (economics is odd in this factor)
+factor9 = industrial (6 items)
+factor10 = administrative (8 items) *odd item = computers & electronics
+factor11 = building (15 items)
+factor12 = makes no sense (10 items) *really odd items
+factor13 = arts & humanities (12 items)
+factor14 = mechanical skills / dexterity (15 items)
+factor15 = physical prowess (19 items)
+factor16 = mathematics (15 items) *odd item = near vision (for reading)
