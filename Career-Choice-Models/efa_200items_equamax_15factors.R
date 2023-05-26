@@ -23,11 +23,16 @@ source('C:/Users/Cao/Documents/Github/Atlas-Research/Data/df_occupations.pop.R')
 # EFA
 source('C:/Users/Cao/Documents/Github/Atlas-Research/Functions/auto_efa_fa.R')
 
+# Knn matching function
+source("C:/Users/Cao/Documents/Github/Atlas-Research/Functions/KNN_Matching.R")
+
 # - Parameters --------------------------------------------------------------
 # EFA parameters
 # Sample weights
 df_occupations %>% 
-  pull(employment2) -> .dbl_weights
+  pull(
+    employment2
+  ) -> .dbl_weights
 
 # Orthogonal rotations
 .chr_rotation <- 'equamax'
@@ -43,6 +48,7 @@ df_occupations %>%
 # .chr_rotation <- 'cluster'
 
 # Number of factors
+# Models tested: from 1 to 22+ factors
 .int_nfactors <- 15
 # .auto_select.nfactors <- T
 .auto_select.nfactors <- F
@@ -87,24 +93,25 @@ list(
 
 # - Select items for EFA --------------------------------------------------
 df_occupations %>%
-  select(ends_with('.l')) %>%
+  select(
+    occupation
+    , ends_with('.l')
+  ) %>%
   select(
     !list_items.remove %>%
       flatten_chr()
   ) -> df_occupations
 
-dsds %>%
-  select(ends_with('.l')) %>%
+df_occupations %>% 
   select(
-    !list_items.remove %>%
-      flatten_chr()
-  ) -> dsds
+    ends_with('.l')
+  ) -> df_occupations.numeric
 
 # [EFA] -----------------------
 # - Run factor analysis on the whole data frame ---------------------------
 fun_efa.bestmodel(
   .df_data.numeric = 
-    df_occupations
+    df_occupations.numeric
   , .dbl_weights = 
     .dbl_weights
   , .chr_rotation =
@@ -140,7 +147,7 @@ tibble(
       'discernment'
       , 'mechanical skills'
       , 'health science'
-      , 'transportation / vehicle operation'
+      , 'transportation / vehicle operation / operation'
       , 'management'
       , 'social skills'
       , 'analytical skills'
@@ -164,7 +171,7 @@ list_efa.equamax.15$
     nitems = n()
   ) %>% 
   ungroup() %>% 
-  relocate(
+  select(
     factor
     , factor.name
     , nitems
@@ -176,10 +183,14 @@ list_efa.equamax.15$
 # - Top items -------------------------------------------------------------
 # Top items selection
 list(
-  atlas.mini = round(ncol(df_occupations) / 4)
-  , atlas.pro = round(ncol(df_occupations) / 2)
-  , atlas.complete = ncol(df_occupations)
+  'atlas.mini' = 0.25
+  , 'atlas.pro' = 0.5
+  , 'atlas.complete' = 1
 ) %>%
+  map(
+    ~ df_occupations.numeric %>% 
+      ncol() * .x
+  ) %>% 
   map(
     ~ fun_efa.topitems(
       .df_data.numeric = 
@@ -211,7 +222,10 @@ list_questionnaires
 list_questionnaires %>% 
   map(
     ~ .x %>%
-      group_by(factor) %>% 
+      group_by(
+        factor
+        , factor.name
+      ) %>% 
       tally() %>% 
       arrange(desc(n))
   )
@@ -220,40 +234,43 @@ list_questionnaires$atlas.mini %>% view
 list_questionnaires$atlas.pro %>% view
 list_questionnaires$atlas.complete %>% view
 
-df_occupations.pop %>% 
-  group_by(occupation) %>%
-  slice(1) %>% 
-  ungroup() -> dsds
+# [TESTING] ---------------------------------------------------------------
+# - Use questionnaires for knn matching -----------------------------------
+# Sample occupation
+df_occupations %>% 
+  slice_sample(
+    n = 1
+  ) -> df_sample
 
-source("C:/Users/Cao/Documents/Github/Atlas-Research/Functions/KNN_Matching.R")
+# Apply questionnaires
+list_questionnaires %>% 
+  map(
+    ~ fun_KNN.matching(
+      .df_data.numeric = 
+        df_occupations %>% 
+        select(
+          occupation
+          , .x$item
+        )
+      , .vec_query.numeric =
+        df_sample %>% 
+        select(.x$item)
+      , .int_k = nrow(df_occupations)
+      , .imput.over_qualification = T
+      , .dbl_over_qualification.threshold = 0
+    ) %>% 
+      select(
+        rank
+        , occupation
+        , similarity
+      ) %>% 
+      slice(
+        seq(1, 7, 1)
+        , seq(n() - 7 + 1, n())
+      )
+  ) 
 
-fun_KNN.matching(
-  .df_data.numeric = 
-    dsds %>% 
-    select(
-      occupation
-      , list_questionnaires$
-        atlas.mini$
-        # atlas.pro$
-        # atlas.complete$
-        item
-    )
-  , .vec_query.numeric = 
-    dsds %>% 
-    slice_sample(n = 1)
-  , .int_k = nrow(dsds)
-  , .imput.over_qualification = T
-  , .dbl_over_qualification.threshold = 0
-) %>% 
-  select(
-    rank
-    , occupation
-    , similarity
-  ) -> lalala
-
-lalala %>% head(10)
-lalala %>% tail(10)
-
+# [OUTPUT] ----------------------------------------------------------------
 # - Export to excel -------------------------------------------------------
 # Model with main factor loadings
 df_loadings.factors %>% 
