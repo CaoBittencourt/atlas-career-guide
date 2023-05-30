@@ -16,7 +16,7 @@ lapply(pkg, function(x)
 # [FUNCTION] ----------------------------------------------
 # EFA-based exogenous impact analysis ------------------------------------
 fun_efa.impact <- function(
-    
+
   # Data
   .df_data
   # Sample weights
@@ -31,11 +31,13 @@ fun_efa.impact <- function(
   # Impact truncation
   , .dbl_impact.lb = -Inf
   , .dbl_impact.ub = Inf
+  # Immunity truncation
+  , .dbl_immune.lb = 0
+  , .dbl_immune.ub = 17
   # Aggregate results
   , .lgc_aggregate = F
-  
+
 ){
-  
   # Arguments validation
   stopifnot(
     "'.efa_model' must be a factor analysis object." =
@@ -48,7 +50,7 @@ fun_efa.impact <- function(
         )) == 'fa'
       )
   )
-  
+
   stopifnot(
     "'.df_data' must be a data frame containing item scores." =
       all(
@@ -58,7 +60,7 @@ fun_efa.impact <- function(
             rownames() %in%
             names(.df_data)
         )))
-  
+
   stopifnot(
     "'.dbl_weights' must be a vector of sample weights the same length as '.df_data'." =
       any(
@@ -67,47 +69,60 @@ fun_efa.impact <- function(
           is.numeric(.dbl_weights)
           , length(.dbl_weights) ==
             .df_data %>%
-            nrow() 
+            nrow()
         )
       ))
-  
+
   stopifnot(
     "'.dbl_factors.impact' must be a vector of expected impact on each factor." =
       all(
         is.numeric(.dbl_factors.impact)
         , length(.dbl_factors.impact) ==
           loadings(.efa_model)[,] %>%
-          ncol() 
+          ncol()
       ))
-  
+
   stopifnot(
     "'.dbl_scale.lb' must be numeric." =
       is.numeric(.dbl_scale.lb)
   )
-  
+
   stopifnot(
     "'.dbl_scale.ub' must be numeric." =
       is.numeric(.dbl_scale.ub)
   )
-  
+
   stopifnot(
     "'.dbl_impact.lb' must be numeric." =
       is.numeric(.dbl_impact.lb)
   )
-  
+
   stopifnot(
     "'.dbl_impact.lb' must be numeric." =
       is.numeric(.dbl_impact.lb)
   )
-  
+
+  stopifnot(
+    "'.dbl_immune.lb' must be numeric." =
+      is.numeric(.dbl_immune.lb)
+  )
+
+  stopifnot(
+    "'.dbl_immune.ub' must be numeric." =
+      is.numeric(.dbl_immune.ub)
+  )
+
   # Data wrangling
   .dbl_scale.lb[[1]] -> dbl_scale.lb
   .dbl_scale.ub[[1]] -> dbl_scale.ub
-  
+
   .dbl_impact.lb[[1]] -> dbl_impact.lb
   .dbl_impact.ub[[1]] -> dbl_impact.ub
-  
-  .df_data %>% 
+
+  .dbl_immune.lb[[1]] -> dbl_immune.lb
+  .dbl_immune.ub[[1]] -> dbl_immune.ub
+
+  .df_data %>%
     select(
       !where(is.numeric)
       , any_of(
@@ -118,7 +133,7 @@ fun_efa.impact <- function(
       cols = is.numeric
       , names_to = 'item'
       , values_to = 'item.score'
-    ) %>% 
+    ) %>%
     mutate(
       item.score = pmax(
         item.score
@@ -129,22 +144,22 @@ fun_efa.impact <- function(
         , dbl_scale.ub
       )
     ) -> df_data.long
-  
+
   loadings(.efa_model)[,] %>%
     as_tibble(
       rownames = 'item'
-    ) %>% 
+    ) %>%
     set_names(
       c(
         'item'
         , loadings(.efa_model)[,] %>%
-          colnames() %>% 
+          colnames() %>%
           str_extract(
             '[[:digit:]]+'
           ) %>%
           paste0('factor',.)
       )
-    ) %>% 
+    ) %>%
     relocate(
       item
       , str_sort(
@@ -157,21 +172,21 @@ fun_efa.impact <- function(
       , names_to = 'factor'
       , values_to = 'factor.loading'
     ) -> df_loadings.long
-  
-  .dbl_factors.impact %>% 
-    as_tibble() %>% 
+
+  .dbl_factors.impact %>%
+    as_tibble() %>%
     set_names(
       'factor.impact'
-    ) %>% 
+    ) %>%
     mutate(
       .before = 1
-      , factor = 
-        df_loadings.long %>% 
-        pull(factor) %>% 
+      , factor =
+        df_loadings.long %>%
+        pull(factor) %>%
         unique()
     ) -> df_factors.impact
-  
-  df_loadings.long %>% 
+
+  df_loadings.long %>%
     full_join(df_factors.impact) %>%
     mutate(
       factor.impact = pmax(
@@ -182,8 +197,8 @@ fun_efa.impact <- function(
         factor.impact
         , dbl_scale.ub
       )
-    ) %>% 
-    group_by(item) %>% 
+    ) %>%
+    group_by(item) %>%
     reframe(
       item.impact =
         sum(
@@ -199,7 +214,7 @@ fun_efa.impact <- function(
         , dbl_impact.ub
       )
     ) -> df_impact.items
-  
+
   # Calculate net impact
   df_data.long %>%
     full_join(
@@ -208,8 +223,19 @@ fun_efa.impact <- function(
     mutate(
       .after = item.score
       , item.score2 =
-        item.score +
-        item.impact
+        if_else(
+          dplyr::between(
+            item.score
+            , dbl_immune.lb
+            , dbl_immune.ub
+          )
+          , true =
+            item.score +
+            pmin(item.impact, 0)
+          , false =
+            item.score +
+            item.impact
+        )
       , item.score2 = pmax(
         item.score2
         , dbl_scale.lb
@@ -218,30 +244,30 @@ fun_efa.impact <- function(
         item.score2
         , dbl_scale.ub
       )
-    ) %>% 
+    ) %>%
     mutate(
       .after = item.impact
       , item.impact.rate =
         if_else(
           item.score == 0
-          , (item.score2 - item.score) / 
+          , (item.score2 - item.score) /
             dbl_scale.ub
-          , (item.score2 - item.score) / 
+          , (item.score2 - item.score) /
             item.score
         )
     ) -> df_impact
-  
+
   # Aggregate results
   df_impact.agg <- NULL
   df_impact.all <- NULL
-  
+
   if(.lgc_aggregate){
-    
-    df_impact %>% 
+
+    df_impact %>%
       group_by(across(c(
         -where(is.numeric)
         , -item
-      ))) %>% 
+      ))) %>%
       reframe(
         aggregate.impact =
           sum(item.score2) /
@@ -249,24 +275,24 @@ fun_efa.impact <- function(
         , aggregate.impact =
           aggregate.impact - 1
       ) -> df_impact.agg
-    
+
     if(!length(.dbl_weights)){
-      
+
       rep(1, nrow(.df_data)) -> .dbl_weights
-      
+
     }
-    
-    df_impact.agg %>% 
+
+    df_impact.agg %>%
       reframe(
-        aggregate.impact = 
+        aggregate.impact =
           weighted.mean(
             aggregate.impact
             , .dbl_weights
           )
       ) -> df_impact.all
-    
+
   }
-  
+
   # Output
   return(compact(list(
     'factors.impact' = df_factors.impact
@@ -280,5 +306,5 @@ fun_efa.impact <- function(
     , 'impact.lb' = dbl_impact.lb
     , 'impact.ub' = dbl_impact.ub
   )))
-  
+
 }

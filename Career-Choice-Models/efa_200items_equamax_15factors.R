@@ -188,7 +188,8 @@ list(
   , 'atlas.complete' = 1
 ) %>%
   map(
-    ~ df_occupations.numeric %>% 
+    ~ df_occupations %>% 
+      select(ends_with('.l')) %>% 
       ncol() * .x
   ) %>% 
   map(
@@ -230,14 +231,14 @@ list_questionnaires %>%
       arrange(desc(n))
   )
 
-list_questionnaires$atlas.mini %>% view
-list_questionnaires$atlas.pro %>% view
-list_questionnaires$atlas.complete %>% view
+list_questionnaires$atlas.mini
+list_questionnaires$atlas.pro
+list_questionnaires$atlas.complete
 
 # [TESTING] ---------------------------------------------------------------
 # - Use questionnaires for knn matching -----------------------------------
 # Sample occupation
-df_occupations %>% 
+df_occupations %>%
   slice_sample(
     n = 1
   ) -> df_sample
@@ -270,12 +271,197 @@ list_questionnaires %>%
       )
   ) 
 
+# # - Real questionnaires ------------------------------------------
+# read_csv(
+#   'https://docs.google.com/spreadsheets/d/e/2PACX-1vSVdXvQMe4DrKS0LKhY0CZRlVuCCkEMHVJHQb_U-GKF21CjcchJ5jjclGSlQGYa5Q/pub?gid=47461225&single=true&output=csv'
+# ) -> df_sample
+# 
+# source("C:/Users/Cao/Documents/Github/Atlas-Research/Functions/Auto_plots.R")
+# 
+# fun_KNN.matching(
+#   .df_data.numeric =
+#     df_occupations %>%
+#     select(
+#       occupation
+#       , list_questionnaires$
+#         atlas.mini$
+#         item
+#     )
+#   , .vec_query.numeric =
+#     df_sample
+#   , .int_k = nrow(df_occupations.efa)
+#   , .imput.over_qualification = T
+#   , .dbl_over_qualification.threshold = 0
+# ) %>%
+#   full_join(
+#     df_occupations.pop %>%
+#       group_by(occupation) %>% 
+#       slice(1) %>% 
+#       ungroup() %>%
+#       select(
+#         occupation
+#         , contains('wage')
+#         , contains('entry_level')
+#       )
+#   ) %>%
+#   add_row(
+#     df_sample
+#     , .before = 1
+#   ) %>%
+#   mutate(
+#     across(
+#       .cols = ends_with('.l')
+#       ,.fns = ~ .x - first(.x)
+#     )
+#     , across(
+#       .cols = ends_with('.l')
+#       ,.fns = ~ pmax(.x, 0)
+#     )
+#   ) %>%
+#   rowwise() %>%
+#   mutate(
+#     .after = occupation
+#     , attribute.gap =
+#       sum(c_across(ends_with('.l')))
+#   ) %>%
+#   ungroup() %>%
+#   select(
+#     rank
+#     , occupation
+#     , contains('entry_level')
+#     , contains('wage')
+#     , attribute.gap
+#     , similarity
+#   ) -> df_knn.matching
+# 
+# df_knn.matching %>%
+#   slice(-1) %>%
+#   rename(
+#     wage = annual_wage_2021
+#   ) %>%
+#   mutate(
+#     .after = occupation
+#     , career.coef =
+#       sqrt(
+#         (wage / max(wage)) *
+#           similarity
+#       ) / (1 + attribute.gap)
+#   ) %>%
+#   arrange(desc(
+#     career.coef
+#   )) %>%
+#   print(n = 22)
+# 
+# df_knn.matching %>%
+#   mutate(
+#     recommended = ifelse(
+#       round(similarity, 2) >= 0.67
+#       | is.na(similarity)
+#       , 'Recommended'
+#       , 'Not Recommended'
+#     )
+#   ) %>%
+#   fun_plot.bar(aes(
+#     x = rank
+#     , y = similarity
+#     , fill = recommended
+#   )
+#   , .theme = theme_ridges(center_axis_labels = T) +
+#     theme(
+#       title = element_text(hjust = 0.5)
+#       , plot.title.position = 'plot'
+#       , legend.position = 'bottom'
+#       , legend.justification = 'center'
+#       , legend.key.size = unit(0.5,'cm')
+#       , legend.key.width = unit(2,'cm')
+#       # , plot.margin = margin(1, 1, 1, 1,'cm')
+#       , plot.margin = margin(0, 0, 0, 0,'cm')
+#     )
+#   , .fun_format.y = function(x){percent(x,accuracy = 1)}
+#   , .coord_polar = T
+#   , .fun_polar.labels = percent
+#   , .list_axis.y.args = list(
+#     breaks = seq(0, 1, length.out = 5)
+#   )
+#   , .list_geom.param = list(
+#     position = c(position_dodge2(0.5, 'single'))
+#     , width = 0.5
+#   )
+#   , .list_labels.param = list(
+#     color = list_pal.atlas$black
+#   )
+#   , .chr_manual.pal = setNames(
+#     c(
+#       list_pal.atlas$purple3
+#       , list_pal.atlas$grey
+#     )
+#     , c(
+#       'Recommended'
+#       , 'Not Recommended'
+#     )
+#   )
+#   , .chr_manual.aes = c(
+#     'fill', 'color'
+#   )
+#   , .list_legend = list(
+#     color = 'none'
+#   )
+#   , .list_labs = list(
+#     y = 'Professional Compatibility'
+#     , fill = NULL
+#   ))
+# 
+# df_knn.matching %>%
+#   fun_plot.histogram(aes(
+#     x = similarity
+#     , y = after_stat(density)
+#   )
+#   , .dbl_limits.y = c(0,1.25*max(density(df_knn.matching$similarity)$y))
+#   , .list_axis.x.args = list(
+#     limits = c(-0.1,1.1)
+#     , breaks = seq(0,1,.25)
+#   )
+#   , .fun_format.x = percent_format(accuracy = 1)
+#   , .list_labs = list(
+#     title = NULL
+#     , subtitle = NULL
+#     , x = 'Professional Compatibility'
+#     , y = NULL
+#   )
+#   , .theme = ggridges::theme_ridges(font_size = 11, center_axis_labels = T) +
+#     theme(
+#       plot.margin = margin(0, 0, 0, 0)
+#       , axis.text.y = element_blank()
+#     )
+#   ) +
+#   geom_density(aes(
+#     x = similarity
+#   )
+#   , size = 1.2
+#   ) +
+#   geom_textvline(
+#     xintercept = 0.67
+#     , label = 'Recommended'
+#     , color = list_pal.atlas$green
+#     , fontface = 'bold'
+#     , linetype = 1
+#     , linewidth = 1.35
+#     , hjust = 0.125
+#     , vjust = -0.5
+#   )
+
 # [OUTPUT] ----------------------------------------------------------------
 # - Export to excel -------------------------------------------------------
 # Model with main factor loadings
 df_loadings.factors %>% 
   openxlsx::write.xlsx(
     file = 'df_efa.equamax.15factors.xlsx'
+  )
+
+list_questionnaires$
+  atlas.mini %>% 
+  openxlsx::write.xlsx(
+    file = 'df_atlas_mini_questionnaire.xlsx'
   )
 
 # Questionnaires

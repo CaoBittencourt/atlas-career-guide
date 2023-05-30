@@ -104,11 +104,12 @@ fun_handler <- function(body, ...){
   df_occupations %>%
     mutate(
       across(
-        .cols = all_of(
-          list_factors %>%
-            flatten() %>% 
-            flatten_chr()
-        )
+        .cols = ends_with('.l')
+        # .cols = all_of(
+        #   list_factors %>%
+        #     flatten() %>% 
+        #     flatten_chr()
+        # )
         , .fns = function(x){x/100}
       )
     ) -> df_occupations
