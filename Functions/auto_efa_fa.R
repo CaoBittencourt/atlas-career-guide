@@ -950,6 +950,271 @@ fun_efa.fa <- function(
 #   
 # }
 
+# #  [x] TOP ITEMS FUNCTION ------------------------------------------------------
+# fun_efa.topitems <- function(
+    #     .df_data.numeric
+#     , .dbl_weights = NULL
+#     , .efa_model
+#     , .int_n.items.total = 15
+#     , .lgc_uneven.factors = F
+#     , .int_min.factor_size = 3
+# ){
+#   
+#   # items per factor
+#   .df_data.numeric %>%
+#     reframe(across(
+#       .cols = where(is.numeric)
+#       ,.fns = 
+#         ~ Hmisc::wtd.var(
+#           x = .x
+#           , weights = 
+#             .dbl_weights
+#         )
+#     )) %>% 
+#     pivot_longer(
+#       cols = everything()
+#       , names_to = 'item'
+#       , values_to = 'item.var'
+#     ) -> df_items.var
+#   
+#   
+#   loadings(.efa_model)[,] %>% 
+#     as_tibble(
+#       rownames = 'item'
+#     ) %>%
+#     set_names(
+#       c(
+#         'item'
+#         , loadings(.efa_model) %>%
+#           colnames() %>% 
+#           str_extract(
+#             '[[:digit:]]+'
+#           ) %>%
+#           paste0('factor',.)
+#       )
+#     ) %>%
+#     pivot_longer(
+#       cols = where(is.numeric)
+#       , names_to = 'factor'
+#       , values_to = 'factor.loading'
+#     ) %>% 
+#     group_by(item) %>% 
+#     mutate(
+#       loading.max = 
+#         max(factor.loading)
+#       , crossloading = 
+#         # sum(abs(factor.loading)) - loading.max
+#         sum(factor.loading) - loading.max
+#     ) %>%
+#     ungroup() %>%
+#     filter(
+#       factor.loading == 
+#         loading.max
+#     ) %>%
+#     full_join(
+#       df_items.var
+#     ) %>% 
+#     ungroup() %>% 
+#     mutate(
+#       item.purity =
+#         factor.loading -
+#         crossloading
+#       , item.purity.norm =
+#         item.purity -
+#         min(item.purity)
+#       , item.purity.norm =
+#         item.purity.norm /
+#         max(item.purity.norm)
+#       , item.relevance =
+#         (item.purity.norm ^ 2) *
+#         sqrt(
+#           item.var /
+#             sum(item.var)
+#         )
+#     ) -> df_loadings.long
+#   
+#   df_loadings.long %>% 
+#     group_by(factor) %>% 
+#     arrange(desc(
+#       item.relevance
+#     )) %>% 
+#     slice(1:.int_min.factor_size) %>%
+#     pull(item) -> chr_items
+#   
+#   df_loadings.long %>% 
+#     filter(!(
+#       item %in%
+#         chr_items
+#     )) %>% 
+#     arrange(desc(
+#       item.relevance
+#     )) %>% 
+#     slice(1:max(
+#       .int_n.items.total -
+#         length(chr_items)
+#       , 0
+#     )) %>% 
+#     pull(item) %>% 
+#     c(chr_items) -> chr_items
+#   
+#   df_loadings.long %>% 
+#     filter(
+#       item %in% 
+#         chr_items
+#     ) %>% 
+#     group_by(factor) %>% 
+#     mutate(
+#       factor.items = n()
+#     ) %>% 
+#     ungroup() %>% 
+#     relocate(
+#       factor
+#       , factor.items
+#       , item
+#       , everything()
+#     ) %>% 
+#     slice(str_order(
+#       factor, numeric = T
+#     )) -> df_loadings.long
+#   
+#   # df_loadings.long %>% 
+#   #   ungroup() %>% 
+#   #   mutate(
+#   #     top.item = 
+#   #       item %in% 
+#   #       chr_items 
+#   #     , nitems = 
+#   #       if_else(
+#   #         top.item
+#   #         , length(chr_items)
+#   #         , .int_n.items.total - 
+#   #           length(chr_items)
+#   #       )
+#   #     , nitems = 
+#   #       max(nitems, 0)
+#   #   ) %>% 
+#   #   group_by(top.item) %>% 
+#   #   arrange(desc(
+#   #     item.relevance
+#   #   )) %>% 
+#   #   slice(1:nitems) %>% 
+#   #   return()
+#   # filter(!(
+#   #   item %in% 
+#   #     chr_items
+#   # )) %>% 
+#   # arrange(desc(
+#   #   item.relevance
+#   # )) %>% 
+#   # slice(
+#   #   1:(.int_n.items.total - length(chr_items))
+#   # ) %>% 
+#   # pull(item) %>%
+#   # c(chr_items) %>% 
+#   # return()
+#   
+#   
+#   # reframe(
+#   #   factor.var =
+#   #     sum(item.var)
+#   # ) %>%
+#   #   mutate(
+#   #     total.items = 
+#   #       .int_n.items.total
+#   #     , factor.items = 
+#   #       total.items * 
+#   #       factor.var / 
+#   #       sum(factor.var)
+#   #     , item.sum = 
+#   #       sum(factor.items)
+#   #   ) %>% 
+#   #   return()
+#   
+#   # if(.lgc_uneven.factors){
+#   #   
+#   #   df_loadings.long %>% 
+#   #     group_by(factor) %>%
+#   #     reframe(
+#   #       factor.var =
+#   #         sum(item.var)
+#   #     ) %>% 
+#   #     mutate(
+#   #       total.items = 
+#   #         .int_n.items.total
+#   #       , factor.items = 
+#   #         total.items * 
+#   #         factor.var / 
+#   #         sum(factor.var)
+#   #       , factor.items = 
+#   #         round(factor.items)
+#   #       , item.sum = 
+#   #         sum(factor.items)
+#   #       , factor.items = 
+#   #         if_else(
+#   #           item.sum ==
+#   #             .int_n.items.total
+#   #           , factor.items
+#   #           , ceiling(
+#   #             total.items * 
+#   #               factor.var / 
+#   #               sum(factor.var) 
+#   #           ))
+#   #       , factor.items = 
+#   #         pmax(
+#   #           factor.items
+#   #           , .int_min.factor_size
+#   #         )
+#   #     ) %>% 
+#   #     select(
+#   #       factor
+#   #       , factor.var
+#   #       , factor.items
+#   #     ) -> df_factor.items
+#   #   
+#   # } else { 
+#   #   
+#   #   df_loadings.long %>% 
+#   #     mutate(
+#   #       factor.items =
+#   #         .int_n.items.total / 
+#   #         length(unique(factor))
+#   #     ) %>% 
+#   #     group_by(factor) %>% 
+#   #     reframe(
+#   #       factor.items = 
+#   #         factor.items %>% 
+#   #         unique() %>% 
+#   #         ceiling()
+#   #     ) %>% 
+#   #     mutate(
+#   #       factor.items = 
+#   #         pmax(
+#   #           factor.items
+#   #           , .int_min.factor_size
+#   #         )
+#   #     ) -> df_factor.items
+#   # }
+#   
+#   # df_loadings.long %>%
+#   #   full_join(
+#   #     df_factor.items
+#   #   ) %>%
+#   #   group_by(factor) %>%
+#   #   arrange(desc(
+#   #     item.relevance
+#   #   )) %>%
+#   #   slice(1:unique(
+#   #     factor.items
+#   #   )) %>%
+#   #   ungroup() %>%
+#   #   slice(str_order(
+#   #     factor, numeric = T
+#   #   )) -> df_loadings.long
+#   
+#   return(df_loadings.long)
+#   
+# }
+
 #  [x] TOP ITEMS FUNCTION ------------------------------------------------------
 fun_efa.topitems <- function(
     .df_data.numeric
@@ -1038,7 +1303,9 @@ fun_efa.topitems <- function(
     arrange(desc(
       item.relevance
     )) %>% 
-    slice(1:.int_min.factor_size) %>%
+    slice_head(
+      n = .int_min.factor_size
+    ) %>%
     pull(item) -> chr_items
   
   df_loadings.long %>% 
@@ -1049,11 +1316,12 @@ fun_efa.topitems <- function(
     arrange(desc(
       item.relevance
     )) %>% 
-    slice(1:max(
-      .int_n.items.total -
-        length(chr_items)
-      , 0
-    )) %>% 
+    slice_head(
+      n = max(
+        .int_n.items.total -
+          length(chr_items)
+        , 0
+      )) %>%
     pull(item) %>% 
     c(chr_items) -> chr_items
   
@@ -1061,6 +1329,9 @@ fun_efa.topitems <- function(
     filter(
       item %in% 
         chr_items
+    ) %>% 
+    mutate(
+      factor = factor(factor)
     ) %>% 
     group_by(factor) %>% 
     mutate(
@@ -1077,139 +1348,6 @@ fun_efa.topitems <- function(
       factor, numeric = T
     )) -> df_loadings.long
   
-  # df_loadings.long %>% 
-  #   ungroup() %>% 
-  #   mutate(
-  #     top.item = 
-  #       item %in% 
-  #       chr_items 
-  #     , nitems = 
-  #       if_else(
-  #         top.item
-  #         , length(chr_items)
-  #         , .int_n.items.total - 
-  #           length(chr_items)
-  #       )
-  #     , nitems = 
-  #       max(nitems, 0)
-  #   ) %>% 
-  #   group_by(top.item) %>% 
-  #   arrange(desc(
-  #     item.relevance
-  #   )) %>% 
-  #   slice(1:nitems) %>% 
-  #   return()
-  # filter(!(
-  #   item %in% 
-  #     chr_items
-  # )) %>% 
-  # arrange(desc(
-  #   item.relevance
-  # )) %>% 
-  # slice(
-  #   1:(.int_n.items.total - length(chr_items))
-  # ) %>% 
-  # pull(item) %>%
-  # c(chr_items) %>% 
-  # return()
-  
-  
-  # reframe(
-  #   factor.var =
-  #     sum(item.var)
-  # ) %>%
-  #   mutate(
-  #     total.items = 
-  #       .int_n.items.total
-  #     , factor.items = 
-  #       total.items * 
-  #       factor.var / 
-  #       sum(factor.var)
-  #     , item.sum = 
-  #       sum(factor.items)
-  #   ) %>% 
-  #   return()
-  
-  # if(.lgc_uneven.factors){
-  #   
-  #   df_loadings.long %>% 
-  #     group_by(factor) %>%
-  #     reframe(
-  #       factor.var =
-  #         sum(item.var)
-  #     ) %>% 
-  #     mutate(
-  #       total.items = 
-  #         .int_n.items.total
-  #       , factor.items = 
-  #         total.items * 
-  #         factor.var / 
-  #         sum(factor.var)
-  #       , factor.items = 
-  #         round(factor.items)
-  #       , item.sum = 
-  #         sum(factor.items)
-  #       , factor.items = 
-  #         if_else(
-  #           item.sum ==
-  #             .int_n.items.total
-  #           , factor.items
-  #           , ceiling(
-  #             total.items * 
-  #               factor.var / 
-  #               sum(factor.var) 
-  #           ))
-  #       , factor.items = 
-  #         pmax(
-  #           factor.items
-  #           , .int_min.factor_size
-  #         )
-  #     ) %>% 
-  #     select(
-  #       factor
-  #       , factor.var
-  #       , factor.items
-  #     ) -> df_factor.items
-  #   
-  # } else { 
-  #   
-  #   df_loadings.long %>% 
-  #     mutate(
-  #       factor.items =
-  #         .int_n.items.total / 
-  #         length(unique(factor))
-  #     ) %>% 
-  #     group_by(factor) %>% 
-  #     reframe(
-  #       factor.items = 
-  #         factor.items %>% 
-  #         unique() %>% 
-  #         ceiling()
-  #     ) %>% 
-  #     mutate(
-  #       factor.items = 
-  #         pmax(
-  #           factor.items
-  #           , .int_min.factor_size
-  #         )
-  #     ) -> df_factor.items
-  # }
-  
-  # df_loadings.long %>%
-  #   full_join(
-  #     df_factor.items
-  #   ) %>%
-  #   group_by(factor) %>%
-  #   arrange(desc(
-  #     item.relevance
-  #   )) %>%
-  #   slice(1:unique(
-  #     factor.items
-  #   )) %>%
-  #   ungroup() %>%
-  #   slice(str_order(
-  #     factor, numeric = T
-  #   )) -> df_loadings.long
   
   return(df_loadings.long)
   

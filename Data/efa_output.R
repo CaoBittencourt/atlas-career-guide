@@ -98,16 +98,11 @@ df_occupations %>%
       flatten_chr()
   ) -> df_occupations.efa
 
-df_occupations %>% 
-  select(
-    ends_with('.l')
-  ) -> df_occupations.numeric
-
 # [EFA] -----------------------
 # - Run factor analysis on the whole data frame ---------------------------
 fun_efa.bestmodel(
   .df_data.numeric = 
-    df_occupations.numeric
+    df_occupations.efa
   , .dbl_weights = 
     .dbl_weights
   , .chr_rotation =
@@ -184,7 +179,8 @@ list(
   , 'atlas.complete' = 1
 ) %>%
   map(
-    ~ df_occupations.numeric %>% 
+    ~ df_occupations.efa %>% 
+      select(ends_with('.l')) %>% 
       ncol() * .x
   ) %>% 
   map(

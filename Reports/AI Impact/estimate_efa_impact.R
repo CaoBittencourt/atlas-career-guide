@@ -22,6 +22,9 @@ source('C:/Users/Cao/Documents/Github/Atlas-Research/Data/efa_output.R')
 # EFA-based exogenous impact analysis
 source('C:/Users/Cao/Documents/Github/Atlas-Research/Functions/fun_efa_impact.R')
 
+# Automated plotting
+source('C:/Users/Cao/Documents/Github/Atlas-Research/Functions/Auto_plots.R')
+
 # - Impact scale ----------------------------------------------------------------
 # Impact levels for reference
 seq(-1, 0, length.out = 7) %>%
@@ -84,17 +87,21 @@ df_loadings.factors %>%
 # LLMs (e.g. chat gpt, google ai)
 set_names(
   c(
-    'factor1' = 67
+    'factor1' = 33
     , 'factor2' = 0
-    , 'factor3' = -33
+    # , 'factor3' = -17/2
+    , 'factor3' = -17
     , 'factor4' = 0
-    , 'factor5' = -17
+    , 'factor5' = -17/2
+    # , 'factor5' = -17
     , 'factor6' = 0
     , 'factor7' = 0
-    , 'factor8' = -17
+    , 'factor8' = -17/2
+    # , 'factor8' = -17
     , 'factor9' = 0
-    , 'factor10' = -75
-    , 'factor11' = -33
+    , 'factor10' = -50
+    , 'factor11' = -17/2
+    # , 'factor11' = -17
     , 'factor12' = 0
     , 'factor13' = 0
     , 'factor14' = 0
@@ -104,56 +111,78 @@ set_names(
     pull(factor.name)
 ) -> dbl_factors.impact
 
-set_names(
-  c(
-    # 'factor1' = 33
-    # 'factor1' = 33 * 1.25
-    'factor1' = 50
-    , 'factor2' = 0
-    # , 'factor2' = -17/2
-    # , 'factor3' = -17/2
-    , 'factor3' = -17
-    , 'factor4' = 0
-    # , 'factor5' = -17/4
-    , 'factor5' = -17/2
-    # , 'factor5' = -17
-    # , 'factor6' = -17/4
-    , 'factor6' = 0
-    # , 'factor7' = -17/2
-    , 'factor7' = 0
-    # , 'factor8' = -17/2
-    , 'factor8' = -17
-    , 'factor9' = 0
-    # , 'factor10' = -50
-    , 'factor10' = -67
-    # , 'factor10' = mean(c(-67,-83))
-    # , 'factor11' = -17/2
-    , 'factor11' = -17
-    # , 'factor12' = -17/4
-    , 'factor12' = 0
-    , 'factor13' = 0
-    # , 'factor14' = 0
-    # , 'factor14' = -17/2
-    # , 'factor14' = -17/4
-    , 'factor14' = 0
-    , 'factor15' = 0
-  )
-  , df_factor.names %>%
-    pull(factor.name)
-) -> dbl_factors.impact
+# set_names(
+#   c(
+#     'factor1' = 67
+#     , 'factor2' = 0
+#     , 'factor3' = -33
+#     , 'factor4' = 0
+#     , 'factor5' = -17
+#     , 'factor6' = 0
+#     , 'factor7' = 0
+#     , 'factor8' = -17
+#     , 'factor9' = 0
+#     , 'factor10' = -75
+#     , 'factor11' = -33
+#     , 'factor12' = 0
+#     , 'factor13' = 0
+#     , 'factor14' = 0
+#     , 'factor15' = 0
+#   )
+#   , df_factor.names %>%
+#     pull(factor.name)
+# ) -> dbl_factors.impact
+
+# set_names(
+#   c(
+#     # 'factor1' = 33
+#     # 'factor1' = 33 * 1.25
+#     'factor1' = 50
+#     , 'factor2' = 0
+#     # , 'factor2' = -17/2
+#     # , 'factor3' = -17/2
+#     , 'factor3' = -17
+#     , 'factor4' = 0
+#     # , 'factor5' = -17/4
+#     , 'factor5' = -17/2
+#     # , 'factor5' = -17
+#     # , 'factor6' = -17/4
+#     , 'factor6' = 0
+#     # , 'factor7' = -17/2
+#     , 'factor7' = 0
+#     # , 'factor8' = -17/2
+#     , 'factor8' = -17
+#     , 'factor9' = 0
+#     # , 'factor10' = -50
+#     , 'factor10' = -67
+#     # , 'factor10' = mean(c(-67,-83))
+#     # , 'factor11' = -17/2
+#     , 'factor11' = -17
+#     # , 'factor12' = -17/4
+#     , 'factor12' = 0
+#     , 'factor13' = 0
+#     # , 'factor14' = 0
+#     # , 'factor14' = -17/2
+#     # , 'factor14' = -17/4
+#     , 'factor14' = 0
+#     , 'factor15' = 0
+#   )
+#   , df_factor.names %>%
+#     pull(factor.name)
+# ) -> dbl_factors.impact
 
 sort(dbl_factors.impact)
 
 # [DATA] ------------------------------------------------------------------
 # - Occupations data frame on a 0 to 100 scale ------------------------------
-df_occupations %>%
+df_occupations.efa %>%
   mutate(across(
     .cols = ends_with('.l')
     ,.fns = ~ .x * 100
   )) -> df_occupations.ai
 
 # [RESULTS] ----------------------------------------------
-# - Estimate exogenous impact ---------------------------------------------
+# - Estimate exogenous impact (USA labor market) ---------------------------------------------
 fun_efa.impact(
   .df_data =
     df_occupations.ai
@@ -172,6 +201,44 @@ fun_efa.impact(
   , .dbl_immune.ub = 33
   , .lgc_aggregate = T
 ) -> list_ai.impact
+
+# # - Estimate exogenous impact (user) ---------------------------------------------
+# read_csv(
+#   'https://docs.google.com/spreadsheets/d/e/2PACX-1vSVdXvQMe4DrKS0LKhY0CZRlVuCCkEMHVJHQb_U-GKF21CjcchJ5jjclGSlQGYa5Q/pub?gid=47461225&single=true&output=csv'
+# ) -> df_sample
+# 
+# fun_efa.impact(
+#   .df_data =
+#     # df_occupations.ai
+#     df_sample %>% 
+#     mutate(across(
+#       .cols = ends_with('.l')
+#       ,.fns = ~ .x * 100
+#     ))
+#   , .dbl_weights = NULL
+#   , .efa_model =
+#     list_efa.equamax.15$
+#     EFA.workflow$
+#     EFA$
+#     EFA.15factors$
+#     model
+#   , .dbl_factors.impact =
+#     dbl_factors.impact
+#   # , .dbl_impact.ub = 0
+#   , .dbl_immune.lb = 0
+#   , .dbl_immune.ub = 33
+#   , .lgc_aggregate = T
+# ) -> list_ai.impact
+# 
+# list_ai.impact$
+#   individual.impact %>% 
+#   view
+# 
+# list_ai.impact$
+#   aggregate.impact
+# 
+# list_ai.impact$
+#   overall.impact
 
 # - Factors impact -----------------------------------------------------------
 list_ai.impact$
@@ -228,6 +295,13 @@ list_ai.impact$
   )) %>% 
   print(n = nrow(.))
 
+list_ai.impact$
+  aggregate.impact %>% 
+  arrange(desc(
+    aggregate.impact
+  )) %>% 
+  slice(1, n())
+
 # - Overall impact --------------------------------------------------------
 list_ai.impact$
   overall.impact
@@ -277,7 +351,15 @@ df_aggregate.unemployment %>%
 
 df_aggregate.unemployment
 
-df_overall.unemployment %>% 
+df_overall.unemployment %>%
+  mutate(
+    unemployment = 
+      161 * 1000000 / 
+      employment2 * 
+      unemployment
+    , employment2 = 
+      161 * 1000000
+  ) %>%
   mutate(across(
     .cols = c(
       employment2
@@ -288,4 +370,3 @@ df_overall.unemployment %>%
         .x, prefix = ''
       )
   ))
-
