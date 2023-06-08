@@ -72,6 +72,36 @@ seq(-1, 0, length.out = 7) %>%
     , impact
   ) -> df_impact.desc
 
+read_csv(
+  'https://docs.google.com/spreadsheets/d/e/2PACX-1vRQCoYHwlfowFhlz3k0tXw1oAPxJ7H1-4MKvEXWVnPrwrehjFwoLy_zrZM-pKRWOl8l98WaF7haYYHE/pub?gid=792495051&single=true&output=csv'
+) -> df_impact
+
+df_impact %>% 
+  arrange(
+    interval.lb
+  ) %>% 
+  mutate(
+    .after = interval
+    # .after = interval.lb
+    , interval2 =
+      findInterval(
+        interval.lb
+        , interval.lb
+      )
+    # , vec = runif(13, -1, 2)
+    # , interval2 =
+    #   findInterval(
+    #     vec
+    #     , interval.lb
+    #   )
+  )
+
+findInterval(
+  round(seq(0, 1, length.out = 7), 2) %>% view
+  , round(seq(0, 1, length.out = 7), 2)
+  , all.inside = T
+)
+
 df_impact.desc
 
 # - Parameters ------------------------------------------------------------
@@ -202,43 +232,112 @@ fun_efa.impact(
   , .lgc_aggregate = T
 ) -> list_ai.impact
 
-# # - Estimate exogenous impact (user) ---------------------------------------------
-# read_csv(
-#   'https://docs.google.com/spreadsheets/d/e/2PACX-1vSVdXvQMe4DrKS0LKhY0CZRlVuCCkEMHVJHQb_U-GKF21CjcchJ5jjclGSlQGYa5Q/pub?gid=47461225&single=true&output=csv'
-# ) -> df_sample
-# 
-# fun_efa.impact(
-#   .df_data =
-#     # df_occupations.ai
-#     df_sample %>% 
-#     mutate(across(
-#       .cols = ends_with('.l')
-#       ,.fns = ~ .x * 100
-#     ))
-#   , .dbl_weights = NULL
-#   , .efa_model =
-#     list_efa.equamax.15$
-#     EFA.workflow$
-#     EFA$
-#     EFA.15factors$
-#     model
-#   , .dbl_factors.impact =
-#     dbl_factors.impact
-#   # , .dbl_impact.ub = 0
-#   , .dbl_immune.lb = 0
-#   , .dbl_immune.ub = 33
-#   , .lgc_aggregate = T
-# ) -> list_ai.impact
-# 
-# list_ai.impact$
-#   individual.impact %>% 
-#   view
-# 
-# list_ai.impact$
-#   aggregate.impact
-# 
-# list_ai.impact$
-#   overall.impact
+# - Estimate exogenous impact (user) ---------------------------------------------
+read_csv(
+  'https://docs.google.com/spreadsheets/d/e/2PACX-1vSVdXvQMe4DrKS0LKhY0CZRlVuCCkEMHVJHQb_U-GKF21CjcchJ5jjclGSlQGYa5Q/pub?gid=47461225&single=true&output=csv'
+) -> df_sample
+
+fun_efa.impact(
+  .df_data =
+    # df_occupations.ai
+    df_sample %>%
+    mutate(across(
+      .cols = ends_with('.l')
+      ,.fns = ~ .x * 100
+    ))
+  , .dbl_weights = NULL
+  , .efa_model =
+    list_efa.equamax.15$
+    EFA.workflow$
+    EFA$
+    EFA.15factors$
+    model
+  , .dbl_factors.impact =
+    dbl_factors.impact
+  # , .dbl_impact.ub = 0
+  , .dbl_immune.lb = 0
+  , .dbl_immune.ub = 33
+  , .lgc_aggregate = T
+) -> list_ai.impact.user
+
+list_ai.impact.user$
+  individual.impact %>%
+  pivot_longer(
+    cols = starts_with('item.score')
+    , names_to = 'model'
+    , values_to = 'item.score'
+  ) %>%
+  fun_plot.bar(aes(
+    x = item
+    , y = item.score
+    , fill = model
+  )
+  , .coord_polar = T
+  )
+
+list_ai.impact$
+  individual.impact %>%
+  filter(
+    occupation == 
+      sample(occupation, 1)
+  ) %>%
+  mutate(
+    .after = 
+      item.impact
+    , item.impact2 = 
+      item.score2 -
+      item.score
+    , item.score2 =
+      item.score - 
+      item.impact2
+    , item.score2 = 
+      item.score2 %>% 
+      pmin(100)
+  ) %>%
+  rename(
+    `AI Impact` = item.impact2
+    , `You` = item.score2
+  ) %>%
+  pivot_longer(
+  cols = c('AI Impact', 'You')
+  , names_to = 'metric'
+  , values_to = 'value'
+) %>% 
+# pivot_longer(
+#   cols = starts_with('item.score')
+#   , names_to = 'model'
+#   , values_to = 'item.score'
+# ) %>% 
+mutate(
+  item = str_sub(item, 1, 4)
+  , metric = factor(metric)
+) %>% 
+  fun_plot.bar(aes(
+    x = item
+    , y = value
+    , fill = metric
+    # x = item
+    # , y = item.score
+    # , fill = model
+  )
+  , .coord_flip = T
+  , .reorder_fct = T
+  # , .coord_polar = T
+  , .list_axis.y.args = list(
+    limits = c(0,100)
+    , breaks = seq(0,100,25)
+  )
+  , .fun_format.y = label_number(accuracy = 1)
+  , .list_geom.param = list(
+    position = 'stack'
+  )
+  )
+
+list_ai.impact.user$
+  aggregate.impact
+
+list_ai.impact.user$
+  overall.impact
 
 # - Factors impact -----------------------------------------------------------
 list_ai.impact$

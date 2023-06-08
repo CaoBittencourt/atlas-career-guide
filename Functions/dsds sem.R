@@ -123,10 +123,21 @@ fun_quadratic.problem <- function(.df_data){
   list_solutions %>%
     map(
       ~ .x %>%
-        as_tibble(rownames = 'item') %>%
-        rename(item.composition = value)# %>%
-      # arrange(desc(item.composition))
+        as_tibble(rownames = 'item.predictor') %>%
+        rename(item.composition = value) %>%
+        arrange(desc(item.composition))
     ) -> list_df_solutions
+  
+  # list_df_solutions$
+  #   solutions.tidy %>%
+  #   map2(
+  #     .y = names(.)
+  #     , .f = ~ .x %>%
+  #       mutate(
+  #         .before = 1
+  #         , item = .y
+  #       )
+  #   ) -> list_df_solutions$solutions.tidy
   
   # Output
   return(list(
@@ -206,7 +217,7 @@ fun_predictors <- function(
       pct = n / sum(n)
     ) %>% 
     arrange(desc(n)) -> df_predictors
-
+  
   list_models.lm <- NULL
   list_models.lm.tidy <- NULL
   
@@ -244,6 +255,227 @@ fun_predictors <- function(
   
 }
 
+fun_quadratic.problem(
+  # df_occupations.efa.comp %>% 
+  # df_occupations.pop %>% 
+  df_occupations.ai
+) -> lalala
+
+lalala$
+  solutions.tidy %>% 
+  bind_rows(
+    .id = 'item'
+  ) %>% 
+  mutate(
+    item = factor(item)
+  ) %>% 
+  filter(
+    item.composition != 0
+  ) %>% 
+  write.xlsx(
+    file = 'df_quadratic_programming.xlsx'
+  )
+
+
+
+map2(
+  .x = 
+    lalala$
+    solutions.tidy
+  , .y = 
+    lalala$
+    solutions.tidy %>% 
+    names()
+  , .f = ~ .x %>% 
+    mutate(
+      .before = 1
+      , item = .y
+    )
+) -> lalala
+
+
+library(weights)
+
+df_occupations.ai %>% 
+  select(
+    ends_with('.l')
+  ) %>% 
+  weights::wtd.cors(
+    weight = 
+      df_occupations %>%
+      pull(employment2)
+  ) -> mtx_correlations
+
+mtx_correlations %>% 
+  as_tibble(
+    rownames = 'item'
+  ) %>% 
+  write.xlsx(
+    file = 'mtx_correlations.xlsx'
+  )
+
+
+source('C:/Users/Cao/Documents/Github/Atlas-Research/Functions/fun_regressions.R')
+
+df_occupations.ai %>% 
+  select(
+    ends_with('.l')
+  ) -> dsds
+
+df_occupations %>% 
+  select(
+    employment2
+    , names(df_occupations.ai)
+    , -occupation
+  ) %>% 
+  mutate(across(
+    .cols = ends_with('.l')
+    ,.fns = ~ 100 * .x
+  )) -> dsds
+
+fun_lm(
+  .df_data = dsds
+  , .sym_vars.dependent = 
+    last(names(dsds))
+  # names(dsds)[
+  #   names(dsds) %>% 
+  #     str_detect(
+  #       'employment'
+  #       , negate = T
+  #     )
+  # ]
+  , .sym_vars.independent = 
+    names(dsds)[
+      names(dsds) %>% 
+        str_detect(
+          paste0('employment|',last(names(dsds)))
+          , negate = T
+        )
+    ]
+  , .sym_vars.weights = 'employment2'
+) -> lalalala
+
+lalalala$r2
+lalalala$rmse
+lalalala$mae
+lalalala$fitted.mean
+lalalala$fitted.sd
+lalalala$model.tidy
+
+
+names(dsds) %>%
+  sample(1) %>% 
+  fun_lm(
+    .df_data = dsds
+    , .sym_vars.dependent = .
+    , .sym_vars.independent = 
+      names(dsds)[
+        names(dsds) %>% 
+          str_detect(
+            paste0(
+              .
+              , 'employment'
+              , collapse = '|'
+            ) , negate = T
+          )]
+    , .sym_vars.weights = 
+      'employment2'
+  ) -> lalalala
+
+lalalala$r2
+lalalala$fitted.mean
+lalalala$mae
+lalalala$model.tidy %>% 
+  arrange(desc(estimate)) %>% 
+  view
+
+fun_lm(
+  dsds
+  , .sym_vars.dependent = 
+    names(dsds) %>% 
+    str_remove('employment2') %>%
+    first()
+  , .sym_vars.independent = 
+    names(dsds) %>% 
+    str_remove('employment2') %>% 
+    .[-1]
+  
+)
+
+dsds %>% 
+  select(
+    ends_with('.l')
+  ) %>%
+  names() %>% 
+  map(
+    ~ fun_lm(
+      .df_data = dsds
+      , .sym_vars.dependent = .x
+      , .sym_vars.independent = 
+        names(dsds)[
+          names(dsds) %>% 
+            str_detect(
+              paste0(
+                .x
+                , 'employment2'
+                , collapse = '|'
+              ) , negate = T
+            )]
+      , .sym_vars.weights =
+        'employment2'
+      , .dbl_lower.bounds = 0
+      , .lgc_intercept = T
+    )
+  ) -> list_lm.models
+
+
+dsds %>% 
+  select(
+    ends_with('.l')
+  ) %>%
+  names() %>% 
+  map(
+    ~ lm(
+      formula = 
+        paste0(.x, '~ .') %>% 
+        as.formula()
+      , data = dsds
+      , weights = employment2
+    )
+  ) -> list_lm.models
+
+list_lm.models[[1]] %>% 
+  broom::tidy()
+
+
+lalala$
+  solutions %>% 
+  map(
+    .f = ~ .x %>%
+      as_tibble(rownames = 'item.predictor') %>%
+      rename(item.composition = value) %>%
+      arrange(desc(item.composition))
+  )
+
+
+lalala$
+  solutions.tidy$
+  active_listening.l %>% 
+  mutate(
+    item.composition =
+      round(item.composition, 2)
+  ) %>% 
+  filter(item.composition > 0) %>% 
+  arrange(desc(
+    item.composition
+  ))
+
+lalala$
+  solutions.tidy %>% 
+  names
+active_listening.l %>% 
+  bind_rows(.id = 'item')
+
 fun_predictors(
   .df_data = 
     df_occupations %>% 
@@ -268,7 +500,8 @@ dsdsd$predictors %>%
   group_by(predictor) %>% 
   tally() %>% 
   arrange(desc(n))
-  unique() -> chr_predictors.unique
+unique() -> chr_predictors.unique
+
 
 
 dsdsd$predictors$active_learning.l
@@ -285,12 +518,6 @@ dsds$intercept
 
 
 dsds$nvmax
-
-fun_quadratic.problem(
-  # df_occupations.efa.comp %>% 
-  df_occupations %>% 
-    select(ends_with('.l'))
-) -> lalala
 
 lalala$solutions.tidy
 

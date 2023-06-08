@@ -38,6 +38,7 @@ fun_efa.impact <- function(
   , .lgc_aggregate = F
   
 ){
+  
   # Arguments validation
   stopifnot(
     "'.efa_model' must be a factor analysis object." =

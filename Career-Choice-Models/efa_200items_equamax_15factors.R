@@ -114,7 +114,8 @@ fun_efa.bestmodel(
   , .auto_select.nfactors =
     .auto_select.nfactors
   , .int_nfactors.vector =
-    .int_nfactors
+    # .int_nfactors
+    c(1, 2, 5)
   , .int_min.factor_size =
     .int_min.factor_size
   , .remove_unacceptable_MSAi.items =
@@ -183,18 +184,18 @@ list(
   , 'atlas.complete' = 1
 ) %>%
   map(
-    ~ df_occupations.efa %>% 
-      select(ends_with('.l')) %>% 
+    ~ df_occupations.efa %>%
+      select(ends_with('.l')) %>%
       ncol() * .x
-  ) %>% 
+  ) %>%
   map(
     ~ fun_efa.topitems(
-      .df_data.numeric = 
+      .df_data.numeric =
         df_occupations.efa
-      , .dbl_weights = 
-        df_occupations %>% 
+      , .dbl_weights =
+        df_occupations %>%
         pull(employment2)
-      , .efa_model = 
+      , .efa_model =
         list_efa.equamax.15$
         EFA.workflow$
         EFA$
@@ -203,8 +204,8 @@ list(
       , .int_n.items.total = .x
       , .lgc_uneven.factors = T
       , .int_min.factor_size = 3
-    ) %>% 
-      full_join(df_factor.names) %>% 
+    ) %>%
+      full_join(df_factor.names) %>%
       relocate(
         factor
         , factor.name
@@ -216,14 +217,14 @@ list(
 
 list_questionnaires
 
-list_questionnaires %>% 
+list_questionnaires %>%
   map(
     ~ .x %>%
       group_by(
         factor
         , factor.name
-      ) %>% 
-      tally() %>% 
+      ) %>%
+      tally() %>%
       arrange(desc(n))
   )
 
@@ -231,6 +232,121 @@ list_questionnaires$atlas.mini
 list_questionnaires$atlas.pro
 list_questionnaires$atlas.complete
 
+# # - Top items (all education levels) -------------------------------------------------------------
+# # Top items selection
+# list(
+#   'atlas.mini' = 0.25
+#   , 'atlas.pro' = 0.5
+#   , 'atlas.complete' = 1
+# ) %>%
+#   map(
+#     ~ df_occupations.efa %>% 
+#       select(ends_with('.l')) %>% 
+#       ncol() * .x
+#   ) %>% 
+#   map(
+#     ~ fun_efa.topitems(
+#       .df_data.numeric = 
+#         df_occupations.efa
+#       , .dbl_weights = 
+#         df_occupations %>% 
+#         pull(employment2)
+#       , .efa_model = 
+#         list_efa.equamax.15$
+#         EFA.workflow$
+#         EFA$
+#         EFA.1factor$
+#         model
+#       , .int_n.items.total = .x
+#       , .lgc_uneven.factors = T
+#       , .int_min.factor_size = 3
+#     ) %>% 
+#       relocate(
+#         factor
+#         # , factor.name
+#         , factor.items
+#         , item
+#         , everything()
+#       )
+#   ) -> list_questionnaires1
+# 
+# # - Top items (all education levels) -------------------------------------------------------------
+# # Top items selection
+# list(
+#   'atlas.mini' = 0.25
+#   , 'atlas.pro' = 0.5
+#   , 'atlas.complete' = 1
+# ) %>%
+#   map(
+#     ~ df_occupations.efa %>% 
+#       select(ends_with('.l')) %>% 
+#       ncol() * .x
+#   ) %>% 
+#   map(
+#     ~ fun_efa.topitems(
+#       .df_data.numeric = 
+#         df_occupations.efa
+#       , .dbl_weights = 
+#         df_occupations %>% 
+#         pull(employment2)
+#       , .efa_model = 
+#         list_efa.equamax.15$
+#         EFA.workflow$
+#         EFA$
+#         EFA.2factors$
+#         model
+#       , .int_n.items.total = .x
+#       , .lgc_uneven.factors = T
+#       , .int_min.factor_size = 3
+#     ) %>% 
+#       relocate(
+#         factor
+#         # , factor.name
+#         , factor.items
+#         , item
+#         , everything()
+#       )
+#   ) -> list_questionnaires2
+# 
+# 
+# # - Top items (all education levels) -------------------------------------------------------------
+# # Top items selection
+# list(
+#   'atlas.mini' = 0.25
+#   , 'atlas.pro' = 0.5
+#   , 'atlas.complete' = 1
+# ) %>%
+#   map(
+#     ~ df_occupations.efa %>% 
+#       select(ends_with('.l')) %>% 
+#       ncol() * .x
+#   ) %>% 
+#   map(
+#     ~ fun_efa.topitems(
+#       .df_data.numeric = 
+#         df_occupations.efa
+#       , .dbl_weights = 
+#         df_occupations %>% 
+#         pull(employment2)
+#       , .efa_model = 
+#         list_efa.equamax.15$
+#         EFA.workflow$
+#         EFA$
+#         EFA.5factors$
+#         model
+#       , .int_n.items.total = .x
+#       , .lgc_uneven.factors = T
+#       , .int_min.factor_size = 3
+#     ) %>% 
+#       relocate(
+#         factor
+#         # , factor.name
+#         , factor.items
+#         , item
+#         , everything()
+#       )
+#   ) -> list_questionnaires5
+# 
 # - Top items (highly qualified) -------------------------------------------------------------
 # Top items selection
 list(
@@ -672,7 +788,7 @@ df_knn.matching %>%
 # [OUTPUT] ----------------------------------------------------------------
 # - Export to excel -------------------------------------------------------
 # Model with main factor loadings
-df_loadings.factors %>% 
+df_loadings.factors %>%
   openxlsx::write.xlsx(
     file = 'df_efa.equamax.15factors.xlsx'
   )
@@ -680,7 +796,7 @@ df_loadings.factors %>%
 map2(
   .x = list_questionnaires
   , .y = names(list_questionnaires)
-  , .f = 
+  , .f =
     ~ .x %>%
     openxlsx::write.xlsx(
       file = paste0('questionnaire_', .y,'.xlsx')
@@ -690,7 +806,7 @@ map2(
 map2(
   .x = list_questionnaires.high_edu
   , .y = names(list_questionnaires.high_edu)
-  , .f = 
+  , .f =
     ~ .x %>%
     openxlsx::write.xlsx(
       file = paste0('questionnaire_', .y,'.xlsx')
@@ -700,7 +816,7 @@ map2(
 map2(
   .x = list_questionnaires.low_edu
   , .y = names(list_questionnaires.low_edu)
-  , .f = 
+  , .f =
     ~ .x %>%
     openxlsx::write.xlsx(
       file = paste0('questionnaire_', .y,'.xlsx')
@@ -708,12 +824,72 @@ map2(
 )
 
 # list_questionnaires$
-#   atlas.mini %>% 
+#   atlas.mini %>%
 #   openxlsx::write.xlsx(
 #     file = 'df_atlas_mini_questionnaire.xlsx'
 #   )
 
 # Questionnaires
+
+# # - Export to excel -------------------------------------------------------
+# # Model with main factor loadings
+# map2(
+#   .x = list_questionnaires1
+#   , .y = names(list_questionnaires1)
+#   , .f = 
+#     ~ .x %>%
+#     openxlsx::write.xlsx(
+#       file = paste0('questionnaire_1factor.', .y,'.xlsx')
+#     )
+# )
+# 
+# # list_questionnaires$
+# #   atlas.mini %>% 
+# #   openxlsx::write.xlsx(
+# #     file = 'df_atlas_mini_questionnaire.xlsx'
+# #   )
+# 
+# # Questionnaires
+# 
+# # - Export to excel -------------------------------------------------------
+# # Model with main factor loadings
+# map2(
+#   .x = list_questionnaires2
+#   , .y = names(list_questionnaires2)
+#   , .f = 
+#     ~ .x %>%
+#     openxlsx::write.xlsx(
+#       file = paste0('questionnaire_2factor.', .y,'.xlsx')
+#     )
+# )
+# 
+# # list_questionnaires$
+# #   atlas.mini %>% 
+# #   openxlsx::write.xlsx(
+# #     file = 'df_atlas_mini_questionnaire.xlsx'
+# #   )
+# 
+# # Questionnaires
+# 
+# # - Export to excel -------------------------------------------------------
+# # Model with main factor loadings
+# map2(
+#   .x = list_questionnaires5
+#   , .y = names(list_questionnaires5)
+#   , .f = 
+#     ~ .x %>%
+#     openxlsx::write.xlsx(
+#       file = paste0('questionnaire_5factor.', .y,'.xlsx')
+#     )
+# )
+# 
+# # list_questionnaires$
+# #   atlas.mini %>% 
+# #   openxlsx::write.xlsx(
+# #     file = 'df_atlas_mini_questionnaire.xlsx'
+# #   )
+# 
+# # Questionnaires
 
 # # dsds -----------------------
 # # Occupations data frame on a 0 to 100 scale

@@ -2859,14 +2859,10 @@ fun_plot.bar <- function(
     sort(seq_breaks) -> seq_breaks
 
     # Axis labels
-    if(length(.fun_polar.labels)){
-
-      do.call(
-        .fun_polar.labels
-        , list(seq_breaks)
-      ) -> chr_labels
-
-    }
+    do.call(
+      .fun_format.y
+      , list(seq_breaks)
+    ) -> chr_labels
 
     # Circular bar plot
     .df_data %>%

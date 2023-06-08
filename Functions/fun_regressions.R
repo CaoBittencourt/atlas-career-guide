@@ -72,6 +72,49 @@ fun_args <- function(df, args){
   
 }
 
+# # R SQUARED ----------------------------------------------------------------------
+# fun_r2 <- function(
+    #     .int_vars.independent
+#     , .lgc_intercept = T
+#     , .dbl_observations
+#     , .dbl_fitted
+# ){
+#   
+#   # Total sum of squares
+#   sum(
+#     (
+#       .dbl_observations - as.numeric(.lgc_intercept) * mean(.dbl_observations)
+#     ) ^ 2
+#   ) -> sst
+#   
+#   # Residual sum of squares
+#   sum(
+#     (
+#       .dbl_observations - .dbl_fitted
+#     ) ^ 2
+#   ) -> sse
+#   
+#   # R2
+#   1 - (sse / sst) -> r2
+#   
+#   # Adjusted R2
+#   1 - (1 - r2) * 
+#     (length(.dbl_observations) - 1) / 
+#     (length(.dbl_observations) -
+#        .int_vars.independent - 
+#        as.numeric(.lgc_intercept)
+#     ) -> r2.adj
+#   
+#   # Output
+#   return(
+#     list(
+#       'r2' = r2
+#       , 'r2.adjusted' = r2.adj
+#     )
+#   )
+#   
+# }
+
 # R SQUARED ----------------------------------------------------------------------
 fun_r2 <- function(
     .int_vars.independent
@@ -83,14 +126,17 @@ fun_r2 <- function(
   # Total sum of squares
   sum(
     (
-      .dbl_observations - as.numeric(.lgc_intercept) * mean(.dbl_observations)
+      .dbl_observations - 
+        # as.numeric(.lgc_intercept) * 
+        mean(.dbl_observations)
     ) ^ 2
   ) -> sst
   
   # Residual sum of squares
   sum(
     (
-      .dbl_observations - .dbl_fitted
+      .dbl_observations - 
+        .dbl_fitted
     ) ^ 2
   ) -> sse
   
@@ -112,6 +158,51 @@ fun_r2 <- function(
       , 'r2.adjusted' = r2.adj
     )
   )
+  
+}
+
+# WEIGHTED R SQUARED -----------------------------------------------------
+fun_r2.weighted <- function(.list_model){
+  
+  .list_model %>% 
+    residuals() -> dbl_residuals
+  
+  .list_model %>% 
+    fitted() -> dbl_fitted
+  
+  .list_model %>% 
+    weights() -> dbl_weights
+  
+  if(!length(dbl_weights)){
+    
+    rep(1, length(
+      dbl_fitted
+    )) -> dbl_weights
+    
+  }
+  
+  dbl_residuals + 
+    dbl_fitted -> dbl_observed
+  
+  sum(
+    dbl_weights *
+      dbl_residuals ^ 2
+  ) -> dbl_sse
+  
+  sum(
+    dbl_weights * 
+      (
+        dbl_observed - 
+          weighted.mean(
+            dbl_observed
+            , dbl_weights
+          )
+      ) ^ 2
+  ) -> dbl_sst
+  
+  dbl_r2 <- 1 - dbl_sse / dbl_sst
+  
+  return(dbl_r2)
   
 }
 
@@ -337,6 +428,441 @@ fun_fitted.sd <- function(
 # mdl_kcost$model.fit 
 #   fun_heteroskedasticity()
 
+# # GENERIC REGRESSION FUNCTION: NNLS & BVLS ---------------------------------------------
+# fun_lm <- function(
+#     .df_data
+#     , .sym_vars.dependent
+#     , .sym_vars.independent
+#     , .sym_vars.dummies = c()
+#     , .sym_vars.instrumental = c()
+#     , .sym_vars.weights = NULL
+#     , .lgc_intercept = T
+#     , .dbl_upper.bounds = c()
+#     , .dbl_lower.bounds = c()
+#     , .lgc_diagnostics = F
+#     , .lgc_dummy.remove = F
+# ){
+#   
+#   
+#   # Dummy variables for non-numerical data
+#   if(length(.sym_vars.dummies)){
+#     
+#     .df_data %>% 
+#       select(all_of(
+#         .sym_vars.dummies
+#       )) %>% 
+#       names() -> chr_dummies
+#     
+#     .df_data %>% 
+#       dummy_cols(
+#         select_columns = chr_dummies
+#         , remove_selected_columns = T
+#         , remove_most_frequent_dummy = 
+#           .lgc_dummy.remove
+#       ) -> .df_data
+#     
+#     .df_data %>% 
+#       select(starts_with(
+#         chr_dummies
+#       )) %>%
+#       names() -> chr_dummies
+#     
+#     c(
+#       .sym_vars.independent
+#       , chr_dummies
+#     ) -> .sym_vars.independent
+#     
+#     if(length(.sym_vars.instrumental)){
+#       
+#       c(
+#         .sym_vars.instrumental
+#         , chr_dummies
+#       ) -> .sym_vars.instrumental
+#       
+#     }
+#     
+#   }
+#   
+#   
+#   # # Argument names
+#   # if(
+#   #   fun_args.aux(!!enexpr(.sym_vars.independent)) %>% 
+#   #   as.character() %>% 
+#   #   intersect(names(.df_data)) %>%
+#   #   length()
+#   # ){
+#   #   
+#   #   fun_args.aux(!!enexpr(.sym_vars.independent)) %>% 
+#   #     as.character() %>% 
+#   #     intersect(names(.df_data)) %>% 
+#   #     return()
+#   #   
+#   # } else { 
+#   #   
+#   #   args %>% 
+#   #     enexpr() %>% 
+#   #     eval() %>% 
+#   #     return()
+#   # } -> .sym_vars.independent
+#   # 
+#   # # fun_args(.df_data, !!enexpr(.sym_vars.dependent)) -> .sym_vars.dependent
+#   # # 
+#   # # fun_args(.df_data, !!enexpr(.sym_vars.independent)) -> .sym_vars.independent
+#   # # 
+#   # # fun_args(.df_data, !!enexpr(.sym_vars.weights)) -> .sym_vars.weights
+#   # 
+#   # return(list(
+#   #   # .sym_vars.dependent
+#   #   .sym_vars.independent
+#   #   # , .sym_vars.weights
+#   # ))
+#   
+#   # fun_args.aux(!!enexpr(.sym_vars.dependent)) -> .sym_vars.dependent
+#   # 
+#   # fun_args.aux(!!enexpr(.sym_vars.independent)) -> .sym_vars.independent
+#   # 
+#   # fun_args.aux(!!enexpr(.sym_vars.weights)) -> .sym_vars.weights
+#   
+#   # Sample weights
+#   # NNLS with weights
+#   # => sqrt(weights) * independent variable = independent variable
+#   # => sqrt(weights) * dependent variable = dependent variable
+#   
+#   # Bounds
+#   if(length(.dbl_upper.bounds) == 1){
+#     
+#     rep(
+#       .dbl_upper.bounds
+#       , as.numeric(.lgc_intercept) + 
+#         length(.sym_vars.independent)
+#     ) -> .dbl_upper.bounds 
+#     
+#   }
+#   
+#   if(length(.dbl_lower.bounds) == 1){
+#     
+#     rep(
+#       .dbl_lower.bounds
+#       , as.numeric(.lgc_intercept) + 
+#         length(.sym_vars.independent)
+#     ) -> .dbl_lower.bounds 
+#     
+#   }
+#   
+#   
+#   # # Bounds
+#   #   if(!length(.dbl_upper.bounds)){
+#   #     
+#   #     rep(Inf, length(.sym_vars.independent)) -> .dbl_upper.bounds 
+#   #     
+#   #   } else if(length(.dbl_upper.bounds) == 1){
+#   #     
+#   #     rep(.dbl_upper.bounds, length(.sym_vars.independent)) -> .dbl_upper.bounds 
+#   #     
+#   #   }
+#   #   
+#   #   if(!length(.dbl_lower.bounds)){
+#   #     
+#   #     rep(-Inf, length(.sym_vars.independent)) -> .dbl_lower.bounds 
+#   #     
+#   #   } else if(length(.dbl_upper.bounds) == 1){
+#   #     
+#   #     rep(.dbl_lower.bounds, length(.sym_vars.independent)) -> .dbl_lower.bounds 
+#   #     
+#   #   }
+#   #   
+#   
+#   # Troublesome variable names
+#   make.names(
+#     .sym_vars.dependent
+#   ) -> .sym_vars.dependent.names
+#   
+#   make.names(
+#     .sym_vars.independent
+#   ) -> .sym_vars.independent.names
+#   
+#   make.names(
+#     names(.df_data)
+#   ) -> names(.df_data)
+#   
+#   # .sym_vars.dependent %>% 
+#   #   str_replace_all(' ', '_') -> .sym_vars.dependent
+#   # 
+#   # .sym_vars.independent
+#   # str_replace_all(' ', '_') -> .sym_vars.independent
+#   
+#   # Methods of estimation
+#   if(length(.sym_vars.instrumental)){
+#     # Troublesome variable names
+#     make.names(
+#       .sym_vars.instrumental
+#     ) -> .sym_vars.instrumental.names
+#     
+#     # .sym_vars.instrumental %>% 
+#     #   str_replace_all(' ', '_') -> .sym_vars.instrumental
+#     
+#     # 2SLS
+#     # Dependent variable
+#     .sym_vars.dependent.names[[1]] %>%
+#       paste('~') -> chr_formula.right
+#     
+#     if(!.lgc_intercept){
+#       
+#       paste0(
+#         chr_formula.right
+#         , '0 + '
+#       ) -> chr_formula.right
+#       
+#     } 
+#     
+#     # Independent variables
+#     paste(
+#       .sym_vars.independent.names
+#       , collapse = '+'
+#     ) %>% 
+#       paste('|') %>% 
+#       paste(
+#         paste(
+#           .sym_vars.instrumental.names
+#           , collapse = ' + '
+#         )) -> chr_formula.left
+#     
+#     # Formula
+#     chr_formula.right %>%
+#       paste0(chr_formula.left) %>%
+#       as.formula() -> fml_formula
+#     
+#     # Run model
+#     ivreg(
+#       formula = fml_formula
+#       , data = .df_data
+#       , weights = 
+#         if(length(.sym_vars.weights)){
+#           .df_data[[
+#             make.names(
+#               .sym_vars.weights
+#             )]]
+#         } else { NULL }
+#     ) -> mdl_fit
+#     
+#   } else {
+#     # Other methods
+#     # Dependent variable
+#     .sym_vars.dependent.names[[1]] %>%
+#       paste('~') -> chr_formula.right
+#     
+#     if(.lgc_intercept){
+#       
+#       # paste0(chr_formula.right, '(Intercept) + ') -> chr_formula.right
+#       paste0(chr_formula.right, 'a + ') -> chr_formula.right
+#       
+#     } 
+#     
+#     # Independent variables
+#     paste0('b', 1:length(
+#       .sym_vars.independent.names
+#     ), '*') %>%
+#       paste(
+#         .sym_vars.independent.names
+#         , collapse = '+'
+#       ) -> chr_formula.left
+#     
+#     # Formula
+#     chr_formula.right %>%
+#       paste0(chr_formula.left) %>%
+#       as.formula() -> fml_formula
+#     
+#     # Run model
+#     if(length(.sym_vars.weights)){
+#       
+#       nlsLM(
+#         formula = fml_formula
+#         , data = .df_data
+#         , weights = .df_data[[
+#           make.names(
+#             .sym_vars.weights
+#           )]]
+#         , upper = .dbl_upper.bounds
+#         , lower = .dbl_lower.bounds
+#         , control = list(scaleOffset = 1)
+#       ) -> mdl_fit 
+#       
+#     } else { 
+#       
+#       nlsLM(
+#         formula = fml_formula
+#         , data = .df_data
+#         , upper = .dbl_upper.bounds
+#         , lower = .dbl_lower.bounds
+#         , control = list(scaleOffset = 1)
+#       ) -> mdl_fit 
+#       
+#     }
+#     
+#     # # Run model
+#     # nlsLM(
+#     #   formula = fml_formula
+#     #   , data = .df_data
+#     #   , weights = 
+#     #     if(length(.sym_vars.weights)){
+#     #       .df_data[[.sym_vars.weights]]
+#     #     } else { NULL }
+#     #   , upper = .dbl_upper.bounds
+#     #   , lower = .dbl_lower.bounds
+#     #   , control = list(scaleOffset = 1)
+#     # ) -> mdl_fit
+#     # 
+#   }
+#   
+#   # Tidy model
+#   if(.lgc_intercept){
+#     
+#     c(
+#       '(Intercept)'
+#       , .sym_vars.independent
+#     ) -> chr_term
+#     
+#   } else { 
+#     
+#     .sym_vars.independent -> chr_term
+#     
+#   }
+#   
+#   mdl_fit %>% 
+#     broom::tidy() %>% 
+#     mutate(
+#       term = chr_term
+#       # , significance = 
+#       #   findInterval(
+#       #     x = p.value
+#       #     , vec = c(0, 0.001, 0.01, 0.05, 0.1, 1)
+#       #   ) %>% 
+#       #   recode(
+#       #     .default = ''
+#       #     , '4' = '.'
+#       #     , '3' = '*'
+#       #     , '2' = '**'
+#       #     , '1' = '***'
+#       #   )
+#     ) -> mdl_fit.tidy
+#   
+#   # Fitted values
+#   if(length(.sym_vars.instrumental)){
+#     
+#     as.numeric(
+#       mdl_fit$fitted.values
+#     ) -> dbl_fitted
+#     
+#   } else { 
+#     
+#     as.numeric(
+#       mdl_fit$m$fitted()
+#     ) -> dbl_fitted
+#     
+#   }
+#   
+#   # R squared
+#   fun_r2(
+#     .int_vars.independent = 
+#       length(.sym_vars.independent.names)
+#     , .dbl_observations = 
+#       .df_data %>% 
+#       pull(.sym_vars.dependent.names[[1]])
+#     , .dbl_fitted = dbl_fitted
+#     , .lgc_intercept = .lgc_intercept
+#   ) -> list_r2
+#   
+#   # RMSE
+#   fun_rmse(
+#     .dbl_observations = 
+#       .df_data %>% 
+#       pull(.sym_vars.dependent.names[[1]])
+#     , .dbl_fitted = dbl_fitted
+#     , .dbl_weights = 
+#       if(length(.sym_vars.weights)){
+#         .df_data[[
+#           make.names(
+#             .sym_vars.weights
+#             # )]] ^ -1
+#           )]]
+#       } else { NULL }
+#   ) -> list_rmse
+#   
+#   # MAE
+#   fun_mae(
+#     .dbl_observations = 
+#       .df_data %>% 
+#       pull(.sym_vars.dependent.names[[1]])
+#     , .dbl_fitted = dbl_fitted
+#     , .dbl_weights = 
+#       if(length(.sym_vars.weights)){
+#         .df_data[[
+#           make.names(
+#             .sym_vars.weights
+#             # )]] ^ -1
+#           )]]
+#       } else { NULL }
+#   ) -> list_mae
+#   
+#   # Fitted mean
+#   fun_fitted.mean(
+#     .dbl_observations = 
+#       .df_data %>% 
+#       pull(.sym_vars.dependent.names[[1]])
+#     , .dbl_fitted = dbl_fitted
+#     , .dbl_weights = 
+#       if(length(.sym_vars.weights)){
+#         .df_data[[
+#           make.names(
+#             .sym_vars.weights
+#             # )]] ^ -1
+#           )]]
+#       } else { NULL }
+#   ) -> list_fitted.mean
+#   
+#   # Fitted sd
+#   fun_fitted.sd(
+#     .dbl_observations = 
+#       .df_data %>% 
+#       pull(.sym_vars.dependent.names[[1]])
+#     , .dbl_fitted = dbl_fitted
+#     , .dbl_weights =
+#       if(length(.sym_vars.weights)){
+#         .df_data[[
+#           make.names(
+#             .sym_vars.weights
+#             # )]] ^ -1
+#           )]]
+#       } else { NULL }
+#   ) -> list_fitted.sd
+#   
+#   # F test
+#   
+#   # Summary
+#   if(.lgc_diagnostics){
+#     
+#     mdl_fit %>% 
+#       summary(diagnostics = T) %>%
+#       print()
+#     
+#   }
+#   
+#   # Output
+#   return(list(
+#     'model.tidy' = mdl_fit.tidy
+#     , 'model.fit' = mdl_fit
+#     # , 'f.test'
+#     , 'r2' = list_r2
+#     , 'rmse' = list_rmse
+#     , 'mae' = list_mae
+#     , 'fitted.mean' = list_fitted.mean
+#     , 'fitted.sd' = list_fitted.sd
+#     , 'fitted' = dbl_fitted
+#     , 'data' = .df_data
+#   ))
+#   
+# }
+
 # GENERIC REGRESSION FUNCTION: NNLS & BVLS ---------------------------------------------
 fun_lm <- function(
     .df_data
@@ -357,28 +883,38 @@ fun_lm <- function(
   if(length(.sym_vars.dummies)){
     
     .df_data %>% 
-      select(all_of(.sym_vars.dummies)) %>% 
+      select(all_of(
+        .sym_vars.dummies
+      )) %>% 
       names() -> chr_dummies
     
     .df_data %>% 
       dummy_cols(
         select_columns = chr_dummies
         , remove_selected_columns = T
-        , remove_most_frequent_dummy = .lgc_dummy.remove
+        , remove_most_frequent_dummy = 
+          .lgc_dummy.remove
       ) -> .df_data
     
     .df_data %>% 
-      select(starts_with(chr_dummies)) %>%
+      select(starts_with(
+        chr_dummies
+      )) %>%
       names() -> chr_dummies
     
-    c(.sym_vars.independent, chr_dummies) -> .sym_vars.independent
+    c(
+      .sym_vars.independent
+      , chr_dummies
+    ) -> .sym_vars.independent
     
     if(length(.sym_vars.instrumental)){
       
-      c(.sym_vars.instrumental, chr_dummies) -> .sym_vars.instrumental
+      c(
+        .sym_vars.instrumental
+        , chr_dummies
+      ) -> .sym_vars.instrumental
       
     }
-    
     
   }
   
@@ -432,7 +968,8 @@ fun_lm <- function(
     
     rep(
       .dbl_upper.bounds
-      , as.numeric(.lgc_intercept) + length(.sym_vars.independent)
+      , as.numeric(.lgc_intercept) + 
+        length(.sym_vars.independent)
     ) -> .dbl_upper.bounds 
     
   }
@@ -441,7 +978,8 @@ fun_lm <- function(
     
     rep(
       .dbl_lower.bounds
-      , as.numeric(.lgc_intercept) + length(.sym_vars.independent)
+      , as.numeric(.lgc_intercept) + 
+        length(.sym_vars.independent)
     ) -> .dbl_lower.bounds 
     
   }
@@ -470,11 +1008,17 @@ fun_lm <- function(
   #   
   
   # Troublesome variable names
-  make.names(.sym_vars.dependent) -> .sym_vars.dependent.names
+  make.names(
+    .sym_vars.dependent
+  ) -> .sym_vars.dependent.names
   
-  make.names(.sym_vars.independent) -> .sym_vars.independent.names
+  make.names(
+    .sym_vars.independent
+  ) -> .sym_vars.independent.names
   
-  make.names(names(.df_data)) -> names(.df_data)
+  make.names(
+    names(.df_data)
+  ) -> names(.df_data)
   
   # .sym_vars.dependent %>% 
   #   str_replace_all(' ', '_') -> .sym_vars.dependent
@@ -485,7 +1029,9 @@ fun_lm <- function(
   # Methods of estimation
   if(length(.sym_vars.instrumental)){
     # Troublesome variable names
-    make.names(.sym_vars.instrumental) -> .sym_vars.instrumental.names
+    make.names(
+      .sym_vars.instrumental
+    ) -> .sym_vars.instrumental.names
     
     # .sym_vars.instrumental %>% 
     #   str_replace_all(' ', '_') -> .sym_vars.instrumental
@@ -497,7 +1043,10 @@ fun_lm <- function(
     
     if(!.lgc_intercept){
       
-      paste0(chr_formula.right, '0 + ') -> chr_formula.right
+      paste0(
+        chr_formula.right
+        , '0 + '
+      ) -> chr_formula.right
       
     } 
     
@@ -524,7 +1073,10 @@ fun_lm <- function(
       , data = .df_data
       , weights = 
         if(length(.sym_vars.weights)){
-          .df_data[[make.names(.sym_vars.weights)]]
+          .df_data[[
+            make.names(
+              .sym_vars.weights
+            )]]
         } else { NULL }
     ) -> mdl_fit
     
@@ -542,8 +1094,13 @@ fun_lm <- function(
     } 
     
     # Independent variables
-    paste0('b', 1:length(.sym_vars.independent.names), '*') %>%
-      paste(.sym_vars.independent.names, collapse = '+') -> chr_formula.left
+    paste0('b', 1:length(
+      .sym_vars.independent.names
+    ), '*') %>%
+      paste(
+        .sym_vars.independent.names
+        , collapse = '+'
+      ) -> chr_formula.left
     
     # Formula
     chr_formula.right %>%
@@ -556,7 +1113,10 @@ fun_lm <- function(
       nlsLM(
         formula = fml_formula
         , data = .df_data
-        , weights = .df_data[[make.names(.sym_vars.weights)]]
+        , weights = .df_data[[
+          make.names(
+            .sym_vars.weights
+          )]]
         , upper = .dbl_upper.bounds
         , lower = .dbl_lower.bounds
         , control = list(scaleOffset = 1)
@@ -624,59 +1184,90 @@ fun_lm <- function(
   # Fitted values
   if(length(.sym_vars.instrumental)){
     
-    as.numeric(mdl_fit$fitted.values) -> dbl_fitted
+    as.numeric(
+      mdl_fit$fitted.values
+    ) -> dbl_fitted
     
   } else { 
     
-    as.numeric(mdl_fit$m$fitted()) -> dbl_fitted
+    as.numeric(
+      mdl_fit$m$fitted()
+    ) -> dbl_fitted
     
   }
   
   # R squared
   fun_r2(
-    .int_vars.independent = length(.sym_vars.independent.names)
-    , .dbl_observations = .df_data %>% pull(.sym_vars.dependent.names[[1]])
+    .int_vars.independent = 
+      length(.sym_vars.independent.names)
+    , .dbl_observations = 
+      .df_data %>% 
+      pull(.sym_vars.dependent.names[[1]])
     , .dbl_fitted = dbl_fitted
     , .lgc_intercept = .lgc_intercept
   ) -> list_r2
   
   # RMSE
   fun_rmse(
-    .dbl_observations = .df_data %>% pull(.sym_vars.dependent.names[[1]])
+    .dbl_observations = 
+      .df_data %>% 
+      pull(.sym_vars.dependent.names[[1]])
     , .dbl_fitted = dbl_fitted
     , .dbl_weights = 
       if(length(.sym_vars.weights)){
-        1 / .df_data[[make.names(.sym_vars.weights)]]
+        .df_data[[
+          make.names(
+            .sym_vars.weights
+            # )]] ^ -1
+          )]]
       } else { NULL }
   ) -> list_rmse
   
   # MAE
   fun_mae(
-    .dbl_observations = .df_data %>% pull(.sym_vars.dependent.names[[1]])
+    .dbl_observations = 
+      .df_data %>% 
+      pull(.sym_vars.dependent.names[[1]])
     , .dbl_fitted = dbl_fitted
     , .dbl_weights = 
       if(length(.sym_vars.weights)){
-        1 / .df_data[[make.names(.sym_vars.weights)]]
+        .df_data[[
+          make.names(
+            .sym_vars.weights
+            # )]] ^ -1
+          )]]
       } else { NULL }
   ) -> list_mae
   
   # Fitted mean
   fun_fitted.mean(
-    .dbl_observations = .df_data %>% pull(.sym_vars.dependent.names[[1]])
+    .dbl_observations = 
+      .df_data %>% 
+      pull(.sym_vars.dependent.names[[1]])
     , .dbl_fitted = dbl_fitted
     , .dbl_weights = 
       if(length(.sym_vars.weights)){
-        1 / .df_data[[make.names(.sym_vars.weights)]]
+        .df_data[[
+          make.names(
+            .sym_vars.weights
+            # )]] ^ -1
+          )]]
       } else { NULL }
   ) -> list_fitted.mean
   
   # Fitted sd
   fun_fitted.sd(
-    .dbl_observations = .df_data %>% pull(.sym_vars.dependent.names[[1]])
+    .dbl_observations = 
+      .df_data %>% 
+      pull(.sym_vars.dependent.names[[1]])
     , .dbl_fitted = dbl_fitted
     , .dbl_weights =
       if(length(.sym_vars.weights)){
-        1 / .df_data[[make.names(.sym_vars.weights)]]
+        .df_data[[
+          make.names(
+            .sym_vars.weights
+            # )]] ^ -1
+          )]]
       } else { NULL }
   ) -> list_fitted.sd
   

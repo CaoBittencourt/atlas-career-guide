@@ -199,7 +199,7 @@ lapply(pkg, function(x)
 # )
 # # DISTANCE TO SIMILARITY FUNCTION 2 ------------------------------
 # fun_similarity <- function(
-#     .df_data.numeric
+    #     .df_data.numeric
 #     , .dbl_distance
 #     , .dbl_scale.lb = 0
 #     , .dbl_scale.ub = 1
@@ -685,6 +685,217 @@ fun_KNN.matching <- function(
   
 }
 
+# KNN MATCHING FUNCTION 4 -------------------------------------------------------------------------
+fun_knn.matching <- function(
+    .df_data
+    , .df_query
+    , .dbl_scale.lb = 0
+    , .dbl_scale.ub = 1
+    , .int_k = NULL
+    , .dbl_over_qualification.threshold = 0
+){
+  
+  # Arguments validation
+  stopifnot(
+    "'.df_data' must be a data frame." =
+      is.data.frame(.df_data)
+  )
+  
+  stopifnot(
+    "'.df_query' must be a data frame." =
+      is.data.frame(.df_query)
+  )
+  
+  stopifnot(
+    "'.dbl_scale.lb' must be numeric." =
+      is.numeric(.dbl_scale.lb)
+  )
+  
+  stopifnot(
+    "'.dbl_scale.ub' must be numeric." =
+      is.numeric(.dbl_scale.ub)
+  )
+  
+  # Data wrangling
+  .dbl_scale.lb[[1]] -> .dbl_scale.lb
+  .dbl_scale.ub[[1]] -> .dbl_scale.ub
+  
+  intersect(
+    .df_query %>% 
+      select(where(
+        is.numeric
+      )) %>%
+      names()
+    , .df_data %>%
+      select(where(
+        is.numeric
+      )) %>%
+      names()
+  ) -> chr_cols
+  
+  .df_query %>% 
+    select(
+      chr_cols
+    ) -> .df_query
+  
+  .df_data %>%
+    select(
+      chr_cols
+    ) -> .df_data.temp
+  
+  # Define k
+  if(!length(.int_k)){
+    # RECOMMENDED
+    # Typical suggested value for k is sqrt(nrow(df))
+    # Looking for k nearest neighbors in all career clusters
+    
+    .df_data %>%
+      nrow() %>%
+      sqrt() %>%
+      round() -> .int_k
+    
+  }
+  
+  if(length(.dbl_over_qualification.threshold)){
+    
+    .df_query %>%
+      rename_with(
+        .fn = function(x){
+          paste0(x,'.imput')
+        }
+      ) %>%
+      bind_cols(
+        .df_data.temp
+      ) %>%
+      mutate(
+        across(
+          .cols = c(
+            !ends_with('.imput')
+          )
+          ,.fns = function(x){
+            
+            ifelse(
+              # Overqualified if > cutoff and requirement <= cutoff
+              x <= .dbl_over_qualification.threshold 
+              & eval(sym(paste0(cur_column(),'.imput'))) > x
+              , yes = x
+              , no = eval(sym(paste0(cur_column(),'.imput')))
+            )
+            
+          }
+          , .names = '{col}.sub'
+        )
+      ) %>%
+      select(
+        ends_with('.sub')
+      ) %>%
+      rename_with(
+        function(x){
+          str_remove(x,'.sub')
+        }
+      ) -> .df_query
+    
+    lapply(
+      1:nrow(.df_query)
+      , function(x){
+        
+        FNN::get.knnx(
+          data = .df_data.temp[x,]
+          , query = .df_query[x,]
+          , k = 1
+        ) -> KNN.output
+        
+      }) %>% 
+      bind_rows() -> KNN.output 
+    
+    # # Find the k nearest neighbors
+    # FNN::get.knnx(
+    #   data = .df_data.temp
+    #   , query = .df_query
+    #   , k = 1
+    # ) -> KNN.output
+    
+    # KNN.output$nn.index[,1] -> KNN.output$nn.index
+    # 
+    # KNN.output$nn.dist[,1] -> KNN.output$nn.dist
+    
+    # Arrange original data frame with KNN output
+    .df_data %>%
+      mutate(#Add euclidean distances and convert them to similarities
+        euclidean_distance = 
+          as.vector(
+            KNN.output$
+              nn.dist
+          )
+        , similarity = 
+          fun_similarity(
+            .df_data =
+              .df_data.temp
+            , .dbl_distance = 
+              euclidean_distance
+            , .dbl_scale.lb =
+              .dbl_scale.lb
+            , .dbl_scale.ub =
+              .dbl_scale.ub
+          )
+      ) %>%
+      arrange(
+        euclidean_distance
+      ) %>%
+      mutate(
+        .before = 1
+        , rank = row_number()
+        , rank.norm = seq(1, 0, - 1 / (n() - 1))
+      ) %>% 
+      return()
+    
+  } else {
+    
+    # Find the k nearest neighbors
+    FNN::get.knnx(
+      data = .df_data.temp
+      , query = .df_query
+      , k = .int_k
+    ) -> KNN.output
+    
+    # Arrange original data frame with KNN output
+    .df_data %>%
+      slice(as.vector(
+        KNN.output$
+          nn.index
+      )) %>%
+      mutate(#Add euclidean distances and convert them to similarities
+        euclidean_distance = 
+          as.vector(
+            KNN.output$
+              nn.dist
+          )
+        , similarity = 
+          fun_similarity(
+            .df_data =
+              .df_data.temp
+            , .dbl_distance = 
+              euclidean_distance
+            , .dbl_scale.lb = 
+              .dbl_scale.lb
+            , .dbl_scale.ub =
+              .dbl_scale.ub
+          )
+      ) %>% 
+      arrange(
+        euclidean_distance
+      ) %>%
+      mutate(
+        .before = 1
+        , rank = row_number()
+        , rank.norm = seq(1, 0, - 1 / (n() - 1))
+      ) %>% 
+      return()
+    
+  }
+  
+}
+
 # # DISTANCE TO SIMILARITY FUNCTION 2 ------------------------------
 # fun_similarity2 <- function(.dbl_distance, .dbl_scale.max = NULL){
 # 
@@ -853,7 +1064,7 @@ fun_KNN.matching <- function(
 
 # # KNN MATCHING FUNCTION 3 -------------------------------------------------------------------------
 # fun_KNN.matching3 <- function(
-#     .df_data.numeric
+    #     .df_data.numeric
 #     , .vec_query.numeric
 #     , .int_k = NULL
 # ){
