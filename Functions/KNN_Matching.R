@@ -896,6 +896,362 @@ fun_knn.matching <- function(
   
 }
 
+# KNN ALPHA MATCHING FUNCTION ---------------------------------------------
+fun_knn.alpha <- function(
+    .df_data
+    , .df_query
+    , .dbl_scale.ub = 100
+){
+  
+  # Arguments validation
+  stopifnot(
+    "'.df_data' must be a data frame." =
+      is.data.frame(.df_data)
+  )
+  
+  stopifnot(
+    "'.df_query' must be a data frame." =
+      is.data.frame(.df_query)
+  )
+  
+  stopifnot(
+    "'.dbl_scale.ub' must be numeric." =
+      is.numeric(.dbl_scale.ub)
+  )
+  
+  # Data wrangling
+  .dbl_scale.ub[[1]] -> .dbl_scale.ub
+  
+  .df_query %>% 
+    select(where(
+      is.numeric
+    )) -> .df_query
+  
+  .df_data %>% 
+    select(where(
+      is.numeric
+    )) -> df_data.numeric
+  
+  # intersect(
+  #   .df_query %>% 
+  #     select(where(
+  #       is.numeric
+  #     )) %>%
+  #     names()
+  #   , .df_data %>%
+  #     select(where(
+  #       is.numeric
+  #     )) %>%
+  #     names()
+  # ) -> chr_cols
+  # 
+  # .df_query %>% 
+  #   select(
+  #     chr_cols
+  #   ) -> .df_query
+  # 
+  # .df_data %>%
+  #   select(
+  #     chr_cols
+  #   ) -> df_data.numeric
+  
+  # Euclidean distance
+  .df_query %>%
+    slice(rep(
+      1, nrow(df_data.numeric)
+    )) -> .df_query
+  
+  df_data.numeric -
+    .df_query -> df_dist
+  
+  
+  
+  # Correct for over-qualification
+  # abs(df_dist) -> df_dist
+  df_dist[df_dist < 0] <- 0
+  return(df_dist)
+  stop()
+  
+  # # Normalize by the scale's upper bound
+  # df_dist / .dbl_scale.ub -> df_dist
+  # 
+  # # Weigh distances by attribute relevance (alpha)
+  # # df_dist *
+  # #   # df_data.numeric /
+  # #   1 /
+  # #   rowSums(
+  # #     df_data.numeric
+  # #   ) -> df_dist
+  # 
+  # # Add Euclidean distances to original data frame
+  # .df_data %>% 
+  #   mutate(
+  #     distance = rowSums(df_dist)
+  #     , similarity = 1 - distance
+  #   ) -> .df_data
+  # 
+  # # Output
+  # return(.df_data)
+  
+}
+
+# fun_knn.alpha(
+#   .df_data = df_occupations.ai
+#   , .df_query = slice_head(
+#     df_occupations.ai
+#     , n = 1
+#   )
+#   # df_sample %>%
+#   # mutate(across(
+#   #   .cols = ends_with('.l')
+#   #   ,.fns = ~ .x * 100
+#   # ))
+#   , .dbl_scale.ub = 100
+# ) -> dsds
+# 
+# dsds %>% 
+#   select(
+#     occupation
+#     , distance
+#     , similarity
+#   ) %>% 
+#   arrange(
+#     # distance
+#     similarity
+#   )
+# 
+# dsds %>% 
+#   full_join(
+#     df_occupations %>% 
+#       select(
+#         occupation
+#         , employment2
+#         , annual_wage_2021
+#       )
+#   ) %>% 
+#   select(
+#     occupation
+#     , employment2
+#     , annual_wage_2021
+#     , distance
+#     , similarity
+#   ) %>% 
+#   mutate(
+#     interchangeability = 
+#       fun_interchangeability(
+#         similarity
+#       )
+#   ) -> dsds
+# 
+# dsds %>%
+#   reframe(
+#     employability = 
+#       fun_employability(
+#         employment2
+#         , interchangeability
+#       )
+#     , employability.optimal =
+#       fun_employability.optimal(
+#         employment2
+#         # , 7000 * 12
+#         , dsds %>% 
+#           filter(
+#             interchangeability == 1
+#           ) %>%
+#           pull(annual_wage_2021)
+#         , annual_wage_2021
+#         , interchangeability
+#       )
+#   )
+
+
+# KNN ALPHA MATCHING FUNCTION ---------------------------------------------
+fun_knn.alpha <- function(
+    .df_data
+    , .df_query
+    , .dbl_overqualification.threshold = 17
+    , .dbl_scale.ub = 100
+){
+  
+  # Arguments validation
+  stopifnot(
+    "'.df_data' must be a data frame." =
+      is.data.frame(.df_data)
+  )
+  
+  stopifnot(
+    "'.df_query' must be a data frame." =
+      is.data.frame(.df_query)
+  )
+  
+  stopifnot(
+    "'.dbl_overqualification.threshold' must be numeric." = 
+      any(
+        is.null(.dbl_overqualification.threshold)
+        , is.numeric(.dbl_overqualification.threshold)
+      )
+  )
+  
+  stopifnot(
+    "'.dbl_scale.ub' must be numeric." =
+      is.numeric(.dbl_scale.ub)
+  )
+  
+  # Data wrangling
+  .dbl_scale.ub[[1]] -> .dbl_scale.ub
+  
+  .dbl_overqualification.threshold[[1]] -> 
+    .dbl_overqualification.threshold
+  
+  .df_query %>% 
+    select(where(
+      is.numeric
+    )) -> .df_query
+  
+  .df_data %>% 
+    select(where(
+      is.numeric
+    )) -> df_data.numeric
+  
+  # intersect(
+  #   .df_query %>% 
+  #     select(where(
+  #       is.numeric
+  #     )) %>%
+  #     names()
+  #   , .df_data %>%
+  #     select(where(
+  #       is.numeric
+  #     )) %>%
+  #     names()
+  # ) -> chr_cols
+  # 
+  # .df_query %>% 
+  #   select(
+  #     chr_cols
+  #   ) -> .df_query
+  # 
+  # .df_data %>%
+  #   select(
+  #     chr_cols
+  #   ) -> df_data.numeric
+  
+  # Euclidean distance
+  .df_query %>%
+    slice(rep(
+      1, nrow(df_data.numeric)
+    )) -> .df_query
+  
+  df_data.numeric -
+    .df_query -> df_dist
+  
+  # Correct for over-qualification
+  if(length(.dbl_overqualification.threshold)){
+    
+    df_dist[
+      df_data.numeric <= 
+        .dbl_overqualification.threshold
+      & df_dist < 0
+    ] <- 0
+    
+  }
+  
+  abs(df_dist) -> df_dist
+  
+  
+  # Normalize by the scale's upper bound
+  df_dist / .dbl_scale.ub -> df_dist
+  
+  # Weigh distances by attribute relevance (alpha)
+  df_dist * (
+    df_data.numeric /
+      rowSums(
+        df_data.numeric
+      )
+  ) -> df_dist
+  
+  # Add Euclidean distances to original data frame
+  .df_data %>%
+    mutate(
+      distance = rowSums(df_dist)
+      , similarity = 1 - distance
+    ) -> .df_data
+  
+  # Output
+  return(.df_data)
+  
+}
+
+# fun_knn.alpha(
+#   .df_data = df_occupations.ai
+#   , .df_query = slice_head(
+#     df_occupations.ai
+#     , n = 1
+#   )
+#   # df_sample %>%
+#   # mutate(across(
+#   #   .cols = ends_with('.l')
+#   #   ,.fns = ~ .x * 100
+#   # ))
+#   , .dbl_scale.ub = 100
+# ) -> dsds
+# 
+# dsds %>% 
+#   select(
+#     occupation
+#     , distance
+#     , similarity
+#   ) %>% 
+#   arrange(
+#     # distance
+#     similarity
+#   )
+# 
+# dsds %>% 
+#   full_join(
+#     df_occupations %>% 
+#       select(
+#         occupation
+#         , employment2
+#         , annual_wage_2021
+#       )
+#   ) %>% 
+#   select(
+#     occupation
+#     , employment2
+#     , annual_wage_2021
+#     , distance
+#     , similarity
+#   ) %>% 
+#   mutate(
+#     interchangeability = 
+#       fun_interchangeability(
+#         similarity
+#       )
+#   ) -> dsds
+# 
+# dsds %>%
+#   reframe(
+#     employability = 
+#       fun_employability(
+#         employment2
+#         , interchangeability
+#       )
+#     , employability.optimal =
+#       fun_employability.optimal(
+#         employment2
+#         # , 7000 * 12
+#         , dsds %>% 
+#           filter(
+#             interchangeability == 1
+#           ) %>%
+#           pull(annual_wage_2021)
+#         , annual_wage_2021
+#         , interchangeability
+#       )
+#   )
+
+
 # # DISTANCE TO SIMILARITY FUNCTION 2 ------------------------------
 # fun_similarity2 <- function(.dbl_distance, .dbl_scale.max = NULL){
 # 

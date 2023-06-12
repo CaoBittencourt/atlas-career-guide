@@ -77,18 +77,15 @@ The second problem with this initial formulation of an employability coefficient
 
 Mathematically, if occupations $q$ and $\tilde{q}$ are said to be similar, then the probability of a person with a professional profile identical with $q$ finding a job either as $q$ or $\tilde{q}$ could be intuitively written as the probability of two mutually exclusive events, adjusted by the probability of two other independent events, namely: the probability of finding a job as a $q$ or a $\tilde{q}$, adjusted by the probability of being *recognized* by the labor market as either one of these occupations to begin with.
 
-The first part of this solution has to do with the amount of job posts available for each occupation, and it was already explained above. The second part has to do with professional similarity, as two occupations are recognized as identical by the labor market to the degree they are similar in the Euclidean sense. Hence, we may define a similarity metric like:
+The first part of this solution has to do with the amount of job posts available for each occupation, and it was already explained above. The second part has to do with professional similarity, as an occupation is recognized by the labor market as identical to another to the degree it has at least the minimum competency level in the required skills. Hence, we may define a measure of the probability of having sufficient professional overlap:
+
+$$\begin{gathered}
+\mathrm{I(\vb{a_j},\vb{a_k})} = \Pr(j \approx k \ | \ \vb{a_j},\vb{a_k})= \Pr(\vb{a_j} \geq \vb{a_k} \ | \ \vb{a_j},\vb{a_k})= \frac{\sum_{i=1}^{m}{g(a_{ji},a_{ki})}}{m},\\ g(a_{ji},a_{ki}) =\begin{cases}1, \text{ if } a_{ji} \geq a_{ki}.\\0, \text{ otherwise}.\end{cases}\end{gathered}$$
 
 $$
-s(\vb{a_q},\vb{a_{\tilde{q}}}) = 1 - \frac{d(\vb{a_q},\vb{a_{\tilde{q}}})}{\max d(\vb{a_j},\vb{a_k})} = 1 - \frac{\sum_{i=1}^m{(a_i^q - a_i^{\tilde{q}})^2}}{\max \sum_{i=1}^m{(a_i^j - a_i^k)^2}},
-$$
-
-where $d(\vb{a_q},\vb{a_{\tilde{q}}})$ is the Euclidean distance between the professional attribute vectors of occupations $q$ and $\tilde{q}$, and ${\max d(\vb{a_j},\vb{a_k})}$, the maximum Euclidean distance between any two occupations $j$ and $k$. From this, we understand that the overlap between vectors $\vb{a_q}$ and $\vb{a_{\tilde{q}}}$ is proportional to the interchangeability of occupations $q$ and $\tilde{q}$. And so, as $s(\vb{a_j},\vb{a_k}) \in [0,1]\ \forall \ j,k$, this metric could be understood as a probability of having sufficient professional overlap:
-
-$$
-\Pr(j \approx k \ | \ \vb{a_j},\vb{a_k}) = \mathrm{I(\vb{a_j},\vb{a_k})} = s(\vb{a_j},\vb{a_k})
-$$
-
+\begin{gathered}\mathrm{I(\vb{a_j},\vb{a_k})}= \Pr(j \approx k \ | \ \vb{a_j},\vb{a_k})= \Pr(\vb{a_j} \geq \vb{a_k} \ | \ \vb{a_j},\vb{a_k})= \sum_{i=1}^{m}{\alpha_{i}^kg(a_{i}^j,a_{i}^k)}, \\ g(a_{i}^j,a_{i}^k) =\begin{cases}1, \text{ if } a_{i}^j \geq a_{i}^k.\\0, \text{ otherwise}.\end{cases},\\ \alpha_i^k = {\frac{a_i^k}{\sum_{i=1}^{m}{a_i^k}}} \implies \sum_{i=1}^{m}\alpha_{i}^k = 1\end{gathered}
+$$\
+\
 The coefficient above refers to the interchangeability of occupations, and can be defined as the similarity between them, or any increasing function of it. Its interpretation is as follows: if employers are interested in a particular subset of professional attributes, which can be attained by any person, regardless of their career path, then the probability of a person having the desired competencies is the overlap between their own competencies and those of a specific occupation, or professional profile, displaying these competencies to the desired degree; or, alternatively, the probability of two professional profiles being interchangeable is the percentage of overlap between them.
 
 The reasoning behind this apparently hasty conclusion is simple: all the job activities of an occupation require of individuals a particular set of skills, which is quantified by their professional profile. If a person has all these competencies, then the probability of being unable to perform a given task on the job is, *ceteris paribus*, precisely zero. But, conversely, if they lack any of the traits required to perform these tasks, then the probability they are unable to perform them properly increases by the exact measure of their under-qualification. Thus, the interchangeability of professional profiles is proportional to their similarity.
@@ -221,7 +218,7 @@ dsds
 
 ## For Professional Attributes
 
-dsds
+P.S.: use $\lambda_i$ for the employability of the $i$-th attribute, since $\Lambda_u$ is the employability of professional profiles.
 
 ## For Any Professional Profile
 

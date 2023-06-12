@@ -96,12 +96,6 @@ df_impact %>%
     #   )
   )
 
-findInterval(
-  round(seq(0, 1, length.out = 7), 2) %>% view
-  , round(seq(0, 1, length.out = 7), 2)
-  , all.inside = T
-)
-
 df_impact.desc
 
 # - Parameters ------------------------------------------------------------
@@ -235,16 +229,16 @@ fun_efa.impact(
 # - Estimate exogenous impact (user) ---------------------------------------------
 read_csv(
   'https://docs.google.com/spreadsheets/d/e/2PACX-1vSVdXvQMe4DrKS0LKhY0CZRlVuCCkEMHVJHQb_U-GKF21CjcchJ5jjclGSlQGYa5Q/pub?gid=47461225&single=true&output=csv'
-) -> df_sample
+) %>% 
+  mutate(across(
+  .cols = ends_with('.l')
+  ,.fns = ~ .x * 100
+)) -> df_sample
 
 fun_efa.impact(
   .df_data =
     # df_occupations.ai
-    df_sample %>%
-    mutate(across(
-      .cols = ends_with('.l')
-      ,.fns = ~ .x * 100
-    ))
+    df_sample
   , .dbl_weights = NULL
   , .efa_model =
     list_efa.equamax.15$

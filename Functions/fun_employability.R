@@ -34,6 +34,7 @@ fun_interchangeability <- function(.dbl_similarity){
   
   # Coefficient 2
   # dbl_interchangeability <- s ^ 2
+  # dbl_interchangeability <- s ^ 4
   
   # Coefficient 3
   # dbl_interchangeability <- s * s + (1 - s) * s ^ 2
@@ -41,23 +42,134 @@ fun_interchangeability <- function(.dbl_similarity){
   # Coefficient 4
   # dbl_interchangeability <- s * s + (1 - s) * s ^ ((1/s)^(1/s))
   
-  # Coefficient 4
-  dbl_interchangeability <- s * s + (1 - s) * s ^ ((1/s)^4)
+  # Coefficient 5
+  # dbl_interchangeability <- s * s + (1 - s) * s ^ ((1/s)^4)
+  
+  # Coefficient 6
+  # dbl_interchangeability <- s ^ ((1/s)^(1/s))
+  dbl_interchangeability <- s ^ ((1/s)^(4*(1/s)))
   
   # Output
   return(dbl_interchangeability)
   
 }
 
-
-# DISTANCE TO SIMILARITY FUNCTION ------------------------------
+# - Employability ---------------------------------------------------------
 fun_employability <- function(
+    .int_employment
+    , .dbl_interchangeability
+){
+  
+  # Arguments validation
+  stopifnot(
+    "'.int_employment' must be numeric." =
+      is.numeric(.int_employment)
+  )
+  
+  stopifnot(
+    "'.dbl_interchangeability' must be numeric." =
+      is.numeric(.dbl_interchangeability)
+  )
+  
+  stopifnot(
+    "'.int_employment' and '.dbl_interchangeability' must be the same length." =
+      length(.int_employment) ==
+      length(.dbl_interchangeability)
+  )
+  
+  # Coerce employment to integer
+  round(.int_employment) -> .int_employment
+  
+  # Rename variables
+  .int_employment -> n
+  .dbl_interchangeability -> I
+  
+  rm(.int_employment)
+  rm(.dbl_interchangeability)
+  
+  # Estimate employability coefficient
+  sum(I * n) / sum(n) -> dbl_employability
+  
+  # Output
+  return(dbl_employability)
+  
+}
+
+# - Utility-Consistent Employability ---------------------------------------------------------
+fun_employability.optimal <- function(
+    .int_employment
+    , .dbl_wage.current
+    , .dbl_wages.market
+    , .dbl_interchangeability
+){
+  
+  # Arguments validation
+  stopifnot(
+    "'.int_employment' must be numeric." =
+      is.numeric(.int_employment)
+  )
+  
+  stopifnot(
+    "'.dbl_wage.current' must be numeric." =
+      is.numeric(.dbl_wage.current)
+  )
+  
+  stopifnot(
+    "'.dbl_wages.market' must be numeric." =
+      is.numeric(.dbl_wages.market)
+  )
+  
+  stopifnot(
+    "'.dbl_interchangeability' must be numeric." =
+      is.numeric(.dbl_interchangeability)
+  )
+  
+  stopifnot(
+    "'.int_employment', '.dbl_wages.market', and '.dbl_interchangeability' must be the same length." =
+      all(
+        length(.int_employment) ==
+          length(.dbl_interchangeability)
+        , length(.dbl_wages.market) ==
+          length(.dbl_interchangeability)
+      )
+  )
+  
+  # Coerce wage to one element
+  .dbl_wage.current[[1]] -> .dbl_wage.current
+  
+  # Coerce employment to integer
+  round(.int_employment) -> .int_employment
+  
+  # Rename variables
+  .int_employment -> n
+  .dbl_interchangeability -> I
+  
+  rm(.int_employment)
+  rm(.dbl_interchangeability)
+  
+  # Calculate utility of changing jobs
+  as.numeric(
+    .dbl_wages.market > 
+      .dbl_wage.current
+  ) -> U
+  
+  # Estimate employability coefficient
+  sum(I * n * U) / sum(n) -> dbl_employability.optimal
+  
+  # Output
+  return(dbl_employability.optimal)
+  
+}
+
+# - Estimate coefficients for a single professional profile -----------
+fun_employability.workflow <- function(
     .df_data
-    , .df_query = NULL
+    , .df_query
     , .int_employment
-    , .dbl_scale.lb = 0
+    , .dbl_wages.market = NULL
+    , .dbl_wage.current = NULL
     , .dbl_scale.ub = 100
-    , .dbl_over_qualification.threshold = NULL
+    , .dbl_overqualification.threshold = 0
 ){
   
   # Arguments validation
@@ -67,333 +179,594 @@ fun_employability <- function(
   )
   
   stopifnot(
-    "'.int_employment' must be a numeric vector the same length as '.df_data'." = 
-      all(
-        is.numeric(.int_employment)
-        , length(.int_employment) ==
-          nrow(.df_data)
+    "'.dbl_wages.market' must be numeric." =
+      any(
+        is.numeric(.dbl_wages.market)
+        , is.null(.dbl_wages.market)
       )
   )
   
-  # Similarity
-  if(length(.df_query)){
-    
-    fun_knn.matching(
-      .df_data =
-        .df_data
-      , .df_query = 
-        .df_query
-      , .dbl_scale.lb =
-        .dbl_scale.lb 
-      , .dbl_scale.ub =
-        .dbl_scale.ub
-      , .int_k = 
-        nrow(.df_data)
-      , .dbl_over_qualification.threshold =
-        .dbl_over_qualification.threshold
-    ) -> df_knn
-    
-    # Interchangeability
-    df_knn %>%
-      mutate(
-        interchangeability = 
-          fun_interchangeability(
-            similarity
-          )
-      ) -> df_knn
-    
-    # Probability of finding a job
-    df_knn %>% 
-      mutate(
-        employment = 
-          .int_employment
-      ) %>% 
-      reframe(
-        employability = 
-          sum(
-            interchangeability * 
-              employment / 
-              sum(employment)
-          )
-      ) -> df_knn
-    
-  } else {
-    
-    .df_data %>% 
-      group_nest(
-        row_number()
-      ) %>% 
-      pull(data) %>% 
-      map(
-        ~ fun_knn.matching(
-          .df_data =
-            .df_data
-          , .df_query = .x
-          , .dbl_scale.lb =
-            .dbl_scale.lb 
-          , .dbl_scale.ub =
-            .dbl_scale.ub
-          , .int_k = 
-            nrow(.df_data)
-          , .dbl_over_qualification.threshold =
-            .dbl_over_qualification.threshold
+  stopifnot(
+    "'.int_employment' and '.dbl_wages.market' must be the same length." =
+      any(
+        length(.int_employment) ==
+          length(.dbl_wages.market)
+        , is.null(.dbl_wages.market)
+      )
+  )
+  
+  # Data wrangling
+  intersect(
+    .df_query %>%
+      # select(where(
+      #   is.numeric
+      # )) %>%
+      names()
+    , .df_data %>%
+      # select(where(
+      #   is.numeric
+      # )) %>%
+      names()
+  ) -> chr_cols
+  
+  .df_query %>%
+    select(
+      chr_cols
+    ) -> .df_query
+  
+  .df_data %>%
+    select(
+      chr_cols
+    ) -> df_data.numeric
+  
+  # Calculate interchangeability
+  fun_knn.alpha(
+    .df_data = 
+      df_data.numeric
+    , .df_query = 
+      .df_query
+    , .dbl_scale.ub = 
+      .dbl_scale.ub
+    , .dbl_overqualification.threshold = 
+      .dbl_overqualification.threshold
+  ) %>% 
+    mutate(
+      interchangeability = 
+        fun_interchangeability(
+          similarity
         )
-      ) -> list_knn
+    ) -> df_knn.alpha
+  
+  # Calculate employability
+  df_knn.alpha %>% 
+    reframe(
+      employability =
+        fun_employability(
+          .int_employment =
+            .int_employment
+          , .dbl_interchangeability =
+            interchangeability
+        )
+    ) -> df_employability
+  
+  
+  # If wages are provided, calculate utility-consistent employability
+  if(length(.dbl_wages.market)){
     
-    # Interchangeability
+    stopifnot(
+      "'.dbl_wage.current' missing with no default." = 
+        !is.null(.dbl_wage.current)
+    )
+    
+    stopifnot(
+      "'.dbl_wage.current' must be numeric." = 
+        is.numeric(.dbl_wage.current)
+    )
+    
+    df_employability %>%
+      mutate(
+        employability.optimal = 
+          fun_employability.optimal(
+            .int_employment = 
+              .int_employment
+            , .dbl_wage.current = 
+              .dbl_wage.current
+            , .dbl_wages.market = 
+              .dbl_wages.market
+            , .dbl_interchangeability =
+              df_knn.alpha$
+              interchangeability
+          )) -> df_employability
+    
+  }
+  
+  # Output
+  return(list(
+    'interchangeability' = df_knn.alpha
+    , 'employability' = df_employability
+  ))
+  
+}
+
+# - Estimate coefficients for multiple professional profiles -----------
+fun_employability.workflow.m <- function(
+    .df_data
+    , .int_employment
+    , .dbl_wages = NULL
+    , .dbl_scale.ub = 100
+    , .dbl_overqualification.threshold = 0
+){
+  
+  # Arguments validation
+  stopifnot(
+    "'.df_data' must be a data frame." =
+      is.data.frame(.df_data)
+  )
+  
+  stopifnot(
+    "'.dbl_wages' must be numeric." =
+      any(
+        is.numeric(.dbl_wages)
+        , is.null(.dbl_wages)
+      )
+  )
+  
+  stopifnot(
+    "'.int_employment' and '.dbl_wages.market' must be the same length." =
+      any(
+        length(.int_employment) ==
+          length(.dbl_wages)
+        , is.null(.dbl_wages)
+      )
+  )
+  
+  # Calculate interchangeability for each row
+  .df_data %>%
+    group_nest(
+      row_number()
+    ) %>%
+    pull(data) %>%
     map(
-      list_knn
-      , ~ .x %>% 
+      ~ fun_knn.alpha(
+        .df_data = .df_data
+        , .df_query = .x
+        , .dbl_scale.ub =
+          .dbl_scale.ub
+        , .dbl_overqualification.threshold = 
+          .dbl_overqualification.threshold
+      ) %>% 
         mutate(
           interchangeability = 
             fun_interchangeability(
               similarity
             )
         )
-    ) -> list_knn
-    
-    # Probability of finding a job
+    ) -> list_knn.alpha
+  
+  # Calculate employability for each row
+  list_knn.alpha %>% 
     map(
-      list_knn
-      , ~ .x %>% 
-        mutate(
-          employment = 
-            .int_employment
-        ) %>% 
+      ~ .x %>% 
         reframe(
           employability = 
-            sum(
-              interchangeability * 
-                employment / 
-                sum(employment)
-            )
-        )
-    ) -> list_knn
+            fun_employability(
+              .int_employment = 
+                .int_employment
+              , .dbl_interchangeability =
+                interchangeability
+            ))
+    ) %>% 
+    bind_rows() -> df_employability
+  
+  
+  # If wages are provided, calculate utility-consistent employability 
+  if(length(.dbl_wages)){
     
-    list_knn -> df_knn
+    df_employability %>%
+      mutate(
+        employability.optimal = 
+          map_dbl(
+            list_knn.alpha
+            , ~ fun_employability.optimal(
+              .int_employment = 
+                .int_employment
+              , .dbl_wage.current = 
+                .dbl_wages[n()]
+              , .dbl_wages.market = 
+                .dbl_wages
+              , .dbl_interchangeability =
+                .x$interchangeability
+            ))
+      ) -> df_employability
     
   }
   
+  # Join employability back to original data frame
+  .df_data %>% 
+    bind_cols(
+      df_employability
+    ) -> df_employability
+  
   # Output
-  return(df_knn)
+  return(list(
+    'interchangeability' = list_knn.alpha
+    , 'employability' = df_employability
+  ))
   
 }
 
-# df_sample %>%
-#   select(ends_with('.l')) %>% 
-#   mutate(across(
-#     .cols = everything()
-#     ,.fns = ~ 100 * .x
-#   )) -> lalala
-# 
-# lalala %>% 
-#   rename_with(
-#     .fn = function(x){
-#       paste0(x,'.imput')
-#     }
-#   ) %>%
-#   bind_cols(
-#     df_occupations.ai %>% 
-#       select(names(df_sample)) %>% 
-#       select(ends_with('.l'))
-#   ) %>%
-#   mutate(
-#     across(
-#       .cols = c(
-#         !ends_with('.imput')
-#       )
-#       ,.fns = function(x){
-#         
-#         ifelse(
-#           # Overqualified if > cutoff and requirement <= cutoff
-#           x <= 0 
-#           & eval(sym(paste0(cur_column(),'.imput'))) > x
-#           , yes = x
-#           , no = eval(sym(paste0(cur_column(),'.imput')))
-#         )
-#         
-#       }
-#       , .names = '{col}.sub'
-#     )
-#   ) %>%
-#   select(
-#     ends_with('.sub')
-#   ) %>%
-#   rename_with(
-#     function(x){
-#       str_remove(x,'.sub')
-#     }
-#   ) -> dsds
-# 
-# FNN::get.knnx(
-#   data = 
-#     df_occupations.ai %>% 
-#     select(names(df_sample)) %>% 
-#     select(ends_with('.l'))
-#   , query = dsds
-#   , k = 873
-# ) -> lala
-# 
-# dsdsds$nn.index %>% view
-# lala$nn.index %>% view
-# lala$nn.dist %>% view
-# 
-# fun_KNN.matching(
-#   .df_data.numeric = 
-#     df_occupations.ai %>% 
-#     select(names(df_sample))
-#   , .vec_query.numeric = 
-#     lalala
-#   , .int_k = 873
-#   , .imput.over_qualification = T
-#   , .dbl_over_qualification.threshold = 0
-#   , .dbl_decimals = 1000
-# ) -> lalalala
-# 
-# lala$nn.index %>% view
-# lala$nn.dist[,1]
+# - Competitiveness -------------------------------------------------------
+fun_competitiveness <- function(.int_applicants, .int_jobs){
+  
+  # Arguments validation
+  stopifnot(
+    "'.int_applicants' must be numeric." =
+      is.numeric(.int_applicants)
+  )
+  
+  stopifnot(
+    "'.int_jobs' must be numeric." =
+      is.numeric(.int_jobs)
+  )
+  
+  # Coerce to integer
+  round(.int_applicants) -> .int_applicants
+  round(.int_jobs) -> .int_jobs
+  
+  pmax(.int_applicants, 0) -> .int_applicants
+  pmax(.int_jobs, 0) -> .int_jobs
+  
+  # Jobs-to-applicants ratio
+  .int_applicants / 
+    .int_jobs  -> dbl_competitiveness
+  
+  # 1 -
+  #   .int_jobs / 
+  #   .int_applicants -> dbl_competitiveness
+  # 
+  # Output
+  return(dbl_competitiveness)
+  
+}
 
-# lala$
-#   nn.dist %>% 
-#   as_tibble() %>% 
-#   mutate(across(
-#     .cols = everything()
-#     ,.fns = ~ 
-#       round(.x, 4) ==
-#       round(lalalala$euclidean_distance, 4)
-#   )) %>% 
-#   colSums()
+# dsds --------------------------------------------------------------------
+start <- Sys.time()
+fun_employability.workflow.m(
+  .df_data = df_occupations.ai
+  , .int_employment = 
+    df_occupations$
+    employment2
+  , .dbl_wages = 
+    df_occupations$
+    annual_wage_2021
+  , .dbl_scale.ub = 100
+  , .dbl_overqualification.threshold = 33
+) -> dsdsds
+end <- Sys.time()
+end - start
 
-# lala$nn.dist %>% 
-#   as_tibble() %>% 
-#   group_nest(
-#     row_number()
-#   ) %>% 
-#   pull(data) %>%
-#   map(
-#     ~ all(
-#       round(.x, 10) ==
-#         round(
-#           lalalala$
-#             euclidean_distance
-#           , 10
-#         )
-#     ))
+fun_competitiveness(
+  .int_applicants = df_occupations$employment2[1] * 0
+  , .int_jobs = df_occupations$employment2[1]
+  )
 
-fun_employability(
+dsdsds$
+  employability %>% 
+  select(
+    !ends_with('.l')
+  ) %>% 
+  arrange(employability)
+
+fun_employability.workflow(
   .df_data = 
     df_occupations.ai %>% 
-    select(names(df_sample)) %>% 
-    select(ends_with('.l'))
-  , .df_query = lalala
+    select(names(df_sample))
+  , .df_query = df_sample
   , .int_employment = 
-    df_occupations$employment2
-  , .dbl_scale.lb = 0
+    df_occupations$
+    employment2
+  , .dbl_wages.market = 
+    df_occupations$
+    annual_wage_2021
+  , .dbl_wage.current = 
+    6000 * 12
   , .dbl_scale.ub = 100
-  , .dbl_over_qualification.threshold = 0
-)
-
-
-dsdsds$nn.index %>% view
-dsdsds$nn.dist %>% view
-dsdsds$nn.dist[,1]
-
-FNN::get.knnx(
-  data = 
-    df_occupations.ai %>% 
-    select(ends_with('.l'))
-  , query = 
-    df_occupations.ai %>% 
-    select(ends_with('.l'))
-  , k = 873
-) -> dsdsds
-
-df_occupations.ai %>% 
-  filter(str_detect(
-    str_to_lower(occupation)
-    , 'data|anal|econo|physicist'
-  )) %>%
-  group_nest(
-    row_number()
+  , .dbl_overqualification.threshold = 33
+)[[1]] %>% 
+  select(
+    !ends_with('.l')
   ) %>% 
-  pull(data) %>% 
-  # sample(10) %>%
-  map(
-    ~ fun_knn.matching(
-      .df_data =
-        df_occupations.ai
-      , .df_query = .x
-      , .dbl_scale.lb = 0 
-      , .dbl_scale.ub = 100
-      , .int_k = nrow(df_occupations.ai)
-      , .dbl_over_qualification.threshold = 0
-    )
-    , .progress = T
-  ) -> list_knn
+  arrange(distance)
 
-set_names(
-  list_knn
-  , list_knn %>% 
-    map_chr(
-      ~ .x %>%
-        slice(1) %>% 
-        pull(occupation)
-    )
-  ) -> list_knn
-
-list_knn %>% 
-  bind_rows(
-    .id = 'oqqupation'
-  ) %>% 
-  full_join(
-    df_occupations %>% 
-      select(
+fun_knn.alpha(
+  .df_data = df_occupations.ai[1,]
+  , .df_query = 
+    df_occupations.ai %>% 
+    filter(str_detect(
+      str_to_lower(
         occupation
-        , employment2
       )
-  ) %>% 
-  # filter(
-  #   oqqupation != 
+      , 'chef'
+    ))
+  , .dbl_scale.ub = 100
+) %>% 
+  # mutate(
+  #   .before = 1
+  #   , row.sum = 
+  #     rowSums(.)
+  #   , occupation =
+  #     df_occupations$
   #     occupation
-  # ) %>% 
+  # ) %>% view
+  select(
+    !ends_with('.l')
+  ) %>%
+  # mutate(across(
+  #   .cols = where(is.numeric)
+  #   , .fns = ~ round(.x, 2)
+  # )) %>% 
+  arrange(
+    -distance
+  ) %>% 
+  filter(str_detect(
+    str_to_lower(
+      occupation
+    )
+    , 'chief'
+  ))
+
+
+lalala[[2]] - 
+  lalala[[1]] -> df_dist
+
+
+df_dist[
+  lalala[[2]] <= 17
+  & df_dist < -17
+] <- 0
+
+lalala[1,1:3]
+lalala[[1]][1,1:3]
+lalala[[2]][1,1:3]
+df_dist[1,1:3]
+
+
+fun_knn.alpha(
+  .df_data = 
+    df_occupations.ai #%>% 
+  # select(names(df_sample))
+  # , .df_query = df_sample
+  , .df_query = 
+    df_occupations.ai %>% 
+    slice_sample(n = 1)
+  , .dbl_scale.ub = 100
+  , .dbl_overqualification.threshold = 0
+) %>% 
+  select(
+    !ends_with('.l')
+  ) %>%
+  arrange(
+    distance
+  ) -> dsds
+
+dsds %>% 
+  print(n = 30)
+dsds %>% 
   mutate(
     interchangeability = 
-      fun_interchangeability(
-        similarity
-      )
+      fun_interchangeability(similarity)
   ) %>% 
-  group_by(oqqupation) %>% 
-  reframe(
-    employability = 
-      sum(
-        interchangeability *
-          employment2 /
-          sum(employment2)
-      )
+  arrange(interchangeability)
+
+
+
+dsds %>% 
+  arrange(
+    -distance
+  ) %>%
+  print(n = 30)
+
+dsdsds$
+  employability %>% 
+  select(
+    !ends_with('.l')
+  ) %>%
+  arrange(
+    -employability
   ) %>% 
-  arrange(desc(
-    employability
-  )) %>% 
+  mutate(across(
+    .cols = where(is.numeric)
+    , .fns = ~ round(.x, 2)
+  ))
+
+fun_knn.alpha(
+  .df_data = df_occupations.ai
+  , .df_query = 
+    df_occupations.ai %>% 
+    filter(str_detect(
+      str_to_lower(
+        occupation
+      )
+      , 'fire'
+    )) %>% 
+    slice_sample(n = 1)
+  , .dbl_scale.ub = 100
+) %>% 
+  select(
+    !ends_with('.l')
+  ) %>% 
+  arrange(
+    distance
+  )
+
+fun_knn.alpha(
+  .df_data = df_occupations.ai
+  , .df_query = 
+    df_occupations.ai %>% 
+    filter(str_detect(
+      str_to_lower(
+        occupation
+      )
+      , 'model'
+    )) %>% 
+    slice_sample(n = 1)
+  , .dbl_scale.ub = 100
+) %>% 
+  select(
+    !ends_with('.l')
+  ) %>% 
+  arrange(
+    -distance
+  )
+
+
+fun_employability.workflow(
+  .df_data = df_occupations.ai
+  , .df_query = df_sample
+  , .int_employment = 
+    df_occupations$
+    employment2
+  , .dbl_wage.current = 
+    6000 * 12
+  , .dbl_wages.market = 
+    df_occupations$
+    annual_wage_2021
+  , .dbl_scale.ub = 100
+)[[1]] %>% 
+  select(
+    occupation
+    , distance
+    , similarity
+    , interchangeability
+  ) %>% 
+  mutate(
+    interchangeability = 
+      round(interchangeability, 4)
+  ) %>%
+  arrange(
+    -interchangeability
+    # -distance
+  ) %>% 
+  print(n = 100)
+
+fun_employability.workflow(
+  .df_data = df_occupations.ai
+  , .df_query = df_sample
+  , .int_employment = 
+    df_occupations$
+    employment2
+  , .dbl_wage.current = 
+    6000 * 12
+  , .dbl_wages.market = 
+    df_occupations$
+    annual_wage_2021
+  , .dbl_scale.ub = 100
+)[[1]] %>% 
+  select(
+    occupation
+    , distance
+    , similarity
+    , interchangeability
+  ) %>% 
+  arrange(
+    distance
+  ) %>% 
+  print(n = 100)
+
+# dsdsds$
+#   interchangeability[[
+#     sample(1:873,1)
+#   ]] %>% 
+dsdsds$
+  interchangeability[[
+    df_occupations %>% 
+      mutate(
+        n = row_number()
+      ) %>% 
+      filter(str_detect(
+        str_to_lower(
+          occupation
+        )
+        , 'doct|medic|physician'
+      )) %>% 
+      slice_sample(n = 1) %>% 
+      pull(n)
+  ]] %>% 
+  select(
+    occupation
+    , distance
+    , similarity
+    , interchangeability
+  ) %>% 
+  arrange(
+    distance
+  ) %>%
+  slice(
+    1:10
+    , 862:873
+  ) %>% 
   print(n = nrow(.))
 
-list_knn %>% 
-  bind_rows(
-    .id = 'oqqupation'
+dsdsds$
+  interchangeability[[
+    df_occupations %>% 
+      mutate(
+        n = row_number()
+      ) %>% 
+      filter(str_detect(
+        str_to_lower(
+          occupation
+        )
+        , 'maid'
+      )) %>% 
+      slice_sample(n = 1) %>% 
+      pull(n)
+  ]] %>% 
+  select(
+    occupation
+    , distance
+    , similarity
+    , interchangeability
   ) %>% 
-  filter(
-    oqqupation != 
-      occupation
+  arrange(
+    distance
+  ) %>%
+  slice(
+    1:10
+    , 862:873
   ) %>% 
+  print(n = nrow(.))
+
+df_occupations %>% 
   mutate(
-    interchangeability = 
-      fun_interchangeability(
-        similarity
-      )
+    n = row_number()
+  ) %>% 
+  filter(str_detect(
+    str_to_lower(
+      occupation
+    )
+    , 'doct|medic|physician'
+  )) %>% 
+  slice_sample(n = 1) %>% 
+  pull(n)
+
+dsdsds$
+  interchangeability[[
+    sample(1:873,1)
+  ]] %>% 
+  select(
+    occupation
+    , distance
+    , similarity
+    , interchangeability
+  ) %>% 
+  arrange(
+    distance
   ) %>% 
   pivot_longer(
     cols = c(
-      interchangeability
-      , similarity
+      similarity
+      , interchangeability
     )
     , names_to = 'metric'
     , values_to = 'value'
@@ -403,353 +776,35 @@ list_knn %>%
     , fill = metric
   )
   , .list_axis.x.args = list(
-    limits = c(-0.1,1.1)
-    , breaks = seq(0,1, length.out = 5)
+    limits = c(-.1, 1.1)
+    , breaks = seq(0, 1, 0.25)
   )
-  , .sym_facets = oqqupation
-  , .int_facets = 5
   , .fun_format.x = percent
   )
-  
 
-list_knn %>% 
-  map(
-    ~ .x %>% 
-      select(
-        rank
-        , rank.norm
-        , occupation
-        , similarity
-      ) %>% 
-      mutate(
-        interchangeability = 
-          fun_interchangeability(
-            similarity
-          )
-      ) %>% 
-      full_join(
-        df_occupations %>% 
-          select(
-            occupation
-            , employment2
-          )
-      ) %>% 
-      mutate(
-        occupation = 
-          first(
-            occupation
-          )
-      ) %>% 
-      group_by(occupation) %>%
-      reframe(
-        employability = 
-          sum(
-            interchangeability * 
-              employment2 / 
-              sum(employment2)
-          )
-      )
+
+
+dsdsds$
+  employability %>% 
+  select(
+    occupation
+    , employability
+    , employability.optimal
   ) %>% 
-  bind_rows() %>% 
   arrange(desc(
     employability
   )) %>% 
   print(n = 100)
 
-fun_employability(
-  .df_data = 
-    df_occupations.ai
-  , .df_query =
-    df_sample %>%
-    mutate(across(
-      .cols = ends_with('.l')
-      ,.fns = ~ .x * 100
-    ))
+fun_employability.m(
+  .df_data = df_occupations.ai
   , .int_employment = 
-    df_occupations %>% 
-    select(
-      occupation
-      , employment2
-    ) %>% 
-    full_join(
-      df_occupations.ai
-    ) %>% 
-    pull(employment2)
-  , .dbl_scale.lb = 0
+    df_occupations$
+    employment2
+  , .dbl_wages = 
+    df_occupations$
+    annual_wage_2021
   , .dbl_scale.ub = 100
-  , .dbl_over_qualification.threshold = 0
-) -> dsds
-
-FNN::get.knnx(
-  data = 
-    df_occupations.ai %>% 
-    select(ends_with('.l'))
-  , query = 
-    df_occupations.ai %>% 
-    select(ends_with('.l'))
-  , k = 873
-) -> dsdsds
+) -> lalala
 
 
-dsdsds$
-  nn.index %>% 
-  as_tibble() %>% 
-  group_nest(
-    row_number()
-  ) %>%
-  rename(index = 2) %>% 
-  full_join(
-    dsdsds$
-      nn.dist %>% 
-      as_tibble() %>% 
-      group_nest(
-        row_number()
-      ) %>% 
-      rename(dist = 2)
-  ) %>%
-  bind_cols(
-    df_occupations.ai
-  ) %>%
-  mutate(
-    similarity = 
-      map(
-        dist
-        , ~ fun_similarity(
-          df_occupations.ai
-          , .dbl_distance = .x
-          , .dbl_scale.lb = 0
-          , .dbl_scale.ub = 100
-        )
-        , .progress = T
-      )
-  )
-
-dsds %>% 
-  full_join(
-    df_occupations %>% 
-      select(
-        occupation
-        , employment2
-      )
-  ) %>% 
-  select(
-    rank
-    , occupation
-    , similarity
-    , employment2
-  ) %>% 
-  mutate(
-    .after = occupation
-    , interchangeability = 
-      fun_interchangeability(similarity)
-  ) -> dsds
-
-dsds %>% 
-  filter(str_detect(
-    str_to_lower(
-      occupation
-    )
-    , 'physician|doctor|medic|surgeon|clinic'
-  ))
-
-dsds %>% 
-  pivot_longer(
-    cols = c(
-      interchangeability
-      , similarity
-    )
-    , names_to = 'metric'
-    , values_to = 'value'
-  ) %>% 
-  fun_plot.histogram(aes(
-    x = value
-    , fill = metric
-  ))
-
-dsds %>% 
-  reframe(
-    employability = 
-      sum(
-        interchangeability * 
-          employment2 / 
-          sum(employment2)
-      )
-  )
-
-
-fun_knn.matching(
-  .df_data =
-    df_occupations.ai
-  , .df_query =
-    df_sample %>%
-    mutate(across(
-      .cols = ends_with('.l')
-      ,.fns = ~ .x * 100
-    ))
-  , .int_k =
-    df_occupations.ai %>%
-    nrow()
-  , .dbl_over_qualification.threshold = 0
-  , .dbl_scale.lb = 0
-  , .dbl_scale.ub = 100
-)
-
-df_occupations.ai %>%
-  fun_employability(
-    .df_data.query =
-      df_sample
-  )
-
-# KNN MATCHING FUNCTION -------------------------------------------------------------------------
-fun_KNN.matching <- function(
-    .df_data.numeric
-    , .vec_query.numeric
-    , .int_k = 1
-    , .auto_select.k = F
-    , .imput.over_qualification = T
-    , .dbl_over_qualification.threshold = 0
-    , .dbl_decimals = 4
-){
-  
-  # Get numeric data only
-  .df_data.numeric %>%
-    select(where(is.numeric)) -> .df_data.numeric.temp
-  
-  if(is.data.frame(.vec_query.numeric)){
-    .vec_query.numeric %>%
-      select(where(is.numeric)) -> .vec_query.numeric
-  }
-  
-  # Define k
-  if(.auto_select.k){
-    # RECOMMENDED
-    # Typical suggested value for k is sqrt(nrow(df))
-    # Looking for k nearest neighbors in all career clusters
-    
-    .df_data.numeric %>%
-      nrow(.) %>%
-      sqrt(.) %>%
-      round(.) -> .int_k
-    
-  }
-  
-  if(.imput.over_qualification){
-    
-    .vec_query.numeric %>%
-      rename_with(
-        .fn = function(x){paste0(x,'.imput')}
-      ) %>%
-      bind_cols(
-        .df_data.numeric.temp
-      ) %>%
-      mutate(
-        across(
-          .cols = c(
-            !ends_with('.imput')
-          )
-          ,.fns = function(x){
-            
-            ifelse(
-              # Overqualified if > cutoff and requirement <= cutoff
-              x <= .dbl_over_qualification.threshold 
-              & eval(sym(paste0(cur_column(),'.imput'))) > x
-              , yes = x
-              , no = eval(sym(paste0(cur_column(),'.imput')))
-            )
-            
-          }
-          , .names = '{col}.sub'
-        )
-      ) %>%
-      select(
-        ends_with('.sub')
-      ) %>%
-      rename_with(
-        function(x){str_remove(x,'.sub')}
-      ) -> .vec_query.numeric
-    
-    lapply(
-      1:nrow(.vec_query.numeric)
-      , function(x){
-        
-        FNN::get.knnx(
-          data = .df_data.numeric.temp[x,]
-          , query = .vec_query.numeric[x,]
-          , k = 1
-        ) -> KNN.output
-        
-      }) %>% 
-      bind_rows() -> KNN.output 
-    
-    # # Find the k nearest neighbors
-    # FNN::get.knnx(
-    #   data = .df_data.numeric.temp
-    #   , query = .vec_query.numeric
-    #   , k = 1
-    # ) -> KNN.output
-    
-    # KNN.output$nn.index[,1] -> KNN.output$nn.index
-    # 
-    # KNN.output$nn.dist[,1] -> KNN.output$nn.dist
-    
-    # Arrange original data frame with KNN output
-    .df_data.numeric %>%
-      mutate(#Add euclidean distances and convert them to similarities
-        euclidean_distance = as.vector(KNN.output$nn.dist)
-        , similarity = 
-          fun_similarity(
-            .df_data.numeric =
-              .df_data.numeric.temp
-            , .dbl_distance = 
-              euclidean_distance
-            , .dbl_scale.lb = 0
-            , .dbl_scale.ub = 1
-          )
-        , similarity = round(similarity, .dbl_decimals)
-      ) %>%
-      # arrange(desc(similarity)) %>%
-      arrange(euclidean_distance) %>%
-      mutate(
-        rank = row_number()
-        , rank.norm = seq(1, 0, - 1 / (n() - 1))
-        , .before = everything()
-      ) %>% 
-      return(.)
-    
-  } else {
-    
-    # Find the k nearest neighbors
-    FNN::get.knnx(
-      data = .df_data.numeric.temp
-      , query = .vec_query.numeric
-      , k = .int_k
-    ) -> KNN.output
-    
-    # Arrange original data frame with KNN output
-    .df_data.numeric %>%
-      slice(as.vector(KNN.output$nn.index)) %>%
-      mutate(#Add euclidean distances and convert them to similarities
-        euclidean_distance = as.vector(KNN.output$nn.dist)
-        , similarity = 
-          fun_similarity(
-            .df_data.numeric =
-              .df_data.numeric.temp
-            , .dbl_distance = 
-              euclidean_distance
-            , .dbl_scale.lb = 0
-            , .dbl_scale.ub = 1
-          )
-        , similarity = round(similarity, .dbl_decimals)
-      ) %>% 
-      # arrange(desc(similarity)) %>%
-      arrange(euclidean_distance) %>%
-      mutate(
-        rank = row_number()
-        , rank.norm = seq(1, 0, - 1 / (n() - 1))
-        , .before = everything()
-      ) %>% 
-      return(.)
-    
-  }
-  
-}
