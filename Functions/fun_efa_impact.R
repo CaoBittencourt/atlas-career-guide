@@ -188,7 +188,9 @@ fun_efa.impact <- function(
     ) -> df_factors.impact
   
   df_loadings.long %>%
-    full_join(df_factors.impact) %>%
+    full_join(
+      df_factors.impact
+    ) %>%
     mutate(
       factor.impact = pmax(
         factor.impact
@@ -199,7 +201,9 @@ fun_efa.impact <- function(
         , dbl_scale.ub
       )
     ) %>%
-    group_by(item) %>%
+    group_by(
+      item = factor(item)
+    ) %>%
     reframe(
       item.impact =
         sum(
@@ -266,10 +270,13 @@ fun_efa.impact <- function(
   if(.lgc_aggregate){
     
     df_impact %>%
-      group_by(across(c(
-        -where(is.numeric)
-        , -item
-      ))) %>%
+      group_by(
+        across(c(
+          -where(is.numeric)
+          , -item
+        )
+        , .fns = fct_inorder
+        )) %>%
       reframe(
         aggregate.impact =
           sum(item.score2) /
@@ -279,17 +286,23 @@ fun_efa.impact <- function(
       ) -> df_impact.agg
     
     if(!length(.dbl_weights)){
-
+      
       rep(1, nrow(.df_data)) -> .dbl_weights
-
+      
     }
-
+    
+    df_impact.agg %>% 
+      mutate(
+        weight = 
+          .dbl_weights
+      ) -> df_impact.agg
+    
     df_impact.agg %>%
       reframe(
         aggregate.impact =
           weighted.mean(
             aggregate.impact
-            , .dbl_weights
+            , weight
           )
       ) -> df_impact.all
     
