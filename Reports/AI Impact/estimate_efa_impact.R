@@ -248,9 +248,6 @@ list_df_text %>%
 list_df_text$
   dictionary <- NULL
 
-list_df_text$
-  plots <- NULL
-
 # Filter text by language
 list_df_text %>% 
   map(
@@ -261,11 +258,11 @@ list_df_text %>%
       )
   ) -> list_df_text
 
-# Section list
-list_df_text$sections$text %>% 
-  as.list() -> list_sections
-
-names(list_sections) <- list_df_text$sections$section
+# # Section list
+# list_df_text$sections$text %>% 
+#   as.list() -> list_sections
+# 
+# names(list_sections) <- list_df_text$sections$section
 
 # [DATA] ------------------------------------------------------------------
 # - Occupations data frame on a 0 to 100 scale ------------------------------
@@ -442,7 +439,7 @@ df_impact.hist %>%
 #   )
 
 # [TEXT REPORT] -----------------------------------------------------------
-# - Generate dynamic texts ------------------------------------------------
+# - Preliminary values for analyses ----------------------------------------------------------------------
 # Preliminary values for analyses
 list(
   username =
@@ -478,6 +475,15 @@ list(
     percent(
       accuracy = .01
     )
+  , pct_most_affected.remaining = 
+    sum(
+      df_max.aggregate$
+        aggregate.impact
+      , 1
+    ) %>% 
+    percent(
+      accuracy = .01
+    )
   , pct_overall.impact = 
     list_ai.impact$
     overall.impact$
@@ -503,6 +509,7 @@ list(
     )
 ) -> list_text
 
+# - List for dictionary evaluation -------------------------------------------------------------------------
 # List for dictionary evaluation
 list(
   chr_automation.negative = 
@@ -516,15 +523,14 @@ list(
         mean(item.impact)
     ) %>% 
     pull()
-  , impact_desc.text1 =
-    df_max.aggregate$
-    aggregate.impact
-  , impact_desc.text2 = 
+  , most_affected.analysis = 
     df_max.aggregate$
     aggregate.impact
   , chr_analysis.panorama = 
     list_ai.impact$
     overall.impact$
+    aggregate.impact / 
+    df_max.aggregate$
     aggregate.impact
   , chr_is.isnot = 
     list_ai.impact$
@@ -552,6 +558,7 @@ list(
     aggregate.impact
 ) -> list_scores
 
+# - Dictionary evaluation --------------------------------------------------------------------
 # Dictionary evaluation
 c(
   list_text
@@ -564,6 +571,7 @@ c(
   )
 ) -> list_text
 
+# - Generate dynamic texts ------------------------------------------------
 # Impute dynamic text
 map_if(
   list_df_text
@@ -577,6 +585,9 @@ list_df_text$
   text %>%
   as.list() -> list_report.texts
 
+list_report.texts
+
+# - Generate remaining text elements ------------------------------------------------
 # Section titles
 list_df_text$
   sections.title %>% 

@@ -17,8 +17,8 @@ lapply(pkg, function(x)
 # QUOTES AND COMMAS FUNCTIONS ---------------------------------------------------
 fun_text.commas <- function(
     ...
-    , .chr_sep = ', ' 
-    , .chr_last.sep = ', and '
+    , .chr_sep = ',' 
+    , .chr_last.sep = ', and'
     , .lgc_quote = T
 ){
   
@@ -40,9 +40,9 @@ fun_text.commas <- function(
   # Coerce into character
   map(chr_text, as.character) -> chr_text
   
-  as.character(.chr_sep) -> chr_sep
+  paste(.chr_sep, '') -> chr_sep
   
-  as.character(.chr_last.sep) -> chr_last.comma
+  paste(.chr_last.sep, '') -> chr_last.comma
   
   
   # Add quotes and commas
