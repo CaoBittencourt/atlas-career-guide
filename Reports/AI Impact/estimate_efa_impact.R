@@ -18,12 +18,24 @@ lapply(pkg, function(x)
 # EFA model
 source('C:/Users/Cao/Documents/Github/Atlas-Research/Data/efa_output.R')
 
+# User data
+read_csv(
+  'https://docs.google.com/spreadsheets/d/e/2PACX-1vSVdXvQMe4DrKS0LKhY0CZRlVuCCkEMHVJHQb_U-GKF21CjcchJ5jjclGSlQGYa5Q/pub?gid=47461225&single=true&output=csv'
+) %>% 
+  mutate(across(
+    .cols = ends_with('.l')
+    ,.fns = ~ .x * 100
+  )) -> df_input
+
 # - Functions -------------------------------------------------------------
 # EFA-based exogenous impact analysis
 source('C:/Users/Cao/Documents/Github/Atlas-Research/Functions/fun_efa_impact.R')
-
 # Automated plotting
 source('C:/Users/Cao/Documents/Github/Atlas-Research/Functions/Auto_plots.R')
+# Commas
+source('C:/Users/Cao/Documents/Github/Atlas-Research/Functions/fun_commas.R')
+# Dictionary
+source('C:/Users/Cao/Documents/Github/Atlas-Research/Functions/fun_dictionary.R')
 
 # - Impact scale ----------------------------------------------------------------
 # Impact levels for reference
@@ -197,6 +209,13 @@ set_names(
 
 sort(dbl_factors.impact)
 
+# Immunity range
+.dbl_immune.lb <- 0
+.dbl_immune.ub <- 33
+
+# US labor force (2023)
+
+
 # [DATA] ------------------------------------------------------------------
 # - Occupations data frame on a 0 to 100 scale ------------------------------
 df_occupations.efa %>%
@@ -206,7 +225,7 @@ df_occupations.efa %>%
   )) -> df_occupations.ai
 
 # [RESULTS] ----------------------------------------------
-# - Estimate exogenous impact (USA labor market) ---------------------------------------------
+# - Estimate exogenous impact (US labor market) ---------------------------------------------
 fun_efa.impact(
   .df_data =
     df_occupations.ai
@@ -220,25 +239,17 @@ fun_efa.impact(
     model
   , .dbl_factors.impact =
     dbl_factors.impact
-  # , .dbl_impact.ub = 0
-  , .dbl_immune.lb = 0
-  , .dbl_immune.ub = 33
+  , .dbl_immune.lb =
+    .dbl_immune.lb
+  , .dbl_immune.ub =
+    .dbl_immune.ub
   , .lgc_aggregate = T
 ) -> list_ai.impact
 
 # - Estimate exogenous impact (user) ---------------------------------------------
-read_csv(
-  'https://docs.google.com/spreadsheets/d/e/2PACX-1vSVdXvQMe4DrKS0LKhY0CZRlVuCCkEMHVJHQb_U-GKF21CjcchJ5jjclGSlQGYa5Q/pub?gid=47461225&single=true&output=csv'
-) %>% 
-  mutate(across(
-  .cols = ends_with('.l')
-  ,.fns = ~ .x * 100
-)) -> df_sample
-
 fun_efa.impact(
   .df_data =
-    # df_occupations.ai
-    df_sample
+    df_input
   , .dbl_weights = NULL
   , .efa_model =
     list_efa.equamax.15$
@@ -248,90 +259,12 @@ fun_efa.impact(
     model
   , .dbl_factors.impact =
     dbl_factors.impact
-  # , .dbl_impact.ub = 0
-  , .dbl_immune.lb = 0
-  , .dbl_immune.ub = 33
+  , .dbl_immune.lb =
+    .dbl_immune.lb
+  , .dbl_immune.ub =
+    .dbl_immune.ub
   , .lgc_aggregate = T
 ) -> list_ai.impact.user
-
-list_ai.impact.user$
-  individual.impact %>%
-  pivot_longer(
-    cols = starts_with('item.score')
-    , names_to = 'model'
-    , values_to = 'item.score'
-  ) %>%
-  fun_plot.bar(aes(
-    x = item
-    , y = item.score
-    , fill = model
-  )
-  , .coord_polar = T
-  )
-
-list_ai.impact$
-  individual.impact %>%
-  filter(
-    occupation == 
-      sample(occupation, 1)
-  ) %>%
-  mutate(
-    .after = 
-      item.impact
-    , item.impact2 = 
-      item.score2 -
-      item.score
-    , item.score2 =
-      item.score - 
-      item.impact2
-    , item.score2 = 
-      item.score2 %>% 
-      pmin(100)
-  ) %>%
-  rename(
-    `AI Impact` = item.impact2
-    , `You` = item.score2
-  ) %>%
-  pivot_longer(
-  cols = c('AI Impact', 'You')
-  , names_to = 'metric'
-  , values_to = 'value'
-) %>% 
-# pivot_longer(
-#   cols = starts_with('item.score')
-#   , names_to = 'model'
-#   , values_to = 'item.score'
-# ) %>% 
-mutate(
-  item = str_sub(item, 1, 4)
-  , metric = factor(metric)
-) %>% 
-  fun_plot.bar(aes(
-    x = item
-    , y = value
-    , fill = metric
-    # x = item
-    # , y = item.score
-    # , fill = model
-  )
-  , .coord_flip = T
-  , .reorder_fct = T
-  # , .coord_polar = T
-  , .list_axis.y.args = list(
-    limits = c(0,100)
-    , breaks = seq(0,100,25)
-  )
-  , .fun_format.y = label_number(accuracy = 1)
-  , .list_geom.param = list(
-    position = 'stack'
-  )
-  )
-
-list_ai.impact.user$
-  aggregate.impact
-
-list_ai.impact.user$
-  overall.impact
 
 # - Factors impact -----------------------------------------------------------
 list_ai.impact$
@@ -352,6 +285,10 @@ list_ai.impact$
   arrange(desc(
     item.impact
   )) %>% 
+  slice(
+    1:10
+    , (n() - 9): n()
+  ) %>% 
   print(n = nrow(.))
 
 list_ai.impact$
@@ -360,25 +297,23 @@ list_ai.impact$
     item, 'thinking|programming|physical'
   ))
 
-# - Detailed impact by occupation -----------------------------------------
-df_occupations.ai %>% 
-  pull(occupation) %>%
-  sample(1) -> chr_occupation.sample
-
+# - Most affected occupation -----------------------------------------
 list_ai.impact$
   aggregate.impact %>% 
   filter(
-    occupation ==
-      chr_occupation.sample
-  )
+    aggregate.impact ==
+      max(aggregate.impact)
+  ) %>% 
+  pull(
+    occupation
+  ) -> chr_occupation.max
 
 list_ai.impact$
   individual.impact %>% 
   filter(
     occupation ==
-      chr_occupation.sample
-  ) %>% 
-  view
+      chr_occupation.max
+  ) -> df_occupation.max
 
 # - Aggregate impact by occupation -----------------------------------------------------
 list_ai.impact$
@@ -463,3 +398,105 @@ df_overall.unemployment %>%
         .x, prefix = ''
       )
   ))
+
+# [TEXT REPORT] -----------------------------------------------------------
+# - Generate dynamic texts ------------------------------------------------
+fun_dictionary()
+# Preliminary values for analyses
+flatten(list(
+  username =
+    df_input$
+    username
+  , nrow_occupations = 
+    df_occupations.ai %>%
+    nrow()
+  , nitems.complete =
+    list_questionnaires$
+    atlas.complete %>% 
+    nrow()
+  , nfactors = 
+    df_factor.names %>% 
+    nrow()
+  , factor.names = 
+    df_factor.names$
+    factor.name %>% 
+    fun_text.commas(
+      .chr_last.sep =
+        chr_comma.last
+    )
+  , chr_automation.negative = 
+    df_impact %>% 
+    mutate(
+      impact = 
+        list_ai.impact$
+        items.impact %>% 
+        filter(
+          item.impact < 0 
+        ) %>% 
+        reframe(
+          item.impact = 
+            mean(item.impact) / 
+            100
+        ) %>% 
+        pull() %>% 
+        findInterval(
+          interval.lb
+        ) 
+    ) %>% 
+    filter(
+      interval == 
+        impact
+    ) %>% 
+    pull(
+      interval.title
+    )
+  , chr_most_affected.occupation = 
+    df_impact.max$
+    occupation
+  , pct_most_affected.impact = 
+    df_impact.max$
+    aggregate.impact %>% 
+    percent(
+      accuracy = .01
+    )
+  , impact_desc.text1
+  , impact_desc.text2
+  , chr_analysis.panorama
+  , chr_is.isnot
+  , pct_overall.impact
+  , impact_desc.text3
+  , int_unemployment
+  , chr_oecd.comparison
+  , chr_user.analysis
+  , pct_user.impact
+  , chr_market.comparison
+))
+
+# Impute dynamic text
+map_if(
+  list_df.text
+  , ~ !any(.x$complexity == 'complex', na.rm = T)
+  , ~ fun_text.dynamic(.x, list_text)
+) -> list_df.text
+
+# Text list
+as.list(list_df.text$sections$text) -> list_report.texts
+
+# Section titles
+list_df.text$sections.title %>% 
+  mutate(title = paste(strrep('#', level), title)) %>% 
+  pull(title) %>%
+  as.list() -> list_report.titles
+
+# Captions
+list_df.text$plots %>% 
+  pull(plot.caption) %>% 
+  unique() %>% 
+  as.list() -> list_plots.caption
+
+# Text elements
+list_df.text$text.elements %>% 
+  pull(title) %>% 
+  as.list() -> list_text.elements
+# - Output / Render R Markdown report ----------------------------------------------
+

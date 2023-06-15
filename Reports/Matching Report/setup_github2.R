@@ -426,9 +426,15 @@ fun_handler <- function(body, ...){
       , bot_match.diff = abs(bot_match - you)
     ) -> df_dumbbell
   
+  list_ai.impact$
+    aggregate.impact %>%
+    arrange(
+      aggregate.impact
+    ) %>% 
+    slice(1) -> df_impact.max
+  
   # -------- DYNAMIC TEXTS --------------------------------------------------
   # DYNAMIC TEXTS -----------------------------------------------
-  # Preliminary values for analyses
   flatten(list(
     # Username
     username = chr_text.user

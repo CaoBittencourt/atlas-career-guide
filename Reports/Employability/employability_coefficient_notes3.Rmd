@@ -24,8 +24,6 @@ header-includes:
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
 knitr::opts_chunk$set(fig.pos = "H", out.extra = "")
-source('C:/Users/Cao/Documents/Github/Atlas-Research/Functions/Auto_plots.R')
-source('C:/Users/Cao/Documents/Github/Atlas-Research/Functions/KNN_Matching.R')
 ```
 
 \newpage
@@ -48,7 +46,7 @@ source('C:/Users/Cao/Documents/Github/Atlas-Research/Functions/KNN_Matching.R')
 
 ### Probability of Finding a Job
 
-Employability, as the word itself indicates, is *the ability to find a job*. This is very obvious, indeed, but it bears mentioning in order to quantify the concept properly. From this tautological notion, then, we could define, in mathematical terms, that employability is not exactly the *ability* to find a job, but rather the *probability* of being employed, given a particular set of professional attributes. That is, if we measure professional attributes on a scale, say, of 0 to 100, calling each attribute $a_i^u$ the $i$-th attribute of person $u$, such that $a_i^u \in [0,100] \ \forall \ i,u$, then it follows that employability is:
+Employability, as the word itself indicates, is the ability to find a job. This is very obvious, indeed, but it bears mentioning in order to quantify the concept properly. From this tautological notion, then, we could define, in mathematical terms, that employability is not exactly the ability to find a job, but rather the probability of being employed, given a particular set of professional attributes. That is, if we measure professional attributes on a scale, say, of 0 to 100, calling each attribute $a_i^u$ the $i$-th attribute of person $u$, such that $a_i^u \in [0,100] \ \forall \ i,u$, then it follows that employability is:
 
 $$
 \Lambda(\vb{a_u}) = \Pr(l=1 \ |\ \vb{a_u}),
@@ -75,7 +73,7 @@ However, this formulation fails to be an adequate employability metric for two m
 
 The second problem with this rather naive employability coefficient is that people can find jobs in many different fields, provided they are sufficiently qualified. If an individual, for instance, is employed in occupation $q$ and occupation $q$ is very similar to another occupation $\tilde{q}$, this individual could also find employment as a $\tilde{q}$. Thus, their employability coefficient would need to account for the probability of them being employed either as $q$ or $\tilde{q}$ --- again, supposing they are sufficiently qualified.
 
-Mathematically, if occupations $q$ and $\tilde{q}$ are said to be similar, then the probability of a person with a professional profile identical with $q$ finding a job either as $q$ or $\tilde{q}$ could be intuitively written as the probability of two mutually exclusive events, adjusted by the probability of two other independent events, namely: the probability of finding a job as a $q$ or a $\tilde{q}$, adjusted by the probability of being *recognized* by the labor market as either one of these occupations to begin with.
+Mathematically, if occupations $q$ and $\tilde{q}$ are said to be similar, then the probability of a person with a professional profile identical with $q$ finding a job either as $q$ or $\tilde{q}$ could be intuitively written as the probability of two mutually exclusive events, adjusted by the probability of two other independent events, namely: the probability of finding a job as a $q$ or a $\tilde{q}$, adjusted by the probability of being recognized by the labor market as either one of these occupations to begin with.
 
 The first part of this solution has to do with the amount of job posts available for each occupation, and it was already explained above. The second part has to do with professional similarity, as two occupations are recognized as identical by the labor market to the degree they are similar in the Euclidean sense. Hence, we may define a similarity metric like:
 
@@ -91,15 +89,15 @@ $$
 
 The coefficient above refers to the interchangeability of occupations, and can be defined as the similarity between them, or any increasing function of it. Its interpretation is as follows: if employers are interested in a particular subset of professional attributes, which can be attained by any person, regardless of their career path, then the probability of a person having the desired competencies is the overlap between their own competencies and those of a specific occupation, or professional profile, displaying these competencies to the desired degree; or, alternatively, the probability of two professional profiles being interchangeable is the percentage of overlap between them.
 
-The reasoning behind this apparently hasty conclusion is simple: all the job activities of an occupation require of individuals a particular set of skills, which is quantified by their professional profile. If a person has all these competencies, then the probability of being unable to perform a given task on the job is, *ceteris paribus*, precisely zero. But, conversely, if they lack any of the traits required to perform these tasks, then the probability they are unable to perform them properly increases by the exact measure of their under-qualification. Thus, the interchangeability of professional profiles is proportional to their similarity.
+The reasoning behind this apparently hasty conclusion is simple: all the job activities of an occupation require of individuals a particular set of skills, which is quantified by their professional profile. If a person has all these competencies, then the probability of being unable to perform a given task on the job is, ceteris paribus, precisely zero. But, conversely, if they lack any of the traits required to perform these tasks, then the probability they are unable to perform them properly increases by the exact measure of their under-qualification. Thus, the interchangeability of professional profiles is proportional to their similarity.
 
-Now, of course, this initial formulation is a deliberate simplification, and we need to adjust for the possibility of *over*-qualification, as well as the importance of each professional attribute to each career path. So, we should write a revised interchangeability metric like
+Now, of course, this initial formulation is a deliberate simplification, and we need to adjust for the possibility of over-qualification, as well as the importance of each professional attribute to each career path. So, we should write a revised interchangeability metric like
 
 $$
 \begin{gathered}\mathrm{I(\vb{a_q},\vb{a_{\tilde{q}}})}= \Pr(q \approx \tilde{q} \ | \ \vb{a_q},\vb{a_{\tilde{q}}})= S(\vb{a_q},\vb{a_{\tilde{q}}})= 1-\sum_{i=1}^m{\alpha_{i}^{\tilde{q}}\delta_i^{q}(a_i^q,a_i^{\tilde{q}})},\\ \alpha_i^k = {\frac{a_i^k}{\sum_{i=1}^{m}{a_i^k}}} \implies \sum_{i=1}^{m}\alpha_{i}^k = 1,\\ \delta_i^{j}(a_i^j,a_i^{k})= \max \left( \frac{a_i^{k} - a_i^{j}}{100},0\right), \ \forall \ j,k,\end{gathered}
 $$
 
-where $\delta_i^{j}(a_i^j,a_i^{k})$ is the over-qualification-adjusted competency gap function, which returns the normalized distance between the $i$-th attributes of occupations $j$ and $k$, if this gap is positive (i.e. if occupation $j$ is under-qualified in this regard), and returns zero otherwise. This means the algorithm above does not "punish" over-qualification. Furthermore, these $\delta_i^{j}(a_i^j,a_i^{k})$ competency gaps are weighted by the $\alpha_i^k$ relevance of each attribute to the comparison occupation. This way, competency gaps in the *core* competencies are given more importance.
+where $\delta_i^{j}(a_i^j,a_i^{k})$ is the over-qualification-adjusted competency gap function, which returns the normalized distance between the $i$-th attributes of occupations $j$ and $k$, if this gap is positive (i.e. if occupation $j$ is under-qualified in this regard), and returns zero otherwise. This means the algorithm above does not "punish" over-qualification. Furthermore, these $\delta_i^{j}(a_i^j,a_i^{k})$ competency gaps are weighted by the $\alpha_i^k$ relevance of each attribute to the comparison occupation. This way, competency gaps in the core competencies are given more importance.
 
 It is evident this coefficient is mathematically consistent, as
 
@@ -115,11 +113,11 @@ $$\
 
 [insert analogy here]
 
-Another way of thinking about this concept would be to pose that some --- if not most --- of the jobs generally associated with a given career path do not actually require its entire set of skills, but only a fraction of it; so that any "sufficiently qualified" job applicant could be hired to perform such jobs. Yet another way of thinking about the interchangeability coefficient is to conjecture employers may be willing to hire under-qualified personnel, probably by less than their more qualified counterparts, and allow their skill set to develop on the job, and/or provide training themselves. In this sense, the interchangeability coefficient (i.e. the probability of being recognized by recruiters as "sufficiently qualified")
+[Another way of thinking about this concept would be to pose that some --- if not most --- of the jobs generally associated with a given career path do not actually require its entire set of skills, but only a fraction of it; so that any "sufficiently qualified" job applicant could be hired to perform such jobs. Yet another way of thinking about the interchangeability coefficient is to conjecture employers may be willing to hire under-qualified personnel, probably by less than their more qualified counterparts, and allow their skill set to develop on the job, and/or provide training themselves. In this sense, the interchangeability coefficient (i.e. the probability of being recognized by recruiters as "sufficiently qualified")
 
 A principal ideia do coeficiente de intercambialidade é que nem todos os empregos de uma profissão requerem 100% das competências, ou alternadamente, nem todos os empregadores requerem que você já esteja 100% pronto, permitindo portanto que desenvolva-se no trabalho, ou ainda que uma parcela das funções de determinado trabalho pode ser terceirizada a pessoas que não têm 100% das competências profissões requeridas, enquanto a parte mais importante do trabalho fica para as pessoas que têm essas competências. Basicamente, estamos dividindo o tempo entre pessoas.
 
-Ou ainda que os empregos em si podem ser uma mistura desses perfis profissionais canônicos, de modo que as profissões mesmo não existam, apenas uma série de N empregos que requerem diferentes parcelas de cada profissão.
+Ou ainda que os empregos em si podem ser uma mistura desses perfis profissionais canônicos, de modo que as profissões mesmo não existam, apenas uma série de N empregos que requerem diferentes parcelas de cada profissão.]
 
 Having understood this, at last we can estimate the probability of finding a job as either $q$ or $\tilde{q}$, adjusted by the similarity between these occupations:
 
@@ -144,9 +142,9 @@ and, on the other hand, that completely similar occupations have a complete over
 S(\vb{a_q},\vb{a_{\tilde{q}}}) = 1  \implies  \Lambda(\vb{a_q},\vb{a_{\tilde{q}}},n_q,n_{\tilde{q}},\mathrm{N}) =  \frac{n_q + 1 \times n_{\tilde{q}}}{\mathrm{N}} = \frac{n_q + n_{\tilde{q}}}{\mathrm{N}}  
 $$
 
-This said, it is important to note that this so-called "overlap" of employment opportunities in no way implies the total work force actually increases beyond $\mathrm{N}$, since $\mathrm{N}$ is calculated by summing up the $n_j$ *workers* employed in each occupation, not the total amount of *people* in the work force. That is, if a person chooses to work another job, they are counted as a separate worker in that particular occupation. Thus, $\mathrm{N}$ already accounts for people with multiple careers. This is important because, otherwise, we would need to adjust the denominator in this mathematical formulation, and in doing so we could fall into the first problem mentioned above (viz. coefficients of employability being too small).
+This said, it is important to note that this so-called "overlap" of employment opportunities in no way implies the total work force actually increases beyond $\mathrm{N}$, since $\mathrm{N}$ is calculated by summing up the $n_j$ workers employed in each occupation, not the total amount of people in the work force. That is, if a person chooses to work another job, they are counted as a separate worker in that particular occupation. Thus, $\mathrm{N}$ already accounts for people with multiple careers. This is important because, otherwise, we would need to adjust the denominator in this mathematical formulation, and in doing so we could fall into the first problem mentioned above (viz. coefficients of employability being too small).
 
-The employability coefficient, therefore, only indicates which percentage of the $\mathrm{N}$ available jobs would be *suitable* to a given person, adjusting for their similarity with each occupation. It does not mean that said person in fact ends up working at the associated jobs, nor that the total amount of available job posts increases simply because workers could be employed elsewhere. Put another way, while employment opportunities do overlap, actual employment does not.
+The employability coefficient, therefore, only indicates which percentage of the $\mathrm{N}$ available jobs would be suitable to a given person, adjusting for their similarity with each occupation. It does not mean that said person in fact ends up working at the associated jobs, nor that the total amount of available job posts increases simply because workers could be employed elsewhere. Put another way, while employment opportunities do overlap, actual employment does not.
 
 For example, Economists, Accountants, Executives, and Actuaries have a reasonably high professional similarity. And in practice, we do find these occupations competing for the same job posts. Engineers, and other STEM-related careers, likewise also have significant overlap in their employment opportunities. And the pattern repeats itself for every group of similar occupations. However, in any of these cases, no matter how many people are suitable for a given job post, only one of them is actually hired. So, despite the sum of overlapping employment opportunities being indeed much higher than available jobs, when each individual is finally employed, the total work force equals $\mathrm{N}$.
 
@@ -166,22 +164,21 @@ Now, even though this adjusted metric is much more adequate than the previous on
 
 Thus, a scaling factor should be applied to the interchangeability metric, in order to reduce the probability of being recognized as "similar" to a given occupation, specially in the smaller ranges of professional similarity. Again, as $S(\vb{a_j},\vb{a_k}) \in [0,1]\ \forall \ j,k$, a simple way of implementing this adjustment would be:
 
-$$ \Pr(j \approx k \ | \ \vb{a_j},\vb{a_k}) = \mathrm{I(\vb{a_j},\vb{a_k})} = S(\vb{a_j},\vb{a_k})^{\alpha}, \ \alpha > 1$$
+$$ \Pr(j \approx k \ | \ \vb{a_j},\vb{a_k}) = \mathrm{I(\vb{a_j},\vb{a_k})} = S(\vb{a_j},\vb{a_k})^{\sigma}, \ \sigma > 1$$
 
-as $x^{\alpha} \leq x \ \forall \ \alpha > 1, \ x \in [0,1]$. However, this metric is also inadequate, as it can be "overly severe" in the higher ranges of similarity. A linear interpolation then is applied so as to smooth the transition between the adjusted equation above and the linear one already described:
-
-$$
-\Pr(j \approx k \ | \ \vb{a_j},\vb{a_k}) = \mathrm{I(\vb{a_j},\vb{a_k})} = S(\vb{a_j},\vb{a_k})S(\vb{a_j},\vb{a_k}) +
-[1-S(\vb{a_j},\vb{a_k})] S(\vb{a_j},\vb{a_k})^{\alpha}, \ \alpha > 1
-$$
-
-And an additional adjustment could provide an even more realistic behavior to the interchangeability function:
+as $x^{\sigma} \leq x \ \forall \ \sigma > 1, \ x \in [0,1]$. However, this metric is also inadequate, as it can be "overly severe" in the higher ranges of similarity. A linear interpolation then is applied so as to smooth the transition from the equation above or, this case, a variant of it to the linear one already described:
 
 $$
 \Pr(j \approx k \ | \ \vb{a_j},\vb{a_k}) = \mathrm{I(\vb{a_j},\vb{a_k})} = S(\vb{a_j},\vb{a_k})S(\vb{a_j},\vb{a_k}) + [1-S(\vb{a_j},\vb{a_k})]S(\vb{a_j},\vb{a_k})^{{\left[ \frac{1}{S(\vb{a_j},\vb{a_k})} \right]} ^{\left[ \frac{1}{S(\vb{a_j},\vb{a_k})} \right]}}
 $$
 
-Here, the "severity" of the adjustment is entirely proportional to the similarity between occupations, and does not depend on arbitrarily set parameters. In either case, the more similarity approaches 1, the more interchangeability becomes linear.
+In this example, the "severity" of the adjustment is entirely proportional to the similarity between occupations, and does not depend on arbitrarily set parameters. Additionaly, the more similarity approaches 1, the more interchangeability becomes linear.
+
+This said, an intermediate metric could be of greater use:
+
+$$
+\Pr(j \approx k \ | \ \vb{a_j},\vb{a_k}) = \mathrm{I(\vb{a_j},\vb{a_k})} = S(\vb{a_j},\vb{a_k})^ {{\left[ \frac{1}{S(\vb{a_j},\vb{a_k})} \right]}^ {\left[ \frac{\sigma}{S(\vb{a_j},\vb{a_k})} \right]}}, \ \sigma > 1
+$$
 
 Finally, these interchangeability metrics are illustrated in the diagram below:
 
@@ -197,9 +194,11 @@ seq(0,1,0.001) %>%
     #, Coef.II = s ^ 2
     , Coef.II = s ^ 4
     #, Coef.III = s * s + (1 - s) * s ^ 2
-    , Coef.III = s * s + (1 - s) * s ^ 4
-    #, Coef.IV = s ^ ((1/s)^((1/s)*(1/s)))
-    , Coef.IV = s ^ ((1/s)^(4*(1/s)))
+    # , Coef.III = s * s + (1 - s) * s ^ 4
+    , Coef.III = s * s + (1 - s) * s ^ ((1/s)^(1/s))
+    # , Coef.IV = s ^ ((1/s)^((1/s)))
+    # , Coef.IV = s ^ ((1/s)^(4*(1/s)))
+    , Coef.IV = s ^ ((1/s)^(4/s))
     #, Coef.IV = s ^ ((1/s)^(1/s))
     #, Coef.IV = s * s + (1 - s) * s ^ ((1/s)^(1/s))
     #, Coef.IV = s * s + (1 - s) * s ^ ((1/s)^(4))
@@ -226,7 +225,7 @@ seq(0,1,0.001) %>%
   , .fun_format.x = percent
   , .fun_format.y = percent
   , .theme = 
-    ggridges::theme_ridges() + 
+    ggridges::theme_ridges(font_size = 12) + 
     theme(
       legend.position = 'bottom'
       , axis.text.y = element_text(vjust = 0.5)
@@ -241,10 +240,12 @@ From this figure, we immediately conclude that coefficients of interchangeabilit
 We can make the employability coefficient consistent with utility theory by applying the following adjustment:
 
 $$
-\begin{gathered}\Lambda(\vb{a_u}, \vb{A}, \vb{n}, \mathrm{N}, \vb{w})=\Pr(l=1,U=1 \ | \ \vb{a_u})\\ = \sum_{k=1}^{j}{U(\vb{a_u},\vb{a_k},w_u,w_k)\Pr(u \approx k \ | \ \vb{a_u},\vb{a_k})\Pr(l=1 \ | \ n_k, \mathrm{N})}\\ = \frac{\sum_{k=1}^{j}{U(\vb{a_u},\vb{a_k},w_u,w_k)\mathrm{I}(\vb{a_u},\vb{a_k})}n_k}{\mathrm{N}},\\ U(\vb{a_u},\vb{a_k},w_u,w_k) = \begin{cases}1, \text{ if } \mathrm{I}(\vb{a_u},\vb{a_k})w_k > w_u.\\ 0, \text{ otherwise.}\end{cases},\end{gathered}
+\begin{gathered}\Lambda(\vb{a_u}, \vb{A}, \vb{n}, \mathrm{N}, \vb{w})=\Pr(l=1,U=1 \ | \ \vb{a_u})\\ = \sum_{k=1}^{j}{U(\vb{a_u},\vb{a_k},w_u,w_k)\Pr(u \approx k \ | \ \vb{a_u},\vb{a_k})\Pr(l=1 \ | \ n_k, \mathrm{N})}\\ = \frac{\sum_{k=1}^{j}{U(\vb{a_u},\vb{a_k},w_u,w_k)\mathrm{I}(\vb{a_u},\vb{a_k})}n_k}{\mathrm{N}},\\ U(\vb{a_u},\vb{a_k},w_u,w_k) = \begin{cases}1, \text{ if } \mathrm{I}(\vb{a_u},\vb{a_k})w_k > w_u,\\ 0, \text{ otherwise.}\end{cases},\end{gathered}
 $$
 
-where the binary utility function $U(\vb{a_u},\vb{a_k},w_u,w_k)$ indicates whether an economic agent would benifit from switching jobs, based on their current wage $w_u$, and the wages other occupations. We also assume here that their expect payment, if they choose to change jobs, is a $\mathrm{I}(\vb{a_u},\vb{a_k})$ fraction of market wages, so they should be paid in accordance with their interchangeability levels. This way, one can only attain the full salary of a given occupation, if considered 100% interchangeable with that occupation. We could interpret this mechanism as employer's willingness to outsource a portion of a job's activities that could be performed by lower-payed workers.
+where the binary utility function $U(\vb{a_u},\vb{a_k},w_u,w_k)$ indicates whether an economic agent would benefit from switching jobs, based on their current wage $w_u$, and the wages of other occupations. We also assume here that their expect payment, if they choose to change jobs, is a $\mathrm{I}(\vb{a_u},\vb{a_k})$ fraction of the market wage --- not the full $w_k$ wage ---, so they are paid in accordance with their interchangeability levels. This way, one can only attain the full salary of a given occupation if considered 100% interchangeable with that occupation.
+
+We could interpret this mechanism as employer's tendency to outsource the portion of a job's activities that could be performed by lower-payed workers; and, alternatively, as workers's economic motive to find the highest paying positions for which they can be hired (i.e. the jobs which they are able and willing to perform).
 
 # Estimating Employability Coefficients
 
@@ -252,15 +253,63 @@ We now estimate the employability metrics developed above in three instances: fo
 
 ## For Occupations
 
-dsds
+```{r employability.occupations, fig.cap='Employability Coefficient per Occupation', fig.dim=c(8.3,5.8), fig.align='center', echo=FALSE, warning=FALSE, results='hide'}
+plt_employability.polar
+```
+
+```{r employability.histogram, fig.cap='Employability Coefficient Distribution', fig.dim=c(7.3,2.9), fig.align='center', echo=FALSE, warning=FALSE, results='hide'}
+plt_employability.hist
+```
+
+```{r employability.top10, echo=FALSE, warning=FALSE}
+knitr::kable(
+  df_employability.top10
+  , caption = 'Most Employable Occupations'
+  )
+```
+
+```{r employability.bot10, echo=FALSE, warning=FALSE}
+knitr::kable(
+  df_employability.bot10
+  , caption = 'Least Employable Occupations'
+  )
+```
 
 ## For Professional Attributes
 
 P.S.: use $\lambda_i$ for the employability of the $i$-th attribute, since $\Lambda_u$ is the employability of professional profiles.
 
+```{r employability.attributes, fig.cap='Marginal Employability per Attribute', fig.dim=c(7.3,10.7), fig.align='center', echo=FALSE, warning=FALSE, results='hide'}
+plt_employability.lollipop
+```
+
+P.S.: attributes with $\lambda_i = 0$ where omitted.
+
 ## For Any Professional Profile
 
-dsds
+```{r interchangeability.histogram, fig.cap='Similarity vs Interchangeability Distributions', fig.dim=c(7.3,2.9), fig.align='center', echo=FALSE, warning=FALSE, results='hide'}
+plt_interchangeability.hist
+```
+
+```{r interchangeability.user.top10, echo=FALSE, warning=FALSE}
+knitr::kable(
+  df_user.top10
+  , caption = 'Most Interchangeable Occupations'
+)
+```
+
+```{r interchangeability.user.bot10, echo=FALSE, warning=FALSE}
+knitr::kable(
+  df_user.bot10
+  , caption = 'Least Interchangeable Occupations'
+)
+```
+
+[Two methods for estimation: 1) Euclidean (cf. occupations); 2) Regression (via regression coefficients).]
+
+```{r employability.lollipop, fig.cap='User Employability Coefficients', fig.dim=c(7.3,2.9), fig.align='center', echo=FALSE, warning=FALSE, results='hide'}
+plt_interchangeability.hist
+```
 
 # Professional Competitiveness
 
@@ -268,9 +317,9 @@ dsds
 
 From the employability metrics previously developed, arises the question of career competitiveness, that is: "What is the level of competition for job posts in a given occupation?" Now, this question is two-fold, for as already stated, people may compete for jobs with people from other fields (e.g. Accountants with Economists, Executives, and Actuaries, etc), again, provided the labor market recognizes these applicants are "sufficiently qualified" (i.e. being interchangeable, as described above).
 
-If we think about this problem thoroughly, it is easy to see that while some job posts for an occupation are indeed too specialized to allow for *external* competition (i.e. applicants from other professional backgrounds), the other portion of jobs are suitable for any person with high enough professional similarity, as their overlapping competencies make them interchangeable to some degree, and therefore eligible to compete for a fraction of available job posts outside their fields of expertise.
+If we think about this problem thoroughly, it is easy to see that while some job posts for an occupation are indeed too specialized to allow for external competition (i.e. applicants from other professional backgrounds), the other portion of jobs are suitable for any person with high enough professional similarity, as their overlapping competencies make them interchangeable to some degree, and therefore eligible to compete for a fraction of available job posts outside their fields of expertise.
 
-Mathematically, we can say that a portion of job posts are subject only to *internal* competition, with applicants completely interchangeable with the "canonical" or even "platonic" representation of a particular occupation's professional profile $\vb{a_q}$, and the remaining jobs are subject to *external* competition with any $k$ occupation to the $\mathrm{I}(S(\vb{a_q},\vb{a_k}))$ degree of professional interchangeability. More precisely, the portion of these jobs (viz. those subject to external competition), is the maximum value of interchangeability with an occupation, since every job applicant said to be interchangeable with this occupation is eligible to compete for job posts below this maximum interchangeability level, above which only "canonical" (i.e. perfectly interchangeable) job applicants compete for jobs.
+Mathematically, we can say that a portion of job posts are subject only to internal competition, with applicants completely interchangeable with the "canonical" or even "platonic" representation of a particular occupation's professional profile $\vb{a_q}$, and the remaining jobs are subject to external competition with any $k$ occupation to the $\mathrm{I}(S(\vb{a_q},\vb{a_k}))$ degree of professional interchangeability. More precisely, the portion of these jobs (viz. those subject to external competition), is the maximum value of interchangeability with an occupation, since every job applicant said to be interchangeable with this occupation is eligible to compete for job posts below this maximum interchangeability level, above which only "canonical" (i.e. perfectly interchangeable) job applicants compete for jobs.
 
 $$
 \begin{gathered}
@@ -278,7 +327,7 @@ c_q^e(\vb{a_q},\vb{a_k}) = \max \mathrm{I}(S(\vb{a_q},\vb{a_k})), \ \forall \ k\
 \end{gathered}
 $$
 
-These two equations describe, respectively, the total percentage of jobs subject to external competition, and internal competition. Again, as applicants from other professional backgrounds are only eligible to the same "not too specialized", or "non canonical", portion of job posts for a given occupation, they can *at most* compete for the same $c_q^e$ jobs equal to the maximum interchangeability level for that occupation.
+These two equations describe, respectively, the total percentage of jobs subject to external competition, and internal competition. Again, as applicants from other professional backgrounds are only eligible to the same "not too specialized", or "non canonical", portion of job posts for a given occupation, they can at most compete for the same $c_q^e$ jobs equal to the maximum interchangeability level for that occupation.
 
 Of course, this is an oversimplification, and we'll develop a more sophisticated model at the end of this Section. It is evident, for example, that not every single applicant is in fact eligible to the full $c_q^e$ portion of "non canonical" job posts, but rather a more restricted $c_q^e(\vb{a_q},\vb{a_j}) \leq c_q^e(\vb{a_q},\vb{a_k})$ portion. In other words, job applicants from other fields overlap with each other from the smallest degree of interchangeability to the highest $c_q^e(\vb{a_q},\vb{a_k}) = \max \mathrm{I}(S(\vb{a_q},\vb{a_k})), \ \forall \ k$, so that inter-occupation competitiveness progressively decreases as interchangeability increases. Put simply, the more a particular job resembles the "canonical" representation of an occupation, the less it is subject to external competition. So, the more competitive jobs are the less specialized ones (i.e. those that could be performed by any untrained person).
 
@@ -320,6 +369,7 @@ The motivation for such a model derives from the problems of endogeneity implied
 
 This model has the advantage of simulating the strategic behavior of rational economic agents and also of providing more precise competitiveness metrics, compared to the simplest models written above. It can be estimated through the following algorithm:
 
+```{=tex}
 \begin{enumerate}
 
 \item Get all the $\vb{a_k}$ unique professional profiles in each occupation.
@@ -341,3 +391,4 @@ This model has the advantage of simulating the strategic behavior of rational ec
 \item Calculate the final competitiveness coefficient $c(n_k^t,n_k^\mathrm{T}) = \frac{n_k^\mathrm{T}}{n_k^t} \ \forall \ k \in [1,j]$, where $t$ is the initial period of measurement, and $\mathrm{T}$ the last period.
 
 \end{enumerate}
+```

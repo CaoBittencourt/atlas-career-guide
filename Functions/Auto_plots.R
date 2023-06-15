@@ -2677,10 +2677,14 @@ fun_plot.bar <- function(
     # Keep only unique rows
     .df_data %>%
       unique() %>%
+      # mutate(across(
+      #   .cols = !!aes_mapping$fill
+      #   ,.fns = factor
+      # )) %>%
       arrange(desc(
         !!aes_mapping$y
       )) -> .df_data
-
+    
     # Empty columns
     int_NA <- round(nrow(.df_data) * (51 / 873))
     int_NA <- ifelse(int_NA %% 2, int_NA, int_NA + 1)
@@ -2883,9 +2887,9 @@ fun_plot.bar <- function(
       # Void theme
       theme_void() +
       theme(
-        legend.position = c(0.5,0.05)
-        , legend.direction = 'horizontal'
-        , panel.grid = element_blank()
+        # legend.position = c(0.5,0)
+        # , legend.direction = 'horizontal'
+        panel.grid = element_blank()
         , panel.border = element_blank()
         , plot.margin = margin(0, 0, 0, 0)
         # , plot.title = element_blank()
