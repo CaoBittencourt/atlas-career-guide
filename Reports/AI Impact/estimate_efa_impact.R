@@ -27,80 +27,73 @@ source('C:/Users/Cao/Documents/Github/Atlas-Research/Functions/fun_dictionary.R'
 # Dynamic text imputation
 source('C:/Users/Cao/Documents/Github/Atlas-Research/Functions/fun_dynamic_text.R')
 
-# - Impact scale ----------------------------------------------------------------
-# Impact levels for reference
-seq(-1, 0, length.out = 7) %>%
-  round(2) %>%
-  as_tibble() %>% 
-  rename(impact = 1) %>% 
-  mutate(
-    impact = 100 * impact
-    , impact = paste(
-      impact
-      , dplyr::lag(
-        impact
-        , default = 
-          first(impact)
-      )
-      , sep = ' to '
-    )
-  ) %>% 
-  slice(-1) %>% 
-  mutate(
-    level = n() - row_number() + 1
-    , desc = 
-      c(
-        'complete replacement'
-        , 'severe replacement'
-        , 'partial replacement'
-        , 'high impact'
-        , 'medium impact'
-        , 'minor impact'
-      )
-    , desc.title = 
-      c(
-        'fatal'
-        , 'massive'
-        , 'huge'
-        , 'disruptive'
-        , 'auxiliary'
-        , 'irrelevant'
-      )
-  ) %>% 
-  relocate(
-    level
-    , desc.title
-    , desc
-    , impact
-  ) -> df_impact.desc
-
-read_csv(
-  'https://docs.google.com/spreadsheets/d/e/2PACX-1vRQCoYHwlfowFhlz3k0tXw1oAPxJ7H1-4MKvEXWVnPrwrehjFwoLy_zrZM-pKRWOl8l98WaF7haYYHE/pub?gid=792495051&single=true&output=csv'
-) -> df_impact
-
-df_impact %>% 
-  arrange(
-    interval.lb
-  ) %>% 
-  mutate(
-    .after = interval
-    # .after = interval.lb
-    , interval2 =
-      findInterval(
-        interval.lb
-        , interval.lb
-      )
-    # , vec = runif(13, -1, 2)
-    # , interval2 =
-    #   findInterval(
-    #     vec
-    #     , interval.lb
-    #   )
-  )
-
-df_impact.desc
-
 # - Parameters ------------------------------------------------------------
+# Immunity range
+.dbl_immune.lb <- 0
+.dbl_immune.ub <- 33
+
+# OECD impact estimation
+dbl_impact.oecd <- -0.09
+
+# Language
+chr_language <- 'en'
+
+# - Data ------------------------------------------------------------------
+# EFA model
+source('C:/Users/Cao/Documents/Github/Atlas-Research/Data/efa_output.R')
+
+# User data
+read_csv(
+  'https://docs.google.com/spreadsheets/d/e/2PACX-1vSVdXvQMe4DrKS0LKhY0CZRlVuCCkEMHVJHQb_U-GKF21CjcchJ5jjclGSlQGYa5Q/pub?gid=47461225&single=true&output=csv'
+) %>% 
+  mutate(across(
+    .cols = ends_with('.l')
+    ,.fns = ~ .x * 100
+  )) -> df_input
+
+# Dynamic texts
+map(
+  excel_sheets('C:/Users/Cao/Documents/Github/Atlas-Research/Reports/AI Impact/ai_impact_report.xlsx')
+  , ~ read_excel('C:/Users/Cao/Documents/Github/Atlas-Research/Reports/AI Impact/ai_impact_report.xlsx', sheet = .x)
+) -> list_df_text
+
+names(list_df_text) <- excel_sheets('C:/Users/Cao/Documents/Github/Atlas-Research/Reports/AI Impact/ai_impact_report.xlsx')
+
+# Remove carriage returns
+list_df_text %>%
+  map(function(df){
+    
+    df %>% 
+      mutate(across(
+        where(is.character)
+        , ~ str_remove_all(.x, "\r") %>% 
+          str_remove_all("\\\\n") %>% 
+          str_replace_all("\n", "  \n")
+      ))
+    
+  }) -> list_df_text
+
+# Remove reference dictionary
+list_df_text$
+  dictionary <- NULL
+
+# Filter text by language
+list_df_text %>% 
+  map(
+    ~ .x %>% 
+      filter(
+        language ==
+          chr_language
+      )
+  ) -> list_df_text
+
+# # Section list
+# list_df_text$sections$text %>% 
+#   as.list() -> list_sections
+# 
+# names(list_sections) <- list_df_text$sections$section
+
+# - Impact ----------------------------------------------------------
 # Factors
 df_loadings.factors %>% 
   select(
@@ -199,71 +192,6 @@ set_names(
 
 sort(dbl_factors.impact)
 
-# Immunity range
-.dbl_immune.lb <- 0
-.dbl_immune.ub <- 33
-
-# OECD impact estimation
-dbl_impact.oecd <- -0.09
-
-# Language
-chr_language <- 'en'
-
-# - Data ------------------------------------------------------------------
-# EFA model
-source('C:/Users/Cao/Documents/Github/Atlas-Research/Data/efa_output.R')
-
-# User data
-read_csv(
-  'https://docs.google.com/spreadsheets/d/e/2PACX-1vSVdXvQMe4DrKS0LKhY0CZRlVuCCkEMHVJHQb_U-GKF21CjcchJ5jjclGSlQGYa5Q/pub?gid=47461225&single=true&output=csv'
-) %>% 
-  mutate(across(
-    .cols = ends_with('.l')
-    ,.fns = ~ .x * 100
-  )) -> df_input
-
-# Dynamic texts
-map(
-  excel_sheets('C:/Users/Cao/Documents/Github/Atlas-Research/Reports/AI Impact/ai_impact_report.xlsx')
-  , ~ read_excel('C:/Users/Cao/Documents/Github/Atlas-Research/Reports/AI Impact/ai_impact_report.xlsx', sheet = .x)
-) -> list_df_text
-
-names(list_df_text) <- excel_sheets('C:/Users/Cao/Documents/Github/Atlas-Research/Reports/AI Impact/ai_impact_report.xlsx')
-
-# Remove carriage returns
-list_df_text %>%
-  map(function(df){
-    
-    df %>% 
-      mutate(across(
-        where(is.character)
-        , ~ str_remove_all(.x, "\r") %>% 
-          str_remove_all("\\\\n") %>% 
-          str_replace_all("\n", "  \n")
-      ))
-    
-  }) -> list_df_text
-
-# Remove reference dictionary
-list_df_text$
-  dictionary <- NULL
-
-# Filter text by language
-list_df_text %>% 
-  map(
-    ~ .x %>% 
-      filter(
-        language ==
-          chr_language
-      )
-  ) -> list_df_text
-
-# # Section list
-# list_df_text$sections$text %>% 
-#   as.list() -> list_sections
-# 
-# names(list_sections) <- list_df_text$sections$section
-
 # [DATA] ------------------------------------------------------------------
 # - Occupations data frame on a 0 to 100 scale ------------------------------
 df_occupations.efa %>%
@@ -312,19 +240,6 @@ fun_efa.impact(
     .dbl_immune.ub
   , .lgc_aggregate = T
 ) -> list_ai.impact.user
-
-# # - Factors impact -----------------------------------------------------------
-# list_ai.impact$
-#   factors.impact %>% 
-#   full_join(
-#     df_factor.names
-#   ) %>% 
-#   relocate(
-#     !where(is.numeric)
-#     , where(is.numeric)
-#   ) -> df_factors.impact
-# 
-# df_factors.impact
 
 # - Item impact -----------------------------------------------------------
 list_ai.impact$
@@ -535,6 +450,8 @@ list(
   , chr_is.isnot = 
     list_ai.impact$
     overall.impact$
+    aggregate.impact / 
+    df_max.aggregate$
     aggregate.impact
   , impact_desc.text3 = 
     list_ai.impact.user$
@@ -579,13 +496,24 @@ map_if(
   , ~ fun_text.dynamic(.x, list_text)
 ) -> list_df_text
 
+list_df_text$
+  sections %>% 
+  mutate(
+    text = if_else(
+      section == 'date'
+      , format(
+        Sys.Date()
+        , text
+      ) , text
+    )) -> 
+  list_df_text$
+  sections
+
 # Text list
 list_df_text$
   sections$
   text %>%
   as.list() -> list_report.texts
-
-list_report.texts
 
 # - Generate remaining text elements ------------------------------------------------
 # Section titles
@@ -614,4 +542,7 @@ list_df_text$
   as.list() -> list_text.elements
 
 # - Output / Render R Markdown report ----------------------------------------------
+rmarkdown::render(
+  'C:/Users/Cao/Documents/Github/Atlas-Research/Reports/AI Impact/ai_report.Rmd'
+)
 
