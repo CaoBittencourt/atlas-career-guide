@@ -78,11 +78,17 @@ df_occupations$
 # - Estimate occupations's employability ---------------------------------------------------------------
 fun_employability.workflow.m(
   .df_data = 
-    df_occupations
+    df_occupations %>% 
+    select(
+      occupation
+      , ends_with('.l')
+    )
   , .int_employment = 
-    int_employment
+    df_occupations$
+    employment2
   , .dbl_wages = 
-    dbl_wages
+    df_occupations$
+    annual_wage_2021
   , .dbl_scale.ub = 
     .dbl_scale.ub
 ) -> list_employability
@@ -120,11 +126,71 @@ fun_lm(
   , .dbl_weights = 
     int_employment
   , .lgc_intercept = F
-  , .dbl_lower.bounds = 0
 ) -> list_employability.nnls
+
+df_employability %>% 
+  mutate(
+    fitted = 
+      list_employability.nnls$
+      fitted
+  ) %>% 
+  select(
+    occupation
+    , employability
+    , fitted
+  ) %>% 
+  mutate(
+    diff = 
+      fitted - 
+      employability
+  ) %>% 
+  filter(str_detect(
+    str_to_lower(occupation)
+    , 'stat|econ'
+  )) %>% 
+  arrange(-diff) %>% 
+  print(n = nrow(.))
+
+list_employability.nnls$
+  model.tidy %>% 
+  mutate(
+    estimate = 
+      round(estimate, 4)
+  ) %>% 
+  arrange(estimate) %>% 
+  print(n = nrow(.))
+
+
+df_employability %>% 
+  mutate(
+    employability.fitted =
+      list_employability.nnls$
+      fitted
+  ) %>% 
+  ggplot(aes(
+    x = employability.fitted
+    , y = employability
+  )) + 
+  geom_point(
+    color = 'blue'
+  ) + 
+  geom_abline(
+    intercept = 0
+    , slope = 1
+  ) + 
+  geom_smooth(
+    method = 'lm'
+    , color = '#212121'
+  ) + 
+  xlim(0,1) +
+  ylim(0,1) 
+  
+
 
 list_employability.nnls$
   model.tidy
+
+list_employability.nnls$r2
 
 df_input %>% 
   pivot_longer(

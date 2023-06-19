@@ -162,7 +162,10 @@ fun_r2 <- function(
 }
 
 # WEIGHTED R SQUARED -----------------------------------------------------
-fun_r2.weighted <- function(.list_model){
+fun_r2.weighted <- function(
+    .list_model
+    , .lgc_intercept
+    ){
   
   .list_model %>% 
     residuals() -> dbl_residuals
@@ -181,6 +184,7 @@ fun_r2.weighted <- function(.list_model){
     
   }
   
+  # Residual sum of squares
   dbl_residuals + 
     dbl_fitted -> dbl_observed
   
@@ -189,6 +193,7 @@ fun_r2.weighted <- function(.list_model){
       dbl_residuals ^ 2
   ) -> dbl_sse
   
+  # Total sum of squares
   sum(
     dbl_weights * 
       (
@@ -200,11 +205,45 @@ fun_r2.weighted <- function(.list_model){
       ) ^ 2
   ) -> dbl_sst
   
+  # R2
   dbl_r2 <- 1 - dbl_sse / dbl_sst
   
-  return(dbl_r2)
+  # Adjusted R2
+  1 - (1 - dbl_r2) * 
+    (length(dbl_fitted) - 1) / 
+    (length(dbl_fitted) -
+       length(coefficients(
+         .list_model
+       )) - 
+       as.numeric(.lgc_intercept)
+    ) -> r2.adj
+  
+  return(list(
+    'r2' = dbl_r2
+    , 'r2.adjusted' = dbl_r2
+  ))
   
 }
+
+
+attr(list_employability.nnls$model.fit, 'term.labels')
+terms(list_employability.nnls)
+
+length(coefficients(list_employability.nnls$model.fit))
+
+summary(list_employability.nnls$model.fit)
+
+formula(list_employability.nnls$model.fit) %>% 
+  as.character() %>% 
+  str_count('\\*')
+
+terms(list_employability.nnls$model.fit)
+
+list_employability.nnls$model.fit$m$getPars()
+
+fitted(list_employability.nnls$model.fit)
+residuals(list_employability.nnls$model.fit)
+
 
 # ROOT MEAN SQUARED ERROR ----------------------------------------------------------------------
 fun_rmse <- function(
@@ -1511,34 +1550,13 @@ fun_lm <- function(
   
   # Fitted values
   fitted(mdl_fit) -> dbl_fitted
-  # if(length(.sym_vars.instrumental)){
-  #   
-  #   as.numeric(
-  #     mdl_fit$fitted.values
-  #   ) -> dbl_fitted
-  #   
-  # } else { 
-  #   
-  #   as.numeric(
-  #     mdl_fit$m$fitted()
-  #   ) -> dbl_fitted
-  #   
-  # }
   
   # R squared
   fun_r2.weighted(
-    mdl_fit
+    .list_model = mdl_fit
+    , .lgc_intercept = 
+      .lgc_intercept
   ) -> list_r2
-  
-  # fun_r2(
-  #   .int_vars.independent =
-  #     length(.sym_vars.independent.names)
-  #   , .dbl_observations =
-  #     .df_data %>%
-  #     pull(.sym_vars.dependent.names[[1]])
-  #   , .dbl_fitted = dbl_fitted
-  #   , .lgc_intercept = .lgc_intercept
-  # ) -> list_r2
   
   # RMSE
   fun_rmse(

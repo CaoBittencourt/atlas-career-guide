@@ -56,7 +56,7 @@ fun_kflex.aggregate(
     df_kflex.items
 ) -> df_input.kflex
 
-# [TEXT REPORT] -----------------------------------------------------------
+# # [TEXT REPORT] -----------------------------------------------------------
 # # - Preliminary values for analyses ----------------------------------------------------------------------
 # # Preliminary values for analyses
 # list(
@@ -64,23 +64,23 @@ fun_kflex.aggregate(
 #     df_input$
 #     occupation
 #   # username
-#   , nrow_occupations = 
+#   , nrow_occupations =
 #     df_occupations %>%
 #     nrow()
 #   , nitems.complete =
 #     list_ai.impact$
-#     items.impact %>% 
+#     items.impact %>%
 #     nrow()
-#   , nfactors = 
+#   , nfactors =
 #     list_df_text$
-#     factor.model %>% 
+#     factor.model %>%
 #     nrow()
-#   , factor.names = 
+#   , factor.names =
 #     list_df_text$
 #     factor.model$
-#     factor.name %>% 
+#     factor.name %>%
 #     fun_text.commas(
-#       .chr_last.sep = 
+#       .chr_last.sep =
 #         list_df_text$
 #         last.comma$
 #         text
@@ -89,52 +89,52 @@ fun_kflex.aggregate(
 #     df_max.aggregate$
 #     occupation %>%
 #     fun_text.commas()
-#   , pct_most_affected.impact = 
+#   , pct_most_affected.impact =
 #     df_max.aggregate$
-#     aggregate.impact %>% 
+#     aggregate.impact %>%
 #     percent(
 #       accuracy = .01
-#     ) %>% 
+#     ) %>%
 #     str_replace(
 #       '-'
 #       , '--'
 #     )
-#   , pct_most_affected.remaining = 
+#   , pct_most_affected.remaining =
 #     sum(
 #       df_max.aggregate$
 #         aggregate.impact
 #       , 1
-#     ) %>% 
+#     ) %>%
 #     percent(
 #       accuracy = .01
 #     )
-#   , pct_overall.impact = 
+#   , pct_overall.impact =
 #     list_ai.impact$
 #     overall.impact$
-#     aggregate.impact %>% 
+#     aggregate.impact %>%
 #     percent(
 #       accuracy = .01
-#     ) %>% 
+#     ) %>%
 #     str_replace(
 #       '-'
 #       , '--'
 #     )
-#   , int_unemployment = 
+#   , int_unemployment =
 #     list_ai.impact$
 #     aggregate.impact %>%
 #     reframe(sum(
 #       -aggregate.impact *
 #         weight
-#     )) %>% 
-#     pull() %>% 
+#     )) %>%
+#     pull() %>%
 #     dollar(prefix = '')
-#   , pct_user.impact = 
+#   , pct_user.impact =
 #     list_ai.impact.user$
 #     overall.impact$
-#     aggregate.impact %>% 
+#     aggregate.impact %>%
 #     percent(
 #       accuracy = .01
-#     ) %>% 
+#     ) %>%
 #     str_replace(
 #       '-'
 #       , '--'
@@ -144,37 +144,37 @@ fun_kflex.aggregate(
 # # - List for dictionary evaluation -------------------------------------------------------------------------
 # # List for dictionary evaluation
 # list(
-#   chr_automation.negative = 
+#   chr_automation.negative =
 #     list_ai.impact$
-#     items.impact %>% 
+#     items.impact %>%
 #     filter(
-#       item.impact < 0 
-#     ) %>% 
+#       item.impact < 0
+#     ) %>%
 #     reframe(
-#       item.impact = 
+#       item.impact =
 #         mean(item.impact)
-#     ) %>% 
+#     ) %>%
 #     pull()
-#   , most_affected.analysis = 
+#   , most_affected.analysis =
 #     df_max.aggregate$
 #     aggregate.impact
-#   , chr_analysis.panorama = 
+#   , chr_analysis.panorama =
 #     list_ai.impact$
 #     overall.impact$
-#     aggregate.impact / 
+#     aggregate.impact /
 #     df_max.aggregate$
 #     aggregate.impact
-#   , chr_is.isnot = 
+#   , chr_is.isnot =
 #     list_ai.impact$
 #     overall.impact$
-#     aggregate.impact / 
+#     aggregate.impact /
 #     df_max.aggregate$
 #     aggregate.impact
-#   , labor_market.analysis = 
+#   , labor_market.analysis =
 #     list_ai.impact.user$
 #     overall.impact$
 #     aggregate.impact
-#   , chr_oecd.comparison = 
+#   , chr_oecd.comparison =
 #     list_ai.impact$
 #     overall.impact$
 #     aggregate.impact /
@@ -187,10 +187,10 @@ fun_kflex.aggregate(
 #     list_ai.impact.user$
 #     overall.impact$
 #     aggregate.impact
-#   , chr_market.comparison = 
+#   , chr_market.comparison =
 #     list_ai.impact.user$
 #     overall.impact$
-#     aggregate.impact / 
+#     aggregate.impact /
 #     list_ai.impact$
 #     overall.impact$
 #     aggregate.impact
@@ -201,10 +201,10 @@ fun_kflex.aggregate(
 # c(
 #   list_text
 #   , fun_dictionary.list(
-#     .df_dictionary.long = 
+#     .df_dictionary.long =
 #       list_df_text$
 #       dictionary.eval
-#     , .list_dbl_score.eval = 
+#     , .list_dbl_score.eval =
 #       list_scores
 #   )
 # ) -> list_text
@@ -226,7 +226,7 @@ fun_kflex.aggregate(
 # ) -> list_df_text
 # 
 # list_df_text$
-#   sections %>% 
+#   sections %>%
 #   mutate(
 #     text = if_else(
 #       section == 'date'
@@ -234,7 +234,7 @@ fun_kflex.aggregate(
 #         Sys.Date()
 #         , text
 #       ) , text
-#     )) -> 
+#     )) ->
 #   list_df_text$
 #   sections
 # 
@@ -242,36 +242,36 @@ fun_kflex.aggregate(
 # list_df_text$
 #   sections$
 #   text %>%
-#   as.list() -> 
+#   as.list() ->
 #   list_report.texts
 # 
 # # - Generate remaining text elements ------------------------------------------------
 # # Section titles
 # list_df_text$
-#   sections.title %>% 
+#   sections.title %>%
 #   mutate(
-#     title = 
+#     title =
 #       paste(
 #         strrep('#', level)
 #         , title
-#       )) %>% 
+#       )) %>%
 #   pull(title) %>%
-#   as.list() -> 
+#   as.list() ->
 #   list_report.titles
 # 
 # # Captions
 # list_df_text$
-#   plots %>% 
-#   pull(plot.caption) %>% 
-#   unique() %>% 
-#   as.list() -> 
+#   plots %>%
+#   pull(plot.caption) %>%
+#   unique() %>%
+#   as.list() ->
 #   list_plots.caption
 # 
 # # Text elements
 # list_df_text$
-#   text.elements %>% 
-#   pull(title) %>% 
-#   as.list() -> 
+#   text.elements %>%
+#   pull(title) %>%
+#   as.list() ->
 #   list_text.elements
 # 
 # # - Output / Render R Markdown report ----------------------------------------------
