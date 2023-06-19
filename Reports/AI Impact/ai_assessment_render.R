@@ -38,14 +38,14 @@ read_csv(
   'https://docs.google.com/spreadsheets/d/e/2PACX-1vSVdXvQMe4DrKS0LKhY0CZRlVuCCkEMHVJHQb_U-GKF21CjcchJ5jjclGSlQGYa5Q/pub?gid=47461225&single=true&output=csv'
 ) -> df_input
 
-df_occupations %>%
-  slice_sample(
-    n = 1
-  ) %>%
-  select(
-    occupation
-    , ends_with('.l')
-  ) -> df_input
+# df_occupations %>%
+#   slice_sample(
+#     n = 1
+#   ) %>%
+#   select(
+#     occupation
+#     , ends_with('.l')
+#   ) -> df_input
 
 # [RESULTS] ----------------------------------------------
 # - Estimate exogenous impact (user) ---------------------------------------------

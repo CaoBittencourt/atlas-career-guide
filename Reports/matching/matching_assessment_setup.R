@@ -1,15 +1,26 @@
-# [SETUP] -----------------------------------------------------------------
+# [SETUP] -----------------------------------------------------------
 # - Packages ----------------------------------------------------------------
 pkg <- c(
-  'tidyverse' #Data wrangling
-  # , 'openxlsx' #Export excel
-  , 'readxl' #Export excel
+  'psych' #Factor Analysis
+  , 'FNN' #Fast K-NN Algorithm (faster than the 'class' package)
+  , 'jsonify' #Work with JSON (faster than jsonlite)
+  , 'ggthemes' #Data visualization
+  , 'tidyverse', 'stringi', 'english' #Data wrangling
+  , 'tinytex' #LaTeX
+  , 'modeest' #Mode
+  , 'knitr' #Knitr
+  , 'readxl' #Import excel (use other package?)
 )
 
 # Activate / install packages
 lapply(pkg, function(x)
   if(!require(x, character.only = T))
   {install.packages(x); require(x)})
+
+# Install TinyTex
+if(!tinytex::is_tinytex()){
+  tinytex::install_tinytex()
+}
 
 # Package citation
 # lapply(pkg, function(x)
@@ -18,55 +29,73 @@ lapply(pkg, function(x)
 # R profile to load packages at the start of the project
 pkg -> chr_profile
 
-# - Functions -------------------------------------------------------------
-# EFA-based exogenous impact analysis
-source('C:/Users/Cao/Documents/Github/Atlas-Research/Functions/fun_efa_impact.R')
+# - Functions ---------------------------------------------------------------
+# KNN matching
+source('C:/Users/Cao/Documents/Github/Atlas-Research/Functions/KNN_Matching.R')
+c(chr_profile, pkg) -> chr_profile
+# Factor scores
+source('C:/Users/Cao/Documents/Github/Atlas-Research/Functions/Factor_Scores.R')
 c(chr_profile, pkg) -> chr_profile
 # Automated plotting
 source('C:/Users/Cao/Documents/Github/Atlas-Research/Functions/Auto_plots.R')
 c(chr_profile, pkg) -> chr_profile
-# Commas
-source('C:/Users/Cao/Documents/Github/Atlas-Research/Functions/fun_commas.R')
+# Dynamic text
+source('C:/Users/Cao/Documents/Github/Atlas-Research/Functions/Dynamic_text.R')
 c(chr_profile, pkg) -> chr_profile
-# Dictionary evaluation
-source('C:/Users/Cao/Documents/Github/Atlas-Research/Functions/fun_dictionary.R')
-c(chr_profile, pkg) -> chr_profile
-# Dynamic text imputation
-source('C:/Users/Cao/Documents/Github/Atlas-Research/Functions/fun_dynamic_text.R')
+# Capital flexibility
+source('C:/Users/Cao/Documents/Github/Atlas-Research/Functions/Capital_Flexibility.R')
 c(chr_profile, pkg) -> chr_profile
 
 unique(chr_profile) -> chr_profile
 
-# - Parameters ------------------------------------------------------------
-# Scale bounds
-.dbl_scale.lb <- 0
-.dbl_scale.ub <- 100
+# - Working directory -------------------------------------------------------
+setwd(dirname(
+  rstudioapi::getSourceEditorContext()$path
+))
 
-# Immunity range
-.dbl_immune.lb <- 0
-.dbl_immune.ub <- 33
+# - Parameters --------------------------------------------------------------
+# Scales
+seq_scale.1_5 <- seq(0,1,.25)
+seq_scale.1_6 <- round(seq(0, 0.9, 1/6), 2)
+seq_scale.1_7 <- c(.33, .33 + .17/2, .50, .50 + .17/2, .67, .67 + .17/2)
+seq_scale.1_8 <- round(seq(0,1,1/7), 2)
 
-# OECD impact estimation
-dbl_impact.oecd <- -0.09
+# Recommendation cutoff
+dbl_recommended.cutff <- 0.67
 
-# - Data ------------------------------------------------------------------
-# EFA model
-read_rds(
-  'C:/Users/Cao/Documents/Github/Atlas-Research/Data/efa_model_equamax_15_factors.rds'
-) -> efa_model
+# Colors
+list(
+  'green' = '#4AF7B0'
+  , 'purple1' = '#753AF9'
+  , 'purple2' = '#301866'
+  , 'purple3' = '#3854FB'
+  , 'blue1' = '#56D0F5'
+  , 'blue2' = '#ABF4D4'
+  , 'blue3' = '#43DED1'
+  , 'blue4' = '#182766'
+  , 'red' = '#CE3527'
+  , 'black' = '#212121'
+  , 'grey' = '#D4D5D8'
+) -> list_atlas.pal
+
+# - Data --------------------------------------------------------------------
+# Factor list
+openxlsx::read.xlsx(
+  'C:/Users/Cao/Documents/Github/Atlas-Research/Data/df_questionnaire_atlas.complete_equamax_15_factors.xlsx'
+) -> df_factors
 
 # Occupations data frame
 read_csv(
   'C:/Users/Cao/Documents/Github/Atlas-Research/Data/df_atlas.complete_equamax_15_factors.csv'
 ) -> df_occupations
 
-# Dynamic texts
+# DEFAULT TEXTS FOR IMPUTATION
 map(
-  excel_sheets('C:/Users/Cao/Documents/Github/Atlas-Research/Reports/AI Impact/ai_assessment_texts.xlsx')
-  , ~ read_excel('C:/Users/Cao/Documents/Github/Atlas-Research/Reports/AI Impact/ai_assessment_texts.xlsx', sheet = .x)
+  excel_sheets('./matching_assessment_texts.xlsx')
+  , ~ read_excel('./matching_assessment_texts.xlsx', sheet = .x)
 ) -> list_df_text
 
-names(list_df_text) <- excel_sheets('C:/Users/Cao/Documents/Github/Atlas-Research/Reports/AI Impact/ai_assessment_texts.xlsx')
+names(list_df_text) <- excel_sheets('./matching_assessment_texts.xlsx')
 
 # Remove carriage returns
 list_df_text %>%
@@ -82,135 +111,14 @@ list_df_text %>%
     
   }) -> list_df_text
 
-# Remove reference dictionary
-list_df_text$
-  dictionary <- NULL
+# Section list
+list_df_text$sections$text %>% 
+  as.list() -> list_sections
 
-# Filter text by language
-list_df_text %>% 
-  map(
-    ~ .x %>% 
-      filter(
-        language ==
-          chr_language
-      )
-  ) -> list_df_text
-
-# - Impact ----------------------------------------------------------
-# Exogenous impact vector
-# LLMs (e.g. chat gpt, google ai)
-set_names(
-  c(
-    'factor1' = 33
-    , 'factor2' = 0
-    # , 'factor3' = -17/2
-    , 'factor3' = -17
-    , 'factor4' = 0
-    , 'factor5' = -17/2
-    # , 'factor5' = -17
-    , 'factor6' = 0
-    , 'factor7' = 0
-    , 'factor8' = -17/2
-    # , 'factor8' = -17
-    , 'factor9' = 0
-    , 'factor10' = -50
-    , 'factor11' = -17/2
-    # , 'factor11' = -17
-    , 'factor12' = 0
-    , 'factor13' = 0
-    , 'factor14' = 0
-    , 'factor15' = 0
-  )
-  , list_df_text$
-    factor.model$
-    factor.name
-) -> dbl_factors.impact
-
-# [RESULTS] ----------------------------------------------
-# - Estimate exogenous impact (US labor market) ---------------------------------------------
-fun_efa.impact(
-  .df_data =
-    df_occupations %>% 
-    select(
-      occupation
-      , ends_with('.l')
-    )
-  , .dbl_weights =
-    df_occupations$
-    employment2
-  , .efa_model = efa_model
-  , .dbl_factors.impact =
-    dbl_factors.impact
-  , .dbl_scale.lb =
-    .dbl_scale.lb 
-  , .dbl_scale.ub =
-    .dbl_scale.ub 
-  , .dbl_immune.lb =
-    .dbl_immune.lb
-  , .dbl_immune.ub =
-    .dbl_immune.ub
-  , .lgc_aggregate = T
-) -> list_ai.impact
-
-# - Item impact -----------------------------------------------------------
-list_ai.impact$
-  items.impact %>% 
-  arrange(desc(
-    item.impact
-  )) %>% 
-  slice(
-    1:10
-    , (n() - 9): n()
-  ) %>% 
-  mutate(
-    impact.type =
-      if_else(
-        item.impact >= 0
-        , 'Positive Impact'
-        , 'Negative Impact'
-      )
-  ) %>% 
-  group_by(
-    impact.type
-  ) %>% 
-  arrange(desc(
-    abs(item.impact)
-  )) -> df_items.top_bot
-
-# - Most affected occupation -----------------------------------------
-list_ai.impact$
-  aggregate.impact %>% 
-  filter(
-    aggregate.impact ==
-      min(aggregate.impact)
-  ) -> df_max.aggregate
-
-list_ai.impact$
-  individual.impact %>% 
-  filter(
-    occupation ==
-      df_max.aggregate$
-      occupation
-  ) -> df_max.individual
-
-# - Aggregate impact by occupation -----------------------------------------------------
-list_ai.impact$
-  aggregate.impact %>% 
-  mutate(
-    weight = 
-      weight / 
-      min(weight)
-    , weight = 
-      ceiling(weight)
-  ) %>% 
-  group_by(
-    occupation
-  ) %>% 
-  slice(rep(
-    1, weight
-  )) %>% 
-  ungroup() -> df_impact.hist
+names(list_sections) <- list_df_text$sections$section
 
 # [EXPORT] ----------------------------------------------------------------
 # - Save workspace image --------------------------------------------------
-save.image('ai_assessment_image.RData')
+save.image('matching_assessment_image.RData')
+
+

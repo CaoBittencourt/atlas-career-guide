@@ -39,79 +39,89 @@ cat(list_report.texts[[4]])
 
 `r list_report.titles[[2]]`
 
-```{r what_is_ai, results='asis'}
+`r list_report.titles[[3]]`
+
+```{r, fig.dim=c(7.3,5.8), fig.align='center', fig.cap=list_plots.caption[[1]]}
+plt_match.polar
+```
+
+```{r circular_plot.comments, results='asis'}
 cat(list_report.texts[[5]])
 ```
 
-`r list_report.titles[[3]]`
+```{r compatibility.table}
+kable(
+  df_top7.bot3
+  , caption = unique(list_df.text$matching.table$caption)
+  )
+```
 
-```{r llms_can, results='asis'}
+```{r compatibility.table.comments, results='asis'}
 cat(list_report.texts[[6]])
 ```
 
-```{r llms_can.list, results='asis'}
+```{r line.plot.intro, results='asis'}
 cat(list_report.texts[[7]])
+```
+
+```{r line.plot, fig.dim=c(7.3,2.9), fig.align='center', fig.cap=list_plots.caption[[2]]}
+plt_line.rank
+```
+
+```{r line.comments, results='asis'}
+cat(list_report.texts[[8]])
 ```
 
 `r list_report.titles[[4]]`
 
-```{r llms_cannot, results='asis'}
-cat(list_report.texts[[8]])
-```
-
-```{r llms_cannot.list, results='asis'}
+```{r distribution.intro, results='asis'}
 cat(list_report.texts[[9]])
 ```
 
-```{r dsds, fig.cap = list_plots.caption[[1]], results='asis'}
+```{r distribution.plot, fig.dim=c(7.3,2.9), fig.align='center', fig.cap=list_plots.caption[[3]]}
+plt_density
+```
+
+```{r distribution.commentary, results='asis'}
+cat(list_report.texts[[10]])
 ```
 
 `r list_report.titles[[5]]`
 
+```{r factors.intro, results='asis'}
+cat(list_report.texts[[11]])
+```
+
 `r list_report.titles[[6]]`
 
-```{r factor_model, results='asis'}
-cat(list_report.texts[[10]])
+```{r factors, results='asis'}
+cat(list_report.texts[[12]])
 ```
 
 `r list_report.titles[[7]]`
 
-```{r attributes, results='asis'}
-cat(list_report.texts[[11]])
+```{r best.plot, fig.dim=c(7.3,4.8), fig.align='center', fig.cap=list_plots.caption[[4]]}
+list_plt.dumbbells$top_match
 ```
 
-```{r attributes.analysis, results='asis'}
-cat(list_report.texts[[12]])
+```{r best.comments, results='asis'}
+cat(list_report.texts[[14]])
+```
+
+```{r worst.comments.intro, results='asis'}
+cat(list_report.texts[[15]])
+```
+
+```{r worst.plot,  fig.dim=c(7.3,4.8), fig.align='center', fig.cap=list_plots.caption[[5]]}
+list_plt.dumbbells$bot_match
+```
+
+```{r worst.comments, results='asis'}
+cat(list_report.texts[[16]])
 ```
 
 `r list_report.titles[[8]]`
 
-```{r occupations.dumbbell, results='asis'}
-cat(list_report.texts[[13]])
-```
-
-```{r occupations.analysis, results='asis'}
-cat(list_report.texts[[14]])
-```
-
-`r list_report.titles[[9]]`
-
-```{r labor_market.histogram, results='asis'}
-cat(list_report.texts[[15]])
-```
-
-```{r labor_market, results='asis'}
-cat(list_report.texts[[16]])
-```
-
-`r list_report.titles[[10]]`
-
-```{r user_impact, results='asis'}
+```{r finishing.remarks, results='asis'}
 cat(list_report.texts[[17]])
-```
-
-`r list_report.titles[[11]]`
-
-```{r finishing_remarks, results='asis'}
-cat(list_report.texts[[18]])
 ```
