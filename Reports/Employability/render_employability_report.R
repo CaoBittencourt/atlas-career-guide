@@ -34,43 +34,17 @@ source('C:/Users/Cao/Documents/Github/Atlas-Research/Functions/fun_regressions.R
 # source('C:/Users/Cao/Documents/Github/Atlas-Research/Functions/Factor_Scores.R')
 
 # - Data --------------------------------------------------------------------
-# EFA model
-source('C:/Users/Cao/Documents/Github/Atlas-Research/Data/efa_output.R')
+# Occupations data frame
+read_csv(
+  'C:/Users/Cao/Documents/Github/Atlas-Research/Data/df_atlas.complete_equamax_15_factors.csv'
+) -> df_occupations
 
-if(max(df_occupations.efa[-1]) <= 1){
-  
-  df_occupations.efa %>%
-    mutate(across(
-      .cols = ends_with('.l')
-      ,.fns = ~ .x * 100
-    )) -> df_occupations.efa
-  
-}
-
-# USER INPUT DATA FRAME
+# User input data frame
 read_csv(
   'https://docs.google.com/spreadsheets/d/e/2PACX-1vSVdXvQMe4DrKS0LKhY0CZRlVuCCkEMHVJHQb_U-GKF21CjcchJ5jjclGSlQGYa5Q/pub?gid=47461225&single=true&output=csv'
-) %>% 
-  mutate(across(
-    .cols = ends_with('.l')
-    ,.fns = ~ .x * 100
-  )) -> df_input
+) -> df_input
 
 # - Parameters --------------------------------------------------------------
-# Selected respondent
-# chr_text.user <- 'Maurício'
-# chr_text.user <- 'Martijn'
-chr_text.user <- 'Cao'
-# chr_text.user <- 'Alexandre'
-# chr_text.user <- 'Acilio'
-# chr_text.user <- 'Milena'
-# chr_text.user <- 'Gabriel'
-# chr_text.user <- 'Random'
-# chr_text.user <- 'Random2'
-# chr_text.user <- 'Random3'
-# chr_text.user <- 'Random4'
-# chr_text.user <- 'Random5'
-
 # Colors
 list(
   'green' = '#4AF7B0'
@@ -104,7 +78,7 @@ df_occupations$
 # - Estimate occupations's employability ---------------------------------------------------------------
 fun_employability.workflow.m(
   .df_data = 
-    df_occupations.efa
+    df_occupations
   , .int_employment = 
     int_employment
   , .dbl_wages = 
@@ -119,7 +93,7 @@ list_employability$
 # - Estimate user's employability -----------------------------------------------------------
 fun_employability.workflow(
   .df_data = 
-    df_occupations.efa
+    df_occupations
   , .df_query = 
     df_input
   , .int_employment = 

@@ -63,6 +63,9 @@ cat(list_report.texts[[8]])
 cat(list_report.texts[[9]])
 ```
 
+```{r dsds, fig.cap = list_plots.caption[[1]], results='asis'}
+```
+
 `r list_report.titles[[5]]`
 
 `r list_report.titles[[6]]`

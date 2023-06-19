@@ -1,7 +1,7 @@
 # -------- SETUP ----------------------------------------------------------
 # PACKAGES ----------------------------------------------------------------
 pkg <- c(
-  'tidyverse', 'stringi' #Data wrangling
+  'tidyverse', 'glue' #Data wrangling
 )
 
 # Activate / install packages

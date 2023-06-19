@@ -1,0 +1,117 @@
+---
+title: "`r list_report.texts[[1]]`"
+subtitle: "`r list_report.texts[[2]]`"
+author: "Atlas Research Team"
+date: "`r list_report.texts[[3]]`"
+geometry: a4paper, margin = 1in
+output:
+  pdf_document:
+  # ipsum_pdf:
+    toc: TRUE
+    number_sections: TRUE
+    toc_depth: 4
+    extra_dependencies: ["float"]
+
+toc-title: "`r list_text.elements[[1]]`"
+header-includes:
+   - \usepackage{floatrow}
+   - \floatsetup[figure]{capposition=top}
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = F)
+knitr::opts_chunk$set(message = F)
+knitr::opts_chunk$set(warning = F)
+knitr::opts_chunk$set(fig.pos = "H", out.extra = "")
+```
+
+\renewcommand{\figurename}{`r list_text.elements[[2]]`}
+
+\renewcommand{\tablename}{`r list_text.elements[[3]]`}
+
+`r list_report.titles[[1]]`
+
+```{r introduction, results='asis'}
+cat(list_report.texts[[4]])
+```
+
+\newpage
+
+`r list_report.titles[[2]]`
+
+```{r what_is_ai, results='asis'}
+cat(list_report.texts[[5]])
+```
+
+`r list_report.titles[[3]]`
+
+```{r llms_can, results='asis'}
+cat(list_report.texts[[6]])
+```
+
+```{r llms_can.list, results='asis'}
+cat(list_report.texts[[7]])
+```
+
+`r list_report.titles[[4]]`
+
+```{r llms_cannot, results='asis'}
+cat(list_report.texts[[8]])
+```
+
+```{r llms_cannot.list, results='asis'}
+cat(list_report.texts[[9]])
+```
+
+```{r dsds, fig.cap = list_plots.caption[[1]], results='asis'}
+```
+
+`r list_report.titles[[5]]`
+
+`r list_report.titles[[6]]`
+
+```{r factor_model, results='asis'}
+cat(list_report.texts[[10]])
+```
+
+`r list_report.titles[[7]]`
+
+```{r attributes, results='asis'}
+cat(list_report.texts[[11]])
+```
+
+```{r attributes.analysis, results='asis'}
+cat(list_report.texts[[12]])
+```
+
+`r list_report.titles[[8]]`
+
+```{r occupations.dumbbell, results='asis'}
+cat(list_report.texts[[13]])
+```
+
+```{r occupations.analysis, results='asis'}
+cat(list_report.texts[[14]])
+```
+
+`r list_report.titles[[9]]`
+
+```{r labor_market.histogram, results='asis'}
+cat(list_report.texts[[15]])
+```
+
+```{r labor_market, results='asis'}
+cat(list_report.texts[[16]])
+```
+
+`r list_report.titles[[10]]`
+
+```{r user_impact, results='asis'}
+cat(list_report.texts[[17]])
+```
+
+`r list_report.titles[[11]]`
+
+```{r finishing_remarks, results='asis'}
+cat(list_report.texts[[18]])
+```

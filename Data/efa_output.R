@@ -2,6 +2,7 @@
 # - Packages ----------------------------------------------------------------
 pkg <- c(
   'tidyverse' #Data wrangling
+  , 'openxlsx' #Export excel
 )
 
 # Activate / install packages
@@ -62,6 +63,9 @@ df_occupations %>%
 # Diagrams and tests
 .show_diagrams <- T
 .show_results <- T
+
+# - Working directory -----------------------------------------------------
+setwd('C:/Users/Cao/Documents/Github/Atlas-Research/Data')
 
 # [DATA] -----------------------------------------------------
 # - Problematic items -----------------------------------------------------
@@ -135,21 +139,21 @@ tibble(
     paste0('factor', seq(1,.int_nfactors))
   , factor.name = 
     c(
-      'discernment'
-      , 'mechanical skills'
-      , 'health science'
-      , 'transportation / vehicle operation / operation'
-      , 'management'
-      , 'social skills'
-      , 'analytical skills'
-      , 'business'
-      , 'dexterity'
-      , 'administrative'
-      , 'building'
-      , 'intelligence'
-      , 'industrial / job hazards'
-      , 'arts & humanities'
-      , 'robustness'
+      'Discernment'
+      , 'Mechanical Skills'
+      , 'Health Science'
+      , 'Transportation'
+      , 'Management'
+      , 'Social Skills'
+      , 'Analytical Skills'
+      , 'Business'
+      , 'Dexterity'
+      , 'Administrative Skills'
+      , 'Building'
+      , 'Intelligence'
+      , 'Industrial'
+      , 'Arts & Humanities'
+      , 'Robustness'
     )
 ) -> df_factor.names
 
@@ -208,3 +212,85 @@ list(
         , everything()
       )
   ) -> list_questionnaires
+
+# [EXPORT] ----------------------------------------------------------------
+# - Export EFA model (RDS) ------------------------------------------------
+write_rds(
+  list_efa.equamax.15$
+    EFA.workflow$
+    EFA$
+    EFA.15factors$
+    model
+  , file = 
+    paste0(
+      paste0(c(
+        'efa_model'
+        , .chr_rotation
+        , .int_nfactors
+        , 'factors'
+      ) , collapse = '_'
+      )
+      , '.rds'
+    )
+)
+
+# - Export Questionnaires (XLSX) -----------------------------------------
+write.xlsx(
+  df_loadings.factors
+  , paste0(
+    paste0(c(
+      'df_factors'
+      , .chr_rotation
+      , .int_nfactors
+      , 'factors'
+    ) , collapse = '_'
+    ), '.xlsx'
+  )
+) 
+
+map2(
+  .x = list_questionnaires
+  , .y = names(list_questionnaires)
+  , ~ 
+    write.xlsx(
+      .x
+      , paste0(
+        paste0(c(
+          'df_questionnaire'
+          , .y
+          , .chr_rotation
+          , .int_nfactors
+          , 'factors'
+        ) , collapse = '_'
+        ), '.xlsx'
+      )
+    )
+)
+
+# - Export Questionnaire Data Frames (XLSX) --------------------------------
+map2(
+  .x = list_questionnaires
+  , .y = names(list_questionnaires)
+  , ~ 
+    df_occupations %>%
+    select(
+      !ends_with('.l')
+      , .x$item
+    ) %>% 
+    mutate(across(
+      .cols = .x$item
+      ,.fns = ~ 100 * .x
+    )) %>% 
+    write_csv(
+      paste0(
+        paste0(c(
+          'df'
+          , .y
+          , .chr_rotation
+          , .int_nfactors
+          , 'factors'
+        ) , collapse = '_'
+        ), '.csv'
+      )
+    )
+)
