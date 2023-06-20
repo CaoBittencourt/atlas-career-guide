@@ -225,26 +225,6 @@ fun_r2.weighted <- function(
   
 }
 
-
-attr(list_employability.nnls$model.fit, 'term.labels')
-terms(list_employability.nnls)
-
-length(coefficients(list_employability.nnls$model.fit))
-
-summary(list_employability.nnls$model.fit)
-
-formula(list_employability.nnls$model.fit) %>% 
-  as.character() %>% 
-  str_count('\\*')
-
-terms(list_employability.nnls$model.fit)
-
-list_employability.nnls$model.fit$m$getPars()
-
-fitted(list_employability.nnls$model.fit)
-residuals(list_employability.nnls$model.fit)
-
-
 # ROOT MEAN SQUARED ERROR ----------------------------------------------------------------------
 fun_rmse <- function(
     .dbl_observations

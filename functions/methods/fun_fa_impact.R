@@ -14,7 +14,7 @@ lapply(pkg, function(x)
 #   {citation(package = x)})
 
 # [FUNCTION] ----------------------------------------------
-# EFA-based exogenous impact analysis ------------------------------------
+# - Factor-Analytic Comparative Statics ------------------------------------
 fun_efa.impact <- function(
 
   # Data

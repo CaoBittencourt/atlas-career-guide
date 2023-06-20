@@ -172,7 +172,7 @@ $$
 \Pr(j \approx k \ | \ \vb{a_j},\vb{a_k}) = \mathrm{I(\vb{a_j},\vb{a_k})} = S(\vb{a_j},\vb{a_k})S(\vb{a_j},\vb{a_k}) + [1-S(\vb{a_j},\vb{a_k})]S(\vb{a_j},\vb{a_k})^{{\left[ \frac{1}{S(\vb{a_j},\vb{a_k})} \right]} ^{\left[ \frac{1}{S(\vb{a_j},\vb{a_k})} \right]}}
 $$
 
-In this example, the "severity" of the adjustment is entirely proportional to the similarity between occupations, and does not depend on arbitrarily set parameters. Additionaly, the more similarity approaches 1, the more interchangeability becomes linear.
+In this example, the "severity" of the adjustment is entirely proportional to the similarity between occupations, and does not depend on arbitrarily set parameters. Additionally, the more similarity approaches 1, the more interchangeability becomes linear.
 
 This said, an intermediate metric could be of greater use:
 

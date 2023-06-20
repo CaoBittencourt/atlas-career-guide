@@ -23,20 +23,20 @@ if(!tinytex::is_tinytex()){
 
 # - Functions ---------------------------------------------------------------
 # KNN matching
-source('C:/Users/Cao/Documents/Github/Atlas-Research/Functions/KNN_Matching.R')
+source('C:/Users/Cao/Documents/Github/atlas-research/functions/methods/fun_knn.R')
 # Employability
-source('C:/Users/Cao/Documents/Github/Atlas-Research/Functions/fun_employability.R')
+source('C:/Users/Cao/Documents/Github/atlas-research/functions/metrics/fun_employability.R')
 # Automated plotting
-source('C:/Users/Cao/Documents/Github/Atlas-Research/Functions/Auto_plots.R')
+source('C:/Users/Cao/Documents/Github/Atlas-Research/functions/methods/fun_plots.R')
 # Regressions
-source('C:/Users/Cao/Documents/Github/Atlas-Research/Functions/fun_regressions.R')
+source('C:/Users/Cao/Documents/Github/Atlas-Research/functions/methods/fun_regressions.R')
 # # Factor scores
 # source('C:/Users/Cao/Documents/Github/Atlas-Research/Functions/Factor_Scores.R')
 
 # - Data --------------------------------------------------------------------
 # Occupations data frame
 read_csv(
-  'C:/Users/Cao/Documents/Github/Atlas-Research/Data/df_atlas.complete_equamax_15_factors.csv'
+  'C:/Users/Cao/Documents/Github/atlas-research/data/df_atlas.complete_equamax_15_factors.csv'
 ) -> df_occupations
 
 # User input data frame
@@ -75,6 +75,99 @@ df_occupations$
 .dbl_scale.ub <- 100
 
 # [RESULTS] --------------------------------------------------------
+# - Estimate similarity ---------------------------------------------------
+df_occupations %>% 
+  slice_sample(n = 1) %>% 
+  select(
+    occupation
+    , ends_with('.l')
+  ) -> df_sample
+
+df_input -> df_sample
+
+df_occupations %>% 
+  filter(str_detect(
+    str_to_lower(
+      occupation
+    ), 'hosp'
+  )
+  | occupation == 
+    df_sample$
+    occupation
+  ) %>% 
+  select(
+    ends_with('.l')
+  ) -> lalala
+
+alpha = a / sum(a)
+alpha = alpha / average(a)
+
+alpha = a / average(a)
+alpha = alpha / sum(a)
+
+tibble(
+  a = c(0.5,0.5)
+  , d = c(50,0)
+) %>% 
+  reframe(
+    d = sum(d * a)
+    # , s = 1 - d / 200
+    , s = 200 * prod(exp(-a*d))
+  )
+
+tibble(
+  # a = c(0.00941466,0.005740528)
+  a = c(0.5,0.5)
+  , d = c(83, 50)
+) %>%
+  mutate(
+    s = exp(-a*d)
+  ) %>% 
+  reframe(
+    s = round(prod(s), 4)
+  )
+ 
+as_tibble(lalala / rowSums(lalala)) %>% view
+  
+  
+plot(function(x){100 ^ ((x - 1)/x)})
+plot(function(x){(100 ^ (1 - 1/x))/100})
+
+fun_knn.alpha(
+  .df_data = 
+    df_occupations %>% 
+    select(names(
+      df_sample
+    ))
+  , .df_query = df_sample
+  , .dbl_scale.ub = 100
+  , .lgc_sort = T
+) %>% 
+  select(
+    occupation
+    , distance
+    , similarity
+  ) %>% 
+  rename(
+    s = similarity
+    , d = distance
+  ) %>% 
+  mutate(
+    s2 = 
+      s * s +
+      (1 - s) *
+      s ^ Inf
+    # s^(1/s^2)
+    # exp(-s^2)
+    # 1 / exp(-(1/s)*(s-(1/s)))
+  ) %>%
+  arrange(d) %>%
+  select(
+    occupation
+    , d, s, s2
+  ) %>%
+  print(n = 25)
+
 # - Estimate occupations's employability ---------------------------------------------------------------
 fun_employability.workflow.m(
   .df_data = 
@@ -184,7 +277,7 @@ df_employability %>%
   ) + 
   xlim(0,1) +
   ylim(0,1) 
-  
+
 
 
 list_employability.nnls$
