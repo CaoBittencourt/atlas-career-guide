@@ -126,12 +126,249 @@ tibble(
   reframe(
     s = round(prod(s), 4)
   )
- 
+
 as_tibble(lalala / rowSums(lalala)) %>% view
-  
-  
+
+
 plot(function(x){100 ^ ((x - 1)/x)})
 plot(function(x){(100 ^ (1 - 1/x))/100})
+
+
+df_occupations %>% 
+  slice_sample(n=1) -> 
+  df_sample
+
+df_input[-1] -> a_u
+
+df_sample %>% 
+  select(
+    ends_with('.l')
+  ) -> a_u
+
+t(a_u)
+
+df_occupations %>% 
+  select(names(a_u)) %>% 
+  t() -> mtx_A
+
+df_occupations$
+  occupation -> colnames(mtx_A)
+
+as_tibble(mtx_A) %>% 
+  mutate(
+    .before = 1
+    , user = 
+      a_u %>% 
+      t() %>%
+      as.numeric()
+  ) -> lalala
+
+make.names(names(
+  lalala
+)) -> names(lalala)
+
+
+lm(
+  formula =
+    user ~ 0 + .
+  , data =
+    lalala[c(1,2)]
+)
+
+map_df(
+  .x = lalala[-1]
+  , ~ 
+    bvls::bvls(
+      as.matrix(.x)
+      , lalala$user
+      , bl = 0
+      , bu = 1
+    )[[1]]
+) %>% 
+  pivot_longer(
+    cols = everything()
+    , names_to = 'occupation'
+    , values_to = 'similarity.bvls'
+  ) -> dsds
+
+# map_df(
+#   .x = 2:874
+#   , ~
+#     nls(
+#       paste0(
+#         'user ~'
+#         , 'b*'
+#         , names(lalala)[.x]
+#       ) %>% as.formula()
+#       , data = lalala[c(1,.x)]
+#       , algorithm = 'port'
+#       , lower = 0
+#       , upper = 1
+#     ) %>% coefficients()
+# ) %>%
+#   pivot_longer(
+#     cols = everything()
+#     , names_to = 'occupation'
+#     , values_to = 'similarity.bvls'
+#   ) -> dsds
+# 
+# dsds$occupation <- df_occupations$occupation
+
+map_df(
+  .x = lalala[-1]
+  , ~ 
+    (weights::wtd.cors(
+      lalala[1]
+      , .x
+      , weight =
+        .x
+    ) + 1) / 2
+) %>% 
+  pivot_longer(
+    cols = everything()
+    , names_to = 'occupation'
+    , values_to = 'similarity.bvls'
+  ) -> dsds
+
+dsds %>% 
+  arrange(desc(
+    similarity.bvls
+  ))
+
+lm(
+  formula =  V1 ~ 0 + .
+  , data =
+    as_tibble(diag(20))
+) %>%
+  coefficients()
+
+c(
+  rep(50,15)
+  , runif(5, min = 50, max = 100)
+) -> dsds
+
+sample(dsds, size = length(dsds)) -> lalala
+
+rep(25,20) > dsds
+fun_knn.alpha(
+  .df_data = 
+    as_tibble(t(dsds))
+  , .df_query = 
+    as_tibble(
+      rbind(
+        t(rep(25,20))
+        , t(rep(100,20))
+      ))
+) %>% 
+  select(similarity)
+
+lm(
+  formula =  V1 ~ 0 + .
+  , data =
+    as_tibble(cbind(
+      rep(25,20)
+      , dsds
+    ))
+  , weights = dsds
+) %>%
+  coefficients()
+
+# no
+# lm(
+#   formula =  V1 ~ 0 + .
+#   , data =
+#     as_tibble(cbind(
+#       rep(25,20) / (25 * 20)
+#       , dsds / sum(dsds)
+#     ))
+#   , weights = dsds
+# ) %>%
+#   coefficients()
+
+dsds %>%
+  mutate(
+    similarity.pearson = 
+      as.numeric(
+        weights::wtd.cors(
+          x = lalala[1]
+          , y = lalala[-1]
+        ))
+    , similarity.pearson = 
+      (1 + similarity.pearson) / 2
+  ) %>% 
+  arrange(desc(
+    similarity.pearson
+  )) -> dsds
+
+dsds %>% 
+  filter(str_detect(
+    str_to_lower(
+      occupation
+    ), 'hosp|physician'
+  ))
+
+dsds %>%
+  slice(-1) %>% 
+  pivot_longer(
+    cols = -1
+    , names_to = 'name'
+    , values_to = 'value'
+  ) %>% 
+  fun_plot.density(aes(
+    x = value
+    , fill = name
+  )
+  , .list_axis.x.args = 
+    list(
+      limits = c(0,1)
+      , breaks = seq(0,1,length.out = 7)
+    )
+  )
+
+
+(cor(
+  lalala[1]
+  , lalala[2]
+) + 1) / 2 
+
+dsds %>% 
+  arrange(desc(
+    similarity.bvls
+  )) %>% 
+  filter(
+    similarity.bvls == 1
+  )
+
+bvls::bvls(
+  as.matrix(lalala[777])
+  , lalala$user
+  , bl = 0
+  , bu = 1
+) -> dsds
+
+
+
+nls(
+  formula = 
+    as.formula(
+      paste(
+        names(dsds)[1]
+        , '~'
+        , paste0(
+          'b'
+          ,1:20
+          ,'*'
+          ,names(dsds)[-1]
+          , collapse = '+'
+        )
+      )
+    )
+  , data = dsds
+  , algorithm = 'port'
+  , lower = rep(0,49)
+  , upper = rep(1,49)
+) -> dsdsds
+
 
 fun_knn.alpha(
   .df_data = 

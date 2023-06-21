@@ -851,7 +851,8 @@ fun_colors <- function(
       values = .chr_manual.pal
       # , limits = .chr_manual.lim
       , aesthetics = .chr_manual.aes
-      , na.translate = F
+      # , na.translate = F
+      , drop = F
     ) -> plt_scale
     
   } else {
@@ -2192,7 +2193,7 @@ fun_plot.line <- function(
 
 # # BAR CHART FUNCTION --------------------------------------------
 # fun_plot.bar <- function(
-#     
+    #     
 #   # Data
 #   .df_data
 #   , .aes_mapping
@@ -2587,20 +2588,20 @@ fun_plot.line <- function(
 
 # BAR CHART FUNCTION --------------------------------------------
 fun_plot.bar <- function(
-
+    
   # Data
   .df_data
   , .aes_mapping
-
+  
   # Reorder
   , .reorder_fct = T
   , .reorder_desc = F
   , .reorder_fun = sum
-
+  
   # Labels
   , .list_labs = list()
   , .geom_label = F
-
+  
   # Default parameters
   , .list_geom.param = list(
     position = c('dodge', 'stack', 'fill', 'identity')
@@ -2613,12 +2614,12 @@ fun_plot.bar <- function(
     , vjust = -1.15
     , hjust = -0.15
   )
-
+  
   # Facets
   , .sym_facets = NULL
   , .int_facets = NULL
   , .chr_scales = 'fixed'
-
+  
   # Colors
   , .scale_colors = list(
     viridis::scale_color_viridis(discrete = T, na.translate = F)
@@ -2626,10 +2627,10 @@ fun_plot.bar <- function(
   )
   , .chr_manual.pal = NULL
   , .chr_manual.aes = 'fill'
-
+  
   # Legend
   , .list_legend = list()
-
+  
   # Axes
   , .fun_axis.x = scale_x_discrete
   , .fun_axis.y = scale_y_continuous
@@ -2639,41 +2640,41 @@ fun_plot.bar <- function(
   )
   , .fun_format.x = function(x){str_wrap(x,10)}
   , .fun_format.y = label_number(accuracy = .01)
-
+  
   # Coordinates
   , .dbl_limits.y = NULL
   , .coord_flip = F
   , .coord_polar = F
-
+  
   # Labels for polar coordinates
   , .fun_polar.labels = function(x){number(x, accuracy = .01)}
-
+  
   # Theme
   , .theme = ggridges::theme_ridges(font_size = 12, center_axis_labels = T)
-
+  
 ){
-
+  
   # Errors
   # Data frame
   if(!is.data.frame(.df_data)){
-
+    
     stop("'.df_data' must be a data frame.")
-
+    
   }
-
-
+  
+  
   # Quo vars
   enquo(.sym_facets) -> enq_facets
-
-
+  
+  
   # Aes Mapping
   fun_aes.map(
     .aes_mapping
     , .chr_required_aes = c('x','y')
   ) -> aes_mapping
-
+  
   if(.coord_polar){
-
+    
     # Keep only unique rows
     .df_data %>%
       unique() %>%
@@ -2690,7 +2691,7 @@ fun_plot.bar <- function(
     int_NA <- ifelse(int_NA %% 2, int_NA, int_NA + 1)
     mtx_NA <- matrix(NA, int_NA, ncol(.df_data))
     colnames(mtx_NA) <- colnames(.df_data)
-
+    
     mtx_NA %>%
       rbind(.df_data) %>%
       mutate(
@@ -2703,28 +2704,28 @@ fun_plot.bar <- function(
         , angle = ifelse(angle < -90, angle + 180, angle)
         , n = factor(n)
       ) -> .df_data
-
+    
     aes_mapping$x <- sym('n')
-
+    
     # aes_mapping$hjust <- sym('hjust')
     #
     # aes_mapping$angle <- sym('angle')
-
+    
     # Reorder = false
     .reorder_fct <- F
-
+    
   }
-
+  
   # Facets
   fun_facets(
     .enq_facets = enq_facets
     , .int_facets = .int_facets
     , .chr_scales = .chr_scales
   ) -> plt_facets
-
+  
   # Reordering
   if(.reorder_fct){
-
+    
     fun_reorder(
       .df_data = .df_data
       , .enq_var.fct = aes_mapping$x
@@ -2732,11 +2733,11 @@ fun_plot.bar <- function(
       , .fun_ord = .reorder_fun
       , .desc = .reorder_desc
     ) -> .df_data
-
+    
   }
-
+  
   if(.reorder_fct & length(plt_facets)){
-
+    
     fun_reorder(
       .df_data = .df_data
       , .enq_var.fct = enq_facets
@@ -2744,9 +2745,9 @@ fun_plot.bar <- function(
       , .fun_ord = .reorder_fun
       , .desc = .reorder_desc
     ) -> .df_data
-
+    
   }
-
+  
   # Color mapping
   fun_colors(
     .scale_color = .scale_colors
@@ -2754,43 +2755,43 @@ fun_plot.bar <- function(
     , .chr_manual.aes = .chr_manual.aes
     # , .chr_manual.lim = .chr_manual.lim
   ) -> plt_colors
-
+  
   # Axes format
   fun_axis.format(
     .fun_axis = .fun_axis.x
     , .list_axis.args = .list_axis.x.args
     , .fun_format = .fun_format.x
   ) -> plt_axis.x
-
+  
   fun_axis.format(
     .fun_axis = .fun_axis.y
     , .list_axis.args = .list_axis.y.args
     , .fun_format = .fun_format.y
   ) -> plt_axis.y
-
+  
   # Coordinates
   fun_coordinates(
     .dbl_limits.y = .dbl_limits.y
     , .coord_flip = .coord_flip
     , .coord_polar = F
   ) -> plt_coord
-
+  
   # Theme
   fun_theme(.theme) -> plt_theme
-
+  
   # Legend
   fun_legends(.list_legend) -> plt_legend
-
+  
   # Labs
   fun_labs(.list_labs) -> plt_labs
-
+  
   # Label position
   if(!length(.list_labels.param$position)){
     # Unless specified, use geom position as label position
     .list_labels.param$position <- .list_geom.param$position
-
+    
   }
-
+  
   # Labels
   fun_labels(
     .list_default = .list_labels.param
@@ -2800,10 +2801,10 @@ fun_plot.bar <- function(
     , .coord_polar = .coord_polar
     , .df_data = .df_data
   ) -> plt_labels
-
+  
   # return(list(plt_labels, .df_data))
   # stop()
-
+  
   # Bar chart
   # geom_col with default parameters
   fun_geom.params(
@@ -2811,9 +2812,9 @@ fun_plot.bar <- function(
     , .list_default = .list_geom.param
     , .aes_mapping = aes_mapping
   ) -> plt_geom
-
+  
   if(!.coord_polar){
-
+    
     # ggplot
     .df_data %>%
       # Plot
@@ -2832,42 +2833,42 @@ fun_plot.bar <- function(
       plt_legend +
       # Labels
       plt_labs -> plt_bar
-
+    
   } else {
-
+    
     # Y axis
     if(
       length(.list_axis.y.args$breaks) &
       is.numeric(.list_axis.y.args$breaks)
     ){
-
+      
       seq_breaks <- .list_axis.y.args$breaks
-
+      
     } else if(length(.dbl_limits.y)){
-
+      
       seq_breaks <- .dbl_limits.y
-
+      
     } else {
-
+      
       .df_data %>%
         pull(!!aes_mapping$y) -> dbl_y
-
+      
       seq(
         min(dbl_y, na.rm = T)
         , max(dbl_y, na.rm = T)
         , length.out = 5
       ) -> seq_breaks
-
+      
     }
-
+    
     sort(seq_breaks) -> seq_breaks
-
+    
     # Axis labels
     do.call(
       .fun_format.y
       , list(seq_breaks)
     ) -> chr_labels
-
+    
     # Circular bar plot
     .df_data %>%
       # ggplot
@@ -2910,7 +2911,7 @@ fun_plot.bar <- function(
       # y axis
       Map(
         function(y, y.label){
-
+          
           annotate(
             # x = as.character(round(int_NA / 2))
             x = as.character(ceiling(int_NA / 2))
@@ -2921,7 +2922,7 @@ fun_plot.bar <- function(
             , fontface = 'bold'
             , size = 3
           )
-
+          
         }
         , y = seq_breaks
         , y.label = chr_labels
@@ -2944,7 +2945,7 @@ fun_plot.bar <- function(
         , fontface = 'bold'
         , size = 4
       ) -> plt_bar
-
+    
     plt_bar$layers <- c(
       geom_hline(
         yintercept = seq_breaks[-1]
@@ -2955,7 +2956,7 @@ fun_plot.bar <- function(
       )
       , plt_bar$layers
     )
-
+    
     plt_bar$layers <- c(
       geom_hline(
         # yintercept = seq_breaks[length(seq_breaks)]
@@ -2966,13 +2967,13 @@ fun_plot.bar <- function(
       )
       , plt_bar$layers
     )
-
+    
   }
-
-
+  
+  
   # Output
   return(plt_bar)
-
+  
 }
 
 # # BAR CHART FUNCTION --------------------------------------------
@@ -3457,7 +3458,16 @@ fun_plot.lollipop <- function(
   , .coord_polar = F
   
   # Theme
-  , .theme = ggridges::theme_ridges(font_size = 12, center_axis_labels = T)
+  , .theme = 
+    ggridges::theme_ridges(
+      center_axis_labels = T
+      , font_size = 12
+    ) + 
+    theme(
+      axis.text.y = element_text(vjust = 0.5)
+      , legend.position = 'bottom'
+      , legend.direction = 'horizontal'
+    )
   
 ){
   
@@ -4248,6 +4258,230 @@ fun_plot.dumbbell2 <- function(
   
   # Output
   return(plt_dumbbell)
+  
+}
+
+# - Ridge plot function ---------------------------------------------------
+fun_plot.ridges <- function(
+    
+  # Data
+  .df_data
+  , .aes_mapping
+  
+  # Reorder
+  , .reorder_fct = T
+  , .reorder_desc = F
+  , .reorder_fun = median
+  
+  # Labels
+  , .list_labs = list(y = NULL)
+  , .geom_label = F
+  
+  # Default parameters
+  , .list_geom.param = list(
+    position = 'identity'
+    , fill = '#3854FB'
+    , color = '#212121'
+    , size = 1.25
+    , alpha = 0.8
+  )
+  
+  # Facets
+  , .sym_facets = NULL
+  , .int_facets = NULL
+  , .chr_scales = 'fixed'
+  
+  # Colors
+  , .scale_colors = list(
+    viridis::scale_color_viridis(discrete = T, na.translate = F)
+    , viridis::scale_fill_viridis(discrete = T, na.translate = F)
+  )
+  , .chr_manual.pal = NULL
+  , .chr_manual.aes = 'fill'
+  # , .chr_manual.lim = NULL
+  
+  # Legend
+  , .list_legend = list(fill = 'none')
+  
+  # Axes
+  , .fun_axis.x = scale_x_continuous
+  , .fun_axis.y = scale_y_discrete
+  , .list_axis.x.args = list(
+    breaks = breaks_extended(5)
+  )
+  , .list_axis.y.args = list(
+    expand = c(0.01,0)
+  )
+  , .fun_format.x = label_number(accuracy = .01)
+  , .fun_format.y = function(y){str_wrap(y,10)}
+  
+  # Coordinates
+  , .dbl_limits.x = NULL
+  , .coord_flip = F
+  , .coord_polar = F
+  
+  # Theme
+  , .theme = 
+    ggridges::theme_ridges(
+      center_axis_labels = T
+      , font_size = 12
+    ) + 
+    theme(
+      axis.text.y = element_text(vjust = 0.5)
+      , legend.position = 'bottom'
+      , legend.direction = 'horizontal'
+    )
+  
+){
+  
+  # Arguments validation
+  stopifnot(
+    "'.df_data' must be a data frame." = 
+      is.data.frame(.df_data)
+  )
+  
+  # Quo vars
+  enquo(.sym_facets) -> enq_facets
+  
+  # Aes mapping
+  fun_aes.map(
+    .aes_mapping
+    , .chr_required_aes = c('x', 'y')
+  ) -> aes_mapping
+  
+  # Facets
+  fun_facets(
+    .enq_facets = enq_facets
+    , .int_facets = .int_facets
+    , .chr_scales = .chr_scales
+  ) -> plt_facets
+  
+  # Reordering
+  if(.reorder_fct){
+    
+    fun_reorder(
+      .df_data = .df_data
+      , .enq_var.fct = aes_mapping$y
+      , .enq_var.dbl = aes_mapping$x
+      , .fun_ord = .reorder_fun
+      , .desc = .reorder_desc
+    ) -> .df_data
+    
+  }
+  
+  if(all(
+    .reorder_fct
+    , length(plt_facets)
+  )){
+    
+    if(.reorder_desc){
+      
+      .df_data %>% 
+        arrange(desc(!!aes_mapping$y)) %>%
+        pull(!!enq_facets) %>%
+        unique() -> chr_order
+      
+    } else { 
+      
+      .df_data %>% 
+        arrange(!!aes_mapping$y) %>%
+        pull(!!enq_facets) %>%
+        unique() -> chr_order
+      
+    }
+    
+    .df_data %>% 
+      mutate(
+        !!enq_facets :=
+          factor(
+            !!enq_facets
+            , levels = chr_order
+          )
+      ) -> .df_data
+    
+  }
+  
+  # Color mapping
+  fun_colors(
+    .scale_color = .scale_colors
+    , .chr_manual.pal = .chr_manual.pal
+    , .chr_manual.aes = .chr_manual.aes
+    # , .chr_manual.lim = .chr_manual.lim
+  ) -> plt_colors
+  
+  # Axes format
+  fun_axis.format(
+    .fun_axis = .fun_axis.x
+    , .list_axis.args = .list_axis.x.args
+    , .fun_format = .fun_format.x
+  ) -> plt_axis.x
+  
+  fun_axis.format(
+    .fun_axis = .fun_axis.y
+    , .list_axis.args = .list_axis.y.args
+    , .fun_format = .fun_format.y
+  ) -> plt_axis.y
+  
+  # Coordinates
+  fun_coordinates(
+    .dbl_limits.x = .dbl_limits.x
+    , .coord_flip = .coord_flip
+    , .coord_polar = .coord_polar
+  ) -> plt_coord
+  
+  # Theme
+  fun_theme(.theme) -> plt_theme
+  
+  # Legend
+  fun_legends(.list_legend) -> plt_legend
+  
+  # Labs
+  fun_labs(.list_labs) -> plt_labs
+  
+  # Label position
+  # if(!length(.list_labels.param$position)){
+  #   # Unless specified, use geom position as label position
+  #   .list_labels.param$position <- .list_geom.param$position
+  #   
+  # }
+  # 
+  # # Labels
+  # fun_labels(
+  #   .list_default = .list_labels.param
+  #   , .aes_mapping = aes_mapping
+  #   , .coord_flip = .coord_flip
+  #   , .geom_label = .geom_label
+  # ) -> plt_labels
+  
+  # Ridges chart
+  # geom_density_ridges with default parameters
+  fun_geom.params(
+    .fun_geom = geom_density_ridges
+    , .list_default = .list_geom.param
+    , .aes_mapping = aes_mapping
+  ) -> plt_geom
+  
+  # ggplot
+  .df_data %>%
+    # Plot
+    ggplot() +
+    plt_geom +
+    # plt_labels +
+    plt_facets +
+    # Colors
+    plt_colors +
+    # Axes
+    plt_axis.x +
+    plt_axis.y +
+    plt_coord +
+    # Theme
+    plt_theme +
+    plt_legend +
+    # Labels
+    plt_labs -> plt_ridges
+  
+  # Output
+  return(plt_ridges)
   
 }
 
