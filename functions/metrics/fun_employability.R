@@ -46,8 +46,8 @@ fun_interchangeability <- function(.dbl_similarity){
   # dbl_interchangeability <- s * s + (1 - s) * s ^ ((1/s)^4)
   
   # Coefficient 6
-  # dbl_interchangeability <- s ^ ((1/s)^(1/s))
-  dbl_interchangeability <- s ^ ((1/s)^(4*(1/s)))
+  dbl_interchangeability <- s ^ ((1/s)^(1/s))
+  # dbl_interchangeability <- s ^ ((1/s)^(4*(1/s)))
   
   # Output
   return(dbl_interchangeability)

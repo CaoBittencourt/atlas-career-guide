@@ -3990,7 +3990,16 @@ fun_plot.dumbbell2 <- function(
   , .coord_polar = F
   
   # Theme
-  , .theme = ggridges::theme_ridges(font_size = 12, center_axis_labels = T)
+  , .theme = 
+    ggridges::theme_ridges(
+      center_axis_labels = T
+      , font_size = 12
+    ) + 
+    theme(
+      axis.text.y = element_text(vjust = 0.5)
+      , legend.position = 'bottom'
+      , legend.direction = 'horizontal'
+    )
   
 ){
   
@@ -4043,6 +4052,9 @@ fun_plot.dumbbell2 <- function(
       ) -> chr_order
     
     if(!.reorder_desc){
+      
+      # Correct this code
+      # Order = max with min diff to max diff
       
       chr_order %>%
         arrange(desc(!!aes_mapping$x)) %>%
@@ -4282,7 +4294,7 @@ fun_plot.ridges <- function(
     position = 'identity'
     , fill = '#3854FB'
     , color = '#212121'
-    , size = 1.25
+    , size = 1.1
     , alpha = 0.8
   )
   
