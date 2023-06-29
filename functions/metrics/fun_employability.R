@@ -17,14 +17,275 @@ lapply(pkg, function(x)
 
 
 # [FUNCTIONS] -------------------------------------------------------------
+# # - Education -------------------------------------------------------------
+# fun_education <- function(
+    #     
+#   .dbl_years_education
+#   , .dbl_years_education_min
+#   
+# ){
+#   
+#   # Arguments validation
+#   stopifnot(
+#     "'.dbl_years_education' must be numeric." = 
+#       is.numeric(.dbl_years_education)
+#   )
+#   
+#   stopifnot(
+#     "'.dbl_years_education_min' must be numeric." = 
+#       is.numeric(.dbl_years_education_min)
+#   )
+#   
+#   # Coerce arguments
+#   .dbl_years_education[[1]] -> 
+#     .dbl_years_education
+#   
+#   # Apply education similarity function
+#   # Coefficient 1
+#   .dbl_years_education >=
+#     .dbl_years_education_min -> 
+#     dbl_education
+#   
+#   as.numeric(dbl_education) -> 
+#     dbl_education
+#   
+#   # # Coefficient 2
+#   # .dbl_years_education /
+#   #   .dbl_years_education_min ->
+#   #   dbl_education
+#   # 
+#   # pmin(dbl_education, 1) -> 
+#   #   dbl_education
+#   
+#   # Output
+#   return(dbl_education)
+#   
+# }
+# 
+# df_occupations %>% 
+#   mutate(
+#     education_viable = 
+#       fun_education(
+#         .dbl_years_education = 21
+#         , education_years
+#       )
+#   ) %>% 
+#   filter(education_viable == 1) %>% 
+#   filter(str_detect(str_to_lower(
+#     occupation
+#   ), 'medicine|pharma|physician|nurse'
+#   ))
+# 
+# source('C:/Users/Cao/Documents/Github/atlas-research/functions/methods/fun_efa.R')
+# install.packages('kselection')
+# library(kselection)
+# 
+# norm(c(210,220) / norm(c(210,220), '2'), '2')
+# 
+# map(
+#   df_occupations
+#   , ~ .x
+# ) -> lalala
+# 
+# lalala[2]
+# 
+# map_df(
+#   df_occupations.t[-1]
+#   , ~ .x / norm(.x, type = '2')
+# ) -> dsds
+# 
+# map_df(
+#   df_occupations.t[-1] / 100
+#   , ~ fun_interchangeability(
+#     .dbl_similarity = .x
+#     , .dbl_scaling = 4
+#   )
+# ) -> dsds
+# 
+# dist(
+#   t(dsds)
+#   # t(df_occupations.t[-1])
+#   , method = 'euclidean'
+# ) -> dsds
+# 
+# wss <- (nrow(as.matrix(dsds))-1)*sum(apply(as.matrix(dsds),2,var))
+# for (i in 2:15) wss[i] <- sum(kmeans(dsds,
+#                                      centers=i)$withinss)
+# plot(1:15, wss, type="b", xlab="Number of Clusters",
+#      ylab="Within groups sum of squares")
+# 
+# 
+# kmeans(
+#   dsds
+#   , centers = 8
+#   , iter.max = 500
+# )$cluster %>%
+#   as_tibble(
+#     rownames = 'occupation'
+#   ) %>%
+#   rename(
+#     kmeans_cluster = value
+#   ) -> df_kmeans
+# 
+# fa(
+#   r = df_occupations.t[-1]
+#   , rotate = 'equamax'
+#   , nfactors = 10
+# ) -> lalala
+# 
+# loadings(lalala)[,] %>% 
+#   as_tibble(
+#     rownames = 'occupation'
+#   ) %>% 
+#   pivot_longer(
+#     cols = -1
+#     , names_to = 'factor'
+#     , values_to = 'factor.score'
+#   ) %>% 
+#   group_by(occupation) %>% 
+#   filter(
+#     factor.score ==
+#       max(factor.score)
+#   ) %>% 
+#   ungroup() -> dsdsds
+# 
+# df_occupations %>% 
+#   filter(str_detect(
+#     str_to_lower(
+#       occupation
+#     ), 'nurse|physician|medicine|hospital|art therapist'
+#   )) %>% view
+# 
+# dsdsds %>% 
+#   full_join(
+#     df_occupations %>%
+#       select(
+#         occupation
+#         , career_cluster
+#       )
+#   ) %>%
+#   relocate(
+#     occupation
+#     , career_cluster
+#   ) %>% view
+#   # filter(str_detect(
+#   #   str_to_lower(
+#   #     occupation
+#   #   ), 'nurse|physician|medicine|hospital|art therapist'
+#   # )) %>% view
+#   filter(
+#     factor == 
+#       nth(unique(
+#         factor
+#       ), 3)
+#   ) %>% view
+# 
+# df_kmeans %>% 
+#   full_join(
+#     df_occupations
+#   ) %>%
+#   select(
+#     occupation
+#     , career_cluster
+#     , kmeans_cluster
+#   ) %>% 
+#   filter(
+#     kmeans_cluster == 1
+#   ) %>% 
+#   view
+# # group_by(kmeans_cluster) %>%
+# # tally()
+# 
+# hclust(dsds) -> lalala
+# 
+# cutree(lalala, h = 4) %>% view
+# cutree(lalala, k = 10) %>% view
+# 
+# plot(lalala)
+# 
+# fun_efa.fa(
+#   .df_data.numeric = 
+#     df_occupations.t[-1] / 100
+#   , .int_nfactors = 5
+#   , .chr_rotation = 'equamax'
+#   , .remove_unacceptable_MSAi.items = F
+#   , .remove_under_loading.items = F
+#   , .remove_cross_loading.items = F
+# ) -> efa_occupations
+# 
+# 
+# 
+# df_occupations %>% 
+#   select(
+#     education_years
+#     , entry_level_education
+#   )
+# 
+
+# # - Interchangeability ----------------------------------------------------
+# fun_interchangeability <- function(.dbl_similarity){
+#   
+#   # Arguments validation
+#   stopifnot(
+#     "'.dbl_similarity' must be numeric." =
+#       is.numeric(.dbl_similarity)
+#   )
+#   
+#   .dbl_similarity -> s
+#   
+#   # Interchangeability coefficients
+#   # Coefficient 1
+#   # dbl_interchangeability <- s
+#   
+#   # Coefficient 2
+#   # dbl_interchangeability <- s ^ 2
+#   # dbl_interchangeability <- s ^ 4
+#   
+#   # Coefficient 3
+#   # dbl_interchangeability <- s * s + (1 - s) * s ^ 2
+#   
+#   # Coefficient 4
+#   # dbl_interchangeability <- s * s + (1 - s) * s ^ ((1/s)^(1/s))
+#   
+#   # Coefficient 5
+#   # dbl_interchangeability <- s * s + (1 - s) * s ^ ((1/s)^4)
+#   
+#   # Coefficient 6
+#   dbl_interchangeability <- s ^ ((1/s)^(1/s))
+#   # dbl_interchangeability <- s ^ ((1/s)^(3*(1/s)))
+#   
+#   # Output
+#   return(dbl_interchangeability)
+#   
+# }
+# 
+# # curve(x^1)
+# # curve(
+# #   fun_interchangeability
+# #   , add = T
+# # )
+
 # - Interchangeability ----------------------------------------------------
-fun_interchangeability <- function(.dbl_similarity){
+fun_interchangeability <- function(
+    # Similarity scores
+  .dbl_similarity
+  # Scaling factor
+  , .dbl_scaling = 1
+){
   
   # Arguments validation
   stopifnot(
     "'.dbl_similarity' must be numeric." =
       is.numeric(.dbl_similarity)
   )
+  
+  stopifnot(
+    "'.dbl_scaling' must be numeric." =
+      is.numeric(.dbl_scaling)
+  )
+  
+  # Data wrangling
+  .dbl_scaling[[1]] -> sigma
   
   .dbl_similarity -> s
   
@@ -33,26 +294,188 @@ fun_interchangeability <- function(.dbl_similarity){
   # dbl_interchangeability <- s
   
   # Coefficient 2
-  # dbl_interchangeability <- s ^ 2
-  # dbl_interchangeability <- s ^ 4
+  # dbl_interchangeability <- s ^ sigma
   
   # Coefficient 3
-  # dbl_interchangeability <- s * s + (1 - s) * s ^ 2
+  # dbl_interchangeability <- s * s + (1 - s) * s ^ sigma
   
   # Coefficient 4
   # dbl_interchangeability <- s * s + (1 - s) * s ^ ((1/s)^(1/s))
   
   # Coefficient 5
-  # dbl_interchangeability <- s * s + (1 - s) * s ^ ((1/s)^4)
+  # dbl_interchangeability <- s * s + (1 - s) * s ^ ((1/s)^sigma)
   
   # Coefficient 6
-  dbl_interchangeability <- s ^ ((1/s)^(1/s))
-  # dbl_interchangeability <- s ^ ((1/s)^(4*(1/s)))
+  # dbl_interchangeability <- s ^ ((1/s)^(1/s))
+  dbl_interchangeability <- s ^ ((1/s)^(sigma*(1/s)))
   
   # Output
   return(dbl_interchangeability)
   
 }
+
+#  - Interchangeability ---------------------------------------------------
+fun_interchangeability <- function(
+    
+  .mtx_similarity
+  , .dbl_scaling = 1
+  , .dbl_years_education = NULL
+  , .dbl_years_education_min = NULL
+  
+){
+  
+  # Argument validation
+  stopifnot(
+    "'.mtx_similarity' must be numeric." =
+      is.numeric(as.matrix(.mtx_similarity))
+  )
+  
+  stopifnot(
+    "'.dbl_scaling' must be numeric." =
+      is.numeric(.dbl_scaling)
+  )
+  
+  stopifnot(
+    "'.dbl_years_education' must be numeric." = 
+      any(
+        is.null(.dbl_years_education)
+        , is.numeric(.dbl_years_education)
+      )
+  )
+  
+  stopifnot(
+    "'.dbl_years_education_min' must be a numeric vector the same length as '.mtx_similarity'." = 
+      any(
+        is.null(.dbl_years_education_min)
+        , is.numeric(.dbl_years_education_min)
+      )
+  )
+  
+  # Data wrangling
+  .dbl_scaling[[1]] -> sigma
+  
+  cbind(.mtx_similarity) -> s
+  
+  # Apply coefficient
+  # Coefficient 1
+  # mtx_interchangeability <- s
+  
+  # Coefficient 2
+  # mtx_interchangeability <- s ^ sigma
+  
+  # Coefficient 3
+  # mtx_interchangeability <- s * s + (1 - s) * s ^ sigma
+  
+  # Coefficient 4
+  # mtx_interchangeability <- s * s + (1 - s) * s ^ ((1/s)^(1/s))
+  
+  # Coefficient 5
+  # mtx_interchangeability <- s * s + (1 - s) * s ^ ((1/s)^sigma)
+  
+  # Coefficient 6
+  # mtx_interchangeability <- s ^ ((1/s)^(1/s))
+  mtx_interchangeability <- s ^ ((1/s)^((sigma/s)))
+  
+  if(all(
+    length(.dbl_years_education_min)
+    , length(.dbl_years_education)
+  )){
+    
+    .dbl_years_education_min[
+      seq(1, nrow(s))
+    ] -> edu_min
+    
+    .dbl_years_education[[1]] / 
+      edu_min -> edu_ratio
+    
+    edu_ratio ^ 
+      ((1/edu_ratio) ^
+         ((edu_min/edu_ratio))) -> mtx_edu
+    
+    pmin(mtx_edu, 1) * 
+      mtx_interchangeability * 
+      mtx_interchangeability -> 
+      mtx_interchangeability
+    
+  }
+  
+  # Rownames and Colnames
+  if(length(rownames(s))){
+    
+    rownames(s) -> 
+      rownames(mtx_interchangeability)
+  }
+  
+  if(length(colnames(s))){
+    
+    colnames(s) -> 
+      colnames(mtx_interchangeability)
+  }
+  
+  # Output
+  return(mtx_interchangeability)
+  
+}
+df_models %>% 
+  full_join(
+    df_occupations
+  ) %>% 
+  mutate(
+    I = 
+      fun_interchangeability(
+        .mtx_similarity = 
+          bvls.wgt
+        , .dbl_scaling = 10
+        , .dbl_years_education = 21
+        , .dbl_years_education_min = 
+          education_years
+      ) %>% as.numeric()
+  ) %>% 
+  select(
+    occupation
+    , I 
+    , bvls.wgt
+    , employment2
+  ) %>% 
+  mutate(
+    jobs = 
+      round(I * employment2)
+  ) %>% 
+  filter(str_detect(
+    str_to_lower(occupation)
+    # , 'hospitalist'
+    # , '^maids'
+    # , '^fallers'
+    # , 'statistician'
+    # , '^statistician'
+    , 'economist'
+  ))
+
+
+plot(
+  fun_interchangeability(
+    seq(0,1,0.01)
+    , .dbl_scaling = 
+      df_occupations %>% 
+      filter(str_detect(
+        str_to_lower(occupation)
+        # , 'hospitalist'
+        # , '^maids'
+        # , '^fallers'
+        # , 'statistician'
+        # , '^statistician'
+        , 'economist'
+      )) %>% 
+      reframe(
+        kflex = fun_kflex(
+          c_across(ends_with('.l'))
+          , .dbl_scale.lb = 0
+          , .dbl_scale.ub = 100
+        )
+      ) %>% 
+      pull()
+  )
+)
 
 # - Employability ---------------------------------------------------------
 fun_employability <- function(
@@ -391,7 +814,7 @@ fun_employability.workflow.m <- function(
 
 # # - Estimate coefficients for a single professional profile -----------
 # fun_employability.workflow <- function(
-#     .df_data
+    #     .df_data
 #     , .df_query
 #     , .int_employment
 #     , .dbl_wages.market = NULL
@@ -518,7 +941,7 @@ fun_employability.workflow.m <- function(
 # 
 # # - Estimate coefficients for multiple professional profiles -----------
 # fun_employability.workflow.m <- function(
-#     .df_data
+    #     .df_data
 #     , .int_employment
 #     , .dbl_wages = NULL
 #     , .dbl_scale.ub = 100

@@ -17,6 +17,9 @@ tryCatch(
 )
 
 # - Packages --------------------------------------------------------------
+source('C:/Users/Cao/Documents/Github/atlas-research/functions/metrics/fun_employability.R')
+source('C:/Users/Cao/Documents/Github/atlas-research/functions/metrics/fun_logistic.R')
+
 pkg <- c('bvls', 'weights', 'fastglm', 'censReg', 'betareg', 'gamlss')
 
 lapply(
@@ -39,14 +42,14 @@ read_csv(
 ) -> df_input
 
 # Maids
-df_occupations %>% 
+df_occupations %>%
   select(
     occupation
     , ends_with('.l')
-  ) %>% 
+  ) %>%
   filter(
     occupation ==
-      'Maids and Housekeeping Cleaners' 
+      'Maids and Housekeeping Cleaners'
   ) -> df_input
 
 # df_occupations %>%
@@ -92,6 +95,23 @@ cbind(
 ) %>% 
   as_tibble() -> 
   df_occupations.t
+
+# - Level of education recode ---------------------------------------------
+df_occupations %>% 
+  mutate(
+    .after = entry_level_education
+    , education_years = recode(
+      entry_level_education
+      , "Bachelor's degree" = 17 + 4
+      , "Postsecondary nondegree award" = 17 + 4 + 2
+      , "High school diploma or equivalent" = 17
+      , "Master's degree" = 17 + 5
+      , "Associate's degree" = 17 + 2
+      , "No formal educational credential" = 14
+      , "Some college, no degree" = 17 + 2
+      , "Doctoral or professional degree" = 17 + 7
+    )
+  ) -> df_occupations
 
 # [CURRENT MODEL] ---------------------------------------------------------
 # - Weighted Knn matching ---------------------------------------------------------------
@@ -205,38 +225,6 @@ df_models %>%
 
 df_models.time$knn.100 <- date_end - date_start
 
-# - Normalized OLS matching -----------------------------------------------------------
-date_start <- Sys.time()
-
-# map_dbl(
-map(
-  .x = df_occupations.t[-1]
-  , ~ 
-    lm.fit(
-      as.matrix(.x)
-      , df_occupations.t[[1]]
-    ) %>% 
-    coef() %>% 
-    pmin(1) %>% 
-    pmax(0)
-  # ) -> df_models$ols
-) -> list_models
-
-date_end <- Sys.time()
-
-df_models.time$ols <- date_end - date_start
-
-list_models %>% 
-  bind_rows(
-    .id = 'occupation'
-  ) %>% 
-  rename(
-    ols = 2
-  ) %>% 
-  full_join(
-    df_models
-  ) -> df_models
-
 # - Normalized Pearson matching ---------------------------------------------------------------
 date_start <- Sys.time()
 
@@ -304,113 +292,42 @@ list_models %>%
     df_models
   ) -> df_models
 
-# - Tobit matching -----------------------------------------------------------
-date_start <- Sys.time()
-
-map_dbl(
-  .x = 2:ncol(df_occupations.t)
-  , ~
-    censReg::censReg(
-      V1 ~ 0 + .
-      , left = dbl_scale.lb
-      , right = dbl_scale.ub
-      , data = df_occupations.t[c(1,.x)]
-    ) %>% 
-    margEff() %>% 
-    as.numeric() %>% 
-    pmin(1) %>% 
-    pmax(0)
-  # ) -> df_models$tobit
-) -> list_models
-
-date_end <- Sys.time()
-
-list_models %>% 
-  set_names(names(
-    df_occupations.t[-1]
-  )) %>%
-  as_tibble(
-    rownames = 'occupation'
-  ) %>% 
-  rename(
-    tobit = 2
-  ) %>% 
-  full_join(
-    df_models
-  ) -> df_models
-
-df_models.time$tobit <- date_end - date_start
-
-# -- Note on Logit and Probit regressions ----------------------------------
-# Generally speaking, logit and probit regression
-# are suited only to binary data (0,1), following a Bernoulli distribution,
-# and, thus, are utilized to estimate the probability
-# of success (1) or failure (0) given certain parameters.
-# This said, these models can also be applied when
-# the dependent variable represents the relative count of
-# successes (i.e. % of 1s in N trials)
-# This is somewhat of a mid-point between Poisson Regression, 
-# Logit Regression, and Tobit Regression: https://www.theanalysisfactor.com/when-to-use-logistic-regression-for-percentages-and-counts/
-# In our career matching problem, then, we could think of 
-# attribute scores as percentages of successful trials,
-# that is: say an individual has 100 of a certain attribute;
-# if we normalize this score as a percentage, dividing by the scale's upper limit,
-# 100 / 100 = 1, then we could think of this normalized score
-# as the ratio of successful trials in tasks related to this attribute.
-# In other words: if this individual performed N tasks
-# related to this attribute, they would be 100% successful.
-# This way, we think of attribute scores as certainty of 
-# success: if somebody has a score of 0%, then that means
-# if they were to try to perform any tasks associated with
-# this attribute, they would be sure to fail every time.
-# Or, say, somebody has a score of 70% in an attribute.
-# We could think of such a score as a track-record of 70%
-# successful trials - whether hypothetical or not doesn't matter,
-# so long as we can reframe this problem in terms of a Bernoulli-distributed variable.
-# Thus, even though logit and probit regressions are suited
-# for binary (Bernoulli) data, by reframing the attribute
-# scores in this way, we could apply these methods to
-# estimate career matching coefficients.
-
-# # - Logistic regression matching -----------------------------------------------------------
+# # - Tobit matching -----------------------------------------------------------
 # date_start <- Sys.time()
 # 
 # map_dbl(
-#   .x = df_occupations.t[-1] / 100
+#   .x = 2:ncol(df_occupations.t)
 #   , ~
-#     fastglm(
-#       as.matrix(.x)
-#       , df_occupations.t[[1]] / 100
-#       , family = binomial(
-#         link = 'logit'
-#       )
-#     ) %>%
-#     coef()
-#   # ) -> df_models$logit
+#     censReg::censReg(
+#       V1 ~ 0 + .
+#       , left = dbl_scale.lb
+#       , right = dbl_scale.ub
+#       , data = df_occupations.t[c(1,.x)]
+#     ) %>% 
+#     margEff() %>%
+#     as.numeric() %>%
+#     pmin(1) %>%
+#     pmax(0)
+#   # ) -> df_models$tobit
 # ) -> list_models
-# 
-# exp(list_models) /
-#   (1 + exp(list_models)) ->
-#   list_models
-# 
-# # exp(df_models$logit) /
-# #   (1 + exp(df_models$logit)) ->
-# #   df_models$logit
 # 
 # date_end <- Sys.time()
 # 
 # list_models %>% 
+#   set_names(names(
+#     df_occupations.t[-1]
+#   )) %>%
 #   as_tibble(
 #     rownames = 'occupation'
 #   ) %>% 
 #   rename(
-#     logit = 2
+#     tobit = 2
 #   ) %>% 
 #   full_join(
 #     df_models
 #   ) -> df_models
 # 
-# df_models.time$logit <- date_end - date_start
+# df_models.time$tobit <- date_end - date_start
 
 # - Logistic regression matching 2 ----------------------------------------
 date_start <- Sys.time()
@@ -424,41 +341,41 @@ list_c(map(
 )) -> int_input.logit
 
 map(
-  .x = df_occupations.t[-1]
-  , ~ 
-    as.matrix(list_c(map(
-      .x = as.integer(.x)
-      , ~ rep(
-        c(1,0)
-        , times = c(.x, 100 - .x)
-      )
-    )))
-) %>% 
   map(
-    ~ 
-      coef(fastglmPure(
-        x = .x
-        , y = int_input.logit
-        , family = binomial(
-          link = 'logit'
+    .x = df_occupations.t[-1]
+    , ~
+      as.matrix(list_c(map(
+        .x = as.integer(.x)
+        , ~ rep(
+          c(1,0)
+          , times = c(.x, 100 - .x)
         )
-      ))
-  ) -> list_models
+      )))
+  )
+  , ~
+    coef(fastglmPure(
+      x = .x
+      , y = int_input.logit
+      , family = binomial(
+        link = 'logit'
+      )
+    ))
+) -> list_models
 
 date_end <- Sys.time()
 
-list_models %>% 
+list_models %>%
   bind_rows(
     .id = 'occupation'
-  ) %>% 
+  ) %>%
   rename(
     logit = 2
-  ) %>% 
+  ) %>%
   mutate(
-    logit = 
+    logit =
       exp(logit) /
       (1 + exp(logit))
-  ) %>% 
+  ) %>%
   full_join(
     df_models
   ) -> df_models
@@ -477,26 +394,26 @@ list_c(map(
 )) -> int_input.probit
 
 map(
-  .x = df_occupations.t[-1]
-  , ~ 
-    as.matrix(list_c(map(
-      .x = as.integer(.x)
-      , ~ rep(
-        c(1,0)
-        , times = c(.x, 100 - .x)
-      )
-    )))
-) %>% 
   map(
-    ~ 
-      coef(fastglmPure(
-        x = .x
-        , y = int_input.probit
-        , family = binomial(
-          link = 'probit'
+    .x = df_occupations.t[-1]
+    , ~ 
+      as.matrix(list_c(map(
+        .x = as.integer(.x)
+        , ~ rep(
+          c(1,0)
+          , times = c(.x, 100 - .x)
         )
-      ))
-  ) -> list_models
+      )))
+  )
+  , ~ 
+    coef(fastglmPure(
+      x = .x
+      , y = int_input.probit
+      , family = binomial(
+        link = 'probit'
+      )
+    ))
+) -> list_models
 
 date_end <- Sys.time()
 
@@ -518,136 +435,7 @@ list_models %>%
 
 df_models.time$probit <- date_end - date_start
 
-# # - Probit regression matching -----------------------------------------------------------
-# date_start <- Sys.time()
-# 
-# map_dbl(
-#   .x = df_occupations.t[-1] / 100
-#   , ~
-#     fastglm(
-#       as.matrix(.x)
-#       , df_occupations.t[[1]] / 100
-#       , family = binomial(
-#         link = 'probit'
-#       )
-#     ) %>%
-#     coef()
-#   # ) -> df_models$probit
-# ) -> list_models
-# 
-# exp(list_models) /
-#   (1 + exp(list_models)) ->
-#   list_models
-# 
-# # exp(df_models$probit) /
-# #   (1 + exp(df_models$probit)) ->
-# #   df_models$probit
-# 
-# date_end <- Sys.time()
-# 
-# list_models %>% 
-#   as_tibble(
-#     rownames = 'occupation'
-#   ) %>% 
-#   rename(
-#     probit = 2
-#   ) %>% 
-#   full_join(
-#     df_models
-#   ) -> df_models
-# 
-# df_models.time$probit <- date_end - date_start
-
-# - Beta regression matching ----------------------------------------------
-date_start <- Sys.time()
-
-map_dbl(
-  .x = 2:ncol(df_occupations.t)
-  , ~
-    gamlss::gamlss(
-      V1 ~ 0 + .
-      , sigma.formula = ~ 0 + .
-      , nu.formula = ~ 0 + .
-      , tau.formula = ~ 0 + .
-      , family = BEINF
-      , data = df_occupations.t[c(1,.x)] / 100
-    ) %>% 
-    coef() %>% 
-    pmin(1) %>% 
-    pmax(0)
-  # ) -> df_models$beta
-) -> list_models
-
-date_end <- Sys.time()
-
-list_models %>% 
-  set_names(names(
-    df_occupations.t[-1]
-  )) %>%
-  as_tibble(
-    rownames = 'occupation'
-  ) %>% 
-  rename(
-    beta = 2
-  ) %>% 
-  full_join(
-    df_models
-  ) -> df_models
-
-df_models.time$beta <- date_end - date_start
-
-# betareg::betareg.fit(
-#   x =
-#     as.matrix((
-#       df_occupations.t[[10]] /
-#         dbl_scale.ub) %>%
-#         pmax(0.0000000001) %>%
-#         pmin(99.9999999999)
-#     )
-#   , y =
-#     (df_occupations.t[[1]] /
-#        dbl_scale.ub) %>%
-#     pmax(0.0000000001) %>%
-#     pmin(99.9999999999)
-#   # , z =
-#     # as.matrix((
-#     #   df_occupations.t[[10]] /
-#     #     dbl_scale.ub) %>%
-#     #     pmax(0.0000000001) %>%
-#     #     pmin(99.9999999999)
-#     # )
-# )
-
-# betareg::betareg(
-#   formula = V1 ~ 0 + .
-#   , data =
-#     df_occupations.t %>%
-#     select(1,10) %>%
-#     mutate(across(
-#       .cols = everything()
-#       ,.fns = ~
-#         pmin(.x, 99.9999999999) %>%
-#         pmax(0.0000000001) / 100
-#     ))
-# ) %>% coef()
-
-# map(
-#   .x = 2:ncol(df_occupations.t)
-#   , ~ 
-#     betareg(
-#       formula = V1 ~ 0 + .
-#       , data =
-#         df_occupations.t[c(1,.x)] %>%
-#         mutate(across(
-#           .cols = everything()
-#           ,.fns = ~ .x %>% 
-#             pmin(99.9999999999) %>%
-#             pmax(0.0000000001) / 100
-#         )
-#         ))
-# ) -> list_models
-
-# # - Beta regression matching 2 ----------------------------------------------
+# # - Beta regression matching ----------------------------------------------
 # date_start <- Sys.time()
 # 
 # map_dbl(
@@ -664,30 +452,45 @@ df_models.time$beta <- date_end - date_start
 #     coef() %>% 
 #     pmin(1) %>% 
 #     pmax(0)
-# ) -> df_models$beta
+#   # ) -> df_models$beta
+# ) -> list_models
 # 
 # date_end <- Sys.time()
+# 
+# list_models %>% 
+#   set_names(names(
+#     df_occupations.t[-1]
+#   )) %>%
+#   as_tibble(
+#     rownames = 'occupation'
+#   ) %>% 
+#   rename(
+#     beta = 2
+#   ) %>% 
+#   full_join(
+#     df_models
+#   ) -> df_models
 # 
 # df_models.time$beta <- date_end - date_start
 # 
 # # betareg::betareg.fit(
-# #   x = 
+# #   x =
 # #     as.matrix((
-# #       df_occupations.t[[10]] / 
-# #         dbl_scale.ub) %>% 
-# #         pmax(0.0000000001) %>% 
+# #       df_occupations.t[[10]] /
+# #         dbl_scale.ub) %>%
+# #         pmax(0.0000000001) %>%
 # #         pmin(99.9999999999)
 # #     )
-# #   , y = 
-# #     (df_occupations.t[[1]] / 
-# #        dbl_scale.ub) %>% 
-# #     pmax(0.0000000001) %>% 
+# #   , y =
+# #     (df_occupations.t[[1]] /
+# #        dbl_scale.ub) %>%
+# #     pmax(0.0000000001) %>%
 # #     pmin(99.9999999999)
-# #   # , z = 
+# #   # , z =
 # #     # as.matrix((
-# #     #   df_occupations.t[[10]] / 
-# #     #     dbl_scale.ub) %>% 
-# #     #     pmax(0.0000000001) %>% 
+# #     #   df_occupations.t[[10]] /
+# #     #     dbl_scale.ub) %>%
+# #     #     pmax(0.0000000001) %>%
 # #     #     pmin(99.9999999999)
 # #     # )
 # # )
@@ -704,54 +507,213 @@ df_models.time$beta <- date_end - date_start
 # #         pmax(0.0000000001) / 100
 # #     ))
 # # ) %>% coef()
+# 
+# # map(
+# #   .x = 2:ncol(df_occupations.t)
+# #   , ~ 
+# #     betareg(
+# #       formula = V1 ~ 0 + .
+# #       , data =
+# #         df_occupations.t[c(1,.x)] %>%
+# #         mutate(across(
+# #           .cols = everything()
+# #           ,.fns = ~ .x %>% 
+# #             pmin(99.9999999999) %>%
+# #             pmax(0.0000000001) / 100
+# #         )
+# #         ))
+# # ) -> list_models
+# 
+# # # - Beta regression matching 2 ----------------------------------------------
+# # date_start <- Sys.time()
+# # 
+# # map_dbl(
+# #   .x = 2:ncol(df_occupations.t)
+# #   , ~
+# #     gamlss::gamlss(
+# #       V1 ~ 0 + .
+# #       , sigma.formula = ~ 0 + .
+# #       , nu.formula = ~ 0 + .
+# #       , tau.formula = ~ 0 + .
+# #       , family = BEINF
+# #       , data = df_occupations.t[c(1,.x)] / 100
+# #     ) %>% 
+# #     coef() %>% 
+# #     pmin(1) %>% 
+# #     pmax(0)
+# # ) -> df_models$beta
+# # 
+# # date_end <- Sys.time()
+# # 
+# # df_models.time$beta <- date_end - date_start
+# # 
+# # # betareg::betareg.fit(
+# # #   x = 
+# # #     as.matrix((
+# # #       df_occupations.t[[10]] / 
+# # #         dbl_scale.ub) %>% 
+# # #         pmax(0.0000000001) %>% 
+# # #         pmin(99.9999999999)
+# # #     )
+# # #   , y = 
+# # #     (df_occupations.t[[1]] / 
+# # #        dbl_scale.ub) %>% 
+# # #     pmax(0.0000000001) %>% 
+# # #     pmin(99.9999999999)
+# # #   # , z = 
+# # #     # as.matrix((
+# # #     #   df_occupations.t[[10]] / 
+# # #     #     dbl_scale.ub) %>% 
+# # #     #     pmax(0.0000000001) %>% 
+# # #     #     pmin(99.9999999999)
+# # #     # )
+# # # )
+# # 
+# # # betareg::betareg(
+# # #   formula = V1 ~ 0 + .
+# # #   , data =
+# # #     df_occupations.t %>%
+# # #     select(1,10) %>%
+# # #     mutate(across(
+# # #       .cols = everything()
+# # #       ,.fns = ~
+# # #         pmin(.x, 99.9999999999) %>%
+# # #         pmax(0.0000000001) / 100
+# # #     ))
+# # # ) %>% coef()
+# 
+# # # - Beta regression matching 3 --------------------------------------------
+# # rstanarm::stan_betareg.fit(
+# #   x = 
+# #     pmax(
+# #       pmin(as.matrix(df_occupations.t[492]) / 100
+# #            , 0.99999)
+# #       , 0.00001
+# #     )
+# #   
+# #   , y = pmax(
+# #     pmin(df_occupations.t[[1]] / 100
+# #          , 0.99999)
+# #     , 0.00001
+# #   )
+# #   # , weights = df_occupations.t[[492]]
+# # )
+# 
+# # # - Bayesian regression matching --------------------------------------------------------------------
+# # install.packages('rstanarm')
+# # library(rstanarm) -
+# #   
+# #   stan_glm(
+# #     V1 ~ 0 + .
+# #     , data = df_occupations.t[c(1,10)]
+# #   ) %>% coef()
+# # 
+# # stan_glm.fit(
+# #   x = as.matrix(df_occupations.t[492])
+# #   , y = df_occupations.t[[1]]
+# #   , weights = df_occupations.t[[492]]
+# # ) -> dsds
+# # 
 
 # [WEIGHTED MODELS] --------------------------------------------------------
 # --
-# - Weighted Normalized ols matching -----------------------------------------------------------
-date_start <- Sys.time()
+# - Weights function ------------------------------------------------------
+# fun_logistic(
+#   .mtx_x = seq(0,1,0.1)
+#   , .dbl_mid.point = 0.5
+#   , .dbl_scaling.factor = 8
+#   , .lgc_logistic.approx = T
+# ) %>% round(4)
+# fun_logistic(
+#   .mtx_x =
+#     as.matrix(
+#       df_occupations.t
+#     )
+#   , .dbl_mid.point = 67
+#   # , .dbl_mid.point = 67
+#   # , .dbl_mid.point = 50
+#   # , .dbl_mid.point = 33
+#   , .dbl_logistic.ub = 1
+#   # , .dbl_scaling.factor = 0.5
+#   , .dbl_scaling.factor = 0.25
+#   # , .dbl_scaling.factor = 0.125
+#   , .dbl_displacement.factor = 1
+#   , .dbl_scale.ub = dbl_scale.ub
+#   , .dbl_scale.lb = dbl_scale.lb
+#   , .lgc_normalize = T
+# ) -> mtx_weights
 
-# map_dbl(
-map(
-  .x = df_occupations.t[-1]
-  , ~ 
-    lm.wfit(
-      as.matrix(.x)
-      , df_occupations.t[[1]]
-      , w = as.numeric(.x)
-    ) %>% 
-    coef() %>% 
-    pmin(1) %>% 
-    pmax(0)
-  # ) -> df_models$ols.wgt
-) -> list_models
+# fun_interchangeability(
+#   as.matrix(
+#     df_occupations.t
+#   ) / dbl_scale.ub
+#   # , .dbl_scaling = 0.125
+#   , .dbl_scaling = 0.25
+# ) -> mtx_weights
 
-date_end <- Sys.time()
+# Variable scaling
+fun_interchangeability(
+  as.matrix(
+    df_occupations.t
+  ) / dbl_scale.ub
+  # , .dbl_scaling = 0.125
+  , .dbl_scaling = 
+    map_dbl(
+      df_occupations.t
+      , ~ 
+        # 2 - .x %>%
+        # 1 - .x %>%
+        # 1 / .x %>%
+        .x %>%
+        fun_kflex(
+          .dbl_scale.lb = 
+            dbl_scale.lb
+          , .dbl_scale.ub = 
+            dbl_scale.ub
+        )
+    )
+) -> mtx_weights
 
-df_models.time$ols.wgt <- date_end - date_start
-
-list_models %>% 
-  bind_rows(
-    .id = 'occupation'
-  ) %>% 
-  rename(
-    ols.wgt = 2
-  ) %>% 
-  full_join(
-    df_models
-  ) -> df_models
+# plot(
+#   fun_logistic(
+#     seq(0,100,1)
+#     , .dbl_mid.point = 67
+#     , .dbl_scaling.factor = 0.25
+#     
+#     , .dbl_displacement.factor = 1
+#     , .dbl_logistic.ub = 1
+#     , .dbl_scale.ub = 1
+#     , .dbl_scale.lb = 0
+#     , .lgc_normalize = T
+#   )
+# )
+# 
+# plot(
+#   fun_interchangeability(
+#     seq(0,1,0.01)
+#     # , .dbl_scaling = 0.125
+#     , .dbl_scaling = 0.25
+#   )
+# )
+# 
+# max(mtx_weights)
+# min(mtx_weights)
+# qplot(mtx_weights)
+# view(round(mtx_weights,4))
 
 # - Weighted Normalized Pearson matching ---------------------------------------------------------------
 date_start <- Sys.time()
 
-map_dbl(
+map2_dbl(
   .x = df_occupations.t[-1]
+  , .y = as_tibble(mtx_weights[,-1])
   , ~
     as.numeric(
       1 +
         weights::wtd.cors(
           df_occupations.t[1]
           , .x
-          , weight = .x
+          , weight = .y
         )
     ) / 2
 ) -> list_models
@@ -775,33 +737,74 @@ df_models.time$pearson.wgt <- date_end - date_start
 date_start <- Sys.time()
 
 # map_dbl(
-map_dbl(
+map2_dbl(
   .x = df_occupations.t[-1]
+  , .y = as_tibble(sqrt(
+    mtx_weights[,-1]
+  ))
   , ~ 
     bvls(
-      as.matrix(.x * sqrt(.x))
-      , df_occupations.t[[1]] *
-        sqrt(.x)
+      as.matrix(.x * .y)
+      , df_occupations.t[[1]] * .y
       , bl = dbl_similarity.lb
       , bu = dbl_similarity.ub
     )[[1]]
-  # ) -> df_models$bvls
 ) -> list_models
 
 date_end <- Sys.time()
 
 df_models.time$bvls.wgt <- date_end - date_start
 
-list_models %>% 
+list_models %>%
   as_tibble(
     rownames = 'occupation'
-  ) %>% 
+  ) %>%
   rename(
     bvls.wgt = 2
-  ) %>% 
+  ) %>%
   full_join(
     df_models
   ) -> df_models
+
+df_models %>% 
+  select(
+    occupation,
+    bvls.wgt
+  ) %>% 
+  filter(str_detect(
+    str_to_lower(occupation),
+    'hospital'
+  )) %>% 
+  mutate(
+    I = 
+      fun_interchangeability(
+        bvls.wgt
+      )
+  )
+
+# list_models %>% 
+#   as_tibble(
+#     rownames = 'occupation'
+#   ) %>% 
+#   rename(
+#     bvls.wgt = 2
+#   ) %>% 
+#   filter(str_detect(
+#     str_to_lower(
+#       occupation
+#     ), 'medicine|physician|hospital|econo|statis'
+#     # ), 'medicine|physician|hospital'
+#     # ), 'econ|data|statis'
+#   )) %>%
+#   mutate(
+#     I = 
+#       fun_interchangeability(
+#         bvls.wgt
+#         , .dbl_scaling = 4
+#       ) %>% round(4)
+#   ) %>% 
+#   arrange(desc(I)) %>% 
+#   print(n = nrow(.))
 
 # - Weighted Logistic regression matching 2 ----------------------------------------
 date_start <- Sys.time()
@@ -814,28 +817,53 @@ list_c(map(
   )
 )) -> int_input.logit
 
-map(
-  .x = df_occupations.t[-1]
+map2(
+  .x = 
+    map(
+      .x = df_occupations.t[-1]
+      , ~ 
+        as.matrix(list_c(map(
+          .x = as.integer(.x)
+          , ~ rep(
+            c(1,0)
+            , times = c(.x, 100 - .x)
+          )
+        )))
+    )
+  , .y = 
+    as_tibble(mtx_weights)[-1][rep(
+      1:nrow(mtx_weights)
+      , each = 100
+    ),]
+  
+  # df_occupations.t[-1][rep(
+  #   1:nrow(df_occupations.t)
+  #   , each = 100
+  # ),]
+  
+  # fun_logistic(
+  #   .dbl_x = 
+  #     df_occupations.t[-1][rep(
+  #       1:nrow(df_occupations.t)
+  #       , each = 100
+  #     ),] / 
+  #     dbl_scale.ub
+  #   , .dbl_mid.point = 
+  #     (dbl_scale.ub / 2 ) / 
+  #     dbl_scale.ub
+  #   , .dbl_scaling.factor = 8
+  #   , .lgc_logistic.approx = T
+  # )
   , ~ 
-    as.matrix(list_c(map(
-      .x = as.integer(.x)
-      , ~ rep(
-        c(1,0)
-        , times = c(.x, 100 - .x)
+    coef(fastglmPure(
+      x = .x
+      , y = int_input.logit
+      , family = binomial(
+        link = 'logit'
       )
-    )))
-) %>% 
-  map(
-    ~ 
-      coef(fastglmPure(
-        x = .x
-        , y = int_input.logit
-        , family = binomial(
-          link = 'logit'
-        )
-        , weights = .x
-      ))
-  ) -> list_models
+      , weights = .y
+    ))
+) -> list_models
 
 date_end <- Sys.time()
 
@@ -868,28 +896,53 @@ list_c(map(
   )
 )) -> int_input.probit
 
-map(
-  .x = df_occupations.t[-1]
+map2(
+  .x =
+    map(
+      .x = df_occupations.t[-1]
+      , ~ 
+        as.matrix(list_c(map(
+          .x = as.integer(.x)
+          , ~ rep(
+            c(1,0)
+            , times = c(.x, 100 - .x)
+          )
+        )))
+    )
+  , .y = 
+    as_tibble(mtx_weights)[-1][rep(
+      1:nrow(mtx_weights)
+      , each = 100
+    ),]
+  
+  # df_occupations.t[-1][rep(
+  #   1:nrow(df_occupations.t)
+  #   , each = 100
+  # ),]
+  
+  # fun_logistic(
+  #   .dbl_x = 
+  #     df_occupations.t[-1][rep(
+  #       1:nrow(df_occupations.t)
+  #       , each = 100
+  #     ),] / 
+  #     dbl_scale.ub
+  #   , .dbl_mid.point = 
+  #     (dbl_scale.ub / 2 ) / 
+  #     dbl_scale.ub
+  #   , .dbl_scaling.factor = 8
+  #   , .lgc_logistic.approx = T
+  # )
   , ~ 
-    as.matrix(list_c(map(
-      .x = as.integer(.x)
-      , ~ rep(
-        c(1,0)
-        , times = c(.x, 100 - .x)
+    coef(fastglmPure(
+      x = .x
+      , y = int_input.probit
+      , family = binomial(
+        link = 'probit'
       )
-    )))
-) %>% 
-  map(
-    ~ 
-      coef(fastglmPure(
-        x = .x
-        , y = int_input.probit
-        , family = binomial(
-          link = 'probit'
-        )
-        , weights = .x
-      ))
-  ) -> list_models
+      , weights = .y
+    ))
+) -> list_models
 
 date_end <- Sys.time()
 
@@ -911,347 +964,65 @@ list_models %>%
 
 df_models.time$probit.wgt <- date_end - date_start
 
-# - Weighted Beta regression matching ----------------------------------------------
-date_start <- Sys.time()
-
-map_dbl(
-  .x = 2:ncol(df_occupations.t)
-  , ~
-    gamlss::gamlss(
-      V1 ~ 0 + .
-      , sigma.formula = ~ 0 + .
-      , nu.formula = ~ 0 + .
-      , tau.formula = ~ 0 + .
-      , family = BEINF
-      , weights = df_occupations.t[[.x]]
-      , data = df_occupations.t[c(1,.x)] / 100
-    ) %>% 
-    coef() %>% 
-    pmin(1) %>% 
-    pmax(0)
-  # ) -> df_models$beta
-) -> list_models
-
-date_end <- Sys.time()
-
-list_models %>% 
-  set_names(names(
-    df_occupations.t[-1]
-  )) %>%
-  as_tibble(
-    rownames = 'occupation'
-  ) %>% 
-  rename(
-    beta.wgt = 2
-  ) %>% 
-  full_join(
-    df_models
-  ) -> df_models
-
-df_models.time$beta.wgt <- date_end - date_start
-
-# betareg::betareg.fit(
-#   x =
-#     as.matrix((
-#       df_occupations.t[[10]] /
-#         dbl_scale.ub) %>%
-#         pmax(0.0000000001) %>%
-#         pmin(99.9999999999)
-#     )
-#   , y =
-#     (df_occupations.t[[1]] /
-#        dbl_scale.ub) %>%
-#     pmax(0.0000000001) %>%
-#     pmin(99.9999999999)
-#   # , z =
-#     # as.matrix((
-#     #   df_occupations.t[[10]] /
-#     #     dbl_scale.ub) %>%
-#     #     pmax(0.0000000001) %>%
-#     #     pmin(99.9999999999)
-#     # )
-# )
-
-# betareg::betareg(
-#   formula = V1 ~ 0 + .
-#   , data =
-#     df_occupations.t %>%
-#     select(1,10) %>%
-#     mutate(across(
-#       .cols = everything()
-#       ,.fns = ~
-#         pmin(.x, 99.9999999999) %>%
-#         pmax(0.0000000001) / 100
-#     ))
-# ) %>% coef()
-
-# map(
-#   .x = 2:ncol(df_occupations.t)
-#   , ~ 
-#     betareg(
-#       formula = V1 ~ 0 + .
-#       , data =
-#         df_occupations.t[c(1,.x)] %>%
-#         mutate(across(
-#           .cols = everything()
-#           ,.fns = ~ .x %>% 
-#             pmin(99.9999999999) %>%
-#             pmax(0.0000000001) / 100
-#         )
-#         ))
-# ) -> list_models
-
-# --
-# # - Weighted Normalized OLS matching -----------------------------------------------------------
-# date_start <- Sys.time()
-# 
-# map_dbl(
-#   .x = df_occupations.t[-1]
-#   , ~ 
-#     lm.wfit(
-#       as.matrix(.x)
-#       , df_occupations.t[[1]]
-#       , w = as.numeric(.x)
-#     ) %>% 
-#     coef() %>% 
-#     pmin(1) %>% 
-#     pmax(0)
-# ) -> df_models$ols.wgt
-# 
-# date_end <- Sys.time()
-# 
-# df_models.time$ols.wgt <- date_end - date_start
-# 
-# # - Weighted Normalized Pearson matching ---------------------------------------------------------------
-# date_start <- Sys.time()
-# 
-# map_dbl(
-#   .x = df_occupations.t[-1]
-#   , ~
-#     as.numeric(
-#       1 +
-#         weights::wtd.cors(
-#           df_occupations.t[1]
-#           , .x
-#           , weight = .x
-#         )
-#     ) / 2
-# ) -> df_models$pearson.wgt
-# 
-# date_end <- Sys.time()
-# 
-# df_models.time$pearson.wgt <- date_end - date_start
-
-# # - Weighted BVLS matching -----------------------------------------------------------
-# date_start <- Sys.time()
-# 
-# map_dbl(
-#   .x = df_occupations.t[-1]
-#   , ~
-#     bvls(
-#       as.matrix(.x * sqrt(.x))
-#       , df_occupations.t[[1]] *
-#         sqrt(.x)
-#       , bl = dbl_similarity.lb
-#       , bu = dbl_similarity.ub
-#     )[[1]]
-# ) -> df_models$bvls.wgt
-# 
-# date_end <- Sys.time()
-# 
-# df_models.time$bvls.wgt <- date_end - date_start
-
-# # - Weighted Logistic regression matching 2 ----------------------------------------
-# date_start <- Sys.time()
-# 
-# list_c(map(
-#   .x = as.integer(df_input.t)
-#   , ~ rep(
-#     c(1,0)
-#     , times = c(.x, 100 - .x)
-#   )
-# )) -> int_input.logit
-# 
-# map(
-#   .x = df_occupations.t[-1]
-#   , ~ 
-#     as.matrix(list_c(map(
-#       .x = as.integer(.x)
-#       , ~ rep(
-#         c(1,0)
-#         , times = c(.x, 100 - .x)
-#       )
-#     )))
-# ) %>% 
-#   map(
-#     ~ 
-#       coef(fastglmPure(
-#         x = .x
-#         , y = int_input.logit
-#         , family = binomial(
-#           link = 'logit'
-#         )
-#         , weights = .x
-#       ))
-#   ) -> list_models
-# 
-# date_end <- Sys.time()
-# 
-# list_models %>% 
-#   bind_rows(
-#     .id = 'occupation'
-#   ) %>% 
-#   rename(
-#     logit = 2
-#   ) %>% 
-#   mutate(
-#     logit = 
-#       exp(logit) /
-#       (1 + exp(logit))
-#   ) %>% 
-#   full_join(
-#     df_models
-#   ) -> df_models
-# 
-# df_models.time$logit <- date_end - date_start
-# 
-# # - Weighted Probit regression matching 2 ----------------------------------------
-# date_start <- Sys.time()
-# 
-# list_c(map(
-#   .x = as.integer(df_input.t)
-#   , ~ rep(
-#     c(1,0)
-#     , times = c(.x, 100 - .x)
-#   )
-# )) -> int_input.probit
-# 
-# map(
-#   .x = df_occupations.t[-1]
-#   , ~ 
-#     as.matrix(list_c(map(
-#       .x = as.integer(.x)
-#       , ~ rep(
-#         c(1,0)
-#         , times = c(.x, 100 - .x)
-#       )
-#     )))
-# ) %>% 
-#   map(
-#     ~ 
-#       coef(fastglmPure(
-#         x = .x
-#         , y = int_input.probit
-#         , family = binomial(
-#           link = 'probit'
-#         )
-#         , weights = .x
-#       ))
-#   ) -> list_models
-# 
-# date_end <- Sys.time()
-# 
-# list_models %>% 
-#   bind_rows(
-#     .id = 'occupation'
-#   ) %>% 
-#   rename(
-#     probit = 2
-#   ) %>% 
-#   mutate(
-#     probit = 
-#       exp(probit) /
-#       (1 + exp(probit))
-#   ) %>% 
-#   full_join(
-#     df_models
-#   ) -> df_models
-# 
-# df_models.time$probit <- date_end - date_start
-# 
-# # # - Weighted Logistic regression matching -----------------------------------------------------------
-# # date_start <- Sys.time()
-# # 
-# # map_dbl(
-# #   .x = df_occupations.t[-1] / 100
-# #   , ~
-# #     fastglm(
-# #       as.matrix(.x)
-# #       , df_occupations.t[[1]] / 100
-# #       , family = binomial(
-# #         link = 'logit'
-# #       )
-# #       , weights = as.matrix(.x)
-# #     ) %>%
-# #     coef()
-# # ) -> df_models$logit.wgt
-# # 
-# # exp(df_models$logit.wgt) /
-# #   (1 + exp(df_models$logit.wgt)) ->
-# #   df_models$logit.wgt
-# # 
-# # date_end <- Sys.time()
-# # 
-# # df_models.time$logit.wgt <- date_end - date_start
-# # 
-# # # - Weighted Probit regression matching -----------------------------------------------------------
-# # date_start <- Sys.time()
-# # 
-# # map_dbl(
-# #   .x = df_occupations.t[-1] / 100
-# #   , ~
-# #     fastglm(
-# #       as.matrix(.x)
-# #       , df_occupations.t[[1]] / 100
-# #       , family = binomial(
-# #         link = 'probit'
-# #       )
-# #       , weights = as.matrix(.x)
-# #     ) %>%
-# #     coef()
-# # ) -> df_models$probit.wgt
-# # 
-# # exp(df_models$probit.wgt) /
-# #   (1 + exp(df_models$probit.wgt)) ->
-# #   df_models$probit.wgt
-# # 
-# # date_end <- Sys.time()
-# # 
-# # df_models.time$probit.wgt <- date_end - date_start
-# 
 # # - Weighted Beta regression matching ----------------------------------------------
 # date_start <- Sys.time()
 # 
-# lm.fit(
-#   x = as.matrix(df_occupations[1,] %>% select(ends_with('.l')))
-#   , y = as.matrix(df_input %>% select(ends_with('.l')))
-# ) %>% coef() -> lalala
-# 
 # map_dbl(
 #   .x = 2:ncol(df_occupations.t)
-#   , ~
+#   , ~ 
 #     gamlss::gamlss(
 #       V1 ~ 0 + .
 #       , sigma.formula = ~ 0 + .
 #       , nu.formula = ~ 0 + .
 #       , tau.formula = ~ 0 + .
 #       , family = BEINF
-#       , data = df_occupations.t[c(1,.x)] / 100
 #       , weights = df_occupations.t[[.x]]
+#       , data = df_occupations.t[c(1,.x)] / 100
 #     ) %>% 
 #     coef() %>% 
 #     pmin(1) %>% 
 #     pmax(0)
-# ) -> df_models$beta.wgt
+#   # ) -> df_models$beta
+# ) -> list_models
 # 
 # date_end <- Sys.time()
+# 
+# list_models %>% 
+#   set_names(names(
+#     df_occupations.t[-1]
+#   )) %>%
+#   as_tibble(
+#     rownames = 'occupation'
+#   ) %>% 
+#   rename(
+#     beta.wgt = 2
+#   ) %>% 
+#   full_join(
+#     df_models
+#   ) -> df_models
 # 
 # df_models.time$beta.wgt <- date_end - date_start
 # 
 # # betareg::betareg.fit(
-# #   x = as.matrix(df_occupations.t[[10]] / sum(df_occupations.t[[10]]))
-# #   , y = df_occupations.t[[1]] / sum(df_occupations.t[[1]])
-# #   # , z = as.matrix(df_occupations.t[[10]] / 100)
+# #   x =
+# #     as.matrix((
+# #       df_occupations.t[[10]] /
+# #         dbl_scale.ub) %>%
+# #         pmax(0.0000000001) %>%
+# #         pmin(99.9999999999)
+# #     )
+# #   , y =
+# #     (df_occupations.t[[1]] /
+# #        dbl_scale.ub) %>%
+# #     pmax(0.0000000001) %>%
+# #     pmin(99.9999999999)
+# #   # , z =
+# #     # as.matrix((
+# #     #   df_occupations.t[[10]] /
+# #     #     dbl_scale.ub) %>%
+# #     #     pmax(0.0000000001) %>%
+# #     #     pmin(99.9999999999)
+# #     # )
 # # )
 # 
 # # betareg::betareg(
@@ -1267,7 +1038,299 @@ df_models.time$beta.wgt <- date_end - date_start
 # #     ))
 # # ) %>% coef()
 # 
+# # map(
+# #   .x = 2:ncol(df_occupations.t)
+# #   , ~ 
+# #     betareg(
+# #       formula = V1 ~ 0 + .
+# #       , data =
+# #         df_occupations.t[c(1,.x)] %>%
+# #         mutate(across(
+# #           .cols = everything()
+# #           ,.fns = ~ .x %>% 
+# #             pmin(99.9999999999) %>%
+# #             pmax(0.0000000001) / 100
+# #         )
+# #         ))
+# # ) -> list_models
 # 
+# # --
+# 
+# # # - Weighted Normalized Pearson matching ---------------------------------------------------------------
+# # date_start <- Sys.time()
+# # 
+# # map_dbl(
+# #   .x = df_occupations.t[-1]
+# #   , ~
+# #     as.numeric(
+# #       1 +
+# #         weights::wtd.cors(
+# #           df_occupations.t[1]
+# #           , .x
+# #           , weight = .x
+# #         )
+# #     ) / 2
+# # ) -> list_models
+# # 
+# # date_end <- Sys.time()
+# # 
+# # list_models %>%
+# #   as_tibble(
+# #     rownames = 'occupation'
+# #   ) %>% 
+# #   rename(
+# #     pearson.wgt = 2
+# #   ) %>% 
+# #   full_join(
+# #     df_models
+# #   ) -> df_models
+# # 
+# # df_models.time$pearson.wgt <- date_end - date_start
+# # 
+# # - Weighted BVLS matching -----------------------------------------------------------
+# date_start <- Sys.time()
+# 
+# # map_dbl(
+# map_dbl(
+#   .x = df_occupations.t[-1]
+#   , ~
+#     bvls(
+#       as.matrix(.x * sqrt(.x))
+#       , df_occupations.t[[1]] *
+#         sqrt(.x)
+#       , bl = dbl_similarity.lb
+#       , bu = dbl_similarity.ub
+#     )[[1]]
+#   # ) -> df_models$bvls
+# ) -> list_models
+# 
+# date_end <- Sys.time()
+# 
+# df_models.time$bvls.wgt <- date_end - date_start
+# 
+# list_models %>%
+#   as_tibble(
+#     rownames = 'occupation'
+#   ) %>%
+#   rename(
+#     bvls.wgt = 2
+#   ) %>%
+#   full_join(
+#     df_models
+#   ) -> df_models
+# 
+# # - Weighted Logistic regression matching 2 ----------------------------------------
+# date_start <- Sys.time()
+# 
+# list_c(map(
+#   .x = as.integer(df_input.t)
+#   , ~ rep(
+#     c(1,0)
+#     , times = c(.x, 100 - .x)
+#   )
+# )) -> int_input.logit
+# 
+# map2(
+#   .x = 
+#     map(
+#       .x = df_occupations.t[-1]
+#       , ~ 
+#         as.matrix(list_c(map(
+#           .x = as.integer(.x)
+#           , ~ rep(
+#             c(1,0)
+#             , times = c(.x, 100 - .x)
+#           )
+#         )))
+#     )
+#   , .y = 
+#     df_occupations.t[-1][rep(
+#       1:nrow(df_occupations.t)
+#       , each = 100
+#     ),]
+#   , ~ 
+#     coef(fastglmPure(
+#       x = .x
+#       , y = int_input.logit
+#       , family = binomial(
+#         link = 'logit'
+#       )
+#       , weights = .y
+#     ))
+# ) -> list_models
+# 
+# date_end <- Sys.time()
+# 
+# list_models %>% 
+#   bind_rows(
+#     .id = 'occupation'
+#   ) %>% 
+#   rename(
+#     logit.wgt = 2
+#   ) %>% 
+#   mutate(
+#     logit.wgt = 
+#       exp(logit.wgt) /
+#       (1 + exp(logit.wgt))
+#   ) %>% 
+#   full_join(
+#     df_models
+#   ) -> df_models
+# 
+# df_models.time$logit.wgt <- date_end - date_start
+# 
+# # - Weighted Probit regression matching 2 ----------------------------------------
+# date_start <- Sys.time()
+# 
+# list_c(map(
+#   .x = as.integer(df_input.t)
+#   , ~ rep(
+#     c(1,0)
+#     , times = c(.x, 100 - .x)
+#   )
+# )) -> int_input.probit
+# 
+# map2(
+#   .x =
+#     map(
+#       .x = df_occupations.t[-1]
+#       , ~ 
+#         as.matrix(list_c(map(
+#           .x = as.integer(.x)
+#           , ~ rep(
+#             c(1,0)
+#             , times = c(.x, 100 - .x)
+#           )
+#         )))
+#     )
+#   , .y = 
+#     df_occupations.t[-1][rep(
+#       1:nrow(df_occupations.t)
+#       , each = 100
+#     ),]
+#   , ~ 
+#     coef(fastglmPure(
+#       x = .x
+#       , y = int_input.probit
+#       , family = binomial(
+#         link = 'probit'
+#       )
+#       , weights = .y
+#     ))
+# ) -> list_models
+# 
+# date_end <- Sys.time()
+# 
+# list_models %>% 
+#   bind_rows(
+#     .id = 'occupation'
+#   ) %>% 
+#   rename(
+#     probit.wgt = 2
+#   ) %>% 
+#   mutate(
+#     probit.wgt = 
+#       exp(probit.wgt) /
+#       (1 + exp(probit.wgt))
+#   ) %>% 
+#   full_join(
+#     df_models
+#   ) -> df_models
+# 
+# df_models.time$probit.wgt <- date_end - date_start
+# 
+# # - Weighted Beta regression matching ----------------------------------------------
+# date_start <- Sys.time()
+# 
+# map_dbl(
+#   .x = 2:ncol(df_occupations.t)
+#   , ~ 
+#     gamlss::gamlss(
+#       V1 ~ 0 + .
+#       , sigma.formula = ~ 0 + .
+#       , nu.formula = ~ 0 + .
+#       , tau.formula = ~ 0 + .
+#       , family = BEINF
+#       , weights = df_occupations.t[[.x]]
+#       , data = df_occupations.t[c(1,.x)] / 100
+#     ) %>% 
+#     coef() %>% 
+#     pmin(1) %>% 
+#     pmax(0)
+#   # ) -> df_models$beta
+# ) -> list_models
+# 
+# date_end <- Sys.time()
+# 
+# list_models %>% 
+#   set_names(names(
+#     df_occupations.t[-1]
+#   )) %>%
+#   as_tibble(
+#     rownames = 'occupation'
+#   ) %>% 
+#   rename(
+#     beta.wgt = 2
+#   ) %>% 
+#   full_join(
+#     df_models
+#   ) -> df_models
+# 
+# df_models.time$beta.wgt <- date_end - date_start
+# 
+# # betareg::betareg.fit(
+# #   x =
+# #     as.matrix((
+# #       df_occupations.t[[10]] /
+# #         dbl_scale.ub) %>%
+# #         pmax(0.0000000001) %>%
+# #         pmin(99.9999999999)
+# #     )
+# #   , y =
+# #     (df_occupations.t[[1]] /
+# #        dbl_scale.ub) %>%
+# #     pmax(0.0000000001) %>%
+# #     pmin(99.9999999999)
+# #   # , z =
+# #     # as.matrix((
+# #     #   df_occupations.t[[10]] /
+# #     #     dbl_scale.ub) %>%
+# #     #     pmax(0.0000000001) %>%
+# #     #     pmin(99.9999999999)
+# #     # )
+# # )
+# 
+# # betareg::betareg(
+# #   formula = V1 ~ 0 + .
+# #   , data =
+# #     df_occupations.t %>%
+# #     select(1,10) %>%
+# #     mutate(across(
+# #       .cols = everything()
+# #       ,.fns = ~
+# #         pmin(.x, 99.9999999999) %>%
+# #         pmax(0.0000000001) / 100
+# #     ))
+# # ) %>% coef()
+# 
+# # map(
+# #   .x = 2:ncol(df_occupations.t)
+# #   , ~ 
+# #     betareg(
+# #       formula = V1 ~ 0 + .
+# #       , data =
+# #         df_occupations.t[c(1,.x)] %>%
+# #         mutate(across(
+# #           .cols = everything()
+# #           ,.fns = ~ .x %>% 
+# #             pmin(99.9999999999) %>%
+# #             pmax(0.0000000001) / 100
+# #         )
+# #         ))
+# # ) -> list_models
+# 
+# # --
+
 # [TEST] ------------------------------------------------------------------
 # - Pivot models ------------------------------------------------------
 df_models %>% 
@@ -1355,8 +1418,63 @@ df_models.time.long %>%
       )
   )
 
+# - Similarity range -----------------------------------------------
+df_models.long %>%
+  filter(
+    occupation !=
+      df_input$
+      occupation
+  ) %>% 
+  group_by(model) %>% 
+  reframe(
+    similarity = 
+      range(similarity)
+  ) %>% 
+  mutate(
+    occupation = 
+      rep(c(
+        'Worst Match'
+        , 'Top Match'
+      )
+      , times = 
+        length(unique(
+          model
+        ))
+      )
+  ) %>% 
+  fun_plot.dumbbell2(aes(
+    x = similarity
+    , y = model
+    , color = occupation
+  )
+  , .list_labs = 
+    list(
+      title = paste('Similarity Range for Each Model:', df_input$occupation)
+      , subtitle = 'What are the maximum and minimum similarity scores?'
+      , x = 'Professional Compatibility Scores (%)'
+      , y = NULL
+      , color = NULL 
+    )
+  
+  , .reorder_fct = T
+  , .reorder_desc = T
+  , .chr_manual.pal = 
+    c('blue','red')
+  , .list_axis.x.args =
+    list(
+      limits = c(0,1)
+      , breaks = seq(0,1,length.out = 7)
+    )
+  , .fun_format.x = percent
+  )
+
 # - Similarity distribution -----------------------------------------------
 df_models.long %>%
+  filter(
+    occupation !=
+      df_input$
+      occupation
+  ) %>% 
   group_by(model) %>%
   mutate(
     similarity.kflex =
@@ -1426,34 +1544,208 @@ df_models.long %>%
   , .fun_format.x = percent
   )
 
-# - Similarity range -----------------------------------------------
+# - Interchangeability metrics --------------------------------------------
+seq(0,1,0.001) %>% 
+  as_tibble() %>%
+  rename(
+    s = 1
+  ) %>%
+  mutate(
+    Coef.I = s
+    #, Coef.II = s ^ 2
+    , Coef.II = s ^ 4
+    #, Coef.III = s * s + (1 - s) * s ^ 2
+    # , Coef.III = s * s + (1 - s) * s ^ 4
+    , Coef.III = s * s + (1 - s) * s ^ ((1/s)^(1/s))
+    # , Coef.IV = s ^ ((1/s)^((1/s)))
+    # , Coef.IV = s ^ ((1/s)^(4*(1/s)))
+    , Coef.IV = s ^ ((1/s)^(1/s))
+    #, Coef.V = s ^ ((1/s)^(4/s))
+    #, Coef.IV = s ^ ((1/s)^(1/s))
+    #, Coef.IV = s * s + (1 - s) * s ^ ((1/s)^(1/s))
+    #, Coef.IV = s * s + (1 - s) * s ^ ((1/s)^(4))
+    #, Coef.V = s * s + (1 - s) * s ^ ((1/s)^(1/s)^(1/s))
+  ) %>% 
+  rename(
+    similarity = s
+  ) %>% 
+  pivot_longer(
+    cols = starts_with('Coef')
+    , names_to = 'coefficient'
+    , values_to = 'interchangeability'
+  ) %>% 
+  fun_plot.line(aes(
+    x = similarity
+    , y = interchangeability
+    , color = coefficient
+  )
+  , .chr_manual.pal = 
+    c(rep('grey',3),viridis(1, direction = -1))
+  , .list_labs = list(
+    title = paste('Interchangeability Metrics')
+    , subtitle = 'How much a person is recognizable by the Labor Market as a particular occupation?'
+    , x = 'Similarity'
+    , y = 'Interchangeability'
+    , color = 'Coefficient'
+  )
+  , .fun_format.x = percent
+  , .fun_format.y = percent
+  )
+
+# - Weights --------------------------------------------
+seq(0,1,0.001) %>% 
+  as_tibble() %>%
+  rename(
+    s = 1
+  ) %>%
+  mutate(
+    Coef.I = s
+    , Coef.II = s ^ 0.25
+    , Coef.III = s ^ 4
+    , Coef.IV = fun_logistic(s, .dbl_mid.point = 0.5, .dbl_scaling.factor = 20, .dbl_scale.ub = 1, .dbl_scale.lb = 0, .lgc_normalize = T)
+    , Coef.V = fun_interchangeability(s, .dbl_scaling = 0.25)
+  ) %>% 
+  rename(
+    similarity = s
+  ) %>% 
+  pivot_longer(
+    cols = starts_with('Coef')
+    , names_to = 'coefficient'
+    , values_to = 'interchangeability'
+  ) %>% 
+  fun_plot.line(aes(
+    x = similarity
+    , y = interchangeability
+    , color = coefficient
+  )
+  , .chr_manual.pal =
+    c(rep('grey',4),viridis(1, direction = -1))
+  , .list_labs = list(
+    title = paste('Regression Weights Function')
+    , subtitle = 'Relative importance of each attribute.'
+    , x = 'Item Score'
+    , y = 'Item Weight'
+    , color = 'Coefficient'
+  )
+  , .fun_format.x = percent
+  , .fun_format.y = percent
+  )
+
+# - Interchangeability distribution -----------------------------------------------
 df_models.long %>%
-  group_by(model) %>% 
-  reframe(
-    similarity = 
-      range(similarity)
+  filter(
+    occupation !=
+      df_input$
+      occupation
   ) %>% 
   mutate(
-    occupation = 
-      rep(c(
-        'Worst Match'
-        , 'Top Match'
-      )
-      , times = 
-        length(unique(
-          model
-        ))
+    interchangeability = 
+      fun_interchangeability(
+        similarity
       )
   ) %>% 
-  fun_plot.dumbbell2(aes(
-    x = similarity
+  group_by(model) %>%
+  mutate(
+    interchangeability.kflex =
+      fun_kflex(interchangeability)
+  ) %>%
+  ungroup() %>%
+  mutate(
+    interchangeability.kflex =
+      cut(
+        interchangeability.kflex
+        , breaks = 5
+        , labels = F
+      ) %>%
+      recode(
+        '5' = 'Very Generalist'
+        , '4' = 'Generalist'
+        , '3' = 'Normal'
+        , '2' = 'Specialist'
+        , '1' = 'Very Specialist'
+      ) %>%
+      factor(
+        levels =
+          c(
+            'Very Generalist'
+            , 'Generalist'
+            , 'Normal'
+            , 'Specialist'
+            , 'Very Specialist'
+          )
+      )
+  ) %>%
+  ungroup() %>%
+  fun_plot.ridges(aes(
+    x = interchangeability
     , y = model
-    , color = occupation
+    , fill = interchangeability.kflex
+  )
+  , .list_labs =
+    list(
+      title = paste('Interchangeability Distribution for Each Model:', df_input$occupation)
+      , subtitle = 'Note: These similarity coefficients are not representative of the whole population.'
+      , x = 'Professional Interchangeability Scores (%)'
+      , y = NULL
+      , fill = NULL
+    )
+  , .list_legend = list(fill = guide_legend(nrow = 1))
+  , .chr_manual.pal =
+    set_names(
+      viridis::viridis(5)
+      ,c(
+        'Very Generalist'
+        , 'Generalist'
+        , 'Normal'
+        , 'Specialist'
+        , 'Very Specialist'
+      )
+    )
+  , .list_axis.x.args =
+    list(
+      limits = c(0,1.1)
+      , breaks = seq(0,1,length.out = 7)
+    )
+  , .list_axis.y.args =
+    list(
+      expand = c(0.25,0)
+    )
+  , .fun_format.x = percent
+  )
+
+# - Compatibility with Statisticians -------------------
+df_models.long %>% 
+  mutate(
+    interchangeability = 
+      fun_interchangeability(
+        similarity
+      )
+  ) %>%
+  filter(str_detect(
+    str_to_lower(
+      occupation
+    ), '^statistician'
+  )) %>%
+  pivot_longer(
+    cols = where(is.numeric)
+    , names_to = 'metric'
+    , values_to = 'value'
+  ) %>% 
+  mutate(
+    metric = 
+      str_to_title(metric)
+  ) -> df_match
+
+df_match %>%
+  fun_plot.dumbbell2(aes(
+    x = value
+    , y = model
+    , color = metric
   )
   , .list_labs = 
     list(
-      title = paste('Similarity Range for Each Model:', df_input$occupation)
-      , subtitle = 'What are the maximum and minimum similarity scores?'
+      title = paste('Similarity Comparison:', df_input$occupation, 'vs', unique(df_match$occupation))
+      , subtitle = paste0('How compatible is ',df_input$occupation,' with ',unique(df_match$occupation),'?')
       , x = 'Professional Compatibility Scores (%)'
       , y = NULL
       , color = NULL 
@@ -1462,7 +1754,107 @@ df_models.long %>%
   , .reorder_fct = T
   , .reorder_desc = T
   , .chr_manual.pal = 
-    c('blue','red')
+    c('yellow','blue')
+  , .list_axis.x.args =
+    list(
+      limits = c(0,1)
+      , breaks = seq(0,1,length.out = 7)
+    )
+  , .fun_format.x = percent
+  )
+
+# - Compatibility with Economists -------------------
+df_models.long %>% 
+  mutate(
+    interchangeability = 
+      fun_interchangeability(
+        similarity
+      )
+  ) %>%
+  filter(str_detect(
+    str_to_lower(
+      occupation
+    ), '^economists$'
+  )) %>%
+  pivot_longer(
+    cols = where(is.numeric)
+    , names_to = 'metric'
+    , values_to = 'value'
+  ) %>% 
+  mutate(
+    metric = 
+      str_to_title(metric)
+  ) -> df_match
+
+df_match %>%
+  fun_plot.dumbbell2(aes(
+    x = value
+    , y = model
+    , color = metric
+  )
+  , .list_labs = 
+    list(
+      title = paste('Similarity Comparison:', df_input$occupation, 'vs', unique(df_match$occupation))
+      , subtitle = paste0('How compatible is ',df_input$occupation,' with ',unique(df_match$occupation),'?')
+      , x = 'Professional Compatibility Scores (%)'
+      , y = NULL
+      , color = NULL 
+    )
+  
+  , .reorder_fct = T
+  , .reorder_desc = T
+  , .chr_manual.pal = 
+    c('yellow','blue')
+  , .list_axis.x.args =
+    list(
+      limits = c(0,1)
+      , breaks = seq(0,1,length.out = 7)
+    )
+  , .fun_format.x = percent
+  )
+
+# - Compatibility with Janitors -------------------
+df_models.long %>% 
+  mutate(
+    interchangeability = 
+      fun_interchangeability(
+        similarity
+      )
+  ) %>%
+  filter(str_detect(
+    str_to_lower(
+      occupation
+    ), 'waitress'
+  )) %>%
+  pivot_longer(
+    cols = where(is.numeric)
+    , names_to = 'metric'
+    , values_to = 'value'
+  ) %>% 
+  mutate(
+    metric = 
+      str_to_title(metric)
+  ) -> df_match
+
+df_match %>%
+  fun_plot.dumbbell2(aes(
+    x = value
+    , y = model
+    , color = metric
+  )
+  , .list_labs = 
+    list(
+      title = paste('Similarity Comparison:', df_input$occupation, 'vs', unique(df_match$occupation))
+      , subtitle = paste0('How compatible is ',df_input$occupation,' with ',unique(df_match$occupation),'?')
+      , x = 'Professional Compatibility Scores (%)'
+      , y = NULL
+      , color = NULL 
+    )
+  
+  , .reorder_fct = T
+  , .reorder_desc = T
+  , .chr_manual.pal = 
+    c('yellow','blue')
   , .list_axis.x.args =
     list(
       limits = c(0,1)
@@ -1530,6 +1922,172 @@ df_models.long %>%
     )
   , .fun_format.x = percent
   )
+
+# - Interchangeability variance ----------------------------------------------------------
+df_models.long %>%
+  mutate(
+    interchangeability = 
+      fun_interchangeability(
+        similarity
+      )
+  ) %>% 
+  full_join(
+    df_occupations %>% 
+      select(
+        occupation
+        , employment2
+      )
+  ) %>% 
+  group_by(model) %>% 
+  reframe(
+    stdev = 
+      sd(interchangeability)
+    , stdev.wgt = 
+      Hmisc::wtd.var(
+        interchangeability
+        , weights = 
+          employment2
+      ) %>% 
+      sqrt()
+  ) %>% 
+  pivot_longer(
+    cols = -1
+    , names_to = 'metric'
+    , values_to = 'value'
+  ) %>%
+  mutate(
+    metric =
+      recode(
+        metric
+        , 'stdev' = 'Standard Deviation'
+        , 'stdev.wgt' = 'Sample-Weighted Standard Deviation'
+      )
+  ) %>% 
+  fun_plot.dumbbell2(aes(
+    x = value
+    , y = model
+    , color = metric
+  )
+  , .list_labs = 
+    list(
+      title = paste('Interchangeability Standard Deviation for Each Model:', df_input$occupation)
+      , subtitle = 'Which models yield more dispersed interchangeability scores?'
+      , x = 'Standard Deviation of Professional Interchangeability Scores (%)'
+      , y = NULL
+      , color = NULL 
+    )
+  
+  , .reorder_fct = T
+  , .reorder_desc = T
+  , .chr_manual.pal = 
+    c('orange','purple')
+  , .list_axis.x.args =
+    list(
+      limits = c(0,1)
+      , breaks = seq(0,1,length.out = 7)
+    )
+  , .fun_format.x = percent
+  )
+
+# - Employability ----------------------------------------------------------
+df_models %>% 
+  full_join(
+    df_occupations %>% 
+      mutate(
+        employment2 = 
+          ceiling(employment2)
+      ) %>% 
+      select(
+        occupation
+        , employment2
+      ) 
+  ) %>% 
+  mutate(across(
+    .cols = -c(occupation, employment2)
+    ,.fns = ~ 
+      fun_interchangeability(.x)
+  )) %>% 
+  reframe(across(
+    .cols = -c(occupation, employment2)
+    ,.fns = ~ 
+      fun_employability(employment2, .x)
+  )) %>%
+  pivot_longer(
+    cols = everything()
+    , names_to = 'model'
+    , values_to = 'employability'
+  ) %>% 
+  mutate(
+    employability.fct =
+      cut(
+        employability
+        , breaks = 5
+        , labels = F
+      ) %>%
+      recode(
+        '5' = 'Very High Employability'
+        , '4' = 'High Employability'
+        , '3' = 'Medium Employability'
+        , '2' = 'Low Employability'
+        , '1' = 'Very Low Employability'
+      ) %>%
+      factor(
+        levels =
+          c(
+            'Very High Employability'
+            , 'High Employability'
+            , 'Medium Employability'
+            , 'Low Employability'
+            , 'Very Low Employability'
+          )
+      )
+  ) -> df_employability
+
+df_employability %>% 
+  fun_plot.lollipop(aes(
+    x = model
+    , y = employability
+    , label = percent(employability, .01)
+    , color = employability.fct
+  )
+  , .list_labs = 
+    list(
+      x = NULL
+      , y = 'Employability Scores (%)'
+      , title = 'Employability Comparison of Different Matching Models'
+      , subtitle = paste0('Which percentage of available job posts are suitable for ', df_input$occupation, '?')
+      , color = NULL
+    )
+  , .chr_manual.pal = 
+    set_names(
+      viridis::viridis(5, direction = -1)
+      , c(
+        'Very High Employability'
+        , 'High Employability'
+        , 'Medium Employability'
+        , 'Low Employability'
+        , 'Very Low Employability'
+      )
+    )
+  , .list_axis.y.args = 
+    list(
+      limits = c(0,1)
+      , breaks = seq(0,1, length.out = 7)
+    )
+  , .fun_format.y = percent
+  ) #+ 
+# annotate(
+#   x = ceiling(nrow(df_employability) / 3)
+#   , y = 0.9 * max(as.numeric(df_employability$employability))
+#   , geom = 'text'
+#   , label = 
+#     str_wrap(
+#       'The old models, which are still in use, are much slower compared to the weighted knn revised algorithm, as well as some regression approches.
+#       Concerning these newer matching models, we can see they generally run in less than 1s.
+#       However, Beta, Logit, Probit, and Tobit regressions are slow.'
+#       , width = 50
+#     )
+# )
 
 # # - Similarity distribution (sample-weighted) -----------------------------------------------
 # df_models %>%
@@ -1673,7 +2231,79 @@ df_models.long %>%
 #   , .fun_format.x = percent
 #   )
 
+# # - Employability benchmarks ----------------------------------------------
+# c(
+#   "High school diploma or equivalent"
+#   , "No formal educational credential"
+# ) -> chr_education.low
+# 
+# df_occupations %>% 
+#   ggplot(aes(
+#     x = annual_wage_2021
+#     , weight = employment2
+#   )) + 
+#   geom_density() + 
+#   geom_textvline(
+#     xintercept = 
+#       weighted.mean(
+#         x = df_occupations$
+#           annual_wage_2021
+#         , w = df_occupations$
+#           employment2
+#       )
+#     , label = 
+#       'Sample-Weighted Average Wage'
+#   )
+# 
+# c(
+#   df_occupations %>% 
+#     mutate(
+#       workforce = 
+#         sum(employment2)
+#     ) %>% 
+#     filter(
+#       annual_wage_2021 <= 
+#         weighted.mean(
+#           x = df_occupations$
+#             annual_wage_2021
+#           , w = df_occupations$
+#             employment2
+#         )
+#     ) %>% 
+#     reframe(
+#       pct_wages.low = 
+#         sum(employment2) / 
+#         unique(workforce)
+#     )
+#   
+#   , df_occupations %>% 
+#     mutate(
+#       workforce = 
+#         sum(employment2)
+#     ) %>% 
+#     filter(
+#       entry_level_education %in%
+#         chr_education.low
+#     ) %>% 
+#     reframe(
+#       pct_education.low = 
+#         sum(employment2) / 
+#         unique(workforce)
+#     )
+# )
+
 # - Interpretability ------------------------------------------------------
+df_models.long %>% 
+  relocate(
+    model
+  ) %>% 
+  mutate(
+    `I(s)` = 
+      fun_interchangeability(
+        similarity
+      ) %>% round(4)
+  ) -> df_models.long
+
 df_models.long %>% 
   filter(
     occupation ==
@@ -1685,6 +2315,11 @@ df_models.long %>%
   ))
 
 df_models.long %>%
+  filter(
+    occupation != 
+      df_input$
+      occupation
+  ) %>% 
   group_by(model) %>% 
   arrange(desc(
     similarity
@@ -1695,7 +2330,25 @@ df_models.long %>%
     similarity
   ))
 
+df_models.long %>% 
+  # filter(str_detect(
+  #   str_to_lower(
+  #     model
+  #   ), 'bvls'
+  # )) %>% 
+  filter(str_detect(
+    str_to_lower(
+      occupation
+    ), 'econo'
+  )) %>% 
+  print(n = nrow(.))
+
 df_models.long %>%
+  filter(
+    occupation != 
+      df_input$
+      occupation
+  ) %>% 
   group_by(model) %>% 
   arrange(
     similarity
@@ -1706,6 +2359,44 @@ df_models.long %>%
     similarity
   ))
 
+df_occupations %>% 
+  select(
+    entry_level_education
+    , education_years
+  ) %>% 
+  unique() %>% 
+  arrange(
+    education_years
+  ) %>% 
+  mutate(
+    degree_interchangeability = 
+      fun_interchangeability(
+        education_years / 
+          nth(education_years, 3)
+        , .dbl_scaling = 
+          nth(education_years, 3)
+      ) %>% 
+      pmin(1) %>%
+      round(4)
+  ) -> dsdsds
+
+dsdsds %>% 
+  fun_plot.line(aes(
+    x = education_years
+    , y = degree_interchangeability
+  )
+  , .list_labs = 
+    list(
+      title = paste(str_to_title(nth(dsdsds$entry_level_education, 3)), 'vs Other Degrees')
+      , subtitle = 'Interchangeability of years of education'
+      , x = 'Years of Education'
+      , y = 'Degree Interchangeability'
+    )
+  , .fun_format.x = number
+  , .fun_format.y = percent
+  )
+
+
 df_models.long %>% 
   filter(str_detect(
     str_to_lower(
@@ -1714,7 +2405,7 @@ df_models.long %>%
   )) %>% 
   arrange(desc(
     similarity
-  )) %>% 
+  )) %>%
   print(n = nrow(.))
 
 df_models.long %>% 
@@ -1726,36 +2417,68 @@ df_models.long %>%
   ) %>% 
   arrange(desc(
     similarity
+  )) %>%
+  print(n = nrow(.))
+
+df_models.long %>% 
+  group_by(model) %>% 
+  arrange(desc(
+    similarity
   )) %>% 
+  slice(
+    1:10
+    , (n()-10+1):n()
+  ) %>% 
+  ungroup() %>%
+  filter(
+    model %in% 
+      c('bvls.wgt', 'logit.wgt', 'pearson.wgt')
+  ) %>% 
   print(n = nrow(.))
 
 df_models.long %>%
-  split(.$model) %>% 
+  split(.$model) %>%
   map(
-    ~ arrange(.x, desc(2))
+    ~ .x %>% 
+      arrange(desc(
+        similarity
+      ))
   ) -> list_models
 
-list_models %>% 
-  map(
-    ~ .x %>%
-      filter(str_detect(
-        str_to_lower(
-          occupation
-        ), 'statisticians'
-      )) %>% 
-      arrange(desc(2))
-  )
+# df_models.long %>% 
+#   filter(
+#     model == 'bvls.wgt'
+#   ) %>% 
+#   ggplot(aes(
+#     x = similarity
+#     , y = model
+#     # , fill = stat(quantile)
+#   )) + 
+#   geom_density_ridges(
+#     quantile_lines = T
+#     # , quantiles = c(0.5)
+#     , quantiles = 2
+#   , alpha = 0.7
+#   ) + 
+#   scale_x_continuous(
+#     limits = c(0,1)
+#     , breaks = seq(0,1,0.25)
+#     , labels = percent
+#   ) + 
+#   theme_ridges()
 
-list_models %>% 
-  map(
-    ~ .x %>%
-      filter(str_detect(
-        str_to_lower(
-          occupation
-        ), 'statisticians'
-      )) %>% 
-      arrange(desc(2))
-  )
+
+
+# list_models %>% 
+#   map(
+#     ~ .x %>%
+#       filter(str_detect(
+#         str_to_lower(
+#           occupation
+#         ), 'statisticians'
+#       )) %>% 
+#       arrange(desc(2))
+#   )
 
 list_models$
   bvls.wgt %>% 
@@ -1774,39 +2497,6 @@ list_models$
   bvls %>% 
   slice_tail(n = 10)
 
-source('C:/Users/Cao/Documents/Github/atlas-research/functions/metrics/fun_employability.R')
-
-df_models %>% 
-  full_join(
-    df_occupations %>% 
-      mutate(
-        employment2 = 
-          ceiling(employment2)
-      ) %>% 
-      select(
-        occupation
-        , employment2
-      ) 
-  ) %>% 
-  mutate(across(
-    .cols = -c(occupation, employment2)
-    ,.fns = ~ 
-      fun_interchangeability(.x)
-  )) %>% 
-  reframe(across(
-    .cols = -c(occupation, employment2)
-    ,.fns = ~ 
-      fun_employability(employment2, .x)
-  )) %>%
-  round(4) %>% 
-  pivot_longer(
-    cols = everything()
-    , names_to = 'model'
-    , values_to = 'employability'
-  ) %>% 
-  arrange(desc(
-    employability
-  ))
 
 list_models$
   # logit %>% 
@@ -1832,39 +2522,31 @@ list_models$
 
 list(
   good = c(
-    'knn.wgt'
-    , 'knn.0'
-    , 'knn.100'
+    'bvls.wgt'
+    , 'logit.wgt'
+    , 'probit.wgt'
+    # , 'pearson.wgt'
   ) 
   , ok = c(
-    'bvls.wgt'
-    , 'ols.wgt'
-    # , 'bvls'
-    , 'ols'
-    , 'bvls.wgt'
-    , 'ols.wgt'
-    , 'tobit'
+    'tobit'
     , 'bvls'
-    , 'ols'
-    , 'knn.17'
-    , 'knn.100'
+    , 'logit'
+    , 'probit'
+    # , 'pearson'
+    # , 'pearson.wgt'
+    # , 'knn.wgt'
+    # , 'knn.0'
+    # , 'knn.17'
+    # , 'knn.100' 
   ) 
   , shit = c(
-    'probit.wgt'
-    , 'logit.wgt'
-    , 'pearson.wgt'
-    , 'probit'
-    , 'logit'
-    , 'tobit'
-    , 'pearson'
+    'pearson'
+    # , 'pearson.wgt'
+    , 'knn.wgt'
+    , 'knn.0'
     , 'knn.17'
+    , 'knn.100'
     , 'beta'
     , 'beta.wgt'
-    , 'bvls.wgt'
-    , 'ols.wgt'
-    , 'bvls'
-    , 'ols'
-    , 'bvls.wgt'
-    , 'ols.wgt'
   )
 )
