@@ -1,0 +1,122 @@
+---
+title: "Ideal Atlas Professional Profile"
+subtitle: "Optimizing Career Choice and Development via User-Defined Parameters" 
+author: "Atlas Research Team"
+date: "`r Sys.Date()`"
+geometry: a4paper, margin = 1in
+output:
+  pdf_document:
+  # ipsum_pdf:
+    # toc: TRUE
+    # number_sections: TRUE
+    # toc_depth: 4
+    # extra_dependencies: ["float"]
+    # extra_dependencies: ["flafter"]
+
+header-includes:
+   - \usepackage{titlesec}
+   - \usepackage{floatrow}
+   - \usepackage{physics}
+   - \usepackage{mathtools}
+   - \usepackage{amsmath}
+   - \floatsetup[figure]{capposition=top}
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+knitr::opts_chunk$set(fig.pos = "H", out.extra = "")
+```
+
+\newpage
+
+\titleformat{\paragraph}{\normalfont\normalsize\bfseries}{\theparagraph}{1em}{}
+
+\titlespacing{\paragraph}{0pt}{3.25ex plus 1ex minus .2ex}{1.5ex plus .2ex}
+
+\setcounter{secnumdepth}{5}
+
+\setcounter{tocdepth}{5}
+
+\tableofcontents
+
+\newpage
+
+# Introduction
+
+Another way of thinking about optimal career choice and development is to start not with the individual's current capacities, but rather their desired outcome. That is, instead of matching users to their most compatible occupations, and then optimizing parameters such as wage, level of education, and so on, we could invert the process by asking users what they'd like their career to look like in the future.
+
+Both procedures are completely valid and serve different purposes. There is a lot of value in estimating optimal career choice and development using either method. However, the user-defined "ideal career" could work best for younger people, who don't yet have as many competencies. It is also an interesting approach psychologically speaking, as it makes people think about what they really want and become more aware of their own career preferences, which helps guide them in the appropriate direction. For one thing is to be compatible with an occupation, and another is to actually want to work at those jobs.
+
+# Rewriting the Career Choice Problem
+
+## Consumer Economics
+
+We could think of user-defined career optimization as a typical economic maximization problem, like so:\
+$$
+\begin{aligned}\max_{\vb{a}}[u(\vb{\psi(\vb{a})},g(\vb{a},\vb{\nu}),\phi)], \text{ s.t.}\\ \sum_{i=1}^{m}{p_ia_i} \geq \overline{w},\\ \sum_{i=1}^{m}{\lambda_ia_i} \geq \overline{\Lambda},\\ \sum_{i=1}^{m}{t_ia_i} \leq \overline{\eta},\\ \sum_{i=1}^{m}{k_ia_i} \geq \overline{k},\\ \sum_{i=1}^{m}{K_ia_i} \geq \overline{K},\\ \sum_{i=1}^{m}{c_ia_i} \leq \overline{c},\end{aligned}
+$$\
+where $\nu_i,\ \phi,\ p_i,\ \lambda_i,\ t_i,\ k_i,\ K_i,\ c_i\geq 0;\ \overline{w},\ \overline{\eta} \geq 0; \text{ and } a_i,\ \overline{\Lambda},\ \overline{k},\ \overline{K},\ \overline{c} \in [0,100]$. The functions and parameters above are summarized as follows:\
+
+|        Symbol        |                           Name                           |                                                                               Description                                                                               |
+|:--------------------:|:--------------------------------------------------------:|:-----------------------------------------------------------------------------------------------------------------------------------------------------------------------:|
+|       $\vb{a}$       |                   Professional profile                   |                                  $\vb{a}=(a_1,...,a_m)$ is a vector of $m$ professional attributes, which characterize an individual.                                   |
+|        $u(.)$        |                     Utility function                     |                                               Measures the user's satisfaction with their career as defined by $\vb{a}$.                                                |
+|     $\vb{\psi}$      |                   Factor scores vector                   |                      Factor score estimates based on a professional profile $\vb{a}$ and a vector $\vb{\Psi}=(\Psi_1,...,\Psi_F)$ of $F$ factors.                       |
+|        $g(.)$        |             Aggregate AI impact coefficient              |                                        Measures a professional profile's total exposure to AI-driven automation as a percentage.                                        |
+|       $\nu_i$        |              Marginal AI impact coefficient              |                                    Measures the level of exposure to AI-driven automation per each additional point in an attribute.                                    |
+|        $\phi$        |                           Fear                           |                                                   Measures the user-defined fear of exposure to AI-driven automation.                                                   |
+|        $p_i$         |              Marginal cost of human capital              |                                         Market prices of each additional point in an attribute, estimated via NNLS regression.                                          |
+|    $\overline{w}$    |                 Minimum acceptable wage                  |                                                           User-defined minimum level of compensation, in USD.                                                           |
+|     $\lambda_i$      |         Marginal employability of human capital          |                                    Employability increase per each additional point in an attribute, estimated via BVLS regression.                                     |
+| $\overline{\Lambda}$ |          Minimum acceptable employability level          |                                                    User-defined minimum level of employability, on a 0 to 100 scale.                                                    |
+|        $t_i$         |        Marginal time investment on human capital         |                                      Time investment to gain each additional point in an attribute, estimated via NNLS regression.                                      |
+|  $\overline{\eta}$   |            Maximum acceptable time investment            |                                     User-defined tolerance for total time investment or estimated time of arrival (ETA), in years.                                      |
+|        $k_i$         |         Marginal human capital micro-flexibility         |                             Cross-attribute carryover of each additional point in an attribute, estimated via a system of BVLS regressions.                             |
+|    $\overline{k}$    | Minimum acceptable human capital micro-flexibility level |                                           User-defined aggregate cross-attribute carryover requirements, on a 0 to 100 scale.                                           |
+|        $K_i$         |         Marginal human capital macro-flexibility         |                  Cross-occupation carryover of each additional point in an attribute, estimated with the $K_i(.)$ formula outlined in a previous note.                  |
+|    $\overline{K}$    | Minimum acceptable human capital macro-flexibility level |                                                     User-defined aggregate cross-occupation carryover requirements.                                                     |
+|        $c_i$         |        Marginal competitiveness of human capital         |                               Competitiveness increment per each additional point in an attribute, estimated via NNLS or BVLS regression.                               |
+|    $\overline{c}$    |         Maximum acceptable level of competition          | User-defined tolerance for competition for job posts, on a 0 to 100 scale (with a bounded model), or using an unbouded ratio scale (number of applicants per job post). |
+
+: Career Optimization Parameters
+
+\
+Though it can appear complicated, the intuition behind this formulation is simple: an individual maximizes their career satisfaction $u(.)$ by rationally selecting an "ideal" professional profile $\vb{a}$, which best approximates their inclinations, such that the resulting attributes' factor scores come as close as possible to their $u(\psi_1(\vb{a})),...,u(\psi_F(\vb{a}))$ factor preferences, while still minimizing exposure to AI-driven automation (proportional to their $\phi$ fear of AI), and also satisfying their own constraints with regards to compensation ($\overline{w}$), employability ($\overline{\Lambda}$), maximum years of education ($\overline{\eta}$), macro ($\overline{K}$) and micro ($\overline{k}$) human capital flexibility, and competitiveness for job posts ($\overline{c}$).
+
+The solution of this maximization problem is derived by applying the generalized Lagrange multiplier. This can be done numerically without much difficulty.
+
+However, we could also think of a different maximization problem, where the described metrics are incorporated into the individual's utility function, with optional constraints:
+
+$$
+\begin{aligned}\max_{\vb{a}}[u(\vb{\psi(\vb{a})},g(\vb{a},\vb{\nu}),\phi,\vb{p}\vb{a},\vb{\lambda}\vb{a},\vb{t}\vb{a},\vb{k}\vb{a},\vb{K}\vb{a},\vb{c}\vb{a})], \text{ s.t. } a_i \in [0,100]\end{aligned}
+$$
+
+## Regression Method
+
+Yet another approach to user-defined optimization of career choice and development would be to employ a simple BVLS regression:
+
+$$
+\text{arg min}_{\vb{a}} || \vb{B_c}\vb{a}-\vb{\pi}||_{2}^{2}, \text{ s.t. } a_i \in [0,100],
+$$
+
+where $\vb{\pi} = (\pi_1,...,\pi_n)$ is the user-defined vector of preferences for each of $n$ criteria, and $\vb{B_c}$ the matrix of $\beta_i^c$ criteria associated with each metric:
+
+$$
+\vb{B_c} =\begin{bmatrix}\beta_1^{c_1} & \dots & \beta_m^{c_1}\\ \vdots & \ddots & \vdots\\ \beta_1^{c_n} & \dots & \beta_m^{c_n}\end{bmatrix},
+$$
+
+which in this case is\
+
+$$
+\vb{B_c} = \begin{bmatrix}\nu_1 & \dots & \nu_m\\ p_1 & \dots & p_m\\ \lambda_1 & \dots & \lambda_m\\ t_1 & \dots & t_m\\ k_1 & \dots & k_m\\ K_1 & \dots & K_m\\ c_1 & \dots & c_m\\ \psi_{1,1} & \dots & \psi_{1,m}\\ \vdots & \ddots & \vdots\\ \psi_{F,1} & \dots & \psi_{F,m}\end{bmatrix},
+$$
+
+where $\psi_{f,i}$ is the factor loading of attribute $i$ to the $f$-th factor.
+
+Finally, the BVLS regression problem becomes:
+
+$$
+\text{arg min}_{\vb{a}} \Bigg|\Bigg|\begin{bmatrix}\nu_1 & \dots & \nu_m\\ p_1 & \dots & p_m\\ \lambda_1 & \dots & \lambda_m\\ \vdots & \ddots & \vdots\\  \psi_{1,1} & \dots & \psi_{1,m} \\ \vdots & \ddots & \vdots\\ \psi_{F,1} & \dots & \psi_{F,m}\end{bmatrix}\begin{bmatrix}a_1 \\ \vdots \\ a_m \end{bmatrix}-\begin{bmatrix}\overline{\phi} \\ \overline{w} \\ \overline{\Lambda} \\ \vdots \\ \overline{\psi_1} \\ \vdots \\ \overline{\psi_F} \end{bmatrix}\Bigg|\Bigg|_{2}^{2}, \text{ s.t. } a_i \in [0,100]
+$$
+
+Thus, the BVLS regression will estimate bounded parameters $\vb{a}=(a_1,...,a_m)$ that minimize the distance between the user's "ideal" professional profile and their own predetermined preferences $\pi=(\overline{\phi},\overline{w},\overline{\Lambda},...,\overline{\psi_1}...,\overline{\psi_F})$. The problem does not have any constraints other than $a_i \in [0,100]$, and so the resulting vector of attributes is understood here as the best linear approximation of the user's "ideal" professional profile.

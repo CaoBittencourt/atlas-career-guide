@@ -265,56 +265,56 @@ lapply(pkg, function(x)
 # #   , add = T
 # # )
 
-# - Interchangeability ----------------------------------------------------
-fun_interchangeability <- function(
-    # Similarity scores
-  .dbl_similarity
-  # Scaling factor
-  , .dbl_scaling = 1
-){
-  
-  # Arguments validation
-  stopifnot(
-    "'.dbl_similarity' must be numeric." =
-      is.numeric(.dbl_similarity)
-  )
-  
-  stopifnot(
-    "'.dbl_scaling' must be numeric." =
-      is.numeric(.dbl_scaling)
-  )
-  
-  # Data wrangling
-  .dbl_scaling[[1]] -> sigma
-  
-  .dbl_similarity -> s
-  
-  # Interchangeability coefficients
-  # Coefficient 1
-  # dbl_interchangeability <- s
-  
-  # Coefficient 2
-  # dbl_interchangeability <- s ^ sigma
-  
-  # Coefficient 3
-  # dbl_interchangeability <- s * s + (1 - s) * s ^ sigma
-  
-  # Coefficient 4
-  # dbl_interchangeability <- s * s + (1 - s) * s ^ ((1/s)^(1/s))
-  
-  # Coefficient 5
-  # dbl_interchangeability <- s * s + (1 - s) * s ^ ((1/s)^sigma)
-  
-  # Coefficient 6
-  # dbl_interchangeability <- s ^ ((1/s)^(1/s))
-  dbl_interchangeability <- s ^ ((1/s)^(sigma*(1/s)))
-  
-  # Output
-  return(dbl_interchangeability)
-  
-}
+# # - Interchangeability ----------------------------------------------------
+# fun_interchangeability <- function(
+#     # Similarity scores
+#   .dbl_similarity
+#   # Scaling factor
+#   , .dbl_scaling = 1
+# ){
+#   
+#   # Arguments validation
+#   stopifnot(
+#     "'.dbl_similarity' must be numeric." =
+#       is.numeric(.dbl_similarity)
+#   )
+#   
+#   stopifnot(
+#     "'.dbl_scaling' must be numeric." =
+#       is.numeric(.dbl_scaling)
+#   )
+#   
+#   # Data wrangling
+#   .dbl_scaling[[1]] -> sigma
+#   
+#   .dbl_similarity -> s
+#   
+#   # Interchangeability coefficients
+#   # Coefficient 1
+#   # dbl_interchangeability <- s
+#   
+#   # Coefficient 2
+#   # dbl_interchangeability <- s ^ sigma
+#   
+#   # Coefficient 3
+#   # dbl_interchangeability <- s * s + (1 - s) * s ^ sigma
+#   
+#   # Coefficient 4
+#   # dbl_interchangeability <- s * s + (1 - s) * s ^ ((1/s)^(1/s))
+#   
+#   # Coefficient 5
+#   # dbl_interchangeability <- s * s + (1 - s) * s ^ ((1/s)^sigma)
+#   
+#   # Coefficient 6
+#   # dbl_interchangeability <- s ^ ((1/s)^(1/s))
+#   dbl_interchangeability <- s ^ ((1/s)^(sigma*(1/s)))
+#   
+#   # Output
+#   return(dbl_interchangeability)
+#   
+# }
 
-#  - Interchangeability ---------------------------------------------------
+# - Interchangeability ---------------------------------------------------
 fun_interchangeability <- function(
     
   .mtx_similarity
@@ -416,66 +416,67 @@ fun_interchangeability <- function(
   return(mtx_interchangeability)
   
 }
-df_models %>% 
-  full_join(
-    df_occupations
-  ) %>% 
-  mutate(
-    I = 
-      fun_interchangeability(
-        .mtx_similarity = 
-          bvls.wgt
-        , .dbl_scaling = 10
-        , .dbl_years_education = 21
-        , .dbl_years_education_min = 
-          education_years
-      ) %>% as.numeric()
-  ) %>% 
-  select(
-    occupation
-    , I 
-    , bvls.wgt
-    , employment2
-  ) %>% 
-  mutate(
-    jobs = 
-      round(I * employment2)
-  ) %>% 
-  filter(str_detect(
-    str_to_lower(occupation)
-    # , 'hospitalist'
-    # , '^maids'
-    # , '^fallers'
-    # , 'statistician'
-    # , '^statistician'
-    , 'economist'
-  ))
 
-
-plot(
-  fun_interchangeability(
-    seq(0,1,0.01)
-    , .dbl_scaling = 
-      df_occupations %>% 
-      filter(str_detect(
-        str_to_lower(occupation)
-        # , 'hospitalist'
-        # , '^maids'
-        # , '^fallers'
-        # , 'statistician'
-        # , '^statistician'
-        , 'economist'
-      )) %>% 
-      reframe(
-        kflex = fun_kflex(
-          c_across(ends_with('.l'))
-          , .dbl_scale.lb = 0
-          , .dbl_scale.ub = 100
-        )
-      ) %>% 
-      pull()
-  )
-)
+# df_models %>% 
+#   full_join(
+#     df_occupations
+#   ) %>% 
+#   mutate(
+#     I = 
+#       fun_interchangeability(
+#         .mtx_similarity = 
+#           bvls.wgt
+#         , .dbl_scaling = 10
+#         , .dbl_years_education = 21
+#         , .dbl_years_education_min = 
+#           education_years
+#       ) %>% as.numeric()
+#   ) %>% 
+#   select(
+#     occupation
+#     , I 
+#     , bvls.wgt
+#     , employment2
+#   ) %>% 
+#   mutate(
+#     jobs = 
+#       round(I * employment2)
+#   ) %>% 
+#   filter(str_detect(
+#     str_to_lower(occupation)
+#     # , 'hospitalist'
+#     # , '^maids'
+#     # , '^fallers'
+#     # , 'statistician'
+#     # , '^statistician'
+#     , 'economist'
+#   ))
+# 
+# 
+# plot(
+#   fun_interchangeability(
+#     seq(0,1,0.01)
+#     , .dbl_scaling = 
+#       df_occupations %>% 
+#       filter(str_detect(
+#         str_to_lower(occupation)
+#         # , 'hospitalist'
+#         # , '^maids'
+#         # , '^fallers'
+#         # , 'statistician'
+#         # , '^statistician'
+#         , 'economist'
+#       )) %>% 
+#       reframe(
+#         kflex = fun_kflex(
+#           c_across(ends_with('.l'))
+#           , .dbl_scale.lb = 0
+#           , .dbl_scale.ub = 100
+#         )
+#       ) %>% 
+#       pull()
+#   )
+# )
 
 # - Employability ---------------------------------------------------------
 fun_employability <- function(

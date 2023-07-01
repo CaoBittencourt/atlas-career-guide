@@ -20,7 +20,7 @@ pkg -> chr_profile
 
 # - Functions -------------------------------------------------------------
 # EFA-based exogenous impact analysis
-source('C:/Users/Cao/Documents/Github/Atlas-Research/Functions/fun_efa_impact.R')
+source('C:/Users/Cao/Documents/Github/atlas-research/functions/methods/fun_fa_impact.R')
 c(chr_profile, pkg) -> chr_profile
 # Automated plotting
 source('C:/Users/Cao/Documents/Github/Atlas-Research/Functions/Auto_plots.R')
@@ -60,13 +60,20 @@ read_csv(
   'C:/Users/Cao/Documents/Github/Atlas-Research/Data/df_atlas.complete_equamax_15_factors.csv'
 ) -> df_occupations
 
+setwd(dirname(
+  rstudioapi::getSourceEditorContext()$path
+))
+
 # Dynamic texts
 map(
-  excel_sheets('C:/Users/Cao/Documents/Github/Atlas-Research/Reports/AI Impact/ai_assessment_texts.xlsx')
-  , ~ read_excel('C:/Users/Cao/Documents/Github/Atlas-Research/Reports/AI Impact/ai_assessment_texts.xlsx', sheet = .x)
+  # excel_sheets('C:/Users/Cao/Documents/Github/Atlas-Research/Reports/AI Impact/ai_assessment_texts.xlsx')
+  excel_sheets('./ai_assessment_texts.xlsx')
+  # , ~ read_excel('C:/Users/Cao/Documents/Github/Atlas-Research/Reports/AI Impact/ai_assessment_texts.xlsx', sheet = .x)
+  , ~ read_excel('./ai_assessment_texts.xlsx', sheet = .x)
 ) -> list_df_text
 
-names(list_df_text) <- excel_sheets('C:/Users/Cao/Documents/Github/Atlas-Research/Reports/AI Impact/ai_assessment_texts.xlsx')
+# names(list_df_text) <- excel_sheets('C:/Users/Cao/Documents/Github/Atlas-Research/Reports/AI Impact/ai_assessment_texts.xlsx')
+names(list_df_text) <- excel_sheets('./ai_assessment_texts.xlsx')
 
 # Remove carriage returns
 list_df_text %>%
