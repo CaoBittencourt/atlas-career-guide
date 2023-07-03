@@ -96,19 +96,19 @@ $$
 Yet another approach to user-defined optimization of career choice and development would be to employ a simple BVLS regression:
 
 $$
-\text{arg min}_{\vb{a}} || \vb{B_c}\vb{a}-\vb{\pi}||_{2}^{2}, \text{ s.t. } a_i \in [0,100],
+\text{arg min}_{\vb{a}} || \vb{B_\pi}\vb{a}-\vb{\pi}||_{2}^{2}, \text{ s.t. } a_i \in [0,100],
 $$
 
-where $\vb{\pi} = (\pi_1,...,\pi_n)$ is the user-defined vector of preferences for each of $n$ criteria, and $\vb{B_c}$ the matrix of $\beta_i^c$ criteria associated with each metric:
+where $\vb{\pi} = (\pi_1,...,\pi_n)$ is the user-defined vector of preferences for each of $n$ criteria, and $\vb{B_\pi}$ the matrix of $\beta_i^{\pi_j}$ criteria associated with each metric:
 
 $$
-\vb{B_c} =\begin{bmatrix}\beta_1^{c_1} & \dots & \beta_m^{c_1}\\ \vdots & \ddots & \vdots\\ \beta_1^{c_n} & \dots & \beta_m^{c_n}\end{bmatrix},
+\vb{B_\pi} =\begin{bmatrix}\beta_1^{\pi_1} & \dots & \beta_m^{\pi_1}\\ \vdots & \ddots & \vdots\\ \beta_1^{\pi_n} & \dots & \beta_m^{\pi_n}\end{bmatrix},
 $$
 
 which in this case is\
 
 $$
-\vb{B_c} = \begin{bmatrix}\nu_1 & \dots & \nu_m\\ p_1 & \dots & p_m\\ \lambda_1 & \dots & \lambda_m\\ t_1 & \dots & t_m\\ k_1 & \dots & k_m\\ K_1 & \dots & K_m\\ c_1 & \dots & c_m\\ \psi_{1,1} & \dots & \psi_{1,m}\\ \vdots & \ddots & \vdots\\ \psi_{F,1} & \dots & \psi_{F,m}\end{bmatrix},
+\vb{B_\pi} = \begin{bmatrix}\nu_1 & \dots & \nu_m\\ p_1 & \dots & p_m\\ \lambda_1 & \dots & \lambda_m\\ t_1 & \dots & t_m\\ k_1 & \dots & k_m\\ K_1 & \dots & K_m\\ c_1 & \dots & c_m\\ \psi_{1,1} & \dots & \psi_{1,m}\\ \vdots & \ddots & \vdots\\ \psi_{F,1} & \dots & \psi_{F,m}\end{bmatrix},
 $$
 
 where $\psi_{f,i}$ is the factor loading of attribute $i$ to the $f$-th factor.
@@ -119,4 +119,4 @@ $$
 \text{arg min}_{\vb{a}} \Bigg|\Bigg|\begin{bmatrix}\nu_1 & \dots & \nu_m\\ p_1 & \dots & p_m\\ \lambda_1 & \dots & \lambda_m\\ \vdots & \ddots & \vdots\\  \psi_{1,1} & \dots & \psi_{1,m} \\ \vdots & \ddots & \vdots\\ \psi_{F,1} & \dots & \psi_{F,m}\end{bmatrix}\begin{bmatrix}a_1 \\ \vdots \\ a_m \end{bmatrix}-\begin{bmatrix}\overline{\phi} \\ \overline{w} \\ \overline{\Lambda} \\ \vdots \\ \overline{\psi_1} \\ \vdots \\ \overline{\psi_F} \end{bmatrix}\Bigg|\Bigg|_{2}^{2}, \text{ s.t. } a_i \in [0,100]
 $$
 
-Thus, the BVLS regression will estimate bounded parameters $\vb{a}=(a_1,...,a_m)$ that minimize the distance between the user's "ideal" professional profile and their own predetermined preferences $\pi=(\overline{\phi},\overline{w},\overline{\Lambda},...,\overline{\psi_1}...,\overline{\psi_F})$. The problem does not have any constraints other than $a_i \in [0,100]$, and so the resulting vector of attributes is understood here as the best linear approximation of the user's "ideal" professional profile.
+Thus, the BVLS regression will estimate bounded parameters $\vb{a}=(a_1,...,a_m)$ that minimize the distance between the user's "ideal" professional profile and their own predetermined preferences $\pi=(\overline{\phi},\overline{w},\overline{\Lambda},...,\overline{\psi_1},...,\overline{\psi_F})$. The problem does not have any constraints other than $a_i \in [0,100]$, and so the resulting vector of attributes is understood here as the best linear approximation of the user's "ideal" professional profile.
