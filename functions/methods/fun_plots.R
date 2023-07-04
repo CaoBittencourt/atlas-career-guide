@@ -36,7 +36,7 @@ fun_facets <- function(
 ){
   
   # Quosure
-  if(!is_quosure(.enq_facets)){
+  if(!rlang::is_quosure(.enq_facets)){
     
     stop("'.enq_facets' must be a quosure.")
     
@@ -3422,7 +3422,7 @@ fun_plot.lollipop <- function(
     , alpha = 0.8
     , position = 'identity'
     , color = '#D4D5D8'
-    , size = 2
+    , linewidth = 2
   )
   , .list_labels.param = list(
     fontface = 'bold'
@@ -3947,7 +3947,7 @@ fun_plot.dumbbell2 <- function(
   # Default parameters
   , .list_geom_line.param = list(
     color = 'lightgrey'
-    , size = 2
+    , linewidth = 2
   )
   , .list_geom_point.param = list(
     size = 5.4
@@ -4050,43 +4050,43 @@ fun_plot.dumbbell2 <- function(
   
   # Reordering
   if(.reorder_fct){
-    
-    .df_data %>% 
+
+    .df_data %>%
       filter(
         !!aes_mapping$colour %in% (
           .df_data %>%
-            slice_max(!!aes_mapping$x) %>% 
+            slice_max(!!aes_mapping$x) %>%
             pull(!!aes_mapping$colour)
         )
       ) -> chr_order
-    
+
     if(!.reorder_desc){
-      
+
       # Correct this code
       # Order = max with min diff to max diff
-      
+
       chr_order %>%
         arrange(desc(!!aes_mapping$x)) %>%
         pull(!!aes_mapping$y) %>%
         unique() -> chr_order
-      
-    } else { 
-      
+
+    } else {
+
       chr_order %>%
         arrange(!!aes_mapping$x) %>%
         pull(!!aes_mapping$y) %>%
         unique() -> chr_order
-      
+
     }
-    
-    .df_data %>% 
+
+    .df_data %>%
       mutate(
-        !!aes_mapping$y := 
+        !!aes_mapping$y :=
           factor(
             !!aes_mapping$y
             , levels = chr_order
           )
-        # , !!aes_mapping$colour := 
+        # , !!aes_mapping$colour :=
         #   fct_reorder(
         #     !!aes_mapping$colour
         #     , !!aes_mapping$x
@@ -4094,7 +4094,7 @@ fun_plot.dumbbell2 <- function(
         #     , .desc = .reorder_desc
         #   )
       ) -> .df_data
-    
+
     # fun_reorder(
     #   .df_data = .df_data
     #   , .enq_var.fct = aes_mapping$y
@@ -4102,31 +4102,31 @@ fun_plot.dumbbell2 <- function(
     #   , .fun_ord = .reorder_fun
     #   , .desc = .reorder_desc
     # ) -> .df_data
-    
+
   }
-  
+
   if(all(
     .reorder_fct
     , length(plt_facets)
   )){
-    
+
     if(.reorder_desc){
-      
-      .df_data %>% 
+
+      .df_data %>%
         arrange(desc(!!aes_mapping$x)) %>%
         pull(!!enq_facets) %>%
         unique() -> chr_order
-      
-    } else { 
-      
-      .df_data %>% 
+
+    } else {
+
+      .df_data %>%
         arrange(!!aes_mapping$x) %>%
         pull(!!enq_facets) %>%
         unique() -> chr_order
-      
+
     }
-    
-    .df_data %>% 
+
+    .df_data %>%
       mutate(
         !!enq_facets :=
           factor(
@@ -4134,7 +4134,7 @@ fun_plot.dumbbell2 <- function(
             , levels = chr_order
           )
       ) -> .df_data
-    
+
     # fun_reorder(
     #   .df_data = .df_data
     #   , .enq_var.fct = enq_facets
@@ -4142,7 +4142,7 @@ fun_plot.dumbbell2 <- function(
     #   , .fun_ord = .reorder_fun
     #   , .desc = .reorder_desc
     # ) -> .df_data
-    
+
   }
   
   # Color mapping
@@ -4182,59 +4182,59 @@ fun_plot.dumbbell2 <- function(
   # Labs
   fun_labs(.list_labs) -> plt_labs
   
-  # Label position
-  if(!length(.list_labels1.param$position)){
-    # Unless specified, use geom position as label position
-    .list_labels1.param$position <- .list_geom_point.param$position
-    
-  }
+  # # Label position
+  # if(!length(.list_labels1.param$position)){
+  #   # Unless specified, use geom position as label position
+  #   .list_labels1.param$position <- .list_geom_point.param$position
+  #   
+  # }
+  # 
+  # if(!length(.list_labels2.param$position)){
+  #   # Unless specified, use geom position as label position
+  #   .list_labels2.param$position <- .list_geom_point.param$position
+  #   
+  # }
   
-  if(!length(.list_labels2.param$position)){
-    # Unless specified, use geom position as label position
-    .list_labels2.param$position <- .list_geom_point.param$position
-    
-  }
-  
-  # Labels
-  if(.labels){
-    
-    # Compose individual aes() for each label
-    aes(
-      label = !!aes_mapping$x %>%
-        .fun_format.labels
-      , x = !!aes_mapping$x
-      , y = !!aes_mapping$y
-    ) -> aes_labels1
-    
-    aes(
-      label = !!aes_mapping$xend %>%
-        .fun_format.labels
-      , x = !!aes_mapping$xend
-      , y = !!aes_mapping$y
-    ) -> aes_labels2
-    
-    # Call labels function
-    fun_labels(
-      .list_default = .list_labels1.param
-      , .aes_mapping = aes_labels1
-      # , .coord_flip = !.coord_flip
-      , .geom_label = .geom_label
-    ) -> plt_labels1
-    
-    fun_labels(
-      .list_default = .list_labels2.param
-      , .aes_mapping = aes_labels2
-      # , .coord_flip = !.coord_flip
-      , .geom_label = .geom_label
-    ) -> plt_labels2
-    
-  } else {
-    
+  # # Labels
+  # if(.labels){
+  #   
+  #   # Compose individual aes() for each label
+  #   aes(
+  #     label = !!aes_mapping$x %>%
+  #       .fun_format.labels
+  #     , x = !!aes_mapping$x
+  #     , y = !!aes_mapping$y
+  #   ) -> aes_labels1
+  #   
+  #   aes(
+  #     label = !!aes_mapping$xend %>%
+  #       .fun_format.labels
+  #     , x = !!aes_mapping$xend
+  #     , y = !!aes_mapping$y
+  #   ) -> aes_labels2
+  #   
+  #   # Call labels function
+  #   fun_labels(
+  #     .list_default = .list_labels1.param
+  #     , .aes_mapping = aes_labels1
+  #     # , .coord_flip = !.coord_flip
+  #     , .geom_label = .geom_label
+  #   ) -> plt_labels1
+  #   
+  #   fun_labels(
+  #     .list_default = .list_labels2.param
+  #     , .aes_mapping = aes_labels2
+  #     # , .coord_flip = !.coord_flip
+  #     , .geom_label = .geom_label
+  #   ) -> plt_labels2
+  #   
+  # } else {
+  #   
     NULL -> plt_labels1
     
     NULL -> plt_labels2
     
-  }
+  # }
   
   
   # Dumbbell chart

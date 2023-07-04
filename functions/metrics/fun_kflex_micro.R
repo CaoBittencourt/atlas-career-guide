@@ -1,5 +1,19 @@
 # [SETUP] -----------------------------------------------------------------
-# - Packages --------------------------------------------------------------
+# - Packages ----------------------------------------------------------------
+pkg <- c(
+  'bvls'
+  , 'tidyverse' #Data wrangling
+)
+
+# Activate / install packages
+lapply(pkg, function(x)
+  if(!require(x, character.only = T))
+  {install.packages(x); require(x)})
+
+# Package citation
+# lapply(pkg, function(x)
+#   {citation(package = x)})
+
 # [FUNCTIONS] --------------------------------------------------------------
 # - Human Capital Micro-Flexibility ---------------------------------------
 fun_kflex_micro <- function(
@@ -57,7 +71,7 @@ fun_kflex_micro <- function(
   # EFA model
   if(length(efa_model)){
     
-    loadings(dsds)[,] %>% 
+    loadings(efa_model)[,] %>% 
       as_tibble(
         rownames = 'item'
       ) -> df_loadings
@@ -173,6 +187,7 @@ fun_kflex_micro <- function(
   # Calculate capital micro-flexibility
   # Default value
   df_kflex_micro_intra_factor <- NULL
+  df_kflex_micro_inter_factor <- NULL
   
   # Intra-Factor Micro-Flexibility
   if(length(efa_model)){
@@ -198,11 +213,47 @@ fun_kflex_micro <- function(
         .id = 'factor'
       ) %>%
       rename(
-        'item.kflex_micro' = 3
+        'kflex_micro_intra_factor' = 3
       ) -> df_kflex_micro_intra_factor
     
   }
-
+  
+  # Inter-Factor Micro-Flexibility
+  if(length(efa_model)){
+    
+    df_kflex_micro %>% 
+      full_join(
+        df_loadings
+      ) %>%
+      split(.$factor) %>%
+      map(
+        ~ .x[
+          , !(colnames(.x) %in% 
+                c(
+                  .x$item
+                  , 'item'
+                  , 'factor'
+                )
+          )] %>%
+          rowMeans(
+            na.rm = T
+          ) %>%
+          set_names(
+            .x$item
+          ) %>%
+        as_tibble(
+          rownames = 'item'
+        )
+      ) %>%
+      bind_rows(
+        .id = 'factor'
+      ) %>%
+      rename(
+        'kflex_micro_inter_factor' = 3
+      ) -> df_kflex_micro_inter_factor
+    
+  }
+  
   # Overall Micro-Flexibility
   rowMeans(
     df_kflex_micro[-1]
@@ -215,12 +266,13 @@ fun_kflex_micro <- function(
       rownames = 'item'
     ) %>%
     rename(
-      'item.kflex_micro' = 2
+      'kflex_micro' = 2
     ) -> df_kflex_micro
   
   # Output
   return(compact(list(
     'intra_factor_micro_kflex' = df_kflex_micro_intra_factor,
+    'inter_factor_micro_kflex' = df_kflex_micro_inter_factor,
     'overall_micro_kflex' = df_kflex_micro
   )))
   
