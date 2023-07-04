@@ -113,14 +113,14 @@ fun_ideal_profile <- function(
     , dbl_user_preferences
     , bl = dbl_scale_lb
     , bu = dbl_scale_ub
-  )) -> dbl_coef
+  )) -> dbl_attributes
   
   colnames(mtx_efa) ->
-    names(dbl_coef)
+    names(dbl_attributes)
   
   # Output
   return(list(
-    'profile' = dbl_coef,
+    'profile' = dbl_attributes,
     'preferences' = mtx_coef,
     'scale_ub' = dbl_scale_ub[[1]],
     'scale_lb' = dbl_scale_lb[[1]]
@@ -129,6 +129,40 @@ fun_ideal_profile <- function(
 }
 
 # dsds --------------------------------------------------------------------
+constrOptim(
+  # starting values
+  theta = runif(2, 0, 100)
+  # objective function
+  , f = function(fct1,fct2){1 + (fct1-0)^2 + (fct2 - 83)^2}
+  # , f = function(x){1 + (x[1]-0)^2 + (x[2] - 83)^2}
+  # gradient
+  , grad = function(fct1,fct2){c(fct1,fct2)}
+  # , grad = function(x){c(x[1],x[2])}
+  # constraint matrix
+  , ui = rbind(1,1,1,1)
+  # constraint vector
+  , ci = c(100,100,0,0)
+  , control = list(fnscale = -1)
+)
+
+dbl_starting_values <- runif(2, 0, 100)
+dbl_starting_values <- c(50,50)
+dbl_starting_values <- c(0,83)
+fun_objective <- function(x){return(-(1 + ((0 - x[[1]])^2) + (83 - x[[2]])^2))}
+round(solnl(
+  dbl_starting_values
+  , fun_objective
+  , lb = rep(0, length(dbl_starting_values))
+  , ub = rep(100, length(dbl_starting_values))
+)$par, 2)
+
+install.packages('NlcOptim')
+library(NlcOptim)
+
+read_rds(
+  "C:/Users/Cao/Documents/Github/atlas-research/data/efa_model_equamax_15_factors.rds"
+) -> efa_model
+
 fun_kflex_micro(
   df_data_rows = df_occupations
   , efa_model = efa_model
@@ -139,20 +173,61 @@ fun_kflex_micro(
     employment2
 ) -> list_kflex_micro
 
-loadings(efa_model)[,] %>% 
-  as_tibble()
+coef(bvls(
+  df_occupations %>% 
+    select(ends_with('.l')) %>% 
+    as.matrix() * 
+    sqrt(
+      df_occupations$
+        employment2
+    )
+  , df_occupations$
+    annual_wage_2021 * 
+    sqrt(
+      df_occupations$
+        employment2
+    )
+  , bl = rep(0,200)
+  , bu = rep(Inf,200)
+)) %>% 
+  set_names(
+    df_occupations %>% 
+      select(ends_with('.l')) %>% 
+      names()
+  ) -> dbl_marginal_cost
+
+view(dbl_marginal_cost)
 
 fun_ideal_profile(
   efa_model = efa_model
   , dbl_user_preferences = 
     # runif(10, min = 0, max = 100)
     # c(83, 0, 0, 0, 83, 67, 100, 100, 0, 50, 0, 100, 0, 17, 0)
-    c(100, c(83, 0, 0, 0, 67, 50, 100, 83, 0, 33, 0, 100, 0, 17, 0))
-  , 'kflex' = list_kflex_micro$overall_micro_kflex$kflex_micro
+    # c(80000,
+    c(100000,
+    # c(200000,
+      # 50, 
+      c(83, 0, 0, 0, 67, 50, 100, 83, 0, 33, 0, 100, 0, 17, 0))
+  , 'kcost' = dbl_marginal_cost[list_kflex_micro$overall_micro_kflex$item]
+  # , 'micro_kflex' = list_kflex_micro$overall_micro_kflex$kflex_micro
 ) -> dsds
 
 view(dsds$profile)
-view(dsds$preferences)
+
+dsds$
+  preferences %>% 
+  as_tibble(
+    rownames = 'criteria'
+  ) %>% 
+  select(
+    criteria, 
+    contains('flex')
+  ) %>% 
+  mutate(
+    user_preferences = 
+      c(80000, 83, c(83, 0, 0, 0, 67, 50, 100, 83, 0, 33, 0, 100, 0, 17, 0))
+  ) %>% 
+  view
 
 dsds$scale_ub
 dsds$scale_lb
