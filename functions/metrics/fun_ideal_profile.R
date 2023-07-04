@@ -145,19 +145,33 @@ constrOptim(
   , control = list(fnscale = -1)
 )
 
-dbl_starting_values <- runif(2, 0, 100)
-dbl_starting_values <- c(50,50)
-dbl_starting_values <- c(0,83)
-fun_objective <- function(x){return(-(1 + ((0 - x[[1]])^2) + (83 - x[[2]])^2))}
-round(solnl(
-  dbl_starting_values
-  , fun_objective
-  , lb = rep(0, length(dbl_starting_values))
-  , ub = rep(100, length(dbl_starting_values))
-)$par, 2)
-
 install.packages('NlcOptim')
 library(NlcOptim)
+dbl_starting_values <- runif(2, 0, 100) / 100
+dbl_starting_values <- c(50,50) / 100
+dbl_starting_values <- c(0,83) / 100
+dbl_starting_values <- c(0,0)
+
+fun_objective <- function(x){
+  
+  1 - 
+    ((x[1] - 0.5) ^ 2) / 2 -
+    ((x[2] - 0.83) ^ 2) / 2 -> u
+  
+  return(-u)
+  
+}
+
+round(solnl(
+  X = dbl_starting_values
+  , objfun = fun_objective
+  # , A = matrix(-1, nrow = 2, ncol = 2)
+  , A = rbind(c(-1,-1),c(1,1))
+  , B = rbind(1,0.25)
+  , lb = rep(0, length(dbl_starting_values))
+  , ub = rep(1, length(dbl_starting_values))
+)$par, 2)
+
 
 read_rds(
   "C:/Users/Cao/Documents/Github/atlas-research/data/efa_model_equamax_15_factors.rds"
@@ -205,7 +219,7 @@ fun_ideal_profile(
     # c(83, 0, 0, 0, 83, 67, 100, 100, 0, 50, 0, 100, 0, 17, 0)
     # c(80000,
     c(100000,
-    # c(200000,
+      # c(200000,
       # 50, 
       c(83, 0, 0, 0, 67, 50, 100, 83, 0, 33, 0, 100, 0, 17, 0))
   , 'kcost' = dbl_marginal_cost[list_kflex_micro$overall_micro_kflex$item]
