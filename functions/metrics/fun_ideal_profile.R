@@ -3,25 +3,14 @@
 fun_ideal_profile <- function(
     
   efa_model
-  , dbl_user_preferences
-  , ...
+  , dbl_factor_preferences
+  , dbl_coef_preferences = NULL
+  , df_item_coefficients = NULL
   , dbl_scale_ub = 100
   , dbl_scale_lb = 0
+  , chr_method = c('gradient','bvls')
   
 ){
-  
-  # Dynamic Dots
-  list2(...) -> list_coef
-  
-  stopifnot(
-    "'dbl_scale_ub' must be numeric." =
-      is.numeric(dbl_scale_ub)
-  )
-  
-  stopifnot(
-    "'dbl_scale_lb' must be numeric." =
-      is.numeric(dbl_scale_lb)
-  )
   
   # Arguments Validation
   stopifnot(
@@ -49,31 +38,49 @@ fun_ideal_profile <- function(
   rm(efa_model)
   
   stopifnot(
-    "'...' must be a collection of numeric vectors the same length as the number of items in 'efa_model'." =
+    "'df_item_coefficients' must be a coefficients data frame with an 'item' column." =
       any(
-        !length(list_coef)
-        , all(
-          is.numeric(c(...))
-          , map_lgl(
-            list_coef
-            , ~ length(.x) ==
-              ncol(mtx_efa)
-          ))
+        all(
+          is.data.frame(df_item_coefficients)
+          , 'item' %in% names(df_item_coefficients)
+          , df_item_coefficients$item %in% 
+            colnames(mtx_efa)
+        )
+        , is.null(df_item_coefficients)
+      )
+    
+  ) 
+  
+  stopifnot(
+    "'dbl_factor_preferences' must be a numeric vector." =
+      all(
+        is.numeric(dbl_coef_preferences)
+        , length(dbl_factor_preferences) ==
+          nrow(mtx_efa)
       )
   )
   
   stopifnot(
-    "'dbl_user_preferences' must be a numeric vector the same length as the number of coefficients." =
+    "'dbl_coef_preferences' must be a numeric vector." =
       any(
-        !length(list_coef)
-        , all(
-          is.numeric(dbl_user_preferences)
-          , length(dbl_user_preferences) ==
-            sum(
-              length(list_coef)
-              , nrow(mtx_efa)
-            )
-        ))
+        is.numeric(dbl_coef_preferences)
+        , is.null(dbl_coef_preferences)
+      )
+  )
+  
+  stopifnot(
+    "'dbl_scale_ub' must be numeric." =
+      is.numeric(dbl_scale_ub)
+  )
+  
+  stopifnot(
+    "'dbl_scale_lb' must be numeric." =
+      is.numeric(dbl_scale_lb)
+  )
+  
+  stopifnot(
+    "'chr_method' must be a character." = 
+      is.character(chr_method)
   )
   
   # Data Wrangling
@@ -84,44 +91,123 @@ fun_ideal_profile <- function(
   dbl_scale_ub[[1]] -> dbl_scale_ub
   dbl_scale_lb[[1]] -> dbl_scale_lb
   
-  rep(
-    dbl_scale_ub
-    , ncol(mtx_efa)
-  ) -> dbl_scale_ub
-  rep(
-    dbl_scale_lb
-    , ncol(mtx_efa)
-  ) -> dbl_scale_lb
-  
-  rbind(
-    do.call(rbind, list_coef)
-    , mtx_efa
-  ) -> mtx_coef
+  chr_method[[1]] -> chr_method
   
   as.numeric(
-    dbl_user_preferences
-  ) -> dbl_user_preferences
+    dbl_factor_preferences
+  ) -> dbl_factor_preferences
+  
+  if(all(
+    length(df_item_coefficients),
+    length(dbl_coef_preferences)
+  )){
+    
+    dbl_coef_preferences[
+      1:(nrow(df_item_coefficients) - 1)
+    ] -> dbl_coef_preferences
+    
+    df_item_coefficients[
+      colnames(mtx_efa),
+    ] -> df_item_coefficients
+    
+    # dsdsds
+    
+  }
   
   # Estimate User-Defined Ideal Profile
-  # Economic Problem I
+  if(
+    chr_method ==
+    'gradient'
+  ){
+    
+    # Constrains Matrix
+    list_coef
+    
+    # Constrained Optimization Problem I
+    constrOptim(
+      # starting values
+      theta = 
+        runif(
+          ncol(mtx_efa), 
+          dbl_scale_lb, 
+          dbl_scale_ub
+        )
+      # objective function
+      , f = function(
+    a
+    , mtx_factor_scores = 
+      mtx_efa
+    , dbl_factor_pref = 
+      dbl_factor_preferences
+    
+      ){
+        
+        1 - 
+          sum(((
+            mtx_factor_scores * a - dbl_factor_pref
+          ) ^ 2) / nrow(mtx_factor_scores)) -> u
+        
+        return(u)
+        
+      }
+    # gradient
+    , grad = NULL
+    # constraint matrix
+    , ui = 
+      rbind(
+        diag(1, ncol(mtx_efa))
+        , diag(-1, ncol(mtx_efa))
+      )
+    # constraint vector
+    , ci = c(
+      rep(dbl_scale_lb, ncol(mtx_efa))
+      , rep(-dbl_scale_ub, ncol(mtx_efa))
+    )
+    , control = list(fnscale = -1)
+    )$par -> dbl_attributes
+    
+    # Constrained Optimization Problem II
+    
+  } else { 
+    
+    # BVLS Regression Method
+    
+    # rbind(
+    #   df_item_coefficients
+    #   , mtx_efa
+    # ) -> mtx_coef
+    
+    rep(
+      dbl_scale_ub
+      , ncol(mtx_efa)
+    ) -> dbl_scale_ub
+    rep(
+      dbl_scale_lb
+      , ncol(mtx_efa)
+    ) -> dbl_scale_lb
+    
+    coef(bvls(
+      mtx_coef
+      , c(
+        dbl_coef_preferences
+        , dbl_factor_preferences
+      )
+      , bl = dbl_scale_lb
+      , bu = dbl_scale_ub
+    )) -> dbl_attributes
+    
+  }
   
-  # Economic Problem II
-  
-  # BVLS Regression Method
-  coef(bvls(
-    mtx_coef
-    , dbl_user_preferences
-    , bl = dbl_scale_lb
-    , bu = dbl_scale_ub
-  )) -> dbl_attributes
-  
+  # Data Wrangling
+  # colnames(mtx_coef) ->
   colnames(mtx_efa) ->
     names(dbl_attributes)
   
   # Output
   return(list(
     'profile' = dbl_attributes,
-    'preferences' = mtx_coef,
+    # 'preferences' = mtx_coef,
+    'preferences' = mtx_efa,
     'scale_ub' = dbl_scale_ub[[1]],
     'scale_lb' = dbl_scale_lb[[1]]
   ))
@@ -129,6 +215,64 @@ fun_ideal_profile <- function(
 }
 
 # dsds --------------------------------------------------------------------
+fun_ideal_profile(
+  efa_model = efa_model
+  , dbl_user_preferences = 
+    c(83, 0, 0, 0, 67, 50, 100, 83, 0, 33, 0, 100, 0, 17, 0)
+  , dbl_scale_ub = 100
+  , dbl_scale_lb = 0
+  , chr_method = 'gradient'
+) -> dsds
+
+view(dsds$profile)
+view(dsdsds$par)
+
+constrOptim(
+  # starting values
+  theta = 
+    runif(
+      ncol(dsds$efa), 
+      0, 
+      100
+    )
+  # objective function
+  , f = function(
+    a
+    , mtx_factor_scores = 
+      dsds$efa
+    , dbl_factor_pref = 
+      dsds$pref
+    
+  ){
+    
+    1 - 
+      sum(((
+        mtx_factor_scores * a - dbl_factor_pref
+      ) ^ 2) / nrow(mtx_factor_scores)) -> u
+    
+    return(u)
+    
+  }
+  # gradient
+  , grad = NULL
+  # constraint matrix
+  , ui = 
+    rbind(
+      diag(1, ncol(dsds$efa))
+      , diag(-1, ncol(dsds$efa))
+    )
+  # constraint vector
+  , ci = c(
+    rep(0, ncol(dsds$efa))
+    , rep(-100, ncol(dsds$efa))
+  )
+  , control = list(fnscale = -1)
+) -> dsdsds
+
+colnames(dsds$efa) ->
+  names(dsdsds$par)
+view(dsdsds$par)
+
 constrOptim(
   # starting values
   theta = runif(2, 0, 100)
@@ -145,31 +289,241 @@ constrOptim(
   , control = list(fnscale = -1)
 )
 
+constrOptim(
+  # starting values
+  theta = runif(3, 0, 1)
+  # theta = runif(3, 0, 100)
+  # objective function
+  , f = function(a){
+    # 100 - 
+    1 - 
+      # ((c(0.5,0.25,-0.3)*a - 0.5) ^ 2) / 2 -
+      # ((c(-0.1,0.3,0.9)*a - 0.83) ^ 2) / 2 -> u
+      ((0.5*a[1] + 0.25*a[2] -0.3*a[3] - 0.5) ^ 2) / 2 -
+      # ((50*a[1] + 25*a[2] - 30*a[3] - 50) ^ 2) / 2 -
+      ((-0.1*a[1] + 0.3*a[2] +0.9*a[3] - 0.83) ^ 2) / 2 -> u
+    # ((-10*a[2] + 30*a[2] + 90*a[3] - 83) ^ 2) / 2 -> u
+    
+    return(u)
+    
+  }
+  # gradient
+  # , grad = function(a){a}
+  , grad = NULL
+  # , grad = function(x){c(x[1],x[2])}
+  # constraint matrix
+  , ui = 
+    rbind(
+      diag(1, 3)
+      , diag(-1, 3)
+    )
+  # constraint vector
+  , ci = c(rep(0,3),rep(-1,3))
+  # , ci = c(rep(0,3),rep(-100,3))
+  , control = list(fnscale = -1)
+)
+
+constrOptim(
+  # starting values
+  theta = runif(2, 0, 1)
+  # objective function
+  , f = function(a){
+    1 - 
+      ((1*a[1] + 0*a[2] - 0.5) ^ 2) / 2 -
+      ((0*a[1] + 1*a[2] - 0.83) ^ 2) / 2 -> u
+    
+    return(u)
+    
+  }
+  # gradient
+  , grad = NULL
+  # constraint matrix
+  , ui = 
+    rbind(
+      diag(1, 2)
+      , diag(-1, 2)
+    )
+  # constraint vector
+  , ci = c(rep(0,2),rep(-1,2))
+  , control = list(fnscale = -1)
+)
+
+constrOptim(
+  # starting values
+  theta = runif(2, 0, 1)
+  # objective function
+  , f = function(a){
+    1 - 
+      sum(
+        ((c(1,0)*a - 0.5) ^ 2) / 2 -
+          ((c(0,1)*a - 0.83) ^ 2) / 2
+      ) -> u
+    
+    return(u)
+    
+  }
+  # gradient
+  , grad = NULL
+  # constraint matrix
+  , ui = 
+    rbind(
+      diag(1, 2)
+      , diag(-1, 2)
+    )
+  # constraint vector
+  , ci = c(rep(0,2),rep(-1,2))
+  , control = list(fnscale = -1)
+)
+
+fun_ideal_profile <- function(
+    
+  efa_model,    
+  dbl_factor_pref,
+  
+  
+){
+  
+  # Arguments Validation
+  
+  # Data Wrangling
+  
+  # Estimate User-Defined Ideal Profile
+  # Constrained Optimization Problem I
+  constrOptim(
+    # starting values
+    theta = runif(3, 0, 1)
+    # objective function
+    , f = function(
+    a,
+    mtx_factor_scores = diag(3),
+    dbl_factor_pref = c(0.5,0.83,0)
+    
+    ){
+      
+      1 - 
+        sum(((
+          mtx_factor_scores * a - dbl_factor_pref
+        ) ^ 2) / nrow(mtx_factor_scores)) -> u
+      
+      return(u)
+      
+    }
+    # gradient
+    , grad = NULL
+    # constraint matrix
+    , ui = 
+      rbind(
+        diag(1, 3)
+        , diag(-1, 3)
+      )
+    # constraint vector
+    , ci = c(rep(0,3),rep(-1,3))
+    , control = list(fnscale = -1)
+  )
+  
+  # Constrained Optimization Problem II
+  
+  # BVLS Regression
+  
+  # Data Wrangling
+  
+  # Output
+  # return()
+  
+}
+
+constrOptim(
+  # starting values
+  theta = runif(3, 0, 1)
+  # objective function
+  , f = function(a, n = 3){
+    1 - 
+      sum(((
+        diag(n) * a - c(0.5,0.83,0)
+      ) ^ 2) / n) -> u
+    
+    return(u)
+    
+  }
+  # gradient
+  , grad = NULL
+  # constraint matrix
+  , ui = 
+    rbind(
+      diag(1, 3)
+      , diag(-1, 3)
+    )
+  # constraint vector
+  , ci = c(rep(0,3),rep(-1,3))
+  , control = list(fnscale = -1)
+)$par
+
+constrOptim(
+  # starting values
+  theta = runif(3, 0, 1)
+  # objective function
+  , f = function(
+    a,
+    mtx_factor_scores = diag(3),
+    dbl_factor_pref = c(0.5,0.83,0)
+    
+  ){
+    
+    1 - 
+      sum(((
+        mtx_factor_scores * a - dbl_factor_pref
+      ) ^ 2) / nrow(mtx_factor_scores)) -> u
+    
+    return(u)
+    
+  }
+  # gradient
+  , grad = NULL
+  # constraint matrix
+  , ui = 
+    rbind(
+      diag(1, 3)
+      , diag(-1, 3)
+    )
+  # constraint vector
+  , ci = c(rep(0,3),rep(-1,3))
+  , control = list(fnscale = -1)
+)
+
+
 install.packages('NlcOptim')
 library(NlcOptim)
-dbl_starting_values <- runif(2, 0, 100) / 100
+dbl_starting_values <- runif(3, 0, 100) / 100
 dbl_starting_values <- c(50,50) / 100
+dbl_starting_values <- c(50,50,50) / 100
 dbl_starting_values <- c(0,83) / 100
-dbl_starting_values <- c(0,0)
+# dbl_starting_values <- c(0,0)
+dbl_starting_values <- c(0,0,0)
 
 fun_objective <- function(x){
   
   1 - 
-    ((x[1] - 0.5) ^ 2) / 2 -
-    ((x[2] - 0.83) ^ 2) / 2 -> u
+    ((0.5*x[1] + 0.25*x[2] -0.3*x[3] - 0.5) ^ 2) / 2 -
+    # ((c(0.5,0.25,-0.3) * x - 0.5) ^ 2) / 2 -
+    ((-0.1*x[2] + 0.3*x[2] +0.9*x[3] - 0.83) ^ 2) / 2 -> u
+  # ((c(-0.1,0.3,0.9) * x - 0.83) ^ 2) / 2 -> u
+  
+  # 1 - 
+  #   ((x[1] - 0.5) ^ 2) / 2 -
+  #   ((x[2] - 0.83) ^ 2) / 2 -> u
   
   return(-u)
   
 }
 
 round(solnl(
-  X = dbl_starting_values
+  X = runif(3, 0, 1)
   , objfun = fun_objective
   # , A = matrix(-1, nrow = 2, ncol = 2)
-  , A = rbind(c(-1,-1),c(1,1))
-  , B = rbind(1,0.25)
-  , lb = rep(0, length(dbl_starting_values))
-  , ub = rep(1, length(dbl_starting_values))
+  # , A = rbind(c(-1,-1),c(1,1))
+  # , B = rbind(1,0.25)
+  , lb = rep(0, 3)
+  , ub = rep(1, 3)
 )$par, 2)
 
 
