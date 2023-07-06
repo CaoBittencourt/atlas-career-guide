@@ -41,16 +41,16 @@ read_csv(
   'https://docs.google.com/spreadsheets/d/e/2PACX-1vSVdXvQMe4DrKS0LKhY0CZRlVuCCkEMHVJHQb_U-GKF21CjcchJ5jjclGSlQGYa5Q/pub?gid=47461225&single=true&output=csv'
 ) -> df_input
 
-# Maids
-df_occupations %>%
-  select(
-    occupation
-    , ends_with('.l')
-  ) %>%
-  filter(
-    occupation ==
-      'Maids and Housekeeping Cleaners'
-  ) -> df_input
+# # Maids
+# df_occupations %>%
+#   select(
+#     occupation
+#     , ends_with('.l')
+#   ) %>%
+#   filter(
+#     occupation ==
+#       'Maids and Housekeeping Cleaners'
+#   ) -> df_input
 
 # df_occupations %>%
 #   slice_sample(

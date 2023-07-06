@@ -128,16 +128,24 @@ df_occupations %>%
   group_by(occupation) %>%
   reframe(
     iq = 
-      fun_iq(
+      fun_iq2(
         dbl_scores = item.score
-        , dbl_scale_ub = 100
-        , dbl_scale_lb = 0
-        , int_interval = 7
         , dbl_proxy_mean = 36.1
         , dbl_proxy_sd = 10.6
+        # , dbl_iq_mean = 105
         , dbl_iq_mean = 100
         , dbl_iq_sd = 15
       )
+    # fun_iq(
+    #   dbl_scores = item.score
+    #   , dbl_scale_ub = 100
+    #   , dbl_scale_lb = 0
+    #   , int_interval = 7
+    #   , dbl_proxy_mean = 36.1
+    #   , dbl_proxy_sd = 10.6
+    #   , dbl_iq_mean = 100
+    #   , dbl_iq_sd = 15
+    # )
   ) %>% 
   # full_join(
   #   df_occupations %>% 
@@ -155,17 +163,20 @@ arrange(desc(iq)) %>%
   slice(1:100,(n()-1):n()) %>% 
   print(n = nrow(.))
 
-df_occupations %>%
+# df_occupations %>%
+df_input %>%
   select(
     occupation
-    , df_factors %>% 
-      filter(
-        str_detect(
-          str_to_lower(
-            factor.name
-          ), 'intelligence|discernment'
-        )) %>% 
-      pull(item)
+    , any_of(
+      df_factors %>% 
+        filter(
+          str_detect(
+            str_to_lower(
+              factor.name
+            ), 'intelligence|discernment'
+          )) %>% 
+        pull(item)
+    )
   ) %>% 
   pivot_longer(
     cols = -1
@@ -175,17 +186,24 @@ df_occupations %>%
   group_by(occupation) %>%
   reframe(
     iq = 
-      fun_iq(
+      fun_iq2(
         dbl_scores = item.score
-        , dbl_scale_ub = 100
-        , dbl_scale_lb = 0
-        , int_interval = 7
         , dbl_proxy_mean = 41.1
         , dbl_proxy_sd = 14.8
         , dbl_iq_mean = 100
         , dbl_iq_sd = 15
-        # , dbl_iq_sd = 10
       )
+    # fun_iq(
+    #   dbl_scores = item.score
+    #   , dbl_scale_ub = 100
+    #   , dbl_scale_lb = 0
+    #   , int_interval = 7
+    #   , dbl_proxy_mean = 41.1
+    #   , dbl_proxy_sd = 14.8
+    #   , dbl_iq_mean = 100
+    #   , dbl_iq_sd = 15
+    #   # , dbl_iq_sd = 10
+    # )
   ) %>% 
   arrange(desc(iq)) %>%
   slice(1:100,(n()-1):n()) %>% 
