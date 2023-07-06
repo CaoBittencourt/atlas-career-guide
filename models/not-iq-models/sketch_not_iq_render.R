@@ -104,11 +104,11 @@ df_occupations %>%
       sqrt(iq_proxy_sd)
   ) -> df_iq_proxy
 
-# Color
+# WAIS IQ Labels
 seq(
-  dbl_iq_mean - 3 * dbl_iq_sd
-  , dbl_iq_mean + 3 * dbl_iq_sd
-  , dbl_iq_sd
+  dbl_iq_mean - 3 * 10
+  , dbl_iq_mean + 3 * 10
+  , 10
 ) -> dbl_iq_seq
 
 c(
@@ -125,11 +125,12 @@ chr_iq_wais ->
   names(dbl_iq_seq)
 
 # [NOT IQ] ------------------------------------------------------------------
-# - Estimate NOT IQ -----------------------------------------------------
+# - Estimate Occupation's NOT IQ -----------------------------------------------------
 df_occupations %>% 
   select(
     occupation
     , employment2
+    , annual_wage_2021
     , any_of(
       chr_iq_proxy
     )) %>% 
@@ -156,6 +157,33 @@ df_occupations %>%
       )
     , employment2 =
       first(employment2)
+    , annual_wage_2021 =
+      first(annual_wage_2021)
+  ) %>% 
+  mutate(
+    NOT_IQ_class = 
+      findInterval(
+        NOT_IQ
+        , dbl_iq_seq
+      ),
+    NOT_IQ_class = 
+      recode(
+        NOT_IQ_class
+        , '0' = chr_iq_wais[[1]]
+        , '1' = chr_iq_wais[[1]]
+        , '2' = chr_iq_wais[[2]]
+        , '3' = chr_iq_wais[[3]]
+        , '4' = chr_iq_wais[[4]]
+        , '5' = chr_iq_wais[[5]]
+        , '6' = chr_iq_wais[[6]]
+        , '7' = chr_iq_wais[[7]]
+      ),
+    NOT_IQ_class = 
+      factor(
+        NOT_IQ_class
+        , levels = 
+          chr_iq_wais
+      )
   ) -> df_occupations_not_iq
 
 # - Simulate Normally Distributed Population --------------------------------------------
@@ -179,6 +207,101 @@ df_occupations_not_iq %>%
       ), 0)
   ) -> df_population_not_iq
 
+# - Descriptive Statistics ------------------------------------------------
+summary(df_population_not_iq$NOT_IQ)
+
+# - NOT IQ Scores vs. Wage ---------------------------------
+lm(
+  annual_wage_2021 ~ 0 + NOT_IQ
+  , weights = df_occupations_not_iq$employment2
+  , data = df_occupations_not_iq
+) -> model_not_iq
+
+coef(model_not_iq) %>% 
+  dollar()
+
+# - Most and Least Intelligent Occupations ---------------------------------
+df_occupations_not_iq %>% 
+  arrange(desc(NOT_IQ)) %>% 
+  mutate(
+    rank = row_number()
+  ) %>% 
+  slice(1,n()) %>%
+  select(
+    rank
+    , occupation
+    , NOT_IQ
+    , NOT_IQ_class
+  )
+
+# - Estimate User's NOT IQ -----------------------------------------------------
+df_input %>% 
+  select(
+    occupation
+    , any_of(
+      chr_iq_proxy
+    )) %>% 
+  pivot_longer(
+    cols = any_of(chr_iq_proxy)
+    , names_to = 'item'
+    , values_to = 'item.score'
+  ) %>% 
+  reframe(
+    NOT_IQ = 
+      fun_not_iq(
+        dbl_scores = item.score
+        , dbl_proxy_mean = 
+          df_iq_proxy$
+          iq_proxy_mean
+        , dbl_proxy_sd = 
+          df_iq_proxy$
+          iq_proxy_sd
+        , dbl_iq_mean = 
+          dbl_iq_mean
+        , dbl_iq_sd = 
+          dbl_iq_sd
+      )
+  ) %>% 
+  mutate(
+    IQ = 128
+    , error = NOT_IQ - IQ
+    , pct_error = percent(error / IQ, accuracy = .01)
+    , NOT_IQ_class = 
+      findInterval(
+        NOT_IQ
+        , dbl_iq_seq
+      ),
+    NOT_IQ_class = 
+      recode(
+        NOT_IQ_class
+        , '0' = chr_iq_wais[[1]]
+        , '1' = chr_iq_wais[[1]]
+        , '2' = chr_iq_wais[[2]]
+        , '3' = chr_iq_wais[[3]]
+        , '4' = chr_iq_wais[[4]]
+        , '5' = chr_iq_wais[[5]]
+        , '6' = chr_iq_wais[[6]]
+        , '7' = chr_iq_wais[[7]]
+      )
+    , IQ_class = 
+      findInterval(
+        IQ
+        , dbl_iq_seq
+      ),
+    IQ_class = 
+      recode(
+        IQ_class
+        , '0' = chr_iq_wais[[1]]
+        , '1' = chr_iq_wais[[1]]
+        , '2' = chr_iq_wais[[2]]
+        , '3' = chr_iq_wais[[3]]
+        , '4' = chr_iq_wais[[4]]
+        , '5' = chr_iq_wais[[5]]
+        , '6' = chr_iq_wais[[6]]
+        , '7' = chr_iq_wais[[7]]
+      )
+  )
+
 # [PLOT] ------------------------------------------------------------------
 # - Distribution of NOT IQ ------------------------------------------------
 df_population_not_iq %>% 
@@ -195,6 +318,19 @@ df_population_not_iq %>%
     breaks = pretty_breaks(13)
   )
   , .fun_format.x = number
+  ) + 
+  annotate(
+    geom = 'text',
+    x = 155,
+    y = 0.015,
+    label = str_wrap(
+      '
+      Strangely enough, the NOT IQ distribution is exactly like an IQ distribution!
+      This is convenient because technically speaking, in the US, it is illegal for HR Recruiters to apply IQ tests on job applicants.
+      Therefore, we could sell a NOT IQ Assessment as an alternative to regular IQ tests.
+      '
+      , width = 40
+    ) 
   )
 
 # - Most and Least Intelligent Occupations -----------------------------------------------
@@ -211,30 +347,6 @@ df_occupations_not_iq %>%
     ),
     (n() - 5 + 1):n()
   ) %>% 
-  mutate(
-    NOT_IQ_class = 
-      findInterval(
-        NOT_IQ
-        , dbl_iq_seq
-      ),
-    NOT_IQ_class = 
-      recode(
-        NOT_IQ_class
-        , .default = chr_iq_wais[[1]]
-        , '1' = chr_iq_wais[[2]]
-        , '2' = chr_iq_wais[[3]]
-        , '3' = chr_iq_wais[[4]]
-        , '4' = chr_iq_wais[[5]]
-        , '5' = chr_iq_wais[[6]]
-        , '6' = chr_iq_wais[[7]]
-      ),
-    NOT_IQ_class = 
-      factor(
-        NOT_IQ_class
-        , levels = 
-          chr_iq_wais
-        )
-  ) %>%
   group_by(occupation) %>% 
   reframe(
     NOT_IQ = pmax(
@@ -252,114 +364,71 @@ df_occupations_not_iq %>%
     , y = occupation
     , fill = NOT_IQ_class
   )
-  # , .reorder_fct = F
-  # , .reorder_desc = F
+  , .list_labs = list(
+    title = 'Most and Least Intelligent Occupations',
+    subtitle = 'NOT IQ Scores for a sample of 15 occupations',
+    x = 'NOT IQ',
+    y = NULL,
+    fill = NULL
+  )
+  , .list_axis.x.args = list(
+    breaks = pretty_breaks(13)
+  )
+  , .fun_format.x = number
   , .fun_format.y = function(y){y}
-  # , .chr_manual.pal =
-  )
-
-df_population_not_iq %>% 
-  filter(
-    occupation %in% (
-      df_occupations_not_iq %>% 
-        arrange(desc(NOT_IQ)) %>% 
-        slice(1:10, (n() - 10 + 1):n()) %>% 
-        pull(occupation)
-    )
-  ) %>% 
-  group_by(
-    occupation
-  ) %>% 
-  mutate(
-    NOT_IQ_class = 
-      findInterval(
-        mean(NOT_IQ)
-        , dbl_iq_seq
-      ),
-    NOT_IQ_class = 
-      recode(
-        NOT_IQ_class
-        , .default = chr_iq_wais[[1]]
-        , '1' = chr_iq_wais[[2]]
-        , '2' = chr_iq_wais[[3]]
-        , '3' = chr_iq_wais[[4]]
-        , '4' = chr_iq_wais[[5]]
-        , '5' = chr_iq_wais[[6]]
-        , '6' = chr_iq_wais[[7]]
-      ),
-    NOT_IQ_class = 
-      factor(NOT_IQ_class)
-  ) %>%
-  ungroup() %>% 
-  fun_plot.ridges(aes(
-    x = NOT_IQ
-    , y = occupation
-    , fill = NOT_IQ_class
-  )
-  # , .reorder_fct = F
-  # , .reorder_desc = F
-  , .fun_format.y = function(y){y}
-  # , .chr_manual.pal =
-  )
-
-fun_plot.lollipop(aes(
-  x = occupation
-  , y = NOT_IQ
-)
-)
-
-# - Least Intelligent Occupations -----------------------------------------------
-df_models.long %>%
-  filter(
-    occupation !=
-      df_input$
-      occupation
-  ) %>% 
-  group_by(model) %>% 
-  reframe(
-    similarity = 
-      range(similarity)
-  ) %>% 
-  mutate(
-    occupation = 
-      rep(c(
-        'Worst Match'
-        , 'Top Match'
-      )
-      , times = 
-        length(unique(
-          model
-        ))
-      )
-  ) %>% 
-  fun_plot.dumbbell2(aes(
-    x = similarity
-    , y = model
-    , color = occupation
-  )
-  , .list_labs = 
-    list(
-      title = paste('Similarity Range for Each Model:', df_input$occupation)
-      , subtitle = 'What are the maximum and minimum similarity scores?'
-      , x = 'Professional Compatibility Scores (%)'
-      , y = NULL
-      , color = NULL 
-    )
-  
-  , .reorder_fct = T
-  , .reorder_desc = T
   , .chr_manual.pal = 
-    c('blue','red')
-  , .list_axis.x.args =
-    list(
-      limits = c(0,1)
-      , breaks = seq(0,1,length.out = 7)
+    set_names(
+      viridis(length(chr_iq_wais))
+      , chr_iq_wais
     )
-  , .fun_format.x = percent
+  )
+
+# - NOT IQ vs Wage --------------------------------------------------------
+df_occupations_not_iq %>% 
+  fun_plot.scatter(aes(
+    x = annual_wage_2021
+    , y = NOT_IQ
+    , color = NOT_IQ_class
+  )
+  , .list_labs = list(
+    title = 'NOT IQ vs. Wages',
+    subtitle = 'Assessing the impact of intelligence on annual earnings',
+    x = 'Annual Compensation (USD)',
+    y = 'NOT IQ',
+    color = NULL
+  )
+  , .list_axis.y.args = list(
+    breaks = pretty_breaks(13)
+  )
+  , .dbl_limits.y = c(70,NA)
+  , .fun_format.y = number
+  , .fun_format.x = dollar
+  , .chr_manual.pal = 
+    set_names(
+      viridis(length(chr_iq_wais))
+      , chr_iq_wais
+    )
+  ) + 
+  annotate(
+    geom = 'text',
+    x = mean(c(150,200)*1000),
+    y = 90,
+    label = str_wrap(
+      '
+      We can clearly see there is a strong positive association between NOT IQ scores and wages.
+      This means more intelligent individuals tend to make more money.
+      However, the benefit of NOT IQ on wages is diminishing,
+      so that each additional point is less profitable than the previous point.
+      '
+      , width = 50
+    ) 
   )
 
 # [EXPORT] ----------------------------------------------------------------
 # - Export NOT IQ Scores to Excel -----------------------------------------
-
-
+df_occupations_not_iq %>%
+  arrange(desc(NOT_IQ)) %>%
+  write.xlsx(
+    file = './df_occupations_not_iq.xlsx'
+  )
 

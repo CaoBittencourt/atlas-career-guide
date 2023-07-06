@@ -2,6 +2,7 @@
 # - Packages ----------------------------------------------------------------
 pkg <- c(
   'tidyverse',  #Data wrangling
+  'weights', #Weighted correlation
   'Hmisc', #Weighted variance
   'openxlsx' #Export excel
 )
