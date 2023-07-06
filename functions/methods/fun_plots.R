@@ -1666,7 +1666,8 @@ fun_plot.density <- function(
   , .list_geom.param = list(
     color = '#212121'
     , fill = '#3854FB'
-    , alpha = 0.8
+    # , alpha = 0.8
+    , alpha = 0.7
     , size = 1.23
   )
   
@@ -1704,7 +1705,14 @@ fun_plot.density <- function(
   , .dbl_limits.y = NULL
   
   # Theme
-  , .theme = ggridges::theme_ridges(font_size = 12, center_axis_labels = T)
+  , .theme = 
+    ggridges::theme_ridges(
+      font_size = 12, 
+      center_axis_labels = T
+      ) + 
+    theme(
+      axis.text.y = element_blank()
+    )
   
 ){
   
@@ -3474,6 +3482,7 @@ fun_plot.lollipop <- function(
     ) + 
     theme(
       axis.text.y = element_text(vjust = 0.5)
+      , axis.title.y = element_blank()
       , legend.position = 'bottom'
       , legend.direction = 'horizontal'
     )
@@ -4322,7 +4331,8 @@ fun_plot.ridges <- function(
   # , .chr_manual.lim = NULL
   
   # Legend
-  , .list_legend = list(fill = 'none')
+  # , .list_legend = list(fill = 'none')
+  , .list_legend = list()
   
   # Axes
   , .fun_axis.x = scale_x_continuous

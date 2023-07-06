@@ -355,15 +355,14 @@ dsds %>%
       rnorm(
         n = employment2
         , mean = iq2
-        , sd = 10.6
+        , sd = 15
       ), 0)
   ) %>% 
-  reframe(
-    iq = mean(iq2)
-    , sd = sd(iq2)
-  )
+  # reframe(
+  #   iq = mean(iq2)
+  #   , sd = sd(iq2)
+  # ) %>% 
   ggplot(aes(
     x = iq2
   )) +
   geom_density()
-
