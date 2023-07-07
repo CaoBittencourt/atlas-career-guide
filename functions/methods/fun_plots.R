@@ -4743,6 +4743,8 @@ fun_plot.scatter <- function(
     , .aes_mapping = aes_mapping
   ) -> plt_geom
   
+  NULL -> plt_smooth
+  
   if(.lgc_smooth){
     
     if(!.lgc_smooth_aes){

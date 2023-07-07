@@ -1,0 +1,114 @@
+---
+title: "NOT IQ"
+subtitle: "Estimating an Alternative to IQ Tests with the BLS-ONET Framework" 
+author: "Atlas Research Team"
+date: "`r Sys.Date()`"
+geometry: a4paper, margin = 1in
+output:
+  pdf_document:
+  # ipsum_pdf:
+    # toc: TRUE
+    # number_sections: TRUE
+    # toc_depth: 4
+    # extra_dependencies: ["float"]
+    # extra_dependencies: ["flafter"]
+
+header-includes:
+   - \usepackage{titlesec}
+   - \usepackage{floatrow}
+   - \usepackage{physics}
+   - \usepackage{mathtools}
+   - \usepackage{amsmath}
+   - \floatsetup[figure]{capposition=top}
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+knitr::opts_chunk$set(fig.pos = "H", out.extra = "")
+```
+
+\newpage
+
+\titleformat{\paragraph}{\normalfont\normalsize\bfseries}{\theparagraph}{1em}{}
+
+\titlespacing{\paragraph}{0pt}{3.25ex plus 1ex minus .2ex}{1.5ex plus .2ex}
+
+\setcounter{secnumdepth}{5}
+
+\setcounter{tocdepth}{5}
+
+\tableofcontents
+
+\newpage
+
+# Introduction
+
+## Intelligence Quotient (IQ)
+
+[What IQ is]
+
+[Why IQ is important]
+
+## Motivation
+
+[Despite the importance of IQ, it is illegal in the US to select job applicants based on IQ scores]
+
+[Therefore, an alternative NOT IQ metric, which yields similar results would be very much useful]
+
+# An Alternative to IQ Tests
+
+## The NOT IQ Metric
+
+[introduction to NOT IQ]
+
+### Proxies for IQ
+
+[Explain Factor Analysis of BLS-ONET data]
+
+[Proxies for IQ = Discernment and Intelligence]
+
+### NOT IQ Formula
+
+$$
+\tilde{g} = \overline{g} + \sigma_g \left( \frac{\psi_g - \overline{\Psi}_g}{\sigma_{\Psi_g}} \right)
+$$
+
+[explain variables]
+
+[Using $\Psi_g$ = Discernment and Intelligence factors, with the usual mean IQ of 100 with standard deviation of 15]
+
+$$
+\tilde{g} = 100 + 15 \times \left( \frac{\psi_g - 41.1}{14.8} \right)
+$$
+
+# Results
+
+## Distribution of NOT IQ
+
+[The NOT IQ Bell Curve]
+
+## Model Precision
+
+### Benchmarks
+
+[IQ of occupations]
+
+### Overall Precision
+
+[Calculate weighted mean of error and percent error]
+
+[Most and least precise estimations]
+
+[Distribution of errors]
+
+## Most and Least Intelligent Occupations
+
+[Ridge plot of most and least intelligent occupations]
+
+## Impact of NOT IQ on Wages
+
+[regression model]
+
+[scatterplot]
+
+# Conclusion

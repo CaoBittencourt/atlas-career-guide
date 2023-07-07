@@ -67,11 +67,17 @@ dbl_iq_mean <- 100
 dbl_iq_sd <- 15
 
 # IQ Proxy
+df_factors$
+  factor.name %>% 
+  unique()
+
 df_factors %>% 
   filter(str_detect(
     str_to_lower(
       factor.name
     ), 'intellig|discern'
+    # ), 'intellig|discern|analytical|humanities'
+    # ), 'intellig|discern|analytical'
     # ), 'intellig'
   )) %>% 
   pull(item) ->
@@ -117,8 +123,8 @@ c(
   'Low Average',
   'Average',
   'High Average',
-  'Superior',
-  'Very Superior'
+  'Bright',
+  'Very Bright'
 ) -> chr_iq_wais
 
 chr_iq_wais -> 
@@ -205,6 +211,33 @@ df_occupations_not_iq %>%
         , mean = NOT_IQ
         , sd = dbl_iq_sd
       ), 0)
+    , annual_wage_2021 =
+      first(annual_wage_2021)
+  ) %>% 
+  mutate(
+    NOT_IQ_class = 
+      findInterval(
+        NOT_IQ
+        , dbl_iq_seq
+      ),
+    NOT_IQ_class = 
+      recode(
+        NOT_IQ_class
+        , '0' = chr_iq_wais[[1]]
+        , '1' = chr_iq_wais[[1]]
+        , '2' = chr_iq_wais[[2]]
+        , '3' = chr_iq_wais[[3]]
+        , '4' = chr_iq_wais[[4]]
+        , '5' = chr_iq_wais[[5]]
+        , '6' = chr_iq_wais[[6]]
+        , '7' = chr_iq_wais[[7]]
+      ),
+    NOT_IQ_class = 
+      factor(
+        NOT_IQ_class
+        , levels = 
+          chr_iq_wais
+      )
   ) -> df_population_not_iq
 
 # - Descriptive Statistics ------------------------------------------------
