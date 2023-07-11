@@ -1,3 +1,4 @@
+
 -- db already created on AWS RDS
 -- CREATE DATABASE db_atlas_research;
 USE atlas;
