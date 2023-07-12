@@ -1,12 +1,11 @@
-
 -- db already created on AWS RDS
 -- CREATE DATABASE db_atlas_research;
 USE atlas;
 
--- create attributes / items table
+-- attributes / items table
 CREATE TABLE
     IF NOT EXISTS df_items (
-        -- item_id = item's numeric id = row_number
+        -- pk_item_id = item's numeric id = row_number
         pk_item_id SMALLINT PRIMARY KEY AUTO_INCREMENT,
         -- item_acronym = 2 letter acronym like a chemical element (e.g. Al for Active Listening)
         item_acronym CHAR(2) UNIQUE NOT NULL,
@@ -27,4 +26,97 @@ CREATE TABLE
         -- factor id is a foreign key
         fk_factor_id TINYINT NOT NULL
         -- , FOREIGN KEY (fk_factor_id) REFERENCES df_factors (pk_factor_id)
+    );
+
+CREATE TABLE
+    IF NOT EXISTS df_items_examples (
+        pk_item_id SMALLINT NOT NULL,
+        pk_branch_id SMALLINT NOT NULL,
+        -- item + branch (subitem) are a composite primary key
+        -- for there are some branches of knowledge, arts, etc 
+        -- that exist in more than one discipline
+        -- this also simplifies normalization
+        PRIMARY KEY(pk_item_id, pk_branch_id),
+        -- examples for difficulty levels 1 to 7
+        -- multi-language support: create an unique id
+        -- for each example of each item + branch pair
+        -- reference these unique ids in a separate table in the translation sub-schema
+        -- then substitute values according to the user's language
+        ex_level1 VARCHAR(100) AS (CONCAT(pk_item_id, pk_branch_id, 'ex1')),
+        ex_level2 VARCHAR(100) AS (CONCAT(pk_item_id, pk_branch_id, 'ex2')),
+        ex_level3 VARCHAR(100) AS (CONCAT(pk_item_id, pk_branch_id, 'ex3')),
+        ex_level4 VARCHAR(100) AS (CONCAT(pk_item_id, pk_branch_id, 'ex4')),
+        ex_level5 VARCHAR(100) AS (CONCAT(pk_item_id, pk_branch_id, 'ex5')),
+        ex_level6 VARCHAR(100) AS (CONCAT(pk_item_id, pk_branch_id, 'ex6')),
+        ex_level7 VARCHAR(100) AS (CONCAT(pk_item_id, pk_branch_id, 'ex7'))
+    );
+
+
+-- one language option
+-- CREATE TABLE
+--     IF NOT EXISTS df_items_examples (
+--         pk_item_id SMALLINT NOT NULL,
+--         pk_branch_id SMALLINT NOT NULL,
+--         -- item + branch (subitem) are a composite primary key
+--         -- for there are some branches of knowledge, arts, etc 
+--         -- that exist in more than one discipline
+--         -- this also simplifies normalization
+--         PRIMARY KEY(pk_item_id, pk_branch_id),
+--         -- examples for difficulty levels 1 to 7 
+--         ex_level1 VARCHAR(100) DEFAULT NULL,
+--         ex_level2 VARCHAR(100) NOT NULL,
+--         ex_level3 VARCHAR(100) DEFAULT NULL,
+--         ex_level4 VARCHAR(100) NOT NULL,
+--         ex_level5 VARCHAR(100) DEFAULT NULL,
+--         ex_level6 VARCHAR(100) NOT NULL,
+--         ex_level7 VARCHAR(100) DEFAULT NULL
+--         -- primary key = branches
+--     );
+
+CREATE TABLE
+    dsds (
+        pk_id1 INT,
+        pk_id2 INT,
+        PRIMARY KEY(pk_id1, pk_id2),
+        ex_level1 VARCHAR(100) as (CONCAT (pk_id1, pk_id2, 'ex_level1')),
+        ex_level2 VARCHAR(100) as (CONCAT (pk_id1, pk_id2, 'ex_level2'))
+    );
+
+-- factors table
+CREATE TABLE
+    IF NOT EXISTS df_factors (
+        pk_factor_id TINYINT PRIMARY KEY AUTO_INCREMENT,
+        factor_acronym CHAR(2) UNIQUE NOT NULL,
+        factor_name VARCHAR(100) UNIQUE NOT NULL
+        -- , qtd_items TINYINT NOT NULL
+    );
+
+-- user information table
+CREATE TABLE
+    IF NOT EXISTS df_users_info (
+        pk_user_id INT PRIMARY KEY AUTO_INCREMENT,
+        username VARCHAR(250) UNIQUE NOT NULL,
+        first_name VARCHAR(100) NOT NULL,
+        last_name VARCHAR(250) NOT NULL,
+        birthday DATE NOT NULL,
+        register_date DATE NOT NULL DEFAULT CURRENT_DATE,
+        last_active DATE NOT NULL DEFAULT CURRENT_DATE,
+        -- User's membership status (premium or not)
+        membership VARCHAR(7) DEFAULT 'Free',
+        -- User's language
+        fk_language_id CHAR(2) NOT NULL
+        -- fk_language_id is a foreign key to the translation sub-schema
+    );
+
+-- one table for each assessment => flexible, normalized, scalable
+-- for each assessment with precalculated data (e.g. ai assessment, kflex, etc)
+-- create a separate table with the precalculated data
+-- and also one assessments table
+CREATE TABLE
+    IF NOT EXISTS df_matches (
+        pk_user_id INT NOT NULL,
+        pk_datetime DATETIME NOT NULL DEFAULT NOW (),
+        fk_occupation_id SMALLINT NOT NULL,
+        -- composite key = user + datetime
+        PRIMARY KEY (pk_user_id, pk_datetime)
     );
