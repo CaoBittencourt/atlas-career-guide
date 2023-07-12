@@ -30,12 +30,12 @@ CREATE TABLE
 
 CREATE TABLE
     IF NOT EXISTS df_items_examples (
-        pk_item_id SMALLINT NOT NULL,
-        pk_branch_id SMALLINT NOT NULL,
         -- item + branch (subitem) are a composite primary key
         -- for there are some branches of knowledge, arts, etc 
         -- that exist in more than one discipline
         -- this also simplifies normalization
+        pk_item_id SMALLINT NOT NULL,
+        pk_branch_id SMALLINT NOT NULL,
         PRIMARY KEY(pk_item_id, pk_branch_id),
         -- examples for difficulty levels 1 to 7
         -- multi-language support: create an unique id
@@ -50,7 +50,6 @@ CREATE TABLE
         ex_level6 VARCHAR(100) AS (CONCAT(pk_item_id, pk_branch_id, 'ex6')),
         ex_level7 VARCHAR(100) AS (CONCAT(pk_item_id, pk_branch_id, 'ex7'))
     );
-
 
 -- one language option
 -- CREATE TABLE
@@ -72,15 +71,6 @@ CREATE TABLE
 --         ex_level7 VARCHAR(100) DEFAULT NULL
 --         -- primary key = branches
 --     );
-
-CREATE TABLE
-    dsds (
-        pk_id1 INT,
-        pk_id2 INT,
-        PRIMARY KEY(pk_id1, pk_id2),
-        ex_level1 VARCHAR(100) as (CONCAT (pk_id1, pk_id2, 'ex_level1')),
-        ex_level2 VARCHAR(100) as (CONCAT (pk_id1, pk_id2, 'ex_level2'))
-    );
 
 -- factors table
 CREATE TABLE
