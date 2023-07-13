@@ -29,7 +29,40 @@ lapply(pkg, function(x)
 #   
 # }
 
-# - Generic Similarity function ---------------------------------------------------
+# - Auxiliary weights function --------------------------------------------
+fun_w <- function(df_data_cols, scale = 0.25){
+# fun_w <- function(df_data_cols, scale = 10){
+  
+  # Calculate matching regression weights
+  fun_interchangeability(
+    .mtx_similarity = 
+      df_data_cols / 
+      colSums(df_data_cols)
+    # , .dbl_scaling = 0.125
+    , .dbl_scaling = scale
+    # , .dbl_scaling =
+    #   map_dbl(
+    #     df_data_cols
+    #     , ~
+    #       # 2 - .x %>%
+    #       # 1 - .x %>%
+    #       # 1 / .x %>%
+    #       .x %>%
+    #       fun_kflex(
+    #         .dbl_scale.lb =
+    #           dbl_scale_lb
+    #         , .dbl_scale.ub =
+    #           dbl_scale_ub
+    #       )
+    #   )
+  ) -> mtx_weights
+  
+  # Output
+  return(mtx_weights)
+  
+}
+
+# - Auxiliary similarity function ---------------------------------------------------
 fun_s <- function(
     
   df_data_cols
@@ -253,25 +286,9 @@ fun_similarity <- function(
   # Weights
   if(!length(mtx_weights)){
     
-    fun_interchangeability(
-      .mtx_similarity = 
-        df_data_cols / dbl_scale_ub
-      , .dbl_scaling = 0.125
-      # , .dbl_scaling =
-      #   map_dbl(
-      #     df_data_cols
-      #     , ~
-      #       # 2 - .x %>%
-      #       # 1 - .x %>%
-      #       # 1 / .x %>%
-      #       .x %>%
-      #       fun_kflex(
-      #         .dbl_scale.lb =
-      #           dbl_scale_lb
-      #         , .dbl_scale.ub =
-      #           dbl_scale_ub
-      #       )
-      #   )
+    fun_w(
+      df_data_cols = 
+        df_data_cols
     ) -> mtx_weights
     
   }
@@ -375,50 +392,121 @@ fun_similarity <- function(
 }
 
 # dsds --------------------------------------------------------------------
-fun_similarity(
-  df_data_rows = 
-    df_occupations %>% 
-    select(
-      occupation,
-      ends_with('.l')
-    ) %>%
-    slice_head(n = 10)
-  , df_query_rows = 
-    df_occupations %>% 
-    select(
-      occupation,
-      ends_with('.l')
-    ) %>%
-    slice_head(n = 10)
-  , chr_method = 'bvls'
-  # , chr_method = 'logit'
-  
-  # , chr_method = 'pearson'
-  , dbl_scale_ub = 100
-  , dbl_scale_lb = 0
-  , lgc_sort = F
-  , id_col = 'occupation'
-) -> dsds
+# fun_similarity(
+#   df_data_rows = 
+#     df_occupations %>% 
+#     select(
+#       occupation,
+#       ends_with('.l')
+#     ) %>%
+#     slice_head(n = 10)
+#   , df_query_rows = 
+#     df_occupations %>% 
+#     select(
+#       occupation,
+#       ends_with('.l')
+#     ) %>%
+#     slice_head(n = 10)
+#   , chr_method = 'bvls'
+#   # , chr_method = 'logit'
+#   # , chr_method = 'pearson'
+#   , dbl_scale_ub = 100
+#   , dbl_scale_lb = 0
+#   , lgc_sort = F
+#   , id_col = 'occupation'
+# ) -> dsds
 
 fun_similarity(
   df_data_rows = df_occupations
   , df_query_rows = df_input
-  , chr_method = 'bvls'
-  # , chr_method = 'logit'
-  
+  # , chr_method = 'bvls'
+  , chr_method = 'logit'
   # , chr_method = 'pearson'
   , dbl_scale_ub = 100
   , dbl_scale_lb = 0
   , lgc_sort = F
 ) -> dsds
 
-dsds$
-  df_similarity %>% 
-  select(
-    occupation
-    , similarity
+# dsds$
+#   df_similarity %>% 
+#   select(
+#     occupation
+#     , similarity
+#   ) %>% 
+#   arrange(desc(
+#     similarity
+#   )) %>% 
+#   filter(str_detect(
+#     str_to_lower(
+#       occupation
+#     ), 'hosp'
+#   )
+#   | occupation == 
+#     df_sample$
+#     occupation
+#   )
+# 
+# fun_w(
+#   df_occupations %>% 
+#     select(
+#       ends_with('.l')
+#     ) %>% 
+#     as.matrix() %>% 
+#     t() %>% 
+#     `colnames<-`(
+#       df_occupations$
+#         occupation
+#     ) / 100
+#   , scale = 0.5
+# ) %>% 
+#   round(4) %>% 
+#   as_tibble(
+#     rownames = 'item'
+#   ) %>% 
+#   select(
+#     item
+#     , starts_with('Hospital')
+#   ) %>% 
+#   view
+
+(
+  fun_interchangeability(
+    dsds$df_similarity$similarity %>% 
+      set_names(df_occupations$occupation)
+    , .dbl_scaling = 1
+    , .dbl_years_education = 21
+    , .dbl_years_education_min = 
+      df_occupations$
+      education_years
+  ) * 
+    fun_interchangeability(
+      dsds$df_similarity$similarity %>% 
+        set_names(df_occupations$occupation)
+      , .dbl_scaling = 1
+    )
+) %>% 
+  as_tibble(
+    rownames = 'occupation'
   ) %>% 
-  arrange(desc(
-    similarity
-  ))
+  rename(
+    I = 2
+  ) %>% 
+  mutate(
+    I = round(I, 4)
+  ) %>% 
+  filter(str_detect(
+    str_to_lower(
+      occupation
+    ), 'hosp|engineer'
+  )) %>% 
+  arrange(desc(I)) %>%
+  print(n = nrow(.))
+
+
+
+
+
+
+
+
 

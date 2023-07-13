@@ -74,6 +74,23 @@ df_occupations %>%
     )
   ) -> df_occupations
 
+# LEVEL OF EDUCATION RECODE ---------------------------------------------
+df_occupations %>% 
+  mutate(
+    .after = entry_level_education
+    , education_years = recode(
+      entry_level_education
+      , "Bachelor's degree" = 17 + 4
+      , "Postsecondary nondegree award" = 17 + 4 + 2
+      , "High school diploma or equivalent" = 17
+      , "Master's degree" = 17 + 5
+      , "Associate's degree" = 17 + 2
+      , "No formal educational credential" = 14
+      , "Some college, no degree" = 17 + 2
+      , "Doctoral or professional degree" = 17 + 7
+    )
+  ) -> df_occupations
+
 # -------- EXPORT ----------------------------------------------------
 # # XLSX --------------------------------------------------------------------
 # df_occupations %>% 

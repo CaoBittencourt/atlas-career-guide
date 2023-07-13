@@ -13,9 +13,9 @@ lapply(pkg, function(x)
   {install.packages(x); require(x)})
 
 # Install TinyTex
-if(!tinytex::is_tinytex()){
-  tinytex::install_tinytex()
-}
+# if(!tinytex::is_tinytex()){
+#   tinytex::install_tinytex()
+# }
 
 # Package citation
 # lapply(pkg, function(x)
@@ -84,6 +84,7 @@ df_occupations %>%
   ) -> df_sample
 
 df_input -> df_sample
+
 
 df_occupations %>% 
   filter(str_detect(

@@ -52,13 +52,29 @@ setwd(dirname(
 # - Data --------------------------------------------------------------------
 # Factor list
 openxlsx::read.xlsx(
-  'C:/Users/Cao/Documents/Github/Atlas-Research/Data/df_questionnaire_atlas.complete_equamax_15_factors.xlsx'
+  'C:/Users/Cao/Documents/Github/atlas-research/data/df_questionnaire_atlas.complete_equamax_15_factors.xlsx'
 ) -> df_factors
 
 # Occupations data frame
 read_csv(
-  'C:/Users/Cao/Documents/Github/Atlas-Research/Data/df_atlas.complete_equamax_15_factors.csv'
+  'C:/Users/Cao/Documents/Github/atlas-research/data/df_atlas_complete_equamax_15_factors.csv'
 ) -> df_occupations
+
+df_occupations %>% 
+  mutate(
+    .after = entry_level_education
+    , education_years = recode(
+      entry_level_education
+      , "Bachelor's degree" = 17 + 4
+      , "Postsecondary nondegree award" = 17 + 4 + 2
+      , "High school diploma or equivalent" = 17
+      , "Master's degree" = 17 + 5
+      , "Associate's degree" = 17 + 2
+      , "No formal educational credential" = 14
+      , "Some college, no degree" = 17 + 2
+      , "Doctoral or professional degree" = 17 + 7
+    )
+  ) -> df_occupations
 
 # [EXPORT] ----------------------------------------------------------------
 # - Save workspace image --------------------------------------------------
