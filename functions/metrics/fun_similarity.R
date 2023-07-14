@@ -30,7 +30,8 @@ lapply(pkg, function(x)
 # }
 
 # - Auxiliary weights function --------------------------------------------
-fun_w <- function(df_data_cols, scale = 0.25){
+fun_w <- function(df_data_cols, scale = 1){
+# fun_w <- function(df_data_cols, scale = 0.25){
 # fun_w <- function(df_data_cols, scale = 10){
   
   # Calculate matching regression weights
@@ -427,25 +428,33 @@ fun_similarity(
   , lgc_sort = F
 ) -> dsds
 
-# dsds$
-#   df_similarity %>% 
-#   select(
-#     occupation
-#     , similarity
-#   ) %>% 
-#   arrange(desc(
-#     similarity
-#   )) %>% 
-#   filter(str_detect(
-#     str_to_lower(
-#       occupation
-#     ), 'hosp'
-#   )
-#   | occupation == 
-#     df_sample$
-#     occupation
-#   )
-# 
+dsds$
+  df_similarity %>%
+  select(
+    occupation
+    , education_years
+    , similarity
+  ) %>%
+  arrange(desc(
+    similarity
+  )) %>% 
+  mutate(
+    I = fun_interchangeability(
+      similarity
+      , .dbl_scaling = 1
+      , .dbl_years_education = 21
+      , .dbl_years_education_min = 
+        education_years
+    ) %>% as.numeric()
+    , I = round(I, 4)
+  ) %>% view
+  filter(str_detect(
+    str_to_lower(
+      occupation
+    ), 'hosp|exec'
+  ))
+
+ 
 # fun_w(
 #   df_occupations %>% 
 #     select(
