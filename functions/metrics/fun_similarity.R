@@ -30,33 +30,30 @@ lapply(pkg, function(x)
 # }
 
 # - Auxiliary weights function --------------------------------------------
-fun_w <- function(df_data_cols, scale = 1){
-# fun_w <- function(df_data_cols, scale = 0.25){
-# fun_w <- function(df_data_cols, scale = 10){
+fun_w <- function(df_data_cols, dbl_scaling = 1){
+  
+  # Get maximum item scores for each column
+  vapply(
+    as_tibble(df_data_cols)
+    , function(x){max(x, na.rm = T)}
+    , FUN.VALUE = numeric(1)
+  ) -> mtx_weights
+  
+  # Prevent division by zero
+  mtx_weights[
+    mtx_weights == 0
+  ] <- 1
+  
+  # Importance of each item compared to most important item
+  # df_data_cols / 
+  #   mtx_weights -> 
+  #   mtx_weights
   
   # Calculate matching regression weights
-  fun_interchangeability(
-    .mtx_similarity = 
-      df_data_cols / 
-      colSums(df_data_cols)
-    # , .dbl_scaling = 0.125
-    , .dbl_scaling = scale
-    # , .dbl_scaling =
-    #   map_dbl(
-    #     df_data_cols
-    #     , ~
-    #       # 2 - .x %>%
-    #       # 1 - .x %>%
-    #       # 1 / .x %>%
-    #       .x %>%
-    #       fun_kflex(
-    #         .dbl_scale.lb =
-    #           dbl_scale_lb
-    #         , .dbl_scale.ub =
-    #           dbl_scale_ub
-    #       )
-    #   )
-  ) -> mtx_weights
+  # fun_interchangeability(
+  #   .mtx_similarity = mtx_weights
+  #   , .dbl_scaling = dbl_scaling
+  # ) -> mtx_weights
   
   # Output
   return(mtx_weights)
@@ -294,6 +291,13 @@ fun_similarity <- function(
     
   }
   
+  return(list(
+    'w' = mtx_weights
+    , 'dfc' = df_data_cols
+    , 'dfr' = df_data_rows
+  ))
+  stop()
+  
   # Apply similarity function
   if(nrow(df_query_rows) == 1){
     
@@ -381,13 +385,9 @@ fun_similarity <- function(
   
   # Output
   return(compact(list(
-    'df_similarity' = 
-      # df_similarity
-      df_data_rows
-    , 'list_similarity' = 
-      list_similarity
-    , 'mtx_similarity' =
-      mtx_similarity
+    'df_similarity' = df_data_rows
+    , 'list_similarity' = list_similarity
+    , 'mtx_similarity' = mtx_similarity
   )))
   
 }
@@ -419,6 +419,7 @@ fun_similarity <- function(
 
 fun_similarity(
   df_data_rows = df_occupations
+  # df_data_rows = df_occupations[names(df_input)]
   , df_query_rows = df_input
   # , chr_method = 'bvls'
   , chr_method = 'logit'
@@ -427,6 +428,8 @@ fun_similarity(
   , dbl_scale_lb = 0
   , lgc_sort = F
 ) -> dsds
+
+view(round(dsds,4))
 
 dsds$
   df_similarity %>%
@@ -443,18 +446,19 @@ dsds$
       similarity
       , .dbl_scaling = 1
       , .dbl_years_education = 21
-      , .dbl_years_education_min = 
+      , .dbl_years_education_min =
         education_years
     ) %>% as.numeric()
     , I = round(I, 4)
-  ) %>% view
+    # ) %>% view
+  ) %>%
   filter(str_detect(
     str_to_lower(
       occupation
     ), 'hosp|exec'
   ))
 
- 
+
 # fun_w(
 #   df_occupations %>% 
 #     select(
