@@ -30,7 +30,7 @@ lapply(pkg, function(x)
 # }
 
 # - Auxiliary weights function --------------------------------------------
-fun_w <- function(df_data_cols, dbl_scaling = 1){
+fun_w <- function(df_data_cols, dbl_scaling = 0.25){
   
   # Get maximum item scores for each column
   vapply(
@@ -44,16 +44,17 @@ fun_w <- function(df_data_cols, dbl_scaling = 1){
     mtx_weights == 0
   ] <- 1
   
-  # Importance of each item compared to most important item
-  # df_data_cols / 
-  #   mtx_weights -> 
-  #   mtx_weights
+  # Relative importance compared to top item
+  t(
+    t(df_data_cols) / 
+      mtx_weights
+  ) -> mtx_weights
   
   # Calculate matching regression weights
-  # fun_interchangeability(
-  #   .mtx_similarity = mtx_weights
-  #   , .dbl_scaling = dbl_scaling
-  # ) -> mtx_weights
+  fun_interchangeability(
+    .mtx_similarity = mtx_weights
+    , .dbl_scaling = dbl_scaling
+  ) -> mtx_weights
   
   # Output
   return(mtx_weights)
@@ -291,13 +292,6 @@ fun_similarity <- function(
     
   }
   
-  return(list(
-    'w' = mtx_weights
-    , 'dfc' = df_data_cols
-    , 'dfr' = df_data_rows
-  ))
-  stop()
-  
   # Apply similarity function
   if(nrow(df_query_rows) == 1){
     
@@ -417,10 +411,23 @@ fun_similarity <- function(
 #   , id_col = 'occupation'
 # ) -> dsds
 
+df_occupations %>% 
+  slice_sample(
+    n = 1
+  ) %>% 
+  select(
+    occupation
+    , ends_with('.l')
+    , education_years
+  ) -> df_sample
+
+df_sample$occupation
+  
 fun_similarity(
   df_data_rows = df_occupations
   # df_data_rows = df_occupations[names(df_input)]
-  , df_query_rows = df_input
+  # , df_query_rows = df_input
+  , df_query_rows = df_sample %>% select(!education_years)
   # , chr_method = 'bvls'
   , chr_method = 'logit'
   # , chr_method = 'pearson'
@@ -429,12 +436,11 @@ fun_similarity(
   , lgc_sort = F
 ) -> dsds
 
-view(round(dsds,4))
-
 dsds$
   df_similarity %>%
   select(
     occupation
+    , entry_level_education
     , education_years
     , similarity
   ) %>%
@@ -444,19 +450,40 @@ dsds$
   mutate(
     I = fun_interchangeability(
       similarity
-      , .dbl_scaling = 1
-      , .dbl_years_education = 21
+      , .dbl_scaling = 2
+      # , .dbl_years_education = 21
+      , .dbl_years_education =
+        df_sample$education_years
       , .dbl_years_education_min =
         education_years
     ) %>% as.numeric()
-    , I = round(I, 4)
-    # ) %>% view
-  ) %>%
-  filter(str_detect(
-    str_to_lower(
-      occupation
-    ), 'hosp|exec'
-  ))
+    # , I = I *
+    #   fun_interchangeability(
+    #     similarity
+    #     , .dbl_scaling = 1
+    #   ) %>% as.numeric()
+    # , I = round(I, 4)
+  ) %>% view
+  ) %>% 
+  full_join(
+    df_occupations %>% 
+      select(
+        occupation
+        , employment2
+      )
+  ) %>% 
+  reframe(
+    employability = 
+      sum(I * employment2) /
+      sum(employment2)
+  )
+
+# ) %>%
+# filter(str_detect(
+#   str_to_lower(
+#     occupation
+#   ), 'hosp|exec'
+# ))
 
 
 # fun_w(
