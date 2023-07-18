@@ -29,6 +29,54 @@ lapply(pkg, function(x)
 #   
 # }
 
+# - Auxiliary factor score matching (field of expertise) -------------------
+fun_similarity_factor_scores <- function(
+    dbl_factor_scores
+    , dbl_comparison
+){
+  
+  # Arguments validation
+  stopifnot(
+    "'dbl_factor_scores' must be a vector of factor scores." = 
+      is.numeric(dbl_factor_scores)
+  )
+  
+  stopifnot(
+    "'dbl_comparison' must be a vector of factor scores." = 
+      is.numeric(dbl_comparison)
+  )
+  
+  # Coerce arguments
+  dbl_comparison[1:length(
+    dbl_factor_scores
+  )] -> dbl_comparison
+  
+  # Most important factors
+  dbl_comparison / 
+    max(dbl_comparison) -> 
+    dbl_comparison_norm
+  
+  fun_interchangeability(
+    dbl_comparison_norm
+    , .dbl_scaling =
+      sd(dbl_comparison_norm)
+  ) -> dbl_comparison_norm
+  
+  as.numeric(
+    dbl_comparison_norm
+  ) -> dbl_comparison_norm
+  
+  # Mean factor similarity
+  weighted.mean(pmin(
+    dbl_factor_scores / dbl_comparison
+    , 1), dbl_comparison_norm
+  ) -> dbl_factor_scores_similarity
+  
+  # Output
+  return(dbl_factor_scores_similarity)
+  
+}
+
 # - Auxiliary weights function --------------------------------------------
 fun_w <- function(df_data_cols, dbl_scaling = 0.25){
   
@@ -422,7 +470,7 @@ df_occupations %>%
   ) -> df_sample
 
 df_sample$occupation
-  
+
 fun_similarity(
   df_data_rows = df_occupations
   # df_data_rows = df_occupations[names(df_input)]
@@ -457,13 +505,18 @@ dsds$
       , .dbl_years_education_min =
         education_years
     ) %>% as.numeric()
+    # , I = 
+    #   I * fun_similarity_factor_scores(
+    #     dbl_factor_scores = dsds
+    #     , dbl_comparison = lalala
+    #   )
     # , I = I *
     #   fun_interchangeability(
     #     similarity
     #     , .dbl_scaling = 1
     #   ) %>% as.numeric()
     # , I = round(I, 4)
-  ) %>% view
+    # ) %>% view
   ) %>% 
   full_join(
     df_occupations %>% 
