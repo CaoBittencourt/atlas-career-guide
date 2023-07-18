@@ -51,24 +51,21 @@ fun_factor_scores <- function(
   )
   
   # Data wrangling
-  # df_data %>% 
-  #   select dsds -> df_data_factors
-  
   loadings(efa_model)[,] %>%
     as_tibble(
       rownames = 'item'
     ) %>%
-    set_names(
-      c(
-        'item'
-        , loadings(efa_model)[,] %>%
-          colnames() %>%
-          str_extract(
-            '[[:digit:]]+'
-          ) %>%
-          paste0('factor',.)
-      )
-    ) %>%
+  set_names(
+    c(
+      'item'
+      , loadings(efa_model)[,] %>%
+        colnames() %>%
+        str_extract(
+          '[[:digit:]]+'
+        ) %>%
+        paste0('factor',.)
+    )
+  ) %>%
     relocate(
       item
       , str_sort(
@@ -77,35 +74,62 @@ fun_factor_scores <- function(
       )
     ) %>%
     pivot_longer(
-      cols = !item
+      cols = -item
       , names_to = 'factor'
       , values_to = 'factor_loading'
-    ) %>% 
-    group_by(factor) %>% 
+    ) %>%
+    group_by(item) %>%
     filter(
       factor_loading ==
         max(factor_loading)
-    ) %>% 
+    ) %>%
     select(
       factor
       , item
-    ) %>% 
-    ungroup() -> 
+    ) %>%
+    ungroup() ->
     df_factors
   
+  df_data %>%
+    select(any_of(
+      df_factors$item
+    )) -> df_data_factors
+  
+  df_data %>%
+    select(!any_of(
+      df_factors$item
+    )) -> df_data
+  
+  # Are all items required to calculate factor scores?
   # Create factor keys list
-  # df_factors %>% 
-  #   dsds -> list_factors
+  df_factors %>%
+    split(.$factor) %>% 
+    map(~ .x[-1]) %>% 
+    c() -> list_factors
+  
   rm(df_factors)
+  
+  return(list(
+    list_factors
+    ,df_data_factors
+  ))
+  stop()
   
   # Score items
   scoreVeryFast(
     keys = list_factors
-    , items = df_data
+    , items = df_data_factors
     , totals = F
   ) -> df_factor_scores
   
+  return(df_factor_scores)
+  stop()
+  
   # Add id columns to data
+  df_data %>% 
+    bind_cols(
+      df_factor_scores
+    ) -> df_factor_scores
   
   # Aggregate results
   if(lgc_pivot){
@@ -119,3 +143,30 @@ fun_factor_scores <- function(
   return(df_factor_scores)
   
 }
+
+# dsds --------------------------------------------------------------------
+# read_rds(
+#   "C:/Users/Cao/Documents/Github/atlas-research/data/efa_model_equamax_15_factors.rds"
+# ) -> efa_model
+fun_factor_scores(
+  df_input,
+  efa_model
+) -> dsds
+
+dsds[[1]]
+dsds[[2]]
+
+# loadings(efa_model) %>% 
+#   ... %>% 
+#   pivot_long() %>% 
+#   ... %>% 
+#   recode(
+#     !max = 0
+#     max = 1
+#   ) -> df_factor_keys
+
+?scoreVeryFast(
+  keys = dsds[[1]]
+  , items = dsds[[2]]
+  , totals = F
+)
