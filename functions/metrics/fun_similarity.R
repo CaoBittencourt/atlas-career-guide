@@ -139,10 +139,8 @@ fun_professional_type <- function(df_data, efa_model){
               , numeric = T
             )
         )
-    ) -> df_factor_scores_long
-  
-  return(df_factor_scores_long)
-  stop()
+    ) %>% 
+    ungroup() -> df_factor_scores_long
   
   # group_by(numeric not factor) %>% 
   
