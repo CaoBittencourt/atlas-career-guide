@@ -29,6 +29,131 @@ lapply(pkg, function(x)
 #   
 # }
 
+# - Professional type -----------------------------------------------------
+fun_professional_type <- function(df_data, efa_model){
+  
+  # Arguments validation
+  stopifnot(
+    "'df_data' must be a data frame containing item scores." =
+      all(
+        is.data.frame(df_data)
+        , any(
+          loadings(efa_model)[,] %>%
+            rownames() %in%
+            names(df_data)
+        )))
+  
+  stopifnot(
+    "'efa_model' must be a factor analysis object." =
+      any(
+        str_to_lower(class(
+          efa_model
+        )) == 'factanal'
+        , str_to_lower(class(
+          efa_model
+        )) == 'fa'
+      )
+  )
+  
+  # Data wrangling
+  # df_data %>% 
+  #   mutate(
+  #     id = row_number()
+  #     , id = factor(id)
+  #   ) -> df_data
+  
+  # Calculate factor scores
+  fun_factor_scores(
+    df_data = df_data
+    , efa_model = efa_model
+    , lgc_pivot = T
+  ) -> df_factor_scores_long
+  
+  # rm(df_data)
+  
+  df_factor_scores_long %>% 
+    # group_by(id) %>%
+    group_by(across(c(
+      -where(is.numeric)
+      , -factor
+    ) , .fns = fct_inorder
+    )) %>%
+    # group_by(not numeric not factor) %>% 
+    mutate(
+      factor_score = 
+        factor_score /
+        max(factor_score)
+    ) -> df_factor_scores_long
+  
+  # Calculate item standard deviation
+  # df_data %>% 
+  #   pivot_longer(
+  #     cols = ...
+  #     # cols = items
+  #     , names_to = 'item'
+  #     , values_to = 'item_score'
+  #   ) %>% 
+  #   group_by(id) %>%  
+  #   # group_by(not numeric not item) %>%
+  #   reframe(
+  #     sd = sd(item_score)
+  #   ) %>% 
+  #   left_join(
+  #     df_factor_scores_long
+  #   ) -> df_factor_scores_long
+  
+  # Estimate professional profile
+  df_factor_scores_long %>% 
+    group_by(across(c(
+      -where(is.numeric)
+      , -factor
+    ) , .fns = fct_inorder
+    )) %>%
+    # group_by(id) %>% 
+    # group_by(across(
+    #   !where(is.numeric)
+    # )) %>% 
+    mutate(
+      professional_profile = 
+        fun_interchangeability(
+          factor_score
+          , sd(factor_score)
+          # , sd(df_input[-1])
+          # , first(sd)
+        ) %>% as.numeric()
+      , professional_profile = 
+        round(professional_profile, 4)
+      , factor = 
+        factor(
+          factor
+          , levels = 
+            str_sort(
+              factor
+              , numeric = T
+            )
+        )
+    ) -> df_factor_scores_long
+  
+  return(df_factor_scores_long)
+  stop()
+  
+  # group_by(numeric not factor) %>% 
+  
+  # dbl_factor_scores / 
+  #   max(dbl_comparison) -> 
+  #   dbl_comparison_norm
+  # 
+  # fun_interchangeability(
+  #   dbl_comparison_norm
+  #   , .dbl_scaling =
+  #     sd(dbl_comparison_norm)
+  # ) -> dbl_comparison_norm
+  
+  # Output
+  return(df_factor_scores_long)
+  
+}
+
 # - Auxiliary factor score matching (field of expertise) -------------------
 fun_similarity_factor_scores <- function(
     dbl_factor_scores
@@ -458,6 +583,49 @@ fun_similarity <- function(
 #   , lgc_sort = F
 #   , id_col = 'occupation'
 # ) -> dsds
+fun_professional_type(
+  df_data = 
+    df_input
+    # df_occupations %>%
+    # slice_sample(
+    #   n = 5
+    # ) %>%
+    # select(
+    #   occupation
+    #   , ends_with('.l')
+    # )
+  , efa_model = 
+    efa_model
+) %>%
+  group_by(occupation) %>% 
+  mutate(
+    rank = min_rank(
+      professional_profile
+    )
+    , professional_profile_desc = 
+      cut(professional_profile, breaks = 5, labels = F)
+  ) %>%
+  fun_plot.heatmap(aes(
+    x = factor
+    , y = occupation
+    , label = rank
+    , fill = professional_profile_desc
+    , alpha = professional_profile
+  )
+  , .list_legend = guides(
+    alpha = 'none'
+  )
+  , .reorder_fct = F
+  , .fun_format.y = function(y){
+    str_wrap(y,40)
+  }
+  )
+
+df_factors %>% 
+  group_by(factor, factor.name) %>% 
+  slice(1) %>% 
+  select(factor, factor.name) %>% 
+  view
 
 df_occupations %>% 
   slice_sample(
@@ -484,40 +652,95 @@ fun_similarity(
   , lgc_sort = F
 ) -> dsds
 
+dsds
+
 dsds$
   df_similarity %>%
   select(
     occupation
     , entry_level_education
-    , education_years
+    # , education_years
     , similarity
   ) %>%
   arrange(desc(
     similarity
   )) %>% 
-  mutate(
-    I = fun_interchangeability(
-      similarity
-      , .dbl_scaling = 2
-      # , .dbl_years_education = 21
-      , .dbl_years_education =
-        df_sample$education_years
-      , .dbl_years_education_min =
-        education_years
-    ) %>% as.numeric()
-    # , I = 
-    #   I * fun_similarity_factor_scores(
-    #     dbl_factor_scores = dsds
-    #     , dbl_comparison = lalala
-    #   )
-    # , I = I *
-    #   fun_interchangeability(
-    #     similarity
-    #     , .dbl_scaling = 1
-    #   ) %>% as.numeric()
-    # , I = round(I, 4)
-    # ) %>% view
+  left_join(
+    df_occupations %>% 
+      select(
+        occupation
+        , ends_with('.l')
+      ) %>% 
+      fun_factor_scores(
+        efa_model = efa_model
+        # , lgc_pivot = T
+        , lgc_pivot = T
+      )
+  ) -> dsdsds
+
+dsdsds %>% 
+  filter(
+    occupation == first(occupation)
   ) %>% 
+  pull(factor_score) -> 
+  lalala
+
+dsdsds %>% 
+  filter(
+    occupation == last(occupation)
+  ) %>% 
+  pull(factor_score) -> 
+  lala
+
+fun_similarity_factor_scores(
+  dbl_factor_scores = lalala,
+  dbl_comparison = lala
+)
+
+
+dsdsds %>% 
+  filter(
+    occupation %in% 
+      c(
+        first(occupation)
+        , sample(df_occupations$occupation, 1)
+      )
+  ) %>% 
+  reframe(
+    similarity_factor = 
+      fun_factor_scores_similarity(
+        dbl_factor_scores = 
+          filter(.,occupation == first(occupation)) %>% 
+          pull(factor_score)
+        , dbl_comparison = 
+          filter(.,occupation != first(occupation)) %>% 
+          pull(factor_score)
+      )
+  )
+
+mutate(
+  I = fun_interchangeability(
+    similarity
+    , .dbl_scaling = 2
+    # , .dbl_years_education = 21
+    , .dbl_years_education =
+      df_sample$education_years
+    , .dbl_years_education_min =
+      education_years
+  ) %>% as.numeric()
+  # , I = 
+  #   I * fun_similarity_factor_scores(
+  #     dbl_factor_scores = dsds
+  #     , dbl_comparison = lalala
+  #   )
+  # , I = I *
+  #   fun_interchangeability(
+  #     similarity
+  #     , .dbl_scaling = 1
+  #   ) %>% as.numeric()
+  # , I = round(I, 4)
+  # ) %>% view
+) %>% 
   full_join(
     df_occupations %>% 
       select(

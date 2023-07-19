@@ -1886,7 +1886,17 @@ fun_plot.heatmap <- function(
   , .coord_polar = F
   
   # Theme
-  , .theme = ggridges::theme_ridges(font_size = 12, center_axis_labels = T)
+  , .theme = 
+    ggridges::theme_ridges(
+      center_axis_labels = T
+      , font_size = 12
+    ) + 
+    theme(
+      axis.text.y = element_text(vjust = 0.5)
+      , axis.title.y = element_blank()
+      , legend.position = 'bottom'
+      , legend.direction = 'horizontal'
+    )
   
 ){
   

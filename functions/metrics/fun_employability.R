@@ -316,132 +316,132 @@ lapply(pkg, function(x)
 
 # - Interchangeability ---------------------------------------------------
 fun_interchangeability <- function(
-    
+
   .mtx_similarity
   , .dbl_scaling = 1
   , .dbl_years_education = NULL
   , .dbl_years_education_min = NULL
-  
+
 ){
-  
+
   # Argument validation
   stopifnot(
     "'.mtx_similarity' must be numeric." =
       is.numeric(as.matrix(.mtx_similarity))
   )
-  
+
   stopifnot(
     "'.dbl_scaling' must be numeric." =
       is.numeric(.dbl_scaling)
   )
-  
+
   stopifnot(
-    "'.dbl_years_education' must be numeric." = 
+    "'.dbl_years_education' must be numeric." =
       any(
         is.null(.dbl_years_education)
         , is.numeric(.dbl_years_education)
       )
   )
-  
+
   stopifnot(
-    "'.dbl_years_education_min' must be a numeric vector the same length as '.mtx_similarity'." = 
+    "'.dbl_years_education_min' must be a numeric vector the same length as '.mtx_similarity'." =
       any(
         is.null(.dbl_years_education_min)
         , is.numeric(.dbl_years_education_min)
       )
   )
-  
+
   # Data wrangling
   .dbl_scaling[[1]] -> sigma
-  
+
   cbind(.mtx_similarity) -> s
-  
+
   # Apply coefficient
   # Coefficient 1
   # mtx_interchangeability <- s
-  
+
   # Coefficient 2
   # mtx_interchangeability <- s ^ sigma
-  
+
   # Coefficient 3
   # mtx_interchangeability <- s * s + (1 - s) * s ^ sigma
-  
+
   # Coefficient 4
   # mtx_interchangeability <- s * s + (1 - s) * s ^ ((1/s)^(1/s))
-  
+
   # Coefficient 5
   # mtx_interchangeability <- s * s + (1 - s) * s ^ ((1/s)^sigma)
-  
+
   # Coefficient 6
   # mtx_interchangeability <- s ^ ((1/s)^(1/s))
   mtx_interchangeability <- s ^ ((1/s)^((sigma/s)))
-  
+
   if(all(
     length(.dbl_years_education_min)
     , length(.dbl_years_education)
   )){
-    
+
     .dbl_years_education_min[
       seq(1, nrow(s))
     ] -> edu_min
-    
-    .dbl_years_education[[1]] / 
+
+    .dbl_years_education[[1]] /
       edu_min -> edu_ratio
-    
-    edu_ratio ^ 
+
+    edu_ratio ^
       ((1/edu_ratio) ^
          ((edu_min/edu_ratio))) -> mtx_edu
-    
-    pmin(mtx_edu, 1) * 
-      mtx_interchangeability * 
-      mtx_interchangeability -> 
+
+    pmin(mtx_edu, 1) *
+      mtx_interchangeability *
+      mtx_interchangeability ->
       mtx_interchangeability
-    
+
   }
-  
+
   # Rownames and Colnames
   if(length(rownames(s))){
-    
-    rownames(s) -> 
+
+    rownames(s) ->
       rownames(mtx_interchangeability)
   }
-  
+
   if(length(colnames(s))){
-    
-    colnames(s) -> 
+
+    colnames(s) ->
       colnames(mtx_interchangeability)
   }
-  
+
   # Output
   return(mtx_interchangeability)
-  
+
 }
 
-# df_models %>% 
+# df_models %>%
 #   full_join(
 #     df_occupations
-#   ) %>% 
+#   ) %>%
 #   mutate(
-#     I = 
+#     I =
 #       fun_interchangeability(
-#         .mtx_similarity = 
+#         .mtx_similarity =
 #           bvls.wgt
 #         , .dbl_scaling = 10
 #         , .dbl_years_education = 21
-#         , .dbl_years_education_min = 
+#         , .dbl_years_education_min =
 #           education_years
 #       ) %>% as.numeric()
-#   ) %>% 
+#   ) %>%
 #   select(
 #     occupation
-#     , I 
+#     , I
 #     , bvls.wgt
 #     , employment2
-#   ) %>% 
+#   ) %>%
 #   mutate(
-#     jobs = 
+#     jobs =
 #       round(I * employment2)
-#   ) %>% 
+#   ) %>%
 #   filter(str_detect(
 #     str_to_lower(occupation)
 #     # , 'hospitalist'
@@ -451,13 +451,13 @@ fun_interchangeability <- function(
 #     # , '^statistician'
 #     , 'economist'
 #   ))
-# 
-# 
+#
+#
 # plot(
 #   fun_interchangeability(
 #     seq(0,1,0.01)
-#     , .dbl_scaling = 
-#       df_occupations %>% 
+#     , .dbl_scaling =
+#       df_occupations %>%
 #       filter(str_detect(
 #         str_to_lower(occupation)
 #         # , 'hospitalist'
@@ -466,14 +466,14 @@ fun_interchangeability <- function(
 #         # , 'statistician'
 #         # , '^statistician'
 #         , 'economist'
-#       )) %>% 
+#       )) %>%
 #       reframe(
 #         kflex = fun_kflex(
 #           c_across(ends_with('.l'))
 #           , .dbl_scale.lb = 0
 #           , .dbl_scale.ub = 100
 #         )
-#       ) %>% 
+#       ) %>%
 #       pull()
 #   )
 # )
