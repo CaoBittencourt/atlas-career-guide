@@ -32,6 +32,13 @@ lapply(pkg, function(x)
 # - Professional type -----------------------------------------------------
 fun_professional_type <- function(df_data, efa_model){
   
+  # Factor scores items
+  # Factor scores factor scores
+  # Numbers -> description
+    # Highly / poorly qualified (score levels)
+    # Generalist / specialist (score dispersion)
+    # Areas of expertise / focus (relative score importance)
+  
   # Arguments validation
   stopifnot(
     "'df_data' must be a data frame containing item scores." =
@@ -153,6 +160,17 @@ fun_professional_type <- function(df_data, efa_model){
   return(df_factor_scores_long)
   
 }
+
+fun_similarity(
+  df_data_rows = df_occupations
+  , df_query_rows = df_input
+  , chr_method = 'logit'
+  , dbl_scale_ub = 100
+  , dbl_scale_lb = 0
+  , mtx_weights = NULL
+  , lgc_sort = T
+  , id_col = 'occupation'
+) -> dsds
 
 # - Auxiliary factor score matching (field of expertise) -------------------
 fun_similarity_factor_scores <- function(
@@ -722,7 +740,7 @@ mutate(
   I = fun_interchangeability(
     similarity
     , .dbl_scaling = 2
-    # , .dbl_years_education = 21
+    # , .dbl_years_education = 21 + 2.5
     , .dbl_years_education =
       df_sample$education_years
     , .dbl_years_education_min =

@@ -15,6 +15,56 @@ lapply(pkg, function(x)
 #   {citation(package = x)})
 
 # [FUNCTION] ----------------------------------------------
+# - Factor loadings function ----------------------------------------------
+fun_factor_loadings <- function(efa_model){
+  
+  # Arguments validation
+  stopifnot(
+    "'efa_model' must be a factor analysis object." =
+      any(
+        str_to_lower(class(
+          efa_model
+        )) == 'factanal'
+        , str_to_lower(class(
+          efa_model
+        )) == 'fa'
+      )
+  )
+  
+  # Get factor loadings
+  loadings(efa_model)[,] %>%
+    as_tibble(
+      rownames = 'item'
+    ) -> df_loadings
+  
+  # Data wrangling
+  df_loadings %>%
+    set_names(
+      c(
+        'item'
+        , df_loadings[-1] %>% 
+          names() %>% 
+          # , loadings(efa_model)[,] %>%
+          #   colnames() %>%
+          str_extract(
+            '[[:digit:]]+'
+          ) %>%
+          paste0('factor',.)
+      )
+    ) %>%
+    relocate(
+      item
+      , str_sort(
+        names(.)
+        , numeric = T
+      )
+    ) -> df_loadings
+  
+  # Output
+  return(df_loadings)
+  
+}
+
 # - Factor scores function ------------------------------------
 fun_factor_scores <- function(
     
@@ -38,41 +88,10 @@ fun_factor_scores <- function(
             names(df_data)
         )))
   
-  stopifnot(
-    "'efa_model' must be a factor analysis object." =
-      any(
-        str_to_lower(class(
-          efa_model
-        )) == 'factanal'
-        , str_to_lower(class(
-          efa_model
-        )) == 'fa'
-      )
-  )
-  
   # Data wrangling
-  loadings(efa_model)[,] %>%
-    as_tibble(
-      rownames = 'item'
-    ) %>%
-    set_names(
-      c(
-        'item'
-        , loadings(efa_model)[,] %>%
-          colnames() %>%
-          str_extract(
-            '[[:digit:]]+'
-          ) %>%
-          paste0('factor',.)
-      )
-    ) %>%
-    relocate(
-      item
-      , str_sort(
-        names(.)
-        , numeric = T
-      )
-    ) %>%
+  fun_factor_loadings(
+    efa_model
+  ) %>%
     pivot_longer(
       cols = -item
       , names_to = 'factor'
@@ -108,7 +127,6 @@ fun_factor_scores <- function(
       df_factors$item
     )) -> df_data
   
-  # Are all items required to calculate factor scores?
   # Create factor keys list
   df_factors %>%
     split(.$factor) %>% 
@@ -122,7 +140,10 @@ fun_factor_scores <- function(
     
     scoreVeryFast(
       keys = list_factors
-      , items = rbind(df_data_factors, df_data_factors)
+      , items = rbind(
+        df_data_factors, 
+        df_data_factors
+      )
       , totals = F
     ) %>% 
       as_tibble() %>%
@@ -147,12 +168,12 @@ fun_factor_scores <- function(
       df_factor_scores
     ) %>% 
     relocate(
-    !starts_with('factor')
-    , str_sort(
-      names(.)
-      , numeric = T
-    )
-  ) -> df_factor_scores
+      !starts_with('factor')
+      , str_sort(
+        names(.)
+        , numeric = T
+      )
+    ) -> df_factor_scores
   
   # Aggregate results
   if(lgc_pivot){
