@@ -1,21 +1,185 @@
 # [SETUP] -----------------------------------------------------------------
-# - Packages --------------------------------------------------------------
+# - Packages ----------------------------------------------------------------
+pkg <- c(
+  'tidyverse' #Data wrangling
+  , 'caret' #ML algorithms
+  , 'weights' #Weighted correlation
+  , 'Hmisc' #Weighted variance
+  , 'MASS' #Simulate correlated data
+)
+
+# Activate / install packages
+lapply(pkg, function(x)
+  if(!require(x, character.only = T))
+  {install.packages(x); require(x)})
+
+select <- dplyr::select
+
+# Package citation
+# lapply(pkg, function(x)
+#   {citation(package = x)})
+
 # [FUNCTIONS] -------------------------------------------------------------
 # - Generate fake data ----------------------------------------------------
-fun_fake_data <- function(df_data, dbl_weights = NULL){
+fun_fake_data <- function(
+    df_data, 
+    dbl_scale_ub = NULL, 
+    dbl_scale_lb = NULL, 
+    dbl_weights = NULL
+){
   
   # Arguments validation
   
   # Data wrangling
+  dbl_scale_ub[[1]] -> dbl_scale_ub
+  dbl_scale_lb[[1]] -> dbl_scale_lb
+  
+  if(!length(dbl_weights)){
+    
+    rep(1, nrow(df_data)) ->
+      dbl_weights
+    
+  }
+  
+  df_data %>% 
+    select(where(
+      is.numeric
+    )) -> df_data
   
   # Descriptive statistics
+  df_data %>%
+    mutate(
+      .before = 1
+      , wgt = dbl_weights
+    ) %>%
+    pivot_longer(
+      cols = -wgt,
+      names_to = 'item',
+      values_to = 'item_score'
+    ) %>% 
+    group_by(item) %>% 
+    reframe(
+      wgt.mean = 
+        wtd.mean(
+          item_score, 
+          wgt, 
+          na.rm = T
+        ),
+      wgt.sd = 
+        sqrt(wtd.var(
+          item_score, 
+          wgt, 
+          na.rm = T
+        ))
+    ) -> df_data_stats
+  
+  # Correlation
+  wtd.cors(
+    df_data
+    , weight =
+      dbl_weights
+  ) -> mtx_data_cors
   
   # Generate fake data
-  # Uncorrelated data
-  # Reversely correlated data
+  nrow(df_data) -> int_fake_data
+  
+  # Statistically define "off the charts"
+  # Bounded data
+  # Unbounded data
+  
   # Correlated, but off the charts data
+  c(
+    'very low' = 0.1,
+    'low' = 0.5,
+    'high' = 1.5,
+    'very high' = 2
+  ) -> dbl_levels
+  
+  map(
+    .x = dbl_levels,
+    ~ mvrnorm(
+      n = round((int_fake_data / 2) / length(dbl_levels)),
+      mu = df_data_stats$wgt.mean * .x,
+      Sigma = mtx_data_cors,
+    ) %>% 
+      as_tibble()
+  ) %>% 
+    list_rbind() -> 
+    df_fake_data
+  
+  # Uncorrelated data
+  runif(
+    n = 10, 
+    min = 0.5, 
+    max = 2.5
+  ) -> dbl_levels
+  
+  map(
+    .x = dbl_levels,
+    ~ mvrnorm(
+      n = round((int_fake_data / 2) / length(dbl_levels)),
+      mu = df_data_stats$wgt.mean * .x,
+      Sigma = diag(nrow(df_data_stats)),
+    ) %>% 
+      as_tibble()
+  ) %>% 
+    list_rbind() %>%
+    set_names(names(
+      df_fake_data
+    )) %>% 
+    bind_rows(
+      df_fake_data
+    ) -> df_fake_data
   
   # Data wrangling
+  if(length(dbl_scale_ub)){
+    
+    df_fake_data %>% 
+      mutate(across(
+        .cols = everything()
+        ,.fns = 
+          ~ pmin(.x, dbl_scale_ub)
+      )) -> df_fake_data
+    
+  }
+  
+  if(length(dbl_scale_lb)){
+    
+    df_fake_data %>% 
+      mutate(across(
+        .cols = everything()
+        ,.fns = 
+          ~ pmax(.x, dbl_scale_lb)
+      )) -> df_fake_data
+    
+  }
+  
+  # Bind data
+  df_data %>% 
+    mutate(
+      .before = 1
+      , fake = 0
+    ) %>% 
+    bind_rows(
+      df_fake_data %>% 
+        mutate(
+          .before = 1
+          , fake = 1
+        )
+    ) -> df_fake_data
+  
+  # Fake weights
+  df_fake_data %>% 
+    mutate(
+      .after = 1
+      , wgt = c(
+        dbl_weights
+        , rep(
+          max(dbl_weights)
+          , nrow(df_fake_data) -
+            nrow(df_data)
+        ))
+    ) -> df_fake_data
   
   # Output
   return(df_fake_data)
@@ -43,7 +207,7 @@ fun_test_classification <- function(df_data, int_labels, model_classification){
   
   # Data wrangling
   
-  # Test predictions
+  # Confusion matrix
   
   # Output
   return(model_classification)
@@ -130,5 +294,25 @@ fun_fraud_detect <- function(df_query, model_fraud){
 
 # [TEST] ------------------------------------------------------------------
 # - Data ------------------------------------------------------------------
+read_csv(
+  'C:/Users/Cao/Documents/Github/Atlas-Research/Data/df_atlas_complete_equamax_15_factors.csv'
+) -> df_occupations
+
+df_occupations$
+  employment2 ->
+  dbl_weight
+
+df_occupations %>% 
+  select(
+    occupation,
+    ends_with('.l')
+  ) -> df_occupation
+
 # - Run model -------------------------------------------------------------
 # - Test model ------------------------------------------------------------
+fun_fake_data(
+  df_data = df_occupations,
+  dbl_scale_ub = 100,
+  dbl_scale_lb = 0,
+  dbl_weights = dbl_weight
+) %>% view
