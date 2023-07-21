@@ -28,6 +28,9 @@ fun_factor_loadings <- function(efa_model){
         , str_to_lower(class(
           efa_model
         )) == 'fa'
+        , str_to_lower(class(
+          efa_model
+        )) == 'principal'
       )
   )
   

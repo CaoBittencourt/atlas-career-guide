@@ -106,16 +106,18 @@ df_occupations %>%
 # - Run factor analysis on the whole data frame ---------------------------
 fun_efa.bestmodel(
   .df_data.numeric = 
-    df_occupations.efa
+    # df_occupations.efa
+    df_occupations %>% 
+    select(ends_with('.l')) / 100
   , .dbl_weights = 
     .dbl_weights
   , .chr_rotation =
     .chr_rotation
-  , .auto_select.nfactors =
-    .auto_select.nfactors
-  , .int_nfactors.vector =
+  , .auto_select.nfactors = F
+    # .auto_select.nfactors
+  , .int_nfactors.vector = 15
     # .int_nfactors
-    c(1, 2, 5)
+    # c(1, 2, 5)
   , .int_min.factor_size =
     .int_min.factor_size
   , .remove_unacceptable_MSAi.items =
