@@ -88,11 +88,19 @@ fun_fake_data <- function(
   # Unbounded data
   
   # Correlated, but off the charts data
+  set.seed(19)
+  
   c(
-    'very low' = 0.1,
-    'low' = 0.5,
-    'high' = 1.5,
-    'very high' = 2
+    runif(
+      n = 50,
+      min = 0,
+      max = 0.5
+    ),
+    runif(
+      n = 50,
+      min = 1.5,
+      max = 2
+    )
   ) -> dbl_levels
   
   map(
@@ -109,7 +117,7 @@ fun_fake_data <- function(
   
   # Uncorrelated data
   runif(
-    n = 10, 
+    n = 100, 
     min = 0.5, 
     max = 2.5
   ) -> dbl_levels
@@ -129,7 +137,10 @@ fun_fake_data <- function(
     )) %>% 
     bind_rows(
       df_fake_data
-    ) -> df_fake_data
+    ) %>% 
+    map(sample) %>% 
+    as_tibble() -> 
+    df_fake_data
   
   # Data wrangling
   if(length(dbl_scale_ub)){
@@ -166,7 +177,11 @@ fun_fake_data <- function(
           .before = 1
           , fake = 1
         )
+    ) %>%
+    mutate(
+      fake = factor(fake)
     ) -> df_fake_data
+  # ) -> df_fake_data
   
   # Fake weights
   df_fake_data %>% 
@@ -175,7 +190,8 @@ fun_fake_data <- function(
       , wgt = c(
         dbl_weights
         , rep(
-          max(dbl_weights)
+          # max(dbl_weights)
+          mean(dbl_weights)
           , nrow(df_fake_data) -
             nrow(df_data)
         ))
@@ -194,6 +210,7 @@ fun_train_classification <- function(df_data, int_labels, dbl_weights = NULL){
   # Data wrangling
   
   # Logistic regression with cross validation
+  
   
   # Output
   return(model_classification)
@@ -298,6 +315,10 @@ read_csv(
   'C:/Users/Cao/Documents/Github/Atlas-Research/Data/df_atlas_complete_equamax_15_factors.csv'
 ) -> df_occupations
 
+read_csv(
+  'https://docs.google.com/spreadsheets/d/e/2PACX-1vSVdXvQMe4DrKS0LKhY0CZRlVuCCkEMHVJHQb_U-GKF21CjcchJ5jjclGSlQGYa5Q/pub?gid=1515296378&single=true&output=csv'
+) -> df_input
+
 df_occupations$
   employment2 ->
   dbl_weight
@@ -306,7 +327,7 @@ df_occupations %>%
   select(
     occupation,
     ends_with('.l')
-  ) -> df_occupation
+  ) -> df_occupations
 
 # - Run model -------------------------------------------------------------
 # - Test model ------------------------------------------------------------
@@ -315,4 +336,74 @@ fun_fake_data(
   dbl_scale_ub = 100,
   dbl_scale_lb = 0,
   dbl_weights = dbl_weight
-) %>% view
+) -> df_fake_data
+
+train(
+  fake ~ .,
+  data = 
+    df_fake_data %>% 
+    select(!wgt), 
+  trControl = 
+    trainControl(
+      method = 'cv',
+      # method = 'repeatedcv',
+      number = 10#,
+      # search = 'random'
+      # repeats = 3
+    ),
+  weights = df_fake_data$wgt,
+  # method = 'bayesglm',
+  # method = 'rf',
+  # tuneLength = 15,
+  method = 'glm',
+  # method = 'lasso',
+  family = binomial(link = 'logit'),
+  metric = 'Accuracy'
+) -> model_fraud
+
+model_fraud
+
+df_fake_data %>% 
+  select(!wgt) %>%
+  filter(
+    fake == '1'
+  ) %>% 
+  slice_sample(
+    n = 1
+  ) %>% 
+  select(!fake)
+
+wtd.cors(
+  df_occupations[-1]
+  , weight = dbl_weight
+) -> dsds
+
+runif(200, min = 0, max = 100) %>% 
+  t() %>% 
+  as_tibble() %>% 
+  set_names(colnames(
+    dsds
+  )) -> lalala
+
+fun_similarity(
+  df_data_rows = as_tibble(rowMeans(lalala) * (1 + dsds)/2),
+  # df_query_rows = lalala,
+  df_query_rows = slice_sample(df_occupations, n = 1),
+  chr_method = 'pearson',
+  mtx_weights = matrix(1, nrow = nrow(dsds), ncol = ncol(dsds)),
+  dbl_scale_ub = 100,
+  dbl_scale_lb = 0
+) -> dsdsds
+
+dsdsds$df_similarity$similarity
+
+
+
+
+
+
+
+
+
+
+
