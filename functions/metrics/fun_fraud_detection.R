@@ -419,6 +419,42 @@ fun_train_classification <- function(
   
 }
 
+# - Evaluate classification model -----------------------------------------
+fun_evaluate_classification <- function(pct_accuracy){
+  
+  # Arguments validation
+  stopifnot(
+    "'pct_accuracy' must be a percentage." =
+      all(
+        is.numeric(pct_accuracy),
+        pct_accuracy <= 1,
+        pct_accuracy >= 0
+      )
+  )
+  
+  # Data wrangling
+  pct_accuracy[[1]] -> pct_accuracy
+  
+  # Evaluate model accuracy
+  case_match(
+    .x = findInterval(
+      pct_accuracy,
+      c(seq(0, 0.9, 0.1), 0.95)
+    ),
+    c(1:5) ~ 'worst than a coin flip',
+    6 ~ 'coin flip',
+    7 ~ 'poor',
+    8 ~ 'ok',
+    9 ~ 'good',
+    10 ~ 'very good',
+    11 ~ 'probably overfitting'
+  ) -> chr_accuracy_evaluation
+  
+  # Output
+  return(chr_accuracy_evaluation)
+  
+}
+
 # - Fraud detection model -------------------------------------------------
 fun_fraud_model <- function(
     df_data,
@@ -452,18 +488,11 @@ fun_fraud_model <- function(
   ) -> model_fraud
   
   # Evaluate classification model
-  case_match(
-    .x = findInterval(
-      model_fraud$results$Accuracy,
-      c(seq(0, 0.9, 0.1), 0.95)
-    ),
-    c(1:5) ~ 'worst than a coin flip',
-    6 ~ 'coin flip',
-    7 ~ 'poor',
-    8 ~ 'ok',
-    9 ~ 'good',
-    10 ~ 'very good',
-    11 ~ 'probably overfitting'
+  fun_evaluate_classification(
+    pct_accuracy =
+      model_fraud$
+      results$
+      Accuracy
   ) -> chr_accuracy_evaluation
   
   # Output
