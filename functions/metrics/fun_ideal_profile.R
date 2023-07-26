@@ -214,404 +214,404 @@ fun_ideal_profile <- function(
   
 }
 
-# dsds --------------------------------------------------------------------
-fun_ideal_profile(
-  efa_model = efa_model
-  , dbl_user_preferences = 
-    c(83, 0, 0, 0, 67, 50, 100, 83, 0, 33, 0, 100, 0, 17, 0)
-  , dbl_scale_ub = 100
-  , dbl_scale_lb = 0
-  , chr_method = 'gradient'
-) -> dsds
-
-view(dsds$profile)
-view(dsdsds$par)
-
-constrOptim(
-  # starting values
-  theta = 
-    runif(
-      ncol(dsds$efa), 
-      0, 
-      100
-    )
-  # objective function
-  , f = function(
-    a
-    , mtx_factor_scores = 
-      dsds$efa
-    , dbl_factor_pref = 
-      dsds$pref
-    
-  ){
-    
-    1 - 
-      sum(((
-        mtx_factor_scores * a - dbl_factor_pref
-      ) ^ 2) / nrow(mtx_factor_scores)) -> u
-    
-    return(u)
-    
-  }
-  # gradient
-  , grad = NULL
-  # constraint matrix
-  , ui = 
-    rbind(
-      diag(1, ncol(dsds$efa))
-      , diag(-1, ncol(dsds$efa))
-    )
-  # constraint vector
-  , ci = c(
-    rep(0, ncol(dsds$efa))
-    , rep(-100, ncol(dsds$efa))
-  )
-  , control = list(fnscale = -1)
-) -> dsdsds
-
-colnames(dsds$efa) ->
-  names(dsdsds$par)
-view(dsdsds$par)
-
-constrOptim(
-  # starting values
-  theta = runif(2, 0, 100)
-  # objective function
-  , f = function(fct1,fct2){1 + (fct1-0)^2 + (fct2 - 83)^2}
-  # , f = function(x){1 + (x[1]-0)^2 + (x[2] - 83)^2}
-  # gradient
-  , grad = function(fct1,fct2){c(fct1,fct2)}
-  # , grad = function(x){c(x[1],x[2])}
-  # constraint matrix
-  , ui = rbind(1,1,1,1)
-  # constraint vector
-  , ci = c(100,100,0,0)
-  , control = list(fnscale = -1)
-)
-
-constrOptim(
-  # starting values
-  theta = runif(3, 0, 1)
-  # theta = runif(3, 0, 100)
-  # objective function
-  , f = function(a){
-    # 100 - 
-    1 - 
-      # ((c(0.5,0.25,-0.3)*a - 0.5) ^ 2) / 2 -
-      # ((c(-0.1,0.3,0.9)*a - 0.83) ^ 2) / 2 -> u
-      ((0.5*a[1] + 0.25*a[2] -0.3*a[3] - 0.5) ^ 2) / 2 -
-      # ((50*a[1] + 25*a[2] - 30*a[3] - 50) ^ 2) / 2 -
-      ((-0.1*a[1] + 0.3*a[2] +0.9*a[3] - 0.83) ^ 2) / 2 -> u
-    # ((-10*a[2] + 30*a[2] + 90*a[3] - 83) ^ 2) / 2 -> u
-    
-    return(u)
-    
-  }
-  # gradient
-  # , grad = function(a){a}
-  , grad = NULL
-  # , grad = function(x){c(x[1],x[2])}
-  # constraint matrix
-  , ui = 
-    rbind(
-      diag(1, 3)
-      , diag(-1, 3)
-    )
-  # constraint vector
-  , ci = c(rep(0,3),rep(-1,3))
-  # , ci = c(rep(0,3),rep(-100,3))
-  , control = list(fnscale = -1)
-)
-
-constrOptim(
-  # starting values
-  theta = runif(2, 0, 1)
-  # objective function
-  , f = function(a){
-    1 - 
-      ((1*a[1] + 0*a[2] - 0.5) ^ 2) / 2 -
-      ((0*a[1] + 1*a[2] - 0.83) ^ 2) / 2 -> u
-    
-    return(u)
-    
-  }
-  # gradient
-  , grad = NULL
-  # constraint matrix
-  , ui = 
-    rbind(
-      diag(1, 2)
-      , diag(-1, 2)
-    )
-  # constraint vector
-  , ci = c(rep(0,2),rep(-1,2))
-  , control = list(fnscale = -1)
-)
-
-constrOptim(
-  # starting values
-  theta = runif(2, 0, 1)
-  # objective function
-  , f = function(a){
-    1 - 
-      sum(
-        ((c(1,0)*a - 0.5) ^ 2) / 2 -
-          ((c(0,1)*a - 0.83) ^ 2) / 2
-      ) -> u
-    
-    return(u)
-    
-  }
-  # gradient
-  , grad = NULL
-  # constraint matrix
-  , ui = 
-    rbind(
-      diag(1, 2)
-      , diag(-1, 2)
-    )
-  # constraint vector
-  , ci = c(rep(0,2),rep(-1,2))
-  , control = list(fnscale = -1)
-)
-
-fun_ideal_profile <- function(
-    
-  efa_model,    
-  dbl_factor_pref,
-  
-  
-){
-  
-  # Arguments Validation
-  
-  # Data Wrangling
-  
-  # Estimate User-Defined Ideal Profile
-  # Constrained Optimization Problem I
-  constrOptim(
-    # starting values
-    theta = runif(3, 0, 1)
-    # objective function
-    , f = function(
-    a,
-    mtx_factor_scores = diag(3),
-    dbl_factor_pref = c(0.5,0.83,0)
-    
-    ){
-      
-      1 - 
-        sum(((
-          mtx_factor_scores * a - dbl_factor_pref
-        ) ^ 2) / nrow(mtx_factor_scores)) -> u
-      
-      return(u)
-      
-    }
-    # gradient
-    , grad = NULL
-    # constraint matrix
-    , ui = 
-      rbind(
-        diag(1, 3)
-        , diag(-1, 3)
-      )
-    # constraint vector
-    , ci = c(rep(0,3),rep(-1,3))
-    , control = list(fnscale = -1)
-  )
-  
-  # Constrained Optimization Problem II
-  
-  # BVLS Regression
-  
-  # Data Wrangling
-  
-  # Output
-  # return()
-  
-}
-
-constrOptim(
-  # starting values
-  theta = runif(3, 0, 1)
-  # objective function
-  , f = function(a, n = 3){
-    1 - 
-      sum(((
-        diag(n) * a - c(0.5,0.83,0)
-      ) ^ 2) / n) -> u
-    
-    return(u)
-    
-  }
-  # gradient
-  , grad = NULL
-  # constraint matrix
-  , ui = 
-    rbind(
-      diag(1, 3)
-      , diag(-1, 3)
-    )
-  # constraint vector
-  , ci = c(rep(0,3),rep(-1,3))
-  , control = list(fnscale = -1)
-)$par
-
-constrOptim(
-  # starting values
-  theta = runif(3, 0, 1)
-  # objective function
-  , f = function(
-    a,
-    mtx_factor_scores = diag(3),
-    dbl_factor_pref = c(0.5,0.83,0)
-    
-  ){
-    
-    1 - 
-      sum(((
-        mtx_factor_scores * a - dbl_factor_pref
-      ) ^ 2) / nrow(mtx_factor_scores)) -> u
-    
-    return(u)
-    
-  }
-  # gradient
-  , grad = NULL
-  # constraint matrix
-  , ui = 
-    rbind(
-      diag(1, 3)
-      , diag(-1, 3)
-    )
-  # constraint vector
-  , ci = c(rep(0,3),rep(-1,3))
-  , control = list(fnscale = -1)
-)
-
-
-install.packages('NlcOptim')
-library(NlcOptim)
-dbl_starting_values <- runif(3, 0, 100) / 100
-dbl_starting_values <- c(50,50) / 100
-dbl_starting_values <- c(50,50,50) / 100
-dbl_starting_values <- c(0,83) / 100
-# dbl_starting_values <- c(0,0)
-dbl_starting_values <- c(0,0,0)
-
-fun_objective <- function(x){
-  
-  1 - 
-    ((0.5*x[1] + 0.25*x[2] -0.3*x[3] - 0.5) ^ 2) / 2 -
-    # ((c(0.5,0.25,-0.3) * x - 0.5) ^ 2) / 2 -
-    ((-0.1*x[2] + 0.3*x[2] +0.9*x[3] - 0.83) ^ 2) / 2 -> u
-  # ((c(-0.1,0.3,0.9) * x - 0.83) ^ 2) / 2 -> u
-  
-  # 1 - 
-  #   ((x[1] - 0.5) ^ 2) / 2 -
-  #   ((x[2] - 0.83) ^ 2) / 2 -> u
-  
-  return(-u)
-  
-}
-
-round(solnl(
-  X = runif(3, 0, 1)
-  , objfun = fun_objective
-  # , A = matrix(-1, nrow = 2, ncol = 2)
-  # , A = rbind(c(-1,-1),c(1,1))
-  # , B = rbind(1,0.25)
-  , lb = rep(0, 3)
-  , ub = rep(1, 3)
-)$par, 2)
-
-
-read_rds(
-  "C:/Users/Cao/Documents/Github/atlas-research/data/efa_model_equamax_15_factors.rds"
-) -> efa_model
-
-fun_kflex_micro(
-  df_data_rows = df_occupations
-  , efa_model = efa_model
-  , dbl_scale_ub = 100
-  , dbl_scale_lb = 0
-  , dbl_weights = 
-    df_occupations$
-    employment2
-) -> list_kflex_micro
-
-coef(bvls(
-  df_occupations %>% 
-    select(ends_with('.l')) %>% 
-    as.matrix() * 
-    sqrt(
-      df_occupations$
-        employment2
-    )
-  , df_occupations$
-    annual_wage_2021 * 
-    sqrt(
-      df_occupations$
-        employment2
-    )
-  , bl = rep(0,200)
-  , bu = rep(Inf,200)
-)) %>% 
-  set_names(
-    df_occupations %>% 
-      select(ends_with('.l')) %>% 
-      names()
-  ) -> dbl_marginal_cost
-
-view(dbl_marginal_cost)
-
-fun_ideal_profile(
-  efa_model = efa_model
-  , dbl_user_preferences = 
-    # runif(10, min = 0, max = 100)
-    # c(83, 0, 0, 0, 83, 67, 100, 100, 0, 50, 0, 100, 0, 17, 0)
-    # c(80000,
-    c(100000,
-      # c(200000,
-      # 50, 
-      c(83, 0, 0, 0, 67, 50, 100, 83, 0, 33, 0, 100, 0, 17, 0))
-  , 'kcost' = dbl_marginal_cost[list_kflex_micro$overall_micro_kflex$item]
-  # , 'micro_kflex' = list_kflex_micro$overall_micro_kflex$kflex_micro
-) -> dsds
-
-view(dsds$profile)
-
-dsds$
-  preferences %>% 
-  as_tibble(
-    rownames = 'criteria'
-  ) %>% 
-  select(
-    criteria, 
-    contains('flex')
-  ) %>% 
-  mutate(
-    user_preferences = 
-      c(80000, 83, c(83, 0, 0, 0, 67, 50, 100, 83, 0, 33, 0, 100, 0, 17, 0))
-  ) %>% 
-  view
-
-dsds$scale_ub
-dsds$scale_lb
-
-df_factors %>% 
-  select(
-    factor,
-    factor.name
-  ) %>% 
-  unique() %>% 
-  as_tibble()
-
-bvls(
-  dsds$preferences
-  # , as.numeric(t(runif(10, min = 0, max = 100)))
-  , c(83, 0, 0, 0, 83, 67, 100, 100, 0, 50, 0, 100, 0, 17, 0)
-  , bl = rep(0, ncol(dsds$preferences))
-  , bu = rep(100, ncol(dsds$preferences))
-)
+# # dsds --------------------------------------------------------------------
+# fun_ideal_profile(
+#   efa_model = efa_model
+#   , dbl_user_preferences = 
+#     c(83, 0, 0, 0, 67, 50, 100, 83, 0, 33, 0, 100, 0, 17, 0)
+#   , dbl_scale_ub = 100
+#   , dbl_scale_lb = 0
+#   , chr_method = 'gradient'
+# ) -> dsds
+# 
+# view(dsds$profile)
+# view(dsdsds$par)
+# 
+# constrOptim(
+#   # starting values
+#   theta = 
+#     runif(
+#       ncol(dsds$efa), 
+#       0, 
+#       100
+#     )
+#   # objective function
+#   , f = function(
+#     a
+#     , mtx_factor_scores = 
+#       dsds$efa
+#     , dbl_factor_pref = 
+#       dsds$pref
+#     
+#   ){
+#     
+#     1 - 
+#       sum(((
+#         mtx_factor_scores * a - dbl_factor_pref
+#       ) ^ 2) / nrow(mtx_factor_scores)) -> u
+#     
+#     return(u)
+#     
+#   }
+#   # gradient
+#   , grad = NULL
+#   # constraint matrix
+#   , ui = 
+#     rbind(
+#       diag(1, ncol(dsds$efa))
+#       , diag(-1, ncol(dsds$efa))
+#     )
+#   # constraint vector
+#   , ci = c(
+#     rep(0, ncol(dsds$efa))
+#     , rep(-100, ncol(dsds$efa))
+#   )
+#   , control = list(fnscale = -1)
+# ) -> dsdsds
+# 
+# colnames(dsds$efa) ->
+#   names(dsdsds$par)
+# view(dsdsds$par)
+# 
+# constrOptim(
+#   # starting values
+#   theta = runif(2, 0, 100)
+#   # objective function
+#   , f = function(fct1,fct2){1 + (fct1-0)^2 + (fct2 - 83)^2}
+#   # , f = function(x){1 + (x[1]-0)^2 + (x[2] - 83)^2}
+#   # gradient
+#   , grad = function(fct1,fct2){c(fct1,fct2)}
+#   # , grad = function(x){c(x[1],x[2])}
+#   # constraint matrix
+#   , ui = rbind(1,1,1,1)
+#   # constraint vector
+#   , ci = c(100,100,0,0)
+#   , control = list(fnscale = -1)
+# )
+# 
+# constrOptim(
+#   # starting values
+#   theta = runif(3, 0, 1)
+#   # theta = runif(3, 0, 100)
+#   # objective function
+#   , f = function(a){
+#     # 100 - 
+#     1 - 
+#       # ((c(0.5,0.25,-0.3)*a - 0.5) ^ 2) / 2 -
+#       # ((c(-0.1,0.3,0.9)*a - 0.83) ^ 2) / 2 -> u
+#       ((0.5*a[1] + 0.25*a[2] -0.3*a[3] - 0.5) ^ 2) / 2 -
+#       # ((50*a[1] + 25*a[2] - 30*a[3] - 50) ^ 2) / 2 -
+#       ((-0.1*a[1] + 0.3*a[2] +0.9*a[3] - 0.83) ^ 2) / 2 -> u
+#     # ((-10*a[2] + 30*a[2] + 90*a[3] - 83) ^ 2) / 2 -> u
+#     
+#     return(u)
+#     
+#   }
+#   # gradient
+#   # , grad = function(a){a}
+#   , grad = NULL
+#   # , grad = function(x){c(x[1],x[2])}
+#   # constraint matrix
+#   , ui = 
+#     rbind(
+#       diag(1, 3)
+#       , diag(-1, 3)
+#     )
+#   # constraint vector
+#   , ci = c(rep(0,3),rep(-1,3))
+#   # , ci = c(rep(0,3),rep(-100,3))
+#   , control = list(fnscale = -1)
+# )
+# 
+# constrOptim(
+#   # starting values
+#   theta = runif(2, 0, 1)
+#   # objective function
+#   , f = function(a){
+#     1 - 
+#       ((1*a[1] + 0*a[2] - 0.5) ^ 2) / 2 -
+#       ((0*a[1] + 1*a[2] - 0.83) ^ 2) / 2 -> u
+#     
+#     return(u)
+#     
+#   }
+#   # gradient
+#   , grad = NULL
+#   # constraint matrix
+#   , ui = 
+#     rbind(
+#       diag(1, 2)
+#       , diag(-1, 2)
+#     )
+#   # constraint vector
+#   , ci = c(rep(0,2),rep(-1,2))
+#   , control = list(fnscale = -1)
+# )
+# 
+# constrOptim(
+#   # starting values
+#   theta = runif(2, 0, 1)
+#   # objective function
+#   , f = function(a){
+#     1 - 
+#       sum(
+#         ((c(1,0)*a - 0.5) ^ 2) / 2 -
+#           ((c(0,1)*a - 0.83) ^ 2) / 2
+#       ) -> u
+#     
+#     return(u)
+#     
+#   }
+#   # gradient
+#   , grad = NULL
+#   # constraint matrix
+#   , ui = 
+#     rbind(
+#       diag(1, 2)
+#       , diag(-1, 2)
+#     )
+#   # constraint vector
+#   , ci = c(rep(0,2),rep(-1,2))
+#   , control = list(fnscale = -1)
+# )
+# 
+# fun_ideal_profile <- function(
+#     
+#   efa_model,    
+#   dbl_factor_pref,
+#   
+#   
+# ){
+#   
+#   # Arguments Validation
+#   
+#   # Data Wrangling
+#   
+#   # Estimate User-Defined Ideal Profile
+#   # Constrained Optimization Problem I
+#   constrOptim(
+#     # starting values
+#     theta = runif(3, 0, 1)
+#     # objective function
+#     , f = function(
+#     a,
+#     mtx_factor_scores = diag(3),
+#     dbl_factor_pref = c(0.5,0.83,0)
+#     
+#     ){
+#       
+#       1 - 
+#         sum(((
+#           mtx_factor_scores * a - dbl_factor_pref
+#         ) ^ 2) / nrow(mtx_factor_scores)) -> u
+#       
+#       return(u)
+#       
+#     }
+#     # gradient
+#     , grad = NULL
+#     # constraint matrix
+#     , ui = 
+#       rbind(
+#         diag(1, 3)
+#         , diag(-1, 3)
+#       )
+#     # constraint vector
+#     , ci = c(rep(0,3),rep(-1,3))
+#     , control = list(fnscale = -1)
+#   )
+#   
+#   # Constrained Optimization Problem II
+#   
+#   # BVLS Regression
+#   
+#   # Data Wrangling
+#   
+#   # Output
+#   # return()
+#   
+# }
+# 
+# constrOptim(
+#   # starting values
+#   theta = runif(3, 0, 1)
+#   # objective function
+#   , f = function(a, n = 3){
+#     1 - 
+#       sum(((
+#         diag(n) * a - c(0.5,0.83,0)
+#       ) ^ 2) / n) -> u
+#     
+#     return(u)
+#     
+#   }
+#   # gradient
+#   , grad = NULL
+#   # constraint matrix
+#   , ui = 
+#     rbind(
+#       diag(1, 3)
+#       , diag(-1, 3)
+#     )
+#   # constraint vector
+#   , ci = c(rep(0,3),rep(-1,3))
+#   , control = list(fnscale = -1)
+# )$par
+# 
+# constrOptim(
+#   # starting values
+#   theta = runif(3, 0, 1)
+#   # objective function
+#   , f = function(
+#     a,
+#     mtx_factor_scores = diag(3),
+#     dbl_factor_pref = c(0.5,0.83,0)
+#     
+#   ){
+#     
+#     1 - 
+#       sum(((
+#         mtx_factor_scores * a - dbl_factor_pref
+#       ) ^ 2) / nrow(mtx_factor_scores)) -> u
+#     
+#     return(u)
+#     
+#   }
+#   # gradient
+#   , grad = NULL
+#   # constraint matrix
+#   , ui = 
+#     rbind(
+#       diag(1, 3)
+#       , diag(-1, 3)
+#     )
+#   # constraint vector
+#   , ci = c(rep(0,3),rep(-1,3))
+#   , control = list(fnscale = -1)
+# )
+# 
+# 
+# install.packages('NlcOptim')
+# library(NlcOptim)
+# dbl_starting_values <- runif(3, 0, 100) / 100
+# dbl_starting_values <- c(50,50) / 100
+# dbl_starting_values <- c(50,50,50) / 100
+# dbl_starting_values <- c(0,83) / 100
+# # dbl_starting_values <- c(0,0)
+# dbl_starting_values <- c(0,0,0)
+# 
+# fun_objective <- function(x){
+#   
+#   1 - 
+#     ((0.5*x[1] + 0.25*x[2] -0.3*x[3] - 0.5) ^ 2) / 2 -
+#     # ((c(0.5,0.25,-0.3) * x - 0.5) ^ 2) / 2 -
+#     ((-0.1*x[2] + 0.3*x[2] +0.9*x[3] - 0.83) ^ 2) / 2 -> u
+#   # ((c(-0.1,0.3,0.9) * x - 0.83) ^ 2) / 2 -> u
+#   
+#   # 1 - 
+#   #   ((x[1] - 0.5) ^ 2) / 2 -
+#   #   ((x[2] - 0.83) ^ 2) / 2 -> u
+#   
+#   return(-u)
+#   
+# }
+# 
+# round(solnl(
+#   X = runif(3, 0, 1)
+#   , objfun = fun_objective
+#   # , A = matrix(-1, nrow = 2, ncol = 2)
+#   # , A = rbind(c(-1,-1),c(1,1))
+#   # , B = rbind(1,0.25)
+#   , lb = rep(0, 3)
+#   , ub = rep(1, 3)
+# )$par, 2)
+# 
+# 
+# read_rds(
+#   "C:/Users/Cao/Documents/Github/atlas-research/data/efa_model_equamax_15_factors.rds"
+# ) -> efa_model
+# 
+# fun_kflex_micro(
+#   df_data_rows = df_occupations
+#   , efa_model = efa_model
+#   , dbl_scale_ub = 100
+#   , dbl_scale_lb = 0
+#   , dbl_weights = 
+#     df_occupations$
+#     employment2
+# ) -> list_kflex_micro
+# 
+# coef(bvls(
+#   df_occupations %>% 
+#     select(ends_with('.l')) %>% 
+#     as.matrix() * 
+#     sqrt(
+#       df_occupations$
+#         employment2
+#     )
+#   , df_occupations$
+#     annual_wage_2021 * 
+#     sqrt(
+#       df_occupations$
+#         employment2
+#     )
+#   , bl = rep(0,200)
+#   , bu = rep(Inf,200)
+# )) %>% 
+#   set_names(
+#     df_occupations %>% 
+#       select(ends_with('.l')) %>% 
+#       names()
+#   ) -> dbl_marginal_cost
+# 
+# view(dbl_marginal_cost)
+# 
+# fun_ideal_profile(
+#   efa_model = efa_model
+#   , dbl_user_preferences = 
+#     # runif(10, min = 0, max = 100)
+#     # c(83, 0, 0, 0, 83, 67, 100, 100, 0, 50, 0, 100, 0, 17, 0)
+#     # c(80000,
+#     c(100000,
+#       # c(200000,
+#       # 50, 
+#       c(83, 0, 0, 0, 67, 50, 100, 83, 0, 33, 0, 100, 0, 17, 0))
+#   , 'kcost' = dbl_marginal_cost[list_kflex_micro$overall_micro_kflex$item]
+#   # , 'micro_kflex' = list_kflex_micro$overall_micro_kflex$kflex_micro
+# ) -> dsds
+# 
+# view(dsds$profile)
+# 
+# dsds$
+#   preferences %>% 
+#   as_tibble(
+#     rownames = 'criteria'
+#   ) %>% 
+#   select(
+#     criteria, 
+#     contains('flex')
+#   ) %>% 
+#   mutate(
+#     user_preferences = 
+#       c(80000, 83, c(83, 0, 0, 0, 67, 50, 100, 83, 0, 33, 0, 100, 0, 17, 0))
+#   ) %>% 
+#   view
+# 
+# dsds$scale_ub
+# dsds$scale_lb
+# 
+# df_factors %>% 
+#   select(
+#     factor,
+#     factor.name
+#   ) %>% 
+#   unique() %>% 
+#   as_tibble()
+# 
+# bvls(
+#   dsds$preferences
+#   # , as.numeric(t(runif(10, min = 0, max = 100)))
+#   , c(83, 0, 0, 0, 83, 67, 100, 100, 0, 50, 0, 100, 0, 17, 0)
+#   , bl = rep(0, ncol(dsds$preferences))
+#   , bu = rep(100, ncol(dsds$preferences))
+# )

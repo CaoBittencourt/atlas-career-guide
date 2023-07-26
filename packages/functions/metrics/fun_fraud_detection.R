@@ -562,56 +562,56 @@ fun_fraud_detect <- function(df_query, model_fraud){
   
 }
 
-# # [TEST] ------------------------------------------------------------------
-# # - Data ------------------------------------------------------------------
-# read_csv(
-#   'C:/Users/Cao/Documents/Github/Atlas-Research/Data/df_atlas_complete_equamax_15_factors.csv'
-# ) -> df_occupations
-# 
-# read_csv(
-#   'https://docs.google.com/spreadsheets/d/e/2PACX-1vSVdXvQMe4DrKS0LKhY0CZRlVuCCkEMHVJHQb_U-GKF21CjcchJ5jjclGSlQGYa5Q/pub?gid=1515296378&single=true&output=csv'
-# ) -> df_input
-# 
-# df_occupations %>% 
-#   select(
-#     occupation,
-#     employment2,
-#     ends_with('.l')
-#   ) -> df_occupations
-# 
-# # - Run model -------------------------------------------------------------
-# fun_fraud_model(
-#   df_data = 
-#     df_occupations %>%
-#     select(names(
-#       df_input
-#     )),
-#   dbl_scale_ub = 100,
-#   dbl_scale_lb = 0,
-#   dbl_weights = 
-#     df_occupations$
-#     employment2
-# ) -> list_fraud_model
-# 
-# list_fraud_model$accuracy
-# list_fraud_model$evaluation
-# 
-# # - Test model ------------------------------------------------------------
-# fun_fraud_detect(
-#   df_query = 
-#     df_input,
-#     # df_input[-1]*0,
-#     # df_occupations %>%
-#     # slice_sample(n = 1) %>%
-#     # mutate(across(
-#     #   .cols = -1,
-#     #   .fns = ~ .x * runif(1,1,1.5)
-#     # )),
-#     
-#     # df_occupations %>%
-#     # slice_sample(n = 1),
-#     # # slice_tail(n = 500),
-#   model_fraud = 
-#     list_fraud_model$
-#     model
-# )
+# [TEST] ------------------------------------------------------------------
+# - Data ------------------------------------------------------------------
+read_csv(
+  'C:/Users/Cao/Documents/Github/Atlas-Research/Data/df_atlas_complete_equamax_15_factors.csv'
+) -> df_occupations
+
+read_csv(
+  'https://docs.google.com/spreadsheets/d/e/2PACX-1vSVdXvQMe4DrKS0LKhY0CZRlVuCCkEMHVJHQb_U-GKF21CjcchJ5jjclGSlQGYa5Q/pub?gid=1515296378&single=true&output=csv'
+) -> df_input
+
+df_occupations %>% 
+  select(
+    occupation,
+    employment2,
+    ends_with('.l')
+  ) -> df_occupations
+
+# - Run model -------------------------------------------------------------
+fun_fraud_model(
+  df_data = 
+    df_occupations %>%
+    select(names(
+      df_input
+    )),
+  dbl_scale_ub = 100,
+  dbl_scale_lb = 0,
+  dbl_weights = 
+    df_occupations$
+    employment2
+) -> list_fraud_model
+
+list_fraud_model$accuracy
+list_fraud_model$evaluation
+
+# - Test model ------------------------------------------------------------
+fun_fraud_detect(
+  df_query = 
+    df_input,
+    # df_input[-1]*0,
+    # df_occupations %>%
+    # slice_sample(n = 1) %>%
+    # mutate(across(
+    #   .cols = -1,
+    #   .fns = ~ .x * runif(1,1,1.5)
+    # )),
+    
+    # df_occupations %>%
+    # slice_sample(n = 1),
+    # # slice_tail(n = 500),
+  model_fraud = 
+    list_fraud_model$
+    model
+)

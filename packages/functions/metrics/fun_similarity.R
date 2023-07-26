@@ -575,270 +575,270 @@ fun_similarity <- function(
   
 }
 
-# # dsds --------------------------------------------------------------------
-# # fun_similarity(
-# #   df_data_rows = 
-# #     df_occupations %>% 
-# #     select(
-# #       occupation,
-# #       ends_with('.l')
-# #     ) %>%
-# #     slice_head(n = 10)
-# #   , df_query_rows = 
-# #     df_occupations %>% 
-# #     select(
-# #       occupation,
-# #       ends_with('.l')
-# #     ) %>%
-# #     slice_head(n = 10)
-# #   , chr_method = 'bvls'
-# #   # , chr_method = 'logit'
-# #   # , chr_method = 'pearson'
-# #   , dbl_scale_ub = 100
-# #   , dbl_scale_lb = 0
-# #   , lgc_sort = F
-# #   , id_col = 'occupation'
-# # ) -> dsds
-# fun_professional_type(
-#   df_data = 
-#     df_input
-#     # df_occupations %>%
-#     # slice_sample(
-#     #   n = 5
-#     # ) %>%
-#     # select(
-#     #   occupation
-#     #   , ends_with('.l')
-#     # )
-#   , efa_model = 
-#     efa_model
-# ) %>%
-#   group_by(occupation) %>% 
-#   mutate(
-#     rank = min_rank(
-#       professional_profile
-#     )
-#     , professional_profile_desc = 
-#       cut(professional_profile, breaks = 5, labels = F)
-#   ) %>%
-#   fun_plot.heatmap(aes(
-#     x = factor
-#     , y = occupation
-#     , label = rank
-#     , fill = professional_profile_desc
-#     , alpha = professional_profile
-#   )
-#   , .list_legend = guides(
-#     alpha = 'none'
-#   )
-#   , .reorder_fct = F
-#   , .fun_format.y = function(y){
-#     str_wrap(y,40)
-#   }
-#   )
-# 
-# df_factors %>% 
-#   group_by(factor, factor.name) %>% 
-#   slice(1) %>% 
-#   select(factor, factor.name) %>% 
-#   view
-# 
-# df_occupations %>% 
-#   slice_sample(
-#     n = 1
-#   ) %>% 
-#   select(
-#     occupation
-#     , ends_with('.l')
-#     , education_years
-#   ) -> df_sample
-# 
-# df_sample$occupation
-# 
+# dsds --------------------------------------------------------------------
 # fun_similarity(
-#   df_data_rows = df_occupations
-#   # df_data_rows = df_occupations[names(df_input)]
-#   # , df_query_rows = df_input
-#   , df_query_rows = df_sample %>% select(!education_years)
-#   # , chr_method = 'bvls'
-#   , chr_method = 'logit'
+#   df_data_rows = 
+#     df_occupations %>% 
+#     select(
+#       occupation,
+#       ends_with('.l')
+#     ) %>%
+#     slice_head(n = 10)
+#   , df_query_rows = 
+#     df_occupations %>% 
+#     select(
+#       occupation,
+#       ends_with('.l')
+#     ) %>%
+#     slice_head(n = 10)
+#   , chr_method = 'bvls'
+#   # , chr_method = 'logit'
 #   # , chr_method = 'pearson'
 #   , dbl_scale_ub = 100
 #   , dbl_scale_lb = 0
 #   , lgc_sort = F
+#   , id_col = 'occupation'
 # ) -> dsds
-# 
-# dsds
-# 
-# dsds$
-#   df_similarity %>%
-#   select(
+fun_professional_type(
+  df_data = 
+    df_input
+    # df_occupations %>%
+    # slice_sample(
+    #   n = 5
+    # ) %>%
+    # select(
+    #   occupation
+    #   , ends_with('.l')
+    # )
+  , efa_model = 
+    efa_model
+) %>%
+  group_by(occupation) %>% 
+  mutate(
+    rank = min_rank(
+      professional_profile
+    )
+    , professional_profile_desc = 
+      cut(professional_profile, breaks = 5, labels = F)
+  ) %>%
+  fun_plot.heatmap(aes(
+    x = factor
+    , y = occupation
+    , label = rank
+    , fill = professional_profile_desc
+    , alpha = professional_profile
+  )
+  , .list_legend = guides(
+    alpha = 'none'
+  )
+  , .reorder_fct = F
+  , .fun_format.y = function(y){
+    str_wrap(y,40)
+  }
+  )
+
+df_factors %>% 
+  group_by(factor, factor.name) %>% 
+  slice(1) %>% 
+  select(factor, factor.name) %>% 
+  view
+
+df_occupations %>% 
+  slice_sample(
+    n = 1
+  ) %>% 
+  select(
+    occupation
+    , ends_with('.l')
+    , education_years
+  ) -> df_sample
+
+df_sample$occupation
+
+fun_similarity(
+  df_data_rows = df_occupations
+  # df_data_rows = df_occupations[names(df_input)]
+  # , df_query_rows = df_input
+  , df_query_rows = df_sample %>% select(!education_years)
+  # , chr_method = 'bvls'
+  , chr_method = 'logit'
+  # , chr_method = 'pearson'
+  , dbl_scale_ub = 100
+  , dbl_scale_lb = 0
+  , lgc_sort = F
+) -> dsds
+
+dsds
+
+dsds$
+  df_similarity %>%
+  select(
+    occupation
+    , entry_level_education
+    # , education_years
+    , similarity
+  ) %>%
+  arrange(desc(
+    similarity
+  )) %>% 
+  left_join(
+    df_occupations %>% 
+      select(
+        occupation
+        , ends_with('.l')
+      ) %>% 
+      fun_factor_scores(
+        efa_model = efa_model
+        # , lgc_pivot = T
+        , lgc_pivot = T
+      )
+  ) -> dsdsds
+
+dsdsds %>% 
+  filter(
+    occupation == first(occupation)
+  ) %>% 
+  pull(factor_score) -> 
+  lalala
+
+dsdsds %>% 
+  filter(
+    occupation == last(occupation)
+  ) %>% 
+  pull(factor_score) -> 
+  lala
+
+fun_similarity_factor_scores(
+  dbl_factor_scores = lalala,
+  dbl_comparison = lala
+)
+
+
+dsdsds %>% 
+  filter(
+    occupation %in% 
+      c(
+        first(occupation)
+        , sample(df_occupations$occupation, 1)
+      )
+  ) %>% 
+  reframe(
+    similarity_factor = 
+      fun_factor_scores_similarity(
+        dbl_factor_scores = 
+          filter(.,occupation == first(occupation)) %>% 
+          pull(factor_score)
+        , dbl_comparison = 
+          filter(.,occupation != first(occupation)) %>% 
+          pull(factor_score)
+      )
+  )
+
+mutate(
+  I = fun_interchangeability(
+    similarity
+    , .dbl_scaling = 2
+    # , .dbl_years_education = 21 + 2.5
+    , .dbl_years_education =
+      df_sample$education_years
+    , .dbl_years_education_min =
+      education_years
+  ) %>% as.numeric()
+  # , I = 
+  #   I * fun_similarity_factor_scores(
+  #     dbl_factor_scores = dsds
+  #     , dbl_comparison = lalala
+  #   )
+  # , I = I *
+  #   fun_interchangeability(
+  #     similarity
+  #     , .dbl_scaling = 1
+  #   ) %>% as.numeric()
+  # , I = round(I, 4)
+  # ) %>% view
+) %>% 
+  full_join(
+    df_occupations %>% 
+      select(
+        occupation
+        , employment2
+      )
+  ) %>% 
+  reframe(
+    employability = 
+      sum(I * employment2) /
+      sum(employment2)
+  )
+
+# ) %>%
+# filter(str_detect(
+#   str_to_lower(
 #     occupation
-#     , entry_level_education
-#     # , education_years
-#     , similarity
-#   ) %>%
-#   arrange(desc(
-#     similarity
-#   )) %>% 
-#   left_join(
-#     df_occupations %>% 
-#       select(
-#         occupation
-#         , ends_with('.l')
-#       ) %>% 
-#       fun_factor_scores(
-#         efa_model = efa_model
-#         # , lgc_pivot = T
-#         , lgc_pivot = T
-#       )
-#   ) -> dsdsds
-# 
-# dsdsds %>% 
-#   filter(
-#     occupation == first(occupation)
-#   ) %>% 
-#   pull(factor_score) -> 
-#   lalala
-# 
-# dsdsds %>% 
-#   filter(
-#     occupation == last(occupation)
-#   ) %>% 
-#   pull(factor_score) -> 
-#   lala
-# 
-# fun_similarity_factor_scores(
-#   dbl_factor_scores = lalala,
-#   dbl_comparison = lala
-# )
-# 
-# 
-# dsdsds %>% 
-#   filter(
-#     occupation %in% 
-#       c(
-#         first(occupation)
-#         , sample(df_occupations$occupation, 1)
-#       )
-#   ) %>% 
-#   reframe(
-#     similarity_factor = 
-#       fun_factor_scores_similarity(
-#         dbl_factor_scores = 
-#           filter(.,occupation == first(occupation)) %>% 
-#           pull(factor_score)
-#         , dbl_comparison = 
-#           filter(.,occupation != first(occupation)) %>% 
-#           pull(factor_score)
-#       )
-#   )
-# 
-# mutate(
-#   I = fun_interchangeability(
-#     similarity
-#     , .dbl_scaling = 2
-#     # , .dbl_years_education = 21 + 2.5
-#     , .dbl_years_education =
-#       df_sample$education_years
-#     , .dbl_years_education_min =
-#       education_years
-#   ) %>% as.numeric()
-#   # , I = 
-#   #   I * fun_similarity_factor_scores(
-#   #     dbl_factor_scores = dsds
-#   #     , dbl_comparison = lalala
-#   #   )
-#   # , I = I *
-#   #   fun_interchangeability(
-#   #     similarity
-#   #     , .dbl_scaling = 1
-#   #   ) %>% as.numeric()
-#   # , I = round(I, 4)
-#   # ) %>% view
-# ) %>% 
-#   full_join(
-#     df_occupations %>% 
-#       select(
-#         occupation
-#         , employment2
-#       )
-#   ) %>% 
-#   reframe(
-#     employability = 
-#       sum(I * employment2) /
-#       sum(employment2)
-#   )
-# 
-# # ) %>%
-# # filter(str_detect(
-# #   str_to_lower(
-# #     occupation
-# #   ), 'hosp|exec'
-# # ))
-# 
-# 
-# # fun_w(
-# #   df_occupations %>% 
-# #     select(
-# #       ends_with('.l')
-# #     ) %>% 
-# #     as.matrix() %>% 
-# #     t() %>% 
-# #     `colnames<-`(
-# #       df_occupations$
-# #         occupation
-# #     ) / 100
-# #   , scale = 0.5
-# # ) %>% 
-# #   round(4) %>% 
-# #   as_tibble(
-# #     rownames = 'item'
-# #   ) %>% 
-# #   select(
-# #     item
-# #     , starts_with('Hospital')
-# #   ) %>% 
-# #   view
-# 
-# (
-#   fun_interchangeability(
-#     dsds$df_similarity$similarity %>% 
-#       set_names(df_occupations$occupation)
-#     , .dbl_scaling = 1
-#     , .dbl_years_education = 21
-#     , .dbl_years_education_min = 
+#   ), 'hosp|exec'
+# ))
+
+
+# fun_w(
+#   df_occupations %>% 
+#     select(
+#       ends_with('.l')
+#     ) %>% 
+#     as.matrix() %>% 
+#     t() %>% 
+#     `colnames<-`(
 #       df_occupations$
-#       education_years
-#   ) * 
-#     fun_interchangeability(
-#       dsds$df_similarity$similarity %>% 
-#         set_names(df_occupations$occupation)
-#       , .dbl_scaling = 1
-#     )
+#         occupation
+#     ) / 100
+#   , scale = 0.5
 # ) %>% 
+#   round(4) %>% 
 #   as_tibble(
-#     rownames = 'occupation'
+#     rownames = 'item'
 #   ) %>% 
-#   rename(
-#     I = 2
+#   select(
+#     item
+#     , starts_with('Hospital')
 #   ) %>% 
-#   mutate(
-#     I = round(I, 4)
-#   ) %>% 
-#   filter(str_detect(
-#     str_to_lower(
-#       occupation
-#     ), 'hosp|engineer'
-#   )) %>% 
-#   arrange(desc(I)) %>%
-#   print(n = nrow(.))
-# 
-# 
-# 
-# 
-# 
-# 
-# 
-# 
-# 
+#   view
+
+(
+  fun_interchangeability(
+    dsds$df_similarity$similarity %>% 
+      set_names(df_occupations$occupation)
+    , .dbl_scaling = 1
+    , .dbl_years_education = 21
+    , .dbl_years_education_min = 
+      df_occupations$
+      education_years
+  ) * 
+    fun_interchangeability(
+      dsds$df_similarity$similarity %>% 
+        set_names(df_occupations$occupation)
+      , .dbl_scaling = 1
+    )
+) %>% 
+  as_tibble(
+    rownames = 'occupation'
+  ) %>% 
+  rename(
+    I = 2
+  ) %>% 
+  mutate(
+    I = round(I, 4)
+  ) %>% 
+  filter(str_detect(
+    str_to_lower(
+      occupation
+    ), 'hosp|engineer'
+  )) %>% 
+  arrange(desc(I)) %>%
+  print(n = nrow(.))
+
+
+
+
+
+
+
+
+
