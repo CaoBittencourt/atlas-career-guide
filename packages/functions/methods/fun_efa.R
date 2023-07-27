@@ -2,14 +2,14 @@
 # - Packages --------------------------------------------------------------
 pkg <- c(
   # 'tidyverse', 'glue' #Data wrangling
-  'dplyr', 'purrr', 'glue' #Data wrangling
-  , 'psych', 'GPArotation' #factor analysis
+  'dplyr', 'tidyr', 'readr', 'stringr', 'purrr', 'vctrs', 'glue' #Data wrangling
+  , 'psych', 'GPArotation' #EFA
+  , 'weights' #Weighted correlations
+  , 'Hmisc'
   , 'matrixcalc'
   , 'plm'
-  , 'weights'
-  , 'Hmisc'
   # , 'ctv' #Most relevant psychometrics packages
-  , 'paletteer' #Palettes for visualization
+  # , 'paletteer' #Palettes for visualization
   , 'stats'
 )
 
@@ -299,21 +299,15 @@ fun_efa_nfactors <- function(
 }
 
 # - Factor loadings function -------------------------------------------------------
-fun_factor_loadings <- function(efa_model){
+fun_efa_loadings <- function(efa_model){
   
   # Arguments validation
   stopifnot(
     "'efa_model' must be a factor analysis object." =
       any(
-        str_to_lower(class(
-          efa_model
-        )) == 'factanal'
-        , str_to_lower(class(
-          efa_model
-        )) == 'fa'
-        , str_to_lower(class(
-          efa_model
-        )) == 'principal'
+        class(efa_model) == 'factanal'
+        , class(efa_model) == 'fa'
+        , class(efa_model) == 'principal'
       )
   )
   
@@ -345,8 +339,201 @@ fun_factor_loadings <- function(efa_model){
       )
     ) -> df_loadings
   
+  # Add loadings class
+  df_loadings %>% 
+    new_data_frame(
+      class = c(
+        class(.),
+        'df_loadings'
+      )
+    ) -> df_loadings
+  
   # Output
   return(df_loadings)
+  
+}
+
+# - Factor consistency -----------------------------------------
+fun_efa_consistency <- function(df_loadings){
+  
+  # Arguments validation
+  stopifnot(
+    "'df_loadings' must be a data frame obtained via the 'fun_efa_loadings' function." =
+      any(class(df_loadings) == 'df_loadings')
+  )
+  
+  # Data wrangling
+  # Match items to factors by max loading
+  df_loadings %>% 
+    pivot_longer(
+      cols = -item
+      , names_to = 'factor'
+      , values_to = 'loading'
+    ) %>% 
+    group_by(item) %>% 
+    filter(
+      loading ==
+        max(loading)
+    ) %>% 
+    ungroup() %>%
+    mutate(
+      factor = 
+        factor(factor)
+    ) %>% 
+    new_data_frame(
+      class = c(
+        class(.),
+        'df_loadings_long'
+      )
+    ) -> df_loadings_long
+  
+  rm(df_loadings)
+  
+  # # Separate factors into individual data frames
+  # df_loadings_long %>% 
+  #   split(.$factor) ->
+  #   list_factors
+  # 
+  # rm(df_loadings_long)
+  # 
+  # factors.names <- str_sort(unique(df_loadings.long.factors$factor), numeric = T)
+  # names(factors.names) <- factors.names
+  # 
+  # # Arrange data frames for output
+  # df_loadings.long %>% 
+  #   mutate(
+  #     factor = factor(factor, levels = factors.names)
+  #   ) %>% 
+  #   group_by(item) %>%
+  #   arrange(item, desc(loading), .by_group = T) -> df_loadings.long
+  # 
+  # df_loadings.long.factors %>% 
+  #   mutate(
+  #     factor = factor(factor, levels = factors.names)
+  #   ) %>% 
+  #   arrange(factor, desc(loading)) -> df_loadings.long.factors
+  # 
+  # lapply(
+  #   factors.names
+  #   , function(factors){
+  #     
+  #     df_loadings.long.factors %>%
+  #       filter(
+  #         factor == factors
+  #       ) %>%
+  #       pull(item) %>%
+  #       factor(.) %>%
+  #       return(.)
+  #     
+  #   }
+  # ) -> list_chr_loadings.long.factors
+  # 
+  # # Calculate reliability measures for each subset of variables
+  # # Temporarily disable warnings
+  # options(warn = -1) 
+  # 
+  # .df_data.numeric %>% 
+  #   weights::wtd.cors(
+  #     weight = 
+  #       .dbl_weights
+  #   ) -> mtx_correlationsrelation
+  # 
+  # lapply(
+  #   list_chr_loadings.long.factors
+  #   , function(factors){
+  #     
+  #     mtx_correlationsrelation[
+  #       all_of(factors)
+  #       , all_of(factors)
+  #     ] -> df.temp
+  #     
+  #     # .df_data.numeric %>%
+  #     #   select(all_of(factors)) -> df.temp #Select only the variables that match to each factor
+  #     # 
+  #     if(length(factors) > 1){#By definition, internal consistency tests only apply to groups of more than one variable
+  #       
+  #       df.temp %>% 
+  #         splitHalf() -> metrics.other
+  #       
+  #       df.temp %>%
+  #         omega(
+  #           nfactors = 1
+  #           , rotate = .chr_rotation
+  #         ) -> metrics.omega
+  #       
+  #       tibble(
+  #         'items' = length(factors)
+  #         , 'lambda6' = metrics.other$lambda6
+  #         , 'omega.t' = metrics.omega$omega.tot
+  #         , 'lambda2' = metrics.other$lambda2
+  #         , 'alpha' = metrics.other$alpha
+  #         , 'split.max' = metrics.other$maxrb
+  #         , 'split.avg' = metrics.other$meanr
+  #         , 'split.min' = metrics.other$minrb
+  #         , 'interitem.r' = metrics.other$av.r
+  #       ) -> df_metrics
+  #       
+  #       return(df_metrics)
+  #       
+  #     }
+  #     else{
+  #       
+  #       tibble(
+  #         'items' = length(factors)
+  #         , 'lambda6' = NA
+  #         , 'omega.t' = NA
+  #         , 'lambda2' = NA
+  #         , 'alpha' = NA
+  #         , 'split.max' = NA
+  #         , 'split.avg' = NA
+  #         , 'split.min' = NA
+  #         , 'interitem.r' = NA
+  #       ) -> df_metrics
+  #       
+  #       return(df_metrics)
+  #       
+  #     }
+  #     
+  #   }
+  # ) %>%
+  #   bind_rows(.id = 'factor') %>%
+  #   select(factor, everything()) -> df_reliability
+  # 
+  # options(warn = getOption('warn'))
+  # 
+  # df_reliability %>%
+  #   mutate(
+  #     across(
+  #       # The minimum required consistency score
+  #       # may be higher or lower, depending on the context.
+  #       .cols = -starts_with(c('factor', 'items', 'interitem'))
+  #       , .fns = function(x){
+  #         case_when(
+  #           x < 0.5 ~ 'Unacceptable'
+  #           , x >= 0.5 & x < 0.6 ~ 'Poor'
+  #           , x >= 0.6 & x < 0.7 ~ 'Questionable'
+  #           , x >= 0.7 & x < 0.8 ~ 'Acceptable'
+  #           , x >= 0.8 & x < 0.9 ~ 'Good'
+  #           , x >= 0.9 ~ 'Excellent'
+  #         )
+  #       }
+  #     )
+  #   ) %>%
+  #   mutate(
+  #     across(
+  #       .cols = starts_with('interitem')
+  #       , .fns = function(x){
+  #         case_when(
+  #           x < 0.15 ~ 'Incoherent'
+  #           , x >= 0.15 & x <= 0.5 ~ 'Ideal'
+  #           , x > 0.5 ~ 'Too similar'
+  #         )
+  #       }
+  #     )
+  #   ) -> df_reliability.evaluation
+  
+  # Output
+  return(df_loadings_long)
   
 }
 
@@ -425,16 +612,17 @@ fun_efa_fa <- function(
     )) -> df_data
   
   chr_rotation[[1]] -> chr_rotation
-
+  
   int_factors[[1]] -> int_factors
   
   ceiling(int_factors) -> int_factors
   
   # Adequacy tests
-  fun_efa_adequacy() ->
-    df_adequacy_tests
-  
-  set_names(1:10, letters[1:10])
+  fun_efa_adequacy(
+    df_data = df_data
+    , dbl_weights = 
+      dbl_weights
+  ) -> df_adequacy_tests
   
   # Remove problematic items
   if(lgc_remove_low_msai_items){
@@ -443,9 +631,15 @@ fun_efa_fa <- function(
       select(!any_of(
         df_adequacy_tests$
           problematic_items
-      ))
+      )) -> df_data
     
   }
+  
+  # Recommended number of factors
+  fun_efa_nfactors(
+    df_data = df_data
+    , dbl_weights = dbl_weights
+  ) -> df_nfactors
   
   # Run EFA
   fa(
@@ -455,10 +649,19 @@ fun_efa_fa <- function(
     , weight = dbl_weights
   ) -> efa_model
   
-  # Evaluate EFA
-  fun_efa_sufficient_loadings
+  # Loadings data frames
+  fun_efa_loadings(
+    efa_model = efa_model
+  ) -> df_loadings
   
-  fun_efa_
+  # Internal consistency
+  fun_efa_consistency
+  
+  # Factor correlations
+  
+  # Suggested rotation
+  
+  # Diagram
   
   # Output
   return(list(
@@ -473,7 +676,6 @@ fun_efa_fa <- function(
     , 'loadings' = df_loadings
     # , 'loadings_long' = df_loadings_long
     , 'loadings_long_factors' = df_loadings_long_factors
-    , 'loadings_heatmap' = plt_heatmap_loadings
   ))
   
 }
@@ -2966,9 +3168,6 @@ fun_efa.bestmodel <- function(
 
 # [TEST] ------------------------------------------------------------------
 # - Test ------------------------------------------------------------------
-library(dplyr)
-library(readr)
-
 read_csv(
   'C:/Users/Cao/Documents/Github/Atlas-Research/Data/df_atlas_complete_equamax_15_factors.csv'
 ) -> df_occupations
@@ -2983,14 +3182,51 @@ df_occupations %>%
 
 df_occupations %>% 
   select(ends_with('.l')) %>%
-  # mutate(across(
-  #   .cols = everything()
-  #   ,.fns = ~ .x / 100
-  # )) %>% 
   fun_efa_nfactors(
     dbl_weights =
       df_occupations$
       employment2
   )
+
+df_occupations %>% 
+  select(ends_with('.l')) %>%
+  fa(
+    nfactors = 2
+    , weight = 
+      df_occupations$
+      employment2
+    , rotate = 'oblimin'
+  ) -> dsds
+
+fun_efa_loadings(dsds) %>% class()
+
+fun_efa_loadings(dsds) -> lalala
+
+lalala %>% 
+  as_tibble() %>%
+  vctrs::new_data_frame(
+    class = c(class(.), 'dsds')
+  ) %>% 
+  class()
+
+fun_efa_consistency(lalala)
+
+class(lalala)
+
+lalala %>% 
+  slice_head(n = 1)
+
+lalala %>% 
+  pivot_longer()
+
+
+
+
+
+
+
+
+
+
 
 
