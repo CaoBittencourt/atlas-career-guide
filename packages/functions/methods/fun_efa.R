@@ -2,7 +2,7 @@
 # - Packages --------------------------------------------------------------
 pkg <- c(
   # 'tidyverse', 'glue' #Data wrangling
-  'dplyr', 'tidyr', 'readr', 'stringr', 'purrr', 'vctrs', 'glue' #Data wrangling
+  'dplyr', 'tidyr', 'readr', 'stringr', 'purrr', 'glue' #Data wrangling
   , 'psych', 'GPArotation' #EFA
   , 'weights' #Weighted correlations
   , 'Hmisc'
@@ -24,11 +24,8 @@ lapply(pkg, function(x)
 
 
 # [BASIC FUNCTIONS] Perform EFA for a given number of factors -------------------------------------------------------
-# - Factor adequacy test --------------------------------------------------
-fun_efa_adequacy <- function(
-    df_data
-    , dbl_weights = NULL
-){
+# - Item correlations -----------------------------------------------------
+fun_efa_correlations <- function(df_data, dbl_weights = NULL){
   
   # Arguments validation
   stopifnot(
@@ -54,19 +51,43 @@ fun_efa_adequacy <- function(
   )
   
   # Data wrangling
-  df_data %>%
+  df_data %>% 
     select(where(
       is.numeric
     )) -> df_data
   
-  # Adequacy tests
-  # K-M-O factor adequacy test
+  # Correlation matrix
   df_data %>%
     wtd.cors(
-      weight = 
+      weight =
         dbl_weights
     ) -> mtx_correlations
   
+  # EFA correlation matrix class
+  structure(
+    mtx_correlations,
+    class = c(
+      class(mtx_correlations),
+      'mtx_correlations'
+    )
+  ) -> mtx_correlations
+  
+  # Output
+  return(mtx_correlations)
+  
+}
+
+# - Factor adequacy test --------------------------------------------------
+fun_efa_adequacy <- function(mtx_correlations){
+  
+  # Arguments validation
+  stopifnot(
+    "'mtx_correlations' must be a correlation matrix obtained via the 'fun_efa_correlations' function." =
+      any(class(mtx_correlations) == 'mtx_correlations')
+  )
+  
+  # Adequacy tests
+  # K-M-O factor adequacy test
   if(
     tryCatch(
       invisible(capture.output(
@@ -182,46 +203,13 @@ fun_efa_adequacy <- function(
 }
 
 # - Optimal number of factors ---------------------------------------------
-fun_efa_nfactors <- function(
-    df_data
-    , dbl_weights = NULL
-){
+fun_efa_nfactors <- function(mtx_correlations){
   
   # Arguments validation
   stopifnot(
-    "'df_data' must be a data frame with numeric columns." = 
-      all(
-        is.data.frame(df_data),
-        df_data %>% 
-          map_lgl(is.numeric) %>% 
-          any()
-      )
+    "'mtx_correlations' must be a correlation matrix obtained via the 'fun_efa_correlations' function." =
+      any(class(mtx_correlations) == 'mtx_correlations')
   )
-  
-  stopifnot(
-    "'dbl_weights' must be either NULL or a numeric vector the same length as the number of rows in 'df_data'." = 
-      any(
-        is.null(dbl_weights),
-        all(
-          is.numeric(dbl_weights),
-          length(dbl_weights) ==
-            nrow(df_data)
-        )
-      )
-  )
-  
-  # Data wrangling
-  df_data %>% 
-    select(where(
-      is.numeric
-    )) -> df_data
-  
-  # Correlation matrix
-  df_data %>%
-    wtd.cors(
-      weight =
-        dbl_weights
-    ) -> mtx_correlations
   
   # Kaiser criterion
   mtx_correlations %>% 
@@ -298,7 +286,7 @@ fun_efa_nfactors <- function(
   
 }
 
-# - Factor loadings function -------------------------------------------------------
+# - Factor loadings -------------------------------------------------------
 fun_efa_loadings <- function(efa_model){
   
   # Arguments validation
@@ -341,10 +329,11 @@ fun_efa_loadings <- function(efa_model){
   
   # Add loadings class
   df_loadings %>% 
-    new_data_frame(
+    structure(
       class = c(
-        class(.),
-        'df_loadings'
+        class(.)
+        , 'df_loadings'
+        , 'list'
       )
     ) -> df_loadings
   
@@ -353,8 +342,8 @@ fun_efa_loadings <- function(efa_model){
   
 }
 
-# - Factor consistency -----------------------------------------
-fun_efa_consistency <- function(df_loadings){
+# - Factor loadings match ----------------------------------------------------------
+fun_efa_factor_match <- function(df_loadings){
   
   # Arguments validation
   stopifnot(
@@ -362,7 +351,6 @@ fun_efa_consistency <- function(df_loadings){
       any(class(df_loadings) == 'df_loadings')
   )
   
-  # Data wrangling
   # Match items to factors by max loading
   df_loadings %>% 
     pivot_longer(
@@ -380,157 +368,307 @@ fun_efa_consistency <- function(df_loadings){
       factor = 
         factor(factor)
     ) %>% 
-    new_data_frame(
+    structure(
       class = c(
-        class(.),
-        'df_loadings_long'
+        class(.)
+        , 'list'
+        , 'df_loadings_long'
       )
     ) -> df_loadings_long
   
-  rm(df_loadings)
+  # Output
+  return(df_loadings_long)
   
-  # # Separate factors into individual data frames
-  # df_loadings_long %>% 
-  #   split(.$factor) ->
-  #   list_factors
-  # 
-  # rm(df_loadings_long)
-  # 
-  # factors.names <- str_sort(unique(df_loadings.long.factors$factor), numeric = T)
-  # names(factors.names) <- factors.names
-  # 
-  # # Arrange data frames for output
-  # df_loadings.long %>% 
-  #   mutate(
-  #     factor = factor(factor, levels = factors.names)
-  #   ) %>% 
-  #   group_by(item) %>%
-  #   arrange(item, desc(loading), .by_group = T) -> df_loadings.long
-  # 
-  # df_loadings.long.factors %>% 
-  #   mutate(
-  #     factor = factor(factor, levels = factors.names)
-  #   ) %>% 
-  #   arrange(factor, desc(loading)) -> df_loadings.long.factors
-  # 
-  # lapply(
-  #   factors.names
-  #   , function(factors){
-  #     
-  #     df_loadings.long.factors %>%
-  #       filter(
-  #         factor == factors
-  #       ) %>%
-  #       pull(item) %>%
-  #       factor(.) %>%
-  #       return(.)
-  #     
-  #   }
-  # ) -> list_chr_loadings.long.factors
-  # 
-  # # Calculate reliability measures for each subset of variables
-  # # Temporarily disable warnings
-  # options(warn = -1) 
-  # 
-  # .df_data.numeric %>% 
-  #   weights::wtd.cors(
-  #     weight = 
-  #       .dbl_weights
-  #   ) -> mtx_correlationsrelation
-  # 
-  # lapply(
-  #   list_chr_loadings.long.factors
-  #   , function(factors){
-  #     
-  #     mtx_correlationsrelation[
-  #       all_of(factors)
-  #       , all_of(factors)
-  #     ] -> df.temp
-  #     
-  #     # .df_data.numeric %>%
-  #     #   select(all_of(factors)) -> df.temp #Select only the variables that match to each factor
-  #     # 
-  #     if(length(factors) > 1){#By definition, internal consistency tests only apply to groups of more than one variable
-  #       
-  #       df.temp %>% 
-  #         splitHalf() -> metrics.other
-  #       
-  #       df.temp %>%
-  #         omega(
-  #           nfactors = 1
-  #           , rotate = .chr_rotation
-  #         ) -> metrics.omega
-  #       
-  #       tibble(
-  #         'items' = length(factors)
-  #         , 'lambda6' = metrics.other$lambda6
-  #         , 'omega.t' = metrics.omega$omega.tot
-  #         , 'lambda2' = metrics.other$lambda2
-  #         , 'alpha' = metrics.other$alpha
-  #         , 'split.max' = metrics.other$maxrb
-  #         , 'split.avg' = metrics.other$meanr
-  #         , 'split.min' = metrics.other$minrb
-  #         , 'interitem.r' = metrics.other$av.r
-  #       ) -> df_metrics
-  #       
-  #       return(df_metrics)
-  #       
-  #     }
-  #     else{
-  #       
-  #       tibble(
-  #         'items' = length(factors)
-  #         , 'lambda6' = NA
-  #         , 'omega.t' = NA
-  #         , 'lambda2' = NA
-  #         , 'alpha' = NA
-  #         , 'split.max' = NA
-  #         , 'split.avg' = NA
-  #         , 'split.min' = NA
-  #         , 'interitem.r' = NA
-  #       ) -> df_metrics
-  #       
-  #       return(df_metrics)
-  #       
-  #     }
-  #     
-  #   }
-  # ) %>%
-  #   bind_rows(.id = 'factor') %>%
-  #   select(factor, everything()) -> df_reliability
-  # 
-  # options(warn = getOption('warn'))
-  # 
-  # df_reliability %>%
-  #   mutate(
-  #     across(
-  #       # The minimum required consistency score
-  #       # may be higher or lower, depending on the context.
-  #       .cols = -starts_with(c('factor', 'items', 'interitem'))
-  #       , .fns = function(x){
-  #         case_when(
-  #           x < 0.5 ~ 'Unacceptable'
-  #           , x >= 0.5 & x < 0.6 ~ 'Poor'
-  #           , x >= 0.6 & x < 0.7 ~ 'Questionable'
-  #           , x >= 0.7 & x < 0.8 ~ 'Acceptable'
-  #           , x >= 0.8 & x < 0.9 ~ 'Good'
-  #           , x >= 0.9 ~ 'Excellent'
-  #         )
-  #       }
-  #     )
-  #   ) %>%
-  #   mutate(
-  #     across(
-  #       .cols = starts_with('interitem')
-  #       , .fns = function(x){
-  #         case_when(
-  #           x < 0.15 ~ 'Incoherent'
-  #           , x >= 0.15 & x <= 0.5 ~ 'Ideal'
-  #           , x > 0.5 ~ 'Too similar'
-  #         )
-  #       }
-  #     )
-  #   ) -> df_reliability.evaluation
+}
+
+# - Factor reliability ---------------------------------------------------
+fun_efa_reliability <- function(
+    mtx_correlation
+    , chr_rotation = 'oblimin'
+){
+  
+  # Arguments validation
+  stopifnot(
+    "'mtx_correlation' must be a numeric matrix" = 
+      all(
+        is.matrix(mtx_correlation), 
+        is.numeric(mtx_correlation)
+      )
+  )
+  
+  stopifnot(
+    "'chr_rotation' must be a character." = 
+      is.character(chr_rotation)
+  )
+  
+  # Single item factors => reliability = NA
+  if(nrow(mtx_correlation) == 1){
+    
+    rep(NA, 9) %>% 
+      as.list() %>% 
+      set_names(
+        c(
+          'omega.tot'
+          , 'maxrb'
+          , 'minrb'
+          , 'meanr'
+          , 'av.r'
+          , 'med.r'
+          , 'alpha'
+          , 'lambda2'
+          , 'lambda6'
+        )
+      ) -> list_reliability
+    
+  } else { 
+    
+    # Estimate reliability metrics
+    splitHalf(
+      mtx_correlation
+    ) -> list_reliability
+    
+    list_reliability[
+      map_lgl(
+        list_reliability
+        , ~ all(
+          is.numeric(.x)
+          , length(.x) == 1
+        ))
+    ] -> list_reliability
+    
+    c(
+      omega.tot = 
+        omega(
+          mtx_correlation
+          , rotate = 
+            chr_rotation
+          , nfactors = 1
+        )$omega.tot
+      , list_reliability
+    ) -> list_reliability
+    
+  }
+  
+  # Data wrangling
+  as_tibble(
+    list_reliability
+  ) %>% 
+    mutate(
+      .before = 1
+      , nitems = nrow(mtx_correlation)
+    ) -> df_reliability
+  
+  # Output
+  return(df_reliability)
+  
+}
+
+# - Factor evaluation -----------------------------------------------------
+fun_efa_evaluation <- function(df_reliability){
+  
+  # Arguments validation
+  stopifnot(
+    "'df_reliability' must be a data frame obtained via the 'fun_efa_reliability' function." = 
+      any(class(df_reliability) == 'df_reliability')
+  )
+  
+  # Evaluate reliability
+  df_reliability %>% 
+  mutate(
+    across(
+      .cols = ends_with('.r'))
+      ,.fns = function(x){
+        case_when(
+          x < 0.5 ~ 'Unacceptable'
+          , x >= 0.5 & x < 0.6 ~ 'Poor'
+          , x >= 0.6 & x < 0.7 ~ 'Questionable'
+          , x >= 0.7 & x < 0.8 ~ 'Acceptable'
+          , x >= 0.8 & x < 0.9 ~ 'Good'
+          , x >= 0.9 ~ 'Excellent'
+        )
+      }
+    )
+  ) %>%
+    mutate(
+      across(
+        .cols = starts_with('interitem')
+        , .fns = function(x){
+          case_when(
+            x < 0.15 ~ 'Incoherent'
+            , x >= 0.15 & x <= 0.5 ~ 'Ideal'
+            , x > 0.5 ~ 'Too similar'
+          )
+        }
+      )
+    )
+  
+}
+
+# - Factor consistency -----------------------------------------
+fun_efa_consistency <- function(
+    mtx_correlations
+    , df_loadings_long
+    , chr_rotation = 'oblimin'
+){
+  
+  # Arguments validation
+  stopifnot(
+    "'mtx_correlations' must be a correlation matrix obtained via the 'fun_efa_correlations' function." =
+      any(class(mtx_correlations) == 'mtx_correlations')
+  )
+  
+  stopifnot(
+    "'df_loadings_long' must be a data frame obtained via the 'fun_efa_factor_match' function." =
+      any(class(df_loadings_long) == 'df_loadings_long')
+  )
+  
+  stopifnot(
+    "'chr_rotation' must be a character." = 
+      is.character(chr_rotation)
+  )
+  
+  # Get items that belong to each factor
+  df_loadings_long %>%
+    split(.$factor) %>% 
+    map(~ pull(.x, item)) ->
+    list_factors
+  
+  rm(df_loadings_long)
+  
+  # Subset correlation matrix
+  map(
+    list_factors
+    , ~ 
+      mtx_correlations[
+        all_of(.x), 
+        all_of(.x)
+      ]
+  ) -> list_factors
+  
+  # Estimate factors' internal consistency
+  map(
+    list_factors
+    , fun_efa_reliability
+  ) %>% 
+    bind_rows(
+      .id = 'factor'
+    ) -> df_reliability
+  
+  # Add factor df_reliability class
+  df_reliability %>% 
+    structure(
+      class = c(
+        class(.)
+        , 'list'
+        , 'df_reliability'
+      )
+    ) -> df_reliability
+  
+  # Evaluate consistency
+  
+  
+  # Temporarily disable warnings
+  options(warn = -1)
+  
+  .df_data.numeric %>%
+    weights::wtd.cors(
+      weight =
+        .dbl_weights
+    ) -> mtx_correlationsrelation
+  
+  lapply(
+    list_chr_loadings.long.factors
+    , function(factors){
+      
+      mtx_correlationsrelation[
+        all_of(factors)
+        , all_of(factors)
+      ] -> df.temp
+      
+      # .df_data.numeric %>%
+      #   select(all_of(factors)) -> df.temp #Select only the variables that match to each factor
+      #
+      if(length(factors) > 1){#By definition, internal consistency tests only apply to groups of more than one variable
+        
+        df.temp %>%
+          splitHalf() -> metrics.other
+        
+        df.temp %>%
+          omega(
+            nfactors = 1
+            , rotate = .chr_rotation
+          ) -> metrics.omega
+        
+        tibble(
+          'items' = length(factors)
+          , 'lambda6' = metrics.other$lambda6
+          , 'omega.t' = metrics.omega$omega.tot
+          , 'lambda2' = metrics.other$lambda2
+          , 'alpha' = metrics.other$alpha
+          , 'split.max' = metrics.other$maxrb
+          , 'split.avg' = metrics.other$meanr
+          , 'split.min' = metrics.other$minrb
+          , 'interitem.r' = metrics.other$av.r
+        ) -> df_metrics
+        
+        return(df_metrics)
+        
+      }
+      else{
+        
+        tibble(
+          'items' = length(factors)
+          , 'lambda6' = NA
+          , 'omega.t' = NA
+          , 'lambda2' = NA
+          , 'alpha' = NA
+          , 'split.max' = NA
+          , 'split.avg' = NA
+          , 'split.min' = NA
+          , 'interitem.r' = NA
+        ) -> df_metrics
+        
+        return(df_metrics)
+        
+      }
+      
+    }
+  ) %>%
+    bind_rows(.id = 'factor') %>%
+    select(factor, everything()) -> df_reliability
+  
+  options(warn = getOption('warn'))
+  
+  df_reliability %>%
+    mutate(
+      across(
+        # The minimum required consistency score
+        # may be higher or lower, depending on the context.
+        .cols = -starts_with(c('factor', 'items', 'interitem'))
+        , .fns = function(x){
+          case_when(
+            x < 0.5 ~ 'Unacceptable'
+            , x >= 0.5 & x < 0.6 ~ 'Poor'
+            , x >= 0.6 & x < 0.7 ~ 'Questionable'
+            , x >= 0.7 & x < 0.8 ~ 'Acceptable'
+            , x >= 0.8 & x < 0.9 ~ 'Good'
+            , x >= 0.9 ~ 'Excellent'
+          )
+        }
+      )
+    ) %>%
+    mutate(
+      across(
+        .cols = starts_with('interitem')
+        , .fns = function(x){
+          case_when(
+            x < 0.15 ~ 'Incoherent'
+            , x >= 0.15 & x <= 0.5 ~ 'Ideal'
+            , x > 0.5 ~ 'Too similar'
+          )
+        }
+      )
+    ) -> df_reliability.evaluation
   
   # Output
   return(df_loadings_long)
@@ -617,11 +755,16 @@ fun_efa_fa <- function(
   
   ceiling(int_factors) -> int_factors
   
-  # Adequacy tests
-  fun_efa_adequacy(
+  # Correlation matrix
+  fun_efa_correlations(
     df_data = df_data
     , dbl_weights = 
       dbl_weights
+  ) -> mtx_correlations
+  
+  # Adequacy tests
+  fun_efa_adequacy(
+    mtx_correlations
   ) -> df_adequacy_tests
   
   # Remove problematic items
@@ -655,7 +798,14 @@ fun_efa_fa <- function(
   ) -> df_loadings
   
   # Internal consistency
-  fun_efa_consistency
+  fun_efa_consistency(
+    df_data = dsds,
+    dbl_weights = dbl_weights,
+    df_loadings_long = 
+      fun_efa_factor_match(
+        df_loadings
+      )
+  ) -> list_reliability
   
   # Factor correlations
   
@@ -3172,6 +3322,29 @@ read_csv(
   'C:/Users/Cao/Documents/Github/Atlas-Research/Data/df_atlas_complete_equamax_15_factors.csv'
 ) -> df_occupations
 
+
+df_occupations %>% 
+  select(ends_with('.l')) %>%
+  fun_efa_correlations(
+    dbl_weights = 
+      df_occupations$
+      employment2
+  ) -> dsdsds
+
+as_tibble(dsdsdsds)
+
+as_tibble(diag(5)) %>% 
+  structure(
+    class = c(
+      class(.),
+      'dsds',
+      'list'
+    )
+  ) %>% 
+  filter(V1 == 1)
+
+class(dsds)
+
 df_occupations %>% 
   select(ends_with('.l')) %>%
   fun_efa_adequacy(
@@ -3191,25 +3364,25 @@ df_occupations %>%
 df_occupations %>% 
   select(ends_with('.l')) %>%
   fa(
-    nfactors = 2
+    nfactors = 1
     , weight = 
       df_occupations$
       employment2
     , rotate = 'oblimin'
   ) -> dsds
 
-fun_efa_loadings(dsds) %>% class()
-
 fun_efa_loadings(dsds) -> lalala
 
-lalala %>% 
-  as_tibble() %>%
-  vctrs::new_data_frame(
-    class = c(class(.), 'dsds')
-  ) %>% 
-  class()
+fun_efa_factor_match(lalala) -> lalala
 
-fun_efa_consistency(lalala)
+fun_efa_consistency(
+  mtx_correlations = dsdsds
+  , df_loadings_long = lalala
+  , chr_rotation = 'oblimin'
+) -> lala
+
+dsdsds$factor1
+dsdsds$factor2
 
 class(lalala)
 
