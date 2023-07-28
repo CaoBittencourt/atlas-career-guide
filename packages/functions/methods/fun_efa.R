@@ -699,7 +699,49 @@ fun_efa_factor_correlations <- function(efa_model){
   round(mtx_factor_correlations, 4) -> 
     mtx_factor_correlations
   
-  # Redundant factors (factors are considered redundant if correlation > ...)
+  # Redundant factors
+  mtx_factor_correlations %>% 
+    as_tibble() %>% 
+    mutate(across(
+      .cols = everything()
+      ,.fns = ~ .x %>% 
+        findInterval(
+          seq(-1, 1, length.out = 9)
+          , all.inside = T
+        ) %>% 
+        case_match(
+          1 ~ 'strong negative correlation'
+          , 2 ~ 'moderate negative correlation'
+          , 3 ~ 'small negative correlation'
+          , 4 ~ 'uncorrelated'
+          , 5 ~ 'uncorrelated'
+          , 6 ~ 'small positive correlation'
+          , 7 ~ 'moderate positive correlation'
+          , 8 ~ 'redundant'
+        )
+    )) %>%
+    as.matrix() ->
+    mtx_factor_correlations_evaluation
+  
+  colnames(mtx_factor_correlations_evaluation) ->
+    rownames(mtx_factor_correlations_evaluation)
+  
+  diag(mtx_factor_correlations_evaluation) <- NA
+  
+  if(any(
+    mtx_factor_correlations_evaluation[lower.tri(
+      mtx_factor_correlations_evaluation
+    )] == 
+    'redundant'
+  )){
+    
+    warning('There are redundant factors in the model! Check the factor correlations matrix.')
+    
+  } else { 
+    
+    mtx_factor_correlations_evaluation <- NULL
+    
+  }
   
   # Suggested rotation
   if_else(
@@ -715,6 +757,7 @@ fun_efa_factor_correlations <- function(efa_model){
   
   return(list(
     'factor_correlations' = mtx_factor_correlations,
+    'redundant_factors' = mtx_factor_correlations_evaluation,
     'suggested_rotation' = chr_suggested_rotation
   ))
   
@@ -2766,7 +2809,7 @@ fun_efa_nfactors(mtx_correlations = dsdsds)
 # fa model
 fa(
   r = dsdsds
-  , nfactors = 40
+  , nfactors = 10
   , weight = 
     df_occupations$
     employment2
@@ -2820,9 +2863,8 @@ fun_efa_fa(
   df_data = 
     df_occupations %>% 
     select(ends_with('.l'))
-  , int_factors = 40
-  # , chr_rotation = 'equamax'
-  , chr_rotation = 'varimax'
+  , int_factors = 15
+  , chr_rotation = 'equamax'
   , dbl_weights = 
     df_occupations$
     employment2
@@ -2832,82 +2874,3 @@ fun_efa_fa(
   , lgc_show_diagrams = T
   , lgc_show_results = F
 ) -> dsdsdsds
-
-dsdsdsds$reliability_metrics %>% View
-dsdsdsds$reliability_evaluation %>% View
-dsdsdsds$factor_correlations
-dsdsdsds$loadings_long %>% View
-dsdsdsds$adequacy_tests
-dsdsdsds$nfactors
-
-rbind(
-  c(1, 0.7, 0.9), 
-  c(0.7, 1, 0.19), 
-  c(0.9, 0.19, 1)
-) -> sdsd
-
-sdsd %>% 
-  findInterval(
-    c(0.7, 0.9)
-    , rightmost.closed = F
-  )
-
-sdsd %>% 
-  as_tibble() %>% 
-  mutate(across(
-    .cols = where(is.numeric)
-    ,.fns = ~ .x %>% 
-      findInterval(
-        c(0.7, 0.9)
-        , rightmost.closed = F
-      ) %>% 
-      case_match(
-        
-      )
-  ))
-
-sdsd[sdsd >= 0.9] <- 'redundant'
-
-sdsd[all(
-  sdsd < 0.9
-  , sdsd >= 0.7
-)] <- 'semi-redundant'
-
-sdsd[all(
-  sdsd < 0.7
-  , sdsd >= -1
-)] <- 'not redundant'
-
-diag(sdsd) <- 'diag'
-
-sdsd
-
-seq(-1, 1, 0.05) %>% 
-  as_tibble() %>% 
-  mutate(
-    interval = 
-      findInterval(
-        value
-        , c(0.15, 0.5, 1)
-        , left.open = F
-        , rightmost.closed = T
-      )
-    , eval =
-      case_match(
-        interval
-        , 0 ~ 'incoherent'
-        , 1 ~ 'ideal'
-        , 2 ~ 'too similar'
-      )
-  ) %>% 
-  print(n = nrow(.))
-
-findInterval(
-  c(0.15, 0.5)
-  , rightmost.closed = F
-) %>%
-  case_match(
-    c(0, 1) ~ 'incoherent'
-    , 2 ~ 'ideal'
-    , 3 ~ 'too similar'
-  )
