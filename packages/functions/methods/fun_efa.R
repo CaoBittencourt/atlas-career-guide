@@ -274,15 +274,15 @@ fun_efa_nfactors <- function(mtx_correlations){
   
   # Criteria data frame
   c(
-    kaiser = int_kaiser
-    , parallel_analysis = int_pa
-    , vss1 = int_vss1
-    , vss2 = int_vss2
-    , velicer_map = int_map
-    , bic = int_bic
-    , empirical_bic = int_ebic
-    , adjusted_bic = int_sabic
-    , average = int_avg
+    'kaiser' = int_kaiser
+    , 'parallel analysis' = int_pa
+    , 'vss1' = int_vss1
+    , 'vss2' = int_vss2
+    , 'velicer map' = int_map
+    , 'bic' = int_bic
+    , 'empirical bic' = int_ebic
+    , 'adjusted bic' = int_sabic
+    , 'average' = int_avg
   ) %>% 
     as_tibble(
       rownames = 'criterion'
@@ -310,25 +310,27 @@ fun_efa_loadings <- function(efa_model){
   loadings(efa_model)[,] %>%
     as_tibble(
       rownames = 'item'
-    ) %>% 
-    rename(
-      factor1 = 2
     ) -> df_loadings
   
   # Data wrangling
+  if(ncol(df_loadings) == 2){
+    
+    df_loadings %>%
+      rename(
+        factor1 = 2
+      ) -> df_loadings
+    
+  }
+  
   df_loadings %>%
-    set_names(
-      c(
-        'item'
-        , paste0(
-          'factor'
-          , df_loadings[-1] %>% 
-            names() %>% 
-            str_extract(
-              '[[:digit:]]+'
-            )
-        ))
-    ) %>%
+    rename_with(
+      .cols = -item
+      , .fn = ~ .x %>% 
+        str_extract(
+          '[[:digit:]]+'
+        ) %>%
+        paste0('factor', .)
+    ) %>% 
     relocate(
       item
       , str_sort(
@@ -342,8 +344,8 @@ fun_efa_loadings <- function(efa_model){
     structure(
       class = c(
         class(.)
-        , 'df_loadings'
         , 'list'
+        , 'df_loadings'
       )
     ) -> df_loadings
   
@@ -368,26 +370,40 @@ fun_efa_factor_match <- function(df_loadings){
       , names_to = 'factor'
       , values_to = 'loading'
     ) %>% 
+    relocate(factor) %>% 
     group_by(item) %>% 
     filter(
       loading ==
         max(loading)
     ) %>% 
     ungroup() %>%
+    # Manually add factors that don't have any items
+    bind_rows(
+      tibble(
+        factor = 
+          setdiff(
+            names(df_loadings[-1])
+            , unique(.$factor)
+          )
+      )
+    ) %>%
     mutate(
-      factor = 
-        factor(factor)
-    ) %>% 
+      factor =
+        factor(
+          factor
+          , levels = names(
+            df_loadings[-1]
+          )
+        )
+    ) %>%
+    arrange(factor) %>% 
     structure(
       class = c(
         class(.)
-        , 'list'
         , 'df_loadings_long'
+        , 'list'
       )
     ) -> df_loadings_long
-  
-  # Manually add factors that don't have any items
-  # dsdsdsds
   
   # Output
   return(df_loadings_long)
@@ -484,7 +500,11 @@ fun_efa_reliability <- function(
         .before = 1
         , nitems = nrow(
           mtx_correlation
-        )
+        ) - any(is.na(
+          mtx_correlation
+        ))
+        , sufficient_items = 
+          nitems >= 3
       ) -> df_reliability
     
     # Output
@@ -2746,11 +2766,11 @@ fun_efa_nfactors(mtx_correlations = dsdsds)
 # fa model
 fa(
   r = dsdsds
-  , nfactors = 3
+  , nfactors = 40
   , weight = 
     df_occupations$
     employment2
-  , rotate = 'oblimin'
+  , rotate = 'varimax'
 ) -> dsds
 
 # factor loadings
@@ -2800,18 +2820,25 @@ fun_efa_fa(
   df_data = 
     df_occupations %>% 
     select(ends_with('.l'))
-  , int_factors = 10
+  , int_factors = 40
   # , chr_rotation = 'equamax'
-  , chr_rotation = 'promax'
+  , chr_rotation = 'varimax'
   , dbl_weights = 
     df_occupations$
     employment2
   , lgc_adequacy_testing = F
   , lgc_optimal_nfactors = F
-  , lgc_remove_low_msai_items = F
+  , lgc_remove_low_msai_items = T
   , lgc_show_diagrams = T
   , lgc_show_results = F
 ) -> dsdsdsds
+
+dsdsdsds$reliability_metrics %>% View
+dsdsdsds$reliability_evaluation %>% View
+dsdsdsds$factor_correlations
+dsdsdsds$loadings_long %>% View
+dsdsdsds$adequacy_tests
+dsdsdsds$nfactors
 
 rbind(
   c(1, 0.7, 0.9), 
