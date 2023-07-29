@@ -3046,7 +3046,7 @@ fun_efa_fa(
   , lgc_show_diagrams = T
   , lgc_show_results = F
 ) -> dsdsdsds
-round(0.89, 2)
+
 dsdsdsds$model_performance
 dsdsdsds$reliability_metrics
 dsdsdsds$reliability_evaluation
