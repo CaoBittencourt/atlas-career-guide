@@ -1108,8 +1108,9 @@ fun_efa_fa <- function(
       mtx_correlations 
     ) -> df_nfactors
     
-    df_nfactors$
-      nfactors ->
+    df_nfactors %>% 
+      slice(-n()) %>%
+      pull(nfactors) ->
       int_factors
     
   }
@@ -1121,12 +1122,10 @@ fun_efa_fa <- function(
       reliability_metrics
     , int_optimal_nfactors = 
       int_factors
-    # ) -> dbl_model_performance
   ) -> list_model_performance
   
   # Output
   return(list(
-    # 'model_performance' = dbl_model_performance
     'model_performance' = list_model_performance
     , 'reliability_metrics' = list_reliability$reliability_metrics
     , 'reliability_evaluation' = list_reliability$reliability_evaluation
@@ -3033,9 +3032,10 @@ fun_efa_fa(
   df_data = 
     df_occupations %>% 
     select(ends_with('.l'))
-  , int_factors = 15
+  , int_factors = 5
   , int_min_items_factor = 3
-  , chr_rotation = 'equamax'
+  , chr_rotation = 'oblimin'
+  # , chr_rotation = 'equamax'
   # , chr_rotation = 'promax'
   , dbl_weights = 
     df_occupations$
