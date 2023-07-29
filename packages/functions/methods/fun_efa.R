@@ -286,7 +286,9 @@ fun_efa_nfactors <- function(mtx_correlations){
   ) %>% 
     as_tibble(
       rownames = 'criterion'
-    ) -> df_nfactors
+    ) %>% 
+    rename(nfactors = 2) -> 
+    df_nfactors
   
   # Output
   return(df_nfactors)
@@ -414,6 +416,7 @@ fun_efa_factor_match <- function(df_loadings){
 fun_efa_reliability <- function(
     mtx_correlations
     , list_factors
+    , int_min_items_factor = 3
     , chr_rotation = 'oblimin'
 ){
   
@@ -434,13 +437,25 @@ fun_efa_reliability <- function(
   )
   
   stopifnot(
+    "'int_min_items_factor' must be an integer." = 
+      is.numeric(int_min_items_factor)
+  )
+  
+  stopifnot(
     "'chr_rotation' must be a character." = 
       is.character(chr_rotation)
   )
   
-  # Reliability helpter function
+  # Data wrangling
+  int_min_items_factor[[1]] %>% 
+    abs() %>% 
+    ceiling() -> 
+    int_min_items_factor
+  
+  # Reliability helper function
   fun_efa_reliability_helper <- function(
     mtx_correlation
+    , int_min_items_factor = 3
     , chr_rotation = 'oblimin'
   ){
     
@@ -504,7 +519,8 @@ fun_efa_reliability <- function(
           mtx_correlation
         ))
         , sufficient_items = 
-          nitems >= 3
+          nitems >= 
+          int_min_items_factor
       ) -> df_reliability
     
     # Output
@@ -532,6 +548,8 @@ fun_efa_reliability <- function(
     , ~  
       fun_efa_reliability_helper(
         mtx_correlation = .x
+        , int_min_items_factor = 
+          int_min_items_factor
         , chr_rotation = 
           chr_rotation
       )
@@ -552,6 +570,68 @@ fun_efa_reliability <- function(
   
 }
 
+# - Reliability evaluation helper -----------------------------------------
+fun_efa_eval <- function(dbl_coef){
+  
+  # Arguments validation
+  stopifnot(
+    "'dbl_coef' must be either numeric or NA." = 
+      any(
+        is.numeric(dbl_coef)
+        , is.na(dbl_coef)
+      )
+  )
+  
+  # Find interval
+  findInterval(
+    round(dbl_coef, 2)
+    , seq(0, 1, 0.1)
+    , rightmost.closed = T
+  ) %>% 
+    case_match(
+      seq(0,5) ~ 'unacceptable'
+      , 6 ~ 'poor'
+      , 7 ~ 'questionable'
+      , 8 ~ 'acceptable'
+      , 9 ~ 'good'
+      , 10 ~ 'excelent'
+    ) -> chr_eval
+  
+  # Output
+  return(chr_eval)
+  
+}
+
+# - Reliability evaluation interitem helper -----------------------------------------
+fun_efa_eval_interitem <- function(dbl_coef){
+  
+  # Arguments validation
+  stopifnot(
+    "'dbl_coef' must be either numeric or NA." = 
+      any(
+        is.numeric(dbl_coef)
+        , is.na(dbl_coef)
+      )
+  )
+  
+  # Find interval
+  findInterval(
+    round(dbl_coef, 2)
+    , c(0.15, 0.5, 1)
+    , left.open = F
+    , rightmost.closed = T
+  ) %>%
+    case_match(
+      0 ~ 'incoherent'
+      , 1 ~ 'ideal'
+      , 2 ~ 'too similar'
+    ) -> chr_eval
+  
+  # Output
+  return(chr_eval)
+  
+}
+
 # - Factor evaluation -----------------------------------------------------
 fun_efa_evaluation <- function(df_reliability){
   
@@ -566,17 +646,7 @@ fun_efa_evaluation <- function(df_reliability){
     mutate(
       across(
         .cols = ends_with('.r')
-        ,.fns = ~ .x %>% 
-          findInterval(
-            c(0.15, 0.5, 1)
-            , left.open = F
-            , rightmost.closed = T
-          ) %>%
-          case_match(
-            0 ~ 'incoherent'
-            , 1 ~ 'ideal'
-            , 2 ~ 'too similar'
-          )
+        ,.fns = fun_efa_eval_interitem
       )
       , across(
         .cols = 
@@ -585,19 +655,7 @@ fun_efa_evaluation <- function(df_reliability){
             , -ends_with('.r')
             , -nitems
           )
-        ,.fns = ~ .x %>% 
-          findInterval(
-            seq(0, 1, 0.1)
-            , rightmost.closed = T
-          ) %>% 
-          case_match(
-            seq(0,5) ~ 'unacceptable'
-            , 6 ~ 'poor'
-            , 7 ~ 'questionable'
-            , 8 ~ 'acceptable'
-            , 9 ~ 'good'
-            , 10 ~ 'excelent'
-          )
+        ,.fns = fun_efa_eval
       )
     ) -> df_evaluation
   
@@ -620,6 +678,7 @@ fun_efa_evaluation <- function(df_reliability){
 fun_efa_consistency <- function(
     mtx_correlations
     , df_loadings_long
+    , int_min_items_factor = 3
     , chr_rotation = 'oblimin'
 ){
   
@@ -632,6 +691,11 @@ fun_efa_consistency <- function(
   stopifnot(
     "'df_loadings_long' must be a data frame obtained via the 'fun_efa_factor_match' function." =
       any(class(df_loadings_long) == 'df_loadings_long')
+  )
+  
+  stopifnot(
+    "'int_min_items_factor' must be an integer." = 
+      is.numeric(int_min_items_factor)
   )
   
   stopifnot(
@@ -653,6 +717,8 @@ fun_efa_consistency <- function(
       mtx_correlations
     , list_factors = 
       list_factors
+    , int_min_items_factor = 
+      int_min_items_factor
     , chr_rotation = 
       chr_rotation
   ) -> df_reliability
@@ -761,7 +827,6 @@ fun_efa_factor_correlations <- function(efa_model){
 fun_efa_performance <- function(
     df_reliability
     , int_optimal_nfactors = NULL
-    , int_min_items_factor = 3
 ){
   
   # Arguments validation
@@ -778,23 +843,69 @@ fun_efa_performance <- function(
       )
   )
   
-  stopifnot(
-    "'int_min_items_factor' must be either NULL or an integer." = 
-      any(
-        is.numeric(int_min_items_factor)
-        , is.null(int_min_items_factor)
-      )
-  )
-  
   # Data wrangling
-  ceiling(int_optimal_nfactors) ->
-    int_optimal_nfactors
+  if(length(int_optimal_nfactors)){
+    
+    int_optimal_nfactors %>% 
+      abs() %>%
+      ceiling() %>%
+      pmax(1) -> 
+      int_optimal_nfactors
+    
+  } else {
+    
+    nrow(df_reliability) ->
+      int_optimal_nfactors
+    
+  }
   
-  ceiling(int_min_items_factor)[[1]] -> 
-    int_min_items_factor
-  
-  # 
-  
+  # Model performance coefficient
+  if(# Sufficient items per factor
+    !all(
+      df_reliability$
+      sufficient_items
+    ) 
+  ){
+    
+    # Output
+    return(0)
+    
+  } else {
+    
+    # Mean factor reliability
+    df_reliability %>% 
+      select(
+        where(is.numeric)
+        , -ends_with('.r')
+        , -nitems
+      ) %>% 
+      as.matrix() %>% 
+      pmax(0) %>% 
+      pmin(1) %>%
+      mean(na.rm = T) * 
+      # Sufficient factors
+      mean(pmin(
+        nrow(df_reliability) /
+          int_optimal_nfactors
+        , 1
+      )) -> 
+      coef_model_performance
+    
+    rm(int_optimal_nfactors)
+    
+    # Evaluate model performance
+    list(
+      'performance' = coef_model_performance,
+      'evaluation' = fun_efa_eval(
+        coef_model_performance
+      )
+    ) -> list_model_performance
+    
+    # Output
+    # return(coef_model_performance)
+    return(list_model_performance)
+    
+  }
   
 }
 
@@ -804,6 +915,7 @@ fun_efa_fa <- function(
     , int_factors = 1
     , chr_rotation = 'oblimin'
     , dbl_weights = NULL
+    , int_min_items_factor = 3
     , lgc_remove_low_msai_items = T
     , lgc_adequacy_testing = F
     , lgc_optimal_nfactors = F
@@ -832,6 +944,11 @@ fun_efa_fa <- function(
             nrow(df_data)
         )
       )
+  )
+  
+  stopifnot(
+    "'int_min_items_factor' must be an integer." = 
+      is.numeric(int_min_items_factor)
   )
   
   stopifnot(
@@ -971,6 +1088,8 @@ fun_efa_fa <- function(
       mtx_correlations
     , df_loadings_long = 
       df_loadings_long
+    , int_min_items_factor = 
+      int_min_items_factor
     , chr_rotation = 
       chr_rotation
   ) -> list_reliability
@@ -989,11 +1108,27 @@ fun_efa_fa <- function(
       mtx_correlations 
     ) -> df_nfactors
     
+    df_nfactors$
+      nfactors ->
+      int_factors
+    
   }
+  
+  # Overall model performance
+  fun_efa_performance(
+    df_reliability = 
+      list_reliability$
+      reliability_metrics
+    , int_optimal_nfactors = 
+      int_factors
+    # ) -> dbl_model_performance
+  ) -> list_model_performance
   
   # Output
   return(list(
-    'reliability_metrics' = list_reliability$reliability_metrics
+    # 'model_performance' = dbl_model_performance
+    'model_performance' = list_model_performance
+    , 'reliability_metrics' = list_reliability$reliability_metrics
     , 'reliability_evaluation' = list_reliability$reliability_evaluation
     , 'factor_correlations' = list_factor_correlations
     , 'loadings_long' = df_loadings_long
@@ -2898,19 +3033,21 @@ fun_efa_fa(
   df_data = 
     df_occupations %>% 
     select(ends_with('.l'))
-  , int_factors = 4
-  # , chr_rotation = 'equamax'
-  , chr_rotation = 'promax'
+  , int_factors = 15
+  , int_min_items_factor = 3
+  , chr_rotation = 'equamax'
+  # , chr_rotation = 'promax'
   , dbl_weights = 
     df_occupations$
     employment2
   , lgc_adequacy_testing = F
-  , lgc_optimal_nfactors = F
+  , lgc_optimal_nfactors = T
   , lgc_remove_low_msai_items = T
   , lgc_show_diagrams = T
   , lgc_show_results = F
 ) -> dsdsdsds
-
+round(0.89, 2)
+dsdsdsds$model_performance
 dsdsdsds$reliability_metrics
 dsdsdsds$reliability_evaluation
 dsdsdsds$factor_correlations
