@@ -576,16 +576,41 @@ fun_similarity <- function(
 }
 
 # # dsds --------------------------------------------------------------------
+# # read_csv(
+# #   'https://docs.google.com/spreadsheets/d/e/2PACX-1vSVdXvQMe4DrKS0LKhY0CZRlVuCCkEMHVJHQb_U-GKF21CjcchJ5jjclGSlQGYa5Q/pub?gid=1515296378&single=true&output=csv'
+# # ) -> df_input
+# # 
 # # fun_similarity(
 # #   df_data_rows = 
 # #     df_occupations %>% 
+# #     select(
+# #       occupation
+# #       , ends_with('.l')
+# #     )
+# #   , df_query_rows = 
+# #     df_input
+# #   , chr_method = 'logit'
+# #   , dbl_scale_ub = 100
+# #   , dbl_scale_lb = 0
+# #   , lgc_sort = T
+# # ) %>%
+# #   pluck(1) %>% 
+# #   select(
+# #     occupation
+# #     , similarity
+# #   ) %>% 
+# #   print(n = 100)
+# 
+# # fun_similarity(
+# #   df_data_rows =
+# #     df_occupations %>%
 # #     select(
 # #       occupation,
 # #       ends_with('.l')
 # #     ) %>%
 # #     slice_head(n = 10)
-# #   , df_query_rows = 
-# #     df_occupations %>% 
+# #   , df_query_rows =
+# #     df_occupations %>%
 # #     select(
 # #       occupation,
 # #       ends_with('.l')
@@ -600,7 +625,7 @@ fun_similarity <- function(
 # #   , id_col = 'occupation'
 # # ) -> dsds
 # fun_professional_type(
-#   df_data = 
+#   df_data =
 #     df_input
 #     # df_occupations %>%
 #     # slice_sample(
@@ -610,15 +635,15 @@ fun_similarity <- function(
 #     #   occupation
 #     #   , ends_with('.l')
 #     # )
-#   , efa_model = 
+#   , efa_model =
 #     efa_model
 # ) %>%
-#   group_by(occupation) %>% 
+#   group_by(occupation) %>%
 #   mutate(
 #     rank = min_rank(
 #       professional_profile
 #     )
-#     , professional_profile_desc = 
+#     , professional_profile_desc =
 #       cut(professional_profile, breaks = 5, labels = F)
 #   ) %>%
 #   fun_plot.heatmap(aes(
@@ -637,16 +662,16 @@ fun_similarity <- function(
 #   }
 #   )
 # 
-# df_factors %>% 
-#   group_by(factor, factor.name) %>% 
-#   slice(1) %>% 
-#   select(factor, factor.name) %>% 
+# df_factors %>%
+#   group_by(factor, factor.name) %>%
+#   slice(1) %>%
+#   select(factor, factor.name) %>%
 #   view
 # 
-# df_occupations %>% 
+# df_occupations %>%
 #   slice_sample(
 #     n = 1
-#   ) %>% 
+#   ) %>%
 #   select(
 #     occupation
 #     , ends_with('.l')
@@ -680,13 +705,13 @@ fun_similarity <- function(
 #   ) %>%
 #   arrange(desc(
 #     similarity
-#   )) %>% 
+#   )) %>%
 #   left_join(
-#     df_occupations %>% 
+#     df_occupations %>%
 #       select(
 #         occupation
 #         , ends_with('.l')
-#       ) %>% 
+#       ) %>%
 #       fun_factor_scores(
 #         efa_model = efa_model
 #         # , lgc_pivot = T
@@ -694,18 +719,18 @@ fun_similarity <- function(
 #       )
 #   ) -> dsdsds
 # 
-# dsdsds %>% 
+# dsdsds %>%
 #   filter(
 #     occupation == first(occupation)
-#   ) %>% 
-#   pull(factor_score) -> 
+#   ) %>%
+#   pull(factor_score) ->
 #   lalala
 # 
-# dsdsds %>% 
+# dsdsds %>%
 #   filter(
 #     occupation == last(occupation)
-#   ) %>% 
-#   pull(factor_score) -> 
+#   ) %>%
+#   pull(factor_score) ->
 #   lala
 # 
 # fun_similarity_factor_scores(
@@ -714,22 +739,22 @@ fun_similarity <- function(
 # )
 # 
 # 
-# dsdsds %>% 
+# dsdsds %>%
 #   filter(
-#     occupation %in% 
+#     occupation %in%
 #       c(
 #         first(occupation)
 #         , sample(df_occupations$occupation, 1)
 #       )
-#   ) %>% 
+#   ) %>%
 #   reframe(
-#     similarity_factor = 
+#     similarity_factor =
 #       fun_factor_scores_similarity(
-#         dbl_factor_scores = 
-#           filter(.,occupation == first(occupation)) %>% 
+#         dbl_factor_scores =
+#           filter(.,occupation == first(occupation)) %>%
 #           pull(factor_score)
-#         , dbl_comparison = 
-#           filter(.,occupation != first(occupation)) %>% 
+#         , dbl_comparison =
+#           filter(.,occupation != first(occupation)) %>%
 #           pull(factor_score)
 #       )
 #   )
@@ -744,7 +769,7 @@ fun_similarity <- function(
 #     , .dbl_years_education_min =
 #       education_years
 #   ) %>% as.numeric()
-#   # , I = 
+#   # , I =
 #   #   I * fun_similarity_factor_scores(
 #   #     dbl_factor_scores = dsds
 #   #     , dbl_comparison = lalala
@@ -756,16 +781,16 @@ fun_similarity <- function(
 #   #   ) %>% as.numeric()
 #   # , I = round(I, 4)
 #   # ) %>% view
-# ) %>% 
+# ) %>%
 #   full_join(
-#     df_occupations %>% 
+#     df_occupations %>%
 #       select(
 #         occupation
 #         , employment2
 #       )
-#   ) %>% 
+#   ) %>%
 #   reframe(
-#     employability = 
+#     employability =
 #       sum(I * employment2) /
 #       sum(employment2)
 #   )
@@ -779,58 +804,58 @@ fun_similarity <- function(
 # 
 # 
 # # fun_w(
-# #   df_occupations %>% 
+# #   df_occupations %>%
 # #     select(
 # #       ends_with('.l')
-# #     ) %>% 
-# #     as.matrix() %>% 
-# #     t() %>% 
+# #     ) %>%
+# #     as.matrix() %>%
+# #     t() %>%
 # #     `colnames<-`(
 # #       df_occupations$
 # #         occupation
 # #     ) / 100
 # #   , scale = 0.5
-# # ) %>% 
-# #   round(4) %>% 
+# # ) %>%
+# #   round(4) %>%
 # #   as_tibble(
 # #     rownames = 'item'
-# #   ) %>% 
+# #   ) %>%
 # #   select(
 # #     item
 # #     , starts_with('Hospital')
-# #   ) %>% 
+# #   ) %>%
 # #   view
 # 
 # (
 #   fun_interchangeability(
-#     dsds$df_similarity$similarity %>% 
+#     dsds$df_similarity$similarity %>%
 #       set_names(df_occupations$occupation)
 #     , .dbl_scaling = 1
 #     , .dbl_years_education = 21
-#     , .dbl_years_education_min = 
+#     , .dbl_years_education_min =
 #       df_occupations$
 #       education_years
-#   ) * 
+#   ) *
 #     fun_interchangeability(
-#       dsds$df_similarity$similarity %>% 
+#       dsds$df_similarity$similarity %>%
 #         set_names(df_occupations$occupation)
 #       , .dbl_scaling = 1
 #     )
-# ) %>% 
+# ) %>%
 #   as_tibble(
 #     rownames = 'occupation'
-#   ) %>% 
+#   ) %>%
 #   rename(
 #     I = 2
-#   ) %>% 
+#   ) %>%
 #   mutate(
 #     I = round(I, 4)
-#   ) %>% 
+#   ) %>%
 #   filter(str_detect(
 #     str_to_lower(
 #       occupation
 #     ), 'hosp|engineer'
-#   )) %>% 
+#   )) %>%
 #   arrange(desc(I)) %>%
 #   print(n = nrow(.))
 # 

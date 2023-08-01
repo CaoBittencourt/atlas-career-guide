@@ -3,6 +3,7 @@
 pkg <- c(
   # 'tidyverse', 'glue' #Data wrangling
   'dplyr', 'tidyr', 'readr', 'stringr', 'purrr', 'glue' #Data wrangling
+  , 'modeest' #Mode
   , 'psych', 'GPArotation' #EFA
   , 'weights' #Weighted correlations
   , 'Hmisc' #Weighted variance
@@ -260,17 +261,17 @@ fun_efa_nfactors <- function(mtx_correlations){
   which.min(psy_vss$vss.stats$SABIC) -> int_sabic
   
   # Average of previous criteria
-  round(
-    mean(c(
-      int_kaiser
-      , int_pa
-      , int_vss1
-      , int_vss2
-      , int_map
-      , int_bic
-      , int_ebic
-      , int_sabic
-    ))) -> int_avg
+  round(mlv(c(
+    int_kaiser
+    , int_pa
+    , int_vss1
+    , int_vss2
+    , int_map
+    , int_bic
+    , int_ebic
+    , int_sabic
+  ), method = 'shorth'
+  )) -> int_mode
   
   # Criteria data frame
   c(
@@ -282,7 +283,7 @@ fun_efa_nfactors <- function(mtx_correlations){
     , 'bic' = int_bic
     , 'empirical bic' = int_ebic
     , 'adjusted bic' = int_sabic
-    , 'average' = int_avg
+    , 'mode' = int_mode
   ) %>% 
     as_tibble(
       rownames = 'criterion'
@@ -838,7 +839,7 @@ fun_efa_model_performance <- function(
   stopifnot(
     "'df_reliability' must be a 'df_reliability' objected obtained via the 'fun_efa_reliability' function." =
       any(class(df_reliability) == 'df_reliability')
-  ) 
+  )
   
   stopifnot(
     "'int_optimal_nfactors' must be either NULL or an integer vector of optimal number of factors." = 
@@ -1010,6 +1011,10 @@ fun_efa_fa <- function(
   
   ceiling(int_factors) -> int_factors
   
+  int_min_items_factor[[1]] -> int_min_items_factor
+  
+  ceiling(int_min_items_factor) -> int_min_items_factor
+  
   # Correlation matrix
   fun_efa_correlations(
     df_data = df_data
@@ -1056,6 +1061,7 @@ fun_efa_fa <- function(
   ) -> efa_model
   
   rm(df_data)
+  rm(dbl_weights)
   
   # Show diagram
   if(lgc_show_diagrams){
@@ -1366,6 +1372,307 @@ fun_efa_top_items <- function(
 }
 
 # [MULTI-FACTOR FUNCTIONS] Perform EFA for a range of factors ------------------------------------------------
+# - Vectorized automated EFA ----------------------------------------------
+fun_efa_vfa <- function(
+    df_data
+    , int_factors = NULL
+    , chr_rotation = 'oblimin'
+    , dbl_weights = NULL
+    , int_min_items_factor = 3
+    , lgc_remove_low_msai_items = T
+    , lgc_adequacy_testing = F
+    , lgc_optimal_nfactors = F
+    , lgc_show_diagrams = T
+    , lgc_show_results = F  
+){
+  
+  # Arguments validation
+  stopifnot(
+    "'df_data' must be a data frame with numeric columns." = 
+      all(
+        is.data.frame(df_data),
+        df_data %>% 
+          map_lgl(is.numeric) %>% 
+          any()
+      )
+  )
+  
+  stopifnot(
+    "'dbl_weights' must be either NULL or a numeric vector the same length as the number of rows in 'df_data'." = 
+      any(
+        is.null(dbl_weights),
+        all(
+          is.numeric(dbl_weights),
+          length(dbl_weights) ==
+            nrow(df_data)
+        )
+      )
+  )
+  
+  stopifnot(
+    "'int_min_items_factor' must be an integer." = 
+      is.numeric(int_min_items_factor)
+  )
+  
+  stopifnot(
+    "'int_factors' must be either NULL or an integer vector." = 
+      any(
+        is.null(int_factors)
+        , is.numeric(int_factors)
+      )
+  )
+  
+  stopifnot(
+    "'chr_rotation' must be a character vector." = 
+      is.character(chr_rotation)
+  )
+  
+  stopifnot(
+    "'lgc_remove_low_msai_items' must be either TRUE or FALSE." = 
+      all(
+        is.logical(lgc_remove_low_msai_items),
+        !is.na(lgc_remove_low_msai_items)
+      )
+  )
+  
+  stopifnot(
+    "'lgc_optimal_nfactors' must be either TRUE or FALSE." = 
+      all(
+        is.logical(lgc_optimal_nfactors),
+        !is.na(lgc_optimal_nfactors)
+      )
+  )
+  
+  stopifnot(
+    "'lgc_show_diagrams' must be either TRUE or FALSE." = 
+      all(
+        is.logical(lgc_show_diagrams),
+        !is.na(lgc_show_diagrams)
+      )
+  )
+  
+  stopifnot(
+    "'lgc_show_results' must be either TRUE or FALSE." = 
+      all(
+        is.logical(lgc_show_results),
+        !is.na(lgc_show_results)
+      )
+  )
+  
+  # Data wrangling
+  df_data %>%
+    select(where(
+      is.numeric
+    )) -> df_data
+  
+  int_min_items_factor[[1]] -> int_min_items_factor
+  
+  ceiling(int_min_items_factor) -> int_min_items_factor
+  
+  # Correlation matrix
+  fun_efa_correlations(
+    df_data = df_data
+    , dbl_weights = 
+      dbl_weights
+  ) -> mtx_correlations
+  
+  # Adequacy tests
+  df_adequacy_tests <- NULL
+  
+  if(lgc_adequacy_testing){
+    
+    fun_efa_adequacy(
+      mtx_correlations = 
+        mtx_correlations
+      , int_nrow = 
+        if_else(
+          is.null(dbl_weights)
+          , nrow(df_data)
+          , sum(dbl_weights)
+        )
+    ) -> df_adequacy_tests
+    
+    # Remove problematic items
+    if(lgc_remove_low_msai_items){
+      
+      df_data %>% 
+        select(!any_of(
+          df_adequacy_tests$
+            problematic_items$
+            item
+        )) -> df_data
+      
+    }
+    
+  }
+  
+  # Auto select number of factors
+  df_nfactors <- NULL
+  
+  if(!length(int_factors)){
+    
+    fun_efa_correlations(
+      df_data = df_data
+      , dbl_weights = 
+        dbl_weights
+    ) %>% 
+      fun_efa_nfactors() ->
+      df_nfactors
+    
+    df_nfactors %>% 
+      slice(
+        which.max(nfactors)
+        , n()
+      ) %>%
+      pull(nfactors) %>% 
+      pmin(floor(
+        ncol(mtx_correlations) / 
+          int_min_items_factor
+      )) -> int_factors
+    
+    seq(
+      min(int_factors)
+      , max(int_factors)
+    ) -> int_factors
+    
+  }
+  
+  unique(int_factors) ->
+    int_factors
+  
+  if(
+    length(int_factors) !=
+    length(chr_rotation)
+  ){
+    
+    rep(
+      chr_rotation[[1]]
+      , length(int_factors)
+    ) -> chr_rotation
+    
+  }
+  
+  # Name the number of factors vector
+  set_names(
+    int_factors
+    , paste0(
+      'EFA_'
+      , chr_rotation
+      , '_'
+      , int_factors
+      , 'factors'
+    ) %>% 
+      str_replace(
+        '1factors'
+        , '1factor'
+      )
+  ) -> int_factors
+  
+  # Run EFA
+  map2(
+    .x = int_factors
+    , .y = chr_rotation
+    , ~ fa(
+      r = df_data
+      , nfactors = .x
+      , rotate = .y
+      , weight = dbl_weights
+    )
+  ) -> list_efa_model
+  
+  rm(df_data)
+  rm(dbl_weights)
+  
+  return(list_efa_model)
+  stop()
+  
+  # Show diagram
+  if(lgc_show_diagrams){
+    
+    fa.diagram(efa_model)
+    
+  }
+  
+  # Show results
+  if(lgc_show_results){
+    
+    print(
+      efa_model
+      , digits = 2
+      , cutoff = 0.3
+      , sort = T
+    )
+    
+  }
+  
+  # Loadings data frames
+  fun_efa_loadings(
+    efa_model = efa_model
+  ) -> df_loadings
+  
+  fun_efa_factor_match(
+    df_loadings 
+  ) -> df_loadings_long
+  
+  rm(df_loadings)
+  
+  # Internal consistency
+  fun_efa_consistency(
+    mtx_correlations = 
+      mtx_correlations
+    , df_loadings_long = 
+      df_loadings_long
+    , int_min_items_factor = 
+      int_min_items_factor
+    , chr_rotation = 
+      chr_rotation
+  ) -> list_reliability
+  
+  # Factor correlations
+  fun_efa_factor_correlations(
+    efa_model 
+  ) -> list_factor_correlations
+  
+  # Recommended number of factors
+  if(all(
+    lgc_optimal_nfactors
+    , !length(df_nfactors)
+  )){
+    
+    fun_efa_nfactors(
+      mtx_correlations 
+    ) -> df_nfactors
+    
+    df_nfactors %>% 
+      slice(-n()) %>%
+      pull(nfactors) ->
+      int_factors
+    
+  }
+  
+  # Overall model performance
+  fun_efa_model_performance(
+    df_reliability = 
+      list_reliability$
+      reliability_metrics
+    , int_optimal_nfactors = 
+      int_factors
+  ) -> list_model_performance
+  
+  # Output
+  return(list(
+    'model_performance' = list_model_performance
+    , 'reliability_metrics' = list_reliability$reliability_metrics
+    , 'reliability_evaluation' = list_reliability$reliability_evaluation
+    , 'factor_correlations' = list_factor_correlations
+    , 'loadings_long' = df_loadings_long
+    , 'adequacy_tests' = df_adequacy_tests
+    , 'nfactors' = df_nfactors
+    , 'model' = efa_model
+  ))
+  
+}
+
 # [WORKFLOW FUNCTIONS] Perform EFA and top items selection ----------------------------------------------------
 # [BEST MODELS] Perform EFA within a range of factors, pick most consistent model -----------------------------------------------------------
 # [x] MULTI FUNCTIONS: PERFORM EFA WITHIN A RANGE OF FACTOR NUMBERS -------
@@ -2129,12 +2436,6 @@ fun_efa_consistency(
   , chr_rotation = 'oblimin'
 )
 
-curve(-(x-1)^4 + 1, from = 0, to = 2)
-curve(x^1, from = 0, to = 1)
-curve(x^1.5, from = 0, to = 1, add = T)
-curve(x^2, from = 0, to = 1, add = T)
-curve(x^4, from = 0, to = 1, add = T)
-
 # efa
 fun_efa_fa(
   df_data = 
@@ -2154,6 +2455,33 @@ fun_efa_fa(
   , lgc_show_diagrams = T
   , lgc_show_results = F
 ) -> dsdsdsds
+
+fun_efa_vfa(
+  df_data =
+    df_occupations %>%
+    select(ends_with('.l'))
+  , int_factors = c(5, 15, 19)
+  , int_min_items_factor = 3
+  # , chr_rotation = 'oblimin'
+  , chr_rotation = 'equamax'
+  # , chr_rotation = 'promax'
+  , dbl_weights =
+    df_occupations$
+    employment2
+  , lgc_adequacy_testing = F
+  , lgc_optimal_nfactors = T
+  , lgc_remove_low_msai_items = T
+  , lgc_show_diagrams = T
+  , lgc_show_results = F
+) -> dsdsdsds
+
+# dsdsdsds[[1]]$reliability_metrics
+# dsdsdsds[[2]]$reliability_metrics
+# dsdsdsds[[3]]$reliability_metrics
+# 
+# dsdsdsds[[1]]$model_performance
+# dsdsdsds[[2]]$model_performance
+# dsdsdsds[[3]]$model_performance
 
 dsdsdsds$model_performance
 dsdsdsds$reliability_metrics %>% View
