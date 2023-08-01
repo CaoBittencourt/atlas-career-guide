@@ -873,8 +873,11 @@ fun_efa_model_performance <- function(
     ) 
   ){
     
-    # Output
-    return(0)
+    # Evaluate model performance
+    list(
+      'performance' = 0,
+      'evaluation' = fun_efa_eval(0)
+    ) -> list_model_performance
     
   } else {
     
@@ -893,9 +896,8 @@ fun_efa_model_performance <- function(
       mean(pmin(
         nrow(df_reliability) /
           int_optimal_nfactors
-        , 1
-      )) ->
-      coef_model_performance
+        , 1), na.rm = T
+      ) -> coef_model_performance
     
     rm(int_optimal_nfactors)
     
@@ -907,11 +909,10 @@ fun_efa_model_performance <- function(
       )
     ) -> list_model_performance
     
-    # Output
-    # return(coef_model_performance)
-    return(list_model_performance)
-    
   }
+  
+  # Output
+  return(list_model_performance)
   
 }
 
@@ -1083,15 +1084,10 @@ fun_efa_fa <- function(
   }
   
   # Loadings data frames
-  fun_efa_loadings(
-    efa_model = efa_model
-  ) -> df_loadings
-  
-  fun_efa_factor_match(
-    df_loadings 
-  ) -> df_loadings_long
-  
-  rm(df_loadings)
+  efa_model %>% 
+    fun_efa_loadings() %>%
+    fun_efa_factor_match() -> 
+    df_loadings_long
   
   # Internal consistency
   fun_efa_consistency(
@@ -1537,36 +1533,43 @@ fun_efa_vfa <- function(
     
   }
   
-  unique(int_factors) ->
-    int_factors
-  
-  if(
-    length(int_factors) !=
-    length(chr_rotation)
-  ){
-    
-    rep(
-      chr_rotation[[1]]
-      , length(int_factors)
-    ) -> chr_rotation
-    
-  }
-  
   # Name the number of factors vector
+  expand_grid(
+    nfactors = unique(
+      int_factors
+    )
+    , rotation = unique(
+      chr_rotation
+    )
+  ) %>% 
+    mutate(
+      model = 
+        paste0(
+          'EFA_'
+          , rotation
+          , '_'
+          , nfactors
+          , 'factors'
+        )
+      , model = 
+        str_replace(
+          model
+          , '1factors'
+          , '1factor'
+        )
+    ) -> df_models
+  
   set_names(
-    int_factors
-    , paste0(
-      'EFA_'
-      , chr_rotation
-      , '_'
-      , int_factors
-      , 'factors'
-    ) %>% 
-      str_replace(
-        '1factors'
-        , '1factor'
-      )
+    df_models$nfactors
+    , df_models$model
   ) -> int_factors
+  
+  set_names(
+    df_models$rotation
+    , df_models$model
+  ) -> chr_rotation
+  
+  rm(df_models)
   
   # Run EFA
   map2(
@@ -1578,60 +1581,85 @@ fun_efa_vfa <- function(
       , rotate = .y
       , weight = dbl_weights
     )
-  ) -> list_efa_model
+  ) -> list_efa_models
   
   rm(df_data)
   rm(dbl_weights)
   
-  return(list_efa_model)
-  stop()
-  
-  # Show diagram
-  if(lgc_show_diagrams){
-    
-    fa.diagram(efa_model)
-    
-  }
-  
-  # Show results
-  if(lgc_show_results){
-    
-    print(
-      efa_model
-      , digits = 2
-      , cutoff = 0.3
-      , sort = T
-    )
-    
-  }
+  # # Show diagram
+  # if(lgc_show_diagrams){
+  #   
+  #   list_efa_models %>% 
+  #     map(fa.diagram)
+  #   
+  # }
+  # 
+  # # Show results
+  # if(lgc_show_results){
+  #   
+  #   map(
+  #     list_efa_models
+  #     , ~ print(
+  #       .x
+  #       , digits = 2
+  #       , cutoff = 0.3
+  #       , sort = T
+  #     )
+  #   )
+  #   
+  # }
   
   # Loadings data frames
-  fun_efa_loadings(
-    efa_model = efa_model
-  ) -> df_loadings
-  
-  fun_efa_factor_match(
-    df_loadings 
-  ) -> df_loadings_long
-  
-  rm(df_loadings)
+  list_efa_models %>% 
+    map(fun_efa_loadings) %>% 
+    map(fun_efa_factor_match) ->
+    list_loadings_long
   
   # Internal consistency
-  fun_efa_consistency(
-    mtx_correlations = 
-      mtx_correlations
-    , df_loadings_long = 
-      df_loadings_long
-    , int_min_items_factor = 
-      int_min_items_factor
-    , chr_rotation = 
-      chr_rotation
+  map2(
+    .x = list_loadings_long
+    , .y = chr_rotation
+    , ~ fun_efa_consistency(
+      mtx_correlations = 
+        mtx_correlations
+      , df_loadings_long = .x
+      , int_min_items_factor =
+        int_min_items_factor
+      , chr_rotation = .y
+    )
+  ) -> list_reliability
+  
+  list_reliability %>% 
+    list_flatten() -> 
+    list_reliability
+  
+  list(
+    'reliability' = 
+      list_reliability[
+        str_detect(
+          names(
+            list_reliability
+          ), 'metrics'
+        )] %>% 
+      set_names(names(
+        list_loadings_long
+      ))
+    , 'evaluation' = 
+      list_reliability[
+        str_detect(
+          names(
+            list_reliability
+          ), 'evaluation'
+        )] %>% 
+      set_names(names(
+        list_loadings_long
+      ))
   ) -> list_reliability
   
   # Factor correlations
-  fun_efa_factor_correlations(
-    efa_model 
-  ) -> list_factor_correlations
+  list_efa_models %>% 
+    map(fun_efa_factor_correlations) ->
+    list_factor_correlations
   
   # Recommended number of factors
   if(all(
@@ -1640,35 +1668,43 @@ fun_efa_vfa <- function(
   )){
     
     fun_efa_nfactors(
-      mtx_correlations 
+      mtx_correlations
     ) -> df_nfactors
     
     df_nfactors %>% 
       slice(-n()) %>%
-      pull(nfactors) ->
-      int_factors
+      pull(nfactors) %>% 
+      list() %>% 
+      rep(length(
+        int_factors
+      )) -> int_factors
     
   }
   
   # Overall model performance
-  fun_efa_model_performance(
-    df_reliability = 
+  map2(
+    .x = 
       list_reliability$
-      reliability_metrics
-    , int_optimal_nfactors = 
-      int_factors
-  ) -> list_model_performance
+      reliability
+    , .y = int_factors
+    , ~ fun_efa_model_performance(
+      df_reliability = .x
+      , int_optimal_nfactors = .y
+    )
+  ) %>% 
+    bind_rows(.id = 'model') -> 
+    df_model_performance
   
   # Output
   return(list(
-    'model_performance' = list_model_performance
-    , 'reliability_metrics' = list_reliability$reliability_metrics
-    , 'reliability_evaluation' = list_reliability$reliability_evaluation
+    'model_performance' = df_model_performance
+    , 'reliability_metrics' = list_reliability$reliability
+    , 'reliability_evaluation' = list_reliability$evaluation
     , 'factor_correlations' = list_factor_correlations
-    , 'loadings_long' = df_loadings_long
+    , 'loadings_long' = list_loadings_long
     , 'adequacy_tests' = df_adequacy_tests
     , 'nfactors' = df_nfactors
-    , 'model' = efa_model
+    , 'models' = list_efa_models
   ))
   
 }
@@ -2360,6 +2396,26 @@ fun_efa.bestmodel <- function(
 }
 
 # [TEST] ------------------------------------------------------------------
+# - vtest -----------------------------------------------------------------
+rm(dsdsdsds)
+
+fun_efa_vfa(
+  df_data =
+    df_occupations %>%
+    select(ends_with('.l'))
+  , int_factors = NULL
+  , int_min_items_factor = 3
+  , chr_rotation = 'equamax'
+  , dbl_weights =
+    df_occupations$
+    employment2
+  , lgc_adequacy_testing = F
+  , lgc_optimal_nfactors = T
+  , lgc_remove_low_msai_items = T
+  , lgc_show_diagrams = F
+  , lgc_show_results = F
+) -> dsdsdsds
+
 # - Test ------------------------------------------------------------------
 # Data
 read_csv(
@@ -2460,20 +2516,33 @@ fun_efa_vfa(
   df_data =
     df_occupations %>%
     select(ends_with('.l'))
-  , int_factors = c(5, 15, 19)
+  # , int_factors = c(5, 15, 19)
+  , int_factors = rep(19, 2)
+  # , int_factors = NULL
   , int_min_items_factor = 3
   # , chr_rotation = 'oblimin'
-  , chr_rotation = 'equamax'
+  , chr_rotation = c('equamax', 'oblimin')
   # , chr_rotation = 'promax'
   , dbl_weights =
     df_occupations$
     employment2
   , lgc_adequacy_testing = F
-  , lgc_optimal_nfactors = T
+  , lgc_optimal_nfactors = F
   , lgc_remove_low_msai_items = T
-  , lgc_show_diagrams = T
+  , lgc_show_diagrams = F
   , lgc_show_results = F
 ) -> dsdsdsds
+
+dsdsdsds$EFA_equamax_19factors
+
+map(
+  dsdsdsds
+  , fun_efa_loadings
+) %>% 
+  map(
+    fun_efa_factor_match
+  )
+
 
 # dsdsdsds[[1]]$reliability_metrics
 # dsdsdsds[[2]]$reliability_metrics
