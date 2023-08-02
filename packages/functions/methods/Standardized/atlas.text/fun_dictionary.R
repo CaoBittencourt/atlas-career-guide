@@ -5,7 +5,7 @@
 
 # [FUNCTIONS] --------------------------------------------------------------------
 # - Dictionary evaluation -------------------------------------------------
-fun_dictionary <- function(
+fun_text_dictionary <- function(
     
   # Dictionary data frame
   df_dictionary_long
@@ -75,7 +75,7 @@ fun_dictionary <- function(
 }
 
 # - Vectorized dictionary evaluation -------------------------------------------------
-fun_dictionary_list <- function(
+fun_text_dictionary_list <- function(
     
   # Dictionary data frame
   df_dictionary_long
@@ -155,7 +155,7 @@ fun_dictionary_list <- function(
 # library(dplyr)
 # library(purrr)
 # 
-# fun_dictionary(
+# fun_text_dictionary(
 #   df_dictionary_long =
 #     tibble(
 #       key = rep(c('dsds', 'lalala'), each = 2),
