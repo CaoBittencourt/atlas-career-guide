@@ -1,5 +1,5 @@
 \name{fun_text_commas}
-\alias{fun_text_commas}
+\alias{List character strings as text}
 %- Also NEED an '\alias' for EACH other topic documented here.
 \title{
 %%  ~~function to do ... ~~
@@ -7,14 +7,15 @@ fun_text_commas
 }
 \description{
 %%  ~~ A concise (1-5 lines) description of what the function does. ~~
-An auxiliary function to separate arguments with commas, and also wrap them in quotes, if so required.
+An auxiliary function that separates arguments with commas, joins them together in a single string, and optionally wraps them in quotes.
 }
 \usage{
 fun_text_commas(
     ...
     , chr_sep = ','
     , chr_last_sep = ', and'
-    , lgc_quote = T)
+    , lgc_quote = T
+)
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{
@@ -59,13 +60,13 @@ Cao Bittencourt Ferreira
 %% ~~objects to See Also as \code{\link{help}}, ~~~
 }
 \examples{
-##---- Should be DIRECTLY executable !! ----
-##-- ==>  Define data, use random,
-##--	or do  help(data=index)  for the standard data sets.
+## Terms can be any number of strings
+fun_text_commas(letters[1:10], lgc_quote = T)
+fun_text_commas(letters[1:5], lgc_quote = F)
 
-## The function is currently defined as
-fun_text_commas('1', '2'){}
-fun_text_commas(1, 2){}
+## Terms can also be of other types, if coercible to character
+fun_text_commas(1:5)
+fun_text_commas(as.list(1:5))
 }
 % Add one or more standard keywords, see file 'KEYWORDS' in the
 % R documentation directory (show via RShowDoc("KEYWORDS")):
