@@ -9,8 +9,8 @@ License: What license is it under?
 Encoding: UTF-8
 LazyData: true
 Imports:
-    stringi
-    purrr
-    dplyr
-    glue
+  stringi
+  purrr
+  dplyr
+  glue
     
