@@ -1,0 +1,16 @@
+Package: atlas.text
+Type: Package
+Title: Dynamic Text Generation
+Version: 0.1.0
+Author: Cao Bittencourt Ferreira
+Maintainer: Cao Bittencourt Ferreira <caobittencourt@go2atlas.com>
+Description: Parameterized text generation functions for rendering dynamic reports.
+License: What license is it under?
+Encoding: UTF-8
+LazyData: true
+Imports:
+    stringi
+    purrr
+    dplyr
+    glue
+    
