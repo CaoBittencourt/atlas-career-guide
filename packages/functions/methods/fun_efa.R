@@ -916,8 +916,8 @@ fun_efa_model_performance <- function(
   
 }
 
-# - Automated EFA ---------------------------------------------------------
-fun_efa_fa <- function(
+# - Automated EFA (heavy lifting) ---------------------------------------------------------
+fun_efa_fa_helper <- function(
     df_data
     , int_factors = 1
     , chr_rotation = 'oblimin'
@@ -1145,6 +1145,38 @@ fun_efa_fa <- function(
   
 }
 
+# - Automated EFA (wrapper with try catch) ---------------------------------------------------------
+fun_efa_fa <- function(
+    df_data
+    , int_factors = 1
+    , chr_rotation = 'oblimin'
+    , dbl_weights = NULL
+    , int_min_items_factor = 3
+    , lgc_remove_low_msai_items = T
+    , lgc_adequacy_testing = F
+    , lgc_optimal_nfactors = F
+    , lgc_show_diagrams = T
+    , lgc_show_results = F
+){
+  
+  # Match call
+  sym_call <- match.call()
+  
+  sym_call[[1]] <- as.symbol('fun_efa_fa_helper')
+  
+  # Try catch
+  tryCatch(
+    expr = {
+      
+      return(eval(sym_call))
+      
+    }
+    , error = function(e){return(NA)}
+    
+  )
+  
+}
+
 # - Top items function ----------------------------------------------------
 fun_efa_top_items <- function(
     df_data
@@ -1368,8 +1400,8 @@ fun_efa_top_items <- function(
 }
 
 # [MULTI-FACTOR FUNCTIONS] Perform EFA for a range of factors ------------------------------------------------
-# - Vectorized automated EFA ----------------------------------------------
-fun_efa_vfa <- function(
+# - Vectorized automated EFA (heavy lifting) ----------------------------------------------
+fun_efa_vfa_helper <- function(
     df_data
     , int_factors = NULL
     , chr_rotation = 'oblimin'
@@ -1379,7 +1411,7 @@ fun_efa_vfa <- function(
     , lgc_adequacy_testing = F
     , lgc_optimal_nfactors = F
     , lgc_show_diagrams = T
-    , lgc_show_results = F  
+    , lgc_show_results = F
 ){
   
   # Arguments validation
@@ -1706,6 +1738,89 @@ fun_efa_vfa <- function(
     , 'nfactors' = df_nfactors
     , 'models' = list_efa_models
   ))
+  
+}
+
+# - Vectorized automated EFA (wrapper with try catch) ----------------------------------------------
+fun_efa_vfa <- function(
+    df_data
+    , int_factors = NULL
+    , chr_rotation = 'oblimin'
+    , dbl_weights = NULL
+    , int_min_items_factor = 3
+    , lgc_remove_low_msai_items = T
+    , lgc_adequacy_testing = F
+    , lgc_optimal_nfactors = F
+    , lgc_show_diagrams = T
+    , lgc_show_results = F
+){
+  
+  # Match call
+  sym_call <- match.call()
+  
+  sym_call[[1]] <- as.symbol('fun_efa_vfa_helper')
+  
+  # Try catch
+  tryCatch(
+    expr = {
+      
+      return(eval(sym_call))
+      
+    }
+    , error = function(e){return(NA)}
+    
+  )
+  
+}
+
+# [WORKFLOW FUNCTIONS] Perform EFA and top items selection ------------------------------------------------
+# - Automated EFA with top item selection ---------------------------------
+fun_efa_fa_top_items <- function(){
+  
+  # Stage 1: Call automated EFA function
+  
+  # Remove non viable models
+  
+  # Select top items
+  
+  # Stage 2: Rerun EFA only with viable models
+  
+  # Output
+  
+}
+
+# - Vectorized automated EFA with top item selection ----------------------
+fun_efa_vfa_top_items <- function(){
+  match.call()
+  # Stage 1: Call automated EFA function
+  fun_efa_vfa(
+    df_data
+    , int_factors = NULL
+    , chr_rotation = 'oblimin'
+    , dbl_weights = NULL
+    , int_min_items_factor = 3
+    , lgc_remove_low_msai_items = T
+    , lgc_adequacy_testing = F
+    , lgc_optimal_nfactors = F
+    , lgc_show_diagrams = T
+    , lgc_show_results = F
+  )
+  
+  # Remove non viable models
+  
+  # Select top items
+  fun_efa_top_items(
+    df_data
+    , dbl_weights = NULL
+    , efa_model
+    , int_items_total = 50
+    , lgc_uneven_factors = F
+    , int_min_factor_size = 3
+  )
+  
+  # Stage 2: Rerun EFA only with viable models
+  
+  # Output
   
 }
 
@@ -2511,6 +2626,8 @@ fun_efa_fa(
   , lgc_show_diagrams = T
   , lgc_show_results = F
 ) -> dsdsdsds
+
+dsdsdsds
 
 fun_efa_vfa(
   df_data =
