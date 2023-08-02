@@ -1166,240 +1166,13 @@ fun_efa_fa <- function(
   
   # Try catch
   tryCatch(
-    expr = {
-      
-      return(eval(sym_call))
-      
-    }
+    expr = {return(eval.parent(sym_call))}
     , error = function(e){return(NA)}
-    
   )
   
 }
 
-# - Top items function ----------------------------------------------------
-fun_efa_top_items <- function(
-    df_data
-    , dbl_weights = NULL
-    , efa_model
-    , int_items_total = 50
-    , lgc_uneven_factors = F
-    , int_min_factor_size = 3
-){
-  
-  # Arguments validation
-  stopifnot(
-    "'df_data' must be a data frame with numeric columns." = 
-      all(
-        is.data.frame(df_data),
-        df_data %>% 
-          map_lgl(is.numeric) %>% 
-          any()
-      )
-  )
-  
-  stopifnot(
-    "'dbl_weights' must be either NULL or a numeric vector the same length as the number of rows in 'df_data'." = 
-      any(
-        is.null(dbl_weights),
-        all(
-          is.numeric(dbl_weights),
-          length(dbl_weights) ==
-            nrow(df_data)
-        )
-      )
-  )
-  
-  stopifnot(
-    "'efa_model' must be a factor analysis object." =
-      any(
-        class(efa_model) == 'factanal'
-        , class(efa_model) == 'fa'
-        , class(efa_model) == 'principal'
-      )
-  )
-  
-  stopifnot(
-    "'int_items_total' must be an integer." = 
-      is.numeric(int_items_total)
-  )
-  
-  stopifnot(
-    "'int_min_factor_size' must be an integer." = 
-      is.numeric(int_min_factor_size)
-  )
-  
-  stopifnot(
-    "'lgc_uneven_factors' must be either TRUE or FALSE." = 
-      all(
-        is.logical(lgc_uneven_factors),
-        !is.na(lgc_uneven_factors)
-      )
-  )
-  
-  # Data wrangling
-  int_items_total[[1]] -> int_items_total
-  ceiling(int_items_total) -> int_items_total
-  
-  int_min_factor_size[[1]] -> int_min_factor_size
-  ceiling(int_min_factor_size) -> int_min_factor_size
-  
-  df_data %>% 
-    select(where(
-      is.numeric
-    )) -> df_data
-  
-  # Item variance
-  df_data %>%
-    reframe(across(
-      .cols = everything()
-      ,.fns = 
-        ~ wtd.var(
-          x = .x
-          , weights = 
-            dbl_weights
-        )
-    )) %>% 
-    pivot_longer(
-      cols = everything()
-      , names_to = 'item'
-      , values_to = 'variance'
-    ) -> df_items_var
-  
-  rm(df_data)
-  
-  # Get factor loadings
-  # Match items to factors
-  efa_model %>%
-    fun_efa_loadings() %>%
-    fun_efa_factor_match() ->
-    df_loadings_long
-  
-  rm(efa_model)
-  
-  # Assess item relevance as a function of 
-  # item purity and captured variance
-  df_loadings_long %>% 
-    full_join(
-      df_items_var
-    ) %>% 
-    as_tibble() -> 
-    df_top_items
-  
-  rm(df_loadings_long)
-  rm(df_items_var)
-  
-  df_top_items %>% 
-    mutate(
-      purity_norm =
-        loading -
-        crossloadings
-      , purity_norm =
-        purity_norm -
-        min(purity_norm)
-      , purity_norm =
-        purity_norm /
-        max(purity_norm)
-      , relevance_norm =
-        (purity_norm ^ 2) *
-        sqrt(
-          variance /
-            sum(variance)
-        )
-      , relevance_norm = 
-        relevance_norm / 
-        max(relevance_norm)
-    ) -> df_top_items
-  
-  if(lgc_uneven_factors){
-    
-    # Get min items from each factor
-    df_top_items %>% 
-      group_by(factor) %>% 
-      arrange(desc(
-        relevance_norm
-      )) %>% 
-      slice_head(
-        n = int_min_factor_size
-      ) %>%
-      pull(item) -> chr_items
-    
-    # Get remaining items
-    df_top_items %>% 
-      filter(!(
-        item %in%
-          chr_items
-      )) %>% 
-      arrange(desc(
-        relevance_norm
-      )) %>% 
-      slice_head(
-        n = max(
-          int_items_total -
-            length(chr_items)
-          , 0
-        )) %>%
-      pull(item) %>% 
-      c(chr_items) -> chr_items
-    
-    df_top_items %>% 
-      filter(
-        item %in% 
-          chr_items
-      ) %>% 
-      group_by(factor) %>% 
-      mutate(
-        nitems = n()
-      ) %>% 
-      ungroup() %>% 
-      relocate(
-        factor
-        , nitems
-        , item
-      ) %>% 
-      slice(str_order(
-        factor
-        , numeric = T
-      )) -> df_top_items
-    
-  } else {
-    
-    df_top_items %>% 
-      mutate(
-        nitems = 
-          int_items_total / 
-          length(unique(
-            factor
-          ))
-        , nitems = 
-          floor(nitems)
-        , nitems = 
-          pmax(
-            nitems
-            , int_min_factor_size
-          )
-      ) %>% 
-      group_by(factor) %>%
-      arrange(desc(
-        relevance_norm
-      )) %>%
-      slice_head(
-        n = first(.$nitems)
-      ) %>% 
-      relocate(
-        factor
-        , nitems
-        , item
-      ) -> df_top_items
-    
-  }
-  
-  # Output
-  return(df_top_items)
-  
-}
-
-# [MULTI-FACTOR FUNCTIONS] Perform EFA for a range of factors ------------------------------------------------
+# [VECTORIZED FUNCTIONS] Perform EFA for a range of factors ------------------------------------------------
 # - Vectorized automated EFA (heavy lifting) ----------------------------------------------
 fun_efa_vfa_helper <- function(
     df_data
@@ -1762,914 +1535,501 @@ fun_efa_vfa <- function(
   
   # Try catch
   tryCatch(
-    expr = {
-      
-      return(eval(sym_call))
-      
-    }
+    expr = {return(eval.parent(sym_call))}
     , error = function(e){return(NA)}
-    
   )
   
 }
 
-# [WORKFLOW FUNCTIONS] Perform EFA and top items selection ------------------------------------------------
-# - Automated EFA with top item selection ---------------------------------
-fun_efa_fa_top_items <- function(){
+# [TOP ITEMS FUNCTIONS] Select top items from an EFA model ----------------
+# - Top items function (heavy lifting) ----------------------------------------------------
+fun_efa_top_items_helper <- function(
+    df_data
+    , dbl_weights = NULL
+    , efa_model
+    , int_items_total_vector = 50
+    , lgc_uneven_factors = F
+    , int_min_items_factor = 3
+){
   
-  # Stage 1: Call automated EFA function
+  # Arguments validation
+  stopifnot(
+    "'df_data' must be a data frame with numeric columns." = 
+      all(
+        is.data.frame(df_data),
+        df_data %>% 
+          map_lgl(is.numeric) %>% 
+          any()
+      )
+  )
   
-  # Remove non viable models
+  stopifnot(
+    "'dbl_weights' must be either NULL or a numeric vector the same length as the number of rows in 'df_data'." = 
+      any(
+        is.null(dbl_weights),
+        all(
+          is.numeric(dbl_weights),
+          length(dbl_weights) ==
+            nrow(df_data)
+        )
+      )
+  )
   
-  # Select top items
+  stopifnot(
+    "'efa_model' must be a factor analysis object." =
+      any(
+        class(efa_model) == 'factanal'
+        , class(efa_model) == 'fa'
+        , class(efa_model) == 'principal'
+      )
+  )
   
-  # Stage 2: Rerun EFA only with viable models
+  stopifnot(
+    "'int_items_total_vector' must be an integer." = 
+      is.numeric(int_items_total_vector)
+  )
+  
+  stopifnot(
+    "'int_min_items_factor' must be an integer." = 
+      is.numeric(int_min_items_factor)
+  )
+  
+  stopifnot(
+    "'lgc_uneven_factors' must be either TRUE or FALSE." = 
+      all(
+        is.logical(lgc_uneven_factors),
+        !is.na(lgc_uneven_factors)
+      )
+  )
+  
+  # Data wrangling
+  ceiling(int_items_total_vector) -> int_items_total_vector
+  
+  int_min_items_factor[[1]] -> int_min_items_factor
+  ceiling(int_min_items_factor) -> int_min_items_factor
+  
+  df_data %>% 
+    select(where(
+      is.numeric
+    )) -> df_data
+  
+  # Name models
+  set_names(
+    int_items_total_vector
+    , paste0(
+      'EFA_'
+      , efa_model$rotation
+      , '_'
+      , efa_model$factors
+      , 'factors'
+      , '_'
+      , int_items_total_vector
+      , 'items'
+    ) %>% 
+      str_replace(
+        '1factors'
+        , '1factor'
+      )
+  ) -> int_items_total_vector
+  
+  # Item variance
+  df_data %>%
+    reframe(across(
+      .cols = everything()
+      ,.fns = 
+        ~ wtd.var(
+          x = .x
+          , weights = 
+            dbl_weights
+        )
+    )) %>% 
+    pivot_longer(
+      cols = everything()
+      , names_to = 'item'
+      , values_to = 'variance'
+    ) -> df_items_var
+  
+  rm(df_data)
+  
+  # Get factor loadings
+  # Match items to factors
+  efa_model %>%
+    fun_efa_loadings() %>%
+    fun_efa_factor_match() ->
+    df_loadings_long
+  
+  rm(efa_model)
+  
+  # Assess item relevance as a function of 
+  # item purity and captured variance
+  df_loadings_long %>% 
+    full_join(
+      df_items_var
+    ) %>% 
+    as_tibble() -> 
+    df_top_items
+  
+  rm(df_loadings_long)
+  rm(df_items_var)
+  
+  df_top_items %>% 
+    mutate(
+      purity_norm =
+        loading -
+        crossloadings
+      , purity_norm =
+        purity_norm -
+        min(purity_norm)
+      , purity_norm =
+        purity_norm /
+        max(purity_norm)
+      , relevance_norm =
+        (purity_norm ^ 2) *
+        sqrt(
+          variance /
+            sum(variance)
+        )
+      , relevance_norm = 
+        relevance_norm / 
+        max(relevance_norm)
+    ) -> df_top_items
+  
+  # Top items helper function
+  fun_top_items <- function(
+    df_top_items
+    , int_items
+    , lgc_uneven_factors
+  ){
+    
+    if(lgc_uneven_factors){
+      
+      # Get min items from each factor
+      df_top_items %>% 
+        group_by(factor) %>% 
+        arrange(desc(
+          relevance_norm
+        )) %>% 
+        slice_head(
+          n = int_min_items_factor
+        ) %>%
+        pull(item) -> chr_items
+      
+      # Get remaining items
+      df_top_items %>% 
+        filter(!(
+          item %in%
+            chr_items
+        )) %>% 
+        arrange(desc(
+          relevance_norm
+        )) %>% 
+        slice_head(
+          n = max(
+            int_items -
+              length(chr_items)
+            , 0
+          )) %>%
+        pull(item) %>% 
+        c(chr_items) -> chr_items
+      
+      df_top_items %>% 
+        filter(
+          item %in% 
+            chr_items
+        ) %>% 
+        group_by(factor) %>% 
+        mutate(
+          nitems = n()
+        ) %>% 
+        ungroup() %>% 
+        relocate(
+          factor
+          , nitems
+          , item
+        ) %>% 
+        slice(str_order(
+          factor
+          , numeric = T
+        )) -> df_top_items
+      
+    } else {
+      
+      df_top_items %>% 
+        mutate(
+          nitems = 
+            int_items / 
+            length(unique(
+              factor
+            ))
+          , nitems = 
+            floor(nitems)
+          , nitems = 
+            pmax(
+              nitems
+              , int_min_items_factor
+            )
+        ) %>% 
+        group_by(factor) %>%
+        arrange(desc(
+          relevance_norm
+        )) %>%
+        slice_head(
+          n = first(.$nitems)
+        ) %>% 
+        relocate(
+          factor
+          , nitems
+          , item
+        ) -> df_top_items
+      
+    }
+    
+  }
+  
+  # Select top items for each element in int_items_total_vector
+  map(
+    int_items_total_vector
+    , ~ fun_top_items(
+      df_top_items = df_top_items
+      , int_items = .x
+      , lgc_uneven_factors = 
+        lgc_uneven_factors
+    )
+  ) -> list_top_items
+  
+  # If only one level, return data frame
+  if(length(list_top_items) == 1){
+    
+    list_top_items %>% 
+      bind_rows() ->
+      list_top_items
+    
+  } 
   
   # Output
+  return(list_top_items)
   
 }
 
-# - Vectorized automated EFA with top item selection ----------------------
-fun_efa_vfa_top_items <- function(){
-  match.call()
-  # Stage 1: Call automated EFA function
-  fun_efa_vfa(
+# - Top items function (wrapper with try catch) ----------------------------------------------------
+fun_efa_top_items <- function(
     df_data
-    , int_factors = NULL
+    , dbl_weights = NULL
+    , efa_model
+    , int_items_total_vector = 50
+    , lgc_uneven_factors = F
+    , int_min_items_factor = 3
+){
+  
+  # Match call
+  sym_call <- match.call(expand.dots = T)
+  
+  sym_call[[1]] <- as.name('fun_efa_top_items_helper')
+  
+  # Try catch
+  tryCatch(
+    expr = {return(eval.parent(sym_call))}
+    # expr = {return(
+    #   fun_efa_top_items_helper(
+    #     df_data = 
+    #       df_data
+    #     , dbl_weights = 
+    #       dbl_weights
+    #     , efa_model = 
+    #       efa_model
+    #     , int_items_total_vector = 
+    #       int_items_total_vector
+    #     , lgc_uneven_factors = 
+    #       lgc_uneven_factors
+    #     , int_min_items_factor = 
+    #       int_min_items_factor
+    #   )
+    # )}
+    , error = function(e){return(NA)}
+  )
+  
+}
+
+# [WORKFLOW FUNCTIONS] Perform EFA, then select top items -----------------
+# - Automated EFA with top item selection ---------------------------------
+fun_efa_fa_top_items <- function(
+    df_data
+    , int_factors = 1
     , chr_rotation = 'oblimin'
     , dbl_weights = NULL
     , int_min_items_factor = 3
+    , int_items_total_vector = 50
+    , lgc_uneven_factors = F
     , lgc_remove_low_msai_items = T
     , lgc_adequacy_testing = F
     , lgc_optimal_nfactors = F
     , lgc_show_diagrams = T
     , lgc_show_results = F
-  )
-  
-  # Remove non viable models
-  
-  # Select top items
-  fun_efa_top_items(
-    df_data
-    , dbl_weights = NULL
-    , efa_model
-    , int_items_total = 50
-    , lgc_uneven_factors = F
-    , int_min_factor_size = 3
-  )
-  
-  # Stage 2: Rerun EFA only with viable models
-  
-  # Output
-  
-}
-
-# [WORKFLOW FUNCTIONS] Perform EFA and top items selection ----------------------------------------------------
-# [BEST MODELS] Perform EFA within a range of factors, pick most consistent model -----------------------------------------------------------
-# [x] MULTI FUNCTIONS: PERFORM EFA WITHIN A RANGE OF FACTOR NUMBERS -------
-#  [x] MULTI AUTOMATED EFA FUNCTION -----------------------------------------------------------
-fun_efa.mfa <- function(
-    # Basic
-  .df_data.numeric
-  , .auto_select.nfactors = F
-  , .int_nfactors.vector = seq(1,5)
-  , .chr_rotation = 'promax'
-  , .dbl_weights = NULL
-  # problematic items (unacceptable MSAi)
-  , .remove_unacceptable_MSAi.items = T
-  # Underloadings and crossloadings
-  , .remove_under_loading.items = T
-  , .remove_cross_loading.items = T
-  , .dbl_under_loading.threshold = 0.4 #Lesser than 0.4 loading = under loading
-  , .dbl_cross_loading.threshold = 0.2 #Lesser than 0.2 loading difference = cross loading
-  # Diagrams and tests
-  , .show_diagrams = T
-  , .show_results = F
 ){
   
-  # Make sure there is only numeric data
-  .df_data.numeric %>% 
-    select(where(is.numeric)) -> .df_data.numeric
+  # Match call
+  sym_call <- match.call()
   
-  # If auto select number of factors,
-  # the range of min and max number of factors in the models 
-  # will start from the minimum in the selection criteria data frame
-  # and end with the maximum
-  if(.auto_select.nfactors){
+  sym_call$int_items_total_vector <- NULL
+  
+  sym_call$lgc_uneven_factors <- NULL
+  
+  sym_call[[1]] <- as.symbol('fun_efa_fa')
+  
+  # Run EFA (try catch within fun_efa_fa)
+  eval.parent(sym_call) -> list_efa_fa
+  
+  # Return NA if error
+  if(length(list_efa_fa) == 1){
     
-    fun_efa.nfactors(.df_data.numeric) -> df_auto_select
-    
-    seq(
-      min(df_auto_select$factors.suggested)
-      , max(df_auto_select$factors.suggested)
-    ) -> .int_nfactors.vector
+    if(all(is.na(list_efa_fa))){
+      
+      # Output
+      return(list(
+        'efa' = NA,
+        'top_items' = NA
+      ))
+      
+    }
     
   }
   
-  # If repetitions in vector, keep only unique values
-  .int_nfactors.vector <- unique(.int_nfactors.vector)
-  
-  # List names = number of factors
-  names(.int_nfactors.vector) <- paste0('EFA.', .int_nfactors.vector, 'factors')
-  
-  names(.int_nfactors.vector) <- str_replace(names(.int_nfactors.vector), 'EFA.1factors', 'EFA.1factor')
-  
-  # Apply automated factor analysis for each number of factors
-  lapply(
-    .int_nfactors.vector
-    , function(nfacts){
-      
-      fun_efa.fa(
-        # Basic
-        .df_data.numeric = .df_data.numeric
-        , .int_nfactors = nfacts
-        , .chr_rotation = .chr_rotation
-        , .dbl_weights = .dbl_weights
-        # problematic items (unacceptable MSAi)
-        , .remove_unacceptable_MSAi.items = .remove_unacceptable_MSAi.items
-        # Underloadings and crossloadings
-        , .remove_under_loading.items = .remove_under_loading.items
-        , .remove_cross_loading.items = .remove_cross_loading.items
-        , .dbl_under_loading.threshold = .dbl_under_loading.threshold
-        , .dbl_cross_loading.threshold = .dbl_cross_loading.threshold
-        # Diagrams and tests
-        , .show_diagrams = .show_diagrams
-        , .show_results = .show_results
-      ) %>%
-        return(.)
-      
-    }) -> list_EFA.multi
-  
-  # Remove NA's returned when optimization fails
-  list_EFA.multi[!is.na(list_EFA.multi)] -> list_EFA.multi
-  
-  .int_nfactors.vector[names(list_EFA.multi)] -> .int_nfactors.vector
-  
-  # Data frames comparing reliability metrics across models
-  Map(
-    function(facts.int, facts.name){
-      
-      list_EFA.multi[[facts.name]]$reliability.metrics %>%
-        reframe(
-          factors = facts.int
-          , Useful_factors = nrow(.)
-          # , Useful_factors = n()
-          , Unused_factors = factors - Useful_factors
-          , items.Min = min(items)
-          , items.Avg = mean(items)
-          , items.max = max(items)
-          , items.Total = round(items.Avg * Useful_factors)
-          , across(
-            .cols = -contains(c('factor', 'items'))
-            , .fns = function(x){mean(x, na.rm = T)}
-            , .names = '{col}.Avg'
-          )
-        ) %>%
-        return(.)
-    }
-    , facts.int = .int_nfactors.vector
-    , facts.name = names(.int_nfactors.vector)
-    
-  ) %>%
-    bind_rows(.id = 'Model') -> df_summary
-  
-  df_summary %>%
-    mutate(
-      across(
-        # The minimum required consistency score
-        # may be higher or lower, depending on the context.
-        .cols = -contains(c('Model','factors', 'items', 'interitem'))
-        , .fns = function(x){
-          case_when(
-            x < 0.5 ~ 'Unacceptable'
-            , x >= 0.5 & x < 0.6 ~ 'Poor'
-            , x >= 0.6 & x < 0.7 ~ 'Questionable'
-            , x >= 0.7 & x < 0.8 ~ 'Acceptable'
-            , x >= 0.8 & x < 0.9 ~ 'Good'
-            , x >= 0.9 ~ 'Excellent'
-          )
-        }
-      )
-    ) %>%
-    mutate(
-      across(
-        .cols = starts_with('interitem')
-        , .fns = function(x){
-          case_when(
-            x < 0.15 ~ 'Incoherent'
-            , x >= 0.15 & x <= 0.5 ~ 'Ideal'
-            , x > 0.5 ~ 'Too similar'
-          )
-        }
-      )
-    ) -> df_summary.evaluation
+  # Get top items (try catch within fun_efa_top_items)
+  fun_efa_top_items(
+    df_data = 
+      df_data
+    , dbl_weights =
+      dbl_weights
+    , efa_model =
+      list_efa_fa$
+      model
+    , int_items_total_vector =
+      int_items_total_vector
+    , lgc_uneven_factors =
+      lgc_uneven_factors
+    , int_min_items_factor =
+      int_min_items_factor
+  ) -> list_efa_top_items
   
   # Output
-  list(
-    'EFA' = list_EFA.multi
-    , 'reliability.metrics' = df_summary
-    , 'reliability.evaluation' = df_summary.evaluation
-    , 'data' = .df_data.numeric
-    # , 'plot' = plot_loadings.heatmap
-  ) %>% return(.)
+  return(list(
+    'efa' = list_efa_fa,
+    'top_items' = list_efa_top_items
+  ))
   
 }
 
-#  [x] MULTI TOP ITEMS FUNCTION ------------------------------------------------------
-fun_efa.mtopitems <-function(
-    .list_EFA
-    , .int_n.items.total = 15
+# - Vectorized automated EFA with top item selection ---------------------------------
+fun_efa_vfa_top_items <- function(
+    df_data
+    , int_factors = NULL
+    , chr_rotation = 'oblimin'
+    , dbl_weights = NULL
+    , int_min_items_factor = 3
+    , int_items_total_vector = 50
+    , lgc_uneven_factors = F
+    , lgc_remove_low_msai_items = T
+    , lgc_adequacy_testing = F
+    , lgc_optimal_nfactors = F
+    , lgc_show_diagrams = T
+    , lgc_show_results = F
 ){
   
-  # Apply top items function to each EFA in the list returned by fun_EFA.multi
-  lapply(
-    .list_EFA
-    , function(EFA){
+  # Match call
+  sym_call <- match.call()
+  
+  sym_call$int_items_total_vector <- NULL
+  
+  sym_call$lgc_uneven_factors <- NULL
+  
+  sym_call[[1]] <- as.symbol('fun_efa_vfa')
+  
+  # Run EFA (try catch within fun_efa_vfa)
+  eval.parent(sym_call) -> list_efa_vfa
+  
+  # Return NA if error
+  if(length(list_efa_vfa) == 1){
+    
+    if(all(is.na(list_efa_vfa))){
       
-      fun_efa.topitems(
-        .df_loadings.long = EFA$loadings.long
-        , .int_n.items.total = .int_n.items.total
-      )
+      # Output
+      return(list(
+        'efa' = NA,
+        'top_items' = NA
+      ))
       
     }
-  ) %>% return(.)
-  
-}
-
-# [x] WORKFLOW FUNCTIONS: PERFORM EFA AND TOP ITEMS SELECTION FROM BEGINNING TO END --------
-#  [x] TOP ITEMS WORKFLOW FUNCTION ------------------------------------------------------
-fun_efa.fa.topitems <- function(
-    # Basic
-  .df_data.numeric
-  , .int_nfactors = 1
-  , .int_n.items.total = 15
-  , .chr_rotation = 'promax'
-  , .dbl_weights = NULL
-  # problematic items (unacceptable MSAi)
-  , .remove_unacceptable_MSAi.items = T
-  # Underloadings and crossloadings
-  , .remove_under_loading.items = T
-  , .remove_cross_loading.items = T
-  , .dbl_under_loading.threshold = 0.4 #Lesser than 0.4 loading = under loading
-  , .dbl_cross_loading.threshold = 0.2 #Lesser than 0.2 loading difference = cross loading
-  # Diagrams and tests
-  , .show_diagrams = T
-  , .show_results = F
-){
-  
-  # Make sure there is only numeric data
-  .df_data.numeric %>% 
-    select(where(is.numeric)) -> .df_data.numeric
-  
-  # EFA
-  fun_efa.fa(
-    # Basic
-    .df_data.numeric = .df_data.numeric
-    , .int_nfactors = .int_nfactors
-    , .chr_rotation = .chr_rotation
-    , .dbl_weights = .dbl_weights
-    # problematic items (unacceptable MSAi)
-    , .remove_unacceptable_MSAi.items = .remove_unacceptable_MSAi.items
-    # Underloadings and crossloadings
-    , .remove_under_loading.items = .remove_under_loading.items
-    , .remove_cross_loading.items = .remove_cross_loading.items
-    , .dbl_under_loading.threshold = .dbl_under_loading.threshold
-    , .dbl_cross_loading.threshold = .dbl_cross_loading.threshold
-    # Diagrams and tests
-    , .show_diagrams = .show_diagrams
-    , .show_results = .show_results
-  ) -> list_EFA
-  
-  
-  # Top items
-  tryCatch(
     
-    expr = {
-      
-      fun_efa.topitems(
-        .df_loadings.long = list_EFA$loadings.long
-        , .int_n.items.total= .int_n.items.total
-      ) %>% 
-        return(.)
-      
-    }
-    , error = function(e){return(NA)}
-    
-  ) -> df_top.items
+  }
   
-  
-  # Repeat EFA with top items only
-  tryCatch(
-    
-    expr = {
-      
-      list_EFA$data %>% 
-        select(df_top.items$item) -> df_data.top.items
-      
-      fun_efa.fa(
-        .df_data.numeric = df_data.top.items
-        , .int_nfactors = .int_nfactors
-        , .chr_rotation = .chr_rotation
-        , .dbl_weights = .dbl_weights
-        # problematic items (unacceptable MSAi)
-        , .remove_unacceptable_MSAi.items = .remove_unacceptable_MSAi.items
-        # Underloadings and crossloadings
-        , .remove_under_loading.items = .remove_under_loading.items
-        , .remove_cross_loading.items = .remove_cross_loading.items
-        , .dbl_under_loading.threshold = .dbl_under_loading.threshold
-        , .dbl_cross_loading.threshold = .dbl_cross_loading.threshold
-        # Diagrams and tests
-        , .show_diagrams = .show_diagrams
-        , .show_results = .show_results
-      ) %>%
-        return(.)
-      
-    }
-    , error = function(e){return(NA)}
-    
-  ) -> list_EFA.top.items
-  
-  # Top items
-  tryCatch(
-    expr = {
-      
-      list_EFA.top.items$loadings.long.factors %>% 
-        select(
-          item
-          , factor
-          , loading
-          , loading_Crossloadings.Diff
-        ) -> df_top.items
-      
-    }
-    , error = function(e){return(NA)}
-  )
-  
-  # Output
-  list(
-    'EFA' = list_EFA
-    , 'top.items' = df_top.items
-    , 'EFA.top.items' = list_EFA.top.items
-  ) %>% 
-    return(.)
-  
-}
-
-#  [x] MULTI TOP ITEMS WORKFLOW FUNCTION ------------------------------------------------------
-fun_efa.mfa.topitems <- function(
-    # Basic
-  .df_data.numeric
-  , .auto_select.nfactors = F
-  , .int_nfactors.vector = seq(1,5)
-  , .int_n.items.total= 15
-  , .chr_rotation = 'promax'
-  , .dbl_weights = NULL
-  # problematic items (unacceptable MSAi)
-  , .remove_unacceptable_MSAi.items = T
-  # Underloadings and crossloadings
-  , .remove_under_loading.items = T
-  , .remove_cross_loading.items = T
-  , .dbl_under_loading.threshold = 0.4 #Lesser than 0.4 loading = under loading
-  , .dbl_cross_loading.threshold = 0.2 #Lesser than 0.2 loading difference = cross loading
-  # Diagrams and tests
-  , .show_diagrams = T
-  , .show_results = F
-){
-  
-  # Make sure there is only numeric data
-  .df_data.numeric %>% 
-    select(where(is.numeric)) -> .df_data.numeric
-  
-  # If repetitions in vector, keep only unique values
-  .int_nfactors.vector <- unique(.int_nfactors.vector)
-  
-  # Multi EFA
-  fun_efa.mfa(
-    # Basic
-    .df_data.numeric = .df_data.numeric
-    , .auto_select.nfactors = .auto_select.nfactors
-    , .int_nfactors.vector = .int_nfactors.vector
-    , .chr_rotation = .chr_rotation
-    , .dbl_weights = .dbl_weights
-    # problematic items (unacceptable MSAi)
-    , .remove_unacceptable_MSAi.items = .remove_unacceptable_MSAi.items
-    # Underloadings and crossloadings
-    , .remove_under_loading.items = .remove_under_loading.items
-    , .remove_cross_loading.items = .remove_cross_loading.items
-    , .dbl_under_loading.threshold = .dbl_under_loading.threshold
-    , .dbl_cross_loading.threshold = .dbl_cross_loading.threshold
-    # Diagrams and tests
-    , .show_diagrams = .show_diagrams
-    , .show_results = .show_results
-  ) -> list_EFA
-  
-  # Multi top items
-  fun_efa.mtopitems(
-    .list_EFA = list_EFA$EFA
-    , .int_n.items.total = .int_n.items.total
-  ) -> list_df_top.items
-  
-  
-  # Repeat EFA with top items only
-  # Data for each EFA (top items only)
-  Map(
-    function(EFA, top.items){
-      
-      EFA$data %>%
-        select(all_of(top.items$item)) %>%
-        return(.)
-      
-    }
-    , EFA = list_EFA$EFA
-    , top.items = list_df_top.items
-    
-  ) -> list_data.numeric.top_items
-  
-  # Retrieve number of factors in each EFA in list
-  list_EFA$reliability.metrics$factors -> .int_nfactors.vector
-  list_EFA$reliability.metrics$Model -> names(.int_nfactors.vector)
-  
-  # Map automated factor analysis for each number of factors
-  # with subset of data (top items)
-  Map(
-    function(data, nfacts){
-      
-      fun_efa.fa(
-        # Basic
-        .df_data.numeric = data
-        , .chr_rotation = .chr_rotation
-        , .int_nfactors = nfacts
-        , .dbl_weights = .dbl_weights
-        # problematic items (unacceptable MSAi)
-        , .remove_unacceptable_MSAi.items = .remove_unacceptable_MSAi.items
-        # Underloadings and crossloadings
-        , .remove_under_loading.items = .remove_under_loading.items
-        , .remove_cross_loading.items = .remove_cross_loading.items
-        , .dbl_under_loading.threshold = .dbl_under_loading.threshold
-        , .dbl_cross_loading.threshold = .dbl_cross_loading.threshold
-        # Diagrams and tests
-        , .show_diagrams = .show_diagrams
-        , .show_results = .show_results
-      ) %>%
-        return(.)
-      
-    }
-    , data = list_data.numeric.top_items
-    , nfacts = .int_nfactors.vector
-    
-  ) -> list_EFA.top.items
-  
-  # Remove NA's returned when optimization fails
-  list_EFA.top.items[!is.na(list_EFA.top.items)] -> list_EFA.top.items
-  
-  # Update number of factors
-  .int_nfactors.vector[names(list_EFA.top.items)] -> .int_nfactors.vector
-  
-  # Run top items function again, in case top items have changed
-  lapply(
-    list_EFA.top.items
-    , function(EFA){
-      
-      fun_efa.topitems(
-        .df_loadings.long = EFA$loadings.long
-        , .int_n.items.total = .int_n.items.total
-      ) %>% 
-        return(.)
-      
-    }) -> list_df_top.items
-  
-  # Data frames comparing reliability metrics across models
-  Map(
-    function(facts.int, facts.name){
-      
-      list_EFA.top.items[[facts.name]]$reliability.metrics %>%
-        reframe(
-          factors = facts.int
-          , Useful_factors = nrow(.)
-          # , Useful_factors = n()
-          , Unused_factors = factors - Useful_factors
-          , items.Min = min(items)
-          , items.Avg = mean(items)
-          , items.max = max(items)
-          , items.Total = round(items.Avg * Useful_factors)
-          , across(
-            .cols = -contains(c('factor', 'items'))
-            , .fns = function(x){mean(x, na.rm = T)}
-            , .names = '{col}.Avg'
-          )
-        ) %>%
-        return(.)
-    }
-    , facts.int = .int_nfactors.vector
-    , facts.name = names(.int_nfactors.vector)
-    
-  ) %>%
-    bind_rows(.id = 'Model') -> df_summary
-  
-  df_summary %>%
-    mutate(
-      across(
-        # The minimum required consistency score
-        # may be higher or lower, depending on the context.
-        .cols = -contains(c('Model','factors', 'items', 'interitem'))
-        , .fns = function(x){
-          case_when(
-            x < 0.5 ~ 'Unacceptable'
-            , x >= 0.5 & x < 0.6 ~ 'Poor'
-            , x >= 0.6 & x < 0.7 ~ 'Questionable'
-            , x >= 0.7 & x < 0.8 ~ 'Acceptable'
-            , x >= 0.8 & x < 0.9 ~ 'Good'
-            , x >= 0.9 ~ 'Excellent'
-          )
-        }
-      )
-    ) %>%
-    mutate(
-      across(
-        .cols = starts_with('interitem')
-        , .fns = function(x){
-          case_when(
-            x < 0.15 ~ 'Incoherent'
-            , x >= 0.15 & x <= 0.5 ~ 'Ideal'
-            , x > 0.5 ~ 'Too similar'
-          )
-        }
-      )
-    ) -> df_summary.evaluation
-  
-  # Output
-  list(
-    'EFA' = list_EFA
-    , 'top.items' = list_df_top.items
-    , 'EFA.top.items' = list_EFA.top.items
-    , 'reliability.metrics' = df_summary
-    , 'reliability.evaluation' = df_summary.evaluation
-    , 'data' = list_data.numeric.top_items
-    # , 'plot' = plot_loadings.heatmap
-  ) %>% return(.)
-  
-}
-
-# [x] BEST MODELS: PERFORM EFA WITHIN A RANGE OF FACTOR NUMBERS AND PICK THE BEST MODEL --------
-#  [x] FULLY AUTOMATED EFA TOP ITEMS WORKFLOW FUNCTION ------------------------------------------------------
-fun_efa.bestmodel.topitems <- function(
-    # Basic
-  .df_data.numeric
-  , .auto_select.nfactors = F
-  , .int_min.factor_size = 3
-  , .int_nfactors.vector = seq(1,5)
-  , .int_n.items.total = 15
-  , .chr_rotation = 'promax'
-  , .dbl_weights = NULL
-  # problematic items (unacceptable MSAi)
-  , .remove_unacceptable_MSAi.items = T
-  # Underloadings and crossloadings
-  , .remove_under_loading.items = T
-  , .remove_cross_loading.items = T
-  , .dbl_under_loading.threshold = 0.4 #Lesser than 0.4 loading = under loading
-  , .dbl_cross_loading.threshold = 0.2 #Lesser than 0.2 loading difference = cross loading
-  # Diagrams and tests
-  , .show_diagrams = T
-  , .show_results = F
-){
-  
-  # Make sure there is only numeric data
-  .df_data.numeric %>% 
-    select(where(is.numeric)) -> .df_data.numeric
-  
-  # If repetitions in vector, keep only unique values
-  .int_nfactors.vector <- unique(.int_nfactors.vector)
-  
-  # Run multi EFA top items workflow
-  fun_efa.mfa.topitems(
-    # Basic
-    .df_data.numeric = .df_data.numeric
-    , .auto_select.nfactors = .auto_select.nfactors
-    , .int_nfactors.vector = .int_nfactors.vector
-    , .int_n.items.total= .int_n.items.total
-    , .chr_rotation = .chr_rotation
-    , .dbl_weights = .dbl_weights
-    # problematic items (unacceptable MSAi)
-    , .remove_unacceptable_MSAi.items = .remove_unacceptable_MSAi.items
-    # Underloadings and crossloadings
-    , .remove_under_loading.items = .remove_under_loading.items
-    , .remove_cross_loading.items = .remove_cross_loading.items
-    , .dbl_under_loading.threshold = .dbl_under_loading.threshold
-    , .dbl_cross_loading.threshold = .dbl_cross_loading.threshold
-    # Diagrams and tests
-    , .show_diagrams = .show_diagrams
-    , .show_results = .show_results
-  ) -> list_EFA.multi.top_items
-  
-  # Exclusion criteria
-  list_EFA.multi.top_items$reliability.metrics %>% 
-    # 1. Unnecessary factors: if unused factors > 0, exclude model
-    filter(Unused_factors == 0) %>%
-    # 2. Minimum items per factor: if min items per factor < .int_min.factor_size, exclude model
-    filter(items.Min >= .int_min.factor_size) -> df_reliability
-  
-  # 4. Reliability comparison
-  df_reliability %>%
-    group_by(
-      across(
-        contains(c('Model', 'factors', 'items', 'interitem'))
-      )
-    ) %>%
-    transmute(
-      Reliability.Avg = mean(
-        c_across(-contains(c('Model', 'factors', 'items', 'interitem')))
-        , na.rm = T)) %>% 
-    ungroup() %>%
-    top_n(1, Reliability.Avg) -> df_reliability.best
-  
-  
-  # Best models
-  list_EFA.multi.top_items$reliability.evaluation %>%
-    filter(Model %in% df_reliability$Model) -> df_reliability.eval
-  
-  # Most internally consistent model ("Best model")
-  list(
-    'EFA' = list_EFA.multi.top_items$EFA$EFA[df_reliability.best$Model] %>% purrr::flatten()
-    , 'top.items' = list_EFA.multi.top_items$top.items[df_reliability.best$Model] %>% purrr::flatten_df()
-    , 'EFA.top.items' = list_EFA.multi.top_items$EFA.top.items[df_reliability.best$Model] %>% purrr::flatten()
-  ) -> list_EFA.Best
-  
-  # Overall reliability comparison
-  list_EFA.multi.top_items$reliability.metrics -> df_reliability.all
-  list_EFA.multi.top_items$reliability.evaluation -> df_reliability.eval.all
-  
-  
-  # Output
-  list(
-    'EFA.workflow' = list_EFA.multi.top_items
-    , 'best.model' = list_EFA.Best
-    , 'all.models.reliability' = df_reliability.all
-    , 'all.models.evaluation' = df_reliability.eval.all
-    , 'best.models.reliability' = df_reliability
-    , 'best.models.evaluation' = df_reliability.eval
-    
-  ) %>%
-    return(.)
-  
-}
-
-#  [x] FULLY AUTOMATED EFA WORKFLOW FUNCTION (WITHOUT TOP ITEMS SELECTION) ------------------------------------------------------
-fun_efa.bestmodel <- function(
-    # Basic
-  .df_data.numeric
-  , .auto_select.nfactors = F
-  , .int_min.factor_size = 3
-  , .int_nfactors.vector = seq(1,5)
-  , .chr_rotation = 'promax'
-  , .dbl_weights = NULL
-  # problematic items (unacceptable MSAi)
-  , .remove_unacceptable_MSAi.items = T
-  # Underloadings and crossloadings
-  , .remove_under_loading.items = T
-  , .remove_cross_loading.items = T
-  , .dbl_under_loading.threshold = 0.4 #Lesser than 0.4 loading = under loading
-  , .dbl_cross_loading.threshold = 0.2 #Lesser than 0.2 loading difference = cross loading
-  # Diagrams and tests
-  , .show_diagrams = T
-  , .show_results = F
-){
-  
-  # Make sure there is only numeric data
-  .df_data.numeric %>% 
-    select(where(is.numeric)) -> .df_data.numeric
-  
-  # If repetitions in vector, keep only unique values
-  .int_nfactors.vector <- unique(.int_nfactors.vector)
-  
-  # Run multi EFA workflow (without top items)
-  fun_efa.mfa(
-    # Basic
-    .df_data.numeric
-    , .auto_select.nfactors = .auto_select.nfactors
-    , .int_nfactors.vector = .int_nfactors.vector
-    , .chr_rotation = .chr_rotation
-    , .dbl_weights = .dbl_weights
-    # problematic items (unacceptable MSAi)
-    , .remove_unacceptable_MSAi.items = .remove_unacceptable_MSAi.items
-    # Underloadings and crossloadings
-    , .remove_under_loading.items = .remove_under_loading.items
-    , .remove_cross_loading.items = .remove_cross_loading.items
-    , .dbl_under_loading.threshold = .dbl_under_loading.threshold
-    , .dbl_cross_loading.threshold = .dbl_cross_loading.threshold
-    # Diagrams and tests
-    , .show_diagrams = .show_diagrams
-    , .show_results = .show_results
-  ) -> list_EFA.multi
-  
-  # Exclusion criteria
-  list_EFA.multi$reliability.metrics %>% 
-    # 1. Unnecessary factors: if unused factors > 0, exclude model
-    filter(Unused_factors == 0) %>%
-    # 2. Minimum items per factor: if min items per factor < .int_min.factor_size, exclude model
-    filter(items.Min >= .int_min.factor_size) -> df_reliability
-  
-  # 4. Reliability comparison
-  df_reliability %>%
-    group_by(
-      across(
-        contains(c('Model', 'factors', 'items', 'interitem'))
-      )
-    ) %>%
-    transmute(
-      Reliability.Avg = mean(
-        c_across(-contains(c('Model', 'factors', 'items', 'interitem')))
-        , na.rm = T)) %>% 
-    ungroup() %>%
-    top_n(1, Reliability.Avg) -> df_reliability.best
-  
-  
-  # Best models
-  list_EFA.multi$reliability.evaluation %>%
-    filter(Model %in% df_reliability$Model) -> df_reliability.eval
-  
-  # Most internally consistent model ("Best model")
-  list_EFA.multi$EFA[df_reliability.best$Model] %>% 
-    purrr::flatten() -> list_EFA.Best
-  
-  # Overall reliability comparison
-  list_EFA.multi$reliability.metrics -> df_reliability.all
-  list_EFA.multi$reliability.evaluation -> df_reliability.eval.all
-  
-  
-  # Output
-  list(
-    'EFA.workflow' = list_EFA.multi
-    , 'best.model' = list_EFA.Best
-    , 'all.models.reliability' = df_reliability.all
-    , 'all.models.evaluation' = df_reliability.eval.all
-    , 'best.models.reliability' = df_reliability
-    , 'best.models.evaluation' = df_reliability.eval
-    
-  ) %>%
-    return(.)
-  
-}
-
-# [TEST] ------------------------------------------------------------------
-# - vtest -----------------------------------------------------------------
-rm(dsdsdsds)
-
-fun_efa_vfa(
-  df_data =
-    df_occupations %>%
-    select(ends_with('.l'))
-  , int_factors = NULL
-  , int_min_items_factor = 3
-  , chr_rotation = 'equamax'
-  , dbl_weights =
-    df_occupations$
-    employment2
-  , lgc_adequacy_testing = F
-  , lgc_optimal_nfactors = T
-  , lgc_remove_low_msai_items = T
-  , lgc_show_diagrams = F
-  , lgc_show_results = F
-) -> dsdsdsds
-
-# - Test ------------------------------------------------------------------
-# Data
-read_csv(
-  'C:/Users/Cao/Documents/Github/Atlas-Research/Data/df_atlas_complete_equamax_15_factors.csv'
-) -> df_occupations
-
-# Correlations
-df_occupations %>% 
-  select(ends_with('.l')) %>%
-  fun_efa_correlations(
-    dbl_weights = 
-      df_occupations$
-      employment2
-  ) -> dsdsds
-
-# Adequacy
-fun_efa_adequacy(
-  mtx_correlations = dsdsds
-  , int_nrow = 873
-)
-
-# Optimal number of factors
-fun_efa_nfactors(mtx_correlations = dsdsds)
-
-# fa model
-fa(
-  r = dsdsds
-  , nfactors = 10
-  , weight = 
-    df_occupations$
-    employment2
-  , rotate = 'varimax'
-) -> dsds
-
-# factor loadings
-fun_efa_loadings(dsds) -> lalala
-
-lalala
-
-class(lalala)
-
-# factor loadings match
-fun_efa_factor_match(lalala) -> lala
-
-lala
-
-class(lala)
-
-# reliability
-fun_efa_reliability(
-  mtx_correlation = dsdsds
-  , list_factors = 
-    lala %>% 
-    split(.$factor) %>% 
-    map( ~ pull(.x, item))
-  , chr_rotation = 'oblimin'
-)
-
-# evaluation
-fun_efa_reliability(
-  mtx_correlation = dsdsds
-  , list_factors = 
-    lala %>% 
-    split(.$factor) %>% 
-    map( ~ pull(.x, item))
-  , chr_rotation = 'oblimin'
-) %>%
-  fun_efa_evaluation()
-
-# consistency
-fun_efa_consistency(
-  mtx_correlations = dsdsds
-  , df_loadings_long = lala
-  , chr_rotation = 'oblimin'
-)
-
-# efa
-fun_efa_fa(
-  df_data = 
-    df_occupations %>% 
-    select(ends_with('.l'))
-  , int_factors = 15
-  , int_min_items_factor = 3
-  # , chr_rotation = 'oblimin'
-  , chr_rotation = 'equamax'
-  # , chr_rotation = 'promax'
-  , dbl_weights = 
-    df_occupations$
-    employment2
-  , lgc_adequacy_testing = F
-  , lgc_optimal_nfactors = T
-  , lgc_remove_low_msai_items = T
-  , lgc_show_diagrams = T
-  , lgc_show_results = F
-) -> dsdsdsds
-
-dsdsdsds
-
-fun_efa_vfa(
-  df_data =
-    df_occupations %>%
-    select(ends_with('.l'))
-  # , int_factors = c(5, 15, 19)
-  , int_factors = rep(19, 2)
-  # , int_factors = NULL
-  , int_min_items_factor = 3
-  # , chr_rotation = 'oblimin'
-  , chr_rotation = c('equamax', 'oblimin')
-  # , chr_rotation = 'promax'
-  , dbl_weights =
-    df_occupations$
-    employment2
-  , lgc_adequacy_testing = F
-  , lgc_optimal_nfactors = F
-  , lgc_remove_low_msai_items = T
-  , lgc_show_diagrams = F
-  , lgc_show_results = F
-) -> dsdsdsds
-
-dsdsdsds$EFA_equamax_19factors
-
-map(
-  dsdsdsds
-  , fun_efa_loadings
-) %>% 
+  # Get top items (try catch within fun_efa_top_items)
   map(
-    fun_efa_factor_match
-  )
+    .x = list_efa_vfa$models
+    , ~ 
+      fun_efa_top_items(
+        df_data = 
+          df_data
+        , dbl_weights =
+          dbl_weights
+        , efa_model = .x
+        , int_items_total_vector =
+          int_items_total_vector
+        , lgc_uneven_factors =
+          lgc_uneven_factors
+        , int_min_items_factor =
+          int_min_items_factor
+      )
+  ) -> list_efa_top_items
+  
+  # Output
+  return(list(
+    'efa' = list_efa_vfa,
+    'top_items' = list_efa_top_items
+  ))
+  
+}
 
-
-# dsdsdsds[[1]]$reliability_metrics
-# dsdsdsds[[2]]$reliability_metrics
-# dsdsdsds[[3]]$reliability_metrics
+# # [TEST] ------------------------------------------------------------------
+# # - Data ------------------------------------------------------------------
+# read_csv(
+#   'C:/Users/Cao/Documents/Github/Atlas-Research/Data/df_atlas_complete_equamax_15_factors.csv'
+# ) -> df_occupations
 # 
-# dsdsdsds[[1]]$model_performance
-# dsdsdsds[[2]]$model_performance
-# dsdsdsds[[3]]$model_performance
-
-dsdsdsds$model_performance
-dsdsdsds$reliability_metrics %>% View
-dsdsdsds$reliability_evaluation
-dsdsdsds$factor_correlations
+# # - Test ------------------------------------------------------------------
+# # fun_efa_fa(
+# #   df_data = 
+# #     df_occupations %>% 
+# #     select(ends_with('.l'))
+# #   , dbl_weights = 
+# #     df_occupations$
+# #     employment2
+# #   , int_factors = 15
+# #   # , chr_rotation = c('equamax', 'oblimin', 'varimin')
+# #   , chr_rotation = 'equamax'
+# #   , int_min_items_factor = 3
+# #   , lgc_remove_low_msai_items = T
+# #   , lgc_adequacy_testing = F
+# #   # , lgc_optimal_nfactors = T
+# #   , lgc_optimal_nfactors = F
+# #   , lgc_show_diagrams = F
+# #   , lgc_show_results = F
+# # ) -> list_efa
+# 
+# # fun_efa_vfa_top_items(
+# #   df_data =
+# #     df_occupations %>%
+# #     select(ends_with('.l'))
+# #   , dbl_weights =
+# #     df_occupations$
+# #     employment2
+# #   , int_factors = 15
+# #   , chr_rotation = c('equamax', 'oblimin')
+# #   , int_items_total_vector = c(50, 100, 200)
+# #   , lgc_uneven_factors = T
+# #   , int_min_items_factor = 3
+# #   , lgc_remove_low_msai_items = T
+# #   , lgc_adequacy_testing = F
+# #   , lgc_optimal_nfactors = F
+# #   , lgc_show_diagrams = F
+# #   , lgc_show_results = F
+# # ) -> list_efa_top_items
