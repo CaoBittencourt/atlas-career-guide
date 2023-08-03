@@ -86,7 +86,87 @@ fun_match_equivalence <- function(
 }
 
 # [MATCHING FUNCTIONS] -------------------------------------------------------------
-# - Similarity weights ----------------------------------------------------
+# - Regression weights --------------------------------------------
+fun_match_weights <- function(
+    dbl_var
+    , dbl_scale_ub = NULL
+    , dbl_scaling = 0.25
+){
+  
+  # Argument validation
+  stopifnot(
+    "'dbl_var' must be a numeric vector or matrix." =
+      is.numeric(dbl_var)
+  )
+  
+  # Get maximum item score
+  max(dbl_var, na.rm = T) -> 
+    dbl_weights
+  
+  # Prevent division by zero
+  if(dbl_weights == 0){
+    
+    dbl_weights <- 1
+    
+  }
+  
+  # Relative importance compared to top item
+  dbl_var / 
+    dbl_weights ->
+    dbl_weights
+  
+  # Apply equivalence function to regression weights
+  fun_match_equivalence(
+    dbl_var = 
+      dbl_weights
+    , dbl_scale_ub = 
+      dbl_scale_ub
+    , dbl_scaling = 
+      dbl_scaling
+  ) -> dbl_weights
+  
+  # Output
+  return(dbl_weights)
+  
+}
+
+# - Regression weights --------------------------------------------
+fun_match_weights <- function(
+    df_data_cols
+    , dbl_scaling = 0.25
+){
+  
+  # Get maximum item scores for each column
+  vapply(
+    as_tibble(df_data_cols)
+    , function(x){max(x, na.rm = T)}
+    , FUN.VALUE = numeric(1)
+  ) -> mtx_weights
+  
+  # Prevent division by zero
+  mtx_weights[
+    mtx_weights == 0
+  ] <- 1
+  
+  # Relative importance compared to top item
+  t(
+    t(df_data_cols) / 
+      mtx_weights
+  ) -> mtx_weights
+  
+  # Calculate matching regression weights
+  fun_interchangeability(
+    .mtx_similarity = mtx_weights
+    , .dbl_scaling = dbl_scaling
+  ) -> mtx_weights
+  
+  # Output
+  return(mtx_weights)
+  
+}
+
+# - Vectorized regression weights -----------------------------------------
+
 
 # - Similarity helper function ---------------------------------------------------
 fun_match_similarity_helper <- function(
@@ -155,6 +235,27 @@ fun_match_equivalence(
   , dbl_scale_ub = NULL
   , dbl_scaling = 1
 )
+toc()
+
+# - Regression weights 1 ----------------------------------------------------
+tic()
+fun_match_weights(
+  dbl_var = runif(50, 0, 100)
+  , dbl_scale_ub = 100
+)
+toc()
+
+# - Regression weights 2 ----------------------------------------------------
+tic()
+fun_match_weights(
+  dbl_var = 
+    df_occupations %>% 
+    slice(1) %>% 
+    select(ends_with('.l')) %>% 
+    as.matrix() %>%
+    max()
+  , dbl_scale_ub = 100
+) %>% View
 toc()
 
 # - Similarity test ------------------------------------------------------------------
