@@ -392,7 +392,6 @@ fun_similarity <- function(
 ){
   
   # Argument validation
-  # Arguments validation
   stopifnot(
     "'df_data_rows' must be a data frame." =
       is.data.frame(df_data_rows)

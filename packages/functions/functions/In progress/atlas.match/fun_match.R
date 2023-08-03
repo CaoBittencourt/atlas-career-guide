@@ -86,6 +86,41 @@ fun_match_equivalence <- function(
 }
 
 # [MATCHING FUNCTIONS] -------------------------------------------------------------
+# # - Regression weights --------------------------------------------
+# fun_match_weights <- function(
+    #     df_data_cols
+#     , dbl_scaling = 0.25
+# ){
+#   
+#   # Get maximum item scores for each column
+#   vapply(
+#     as_tibble(df_data_cols)
+#     , function(x){max(x, na.rm = T)}
+#     , FUN.VALUE = numeric(1)
+#   ) -> mtx_weights
+#   
+#   # Prevent division by zero
+#   mtx_weights[
+#     mtx_weights == 0
+#   ] <- 1
+#   
+#   # Relative importance compared to top item
+#   t(
+#     t(df_data_cols) / 
+#       mtx_weights
+#   ) -> mtx_weights
+#   
+#   # Calculate matching regression weights
+#   fun_interchangeability(
+#     .mtx_similarity = mtx_weights
+#     , .dbl_scaling = dbl_scaling
+#   ) -> mtx_weights
+#   
+#   # Output
+#   return(mtx_weights)
+#   
+# }
+
 # - Regression weights --------------------------------------------
 fun_match_weights <- function(
     dbl_var
@@ -130,43 +165,43 @@ fun_match_weights <- function(
   
 }
 
-# - Regression weights --------------------------------------------
-fun_match_weights <- function(
-    df_data_cols
-    , dbl_scaling = 0.25
+# - Vectorized regression weights -----------------------------------------
+fun_match_vweights <- function(
+    df_data
+    , dbl_scale_ub = NULL
+    , dbl_scaling = 0.25 
 ){
   
-  # Get maximum item scores for each column
-  vapply(
-    as_tibble(df_data_cols)
-    , function(x){max(x, na.rm = T)}
-    , FUN.VALUE = numeric(1)
-  ) -> mtx_weights
+  # Arguments validation
+  stopifnot(
+    "'df_data' must be a data frame." =
+      is.data.frame(df_data)
+  )
   
-  # Prevent division by zero
-  mtx_weights[
-    mtx_weights == 0
-  ] <- 1
+  # Data wrangling
+  df_data %>% 
+    select(where(
+      is.numeric
+    )) %>% 
+    as_tibble() -> 
+    df_data
   
-  # Relative importance compared to top item
-  t(
-    t(df_data_cols) / 
-      mtx_weights
-  ) -> mtx_weights
-  
-  # Calculate matching regression weights
-  fun_interchangeability(
-    .mtx_similarity = mtx_weights
-    , .dbl_scaling = dbl_scaling
-  ) -> mtx_weights
+  # Map weights function
+  map_df(
+    .x = df_data
+    , ~ fun_match_weights(
+      dbl_var = .x
+      , dbl_scale_ub = 
+        dbl_scale_ub
+      , dbl_scaling = 
+        dbl_scaling
+    )
+  ) -> df_data
   
   # Output
-  return(mtx_weights)
+  return(df_data)
   
 }
-
-# - Vectorized regression weights -----------------------------------------
-
 
 # - Similarity helper function ---------------------------------------------------
 fun_match_similarity_helper <- function(
@@ -245,17 +280,16 @@ fun_match_weights(
 )
 toc()
 
-# - Regression weights 2 ----------------------------------------------------
+# - Regression weights 2 --------------------------------------------------
 tic()
-fun_match_weights(
-  dbl_var = 
+fun_match_vweights(
+  df_data = 
     df_occupations %>% 
-    slice(1) %>% 
     select(ends_with('.l')) %>% 
-    as.matrix() %>%
-    max()
+    t() %>% 
+    as_tibble()
   , dbl_scale_ub = 100
-) %>% View
+)
 toc()
 
 # - Similarity test ------------------------------------------------------------------
