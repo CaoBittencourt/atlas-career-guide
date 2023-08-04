@@ -757,6 +757,9 @@ fun_match_similarity <- function(
 
 # - ACTI estimator --------------------------------------------------------
 
+# - ACTI matching ---------------------------------------------------------
+# fun_match_equivalence_acti
+
 # [INTERCHANGEABILITY FUNCTIONS] ------------------------------------------
 # - Educational equivalence function -------------------------------
 fun_match_equivalence_education <- function(
@@ -809,13 +812,49 @@ fun_match_interchangeability <- function(
     , dbl_years_education_min = NULL
 ){
   
-  # Arguments validation
+  # Arguments validation within helper functions
+  
+  # Data wrangling
+  dbl_scaling[[1]] -> dbl_scaling
+  
+  # cbind(mtx_similarity) #?
+  
+  # Apply equivalence function to similarity scores
+  # fun_match_equivalence_similarity
+  fun_match_equivalence(
+    dbl_var = mtx_similarity
+    , dbl_scaling = dbl_scaling
+  ) -> mtx_interchangeability
+  
+  rm(mtx_similarity)
+  
+  # Apply equivalence function to years of education
+  if(all(
+    length(dbl_years_education),
+    length(dbl_years_education_min)
+  )){
+    
+    fun_match_equivalence_education(
+      dbl_years_education = 
+        dbl_years_education
+      , dbl_years_education_min = 
+        dbl_years_education_min
+    ) * 
+      mtx_interchangeability -> 
+      mtx_interchangeability
+    
+  }
+  
+  rm(dbl_years_education)
+  rm(dbl_years_education_min)
+  
+  # Apply equivalence function to Atlas Career Type
+  # fun_match_equivalence_acti
   
   # Data wrangling
   
-  # Apply equivalence function to similarity scores
-  
-  # Apply equivalence function to 
+  # Output
+  return(mtx_interchangeability)
   
 }
 
@@ -997,6 +1036,63 @@ toc()
 
 # - Atlas Career Type Indicator test --------------------------------------
 
-# - Interchangeability test -----------------------------------------------
+# - Interchangeability test 1 -----------------------------------------------
+fun_match_similarity(
+  df_data_rows = 
+    df_occupations %>% 
+    select(
+      occupation
+      , ends_with('.l')
+    )
+  , df_query_rows = 
+    df_input
+  , chr_method = 'bvls'
+  , dbl_scale_ub = 100
+  , dbl_scale_lb = 0
+) -> df_similarity
+
+df_similarity$
+  df_similarity -> 
+  df_similarity
+
+tic()
+fun_match_interchangeability(
+  mtx_similarity = 
+    df_similarity$
+    similarity
+  , dbl_scaling = 1
+) %>% round(4)
+toc()
+
+# - Interchangeability test 2 -----------------------------------------------
+fun_match_similarity(
+  df_data_rows = 
+    df_occupations %>% 
+    select(
+      occupation
+      , ends_with('.l')
+    )
+  , df_query_rows = 
+    df_input
+  , chr_method = 'bvls'
+  , dbl_scale_ub = 100
+  , dbl_scale_lb = 0
+) -> df_similarity
+
+df_similarity$
+  df_similarity -> 
+  df_similarity
+
+tic()
+fun_match_interchangeability(
+  mtx_similarity = 
+    df_similarity$
+    similarity
+  , dbl_scaling = 1
+  , dbl_years_education = 22
+  , dbl_years_education_min = 
+    seq(873, 1) / 100
+) %>% round(4)
+toc()
 
 # - Employability test ----------------------------------------------------
