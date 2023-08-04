@@ -86,41 +86,6 @@ fun_match_equivalence <- function(
 }
 
 # [MATCHING FUNCTIONS] -------------------------------------------------------------
-# # - Regression weights --------------------------------------------
-# fun_match_weights <- function(
-    #     df_data_cols
-#     , dbl_scaling = 0.25
-# ){
-#   
-#   # Get maximum item scores for each column
-#   vapply(
-#     as_tibble(df_data_cols)
-#     , function(x){max(x, na.rm = T)}
-#     , FUN.VALUE = numeric(1)
-#   ) -> mtx_weights
-#   
-#   # Prevent division by zero
-#   mtx_weights[
-#     mtx_weights == 0
-#   ] <- 1
-#   
-#   # Relative importance compared to top item
-#   t(
-#     t(df_data_cols) / 
-#       mtx_weights
-#   ) -> mtx_weights
-#   
-#   # Calculate matching regression weights
-#   fun_interchangeability(
-#     .mtx_similarity = mtx_weights
-#     , .dbl_scaling = dbl_scaling
-#   ) -> mtx_weights
-#   
-#   # Output
-#   return(mtx_weights)
-#   
-# }
-
 # - Regression weights --------------------------------------------
 fun_match_weights <- function(
     dbl_var
@@ -202,6 +167,86 @@ fun_match_vweights <- function(
   return(df_data)
   
 }
+
+# - BVLS regression matching ----------------------------------------------
+fun_match_bvls <- function(
+    df_data_cols
+    , df_query_cols
+    , mtx_weights = NULL
+){
+  
+  # Arguments validation
+  stopifnot(
+    "'df_data_cols' must be a data frame." = 
+      is.data.frame(df_data_cols)
+  )
+  
+  stopifnot(
+    "'df_query_cols' must be a data frame." = 
+      all(
+        is.data.frame(df_query_cols)
+        , nrow(df_query_cols) ==
+          nrow(df_data_cols)
+      )
+  )
+  
+  stopifnot(
+    "'mtx_weights' must be either NULL or a numeric matrix." = 
+      any(
+        all(
+          is.numeric(mtx_weights)
+          , is.matrix(mtx_weights)
+        )
+        , is.null(mtx_weights)
+      )
+  )
+  
+  # BVLS regression matching without weights
+  if(!length(mtx_weights)){
+    
+    map_dbl(
+      .x = as_tibble(df_data_cols)
+      , ~ 
+        coef(bvls(
+          as.matrix(.x)
+          , df_query_cols[,]
+          , bl = 0
+          , bu = 1
+        ))
+    ) -> dbl_similarity
+    
+  } else {
+    
+    # Add weights to regression 
+    sqrt(mtx_weights) ->
+      mtx_weights
+    
+    df_data_cols *
+      mtx_weights ->
+      df_data_cols
+    
+    # BVLS regression matching with weights
+    map2_dbl(
+      .x = as_tibble(df_data_cols)
+      , .y = as_tibble(mtx_weights)
+      , ~
+        coef(bvls(
+          as.matrix(.x)
+          , df_query_cols[,] * .y
+          , bl = 0
+          , bu = 1
+        ))
+    ) -> dbl_similarity
+    
+  }
+  
+  # Output
+  return(dbl_similarity)
+  
+}
+
+# - Logistic regression matching ------------------------------------------
+# - Pearson correlation matching ------------------------------------------
 
 # - Similarity helper function ---------------------------------------------------
 fun_match_similarity_helper <- function(
@@ -289,6 +334,25 @@ fun_match_vweights(
     t() %>% 
     as_tibble()
   , dbl_scale_ub = 100
+)
+toc()
+
+# - BVLS regression matching -------------------------------------------------------
+tic()
+fun_match_bvls(
+  df_data_cols = 
+    df_occupations %>% 
+    select(ends_with('.l')) %>% 
+    t() %>% 
+    as_tibble()
+  , df_query_cols = 
+    df_occupations %>% 
+    select(ends_with('.l')) %>% 
+    t() %>% 
+    as_tibble() %>% 
+    select(1) * 
+    runif(1, 0, 1)
+  , mtx_weights = NULL
 )
 toc()
 
