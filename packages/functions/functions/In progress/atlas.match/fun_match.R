@@ -706,8 +706,9 @@ fun_match_similarity <- function(
     
     df_query_cols %>% 
       map(
-        ~ fun_s(
+        ~ fun_match_similarity_cols(
           df_data_cols = df_data_cols
+          # , dbl_query = as.numeric(.x)
           , dbl_query = as.matrix(.x)
           , chr_method = chr_method
           , dbl_scale_ub = dbl_scale_ub
@@ -925,6 +926,35 @@ dsds$
   select(!ends_with('.l')) %>% 
   arrange(desc(similarity)) %>% 
   print(n = nrow(.))
+
+# - Similarity matrix test ------------------------------------------------
+rm(dsds)
+
+tic()
+fun_match_similarity(
+  df_data_rows = 
+    df_occupations %>% 
+    slice(1:10) %>%
+    select(
+      occupation
+      , ends_with('.l')
+    )
+  , df_query_rows = 
+    df_occupations %>% 
+    slice(1:10) %>%
+    select(
+      occupation
+      , ends_with('.l')
+    )
+  , chr_method = 'bvls'
+  , dbl_scale_ub = 100
+  , dbl_scale_lb = 0
+  , chr_id_col = 
+    'occupation'
+) -> dsds
+toc()
+
+dsds
 
 # - Atlas Career Type Indicator test --------------------------------------
 
