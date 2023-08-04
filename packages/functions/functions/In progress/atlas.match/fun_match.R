@@ -201,9 +201,10 @@ fun_match_bvls <- function(
       )
   )
   
-  # BVLS regression matching without weights
+  # BVLS regression
   if(!length(mtx_weights)){
     
+    # Run BVLS regression matching without weights
     map_dbl(
       .x = as_tibble(df_data_cols)
       , ~ 
@@ -246,7 +247,214 @@ fun_match_bvls <- function(
 }
 
 # - Logistic regression matching ------------------------------------------
-# - Pearson correlation matching ------------------------------------------
+fun_match_logit <- function(
+    df_data_cols
+    , df_query_cols
+    , dbl_scale_ub
+    , dbl_scale_lb
+    , mtx_weights = NULL
+){
+  
+  # Arguments validation
+  stopifnot(
+    "'df_data_cols' must be a data frame." = 
+      is.data.frame(df_data_cols)
+  )
+  
+  stopifnot(
+    "'df_query_cols' must be a data frame." = 
+      all(
+        is.data.frame(df_query_cols)
+        , nrow(df_query_cols) ==
+          nrow(df_data_cols)
+      )
+  )
+  
+  stopifnot(
+    "'dbl_scale_ub' must be numeric." =
+      is.numeric(dbl_scale_ub)
+  )
+  
+  stopifnot(
+    "'dbl_scale_lb' must be numeric." =
+      is.numeric(dbl_scale_lb)
+  )
+  
+  stopifnot(
+    "'mtx_weights' must be either NULL or a numeric matrix." = 
+      any(
+        all(
+          is.numeric(mtx_weights)
+          , is.matrix(mtx_weights)
+        )
+        , is.null(mtx_weights)
+      )
+  )
+  
+  # Data wrangling
+  dbl_scale_ub[[1]] -> dbl_scale_ub
+  
+  dbl_scale_lb[[1]] -> dbl_scale_lb
+  
+  as.integer(dbl_scale_ub) -> dbl_scale_ub
+  
+  as.integer(dbl_scale_lb) -> dbl_scale_lb
+  
+  # Convert query to a Bernoulli variable
+  list_c(map(
+    .x = as.integer(df_query_cols[,])
+    , ~ rep(
+      c(1,0), times = c(
+        .x, (dbl_scale_ub - dbl_scale_lb) - .x
+      )
+    )
+  )) -> int_query_bernoulli
+  
+  rm(df_query_cols)
+  
+  # Convert data to a Bernoulli variable
+  map(
+    .x = as_tibble(df_data_cols)
+    , ~
+      as.matrix(list_c(map(
+        .x = as.integer(.x)
+        , ~ rep(
+          c(1,0), times = c(
+            .x, (dbl_scale_ub - dbl_scale_lb) - .x
+          )
+        )
+      )))
+  ) -> list_data_bernoulli
+  
+  rm(df_data_cols)
+  
+  # Logistic regression
+  if(!length(mtx_weights)){
+    
+    # Run logistic regression matching without weights
+    map_dbl(
+      .x = list_data_bernoulli
+      , ~
+        coef(fastglmPure(
+          x = .x
+          , y = int_query_bernoulli
+          , family = binomial(
+            link = 'logit'
+          )
+        ))
+    ) -> dbl_similarity
+    
+    exp(dbl_similarity) /
+      (1 + exp(dbl_similarity)) ->
+      dbl_similarity
+    
+  } else {
+    
+    # Repeat mtx_weight's rows
+    as_tibble(mtx_weights)[rep(
+      1:nrow(mtx_weights)
+      , each = 
+        dbl_scale_ub - 
+        dbl_scale_lb
+    ), ] -> df_weights
+    
+    rm(mtx_weights)
+    
+    # Run logistic regression matching with weights
+    map2_dbl(
+      .x = list_data_bernoulli
+      , .y = df_weights
+      , ~
+        coef(fastglmPure(
+          x = .x
+          , y = int_query_bernoulli
+          , family = binomial(
+            link = 'logit'
+          ), weights = .y
+        ))
+    ) -> dbl_similarity
+    
+    exp(dbl_similarity) /
+      (1 + exp(dbl_similarity)) ->
+      dbl_similarity
+    
+  }
+  
+  # Output
+  return(dbl_similarity)
+  
+}
+
+# - Pearson correlation matching ----------------------------------------------
+fun_match_pearson <- function(
+    df_data_cols
+    , df_query_cols
+    , mtx_weights = NULL
+){
+  
+  # Arguments validation
+  stopifnot(
+    "'df_data_cols' must be a data frame." = 
+      is.data.frame(df_data_cols)
+  )
+  
+  stopifnot(
+    "'df_query_cols' must be a data frame." = 
+      all(
+        is.data.frame(df_query_cols)
+        , nrow(df_query_cols) ==
+          nrow(df_data_cols)
+      )
+  )
+  
+  stopifnot(
+    "'mtx_weights' must be either NULL or a numeric matrix." = 
+      any(
+        all(
+          is.numeric(mtx_weights)
+          , is.matrix(mtx_weights)
+        )
+        , is.null(mtx_weights)
+      )
+  )
+  
+  # Pearson correlation
+  if(!length(mtx_weights)){
+    
+    # Pearson correlation matching without weights
+    map_dbl(
+      .x = as_tibble(df_data_cols)
+      , ~ (
+        1 +
+          wtd.cors(
+            df_query_cols[,]
+            , .x
+          )[,]
+      ) / 2
+    ) -> dbl_similarity
+    
+  } else {
+    
+    # Pearson correlation matching with weights
+    map2_dbl(
+      .x = as_tibble(df_data_cols)
+      , .y = as_tibble(mtx_weights)
+      , ~ (
+        1 +
+          wtd.cors(
+            df_query_cols[,]
+            , .x
+            , weight = .y
+          )[,]
+      ) / 2
+    ) -> dbl_similarity
+    
+  }
+  
+  # Output
+  return(dbl_similarity)
+  
+}
 
 # - Similarity helper function ---------------------------------------------------
 fun_match_similarity_helper <- function(
@@ -340,6 +548,46 @@ toc()
 # - BVLS regression matching -------------------------------------------------------
 tic()
 fun_match_bvls(
+  df_data_cols = 
+    df_occupations %>% 
+    select(ends_with('.l')) %>% 
+    t() %>% 
+    as_tibble()
+  , df_query_cols = 
+    df_occupations %>% 
+    select(ends_with('.l')) %>% 
+    t() %>% 
+    as_tibble() %>% 
+    select(1) * 
+    runif(1, 0, 1)
+  , mtx_weights = NULL
+)
+toc()
+
+# - Logistic regression matching -------------------------------------------------------
+tic()
+fun_match_logit(
+  df_data_cols = 
+    df_occupations %>% 
+    select(ends_with('.l')) %>% 
+    t() %>% 
+    as_tibble()
+  , df_query_cols = 
+    df_occupations %>% 
+    select(ends_with('.l')) %>% 
+    t() %>% 
+    as_tibble() %>% 
+    select(1) * 
+    runif(1, 0, 1)
+  , mtx_weights = NULL
+  , dbl_scale_ub = 100
+  , dbl_scale_lb = 0
+)
+toc()
+
+# - Pearson correlation matching -------------------------------------------------------
+tic()
+fun_match_pearson(
   df_data_cols = 
     df_occupations %>% 
     select(ends_with('.l')) %>% 
