@@ -132,28 +132,28 @@ fun_match_weights <- function(
 
 # - Vectorized regression weights -----------------------------------------
 fun_match_vweights <- function(
-    df_data
+    df_data_cols
     , dbl_scale_ub = NULL
     , dbl_scaling = 0.25 
 ){
   
   # Arguments validation
   stopifnot(
-    "'df_data' must be a data frame." =
-      is.data.frame(df_data)
+    "'df_data_cols' must be a data frame." =
+      is.data.frame(df_data_cols)
   )
   
   # Data wrangling
-  df_data %>% 
+  df_data_cols %>% 
     select(where(
       is.numeric
     )) %>% 
     as_tibble() -> 
-    df_data
+    df_data_cols
   
   # Map weights function
   map_df(
-    .x = df_data
+    .x = df_data_cols
     , ~ fun_match_weights(
       dbl_var = .x
       , dbl_scale_ub = 
@@ -161,10 +161,10 @@ fun_match_vweights <- function(
       , dbl_scaling = 
         dbl_scaling
     )
-  ) -> df_data
+  ) -> df_data_cols
   
   # Output
-  return(df_data)
+  return(df_data_cols)
   
 }
 
@@ -246,12 +246,84 @@ fun_match_bvls <- function(
   
 }
 
+# - Pearson correlation matching ----------------------------------------------
+fun_match_pearson <- function(
+    df_data_cols
+    , df_query_cols
+    , mtx_weights = NULL
+){
+  
+  # Arguments validation
+  stopifnot(
+    "'df_data_cols' must be a data frame." = 
+      is.data.frame(df_data_cols)
+  )
+  
+  stopifnot(
+    "'df_query_cols' must be a data frame." = 
+      all(
+        is.data.frame(df_query_cols)
+        , nrow(df_query_cols) ==
+          nrow(df_data_cols)
+      )
+  )
+  
+  stopifnot(
+    "'mtx_weights' must be either NULL or a numeric matrix." = 
+      any(
+        all(
+          is.numeric(mtx_weights)
+          , is.matrix(mtx_weights)
+        )
+        , is.null(mtx_weights)
+      )
+  )
+  
+  # Pearson correlation
+  if(!length(mtx_weights)){
+    
+    # Pearson correlation matching without weights
+    map_dbl(
+      .x = as_tibble(df_data_cols)
+      , ~ (
+        1 +
+          wtd.cors(
+            df_query_cols[,]
+            , .x
+          )[,]
+      ) / 2
+    ) -> dbl_similarity
+    
+  } else {
+    
+    # Pearson correlation matching with weights
+    map2_dbl(
+      .x = as_tibble(df_data_cols)
+      , .y = as_tibble(mtx_weights)
+      , ~ (
+        1 +
+          wtd.cors(
+            df_query_cols[,]
+            , .x
+            , weight = .y
+          )[,]
+      ) / 2
+    ) -> dbl_similarity
+    
+  }
+  
+  # Output
+  return(dbl_similarity)
+  
+}
+
 # - Logistic regression matching ------------------------------------------
 fun_match_logit <- function(
     df_data_cols
     , df_query_cols
     , dbl_scale_ub
     , dbl_scale_lb
+    , chr_method = c('logit', 'probit')
     , mtx_weights = NULL
 ){
   
@@ -281,6 +353,14 @@ fun_match_logit <- function(
   )
   
   stopifnot(
+    "'chr_method' must be either 'logit' or 'probit'." =
+      any(
+        chr_method == 'logit',
+        chr_method == 'probit'
+      )
+  )
+  
+  stopifnot(
     "'mtx_weights' must be either NULL or a numeric matrix." = 
       any(
         all(
@@ -299,6 +379,8 @@ fun_match_logit <- function(
   as.integer(dbl_scale_ub) -> dbl_scale_ub
   
   as.integer(dbl_scale_lb) -> dbl_scale_lb
+  
+  chr_method[[1]] -> chr_method
   
   # Convert query to a Bernoulli variable
   list_c(map(
@@ -385,68 +467,128 @@ fun_match_logit <- function(
   
 }
 
-# - Pearson correlation matching ----------------------------------------------
-fun_match_pearson <- function(
+# - Similarity function (col vectors) ---------------------------------------------------
+fun_match_similarity_cols <- function(
     df_data_cols
     , df_query_cols
+    , chr_method = c('bvls', 'logit', 'probit', 'pearson')
+    , dbl_scale_ub = 100
+    , dbl_scale_lb = 0
     , mtx_weights = NULL
+    , dbl_scaling = 0.25
+    , lgc_sort = F
 ){
   
-  # Arguments validation
+  # Argument validation
   stopifnot(
-    "'df_data_cols' must be a data frame." = 
+    "'df_data_cols' must be a data frame." =
       is.data.frame(df_data_cols)
   )
   
   stopifnot(
-    "'df_query_cols' must be a data frame." = 
-      all(
-        is.data.frame(df_query_cols)
-        , nrow(df_query_cols) ==
-          nrow(df_data_cols)
+    "'df_query_cols' must be a data frame." =
+      is.data.frame(df_query_cols)
+  )
+  
+  stopifnot(
+    "'chr_method' must be one of the following methods: 'bvls', 'logit', 'probit', or 'pearson'." =
+      any(
+        chr_method == 'bvls',
+        chr_method == 'logit',
+        chr_method == 'probit',
+        chr_method == 'pearson'
       )
   )
   
   stopifnot(
-    "'mtx_weights' must be either NULL or a numeric matrix." = 
+    "'dbl_scale_ub' must be numeric." =
+      is.numeric(dbl_scale_ub)
+  )
+  
+  stopifnot(
+    "'dbl_scale_lb' must be numeric." =
+      is.numeric(dbl_scale_lb)
+  )
+  
+  stopifnot(
+    "'mtx_weights' must be either NULL or numeric." =
       any(
-        all(
-          is.numeric(mtx_weights)
-          , is.matrix(mtx_weights)
-        )
+        is.numeric(mtx_weights)
         , is.null(mtx_weights)
       )
   )
   
-  # Pearson correlation
+  # Data wrangling
+  dbl_scale_ub[[1]] -> dbl_scale_ub
+  
+  dbl_scale_lb[[1]] -> dbl_scale_lb
+  
+  chr_method[[1]] -> chr_method
+  
+  # Weights
   if(!length(mtx_weights)){
     
-    # Pearson correlation matching without weights
-    map_dbl(
-      .x = as_tibble(df_data_cols)
-      , ~ (
-        1 +
-          wtd.cors(
-            df_query_cols[,]
-            , .x
-          )[,]
-      ) / 2
+    match.call()
+    formalArgs(fun_match_vweights)
+    
+    fun_match_vweights(
+      df_data_cols = 
+        df_data_cols
+      , dbl_scale_ub = 
+        dbl_scale_ub
+      , dbl_scaling = 
+        dbl_scaling
+    ) -> mtx_weights
+    
+  }
+  
+  # Apply matching method
+  if(chr_method == 'bvls'){
+    
+    formalArgs(fun_match_bvls)
+    
+    # Apply BVLS regression matching
+    fun_match_bvls(
+      df_data_cols =
+        df_data_cols
+      , df_query_cols = 
+        df_query_cols
+      , mtx_weights = 
+        mtx_weights
+    ) -> dbl_similarity
+    
+  } else if(chr_method == 'pearson') {
+    
+    formalArgs(fun_match_pearson)
+    
+    # Apply Pearson correlation matching
+    fun_match_pearson(
+      df_data_cols = 
+        df_data_cols
+      , df_query_cols = 
+        df_query_cols
+      , mtx_weights = 
+        mtx_weights
     ) -> dbl_similarity
     
   } else {
     
-    # Pearson correlation matching with weights
-    map2_dbl(
-      .x = as_tibble(df_data_cols)
-      , .y = as_tibble(mtx_weights)
-      , ~ (
-        1 +
-          wtd.cors(
-            df_query_cols[,]
-            , .x
-            , weight = .y
-          )[,]
-      ) / 2
+    formalArgs(fun_match_logit)
+    
+    # Apply logistic regression matching
+    fun_match_logit(
+      df_data_cols = 
+        df_data_cols
+      , df_query_cols = 
+        df_query_cols
+      , dbl_scale_ub = 
+        dbl_scale_ub
+      , dbl_scale_lb = 
+        dbl_scale_lb
+      , chr_method = 
+        chr_method
+      , mtx_weights = 
+        mtx_weights
     ) -> dbl_similarity
     
   }
@@ -456,21 +598,191 @@ fun_match_pearson <- function(
   
 }
 
-# - Similarity helper function ---------------------------------------------------
-fun_match_similarity_helper <- function(
-    
-){
-  
-  
-  
-}
-
-# - Similarity function ---------------------------------------------------
+# - Similarity function (row vectors) ---------------------------------------------------
 fun_match_similarity <- function(
-    
+    df_data_rows
+    , df_query_rows
+    , chr_method = c('bvls', 'logit', 'probit', 'pearson')
+    , dbl_scale_ub = 100
+    , dbl_scale_lb = 0
+    , mtx_weights = NULL
+    , dbl_scaling = 0.25
+    , lgc_sort = F
 ){
   
+  # Argument validation
+  stopifnot(
+    "'df_data_rows' must be a data frame." =
+      is.data.frame(df_data_rows)
+  )
   
+  stopifnot(
+    "'df_query_rows' must be a data frame." =
+      is.data.frame(df_query_rows)
+  )
+  
+  stopifnot(
+    "'chr_method' must be one of the following methods: 'bvls', 'logit', 'probit', or 'pearson'." =
+      any(
+        chr_method == 'bvls',
+        chr_method == 'logit',
+        chr_method == 'probit',
+        chr_method == 'pearson'
+      )
+  )
+  
+  stopifnot(
+    "'dbl_scale_ub' must be numeric." =
+      is.numeric(dbl_scale_ub)
+  )
+  
+  stopifnot(
+    "'dbl_scale_lb' must be numeric." =
+      is.numeric(dbl_scale_lb)
+  )
+  
+  stopifnot(
+    "'mtx_weights' must be either NULL or numeric." =
+      any(
+        is.numeric(mtx_weights)
+        , is.null(mtx_weights)
+      )
+  )
+  
+  stopifnot(
+    "'lgc_sort' must be either TRUE or FALSE." =
+      all(
+        is.logical(lgc_sort)
+        , !is.na(lgc_sort)
+      )
+  )
+  
+  # Data wrangling
+  Filter(
+    function(x){all(is.numeric(x))}
+    , df_query_rows
+  ) -> df_query_cols
+  
+  rm(df_query_rows)
+  
+  df_data_rows[names(
+    df_query_cols
+  )] -> df_data_cols
+  
+  # Pivot data
+  t(df_query_cols) -> df_query_cols
+  
+  t(df_data_cols) -> df_data_cols
+  
+  # Match call
+  sym_call <- match.call()
+  
+  sym_call[[1]] <- as.name('fun_match_similarity_cols')
+  
+  gsub(
+    '_rows'
+    , '_cols'
+    , names(sym_call)
+  ) -> names(sym_call)
+  
+  # Apply similarity function
+  if(ncol(df_query_cols) == 1){
+    
+    eval.parent(sym_call) ->
+      df_data_rows$
+      similarity
+    
+    return(df_data_rows)
+    stop()
+    
+    # fun_match_similarity_cols(
+    #   df_data_cols = df_data_cols
+    #   , df_query_cols = df_query_cols
+    #   , chr_method = chr_method
+    #   , dbl_scale_ub = dbl_scale_ub
+    #   , dbl_scale_lb = dbl_scale_lb
+    #   , mtx_weights = mtx_weights
+    # ) -> df_data_rows$similarity
+    
+    # Sort data frame
+    if(lgc_sort){
+      
+      df_data_rows %>%
+        arrange(desc(
+          similarity
+        )) -> df_data_rows
+      
+    }
+    
+    list_similarity <- NULL
+    mtx_similarity <- NULL
+    
+  } else {
+    
+    df_query_cols %>%
+      as_tibble() %>% 
+      map(
+        ~ fun_s(
+          df_data_cols = df_data_cols
+          , df_query_cols = as.matrix(.x)
+          , chr_method = chr_method
+          , dbl_scale_ub = dbl_scale_ub
+          , dbl_scale_lb = dbl_scale_lb
+          , mtx_weights = mtx_weights
+        )
+      ) -> list_similarity
+    
+    # Similarity matrix
+    if(
+      all(
+        df_data_cols ==
+        df_query_cols
+      )
+    ){
+      
+      list_similarity %>%
+        bind_cols() %>%
+        as.matrix() ->
+        mtx_similarity
+      
+      if(length(id_col)){
+        
+        id_col[[1]] -> id_col
+        
+        df_data_rows %>%
+          pull(!!sym(id_col)) ->
+          colnames(
+            mtx_similarity
+          )
+        
+        colnames(
+          mtx_similarity
+        ) ->
+          rownames(
+            mtx_similarity
+          )
+        
+        colnames(
+          mtx_similarity
+        ) ->
+          names(
+            list_similarity
+          )
+        
+      }
+      
+    }
+    
+    df_data_rows <- NULL
+    
+  }
+  
+  # Output
+  return(compact(list(
+    'df_similarity' = df_data_rows
+    , 'list_similarity' = list_similarity
+    , 'mtx_similarity' = mtx_similarity
+  )))
   
 }
 
@@ -499,6 +811,10 @@ read_rds(
 read_csv(
   'C:/Users/Cao/Documents/Github/Atlas-Research/Data/df_atlas_complete_equamax_15_factors.csv'
 ) -> df_occupations
+
+read_csv(
+  'https://docs.google.com/spreadsheets/d/e/2PACX-1vSVdXvQMe4DrKS0LKhY0CZRlVuCCkEMHVJHQb_U-GKF21CjcchJ5jjclGSlQGYa5Q/pub?gid=1515296378&single=true&output=csv'
+) -> df_input
 
 # - Equivalence test 1 ------------------------------------------------------
 tic()
@@ -605,6 +921,24 @@ fun_match_pearson(
 toc()
 
 # - Similarity test ------------------------------------------------------------------
+tic()
+fun_match_similarity(
+  df_data_rows = 
+    df_occupations %>% 
+    select(
+      occupation
+      , ends_with('.l')
+    )
+  , df_query_rows = 
+    df_input
+  # , chr_method = 
+  , dbl_scale_ub = 100
+  , dbl_scale_lb = 0
+) -> dsds
+toc()
+
+dsds$query %>% View
+dsds$data %>% View
 
 # - Atlas Career Type Indicator test --------------------------------------
 

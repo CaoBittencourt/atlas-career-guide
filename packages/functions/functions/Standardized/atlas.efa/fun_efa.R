@@ -603,6 +603,7 @@ fun_efa_consistency <- function(
   rm(df_factor_match)
 
   # Estimate factors' internal consistency
+  # formalArgs(fun_efa_reliability)
   fun_efa_reliability(
     mtx_correlations =
       mtx_correlations
