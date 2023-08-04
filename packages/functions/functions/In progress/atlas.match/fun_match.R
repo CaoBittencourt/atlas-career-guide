@@ -171,8 +171,8 @@ fun_match_vweights <- function(
 # - BVLS regression matching ----------------------------------------------
 fun_match_bvls <- function(
     df_data_cols
-    , df_query_cols
-    , mtx_weights = NULL
+    , dbl_query
+    , df_weights = NULL
 ){
   
   # Arguments validation
@@ -182,27 +182,24 @@ fun_match_bvls <- function(
   )
   
   stopifnot(
-    "'df_query_cols' must be a data frame." = 
+    "'dbl_query' must be numeric." =
       all(
-        is.data.frame(df_query_cols)
-        , nrow(df_query_cols) ==
+        is.numeric(dbl_query)
+        , length(dbl_query) ==
           nrow(df_data_cols)
       )
   )
   
   stopifnot(
-    "'mtx_weights' must be either NULL or a numeric matrix." = 
+    "'df_weights' must be either NULL or a numeric data frame." = 
       any(
-        all(
-          is.numeric(mtx_weights)
-          , is.matrix(mtx_weights)
-        )
-        , is.null(mtx_weights)
+        all(map_lgl(df_weights, is.numeric))
+        , is.null(df_weights)
       )
   )
   
   # BVLS regression
-  if(!length(mtx_weights)){
+  if(!length(df_weights)){
     
     # Run BVLS regression matching without weights
     map_dbl(
@@ -210,7 +207,7 @@ fun_match_bvls <- function(
       , ~ 
         coef(bvls(
           as.matrix(.x)
-          , df_query_cols[,]
+          , dbl_query[,]
           , bl = 0
           , bu = 1
         ))
@@ -219,21 +216,21 @@ fun_match_bvls <- function(
   } else {
     
     # Add weights to regression 
-    sqrt(mtx_weights) ->
-      mtx_weights
+    sqrt(df_weights) ->
+      df_weights
     
     df_data_cols *
-      mtx_weights ->
+      df_weights ->
       df_data_cols
     
     # BVLS regression matching with weights
     map2_dbl(
-      .x = as_tibble(df_data_cols)
-      , .y = as_tibble(mtx_weights)
+      .x = df_data_cols
+      , .y = df_weights
       , ~
         coef(bvls(
           as.matrix(.x)
-          , df_query_cols[,] * .y
+          , dbl_query[,] * .y
           , bl = 0
           , bu = 1
         ))
@@ -249,8 +246,8 @@ fun_match_bvls <- function(
 # - Pearson correlation matching ----------------------------------------------
 fun_match_pearson <- function(
     df_data_cols
-    , df_query_cols
-    , mtx_weights = NULL
+    , dbl_query
+    , df_weights = NULL
 ){
   
   # Arguments validation
@@ -260,27 +257,24 @@ fun_match_pearson <- function(
   )
   
   stopifnot(
-    "'df_query_cols' must be a data frame." = 
+    "'dbl_query' must be numeric." = 
       all(
-        is.data.frame(df_query_cols)
-        , nrow(df_query_cols) ==
+        is.numeric(dbl_query)
+        , nrow(dbl_query) ==
           nrow(df_data_cols)
       )
   )
   
   stopifnot(
-    "'mtx_weights' must be either NULL or a numeric matrix." = 
+    "'df_weights' must be either NULL or a numeric data frame." = 
       any(
-        all(
-          is.numeric(mtx_weights)
-          , is.matrix(mtx_weights)
-        )
-        , is.null(mtx_weights)
+        all(map_lgl(df_weights, is.numeric))
+        , is.null(df_weights)
       )
   )
   
   # Pearson correlation
-  if(!length(mtx_weights)){
+  if(!length(df_weights)){
     
     # Pearson correlation matching without weights
     map_dbl(
@@ -288,7 +282,7 @@ fun_match_pearson <- function(
       , ~ (
         1 +
           wtd.cors(
-            df_query_cols[,]
+            dbl_query[,]
             , .x
           )[,]
       ) / 2
@@ -298,12 +292,12 @@ fun_match_pearson <- function(
     
     # Pearson correlation matching with weights
     map2_dbl(
-      .x = as_tibble(df_data_cols)
-      , .y = as_tibble(mtx_weights)
+      .x = df_data_cols
+      , .y = df_weights
       , ~ (
         1 +
           wtd.cors(
-            df_query_cols[,]
+            dbl_query[,]
             , .x
             , weight = .y
           )[,]
@@ -320,11 +314,11 @@ fun_match_pearson <- function(
 # - Logistic regression matching ------------------------------------------
 fun_match_logit <- function(
     df_data_cols
-    , df_query_cols
+    , dbl_query
     , dbl_scale_ub
     , dbl_scale_lb
     , chr_method = c('logit', 'probit')
-    , mtx_weights = NULL
+    , df_weights = NULL
 ){
   
   # Arguments validation
@@ -334,10 +328,10 @@ fun_match_logit <- function(
   )
   
   stopifnot(
-    "'df_query_cols' must be a data frame." = 
+    "'dbl_query' must be numeric." = 
       all(
-        is.data.frame(df_query_cols)
-        , nrow(df_query_cols) ==
+        is.numeric(dbl_query)
+        , nrow(dbl_query) ==
           nrow(df_data_cols)
       )
   )
@@ -361,13 +355,10 @@ fun_match_logit <- function(
   )
   
   stopifnot(
-    "'mtx_weights' must be either NULL or a numeric matrix." = 
+    "'df_weights' must be either NULL or a numeric data frame." = 
       any(
-        all(
-          is.numeric(mtx_weights)
-          , is.matrix(mtx_weights)
-        )
-        , is.null(mtx_weights)
+        all(map_lgl(df_weights, is.numeric))
+        , is.null(df_weights)
       )
   )
   
@@ -384,7 +375,7 @@ fun_match_logit <- function(
   
   # Convert query to a Bernoulli variable
   list_c(map(
-    .x = as.integer(df_query_cols[,])
+    .x = as.integer(dbl_query[,])
     , ~ rep(
       c(1,0), times = c(
         .x, (dbl_scale_ub - dbl_scale_lb) - .x
@@ -392,11 +383,11 @@ fun_match_logit <- function(
     )
   )) -> int_query_bernoulli
   
-  rm(df_query_cols)
+  rm(dbl_query)
   
   # Convert data to a Bernoulli variable
   map(
-    .x = as_tibble(df_data_cols)
+    .x = df_data_cols
     , ~
       as.matrix(list_c(map(
         .x = as.integer(.x)
@@ -411,7 +402,7 @@ fun_match_logit <- function(
   rm(df_data_cols)
   
   # Logistic regression
-  if(!length(mtx_weights)){
+  if(!length(df_weights)){
     
     # Run logistic regression matching without weights
     map_dbl(
@@ -433,14 +424,12 @@ fun_match_logit <- function(
   } else {
     
     # Repeat mtx_weight's rows
-    as_tibble(mtx_weights)[rep(
-      1:nrow(mtx_weights)
+    df_weights[rep(
+      1:nrow(df_weights)
       , each = 
         dbl_scale_ub - 
         dbl_scale_lb
     ), ] -> df_weights
-    
-    rm(mtx_weights)
     
     # Run logistic regression matching with weights
     map2_dbl(
@@ -470,11 +459,11 @@ fun_match_logit <- function(
 # - Similarity function (col vectors) ---------------------------------------------------
 fun_match_similarity_cols <- function(
     df_data_cols
-    , df_query_cols
+    , dbl_query
     , chr_method = c('bvls', 'logit', 'probit', 'pearson')
     , dbl_scale_ub = 100
     , dbl_scale_lb = 0
-    , mtx_weights = NULL
+    , df_weights = NULL
     , dbl_scaling = 0.25
     , lgc_sort = F
 ){
@@ -486,8 +475,8 @@ fun_match_similarity_cols <- function(
   )
   
   stopifnot(
-    "'df_query_cols' must be a data frame." =
-      is.data.frame(df_query_cols)
+    "'dbl_query' must be numeric." =
+      is.numeric(dbl_query)
   )
   
   stopifnot(
@@ -511,10 +500,10 @@ fun_match_similarity_cols <- function(
   )
   
   stopifnot(
-    "'mtx_weights' must be either NULL or numeric." =
+    "'df_weights' must be either NULL or a numeric data frame." = 
       any(
-        is.numeric(mtx_weights)
-        , is.null(mtx_weights)
+        all(map_lgl(df_weights, is.numeric))
+        , is.null(df_weights)
       )
   )
   
@@ -526,10 +515,7 @@ fun_match_similarity_cols <- function(
   chr_method[[1]] -> chr_method
   
   # Weights
-  if(!length(mtx_weights)){
-    
-    match.call()
-    formalArgs(fun_match_vweights)
+  if(!length(df_weights)){
     
     fun_match_vweights(
       df_data_cols = 
@@ -538,57 +524,51 @@ fun_match_similarity_cols <- function(
         dbl_scale_ub
       , dbl_scaling = 
         dbl_scaling
-    ) -> mtx_weights
+    ) -> df_weights
     
   }
   
   # Apply matching method
   if(chr_method == 'bvls'){
     
-    formalArgs(fun_match_bvls)
-    
     # Apply BVLS regression matching
     fun_match_bvls(
       df_data_cols =
         df_data_cols
-      , df_query_cols = 
-        df_query_cols
-      , mtx_weights = 
-        mtx_weights
+      , dbl_query = 
+        dbl_query
+      , df_weights = 
+        df_weights
     ) -> dbl_similarity
     
   } else if(chr_method == 'pearson') {
-    
-    formalArgs(fun_match_pearson)
     
     # Apply Pearson correlation matching
     fun_match_pearson(
       df_data_cols = 
         df_data_cols
-      , df_query_cols = 
-        df_query_cols
-      , mtx_weights = 
-        mtx_weights
+      , dbl_query = 
+        dbl_query
+      , df_weights = 
+        df_weights
     ) -> dbl_similarity
     
   } else {
-    
-    formalArgs(fun_match_logit)
     
     # Apply logistic regression matching
     fun_match_logit(
       df_data_cols = 
         df_data_cols
-      , df_query_cols = 
-        df_query_cols
+      , dbl_query = 
+        dbl_query
       , dbl_scale_ub = 
         dbl_scale_ub
       , dbl_scale_lb = 
         dbl_scale_lb
       , chr_method = 
         chr_method
-      , mtx_weights = 
-        mtx_weights
+      , df_weights = 
+        df_weights
     ) -> dbl_similarity
     
   }
@@ -605,7 +585,7 @@ fun_match_similarity <- function(
     , chr_method = c('bvls', 'logit', 'probit', 'pearson')
     , dbl_scale_ub = 100
     , dbl_scale_lb = 0
-    , mtx_weights = NULL
+    , df_weights = NULL
     , dbl_scaling = 0.25
     , lgc_sort = F
 ){
@@ -642,10 +622,10 @@ fun_match_similarity <- function(
   )
   
   stopifnot(
-    "'mtx_weights' must be either NULL or numeric." =
+    "'df_weights' must be either NULL or a numeric data frame." = 
       any(
-        is.numeric(mtx_weights)
-        , is.null(mtx_weights)
+        all(map_lgl(df_weights, is.numeric))
+        , is.null(df_weights)
       )
   )
   
@@ -661,48 +641,66 @@ fun_match_similarity <- function(
   Filter(
     function(x){all(is.numeric(x))}
     , df_query_rows
-  ) -> df_query_cols
+  ) -> dbl_query
   
   rm(df_query_rows)
   
   df_data_rows[names(
-    df_query_cols
+    dbl_query
   )] -> df_data_cols
   
   # Pivot data
-  t(df_query_cols) -> df_query_cols
+  t(dbl_query) -> 
+    dbl_query
   
-  t(df_data_cols) -> df_data_cols
+  as_tibble(t(
+    df_data_cols
+  )) -> df_data_cols
   
-  # Match call
-  sym_call <- match.call()
+  fun_match_similarity_cols(
+    df_data_cols = df_data_cols
+    , dbl_query = dbl_query
+    , chr_method = chr_method
+    , dbl_scale_ub = dbl_scale_ub
+    , dbl_scale_lb = dbl_scale_lb
+    , df_weights = df_weights
+  ) -> df_data_rows$similarity
   
-  sym_call[[1]] <- as.name('fun_match_similarity_cols')
+  return(df_data_rows)
+  stop()
   
-  gsub(
-    '_rows'
-    , '_cols'
-    , names(sym_call)
-  ) -> names(sym_call)
+  # # Match call
+  # sym_call <- match.call()
+  # 
+  # sym_call[[1]] <- as.name('fun_match_similarity_cols')
+  # 
+  # gsub(
+  #   '_rows'
+  #   , '_cols'
+  #   , names(sym_call)
+  # ) -> names(sym_call)
   
   # Apply similarity function
-  if(ncol(df_query_cols) == 1){
+  if(ncol(dbl_query) == 1){
     
-    eval.parent(sym_call) ->
-      df_data_rows$
-      similarity
+    # eval.parent(sym_call) ->
+    #   df_data_rows$
+    #   similarity
+    # 
+    # return(df_data_rows)
+    # stop()
+    
+    fun_match_similarity_cols(
+      df_data_cols = df_data_cols
+      , dbl_query = dbl_query
+      , chr_method = chr_method
+      , dbl_scale_ub = dbl_scale_ub
+      , dbl_scale_lb = dbl_scale_lb
+      , df_weights = df_weights
+    ) -> df_data_rows$similarity
     
     return(df_data_rows)
     stop()
-    
-    # fun_match_similarity_cols(
-    #   df_data_cols = df_data_cols
-    #   , df_query_cols = df_query_cols
-    #   , chr_method = chr_method
-    #   , dbl_scale_ub = dbl_scale_ub
-    #   , dbl_scale_lb = dbl_scale_lb
-    #   , mtx_weights = mtx_weights
-    # ) -> df_data_rows$similarity
     
     # Sort data frame
     if(lgc_sort){
@@ -719,16 +717,16 @@ fun_match_similarity <- function(
     
   } else {
     
-    df_query_cols %>%
+    dbl_query %>%
       as_tibble() %>% 
       map(
         ~ fun_s(
           df_data_cols = df_data_cols
-          , df_query_cols = as.matrix(.x)
+          , dbl_query = as.matrix(.x)
           , chr_method = chr_method
           , dbl_scale_ub = dbl_scale_ub
           , dbl_scale_lb = dbl_scale_lb
-          , mtx_weights = mtx_weights
+          , df_weights = df_weights
         )
       ) -> list_similarity
     
@@ -736,7 +734,7 @@ fun_match_similarity <- function(
     if(
       all(
         df_data_cols ==
-        df_query_cols
+        dbl_query
       )
     ){
       
@@ -876,7 +874,7 @@ fun_match_bvls(
     as_tibble() %>% 
     select(1) * 
     runif(1, 0, 1)
-  , mtx_weights = NULL
+  , df_weights = NULL
 )
 toc()
 
@@ -895,7 +893,7 @@ fun_match_logit(
     as_tibble() %>% 
     select(1) * 
     runif(1, 0, 1)
-  , mtx_weights = NULL
+  , df_weights = NULL
   , dbl_scale_ub = 100
   , dbl_scale_lb = 0
 )
@@ -916,11 +914,13 @@ fun_match_pearson(
     as_tibble() %>% 
     select(1) * 
     runif(1, 0, 1)
-  , mtx_weights = NULL
+  , df_weights = NULL
 )
 toc()
 
 # - Similarity test ------------------------------------------------------------------
+rm(dsds)
+
 tic()
 fun_match_similarity(
   df_data_rows = 
@@ -931,14 +931,12 @@ fun_match_similarity(
     )
   , df_query_rows = 
     df_input
-  # , chr_method = 
   , dbl_scale_ub = 100
   , dbl_scale_lb = 0
 ) -> dsds
 toc()
 
-dsds$query %>% View
-dsds$data %>% View
+dsds
 
 # - Atlas Career Type Indicator test --------------------------------------
 
