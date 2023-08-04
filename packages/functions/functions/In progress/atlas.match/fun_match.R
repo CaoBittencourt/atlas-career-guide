@@ -46,13 +46,11 @@ fun_match_equivalence <- function(
       is.numeric(dbl_scaling)
   )
   
-  # Data wrangling
-  dbl_scale_ub[[1]] -> dbl_scale_ub
-  
-  dbl_scaling[[1]] -> dbl_scaling
-  
   # Normalize data to percentage scale
-  if(max(dbl_var, na.rm = T) != 1){
+  if(!all(
+    max(dbl_var, na.rm = T) <= 1,
+    min(dbl_var, na.rm = T) >= 0
+  )){
     
     # Normalize by upper bound, if any
     if(length(dbl_scale_ub)){
@@ -63,6 +61,7 @@ fun_match_equivalence <- function(
       
     } else { 
       
+      # Normalize by maxima
       dbl_var / 
         max(
           dbl_var
@@ -89,7 +88,6 @@ fun_match_equivalence <- function(
 # - Regression weights --------------------------------------------
 fun_match_weights <- function(
     dbl_var
-    , dbl_scale_ub = NULL
     , dbl_scaling = 0.25
 ){
   
@@ -99,29 +97,10 @@ fun_match_weights <- function(
       is.numeric(dbl_var)
   )
   
-  # Get maximum item score
-  max(dbl_var, na.rm = T) -> 
-    dbl_weights
-  
-  # Prevent division by zero
-  if(dbl_weights == 0){
-    
-    dbl_weights <- 1
-    
-  }
-  
-  # Relative importance compared to top item
-  dbl_var / 
-    dbl_weights ->
-    dbl_weights
-  
   # Apply equivalence function to regression weights
   fun_match_equivalence(
-    dbl_var = 
-      dbl_weights
-    , dbl_scale_ub = 
-      dbl_scale_ub
-    , dbl_scaling = 
+    dbl_var = dbl_var
+    , dbl_scaling =
       dbl_scaling
   ) -> dbl_weights
   
@@ -133,7 +112,6 @@ fun_match_weights <- function(
 # - Vectorized regression weights -----------------------------------------
 fun_match_vweights <- function(
     df_data_cols
-    , dbl_scale_ub = NULL
     , dbl_scaling = 0.25 
 ){
   
@@ -154,8 +132,6 @@ fun_match_vweights <- function(
     .x = df_data_cols
     , ~ fun_match_weights(
       dbl_var = .x
-      , dbl_scale_ub = 
-        dbl_scale_ub
       , dbl_scaling = 
         dbl_scaling
     )
@@ -518,8 +494,6 @@ fun_match_similarity_cols <- function(
     fun_match_vweights(
       df_data_cols = 
         df_data_cols
-      , dbl_scale_ub = 
-        dbl_scale_ub
       , dbl_scaling = 
         dbl_scaling
     ) -> df_weights
@@ -784,7 +758,66 @@ fun_match_similarity <- function(
 # - ACTI estimator --------------------------------------------------------
 
 # [INTERCHANGEABILITY FUNCTIONS] ------------------------------------------
+# - Educational equivalence function -------------------------------
+fun_match_equivalence_education <- function(
+    dbl_years_education
+    , dbl_years_education_min
+){
+  
+  # Arguments validation
+  stopifnot(
+    "'dbl_years_education' must be numeric." = 
+      is.numeric(dbl_years_education)
+  )
+  
+  stopifnot(
+    "'dbl_years_education_min' must be numeric." = 
+      is.numeric(dbl_years_education_min)
+  )
+  
+  # Data wrangling
+  rep(
+    dbl_years_education
+    , each = length(
+      dbl_years_education_min
+    )) -> dbl_years_education
+  
+  # Apply equivalence function to years of education
+  fun_match_equivalence(
+    dbl_var = dbl_years_education
+    , dbl_scale_ub = dbl_years_education_min
+    , dbl_scaling = dbl_years_education_min
+  ) -> dbl_eq_education
+  
+  rm(dbl_years_education)
+  rm(dbl_years_education_min)
+  
+  # Truncate educational equivalence to [0,1]
+  pmin(dbl_eq_education, 1) -> dbl_eq_education
+  pmax(dbl_eq_education, 0) -> dbl_eq_education
+  
+  # Output
+  return(dbl_eq_education)
+  
+}
+
 # - Interchangeability function -------------------------------------------
+fun_match_interchangeability <- function(
+    mtx_similarity
+    , dbl_scaling = 1
+    , dbl_years_education = NULL
+    , dbl_years_education_min = NULL
+){
+  
+  # Arguments validation
+  
+  # Data wrangling
+  
+  # Apply equivalence function to similarity scores
+  
+  # Apply equivalence function to 
+  
+}
 
 # [EMPLOYABILITY FUNCTIONS] -----------------------------------------------
 # - Employability helper function -----------------------------------------
@@ -836,7 +869,6 @@ toc()
 tic()
 fun_match_weights(
   dbl_var = runif(50, 0, 100)
-  , dbl_scale_ub = 100
 )
 toc()
 
@@ -848,7 +880,6 @@ fun_match_vweights(
     select(ends_with('.l')) %>% 
     t() %>% 
     as_tibble()
-  , dbl_scale_ub = 100
 )
 toc()
 
@@ -955,6 +986,14 @@ fun_match_similarity(
 toc()
 
 dsds
+
+# - Educational equivalence -----------------------------------------------
+tic()
+fun_match_equivalence_education(
+  dbl_years_education = c(14, 17, 20, 22)
+  , dbl_years_education_min = c(17, 21, 25)
+) %>% round(4)
+toc()
 
 # - Atlas Career Type Indicator test --------------------------------------
 
