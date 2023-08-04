@@ -147,9 +147,7 @@ fun_match_vweights <- function(
   df_data_cols %>% 
     select(where(
       is.numeric
-    )) %>% 
-    as_tibble() -> 
-    df_data_cols
+    )) -> df_data_cols
   
   # Map weights function
   map_df(
@@ -203,7 +201,7 @@ fun_match_bvls <- function(
     
     # Run BVLS regression matching without weights
     map_dbl(
-      .x = as_tibble(df_data_cols)
+      .x = df_data_cols
       , ~ 
         coef(bvls(
           as.matrix(.x)
@@ -260,7 +258,7 @@ fun_match_pearson <- function(
     "'dbl_query' must be numeric." = 
       all(
         is.numeric(dbl_query)
-        , nrow(dbl_query) ==
+        , length(dbl_query) ==
           nrow(df_data_cols)
       )
   )
@@ -278,7 +276,7 @@ fun_match_pearson <- function(
     
     # Pearson correlation matching without weights
     map_dbl(
-      .x = as_tibble(df_data_cols)
+      .x = df_data_cols
       , ~ (
         1 +
           wtd.cors(
@@ -331,7 +329,7 @@ fun_match_logit <- function(
     "'dbl_query' must be numeric." = 
       all(
         is.numeric(dbl_query)
-        , nrow(dbl_query) ==
+        , length(dbl_query) ==
           nrow(df_data_cols)
       )
   )
@@ -423,7 +421,7 @@ fun_match_logit <- function(
     
   } else {
     
-    # Repeat mtx_weight's rows
+    # Repeat df_weights' rows
     df_weights[rep(
       1:nrow(df_weights)
       , each = 
@@ -587,6 +585,7 @@ fun_match_similarity <- function(
     , dbl_scale_lb = 0
     , df_weights = NULL
     , dbl_scaling = 0.25
+    , chr_id_col = NULL
     , lgc_sort = F
 ){
   
@@ -637,6 +636,14 @@ fun_match_similarity <- function(
       )
   )
   
+  stopifnot(
+    "'chr_id_col' must be either NULL or a character string." = 
+      any(
+        is.null(chr_id_col)
+        , is.character(chr_id_col)
+      )
+  )
+  
   # Data wrangling
   Filter(
     function(x){all(is.numeric(x))}
@@ -657,38 +664,8 @@ fun_match_similarity <- function(
     df_data_cols
   )) -> df_data_cols
   
-  fun_match_similarity_cols(
-    df_data_cols = df_data_cols
-    , dbl_query = dbl_query
-    , chr_method = chr_method
-    , dbl_scale_ub = dbl_scale_ub
-    , dbl_scale_lb = dbl_scale_lb
-    , df_weights = df_weights
-  ) -> df_data_rows$similarity
-  
-  return(df_data_rows)
-  stop()
-  
-  # # Match call
-  # sym_call <- match.call()
-  # 
-  # sym_call[[1]] <- as.name('fun_match_similarity_cols')
-  # 
-  # gsub(
-  #   '_rows'
-  #   , '_cols'
-  #   , names(sym_call)
-  # ) -> names(sym_call)
-  
   # Apply similarity function
   if(ncol(dbl_query) == 1){
-    
-    # eval.parent(sym_call) ->
-    #   df_data_rows$
-    #   similarity
-    # 
-    # return(df_data_rows)
-    # stop()
     
     fun_match_similarity_cols(
       df_data_cols = df_data_cols
@@ -699,8 +676,12 @@ fun_match_similarity <- function(
       , df_weights = df_weights
     ) -> df_data_rows$similarity
     
-    return(df_data_rows)
-    stop()
+    rm(dbl_query)
+    rm(df_weights)
+    rm(chr_method)
+    rm(dbl_scale_ub)
+    rm(dbl_scale_lb)
+    rm(df_data_cols)
     
     # Sort data frame
     if(lgc_sort){
@@ -718,7 +699,12 @@ fun_match_similarity <- function(
   } else {
     
     dbl_query %>%
-      as_tibble() %>% 
+      as_tibble() -> 
+      df_query_cols
+    
+    rm(dbl_query)
+    
+    df_query_cols %>% 
       map(
         ~ fun_s(
           df_data_cols = df_data_cols
@@ -730,42 +716,48 @@ fun_match_similarity <- function(
         )
       ) -> list_similarity
     
+    rm(df_weights)
+    rm(chr_method)
+    rm(dbl_scale_ub)
+    rm(dbl_scale_lb)
+    
     # Similarity matrix
     if(
       all(
-        df_data_cols ==
-        dbl_query
+        df_query_cols ==
+        df_data_cols
       )
     ){
+      
+      rm(df_query_cols)
+      rm(df_data_cols)
       
       list_similarity %>%
         bind_cols() %>%
         as.matrix() ->
         mtx_similarity
       
-      if(length(id_col)){
+      if(length(chr_id_col)){
         
-        id_col[[1]] -> id_col
+        chr_id_col[[1]] -> chr_id_col
         
         df_data_rows %>%
-          pull(!!sym(id_col)) ->
+          pull(!!sym(chr_id_col)) ->
           colnames(
             mtx_similarity
           )
         
         colnames(
           mtx_similarity
-        ) ->
-          rownames(
-            mtx_similarity
-          )
+        ) -> rownames(
+          mtx_similarity
+        )
         
         colnames(
           mtx_similarity
-        ) ->
-          names(
-            list_similarity
-          )
+        ) -> names(
+          list_similarity
+        )
         
       }
       
@@ -859,66 +851,7 @@ fun_match_vweights(
 )
 toc()
 
-# - BVLS regression matching -------------------------------------------------------
-tic()
-fun_match_bvls(
-  df_data_cols = 
-    df_occupations %>% 
-    select(ends_with('.l')) %>% 
-    t() %>% 
-    as_tibble()
-  , df_query_cols = 
-    df_occupations %>% 
-    select(ends_with('.l')) %>% 
-    t() %>% 
-    as_tibble() %>% 
-    select(1) * 
-    runif(1, 0, 1)
-  , df_weights = NULL
-)
-toc()
-
-# - Logistic regression matching -------------------------------------------------------
-tic()
-fun_match_logit(
-  df_data_cols = 
-    df_occupations %>% 
-    select(ends_with('.l')) %>% 
-    t() %>% 
-    as_tibble()
-  , df_query_cols = 
-    df_occupations %>% 
-    select(ends_with('.l')) %>% 
-    t() %>% 
-    as_tibble() %>% 
-    select(1) * 
-    runif(1, 0, 1)
-  , df_weights = NULL
-  , dbl_scale_ub = 100
-  , dbl_scale_lb = 0
-)
-toc()
-
-# - Pearson correlation matching -------------------------------------------------------
-tic()
-fun_match_pearson(
-  df_data_cols = 
-    df_occupations %>% 
-    select(ends_with('.l')) %>% 
-    t() %>% 
-    as_tibble()
-  , df_query_cols = 
-    df_occupations %>% 
-    select(ends_with('.l')) %>% 
-    t() %>% 
-    as_tibble() %>% 
-    select(1) * 
-    runif(1, 0, 1)
-  , df_weights = NULL
-)
-toc()
-
-# - Similarity test ------------------------------------------------------------------
+# - BVLS similarity test ------------------------------------------------------------------
 rm(dsds)
 
 tic()
@@ -929,6 +862,7 @@ fun_match_similarity(
       occupation
       , ends_with('.l')
     )
+  , chr_method = 'bvls'
   , df_query_rows = 
     df_input
   , dbl_scale_ub = 100
@@ -936,7 +870,61 @@ fun_match_similarity(
 ) -> dsds
 toc()
 
-dsds
+dsds$
+  df_similarity %>% 
+  select(!ends_with('.l')) %>% 
+  arrange(desc(similarity)) %>% 
+  print(n = nrow(.))
+
+# - Pearson similarity test ------------------------------------------------------------------
+rm(dsds)
+
+tic()
+fun_match_similarity(
+  df_data_rows = 
+    df_occupations %>% 
+    select(
+      occupation
+      , ends_with('.l')
+    )
+  , chr_method = 'pearson'
+  , df_query_rows = 
+    df_input
+  , dbl_scale_ub = 100
+  , dbl_scale_lb = 0
+) -> dsds
+toc()
+
+dsds$
+  df_similarity %>% 
+  select(!ends_with('.l')) %>% 
+  arrange(desc(similarity)) %>% 
+  print(n = nrow(.))
+
+# - Logit similarity test ------------------------------------------------------------------
+rm(dsds)
+
+tic()
+fun_match_similarity(
+  df_data_rows = 
+    df_occupations %>% 
+    select(
+      occupation
+      , ends_with('.l')
+    )
+  , chr_method = 'logit'
+  , df_query_rows = 
+    df_input
+  , dbl_scale_ub = 100
+  , dbl_scale_lb = 0
+) -> dsds
+toc()
+
+dsds$
+  df_similarity %>% 
+  select(!ends_with('.l')) %>% 
+  arrange(desc(similarity)) %>% 
+  print(n = nrow(.))
 
 # - Atlas Career Type Indicator test --------------------------------------
 
