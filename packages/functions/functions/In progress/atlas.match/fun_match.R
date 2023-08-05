@@ -668,7 +668,7 @@ fun_match_similarity <- function(
     }
     
     list_similarity <- NULL
-    mtx_similarity <- NULL
+    dbl_similarity <- NULL
     
   } else {
     
@@ -710,7 +710,7 @@ fun_match_similarity <- function(
       list_similarity %>%
         bind_cols() %>%
         as.matrix() ->
-        mtx_similarity
+        dbl_similarity
       
       if(length(chr_id_col)){
         
@@ -719,17 +719,17 @@ fun_match_similarity <- function(
         df_data_rows %>%
           pull(!!sym(chr_id_col)) ->
           colnames(
-            mtx_similarity
+            dbl_similarity
           )
         
         colnames(
-          mtx_similarity
+          dbl_similarity
         ) -> rownames(
-          mtx_similarity
+          dbl_similarity
         )
         
         colnames(
-          mtx_similarity
+          dbl_similarity
         ) -> names(
           list_similarity
         )
@@ -746,7 +746,7 @@ fun_match_similarity <- function(
   return(compact(list(
     'df_similarity' = df_data_rows
     , 'list_similarity' = list_similarity
-    , 'mtx_similarity' = mtx_similarity
+    , 'dbl_similarity' = dbl_similarity
   )))
   
 }
@@ -806,27 +806,34 @@ fun_match_equivalence_education <- function(
 
 # - Interchangeability function -------------------------------------------
 fun_match_interchangeability <- function(
-    mtx_similarity
+    dbl_similarity
     , dbl_scaling = 1
     , dbl_years_education = NULL
     , dbl_years_education_min = NULL
 ){
   
-  # Arguments validation within helper functions
+  # Other arguments validation within helper functions
+  stopifnot(
+    "'dbl_similarity' must be a percentage." = 
+      all(
+        dbl_similarity >= 0,
+        dbl_similarity <= 1
+      )
+  )
   
   # Data wrangling
   dbl_scaling[[1]] -> dbl_scaling
   
-  # cbind(mtx_similarity) #?
+  # cbind(dbl_similarity) #?
   
   # Apply equivalence function to similarity scores
   # fun_match_equivalence_similarity
   fun_match_equivalence(
-    dbl_var = mtx_similarity
+    dbl_var = dbl_similarity
     , dbl_scaling = dbl_scaling
-  ) -> mtx_interchangeability
+  ) -> dbl_interchangeability
   
-  rm(mtx_similarity)
+  rm(dbl_similarity)
   
   # Apply equivalence function to years of education
   if(all(
@@ -840,8 +847,8 @@ fun_match_interchangeability <- function(
       , dbl_years_education_min = 
         dbl_years_education_min
     ) * 
-      mtx_interchangeability -> 
-      mtx_interchangeability
+      dbl_interchangeability -> 
+      dbl_interchangeability
     
   }
   
@@ -854,13 +861,49 @@ fun_match_interchangeability <- function(
   # Data wrangling
   
   # Output
-  return(mtx_interchangeability)
+  return(dbl_interchangeability)
   
 }
 
 # [EMPLOYABILITY FUNCTIONS] -----------------------------------------------
-# - Employability helper function -----------------------------------------
 # - Employability function -----------------------------------------
+fun_match_employability <- function(
+    int_employment
+    , dbl_interchangeability
+){
+  
+  # Arguments validation
+  stopifnot(
+    "'int_employment' must be a numeric vector the same length as 'dbl_interchangeability'." =
+      all(
+        is.numeric(int_employment)
+        , length(int_employment) == 
+          nrow(cbind(dbl_interchangeability))
+      )
+  )
+  
+  stopifnot(
+    "'dbl_interchangeability' must be a percentage." = 
+      all(
+        dbl_interchangeability >= 0,
+        dbl_interchangeability <= 1
+      )
+  )
+  
+  # Data wrangling
+  round(int_employment) -> int_employment
+  
+  # Percentage of interchangeable job posts
+  sum(
+    int_employment * 
+      dbl_interchangeability
+  ) / sum(int_employment) ->
+    dbl_employability
+  
+  # Output
+  return(dbl_employability)
+  
+}
 
 # [TEST] ------------------------------------------------------------------
 # - Data ------------------------------------------------------------------
@@ -1057,7 +1100,7 @@ df_similarity$
 
 tic()
 fun_match_interchangeability(
-  mtx_similarity = 
+  dbl_similarity = 
     df_similarity$
     similarity
   , dbl_scaling = 1
@@ -1085,14 +1128,27 @@ df_similarity$
 
 tic()
 fun_match_interchangeability(
-  mtx_similarity = 
+  dbl_similarity = 
     df_similarity$
     similarity
   , dbl_scaling = 1
   , dbl_years_education = 22
   , dbl_years_education_min = 
-    seq(873, 1) / 100
+    rep(25, nrow(df_similarity))
 ) %>% round(4)
 toc()
 
 # - Employability test ----------------------------------------------------
+tic()
+
+fun_match_employability(
+  int_employment = 
+    df_occupations$
+    employment2
+  , dbl_interchangeability = 
+    df_similarity$
+    similarity %>% 
+    fun_match_interchangeability()
+)
+
+toc()
