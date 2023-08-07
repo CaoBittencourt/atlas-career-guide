@@ -1,23 +1,21 @@
 library(devtools)
 
-# use_dev_package(
-#   package = 'CaoBittencourtFerreira/atlas.ftools'
-#   , type = 'Depends'
-# )
-
 remove.packages('atlas.ftools')
+remove.packages('atlas.fstatics')
 remove.packages('atlas.efa')
 
-# install_github('CaoBittencourtFerreira/atlas.ftools')
-# install_github('caobittencourtferreira/atlas.ftools')
-#
-# library(atlas.ftools)
+install_github('CaoBittencourtFerreira/atlas.ftools')
+install_github('caobittencourtferreira/atlas.ftools')
 
 install_github('CaoBittencourtFerreira/atlas.efa')
 install_github('caobittencourtferreira/atlas.efa')
 
+install_github('CaoBittencourtFerreira/atlas.fstatics')
+install_github('caobittencourtferreira/atlas.fstatics')
+
 library(atlas.efa)
 library(atlas.ftools)
+library(atlas.fstatics)
 
 # [TEST] ------------------------------------------------------------------
 # - Data ------------------------------------------------------------------
@@ -111,3 +109,40 @@ list_efa
 #   top_items %>%
 #   list_flatten() %>%
 #   map(class)
+
+# [TEST] ------------------------------------------------------------------
+# - Data ------------------------------------------------------------------
+library(readr)
+library(tictoc)
+
+# read_rds(
+read_rds(
+  'C:/Users/Cao/Documents/Github/atlas-research/data/efa_model_equamax_15_factors.rds'
+) -> efa_model
+
+read_csv(
+  'C:/Users/Cao/Documents/Github/Atlas-Research/Data/df_atlas_complete_equamax_15_factors.csv'
+) -> df_occupations
+
+# - Factor-analytic comparative statics -----------------------------------
+tic()
+fun_fstatics_impact(
+  df_data =
+    df_occupations
+  , dbl_weights =
+    df_occupations$
+    employment2
+  , efa_model =
+    efa_model
+  , dbl_factors_impact =
+    runif(
+      efa_model$
+        factors
+      , min = -100
+      , max = 100
+    )
+  , lgc_aggregate = T
+) -> dsds
+toc()
+
+dsds
