@@ -5,27 +5,32 @@ remove.packages('atlas.fstatics')
 remove.packages('atlas.efa')
 remove.packages('atlas.eqvl')
 remove.packages('atlas.match')
+remove.packages('atlas.intc')
 
 install_github('CaoBittencourtFerreira/atlas.ftools')
-install_github('caobittencourtferreira/atlas.ftools')
+# install_github('caobittencourtferreira/atlas.ftools')
 
 install_github('CaoBittencourtFerreira/atlas.efa')
-install_github('caobittencourtferreira/atlas.efa')
+# install_github('caobittencourtferreira/atlas.efa')
 
 install_github('CaoBittencourtFerreira/atlas.fstatics')
-install_github('caobittencourtferreira/atlas.fstatics')
+# install_github('caobittencourtferreira/atlas.fstatics')
 
 install_github('CaoBittencourtFerreira/atlas.eqvl')
-install_github('caobittencourtferreira/atlas.eqvl')
+# install_github('caobittencourtferreira/atlas.eqvl')
 
 install_github('CaoBittencourtFerreira/atlas.match')
-install_github('caobittencourtferreira/atlas.match')
+# install_github('caobittencourtferreira/atlas.match')
 
-library(atlas.efa)
-library(atlas.ftools)
-library(atlas.fstatics)
-library(atlas.eqvl)
-library(atlas.match)
+install_github('CaoBittencourtFerreira/atlas.intc')
+# install_github('caobittencourtferreira/atlas.intc')
+
+# library(atlas.efa)
+# library(atlas.ftools)
+# library(atlas.fstatics)
+# library(atlas.eqvl)
+# library(atlas.match)
+library(atlas.intc)
 
 # [TEST] ------------------------------------------------------------------
 # - Data ------------------------------------------------------------------
@@ -285,3 +290,18 @@ toc()
 
 dsds
 
+
+# [TEST] ------------------------------------------------------------------
+# - Interchangeability test 1 -----------------------------------------------
+fun_intc_interchangeability(
+  dbl_similarity = runif(1, 0, 1)
+  , dbl_scaling = 1
+)
+
+# - Interchangeability test 2 -----------------------------------------------
+fun_intc_interchangeability(
+  dbl_similarity = runif(1, 0, 1)
+  , dbl_scaling = 1
+  , dbl_years_education = 21
+  , dbl_years_education_min = 25
+)
