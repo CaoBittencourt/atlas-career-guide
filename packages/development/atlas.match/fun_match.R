@@ -34,7 +34,7 @@ fun_match_weights <- function(
   )
   
   # Apply equivalence function to regression weights
-  fun_match_equivalence(
+  fun_eqvl_equivalence(
     dbl_var = dbl_var
     , dbl_scaling =
       dbl_scaling
