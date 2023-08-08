@@ -1,23 +1,23 @@
-# [SETUP] -----------------------------------------------------------------
-# - Packages ----------------------------------------------------------------
-pkg <- c(
-  'bvls'
-  , 'fastglm'
-  , 'weights'
-  # 'atlas.ftools' #Factor analysis tools
-  , 'dplyr', 'tidyr', 'purrr' #Data wrangling
-  # , 'vctrs' #Data wrangling
-  # , 'modeest' #Mode
-)
-
-# Activate / install packages
-lapply(pkg, function(x)
-  if(!require(x, character.only = T))
-  {install.packages(x); require(x)})
-
-# Package citation
+# # [SETUP] -----------------------------------------------------------------
+# # - Packages ----------------------------------------------------------------
+# pkg <- c(
+#   'bvls'
+#   , 'fastglm'
+#   , 'weights'
+#   # 'atlas.ftools' #Factor analysis tools
+#   , 'dplyr', 'tidyr', 'purrr' #Data wrangling
+#   # , 'vctrs' #Data wrangling
+#   # , 'modeest' #Mode
+# )
+# 
+# # Activate / install packages
 # lapply(pkg, function(x)
-#   {citation(package = x)})
+#   if(!require(x, character.only = T))
+#   {install.packages(x); require(x)})
+# 
+# # Package citation
+# # lapply(pkg, function(x)
+# #   {citation(package = x)})
 
 # [FUNCTIONS] -----------------------------------------------
 # - Employability function -----------------------------------------

@@ -30,7 +30,7 @@ install_github('CaoBittencourtFerreira/atlas.intc')
 # library(atlas.fstatics)
 # library(atlas.eqvl)
 # library(atlas.match)
-library(atlas.intc)
+# library(atlas.intc)
 
 # [TEST] ------------------------------------------------------------------
 # - Data ------------------------------------------------------------------
@@ -54,11 +54,26 @@ atlas.efa::fun_efa_fa(
   , lgc_remove_low_msai_items = T
   , lgc_adequacy_testing = T
   , lgc_optimal_nfactors = T
-  , lgc_show_diagrams = T
-  , lgc_show_results = F
 ) -> list_efa
 
-list_efa
+atlas.efa::fun_efa_vfa(
+  df_data =
+    df_occupations %>%
+    select(ends_with('.l'))
+  , chr_rotation = 'equamax'
+  , dbl_weights =
+    df_occupations$
+    employment2
+  , int_min_items_factor = 3
+  , lgc_remove_low_msai_items = T
+  , lgc_adequacy_testing = T
+  , lgc_optimal_nfactors = T
+) -> list_efa
+
+list_efa$
+  loadings_long$
+  EFA_equamax_14factors %>% 
+  View
 
 # fun_efa_fa(
 #   df_data =
@@ -289,7 +304,6 @@ fun_match_similarity(
 toc()
 
 dsds
-
 
 # [TEST] ------------------------------------------------------------------
 # - Interchangeability test 1 -----------------------------------------------
