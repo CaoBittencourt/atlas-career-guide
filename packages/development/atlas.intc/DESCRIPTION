@@ -1,0 +1,12 @@
+Package: atlas.intc
+Type: Package
+Title: A Career Interchangeability Coefficient
+Version: 0.1.0
+Author: Cao Bittencourt Ferreira
+Maintainer: Cao Bittencourt Ferreira <caobittencourt@gmail.com>
+Description: This package provides statistical metrics to estimate the interchangeability between any numeric professional profiles.
+Depends: atlas.eqvl
+Remotes: github::CaoBittencourtFerreira/atlas.eqvl
+License: What license is it under?
+Encoding: UTF-8
+LazyData: true

@@ -1,24 +1,24 @@
-# [SETUP] -----------------------------------------------------------------
-# - Packages ----------------------------------------------------------------
-pkg <- c(
-  'bvls'
-  , 'fastglm'
-  , 'weights'
-  # , 'atlas.eqvl' #Equivalence coefficient
-  , 'dplyr', 'tidyr', 'purrr' #Data wrangling
-  , 'atlas.eqvl' #Equivalence coefficient
-  # , 'vctrs' #Data wrangling
-  # , 'modeest' #Mode
-)
-
-# Activate / install packages
-lapply(pkg, function(x)
-  if(!require(x, character.only = T))
-  {install.packages(x); require(x)})
-
-# Package citation
+# # [SETUP] -----------------------------------------------------------------
+# # - Packages ----------------------------------------------------------------
+# pkg <- c(
+#   'bvls'
+#   , 'fastglm'
+#   , 'weights'
+#   # , 'atlas.eqvl' #Equivalence coefficient
+#   , 'dplyr', 'tidyr', 'purrr' #Data wrangling
+#   , 'atlas.eqvl' #Equivalence coefficient
+#   # , 'vctrs' #Data wrangling
+#   # , 'modeest' #Mode
+# )
+# 
+# # Activate / install packages
 # lapply(pkg, function(x)
-#   {citation(package = x)})
+#   if(!require(x, character.only = T))
+#   {install.packages(x); require(x)})
+# 
+# # Package citation
+# # lapply(pkg, function(x)
+# #   {citation(package = x)})
 
 # [MATCHING FUNCTIONS] -------------------------------------------------------------
 # - Regression weights --------------------------------------------
@@ -604,7 +604,7 @@ fun_match_similarity <- function(
     }
     
     list_similarity <- NULL
-    dbl_similarity <- NULL
+    mtx_similarity <- NULL
     
   } else {
     
@@ -618,7 +618,6 @@ fun_match_similarity <- function(
       map(
         ~ fun_match_similarity_cols(
           df_data_cols = df_data_cols
-          # , dbl_query = as.numeric(.x)
           , dbl_query = as.matrix(.x)
           , chr_method = chr_method
           , dbl_scale_ub = dbl_scale_ub
@@ -646,7 +645,7 @@ fun_match_similarity <- function(
       list_similarity %>%
         bind_cols() %>%
         as.matrix() ->
-        dbl_similarity
+        mtx_similarity
       
       if(length(chr_id_col)){
         
@@ -655,17 +654,17 @@ fun_match_similarity <- function(
         df_data_rows %>%
           pull(!!sym(chr_id_col)) ->
           colnames(
-            dbl_similarity
+            mtx_similarity
           )
         
         colnames(
-          dbl_similarity
+          mtx_similarity
         ) -> rownames(
-          dbl_similarity
+          mtx_similarity
         )
         
         colnames(
-          dbl_similarity
+          mtx_similarity
         ) -> names(
           list_similarity
         )
@@ -682,7 +681,7 @@ fun_match_similarity <- function(
   return(compact(list(
     'df_similarity' = df_data_rows
     , 'list_similarity' = list_similarity
-    , 'dbl_similarity' = dbl_similarity
+    , 'mtx_similarity' = mtx_similarity
   )))
   
 }
@@ -690,7 +689,6 @@ fun_match_similarity <- function(
 # # [TEST] ------------------------------------------------------------------
 # # - Data ------------------------------------------------------------------
 # library(readr)
-# library(tictoc)
 # 
 # read_rds(
 #   'C:/Users/Cao/Documents/Github/atlas-research/data/efa_model_equamax_15_factors.rds'
@@ -705,112 +703,76 @@ fun_match_similarity <- function(
 # ) -> df_input
 # 
 # # - Regression weights 1 ----------------------------------------------------
-# tic()
 # fun_match_weights(
 #   dbl_var = runif(50, 0, 100)
 # )
-# toc()
 # 
 # # - Regression weights 2 --------------------------------------------------
-# tic()
 # fun_match_vweights(
-#   df_data = 
-#     df_occupations %>% 
-#     select(ends_with('.l')) %>% 
-#     t() %>% 
+#   df_data =
+#     df_occupations %>%
+#     select(ends_with('.l')) %>%
+#     t() %>%
 #     as_tibble()
 # )
-# toc()
 # 
 # # - BVLS similarity test ------------------------------------------------------------------
-# rm(dsds)
-# 
-# tic()
 # fun_match_similarity(
-#   df_data_rows = 
-#     df_occupations %>% 
+#   df_data_rows =
+#     df_occupations %>%
 #     select(
 #       occupation
 #       , ends_with('.l')
 #     )
 #   , chr_method = 'bvls'
-#   , df_query_rows = 
+#   , df_query_rows =
 #     df_input
 #   , dbl_scale_ub = 100
 #   , dbl_scale_lb = 0
-# ) -> dsds
-# toc()
-# 
-# dsds$
-#   df_similarity %>% 
-#   select(!ends_with('.l')) %>% 
-#   arrange(desc(similarity)) %>% 
-#   print(n = nrow(.))
+# )
 # 
 # # - Pearson similarity test ------------------------------------------------------------------
-# rm(dsds)
-# 
 # tic()
 # fun_match_similarity(
-#   df_data_rows = 
-#     df_occupations %>% 
+#   df_data_rows =
+#     df_occupations %>%
 #     select(
 #       occupation
 #       , ends_with('.l')
 #     )
 #   , chr_method = 'pearson'
-#   , df_query_rows = 
+#   , df_query_rows =
 #     df_input
 #   , dbl_scale_ub = 100
 #   , dbl_scale_lb = 0
-# ) -> dsds
-# toc()
-# 
-# dsds$
-#   df_similarity %>% 
-#   select(!ends_with('.l')) %>% 
-#   arrange(desc(similarity)) %>% 
-#   print(n = nrow(.))
+# )
 # 
 # # - Logit similarity test ------------------------------------------------------------------
-# rm(dsds)
-# 
-# tic()
 # fun_match_similarity(
-#   df_data_rows = 
-#     df_occupations %>% 
+#   df_data_rows =
+#     df_occupations %>%
 #     select(
 #       occupation
 #       , ends_with('.l')
 #     )
 #   , chr_method = 'logit'
-#   , df_query_rows = 
+#   , df_query_rows =
 #     df_input
 #   , dbl_scale_ub = 100
 #   , dbl_scale_lb = 0
-# ) -> dsds
-# toc()
-# 
-# dsds$
-#   df_similarity %>% 
-#   select(!ends_with('.l')) %>% 
-#   arrange(desc(similarity)) %>% 
-#   print(n = nrow(.))
+# )
 # 
 # # - Similarity matrix test ------------------------------------------------
-# rm(dsds)
-# 
-# tic()
 # fun_match_similarity(
-#   df_data_rows = 
-#     df_occupations %>% 
+#   df_data_rows =
+#     df_occupations %>%
 #     slice(1:10) %>%
 #     select(
 #       occupation
 #       , ends_with('.l')
 #     )
-#   , df_query_rows = 
-#     df_occupations %>% 
+#   , df_query_rows =
+#     df_occupations %>%
 #     slice(1:10) %>%
 #     select(
 #       occupation
@@ -819,10 +781,6 @@ fun_match_similarity <- function(
 #   , chr_method = 'bvls'
 #   , dbl_scale_ub = 100
 #   , dbl_scale_lb = 0
-#   , chr_id_col = 
+#   , chr_id_col =
 #     'occupation'
-# ) -> dsds
-# toc()
-# 
-# dsds
-# 
+# )
