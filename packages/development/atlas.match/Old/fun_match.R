@@ -1,24 +1,88 @@
-# # [SETUP] -----------------------------------------------------------------
-# # - Packages ----------------------------------------------------------------
-# pkg <- c(
-#   'bvls'
-#   , 'fastglm'
-#   , 'weights'
-#   # 'atlas.ftools' #Factor analysis tools
-#   , 'dplyr', 'tidyr', 'purrr' #Data wrangling
-#   , 'atlas.eqvl' #Equivalence coefficient
-#   # , 'vctrs' #Data wrangling
-#   # , 'modeest' #Mode
-# )
-# 
-# # Activate / install packages
+# [SETUP] -----------------------------------------------------------------
+# - Packages ----------------------------------------------------------------
+pkg <- c(
+  'bvls'
+  , 'fastglm'
+  , 'weights'
+  # 'atlas.ftools' #Factor analysis tools
+  , 'dplyr', 'tidyr', 'purrr' #Data wrangling
+  # , 'vctrs' #Data wrangling
+  # , 'modeest' #Mode
+)
+
+# Activate / install packages
+lapply(pkg, function(x)
+  if(!require(x, character.only = T))
+  {install.packages(x); require(x)})
+
+# Package citation
 # lapply(pkg, function(x)
-#   if(!require(x, character.only = T))
-#   {install.packages(x); require(x)})
-# 
-# # Package citation
-# # lapply(pkg, function(x)
-# #   {citation(package = x)})
+#   {citation(package = x)})
+
+# [EQUIVALENCE FUNCTIONS] ------------------------------------------
+# - Equivalence function ------------------------------------
+fun_match_equivalence <- function(
+    dbl_var
+    , dbl_scale_ub = NULL
+    , dbl_scaling = 1
+){
+  
+  # Argument validation
+  stopifnot(
+    "'dbl_var' must be a numeric vector or matrix." =
+      is.numeric(dbl_var)
+  )
+  
+  stopifnot(
+    "'dbl_scale_ub' must be either NULL or numeric." =
+      any(
+        is.numeric(dbl_scale_ub)
+        , is.null(dbl_scale_ub)
+      )
+  )
+  
+  stopifnot(
+    "'dbl_scaling' must be numeric." =
+      is.numeric(dbl_scaling)
+  )
+  
+  # Normalize data to percentage scale
+  if(!all(
+    max(dbl_var, na.rm = T) <= 1,
+    min(dbl_var, na.rm = T) >= 0
+  )){
+    
+    # Normalize by upper bound, if any
+    if(length(dbl_scale_ub)){
+      
+      dbl_var / 
+        dbl_scale_ub -> 
+        dbl_var
+      
+    } else { 
+      
+      # Normalize by maxima
+      dbl_var / 
+        max(
+          dbl_var
+          , na.rm = T
+        ) -> dbl_var
+      
+    }
+    
+  }
+  
+  # Calculate equivalence
+  dbl_var ^ 
+    (
+      (1 / dbl_var) ^ 
+        (dbl_scaling / dbl_var)
+    ) -> dbl_equivalence
+  
+  # Output
+  return(dbl_equivalence)
+  
+}
 
 # [MATCHING FUNCTIONS] -------------------------------------------------------------
 # - Regression weights --------------------------------------------

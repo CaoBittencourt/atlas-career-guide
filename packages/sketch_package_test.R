@@ -3,6 +3,7 @@ library(devtools)
 remove.packages('atlas.ftools')
 remove.packages('atlas.fstatics')
 remove.packages('atlas.efa')
+remove.packages('atlas.eqvl')
 
 install_github('CaoBittencourtFerreira/atlas.ftools')
 install_github('caobittencourtferreira/atlas.ftools')
@@ -13,9 +14,13 @@ install_github('caobittencourtferreira/atlas.efa')
 install_github('CaoBittencourtFerreira/atlas.fstatics')
 install_github('caobittencourtferreira/atlas.fstatics')
 
+install_github('CaoBittencourtFerreira/atlas.eqvl')
+install_github('caobittencourtferreira/atlas.eqvl')
+
 library(atlas.efa)
 library(atlas.ftools)
 library(atlas.fstatics)
+library(atlas.eqvl)
 
 # [TEST] ------------------------------------------------------------------
 # - Data ------------------------------------------------------------------
@@ -25,7 +30,7 @@ read_csv(
   'C:/Users/Cao/Documents/Github/Atlas-Research/Data/df_atlas_complete_equamax_15_factors.csv'
 ) -> df_occupations
 
-# - Test ------------------------------------------------------------------
+# - EFA ------------------------------------------------------------------
 atlas.efa::fun_efa_fa(
   df_data =
     df_occupations %>%
@@ -146,3 +151,10 @@ fun_fstatics_impact(
 toc()
 
 dsds
+
+# [TEST] ------------------------------------------------------------------
+
+# - Equivalence coefficient -----------------------------------------------
+atlas.eqvl::fun_eqvl_equivalence(runif(1, 0, 1))
+
+
