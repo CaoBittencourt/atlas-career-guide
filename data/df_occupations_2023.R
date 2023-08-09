@@ -29,88 +29,162 @@ df_employment <- read_csv('https://docs.google.com/spreadsheets/d/e/2PACX-1vQ2Vj
 
 # [DATA] --------------------------------------------
 # - Occupations data frame -------------------------------------------------------
+# Column names
 fun_misc_rename_df(
   df_occupations
 ) -> df_occupations
 
-df_occupations
-
 df_occupations %>%
-  mutate(code = substr(code, 1, 7)) %>%
-  group_by(code) %>%
-  mutate(
-    code.variants = n()
-    , .after = code
+  rename_with(
+    .cols = 1:17
+    , .fn = ~ .x %>%
+      str_remove_all('required_') %>%
+      str_remove_all('related_') %>%
+      str_replace_all('level_of_', 'id_') %>%
+      str_replace('mean$', 'wage_mean') %>%
+      str_replace('compensation', 'wage')
   ) %>%
-  ungroup() %>%
-  select(
-    occupation
-    , code
-    , code.variants
-    , career_cluster
-    , entry_level_education
-    , typical_on_the_job_training
-    , annual_wage_2021
-    , projected_growth_2020.2030
-  ) %>%
-  mutate(
-    across(
-      .cols = ends_with('.l') #Using recommended levels
-      # .cols = ends_with(c('.l', '.i'))
-      ,.fns = function(x){x/100}
+  rename_with(
+    .cols = starts_with(c(
+      'zone'
+      , 'work_experience'
+      , 'on_site_'
+      , 'on_the_job'
+    ))
+    , .fn = ~ paste0('id_', .x)
+  ) %>% 
+  rename_with(
+    .cols = c(
+      'realistic',
+      'investigative',
+      'artistic',
+      'social',
+      'enterprising',
+      'conventional'
     )
+    , .fn = ~ paste0('holland_', .x)
+  ) %>%
+  rename_with(
+    .cols = seq(match(
+      'oral_comprehension'
+      , names(df_occupations)
+    ), ncol(df_occupations))
+    , .fn = ~ paste0('item_', .x)
+  ) %>% 
+  rename_with(
+    .cols = c(
+      'achievement',
+      'independence',
+      'recognition',
+      'relationships',
+      'support',
+      'working_conditions'
+    )
+    , .fn = ~ paste0('value_', .x)
+  ) %>% 
+  rename_with(
+    .cols = 
+      seq(
+        max(which(str_detect(
+          names(.)
+          , 'value_'
+        ))) + 1
+        , min(which(str_detect(
+          names(.)
+          , 'item_'
+        ))) - 1 
+      )
+    , .fn = ~ paste0('style_', .x)
+  ) %>% 
+  rename(
+    occupation = title
   ) -> df_occupations
 
-# - Years of education ---------------------------------------------
+# Data types
 df_occupations %>% 
   mutate(
-    .after = entry_level_education
-    , education_years = recode(
-      entry_level_education
-      , "Bachelor's degree" = 17 + 4
-      , "Postsecondary nondegree award" = 17 + 4 + 2
-      , "High school diploma or equivalent" = 17
-      , "Master's degree" = 17 + 5
-      , "Associate's degree" = 17 + 2
-      , "No formal educational credential" = 14
-      , "Some college, no degree" = 17 + 2
-      , "Doctoral or professional degree" = 17 + 7
+    wage_mean = 
+      wage_mean %>% 
+      str_remove_all(',') %>%
+      str_remove_all('\\$') %>% 
+      as.numeric()
+    , across(
+      .cols = starts_with('id_')
+      ,.fns = as.integer
     )
   ) -> df_occupations
+
+# SOC code variants
+df_occupations %>%
+  mutate(
+    .before = 1
+    , soc_code = substr(
+      code, 1, 7
+    )
+  ) %>%
+  group_by(soc_code) %>%
+  mutate(
+    nvariants = n()
+    , .after = code
+  ) %>%
+  ungroup() -> 
+  df_occupations
+
+# # - Years of education ---------------------------------------------
+# # sort(unique(df_occupations$id_education)) * 2 + 1
+# df_occupations %>% 
+#   mutate(
+#     .after = id_education
+#     , education_years = recode(
+#       id_education
+#       , "Bachelor's degree" = 17 + 4
+#       , "Postsecondary nondegree award" = 17 + 4 + 2
+#       , "High school diploma or equivalent" = 17
+#       , "Master's degree" = 17 + 5
+#       , "Associate's degree" = 17 + 2
+#       , "No formal educational credential" = 14
+#       , "Some college, no degree" = 17 + 2
+#       , "Doctoral or professional degree" = 17 + 7
+#     )
+#   ) -> df_occupations
 
 # - Employment data frame -------------------------------------------------
 df_employment %>% 
   rename(
-    code = OCC_CODE
+    soc_code = OCC_CODE
     , employment = TOT_EMP
-  ) %>% 
+  ) %>%
   select(
-    code
+    soc_code
     , employment
   ) %>% 
-  group_by(code) %>%
+  group_by(soc_code) %>%
   reframe(
-    employment = max(employment)
-  ) %>% 
+    employment = 
+      max(employment)
+  ) -> df_employment
+
+df_employment %>% 
   right_join(
     df_occupations
-  ) %>% 
+    , multiple = 'all'
+  ) %>%
   mutate(
     .after = employment
     , employment_variants = 
       employment / 
-      code.variants
+      nvariants
   ) -> df_occupations
 
+rm(df_employment)
+
 # [EXPORT] ----------------------------------------------------
-# # XLSX --------------------------------------------------------------------
-# df_occupations %>% 
-#   select(
-#     code
-#     , code.variants
-#     , occupation
-#     , annual_wage_2021
-#   ) %>% 
-#   write.xlsx(
-#     'df_occupations.xlsx'
-#   )
+# - Write new csv file ----------------------------------------------------
+setwd(dirname(
+  rstudioapi::getSourceEditorContext()$path
+))
+
+write_csv(
+  df_occupations
+  , file = './df_occupations_2023.csv'
+)
