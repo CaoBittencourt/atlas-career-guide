@@ -6,24 +6,21 @@ remove.packages('atlas.efa')
 remove.packages('atlas.eqvl')
 remove.packages('atlas.match')
 remove.packages('atlas.intc')
+remove.packages('atlas.skew')
+remove.packages('atlas.kcoef')
+remove.packages('atlas.notiq')
+remove.packages('atlas.misc')
 
 install_github('CaoBittencourtFerreira/atlas.ftools')
-# install_github('caobittencourtferreira/atlas.ftools')
-
 install_github('CaoBittencourtFerreira/atlas.efa')
-# install_github('caobittencourtferreira/atlas.efa')
-
 install_github('CaoBittencourtFerreira/atlas.fstatics')
-# install_github('caobittencourtferreira/atlas.fstatics')
-
 install_github('CaoBittencourtFerreira/atlas.eqvl')
-# install_github('caobittencourtferreira/atlas.eqvl')
-
 install_github('CaoBittencourtFerreira/atlas.match')
-# install_github('caobittencourtferreira/atlas.match')
-
 install_github('CaoBittencourtFerreira/atlas.intc')
-# install_github('caobittencourtferreira/atlas.intc')
+install_github('CaoBittencourtFerreira/atlas.skew')
+install_github('CaoBittencourtFerreira/atlas.kcoef')
+install_github('CaoBittencourtFerreira/atlas.notiq')
+install_github('CaoBittencourtFerreira/atlas.misc')
 
 # library(atlas.efa)
 # library(atlas.ftools)
@@ -31,6 +28,9 @@ install_github('CaoBittencourtFerreira/atlas.intc')
 # library(atlas.eqvl)
 # library(atlas.match)
 # library(atlas.intc)
+# library(atlas.skew)
+# library(atlas.kcoef)
+library(atlas.notiq)
 
 # [TEST] ------------------------------------------------------------------
 # - Data ------------------------------------------------------------------
@@ -318,4 +318,100 @@ fun_intc_interchangeability(
   , dbl_scaling = 1
   , dbl_years_education = 21
   , dbl_years_education_min = 25
+)
+
+# [TEST] ------------------------------------------------------------------
+# - Sd-adjusted mode 1 ------------------------------------------------------
+fun_skew_sdmode(
+  dbl_var = pmax(rnorm(1000, 50, sd = 15), 0)
+  , dbl_weights = runif(1000, 25000, 250000)
+  , dbl_scale_lb = 0
+  , dbl_scale_ub = 100
+  , dbl_discount = 0.25
+)
+
+# - Sd-adjusted mode 2 ------------------------------------------------------
+fun_skew_sdmode(
+  dbl_var =
+    pmax(
+      cbind(
+        rnorm(1000, 50, sd = 15),
+        rnorm(1000, 50, sd = 15),
+        rnorm(1000, 50, sd = 15),
+        rnorm(1000, 50, sd = 15),
+        rnorm(1000, 50, sd = 15)
+      ), 0
+    )
+  , dbl_weights = runif(1000, 25000, 250000)
+  , dbl_scale_lb = 0
+  , dbl_scale_ub = 100
+  , dbl_discount = 0.25
+)
+
+# - Sd-adjusted mode 3 ------------------------------------------------------
+pmax(
+  cbind(
+    rnorm(1000, 50, sd = 15),
+    rnorm(1000, 50, sd = 15),
+    rnorm(1000, 50, sd = 15),
+    rnorm(1000, 50, sd = 15),
+    rnorm(1000, 50, sd = 15)
+  ), 0
+) -> dsds
+
+colnames(dsds) <- letters[1:ncol(dsds)]
+
+fun_skew_sdmode(
+  dbl_var = dsds
+  , dbl_weights = runif(1000, 25000, 250000)
+  , dbl_scale_lb = 0
+  , dbl_scale_ub = 100
+  , dbl_discount = 0.25
+)
+
+# [TEST] ------------------------------------------------------------------
+# - Data ------------------------------------------------------------------
+library(readr)
+
+read_csv(
+  'C:/Users/Cao/Documents/Github/Atlas-Research/Data/df_atlas_complete_equamax_15_factors.csv'
+) -> df_occupations
+
+# - Capital flexibility ------------------------------------------------------
+fun_kcoef_kflex_macro(
+  dbl_var = df_occupations$active_listening.l
+  , dbl_weights = df_occupations$employment2
+  , dbl_scale_lb = 0
+  , dbl_scale_ub = 100
+  , dbl_discount = 0.25
+)
+
+# - Capital flexibility data frame ------------------------------------------------------
+fun_kcoef_kflex_macro_df(
+  df_data =
+    df_occupations %>%
+    select(
+      occupation
+      , ends_with('.l')
+    )
+  , dbl_weights =
+    df_occupations$
+    employment2
+  , dbl_scale_lb = 0
+  , dbl_scale_ub = 100
+  , dbl_discount = 0.25
+  , lgc_sample_variance = F
+) -> df_kflex
+
+df_kflex
+
+# [TEST] ------------------------------------------------------------------
+# - NOT IQ ----------------------------------------------------------------
+fun_notiq_quotient(
+  dbl_proxy_scores =
+    pmin(pmax(
+      rnorm(30, mean = 33, sd = 14.8)
+      , 0), 100)
+  , dbl_proxy_mean = 33
+  , dbl_proxy_sd = 14.8
 )
