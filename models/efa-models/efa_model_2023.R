@@ -50,6 +50,53 @@ read_csv(
 #   , 'item_public_safety_and_security'
 # ) -> chr_items_remove1
 
+# c(
+#   'item_near_vision'
+#   , 'item_foreign_language'
+#   , 'item_duration_of_typical_work_week'
+#   # , 'item_telephone'
+#   # , 'item_electronic_mail'
+#   , 'item_letters_and_memos'
+#   , 'item_food_production'
+#   , 'item_structured_versus_unstructured_work'
+#   , 'item_establishing_and_maintaining_interpersonal_relationships'
+#   , 'item_communicating_with_supervisors_peers_or_subordinates'
+#   , 'item_speaking'
+#   , 'item_writing'
+#   , 'item_reading_comprehension'
+#   , 'item_degree_of_automation'
+#   , 'item_work_schedules'
+#   , 'item_indoors_environmentally_controlled'
+#   , 'item_impact_of_decisions_on_co_workers_or_company_results'
+#   , 'item_spend_time_sitting'
+#   , 'item_law_and_government'
+#   , 'item_public_safety_and_security'
+# ) -> chr_items_remove1
+
+# c(
+#   'item_near_vision'
+#   , 'item_foreign_language'
+#   , 'item_duration_of_typical_work_week'
+#   # , 'item_telephone'
+#   # , 'item_electronic_mail'
+#   , 'item_letters_and_memos'
+#   , 'item_food_production'
+#   , 'item_structured_versus_unstructured_work'
+#   , 'item_establishing_and_maintaining_interpersonal_relationships'
+#   , 'item_communicating_with_supervisors_peers_or_subordinates'
+#   , 'item_speaking'
+#   # , 'item_writing'
+#   , 'item_reading_comprehension'
+#   , 'item_level_of_competition'
+#   , 'item_degree_of_automation'
+#   , 'item_work_schedules'
+#   , 'item_indoors_environmentally_controlled'
+#   , 'item_impact_of_decisions_on_co_workers_or_company_results'
+#   , 'item_spend_time_sitting'
+#   , 'item_law_and_government'
+#   , 'item_public_safety_and_security'
+# ) -> chr_items_remove1
+
 c(
   'item_near_vision'
   , 'item_foreign_language'
@@ -61,9 +108,11 @@ c(
   , 'item_structured_versus_unstructured_work'
   , 'item_establishing_and_maintaining_interpersonal_relationships'
   , 'item_communicating_with_supervisors_peers_or_subordinates'
-  , 'item_speaking'
-  , 'item_writing'
+  # , 'item_speaking'
+  # , 'item_writing'
+  , 'item_freedom_to_make_decisions'
   , 'item_reading_comprehension'
+  , 'item_level_of_competition'
   , 'item_degree_of_automation'
   , 'item_work_schedules'
   , 'item_indoors_environmentally_controlled'
@@ -123,8 +172,9 @@ atlas.efa::fun_efa_vfa(
   df_data = 
     df_occupations_efa1[-1]
   # , int_factors = NULL
-  , int_factors = c(14, 15)
-  , chr_rotation = c('oblimin', 'equamax')
+  , int_factors = c(14, 15, 16, 20)
+  , chr_rotation = 'equamax'
+  # , chr_rotation = c('oblimin', 'equamax')
   # , chr_rotation = c('quartimax', 'equamax')
   , dbl_weights = 
     df_occupations_efa1$
@@ -174,6 +224,27 @@ list_efa1_loadings[[1]] %>%
   ) %>% 
   ungroup() %>%
   print(n = nrow(.))
+
+# 1 social skills
+# 2 engineering
+# 3 health science
+# 4 management
+# 5 transportation
+# 6 administrative
+# 7 sales and marketing
+# 8 perception
+# 9 job hazards
+# 10 analytical skills
+# 11 intelligence
+# 12 dexterity
+# 13 arts and humanities
+# 14 team work
+# 15 discernment / systems skills
+# 16 industrial
+# 17 creativity
+# 18 mechanical skills
+# 19 teaching
+# 20 strength / robustness
 
 # Factor 1 team work / social skills
 # Factor 2 dexterity / manual skills / mechanical

@@ -2,6 +2,7 @@
 # - Packages ----------------------------------------------------------------
 pkg <- c(
   'dplyr', 'tidyr', 'readr',  'stringr' #Data wrangling
+  , 'openxlsx' #Open excel
   , 'devtools' #Github packages
 )
 
@@ -24,8 +25,22 @@ df_occupations <- read_csv(
   'C:/Users/Cao/Documents/Github/atlas-research/data/df_occupations_2023_3q.csv'
 )
 
-# Employment data frame
-df_employment <- read_csv('https://docs.google.com/spreadsheets/d/e/2PACX-1vQ2VjvaVX0WrPJcuTtfYL5E4yZ6OmijSL961ytjRtxCPHb2JInjOKSHqq-pGg_m7g/pub?gid=873564137&single=true&output=csv')
+# # Employment data frame (2021)
+# df_employment <- read_csv(
+#   'https://docs.google.com/spreadsheets/d/e/2PACX-1vQ2VjvaVX0WrPJcuTtfYL5E4yZ6OmijSL961ytjRtxCPHb2JInjOKSHqq-pGg_m7g/pub?gid=873564137&single=true&output=csv'
+# )
+
+# Employment data frame (2022)
+df_employment_2022 <- read.xlsx(
+  'C:/Users/Cao/Documents/Github/atlas-research/data/employment/bls-oes-2022/national_M2022_dl.xlsx'
+)
+
+# Missing occupations (2022)
+df_employment_2022_na <- read_csv(
+  'C:/Users/Cao/Documents/Github/atlas-research/data/employment/bls-oes-2022/national_M2022_na.csv'
+)
+
+df_employment_2022 <- as_tibble(df_employment_2022)
 
 # [DATA] --------------------------------------------
 # - Occupations data frame -------------------------------------------------------
@@ -149,7 +164,7 @@ df_occupations %>%
 #   ) -> df_occupations
 
 # - Employment data frame -------------------------------------------------
-df_employment %>% 
+df_employment_2022 %>% 
   rename(
     soc_code = OCC_CODE
     , employment = TOT_EMP
@@ -162,9 +177,15 @@ df_employment %>%
   reframe(
     employment = 
       max(employment)
-  ) -> df_employment
+  ) %>% 
+  bind_rows(
+    df_employment_2022_na %>% 
+      select(-occupation)
+  ) -> df_employment_2022
 
-df_employment %>% 
+rm(df_employment_2022_na)
+
+df_employment_2022 %>% 
   right_join(
     df_occupations
     , multiple = 'all'
@@ -176,7 +197,34 @@ df_employment %>%
       nvariants
   ) -> df_occupations
 
-rm(df_employment)
+rm(df_employment_2022)
+
+# - Imput NA -------------------------------------------------------------
+df_occupations %>%
+  filter(is.na(
+    employment
+  ))
+
+df_occupations %>%
+  filter(if_any(
+    .cols = everything()
+    ,.fns = is.na
+  )) %>% 
+  pull(soc_code)
+
+df_occupations %>% 
+  group_by(cluster) %>%
+  mutate(
+    wage_mean = if_else(
+      is.na(wage_mean)
+      , weighted.mean(
+        wage_mean
+        , employment_variants
+        , na.rm = T
+      )
+      , wage_mean
+    )
+  ) -> df_occupations
 
 # [EXPORT] ----------------------------------------------------
 # - Write new csv file ----------------------------------------------------
