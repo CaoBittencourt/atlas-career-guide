@@ -11,7 +11,7 @@ lapply(pkg, function(x)
   if(!require(x, character.only = T))
   {install.packages(x); require(x)})
 
-install_github('CaoBittencourtFerreira/atlas.misc')
+# install_github('CaoBittencourtFerreira/atlas.misc')
 
 library(atlas.misc)
 
@@ -25,11 +25,6 @@ df_occupations <- read_csv(
   'C:/Users/Cao/Documents/Github/atlas-research/data/df_occupations_2023_3q.csv'
 )
 
-# # Employment data frame (2021)
-# df_employment <- read_csv(
-#   'https://docs.google.com/spreadsheets/d/e/2PACX-1vQ2VjvaVX0WrPJcuTtfYL5E4yZ6OmijSL961ytjRtxCPHb2JInjOKSHqq-pGg_m7g/pub?gid=873564137&single=true&output=csv'
-# )
-
 # Employment data frame (2022)
 df_employment_2022 <- read.xlsx(
   'C:/Users/Cao/Documents/Github/atlas-research/data/employment/bls-oes-2022/national_M2022_dl.xlsx'
@@ -42,12 +37,19 @@ df_employment_2022_na <- read_csv(
 
 df_employment_2022 <- as_tibble(df_employment_2022)
 
+# Education, experience codes
+df_education <- read.xlsx(
+  'C:/Users/Cao/Documents/Github/atlas-research/data/education/id_education_experience.xlsx'
+)
+
+df_education <- as_tibble(df_education)
+
 # [DATA] --------------------------------------------
 # - Occupations data frame -------------------------------------------------------
 # Column names
-fun_misc_rename_df(
+df_occupations %>% 
+  atlas.misc::fun_misc_rename_df() ->
   df_occupations
-) -> df_occupations
 
 df_occupations %>%
   rename_with(
@@ -145,23 +147,66 @@ df_occupations %>%
   ungroup() -> 
   df_occupations
 
-# # - Years of education ---------------------------------------------
-# # sort(unique(df_occupations$id_education)) * 2 + 1
-# df_occupations %>% 
-#   mutate(
-#     .after = id_education
-#     , education_years = recode(
-#       id_education
-#       , "Bachelor's degree" = 17 + 4
-#       , "Postsecondary nondegree award" = 17 + 4 + 2
-#       , "High school diploma or equivalent" = 17
-#       , "Master's degree" = 17 + 5
-#       , "Associate's degree" = 17 + 2
-#       , "No formal educational credential" = 14
-#       , "Some college, no degree" = 17 + 2
-#       , "Doctoral or professional degree" = 17 + 7
-#     )
-#   ) -> df_occupations
+# Rename specific items
+df_occupations %>% 
+  rename(
+    native_language = 
+      national_language
+    , item_pure_mathematics = 
+      item_mathematics
+    , item_applied_mathematics = 
+      item_numerical_reasoning
+  ) -> df_occupations
+
+# - Years of education ---------------------------------------------
+df_education %>% 
+  atlas.misc::fun_misc_rename_df() %>% 
+  mutate(
+    element_name = 
+      atlas.misc::fun_misc_str_standard(
+        element_name
+      ) %>% 
+      str_remove_all('required_') %>%
+      str_replace_all('level_of_', 'id_')
+  ) %>%
+  filter(
+    element_name == 'id_education'
+  ) %>% 
+  select(
+    element_name
+    , category
+    , category_description
+  ) %>%
+  pivot_wider(
+    names_from = element_name
+    , values_from = category
+  ) %>%
+  rename(
+    education_desc = 1
+  ) %>%
+  mutate(
+    education_years = 
+      case_match(
+        id_education
+        , 1 ~ 14 
+        , 2 ~ 17
+        , 3 ~ 17 + 1
+        , 4 ~ 17 + 1.5
+        , 5 ~ 17 + 2
+        , 6 ~ 17 + 4
+        , 7 ~ 17 + 4 + 1
+        , 8 ~ 17 + 5
+        , 9 ~ 17 + 5 + 1
+        , 10 ~ 17 + 6
+        , 11 ~ 17 + 7
+        , 12 ~ 17 + 7 + 1
+        , .default = 14
+      )
+  ) %>% 
+  right_join(
+    df_occupations
+    , multiple = 'all'
+  ) -> df_occupations
 
 # - Employment data frame -------------------------------------------------
 df_employment_2022 %>% 
@@ -199,7 +244,7 @@ df_employment_2022 %>%
 
 rm(df_employment_2022)
 
-# - Imput NA -------------------------------------------------------------
+# - Input NA -------------------------------------------------------------
 df_occupations %>%
   filter(is.na(
     employment
@@ -224,6 +269,21 @@ df_occupations %>%
       )
       , wage_mean
     )
+  ) %>% 
+  ungroup() -> 
+  df_occupations
+
+df_occupations %>% 
+  filter(if_any(
+    .cols = everything()
+    ,.fns = is.na
+  ))
+
+# - Relocate --------------------------------------------------------------
+df_occupations %>% 
+  relocate(
+    soc_code
+    , occupation
   ) -> df_occupations
 
 # [EXPORT] ----------------------------------------------------
