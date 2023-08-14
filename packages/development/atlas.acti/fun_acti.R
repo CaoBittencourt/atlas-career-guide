@@ -26,7 +26,10 @@ library(SWKM)
 
 # [FUNCTIONS] ---------------------------
 # - Generalism function ---------------------------------------------------
-fun_acti_generalism <- function(mtx_data, dbl_scaling = 1){
+fun_acti_generalism <- function(
+    mtx_data
+    , dbl_scaling = 1
+){
   
   # Arguments validation
   stopifnot(
@@ -81,6 +84,32 @@ fun_acti_generalism <- function(mtx_data, dbl_scaling = 1){
   
   # Output
   return(mtx_generalism)
+  
+}
+
+# - Competency function ---------------------------------------------------
+fun_acti_competency <- function(
+    mtx_data
+    , dbl_scale_lb
+    , dbl_scale_up
+    , int_levels = 3
+){
+  
+  # Arguments validation
+  
+  # Data wrangling
+  
+  # Competency level helper function
+  # fun_acti_competency_helper <- function(
+  #   dbl_var
+  #   # , dbl_scale_lb
+  #   # , dbl_scale_up
+  #   )
+  
+  # Apply competency level helper function
+  
+  # Output
+  return(mtx_competency)
   
 }
 
