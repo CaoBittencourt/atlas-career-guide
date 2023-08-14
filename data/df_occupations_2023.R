@@ -150,8 +150,8 @@ df_occupations %>%
 # Rename specific items
 df_occupations %>% 
   rename(
-    native_language = 
-      national_language
+    item_native_language = 
+      item_national_language
     , item_pure_mathematics = 
       item_mathematics
     , item_applied_mathematics = 
@@ -240,6 +240,9 @@ df_employment_2022 %>%
     , employment_variants = 
       employment / 
       nvariants
+    , employment_norm = 
+      employment_variants / 
+      min(employment_variants)
   ) -> df_occupations
 
 rm(df_employment_2022)
