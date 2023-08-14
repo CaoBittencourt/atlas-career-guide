@@ -26,7 +26,63 @@ library(SWKM)
 
 # [FUNCTIONS] ---------------------------
 # - Generalism function ---------------------------------------------------
-fun_acti_generalism <- function(df_data){}
+fun_acti_generalism <- function(mtx_data, dbl_scaling = 1){
+  
+  # Arguments validation
+  stopifnot(
+    "'mtx_data' must be a numeric matrix." =
+      all(
+        is.numeric(mtx_data)
+      )
+  )
+  
+  stopifnot(
+    "'dbl_scaling' must be numeric" =
+      is.numeric(dbl_scaling)
+  )
+  
+  # Data wrangling
+  dbl_scaling[[1]] -> dbl_scaling
+  
+  # Generalism helper function
+  fun_acti_generalism_helper <- function(dbl_profile){
+    
+    # Divide each element of the vector by the max
+    dbl_profile / 
+      max(
+        dbl_profile
+        , na.rm = T
+      ) -> dbl_profile
+    
+    # Apply equivalence function to vector
+    fun_eqvl_equivalence(
+      dbl_profile
+      , dbl_scaling = 
+        dbl_scaling
+    ) -> dbl_generalism
+    
+    rm(dbl_profile)
+    
+    # Take the average equivalence
+    mean(
+      dbl_generalism
+    ) -> dbl_generalism
+    
+    # Output
+    return(dbl_generalism)
+    
+  }
+  
+  # Apply generalism function to each row
+  apply(
+    mtx_data, 1
+    , fun_acti_generalism_helper
+  ) -> mtx_generalism
+  
+  # Output
+  return(mtx_generalism)
+  
+}
 
 # - Create Career types -----------------------------------------------------
 fun_acti_derive_types <- function(
@@ -65,12 +121,7 @@ fun_acti_derive_types <- function(
   # Data wrangling
   
   # Determine generalist vs specialist scope descriptor
-  sapply(
-    df_data / apply(df_data, 1, max)
-    , fun_eqvl_equivalence
-    ) %>% 
-    rowMeans() -> 
-    dbl_generalism
+  
   
   # Determine high-mid-low level competency descriptor
   
@@ -146,6 +197,52 @@ read_csv(
 read_csv(
   'https://docs.google.com/spreadsheets/d/e/2PACX-1vSVdXvQMe4DrKS0LKhY0CZRlVuCCkEMHVJHQb_U-GKF21CjcchJ5jjclGSlQGYa5Q/pub?gid=1515296378&single=true&output=csv'
 ) -> df_input
+
+# - Generalism test -------------------------------------------------------
+df_occupations %>%
+  transmute(
+    occupation = occupation
+    , generalism =
+      apply(
+        df_occupations %>% 
+          select(ends_with('.l'))
+        , 1, function(x){
+          x %>% 
+            as.numeric() %>%
+            fun_acti_generalism()
+        }
+      )
+  ) -> dsdsds
+
+df_input[-1] %>% 
+  as.matrix() %>% 
+  rbind(.,.) %>% 
+  fun_acti_generalism(
+    dbl_scaling = 0
+  )
+
+dsdsds %>%
+  arrange(desc(
+    generalism
+  )) %>% 
+  print(n = Inf)
+
+df_input[-1] -> dsds
+
+# sd(dsds) / (100 - 0)
+
+dsds / max(dsds) -> dsds
+
+as.numeric(dsds) -> dsds
+
+ggplot2::qplot(dsds, geom = 'density')
+
+mean(fun_eqvl_equivalence(dsds, dbl_scaling = 0))
+mean(fun_eqvl_equivalence(dsds, dbl_scaling = 0))
+
+fun_acti_generalism(matrix(1, 2, 5) * rnorm(10, 0.5, 0.025))
+fun_acti_generalism(matrix(1, 2, 5) * rnorm(10, 0.5, 0.25))
+fun_acti_generalism(matrix(1, 2, 5) * rnorm(10, 0.5, 1000))
 
 # - Atlas Career Type Indicator test --------------------------------------
 fun_acti_derive_types
