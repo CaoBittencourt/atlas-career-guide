@@ -40,7 +40,7 @@ fun_acti_generalism <- function(
   )
   
   stopifnot(
-    "'dbl_scaling' must be numeric" =
+    "'dbl_scaling' must be numeric." =
       is.numeric(dbl_scaling)
   )
   
@@ -87,6 +87,76 @@ fun_acti_generalism <- function(
   
 }
 
+# - Generalism function 2 ---------------------------------------------------
+fun_acti_generalism <- function(
+    mtx_data
+    , dbl_discount = 0.25
+){
+  
+  # Arguments validation
+  stopifnot(
+    "'mtx_data' must be a numeric matrix." =
+      all(
+        is.numeric(mtx_data)
+      )
+  )
+  
+  stopifnot(
+    "'dbl_discount' must be a number between 0 and 1." =
+      all(
+        dbl_discount >= 0,
+        dbl_discount <= 1
+      )
+  )
+  
+  # Data wrangling
+  dbl_discount[[1]] -> dbl_discount
+  
+  # Generalism helper function
+  fun_acti_generalism_helper <- function(
+    dbl_profile
+  ){
+    
+    # Divide each element of the vector by the max
+    dbl_profile / 
+      max(
+        dbl_profile
+        , na.rm = T
+      ) -> dbl_profile
+    
+    # Apply equivalence function to vector
+    fun_skew_sdmode(
+      dbl_var = 
+        dbl_profile
+      , dbl_scale_lb = 0
+      , dbl_scale_ub = 1
+      , dbl_discount = 
+        dbl_discount
+    ) -> dbl_generalism
+    
+    rm(dbl_profile)
+    
+    # # Take the average equivalence
+    # mean(
+    #   dbl_generalism
+    # ) -> dbl_generalism
+    
+    # Output
+    return(dbl_generalism)
+    
+  }
+  
+  # Apply generalism function to each row
+  apply(
+    mtx_data, 1
+    , fun_acti_generalism_helper
+  ) -> mtx_generalism
+  
+  # Output
+  return(mtx_generalism)
+  
+}
+
 # - Competency function ---------------------------------------------------
 fun_acti_competency <- function(
     mtx_data
@@ -101,7 +171,7 @@ fun_acti_competency <- function(
   
   # Competency level helper function
   # fun_acti_competency_helper <- function(
-  #   dbl_var
+    #   dbl_var
   #   # , dbl_scale_lb
   #   # , dbl_scale_up
   #   )
@@ -224,6 +294,10 @@ read_csv(
 ) -> df_occupations
 
 read_csv(
+  'C:/Users/Cao/Documents/Github/Atlas-Research/Data/df_occupations_2023.csv'
+) -> df_occupations
+
+read_csv(
   'https://docs.google.com/spreadsheets/d/e/2PACX-1vSVdXvQMe4DrKS0LKhY0CZRlVuCCkEMHVJHQb_U-GKF21CjcchJ5jjclGSlQGYa5Q/pub?gid=1515296378&single=true&output=csv'
 ) -> df_input
 
@@ -234,21 +308,56 @@ df_occupations %>%
     , generalism =
       apply(
         df_occupations %>% 
-          select(ends_with('.l'))
-        , 1, function(x){
-          x %>% 
-            as.numeric() %>%
-            fun_acti_generalism()
-        }
+          # select(ends_with('.l'))
+          select(starts_with(
+            'item'
+          ))
+        , 1, 
+        fun_acti_generalism
       )
   ) -> dsdsds
+
+df_occupations %>% 
+  transmute(
+    occupation = occupation
+    , generalism = 
+      df_occupations %>% 
+      select(starts_with(
+        'item'
+      )) %>% 
+      as.matrix() %>% 
+      fun_acti_generalism()
+  ) -> dsdsds
+
+dsdsds %>% 
+  arrange(desc(
+    generalism
+  )) %>% 
+  filter(stringr::str_detect(
+    tolower(occupation)
+    , 'data|statis'
+  )) %>%
+  print(n = Inf)
 
 df_input[-1] %>% 
   as.matrix() %>% 
   rbind(.,.) %>% 
-  fun_acti_generalism(
-    dbl_scaling = 0
-  )
+  fun_acti_generalism()
+
+atlas.skew::fun_skew_sdmode(
+  dbl_var = as.numeric(df_input[-1] / max(df_input[-1]))
+  , dbl_scale_lb = 0
+  , dbl_scale_ub = 1
+  , dbl_discount = 0.25
+)
+
+fun_kcoef_kflex_macro(
+  df_input[-1] / max(df_input[-1])
+  , dbl_weights = 1
+  # , dbl_scale_lb = 0
+  # , dbl_scale_ub = 1
+  # , dbl_discount = 0.25
+)
 
 dsdsds %>%
   arrange(desc(
