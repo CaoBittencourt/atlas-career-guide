@@ -28,68 +28,7 @@ library(SWKM)
 # - Generalism function ---------------------------------------------------
 fun_acti_generalism <- function(
     mtx_data
-    , dbl_scaling = 1
-){
-  
-  # Arguments validation
-  stopifnot(
-    "'mtx_data' must be a numeric matrix." =
-      all(
-        is.numeric(mtx_data)
-      )
-  )
-  
-  stopifnot(
-    "'dbl_scaling' must be numeric." =
-      is.numeric(dbl_scaling)
-  )
-  
-  # Data wrangling
-  dbl_scaling[[1]] -> dbl_scaling
-  
-  # Generalism helper function
-  fun_acti_generalism_helper <- function(dbl_profile){
-    
-    # Divide each element of the vector by the max
-    dbl_profile / 
-      max(
-        dbl_profile
-        , na.rm = T
-      ) -> dbl_profile
-    
-    # Apply equivalence function to vector
-    fun_eqvl_equivalence(
-      dbl_profile
-      , dbl_scaling = 
-        dbl_scaling
-    ) -> dbl_generalism
-    
-    rm(dbl_profile)
-    
-    # Take the average equivalence
-    mean(
-      dbl_generalism
-    ) -> dbl_generalism
-    
-    # Output
-    return(dbl_generalism)
-    
-  }
-  
-  # Apply generalism function to each row
-  apply(
-    mtx_data, 1
-    , fun_acti_generalism_helper
-  ) -> mtx_generalism
-  
-  # Output
-  return(mtx_generalism)
-  
-}
-
-# - Generalism function 2 ---------------------------------------------------
-fun_acti_generalism <- function(
-    mtx_data
+    , dbl_scale_lb = 0
     , dbl_discount = 0.25
 ){
   
@@ -109,13 +48,18 @@ fun_acti_generalism <- function(
       )
   )
   
+  stopifnot(
+    "'dbl_scale_lb' must be numeric." =
+      is.numeric(dbl_scale_lb)
+  )
+  
   # Data wrangling
   dbl_discount[[1]] -> dbl_discount
   
+  dbl_scale_lb[[1]] -> dbl_scale_lb
+  
   # Generalism helper function
-  fun_acti_generalism_helper <- function(
-    dbl_profile
-  ){
+  fun_acti_generalism_helper <- function(dbl_profile){
     
     # Divide each element of the vector by the max
     dbl_profile / 
@@ -124,22 +68,24 @@ fun_acti_generalism <- function(
         , na.rm = T
       ) -> dbl_profile
     
-    # Apply equivalence function to vector
+    dbl_scale_lb / 
+      max(
+        dbl_profile
+        , na.rm = T
+      ) -> dbl_scale_lb
+    
+    # Apply bounded variable skewness function
     fun_skew_sdmode(
       dbl_var = 
         dbl_profile
-      , dbl_scale_lb = 0
+      , dbl_scale_lb = 
+        dbl_scale_lb
       , dbl_scale_ub = 1
       , dbl_discount = 
         dbl_discount
     ) -> dbl_generalism
     
     rm(dbl_profile)
-    
-    # # Take the average equivalence
-    # mean(
-    #   dbl_generalism
-    # ) -> dbl_generalism
     
     # Output
     return(dbl_generalism)
@@ -160,9 +106,10 @@ fun_acti_generalism <- function(
 # - Competency function ---------------------------------------------------
 fun_acti_competency <- function(
     mtx_data
-    , dbl_scale_lb
-    , dbl_scale_up
-    , int_levels = 3
+    , dbl_scale_lb = 0
+    , dbl_scale_ub = 100
+    # , dbl_generalism
+    # , int_levels = 3
 ){
   
   # Arguments validation
@@ -170,16 +117,95 @@ fun_acti_competency <- function(
   # Data wrangling
   
   # Competency level helper function
-  # fun_acti_competency_helper <- function(
-    #   dbl_var
-  #   # , dbl_scale_lb
-  #   # , dbl_scale_up
-  #   )
+  fun_acti_competency_helper <- function(dbl_profile){
+    
+    # Apply bounded variable skewness function
+    # Discount is a function of variance
+    # Weight variable with itself
+    fun_skew_sdmode(
+      # dbl_var = 
+      # (dbl_profile ^ 2) / 
+      # dbl_scale_ub
+      dbl_var = 
+        dbl_profile
+      , dbl_scale_lb = 
+        dbl_scale_lb
+      , dbl_scale_ub = 
+        dbl_scale_ub
+      , dbl_discount = 
+        1 -  mlv(
+          dbl_profile /
+            dbl_scale_ub
+        )
+    ) -> dbl_competency
+    
+    # Output
+    return(dbl_competency)
+    
+  }
   
   # Apply competency level helper function
+  apply(
+    mtx_data, 1
+    , fun_acti_competency_helper
+  ) -> mtx_competency
   
   # Output
   return(mtx_competency)
+  
+}
+
+# - Classifier function -------------------------------------------------
+fun_acti_classifier <- function(
+    dbl_var
+    , dbl_scale_lb = 0
+    , dbl_scale_ub = 1
+    , int_levels = 5
+){
+  
+  # Arguments validation
+  stopifnot(
+    "'dbl_var' must be numeric." = 
+      is.numeric(dbl_var)
+  )
+  
+  stopifnot(
+    "'dbl_scale_lb' must be numeric." = 
+      is.numeric(dbl_scale_lb)
+  )
+  
+  stopifnot(
+    "'dbl_scale_ub' must be numeric." = 
+      is.numeric(dbl_scale_ub)
+  )
+  
+  stopifnot(
+    "'int_levels' must be an integer." = 
+      is.numeric(int_levels)
+  )
+  
+  # Data wrangling
+  dbl_scale_lb[[1]] -> dbl_scale_lb
+  
+  dbl_scale_ub[[1]] -> dbl_scale_ub
+  
+  int_levels[[1]] -> int_levels
+  ceiling(int_levels) -> int_levels
+  
+  # Classify competency level
+  findInterval(
+    dbl_var
+    , seq(
+      dbl_scale_lb, 
+      dbl_scale_ub, 
+      length.out = 1 +
+        int_levels
+    )
+    , all.inside = T
+  ) -> int_class_id
+  
+  # Output
+  return(int_class_id)
   
 }
 
@@ -188,8 +214,8 @@ fun_acti_derive_types <- function(
     df_data
     , efa_model
     , dbl_weights = NULL
-    , dbl_scale_lb
-    , dbl_scale_up
+    , dbl_scale_lb = 0
+    , dbl_scale_ub = 100
     , dbl_discount = 0.25
     # , int_types = 16
 ){
@@ -274,6 +300,51 @@ fun_acti_derive_types <- function(
   
 }
 
+# - ACTI code -------------------------------------------------------------
+fun_acti_code <- function(
+  dbl_factor_scores
+  # , dsds
+  , dbl_generalism
+  , dbl_competency
+  , int_generalism_levels = 2
+  , int_competency_levels = 5
+){
+  
+  # Arguments validation
+  
+  # Data wrangling
+  
+  # Apply generalism classifier
+  fun_acti_classifier(
+    dbl_var = dbl_generalism
+    , dbl_scale_lb = 0
+    , dbl_scale_ub = 1
+    , int_levels = 
+      int_generalism_levels
+  ) -> int_generalism_id
+  
+  # Apply competency classifier
+  fun_acti_classifier(
+    dbl_var = dbl_competency
+    , dbl_scale_lb = 0
+    , dbl_scale_ub = 1
+    , int_levels = 
+      int_competency_levels
+  ) -> int_competency_id
+  
+  # Compose ACTI code
+  paste0() ->
+    chr_acti_code
+  
+  # Output
+  return(list(
+    'acti_code' = chr_acti_code,
+    'generalism_id' = int_generalism_id,
+    'competency_id' = int_competency_id
+  ))
+  
+}
+
 # - ACTI estimator helper function --------------------------------------------------------
 
 # - ACTI estimator --------------------------------------------------------
@@ -302,21 +373,6 @@ read_csv(
 ) -> df_input
 
 # - Generalism test -------------------------------------------------------
-df_occupations %>%
-  transmute(
-    occupation = occupation
-    , generalism =
-      apply(
-        df_occupations %>% 
-          # select(ends_with('.l'))
-          select(starts_with(
-            'item'
-          ))
-        , 1, 
-        fun_acti_generalism
-      )
-  ) -> dsdsds
-
 df_occupations %>% 
   transmute(
     occupation = occupation
@@ -344,43 +400,87 @@ df_input[-1] %>%
   rbind(.,.) %>% 
   fun_acti_generalism()
 
-atlas.skew::fun_skew_sdmode(
-  dbl_var = as.numeric(df_input[-1] / max(df_input[-1]))
-  , dbl_scale_lb = 0
-  , dbl_scale_ub = 1
-  , dbl_discount = 0.25
-)
-
-fun_kcoef_kflex_macro(
-  df_input[-1] / max(df_input[-1])
-  , dbl_weights = 1
-  # , dbl_scale_lb = 0
-  # , dbl_scale_ub = 1
-  # , dbl_discount = 0.25
-)
-
-dsdsds %>%
-  arrange(desc(
-    generalism
-  )) %>% 
-  print(n = Inf)
-
-df_input[-1] -> dsds
-
-# sd(dsds) / (100 - 0)
-
-dsds / max(dsds) -> dsds
-
-as.numeric(dsds) -> dsds
-
-ggplot2::qplot(dsds, geom = 'density')
-
-mean(fun_eqvl_equivalence(dsds, dbl_scaling = 0))
-mean(fun_eqvl_equivalence(dsds, dbl_scaling = 0))
-
 fun_acti_generalism(matrix(1, 2, 5) * rnorm(10, 0.5, 0.025))
 fun_acti_generalism(matrix(1, 2, 5) * rnorm(10, 0.5, 0.25))
 fun_acti_generalism(matrix(1, 2, 5) * rnorm(10, 0.5, 1000))
+
+# - Competency test -------------------------------------------------------
+df_occupations %>% 
+  transmute(
+    occupation = occupation
+    , competency = 
+      df_occupations %>% 
+      select(starts_with(
+        'item'
+      )) %>% 
+      as.matrix() %>% 
+      fun_acti_competency(
+        dbl_scale_ub = 100
+        , dbl_scale_lb = 0
+      )
+    , competency_level =
+      fun_acti_classifier(
+        dbl_var = competency
+        , dbl_scale_lb = 0
+        , dbl_scale_ub = 1
+        , int_levels = 5
+      )
+  ) -> dsdsds
+
+dsdsds %>% 
+  arrange(desc(
+    competency
+  )) %>% 
+  print(n = Inf)
+
+dsdsds %>% 
+  arrange(desc(
+    competency
+  )) %>% 
+  filter(stringr::str_detect(
+    tolower(occupation)
+    , 'data|statis'
+  )) %>%
+  print(n = Inf)
+
+dsdsds %>% 
+  arrange(desc(
+    competency
+  )) %>% 
+  filter(stringr::str_detect(
+    tolower(occupation)
+    , 'engineers'
+  )) %>%
+  print(n = Inf)
+
+# LL
+# LM
+# MM
+# HM
+# HH
+library(stringr)
+
+df_occupations %>% 
+  filter(str_detect(
+    str_to_lower(occupation)
+    , 'k-12'
+  )) %>% 
+  select(starts_with(
+    'item'
+  )) %>% 
+  as.numeric() %>% 
+  qplot(geom = 'density')
+
+df_input[-1] %>% 
+  as.matrix() %>%
+  rbind(.,.) %>% 
+  fun_acti_competency(
+    dbl_scale_ub = 100
+    , dbl_scale_lb = 0
+  ) %>% 
+  fun_acti_classifier(
+    int_levels = 5
+  )
 
 # - Atlas Career Type Indicator test --------------------------------------
 fun_acti_derive_types
