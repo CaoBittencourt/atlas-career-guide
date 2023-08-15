@@ -43,7 +43,7 @@ c(
   # poorly clustering items:
   , 'item_law_and_government'
   , 'item_public_safety_and_security'
-  , 'item_establishing_and_maintaining_interpersonal_relationships'
+  # , 'item_establishing_and_maintaining_interpersonal_relationships'
   , 'item_food_production'
   , 'item_level_of_competition'
   , 'item_duration_of_typical_work_week'
@@ -55,6 +55,7 @@ c(
   , 'item_writing'
   # useless items:
   , 'item_near_vision'
+  , 'item_indoors_environmentally_controlled'
 ) -> chr_items_remove
 
 unique(

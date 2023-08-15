@@ -109,13 +109,13 @@ fun_acti_competency <- function(
     , dbl_scale_lb = 0
     , dbl_scale_ub = 100
     # , dbl_generalism
-    # , int_levels = 3
 ){
   
   # Arguments validation
   
   # Data wrangling
   
+  # Weigh each attribute by its capital macro-flexibility?
   # Competency level helper function
   fun_acti_competency_helper <- function(dbl_profile){
     
@@ -149,6 +149,65 @@ fun_acti_competency <- function(
     mtx_data, 1
     , fun_acti_competency_helper
   ) -> mtx_competency
+  
+  # Output
+  return(mtx_competency)
+  
+}
+
+# - Competency function 2 ---------------------------------------------------
+fun_acti_competency <- function(
+    mtx_data
+    , dbl_scale_lb = 0
+    , dbl_scale_ub = 100
+    , dbl_generalism
+){
+  
+  # Arguments validation
+  
+  # Data wrangling
+  
+  # Weigh each attribute by its capital macro-flexibility?
+  # Competency level helper function
+  fun_acti_competency_helper <- function(
+    dbl_profile
+    , dbl_generalism
+  ){
+    
+    # Weighted mean of normalized item scores
+    # adjusted by item importance and generalism
+    weighted.mean(
+      x = 
+        dbl_profile / (
+          dbl_scale_ub - 
+            dbl_scale_lb
+        )
+      , w = 
+        (1 - dbl_generalism) *
+        dbl_profile 
+    ) -> dbl_competency
+    
+    # Output
+    return(dbl_competency)
+    
+  }
+  
+  # Apply competency level helper function
+  mapply(
+    function(profile, generalism){
+      
+      fun_acti_competency_helper(
+        
+      )
+      
+    }
+      , profile = t(mtx_data)
+      , generalism = dbl_generalism) -> mtx_competency
+  
+  # apply(
+  #   mtx_data, 1
+  #   , fun_acti_competency_helper
+  # ) -> mtx_competency
   
   # Output
   return(mtx_competency)
@@ -302,12 +361,12 @@ fun_acti_derive_types <- function(
 
 # - ACTI code -------------------------------------------------------------
 fun_acti_code <- function(
-  dbl_factor_scores
-  # , dsds
-  , dbl_generalism
-  , dbl_competency
-  , int_generalism_levels = 2
-  , int_competency_levels = 5
+    dbl_factor_scores
+    # , dsds
+    , dbl_generalism
+    , dbl_competency
+    , int_generalism_levels = 2
+    , int_competency_levels = 5
 ){
   
   # Arguments validation
@@ -389,6 +448,12 @@ dsdsds %>%
   arrange(desc(
     generalism
   )) %>% 
+  print(n = Inf)
+
+dsdsds %>% 
+  arrange(desc(
+    generalism
+  )) %>% 
   filter(stringr::str_detect(
     tolower(occupation)
     , 'data|statis'
@@ -459,6 +524,33 @@ dsdsds %>%
 # HM
 # HH
 library(stringr)
+
+100 - 
+  df_occupations %>% 
+  filter(str_detect(
+    str_to_lower(occupation)
+    , 'k-12'
+  )) %>% 
+  select(starts_with(
+    'item'
+  )) %>%
+  as.numeric() %>%
+  mlv()
+
+df_occupations %>% 
+  filter(str_detect(
+    str_to_lower(occupation)
+    , 'k-12'
+  )) %>% 
+  select(starts_with(
+    'item'
+  )) %>%
+  as.numeric() %>%
+  fun_skew_sdmode(
+    dbl_scale_lb = 0
+    , dbl_scale_ub = 100
+    , dbl_discount = 0.7
+  )
 
 df_occupations %>% 
   filter(str_detect(
