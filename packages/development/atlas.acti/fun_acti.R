@@ -27,9 +27,7 @@ lapply(pkg, function(x)
 
 # [FUNCTIONS] ---------------------------
 # - Generalism function ---------------------------------------------------
-fun_acti_generalism <- function(
-    mtx_data
-){
+fun_acti_generalism <- function(mtx_data){
   
   # Arguments validation
   stopifnot(
@@ -84,32 +82,32 @@ fun_acti_competency <- function(
     , dbl_scale_lb = 0
     , dbl_scale_ub = 100
 ){
-
+  
   # Arguments validation
-
+  
   # Data wrangling
-
+  
   # Weigh each attribute by its capital macro-flexibility?
   # Competency level helper function
   fun_acti_competency_helper <- function(dbl_profile){
-
+    
     # Drop NAs
     dbl_profile[!is.na(
       dbl_profile
     )] -> dbl_profile
-
+    
     # Normalize item scores
     dbl_profile / (
       dbl_scale_ub -
         dbl_scale_lb
     ) -> dbl_profile
-
+    
     dbl_profile -
       dbl_scale_lb / (
         dbl_scale_ub -
           dbl_scale_lb
       ) -> dbl_profile
-
+    
     # Self-weighted mean of item scores
     weighted.mean(
       x = dbl_profile
@@ -119,23 +117,23 @@ fun_acti_competency <- function(
       #   dbl_profile /
       #   max(dbl_profile)
     ) -> dbl_competency
-
+    
     rm(dbl_profile)
-
+    
     # Output
     return(dbl_competency)
-
+    
   }
-
+  
   # Apply competency level helper function
   apply(
     mtx_data, 1
     , fun_acti_competency_helper
   ) -> mtx_competency
-
+  
   # Output
   return(mtx_competency)
-
+  
 }
 
 # - [?] Competency function 2 ---------------------------------------------------
@@ -207,16 +205,11 @@ fun_acti_competency <- function(
       , w =
         fun_eqvl_equivalence(
           dbl_var = 
-            dbl_profile /
+            dbl_profile
+          , dbl_scale_lb =
+            min(dbl_profile)
+          , dbl_scale_ub =
             max(dbl_profile)
-          , 
-        )
-        
-        fun_eqvl_equivalence(
-          dbl_var = 
-            dbl_profile / 
-            max(dbl_profile)
-          , dbl_scale_ub = 1
           , dbl_scaling =
             (1 - dbl_generalism)
         )

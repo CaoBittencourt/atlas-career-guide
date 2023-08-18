@@ -244,50 +244,9 @@ fun_skew_sdmode <- function(
       )
   )
 
-  # Coerce bounds to one element
+  # Data wrangling
   dbl_scale_lb[[1]] -> dbl_scale_lb
   dbl_scale_ub[[1]] -> dbl_scale_ub
-
-  # Prevent division by zero by increasing the scale by 1
-  if(dbl_scale_ub == 0){
-
-    dbl_scale_lb + 1 -> dbl_scale_lb
-    dbl_scale_ub + 1 -> dbl_scale_ub
-    dbl_var + 1 -> dbl_var
-
-  }
-
-  # Coerce the data into the bounds
-  pmax(dbl_var, dbl_scale_lb) -> dbl_var
-  pmin(dbl_var, dbl_scale_ub) -> dbl_var
-
-  # Calculate upper limit for standard deviation
-  sd(c(
-    dbl_scale_lb
-    , dbl_scale_ub
-  )) -> dbl_sd_ub
-
-  if(!lgc_sample_variance){
-
-    # Population standard deviation
-    dbl_sd_ub / sqrt(2) -> dbl_sd_ub
-
-  }
-
-  # Minimal weights
-  if(length(dbl_weights)){
-
-    dbl_weights /
-      min(
-        dbl_weights
-        , na.rm = T
-      ) -> dbl_weights
-
-    round(
-      dbl_weights
-    ) -> dbl_weights
-
-  }
 
   # Check if 'dbl_var' is named
   lgc_named <- F
@@ -301,22 +260,46 @@ fun_skew_sdmode <- function(
 
   }
 
-  # Data wrangling
   cbind(
     dbl_var
   ) -> dbl_var
+
+  dbl_var / (
+    dbl_scale_ub -
+      dbl_scale_lb
+  ) -
+    dbl_scale_lb / (
+      dbl_scale_ub -
+        dbl_scale_lb
+    ) -> dbl_var
+
+  rm(dbl_scale_lb)
+  rm(dbl_scale_ub)
 
   # Calculate standard deviation
   # Sample standard deviation
   vapply(
     as.data.frame(dbl_var)
-    , function(x){sqrt(wtd.var(x, dbl_weights))}
+    , function(x){sqrt(wtd.var(
+      x, dbl_weights, na.rm = T
+    ))}
     , FUN.VALUE = numeric(1)
   ) -> dbl_sd
 
-  dbl_sd[is.na(
-    dbl_sd
-  )] <- 0
+  # Normalize sd
+  # Calculate upper limit for standard deviation
+  sd(c(0, 1)) -> dbl_sd_ub
+
+  if(!lgc_sample_variance){
+
+    # Population standard deviation
+    dbl_sd_ub / sqrt(2) -> dbl_sd_ub
+
+  }
+
+  dbl_sd / dbl_sd_ub -> dbl_sd
+
+  rm(dbl_sd_ub)
 
   # Population standard deviation
   if(!lgc_sample_variance){
@@ -329,13 +312,21 @@ fun_skew_sdmode <- function(
 
   }
 
-  # Normalize sd
-  dbl_sd / dbl_sd_ub -> dbl_sd
-
-  rm(dbl_sd_ub)
+  rm(lgc_sample_variance)
 
   # If weights are provided, repeat each element 'dbl_weights' times
   if(length(dbl_weights)){
+
+    # Minimal weights
+    dbl_weights
+    min(
+      dbl_weights
+      , na.rm = T
+    ) -> dbl_weights
+
+    round(
+      dbl_weights
+    ) -> dbl_weights
 
     dbl_var[rep(
       1:nrow(dbl_var)
@@ -352,11 +343,7 @@ fun_skew_sdmode <- function(
   ) -> dbl_mode
 
   rm(dbl_var)
-
-  # Normalize mode
-  dbl_mode / dbl_scale_ub -> dbl_mode
-
-  rm(dbl_scale_ub)
+  rm(dbl_weights)
 
   # Calculate sd-adjusted mode
   0.5 * dbl_sd +
@@ -377,6 +364,8 @@ fun_skew_sdmode <- function(
     ) -> dbl_skew
 
   }
+
+  rm(lgc_named)
 
   # Output
   return(dbl_skew)
