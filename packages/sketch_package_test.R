@@ -22,49 +22,6 @@ install_github('CaoBittencourtFerreira/atlas.kcoef', force = T)
 install_github('CaoBittencourtFerreira/atlas.notiq', force = T)
 install_github('CaoBittencourtFerreira/atlas.misc', force = T)
 
-library(ggplot2)
-library(modeest)
-TruncatedNormal::rtnorm(n = 100000, mu = 1, sd = 1, lb = 0, ub = 1) -> dsdsds
-TruncatedNormal::rtnorm(n = 100000, mu = 1, sd = 0.0005, lb = 0, ub = 1) -> dsdsds
-TruncatedNormal::rtnorm(n = 100000, mu = 0.25, sd = 1, lb = 0, ub = 1) -> dsdsds
-TruncatedNormal::rtnorm(n = 100000, mu = 0, sd = 0.25, lb = 0, ub = 1) -> dsdsds
-
-y <- sd(dsdsds)
-x <- mlv(dsdsds)
-# x <- 0
-# t <- sd(dsdsds)
-# t <- 0
-# t <- 0.25
-t <- 0.5
-# t <- 1
-# t <- abs(mean(dsdsds) - x)
-
-t + (1 - t) * x - t * y - t * (1 - x) * (1 - 2 * y)
-x
-
-qplot(dsdsds, geom = 'density', xlim = c(0,1)) + 
-  geom_vline(
-    xintercept = t + (1 - t) * x - t * y - t * (1 - x) * (1 - 2 * y)
-    , linetype = 'dashed'
-  ) + 
-  geom_vline(
-    xintercept = x
-  )
-
-
-qplot(dsds, geom = 'density', xlim = c(0,1))
-qplot(lalala, geom = 'density', xlim = c(0,1))
-qplot(lala, geom = 'density', xlim = c(0,1))
-
-mlv(dsds)
-mean(dsds)
-modeest::mlv(dsds) - mean(dsds)
-mean(lalala)
-modeest::mlv(lalala)
-modeest::mlv(lalala) - mean(lalala)
-mean(lala) - modeest::mlv(lala)
-
-
 # library(atlas.efa)
 # library(atlas.ftools)
 # library(atlas.fstatics)
