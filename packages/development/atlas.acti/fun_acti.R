@@ -10,7 +10,8 @@ pkg <- c(
   # , 'vctrs' #Data wrangling
   # , 'atlas.skew'
   , 'atlas.skew'
-  , 'atlas.kcoef'
+  , 'atlas.ftools'
+  # , 'atlas.kcoef'
   , 'atlas.eqvl'
   , 'ggplot2'
   # , 'modeest' #Mode
@@ -28,7 +29,7 @@ lapply(pkg, function(x)
 # remotes::install_github('Van1yu3/SWKM')
 # library(SWKM)
 
-# [FUNCTIONS] ---------------------------
+# [CLASSIFICATION FUNCTIONS] ---------------------------
 # - Generalism function ---------------------------------------------------
 fun_acti_generalism <- function(mtx_data){
   
@@ -79,6 +80,146 @@ fun_acti_generalism <- function(mtx_data){
   
 }
 
+# - Competency function ---------------------------------------------------
+fun_acti_competency <- function(
+    mtx_data
+    , mtx_weights = NULL
+    , dbl_scale_lb = 0
+    , dbl_scale_ub = 100
+    , dbl_generalism
+){
+  
+  # Arguments validation
+  stopifnot(
+    "'mtx_data' must be a numeric matrix." =
+      all(
+        is.numeric(mtx_data)
+      )
+  )
+  
+  stopifnot(
+    "'mtx_weights' must be a numeric matrix." =
+      any(
+        is.null(mtx_weights)
+        , all(
+          is.numeric(mtx_weights)
+          , dim(mtx_weights) ==
+            dim(mtx_data)
+        )
+      )
+  )
+  
+  stopifnot(
+    "'dbl_scale_lb' must be numeric." =
+      is.numeric(dbl_scale_lb)
+  )
+  
+  stopifnot(
+    "'dbl_scale_ub' must be numeric." =
+      is.numeric(dbl_scale_ub)
+  )
+  
+  stopifnot(
+    "'dbl_generalism' must be a numeric vector with one element for each row in 'mtx_data'." =
+      all(
+        is.numeric(dbl_generalism)
+        , length(dbl_generalism) ==
+          nrow(rbind(mtx_data))
+      )
+  )
+  
+  # Data wrangling
+  dbl_scale_lb[[1]] -> dbl_scale_lb
+  
+  dbl_scale_ub[[1]] -> dbl_scale_ub
+  
+  rbind(mtx_data) -> mtx_data
+  
+  # Weigh each attribute by its capital macro-flexibility?
+  # Competency level helper function
+  fun_acti_competency_helper <- function(
+    dbl_profile
+    , dbl_generalism
+    , dbl_weights
+  ){
+    
+    # Drop NA's
+    dbl_profile[!is.na(
+      dbl_profile
+    )] -> dbl_profile
+    
+    # Weighted mean of normalized item scores
+    # adjusted by item importance and generalism
+    weighted.mean(
+      x =
+        dbl_profile / (
+          dbl_scale_ub -
+            dbl_scale_lb
+        ) -
+        dbl_scale_lb / (
+          dbl_scale_ub -
+            dbl_scale_lb
+        )
+      , w =
+        fun_eqvl_equivalence(
+          dbl_var =
+            dbl_profile
+          , dbl_scale_lb =
+            min(dbl_profile)
+          , dbl_scale_ub =
+            max(dbl_profile)
+          , dbl_scaling =
+            (1 - dbl_generalism)
+        ) +
+        fun_eqvl_equivalence(
+          dbl_var =
+            dbl_weights
+          , dbl_scale_lb =
+            min(dbl_weights)
+          , dbl_scale_ub =
+            max(dbl_weights)
+          , dbl_scaling =
+            (1 - dbl_generalism)
+        )
+    ) -> dbl_competency
+    
+    # Output
+    return(dbl_competency)
+    
+  }
+  
+  # Weights
+  if(!length(mtx_weights)){
+    
+    mtx_data -> mtx_weights
+    
+  }
+  
+  # Apply competency level helper function
+  mapply(
+    function(profile, generalism, weight){
+      
+      # Call helper function
+      fun_acti_competency_helper(
+        dbl_profile = profile
+        , dbl_generalism = generalism
+        , dbl_weights = weight
+      ) -> dbl_competency
+      
+      # Output
+      return(dbl_competency)
+      
+    }
+    , profile = as.data.frame(t(mtx_data))
+    , generalism = dbl_generalism
+    , weight = as.data.frame(t(mtx_weights))
+  ) -> mtx_competency
+  
+  # Output
+  return(mtx_competency)
+  
+}
+
 # - Competency function (ps: this only measures intra-occupation competency! it doesn't account for attribute difficulty) ---------------------------------------------------
 fun_acti_competency <- function(
     mtx_data
@@ -106,7 +247,7 @@ fun_acti_competency <- function(
   )
   
   stopifnot(
-    "'dbl_generalism' must be a numeric vector with one element for each row in 'mtx_data'." = 
+    "'dbl_generalism' must be a numeric vector with one element for each row in 'mtx_data'." =
       all(
         is.numeric(dbl_generalism)
         , length(dbl_generalism) ==
@@ -147,14 +288,12 @@ fun_acti_competency <- function(
         )
       , w =
         fun_eqvl_equivalence(
-          dbl_var = 
+          dbl_var =
             dbl_profile
           , dbl_scale_lb =
             min(dbl_profile)
-          # dbl_scale_lb
           , dbl_scale_ub =
             max(dbl_profile)
-          # dbl_scale_ub
           , dbl_scaling =
             (1 - dbl_generalism)
         )
@@ -248,79 +387,6 @@ fun_acti_competency <- function(
 # 
 # }
 
-# # - [shit] Competency function 3 ---------------------------------------------------
-# fun_acti_competency <- function(
-    #     mtx_data
-#     , dbl_scale_lb = 0
-#     , dbl_scale_ub = 100
-#     , dbl_generalism
-# ){
-# 
-#   # Arguments validation
-# 
-#   # Data wrangling
-# 
-#   # Weigh each attribute by its capital macro-flexibility?
-#   # Competency level helper function
-#   fun_acti_competency_helper <- function(
-    #     dbl_profile
-#     , dbl_generalism
-#   ){
-# 
-#     # K-means clustering on item scores
-#     kmeans(
-#       as.numeric(
-#         dbl_profile
-#       ), centers = 2
-#     )$centers ->
-#       dbl_kmeans
-# 
-#     # K-means centers adjusted by generalism
-#     weighted.mean(
-#       x = (
-#         sort(dbl_kmeans) / (
-#           dbl_scale_ub -
-#             dbl_scale_lb
-#         )) -
-#         dbl_scale_lb / (
-#           dbl_scale_ub -
-#             dbl_scale_lb
-#         )
-#       , w = c(
-#         dbl_generalism, #Non-specialized cluster
-#         1 - dbl_generalism #Specialized cluster
-#       )
-#     ) -> dbl_competency
-# 
-#     # Output
-#     return(dbl_competency)
-# 
-#   }
-# 
-#   # Apply competency level helper function
-#   mapply(
-#     function(profile, generalism){
-# 
-#       # Call helper function
-#       fun_acti_competency_helper(
-#         dbl_profile = profile
-#         , dbl_generalism = generalism
-#       ) -> dbl_competency
-# 
-#       # Output
-#       return(dbl_competency)
-# 
-#     }
-#     # , profile = t(mtx_data)
-#     , profile = as.data.frame(t(mtx_data))
-#     , generalism = dbl_generalism
-#   ) -> mtx_competency
-# 
-#   # Output
-#   return(mtx_competency)
-# 
-# }
-
 # - Classifier function -------------------------------------------------
 fun_acti_classifier <- function(
     dbl_var
@@ -375,14 +441,40 @@ fun_acti_classifier <- function(
   
 }
 
-# - Create Career types -----------------------------------------------------
+# [K-MEANS ACTI] ----------------------------------------------------------
+
+# - Create Clustering Career Types ---------------------------------------------------
+fun_acti_kmeans_types <- function(
+    df_data
+    , efa_model
+    , dbl_weights = NULL
+    , dbl_scale_lb = 0
+    , dbl_scale_ub = 100
+    , int_types = 16  
+){
+  
+  # Arguments validation
+  
+  # Data wrangling
+  
+  # Estimate factor scores
+  
+  # K-means clustering
+  
+  # Remove irrelevant factors
+  
+  # Output
+  
+}
+
+# [NUMERICAL ACTI] --------------------------------------------------------
+# - Create Numerical Career types -----------------------------------------------------
 fun_acti_derive_types <- function(
     df_data
     , efa_model
     , dbl_weights = NULL
     , dbl_scale_lb = 0
     , dbl_scale_ub = 100
-    , dbl_discount = 0.25
     # , int_types = 16
 ){
   
@@ -538,24 +630,61 @@ read_csv(
   'https://docs.google.com/spreadsheets/d/e/2PACX-1vSVdXvQMe4DrKS0LKhY0CZRlVuCCkEMHVJHQb_U-GKF21CjcchJ5jjclGSlQGYa5Q/pub?gid=1515296378&single=true&output=csv'
 ) -> df_input
 
+# kmeans ------------------------------------------------------------------
+df_occupations %>% 
+  select(starts_with(
+    'item'
+  )) %>%
+  fun_ftools_factor_scores()
+
+mtx_occupations[rep(
+  1:nrow(mtx_occupations)
+  , df_occupations$
+    employment_norm
+), ] -> mtx_occupations
+
+kmeans(
+  mtx_occupations
+  , centers = 16
+) -> list_kmeans
+
+source('C:/Users/Cao/Documents/Github/atlas-research/functions/methods/fun_plots.R')
+
+list_kmeans$
+  centers %>% 
+  as_tibble() %>% 
+  mutate(
+    .before = 1
+    , acti = 
+      paste0(
+        'ACTI'
+        , row_number()
+      )
+  ) %>%
+  select(1, 201:218) %>% 
+  pivot_longer(
+    cols = -1
+    , names_to = 'item'
+    , values_to = 'item_score'
+  ) %>%
+  fun_plot.heatmap(aes(
+    x = item
+    , y = acti
+    , fill = item_score
+  )
+  , .reorder_fct = F
+  , .reorder_desc = F
+  )
+
 # dsdsds ------------------------------------------------------------------
 df_occupations %>% 
   select(starts_with(
     'item'
   )) -> dsdsds
-  
+
 dsdsds %>% 
   as.matrix() ->
   dsdsds
-
-fun_skew_sdmode(
-  dbl_var = dsdsds
-  , dbl_weights = 
-    df_occupations$
-    employment_variants
-  , dbl_scale_lb = 0
-  , dbl_scale_ub = 100
-) -> dsds
 
 fun_skew_center_data(
   dbl_var = dsdsds
@@ -565,49 +694,96 @@ fun_skew_center_data(
   , dbl_scale_lb = 0
   , dbl_scale_ub = 100
   , lgc_sample_variance = F
-) -> dsds
-
-dsds
-
-dsds -> dbl_skew
-dsdsds -> dbl_var
-
-# Center data
-rbind(dbl_skew)[rep(
-  1, length(dbl_skew)
-),] -> dbl_skew
-
-dbl_var - dbl_skew -> dbl_var
-
-rm(dbl_skew)
-
-# Normalize data
-vapply(
-  as.data.frame(dbl_var)
-  , min
-  , FUN.VALUE = numeric(1)
-  , na.rm = T
-) -> dbl_min
-
-vapply(
-  as.data.frame(dbl_var)
-  , min
-  , FUN.VALUE = numeric(1)
-  , na.rm = T
-) -> dbl_max
-
-
-
-fun_skew_center_data(
-  dbl_var = dsdsds
-  , dbl_weights = 
-    df_occupations$
-    employment_variants
-  , dbl_scale_lb = 0
-  , dbl_scale_ub = 100
 ) -> lalala
 
-lalala
+fun_acti_competency(
+  mtx_data = 
+    dsdsds
+  , mtx_weights = 
+    lalala
+  , dbl_scale_lb = 0
+  , dbl_scale_ub = 100
+  , dbl_generalism = 
+    fun_acti_generalism(
+      dsdsds
+    )
+) -> lala
+
+lala %>% 
+  as_tibble() %>% 
+  mutate(
+    wgt = 
+      df_occupations$
+      employment_variants
+  ) %>% 
+  ggplot(aes(
+    x = value
+    , weights = wgt
+  )) + 
+  geom_density() + 
+  xlim(c(0,1))
+
+
+weighted.mean(100 * lalala[,1] - dsdsds[,1], w = df_occupations$employment_variants)
+weighted.mean(100 * lalala[,190] - dsdsds[,190], w = df_occupations$employment_variants)
+weighted.mean(100 * lalala[,37] - dsdsds[,37], w = df_occupations$employment_variants)
+weighted.mean(100 * lalala[,200] - dsdsds[,200], w = df_occupations$employment_variants)
+weighted.mean(100 * lalala[,19] - dsdsds[,19], w = df_occupations$employment_variants)
+
+apply(
+  as.data.frame(dsdsds - lalala * 100)
+  , 2
+  , function(x){weighted.mean(x, df_occupations$employment_variants)}
+) -> lala
+
+qplot(as.numeric(lalala))
+
+apply(
+  as.data.frame(lalala)
+  , 2, function(x){
+    
+    sqrt(wtd.var(
+      x, weights = 
+        df_occupations$
+        employment_variants
+    ))
+    
+  }
+) -> sdsd
+
+View(cbind(sdsd))
+
+lalala %>% 
+  as_tibble() %>% 
+  ggplot(aes(
+    x = 
+      item_oral_expression
+    # item_fine_arts
+    # item_programming
+    # item_written_comprehension
+    # item_electronic_mail
+    , weights =
+      df_occupations$
+      employment_variants
+  )) + 
+  geom_density()
+
+df_occupations %>% 
+  ggplot(aes(
+    x = 
+      item_oral_expression
+    # item_programming
+    # item_written_comprehension
+    # item_electronic_mail
+    , weights = 
+      df_occupations$
+      employment_variants
+  )) + 
+  geom_density()
+
+View(lalala)
+
+wtd.var(lalala, weights = df_occupations$employment_variants)
 
 # dsds --------------------------------------------------------------------
 df_input[-1] %>%
@@ -666,8 +842,6 @@ c(100,0,0,0,20) %>%
     dbl_scale_lb = 0
     , dbl_scale_ub = 100
   )
-
-
 
 map(
   list(

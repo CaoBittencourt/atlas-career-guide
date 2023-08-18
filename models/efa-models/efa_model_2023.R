@@ -2,7 +2,7 @@
 # - Packages ----------------------------------------------------------------
 pkg <- c(
   'dplyr', 'tidyr', 'readr' #Data wrangling
-  , 'devtools' #Github packages
+  , 'atlas.efa' #Github packages
 )
 
 # Activate / install packages
@@ -10,10 +10,8 @@ lapply(pkg, function(x)
   if(!require(x, character.only = T))
   {install.packages(x); require(x)})
 
-# install_github('CaoBittencourtFerreira/atlas.ftools')
-# install_github('CaoBittencourtFerreira/atlas.efa')
-
-library(atlas.efa)
+# devtools::install_github('CaoBittencourtFerreira/atlas.ftools')
+# devtools::install_github('CaoBittencourtFerreira/atlas.efa')
 
 source('C:/Users/Cao/Documents/Github/atlas-research/functions/methods/fun_plots.R')
 
@@ -40,22 +38,27 @@ c(
   , 'item_degree_of_automation'
   , 'item_consequence_of_error'
   , 'item_impact_of_decisions_on_co_workers_or_company_results'
+  # useless items:
+  , 'item_near_vision'
+  , 'item_spend_time_sitting'
+  , 'item_indoors_environmentally_controlled'
+  
+  , 'item_work_with_work_group_or_team'
+  
+  # , 'item_communicating_with_supervisors_peers_or_subordinates'
+  # or remove or rename Explaining ideas? Presenting ideas?
+  # , 'item_freedom_to_make_decisions' #rename to autonomy
+  
   # poorly clustering items:
   , 'item_law_and_government'
   , 'item_public_safety_and_security'
-  # , 'item_establishing_and_maintaining_interpersonal_relationships'
+  , 'item_establishing_and_maintaining_interpersonal_relationships'
   , 'item_food_production'
-  , 'item_level_of_competition'
-  , 'item_duration_of_typical_work_week'
-  , 'item_time_sharing'
-  , 'item_frequency_of_decision_making'
-  # redundant:
-  , 'item_reading_comprehension'
-  , 'item_speaking'
-  , 'item_writing'
-  # useless items:
-  , 'item_near_vision'
-  , 'item_indoors_environmentally_controlled'
+  # , 'item_time_sharing' #rename to multi-tasking
+  # # redundant:
+  # , 'item_reading_comprehension' #rename to item_literacy / item_written_whatever according to factor
+  # # , 'item_speaking' #rename to item_oral_whatever according to factor
+  # # , 'item_writing' #rename to item_written_whatever according to factor
 ) -> chr_items_remove
 
 unique(
@@ -63,6 +66,50 @@ unique(
 ) -> chr_items_remove
 
 length(chr_items_remove)
+
+# # - Problematic items -----------------------------------------------------
+# c(
+#   # poorly measured items:
+#   'item_work_schedules'
+#   , 'item_time_pressure'
+#   , 'item_level_of_competition'
+#   , 'item_structured_versus_unstructured_work'
+#   , 'item_duration_of_typical_work_week'
+#   , 'item_frequency_of_decision_making'
+#   , 'item_degree_of_automation'
+#   , 'item_consequence_of_error'
+#   , 'item_impact_of_decisions_on_co_workers_or_company_results'
+#   
+#   # rename or remove item_communicating_with_supervisors_peers_or_subordinates
+#   # Explaining ideas? Presenting ideas?
+#   
+#   # , rename to autonomy 'item_freedom_to_make_decisions'
+#   
+#   # poorly clustering items:
+#   , 'item_law_and_government'
+#   , 'item_public_safety_and_security'
+#   , 'item_establishing_and_maintaining_interpersonal_relationships'
+#   , 'item_food_production'
+#   , 'item_level_of_competition'
+#   , 'item_duration_of_typical_work_week'
+#   , 'item_time_sharing'
+#   , 'item_frequency_of_decision_making'
+#   # redundant:
+#   , 'item_reading_comprehension'
+#   # , 'item_speaking'
+#   # , 'item_writing'
+#   , 'item_spend_time_sitting'
+#   # useless items:
+#   , 'item_near_vision'
+#   , 'item_spend_time_sitting'
+#   , 'item_indoors_environmentally_controlled'
+# ) -> chr_items_remove
+# 
+# unique(
+#   chr_items_remove
+# ) -> chr_items_remove
+# 
+# length(chr_items_remove)
 
 # - Questionnaire items ---------------------------------------------------
 218 - length(chr_items_remove)
@@ -156,24 +203,24 @@ c(
     sum(mtx_retained_covariance)
 )
 
-# - Problematic items distribution ----------------------------------------
-for(var in chr_items_remove){
-  
-  df_occupations %>%
-    fun_plot.density(aes(
-      x = !!sym(var)
-      , weight = employment_variants
-    )
-    , .list_axis.x.args = list(
-      limits = c(0,100)
-    )
-    , .fun_format.x = number_format(1)
-    , .list_labs = list(
-      y = NULL
-    )) %>% 
-    plot()
-  
-}
+# # - Problematic items distribution ----------------------------------------
+# for(var in chr_items_remove){
+# 
+#   df_occupations %>%
+#     fun_plot.density(aes(
+#       x = !!sym(var)
+#       , weight = employment_variants
+#     )
+#     , .list_axis.x.args = list(
+#       limits = c(-25,125)
+#     )
+#     , .fun_format.x = number_format(1)
+#     , .list_labs = list(
+#       y = NULL
+#     )) %>%
+#     plot()
+# 
+# }
 
 # - Data wrangling --------------------------------------------------------
 df_occupations %>% 
@@ -189,17 +236,15 @@ atlas.efa::fun_efa_vfa(
   df_data = 
     df_occupations_efa[-1]
   , int_factors = c(14, 15, 16)
+  # , int_factors = c(7, 14, 15, 16)
   , chr_rotation = 'equamax'
   , dbl_weights = 
     df_occupations_efa$
     employment_variants
-  # , int_min_items_factor = 3
-  , int_min_items_factor = 5
+  , int_min_items_factor = 4
   , lgc_remove_low_msai_items = T
-  # , lgc_adequacy_testing = T
-  # , lgc_optimal_nfactors = T
-  , lgc_adequacy_testing = F
-  , lgc_optimal_nfactors = F
+  , lgc_adequacy_testing = T
+  , lgc_optimal_nfactors = T
 ) -> list_efa
 
 # - Evaluate results --------------------------------------------------------------
@@ -220,7 +265,7 @@ list_efa$
       filter(
         evaluation != 
           'unacceptable'
-      ) %>% ○
+      ) %>%
       arrange(desc(
         performance
       )) %>%
@@ -233,80 +278,6 @@ for(df in 1:length(list_efa_loadings)){
     , n = Inf
   )
 }
-
-# all 218 items
-# almost good
-
-# poorly clustering items:
-# item_law_and_government
-# item_public_safety_and_security
-# item_establishing_and_maintaining_interpersonal_relationships
-# item_food_production
-# item_level_of_competition
-# item_duration_of_typical_work_week
-
-# suboptimal clustering:
-# item_programming
-# interesting enough,
-# item_foreign_language is clustering correctly
-
-# 210 items
-
-
-# 1 social skills
-# 2 engineering
-# 3 health science
-# 4 management
-# 5 transportation
-# 6 administrative
-# 7 sales and marketing
-# 8 perception
-# 9 job hazards
-# 10 analytical skills
-# 11 intelligence
-# 12 dexterity
-# 13 arts and humanities
-# 14 team work
-# 15 discernment / systems skills
-# 16 industrial
-# 17 creativity
-# 18 mechanical skills
-# 19 teaching
-# 20 strength / robustness
-
-# Factor 1 team work / social skills
-# Factor 2 dexterity / manual skills / mechanical
-# Factor 3 health science
-# Factor 4 sales and marketing / persuasion
-# Factor 5 transportation / spatial skills (or orientation)
-# Factor 6 administrative 
-# Factor 7 arts and humanities
-# odd item: 'item_developing_objectives_and_strategies'
-# Factor 8 management
-# Factor 9 engineering / building
-# Factor 10 analytical skills
-# Factor 11 intelligence
-# Factor 12 robustness
-# odd item: 'item_installation'
-# Factor 13 job hazards
-# Factor 14 discernment / systems skills / systemic thinking
-
-# Factor 1 industrial / production and processing
-# Factor 2 dexterity / manual skills / mechanical
-# Factor 3 health science
-# Factor 4 sales and marketing / persuasion
-# Factor 5 transportation / spatial skills (or orientation)
-# Factor 6 administrative 
-# Factor 7 arts and humanities
-# Factor 8 management
-# Factor 9 engineering / building
-# Factor 10 analytical skills
-# Factor 11 intelligence
-# Factor 12 robustness
-# Factor 13 job hazards / building and construction
-# semi-odd item: 'item_installation'
-# Factor 14 discernment
-# Factor 15 team work
 
 # - Questionnaires --------------------------------------------------------
 # [EXPORT] ----------------------------------------------------------------

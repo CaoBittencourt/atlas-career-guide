@@ -152,10 +152,14 @@ df_occupations %>%
   rename(
     item_native_language = 
       item_national_language
-    , item_pure_mathematics = 
-      item_mathematics
     , item_applied_mathematics = 
+      item_mathematics
+    , item_pure_mathematics = 
       item_numerical_reasoning
+    , item_autonomy = 
+      item_freedom_to_make_decisions
+    , item_multitasking =
+      item_time_sharing
   ) -> df_occupations
 
 # - Years of education ---------------------------------------------

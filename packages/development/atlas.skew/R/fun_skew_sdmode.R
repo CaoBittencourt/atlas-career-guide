@@ -377,120 +377,148 @@ fun_skew_sdmode <- function(
 
 }
 
-# - Skewness-centered data ----------------------------------------------
-fun_skew_center_data <- function(
-    dbl_var
-    , dbl_weights = NULL
-    , dbl_scale_lb
-    , dbl_scale_ub
-    , lgc_sample_variance = F
-){
-
-  # Arguments validation
-  stopifnot(
-    "'dbl_var' must be numeric." =
-      is.numeric(dbl_var)
-  )
-
-  stopifnot(
-    "'dbl_weights' must be either NULL or a numeric vector the same length as 'dbl_var'." =
-      any(
-        all(
-          is.numeric(dbl_weights)
-          , length(dbl_weights) ==
-            nrow(cbind(dbl_var))
-        )
-        , is.null(dbl_weights)
-      )
-  )
-
-  stopifnot(
-    "'dbl_scale_lb' must be numeric." =
-      is.numeric(dbl_scale_lb)
-  )
-
-  stopifnot(
-    "'dbl_scale_ub' must be numeric." =
-      is.numeric(dbl_scale_ub)
-  )
-
-  stopifnot(
-    "'lgc_sample_variance' must be either TRUE or FALSE." =
-      all(
-        is.logical(lgc_sample_variance)
-        , !is.na(lgc_sample_variance)
-      )
-  )
-
-  # Call 'fun_skew_sdmode'
-  call_kflex_macro <- match.call()
-
-  call_kflex_macro[[1]] <- as.name('fun_skew_sdmode')
-
-  # Run 'fun_skew_sdmode' with try catch
-  tryCatch(
-    expr = {return(eval.parent(call_kflex_macro))}
-    , error = function(e){return(NA)}
-  ) -> dbl_skew
-
-  rm(dbl_weights)
-  rm(call_kflex_macro)
-  rm(lgc_sample_variance)
-
-  # Scale skewness
-  dbl_skew * dbl_scale_ub -> dbl_skew
-
-  rm(dbl_scale_ub)
-  rm(dbl_scale_lb)
-
-  # Center data
-  rbind(dbl_skew)[rep(
-    1, length(dbl_skew)
-  ), ] -> dbl_skew
-
-  dbl_var - dbl_skew -> dbl_var
-
-  rm(dbl_skew)
-
-  # Normalize data
-  vapply(
-    as.data.frame(dbl_var)
-    , min
-    , FUN.VALUE = numeric(1)
-    , na.rm = T
-  ) -> dbl_min
-
-  vapply(
-    as.data.frame(dbl_var)
-    , min
-    , FUN.VALUE = numeric(1)
-    , na.rm = T
-  ) -> dbl_max
-
-  rbind(dbl_min)[rep(
-    1, length(dbl_min)
-  ), ] -> dbl_min
-
-  rbind(dbl_max)[rep(
-    1, length(dbl_max)
-  ), ] -> dbl_max
-
-  dbl_var / c(
-    dbl_max -
-      dbl_min
-  ) -
-    dbl_min / c(
-      dbl_max -
-        dbl_min
-    ) -> dbl_var
-
-  rm(dbl_max)
-  rm(dbl_min)
-
-  # Output
-  return(dbl_var)
-
-}
+# # - Skewness-centered data ----------------------------------------------
+# fun_skew_center_data <- function(
+#     dbl_var
+#     , dbl_weights = NULL
+#     , dbl_scale_lb
+#     , dbl_scale_ub
+#     , lgc_sample_variance = F
+#     , lgc_truncate = T
+# ){
+#
+#   # Arguments validation
+#   stopifnot(
+#     "'dbl_var' must be numeric." =
+#       is.numeric(dbl_var)
+#   )
+#
+#   stopifnot(
+#     "'dbl_weights' must be either NULL or a numeric vector the same length as 'dbl_var'." =
+#       any(
+#         all(
+#           is.numeric(dbl_weights)
+#           , length(dbl_weights) ==
+#             nrow(cbind(dbl_var))
+#         )
+#         , is.null(dbl_weights)
+#       )
+#   )
+#
+#   stopifnot(
+#     "'dbl_scale_lb' must be numeric." =
+#       is.numeric(dbl_scale_lb)
+#   )
+#
+#   stopifnot(
+#     "'dbl_scale_ub' must be numeric." =
+#       is.numeric(dbl_scale_ub)
+#   )
+#
+#   stopifnot(
+#     "'lgc_sample_variance' must be either TRUE or FALSE." =
+#       all(
+#         is.logical(lgc_sample_variance)
+#         , !is.na(lgc_sample_variance)
+#       )
+#   )
+#
+#   # Data wrangling
+#   dbl_scale_lb[[1]] -> dbl_scale_lb
+#   dbl_scale_ub[[1]] -> dbl_scale_ub
+#
+#   # # Call 'fun_skew_sdmode'
+#   # call_kflex_macro <- match.call()
+#   #
+#   # call_kflex_macro[[1]] <- as.name('fun_skew_sdmode')
+#   #
+#   # # Run 'fun_skew_sdmode' with try catch
+#   # tryCatch(
+#   #   expr = {return(eval.parent(call_kflex_macro))}
+#   #   , error = function(e){return(NA)}
+#   # ) -> dbl_skew
+#
+#   fun_skew_sdmode(
+#     dbl_var = dbl_var
+#     , dbl_weights =
+#       dbl_weights
+#     , dbl_scale_lb =
+#       dbl_scale_lb
+#     , dbl_scale_ub =
+#       dbl_scale_ub
+#     , lgc_sample_variance =
+#       lgc_sample_variance
+#   ) -> dbl_skew
+#
+#   rm(dbl_weights)
+#
+#   # rm(call_kflex_macro)
+#   rm(lgc_sample_variance)
+#
+#   # Scale skewness
+#   dbl_skew * dbl_scale_ub -> dbl_skew
+#
+#   rm(dbl_scale_ub)
+#
+#   # Center data
+#   rbind(dbl_skew)[rep(
+#     1, nrow(dbl_var)
+#   ), ] -> dbl_skew
+#
+#   dbl_var - dbl_skew -> dbl_var
+#
+#   rm(dbl_skew)
+#
+#   if(lgc_truncate){
+#
+#     pmax(
+#       dbl_var
+#       , dbl_scale_lb
+#     ) -> dbl_var
+#
+#   }
+#
+#   rm(dbl_scale_lb)
+#
+#   # Normalize data
+#   vapply(
+#     as.data.frame(dbl_var)
+#     , min
+#     , FUN.VALUE = numeric(1)
+#     , na.rm = T
+#   ) -> dbl_min
+#
+#   vapply(
+#     as.data.frame(dbl_var)
+#     , max
+#     , FUN.VALUE = numeric(1)
+#     , na.rm = T
+#   ) -> dbl_max
+#
+#   rbind(dbl_min)[rep(
+#     1, nrow(dbl_var)
+#   ), ] -> dbl_min
+#
+#   rbind(dbl_max)[rep(
+#     1, nrow(dbl_var)
+#   ), ] -> dbl_max
+#
+#   dbl_var / c(
+#     dbl_max -
+#       dbl_min
+#   ) -
+#     dbl_min / c(
+#       dbl_max -
+#         dbl_min
+#     ) -> dbl_var
+#
+#   rm(dbl_max)
+#   rm(dbl_min)
+#
+#   # Output
+#   return(dbl_var)
+#
+# }
 
 # # [TEST] ------------------------------------------------------------------
 # # - Sd-adjusted mode 1 ------------------------------------------------------
