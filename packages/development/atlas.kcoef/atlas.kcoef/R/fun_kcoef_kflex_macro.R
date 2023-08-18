@@ -22,7 +22,6 @@ fun_kcoef_kflex_macro <- function(
     , dbl_weights = NULL
     , dbl_scale_lb
     , dbl_scale_ub
-    , dbl_discount = 0.25
     , lgc_sample_variance = F
 ){
 
@@ -50,7 +49,6 @@ fun_kcoef_kflex_macro_df <- function(
     , dbl_weights = NULL
     , dbl_scale_lb
     , dbl_scale_ub
-    , dbl_discount = 0.25
     , lgc_sample_variance = F
 ){
 
@@ -88,8 +86,6 @@ fun_kcoef_kflex_macro_df <- function(
       dbl_scale_lb
     , dbl_scale_ub =
       dbl_scale_ub
-    , dbl_discount =
-      dbl_discount
     , lgc_sample_variance =
       lgc_sample_variance
   ) -> dbl_kflex
@@ -98,7 +94,6 @@ fun_kcoef_kflex_macro_df <- function(
   rm(dbl_weights)
   rm(dbl_scale_lb)
   rm(dbl_scale_ub)
-  rm(dbl_discount)
   rm(lgc_sample_variance)
 
   # Data wrangling

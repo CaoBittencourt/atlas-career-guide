@@ -243,6 +243,8 @@ df_employment_2022 %>%
     , employment_norm = 
       employment_variants / 
       min(employment_variants)
+    , employment_norm = 
+      ceiling(employment_norm)
   ) -> df_occupations
 
 rm(df_employment_2022)
