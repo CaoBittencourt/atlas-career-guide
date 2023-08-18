@@ -1,16 +1,5 @@
 library(devtools)
 
-remove.packages('atlas.ftools')
-remove.packages('atlas.fstatics')
-remove.packages('atlas.efa')
-remove.packages('atlas.eqvl')
-remove.packages('atlas.match')
-remove.packages('atlas.intc')
-remove.packages('atlas.skew')
-remove.packages('atlas.kcoef')
-remove.packages('atlas.notiq')
-remove.packages('atlas.misc')
-
 install_github('CaoBittencourtFerreira/atlas.ftools', force = T)
 install_github('CaoBittencourtFerreira/atlas.efa', force = T)
 install_github('CaoBittencourtFerreira/atlas.fstatics', force = T)

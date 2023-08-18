@@ -76,65 +76,65 @@ fun_acti_generalism <- function(mtx_data){
   
 }
 
-# - Competency function ---------------------------------------------------
-fun_acti_competency <- function(
-    mtx_data
-    , dbl_scale_lb = 0
-    , dbl_scale_ub = 100
-){
-  
-  # Arguments validation
-  
-  # Data wrangling
-  
-  # Weigh each attribute by its capital macro-flexibility?
-  # Competency level helper function
-  fun_acti_competency_helper <- function(dbl_profile){
-    
-    # Drop NAs
-    dbl_profile[!is.na(
-      dbl_profile
-    )] -> dbl_profile
-    
-    # Normalize item scores
-    dbl_profile / (
-      dbl_scale_ub -
-        dbl_scale_lb
-    ) -> dbl_profile
-    
-    dbl_profile -
-      dbl_scale_lb / (
-        dbl_scale_ub -
-          dbl_scale_lb
-      ) -> dbl_profile
-    
-    # Self-weighted mean of item scores
-    weighted.mean(
-      x = dbl_profile
-      , w = dbl_profile
-      # , w = 1 + dbl_profile
-      # , w =
-      #   dbl_profile /
-      #   max(dbl_profile)
-    ) -> dbl_competency
-    
-    rm(dbl_profile)
-    
-    # Output
-    return(dbl_competency)
-    
-  }
-  
-  # Apply competency level helper function
-  apply(
-    mtx_data, 1
-    , fun_acti_competency_helper
-  ) -> mtx_competency
-  
-  # Output
-  return(mtx_competency)
-  
-}
+# # - Competency function ---------------------------------------------------
+# fun_acti_competency <- function(
+#     mtx_data
+#     , dbl_scale_lb = 0
+#     , dbl_scale_ub = 100
+# ){
+#   
+#   # Arguments validation
+#   
+#   # Data wrangling
+#   
+#   # Weigh each attribute by its capital macro-flexibility?
+#   # Competency level helper function
+#   fun_acti_competency_helper <- function(dbl_profile){
+#     
+#     # Drop NAs
+#     dbl_profile[!is.na(
+#       dbl_profile
+#     )] -> dbl_profile
+#     
+#     # Normalize item scores
+#     dbl_profile / (
+#       dbl_scale_ub -
+#         dbl_scale_lb
+#     ) -> dbl_profile
+#     
+#     dbl_profile -
+#       dbl_scale_lb / (
+#         dbl_scale_ub -
+#           dbl_scale_lb
+#       ) -> dbl_profile
+#     
+#     # Self-weighted mean of item scores
+#     weighted.mean(
+#       x = dbl_profile
+#       , w = dbl_profile
+#       # , w = 1 + dbl_profile
+#       # , w =
+#       #   dbl_profile /
+#       #   max(dbl_profile)
+#     ) -> dbl_competency
+#     
+#     rm(dbl_profile)
+#     
+#     # Output
+#     return(dbl_competency)
+#     
+#   }
+#   
+#   # Apply competency level helper function
+#   apply(
+#     mtx_data, 1
+#     , fun_acti_competency_helper
+#   ) -> mtx_competency
+#   
+#   # Output
+#   return(mtx_competency)
+#   
+# }
 
 # - [?] Competency function 2 ---------------------------------------------------
 fun_acti_competency <- function(
@@ -540,6 +540,8 @@ df_input[-1] %>%
 
 fun_acti_generalism(dsds) -> generalism
 
+generalism
+
 fun_acti_competency(
   mtx_data = dsds
   , dbl_scale_lb = 0
@@ -557,6 +559,32 @@ weighted.mean(
       , dbl_scaling = 1 - generalism
     )
 )
+
+
+library(purrr)
+sd(c(rep(0,1),1))
+sd(c(rep(0,10),1))
+sd(c(rep(1,10),0))
+
+map(
+  list(
+    c(100,0,0,0),
+    c(100,20,20,20),
+    c(100,50,50,40),
+    c(100,50,50,50),
+    c(100,50,50,60),
+    c(100,70,70,70)
+  )
+  , ~ fun_acti_generalism(.x)
+  # , ~ fun_acti_competency(
+  #   mtx_data = .x
+  #   , dbl_scale_lb = 0
+  #   , dbl_scale_ub = 100
+  #   , dbl_generalism = 
+  #     fun_acti_generalism(.x)
+  # )
+)
+
 
 # - Generalism test -------------------------------------------------------
 df_occupations %>% 
