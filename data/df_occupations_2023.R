@@ -156,10 +156,10 @@ df_occupations %>%
       item_mathematics
     , item_pure_mathematics = 
       item_numerical_reasoning
-    , item_autonomy = 
-      item_freedom_to_make_decisions
     , item_multitasking =
       item_time_sharing
+    , item_industrial_design = 
+      item_design
   ) -> df_occupations
 
 # - Years of education ---------------------------------------------

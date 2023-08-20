@@ -29,84 +29,60 @@ lapply(pkg, function(x)
 # remotes::install_github('Van1yu3/SWKM')
 # library(SWKM)
 
-# [CLASSIFICATION FUNCTIONS] ---------------------------
+# [FUNCTIONS] ---------------------------
 # - Generalism function ---------------------------------------------------
-fun_acti_generalism <- function(mtx_data){
-  
-  # Arguments validation
-  stopifnot(
-    "'mtx_data' must be a numeric matrix." =
-      all(
-        is.numeric(mtx_data)
-      )
-  )
-  
-  # Data wrangling
-  rbind(mtx_data) -> mtx_data
-  
-  # Generalism helper function
-  fun_acti_generalism_helper <- function(dbl_profile){
-    
-    # Drop NAs
-    dbl_profile[!is.na(
-      dbl_profile
-    )] -> dbl_profile
-    
-    # Apply bounded variable skewness function
-    fun_skew_sdmode(
-      dbl_var =
-        dbl_profile
-      , dbl_scale_lb =
-        min(dbl_profile)
-      , dbl_scale_ub =
-        max(dbl_profile)
-    ) -> dbl_generalism
-    
-    rm(dbl_profile)
-    
-    # Output
-    return(dbl_generalism)
-    
-  }
-  
-  # Apply generalism function to each row
-  apply(
-    mtx_data, 1
-    , fun_acti_generalism_helper
-  ) -> mtx_generalism
-  
-  # Output
-  return(mtx_generalism)
-  
-}
-
-# - Competency function ---------------------------------------------------
-fun_acti_competency <- function(
-    mtx_data
-    , mtx_weights = NULL
+fun_acti_generalism <- function(
+    dbl_profile
     , dbl_scale_lb = 0
-    , dbl_scale_ub = 100
-    , dbl_generalism
 ){
   
   # Arguments validation
   stopifnot(
-    "'mtx_data' must be a numeric matrix." =
-      all(
-        is.numeric(mtx_data)
-      )
+    "'dbl_profile' must be numeric." =
+      is.numeric(dbl_profile)
   )
   
   stopifnot(
-    "'mtx_weights' must be a numeric matrix." =
-      any(
-        is.null(mtx_weights)
-        , all(
-          is.numeric(mtx_weights)
-          , dim(mtx_weights) ==
-            dim(mtx_data)
-        )
-      )
+    "'dbl_scale_lb' must be numeric." =
+      is.numeric(dbl_scale_lb)
+  )
+  
+  # Data wrangling
+  dbl_scale_lb[[1]] -> dbl_scale_lb
+  
+  # Drop NAs
+  dbl_profile[!is.na(
+    dbl_profile
+  )] -> dbl_profile
+  
+  # Apply bounded variable skewness function
+  fun_skew_sdmode(
+    dbl_var =
+      dbl_profile
+    , dbl_scale_lb =
+      dbl_scale_lb
+    , dbl_scale_ub =
+      max(dbl_profile)
+  ) -> dbl_generalism
+  
+  rm(dbl_profile)
+  
+  # Output
+  return(dbl_generalism)
+  
+}
+
+# - Indispensability function ---------------------------------------------
+fun_acti_indispensability <- function(
+    dbl_profile
+    , dbl_scale_lb = 0
+    , dbl_generalism = NULL
+){
+  
+  # Arguments validation
+  stopifnot(
+    "'dbl_profile' must be a numeric." =
+      is.numeric(dbl_profile)
   )
   
   stopifnot(
@@ -115,125 +91,73 @@ fun_acti_competency <- function(
   )
   
   stopifnot(
-    "'dbl_scale_ub' must be numeric." =
-      is.numeric(dbl_scale_ub)
-  )
-  
-  stopifnot(
-    "'dbl_generalism' must be a numeric vector with one element for each row in 'mtx_data'." =
-      all(
+    "'dbl_generalism' must be either NULL or numeric." =
+      any(
         is.numeric(dbl_generalism)
-        , length(dbl_generalism) ==
-          nrow(rbind(mtx_data))
+        , is.null(dbl_generalism)
       )
   )
   
   # Data wrangling
   dbl_scale_lb[[1]] -> dbl_scale_lb
   
-  dbl_scale_ub[[1]] -> dbl_scale_ub
-  
-  rbind(mtx_data) -> mtx_data
-  
-  # Weigh each attribute by its capital macro-flexibility?
-  # Competency level helper function
-  fun_acti_competency_helper <- function(
-    dbl_profile
-    , dbl_generalism
-    , dbl_weights
-  ){
+  if(is.null(dbl_generalism)){
     
-    # Drop NA's
-    dbl_profile[!is.na(
+    fun_acti_generalism(
       dbl_profile
-    )] -> dbl_profile
-    
-    # Weighted mean of normalized item scores
-    # adjusted by item importance and generalism
-    weighted.mean(
-      x =
-        dbl_profile / (
-          dbl_scale_ub -
-            dbl_scale_lb
-        ) -
-        dbl_scale_lb / (
-          dbl_scale_ub -
-            dbl_scale_lb
-        )
-      , w =
-        fun_eqvl_equivalence(
-          dbl_var =
-            dbl_profile
-          , dbl_scale_lb =
-            min(dbl_profile)
-          , dbl_scale_ub =
-            max(dbl_profile)
-          , dbl_scaling =
-            (1 - dbl_generalism)
-        ) +
-        fun_eqvl_equivalence(
-          dbl_var =
-            dbl_weights
-          , dbl_scale_lb =
-            min(dbl_weights)
-          , dbl_scale_ub =
-            max(dbl_weights)
-          , dbl_scaling =
-            (1 - dbl_generalism)
-        )
-    ) -> dbl_competency
-    
-    # Output
-    return(dbl_competency)
+      , dbl_scale_lb =
+        dbl_scale_lb
+    ) -> dbl_generalism
     
   }
   
-  # Weights
-  if(!length(mtx_weights)){
+  dbl_generalism[[1]] -> dbl_generalism
+  
+  dbl_profile[!is.na(
+    dbl_profile
+  )] -> dbl_profile
+  
+  # Equivalence of normalized scores
+  fun_eqvl_equivalence(
+    dbl_var =
+      dbl_profile
+    , dbl_scale_lb =
+      dbl_scale_lb
+    , dbl_scale_ub =
+      max(dbl_profile)
+    , dbl_scaling =
+      1 - dbl_generalism
+  ) -> dbl_indispensability
+  
+  if(is.matrix(dbl_profile)){
     
-    mtx_data -> mtx_weights
+    colnames(dbl_profile) ->
+      names(dbl_indispensability)
+    
+  } else {
+    
+    names(dbl_profile) ->
+      names(dbl_indispensability)
     
   }
-  
-  # Apply competency level helper function
-  mapply(
-    function(profile, generalism, weight){
-      
-      # Call helper function
-      fun_acti_competency_helper(
-        dbl_profile = profile
-        , dbl_generalism = generalism
-        , dbl_weights = weight
-      ) -> dbl_competency
-      
-      # Output
-      return(dbl_competency)
-      
-    }
-    , profile = as.data.frame(t(mtx_data))
-    , generalism = dbl_generalism
-    , weight = as.data.frame(t(mtx_weights))
-  ) -> mtx_competency
   
   # Output
-  return(mtx_competency)
+  return(dbl_indispensability)
   
 }
 
 # - Competency function (ps: this only measures intra-occupation competency! it doesn't account for attribute difficulty) ---------------------------------------------------
 fun_acti_competency <- function(
-    mtx_data
+    dbl_profile
     , dbl_scale_lb = 0
     , dbl_scale_ub = 100
-    , dbl_generalism
+    , dbl_generalism = NULL
 ){
   
   # Arguments validation
   stopifnot(
-    "'mtx_data' must be a numeric matrix." =
-      all(
-        is.numeric(mtx_data)
-      )
+    "'dbl_profile' must be numeric." =
+      is.numeric(dbl_profile)
   )
   
   stopifnot(
@@ -247,11 +171,10 @@ fun_acti_competency <- function(
   )
   
   stopifnot(
-    "'dbl_generalism' must be a numeric vector with one element for each row in 'mtx_data'." =
-      all(
+    "'dbl_generalism' must be either NULL or numeric." =
+      any(
         is.numeric(dbl_generalism)
-        , length(dbl_generalism) ==
-          nrow(rbind(mtx_data))
+        , is.null(dbl_generalism)
       )
   )
   
@@ -260,132 +183,49 @@ fun_acti_competency <- function(
   
   dbl_scale_ub[[1]] -> dbl_scale_ub
   
-  rbind(mtx_data) -> mtx_data
-  
-  # Weigh each attribute by its capital macro-flexibility?
-  # Competency level helper function
-  fun_acti_competency_helper <- function(
-    dbl_profile
-    , dbl_generalism
-  ){
+  if(is.null(dbl_generalism)){
     
-    # Drop NA's
-    dbl_profile[!is.na(
+    fun_acti_generalism(
       dbl_profile
-    )] -> dbl_profile
-    
-    # Weighted mean of normalized item scores
-    # adjusted by item importance and generalism
-    weighted.mean(
-      x =
-        dbl_profile / (
-          dbl_scale_ub -
-            dbl_scale_lb
-        ) -
-        dbl_scale_lb / (
-          dbl_scale_ub -
-            dbl_scale_lb
-        )
-      , w =
-        fun_eqvl_equivalence(
-          dbl_var =
-            dbl_profile
-          , dbl_scale_lb =
-            min(dbl_profile)
-          , dbl_scale_ub =
-            max(dbl_profile)
-          , dbl_scaling =
-            (1 - dbl_generalism)
-        )
-    ) -> dbl_competency
-    
-    # Output
-    return(dbl_competency)
+      , dbl_scale_lb =
+        dbl_scale_lb
+    ) -> dbl_generalism
     
   }
   
-  # Apply competency level helper function
-  mapply(
-    function(profile, generalism){
-      
-      # Call helper function
-      fun_acti_competency_helper(
-        dbl_profile = profile
-        , dbl_generalism = generalism
-      ) -> dbl_competency
-      
-      # Output
-      return(dbl_competency)
-      
-    }
-    , profile = as.data.frame(t(mtx_data))
-    , generalism = dbl_generalism
-  ) -> mtx_competency
+  dbl_generalism[[1]] -> dbl_generalism
+  
+  dbl_profile[!is.na(
+    dbl_profile
+  )] -> dbl_profile
+  
+  # Weighted mean of normalized item scores
+  # adjusted by item importance and generalism
+  weighted.mean(
+    x =
+      dbl_profile / (
+        dbl_scale_ub -
+          dbl_scale_lb
+      ) -
+      dbl_scale_lb / (
+        dbl_scale_ub -
+          dbl_scale_lb
+      )
+    , w =
+      fun_acti_indispensability(
+        dbl_profile = 
+          dbl_profile
+        , dbl_scale_lb = 
+          dbl_scale_lb
+        , dbl_generalism =
+          dbl_generalism
+      )
+  ) -> dbl_competency
   
   # Output
-  return(mtx_competency)
+  return(dbl_competency)
   
 }
-
-# # - Competency function ---------------------------------------------------
-# fun_acti_competency <- function(
-    #     mtx_data
-#     , dbl_scale_lb = 0
-#     , dbl_scale_ub = 100
-# ){
-# 
-#   # Arguments validation
-# 
-#   # Data wrangling
-# 
-#   # Weigh each attribute by its capital macro-flexibility?
-#   # Competency level helper function
-#   fun_acti_competency_helper <- function(dbl_profile){
-# 
-#     # Drop NAs
-#     dbl_profile[!is.na(
-#       dbl_profile
-#     )] -> dbl_profile
-# 
-#     # Normalize item scores
-#     dbl_profile / (
-#       dbl_scale_ub -
-#         dbl_scale_lb
-#     ) -> dbl_profile
-# 
-#     dbl_profile -
-#       dbl_scale_lb / (
-#         dbl_scale_ub -
-#           dbl_scale_lb
-#       ) -> dbl_profile
-# 
-#     # Self-weighted mean of item scores
-#     weighted.mean(
-#       x = dbl_profile
-#       , w = dbl_profile
-#       # , w = 1 + dbl_profile
-#       # , w =
-#       #   dbl_profile /
-#       #   max(dbl_profile)
-#     ) -> dbl_competency
-# 
-#     rm(dbl_profile)
-# 
-#     # Output
-#     return(dbl_competency)
-# 
-#   }
-# 
-#   # Apply competency level helper function
-#   apply(
-#     mtx_data, 1
-#     , fun_acti_competency_helper
-#   ) -> mtx_competency
-# 
-#   # Output
-#   return(mtx_competency)
-# 
-# }
 
 # - Classifier function -------------------------------------------------
 fun_acti_classifier <- function(
@@ -436,10 +276,194 @@ fun_acti_classifier <- function(
     , all.inside = T
   ) -> int_class_id
   
+  names(dbl_var) -> 
+    names(int_class_id)
+  
   # Output
   return(int_class_id)
   
 }
+
+# - Numerical ACTI --------------------------------------------------------
+fun_acti_numerical_type <- function(
+    df_data
+    , efa_model
+    , df_factor_scores = NULL
+    , dbl_weights = NULL
+    , dbl_scale_lb = 0
+    # , dbl_scale_ub = 100
+    , dbl_generalism = NULL
+){
+  
+  # Arguments validation
+  stopifnot(
+    "'df_data' must be a data frame containing item scores." =
+      all(
+        is.data.frame(df_data)
+        , any(
+          loadings(efa_model)[,] %>%
+            rownames() %in%
+            names(df_data)
+        )))
+  
+  stopifnot(
+    "'dbl_scale_lb' must be numeric." =
+      is.numeric(dbl_scale_lb)
+  )
+  
+  # stopifnot(
+  #   "'dbl_scale_ub' must be numeric." =
+  #     is.numeric(dbl_scale_ub)
+  # )
+  
+  stopifnot(
+    "'dbl_generalism' must be either NULL or numeric." =
+      any(
+        is.numeric(dbl_generalism)
+        , is.null(dbl_generalism)
+      )
+  )
+  
+  # Data wrangling
+  dbl_scale_lb[[1]] -> dbl_scale_lb
+  
+  # dbl_scale_ub[[1]] -> dbl_scale_ub
+  
+  df_data %>% 
+    select(any_of(
+      efa_model$
+        model %>% 
+        colnames()
+    )) -> df_data
+  
+  if(is.null(dbl_generalism)){
+    
+    fun_acti_generalism(
+      as.numeric(df_data)
+      , dbl_scale_lb =
+        dbl_scale_lb
+    ) -> dbl_generalism
+    
+  }
+  
+  dbl_generalism[[1]] -> dbl_generalism
+  
+  # Factor scores
+  fun_ftools_factor_scores(
+    df_data = 
+      df_data
+    , efa_model = 
+      efa_model
+    , lgc_pivot = F
+  ) -> df_factor_scores
+  
+  rm(df_data)
+  
+  df_factor_scores %>% 
+    as.matrix() %>% 
+    as.numeric() ->
+    dbl_factor_scores
+  
+  names(df_factor_scores) -> 
+    names(dbl_factor_scores)
+  
+  rm(df_factor_scores)
+  
+  # Apply indispensability function
+  fun_acti_indispensability(
+    dbl_profile = 
+      dbl_factor_scores
+    , dbl_scale_lb = 
+      dbl_scale_lb
+    , dbl_generalism =
+      dbl_generalism
+  ) -> dbl_factor_scores
+  
+  # Normalize
+  
+  # Sort
+  sort(
+    dbl_factor_scores
+    , decreasing = T
+  ) -> dbl_factor_scores
+  
+  # temp
+  names(dbl_factor_scores) %>% 
+    case_match(
+      'factor1' ~ 'Ds',
+      'factor2' ~ 'Eg',
+      'factor3' ~ 'Hs',
+      'factor4' ~ 'Bs',
+      'factor5' ~ 'Tr',
+      'factor6' ~ 'Ad',
+      'factor7' ~ 'Sm',
+      'factor8' ~ 'Ah',
+      'factor9' ~ 'Hz',
+      'factor10' ~ 'An',
+      'factor11' ~ 'Mt',
+      'factor12' ~ 'Rb',
+      'factor13' ~ 'Id',
+      'factor14' ~ 'Mc'
+      # 'factor1' ~ 'discernment',
+      # 'factor2' ~ 'engineering',
+      # 'factor3' ~ 'health_science',
+      # 'factor4' ~ 'business',
+      # 'factor5' ~ 'transportation',
+      # 'factor6' ~ 'administrative',
+      # 'factor7' ~ 'sales_marketing',
+      # 'factor8' ~ 'arts_humanities',
+      # 'factor9' ~ 'hazards',
+      # 'factor10' ~ 'analystical_skills',
+      # 'factor11' ~ 'mathematics',
+      # 'factor12' ~ 'robustness',
+      # 'factor13' ~ 'industrial',
+      # 'factor14' ~ 'mechanical_skills'
+    ) -> names(dbl_factor_scores)
+  
+  # Classify scores
+  fun_acti_classifier(
+    dbl_var = dbl_factor_scores
+    , dbl_scale_lb = 0
+    , dbl_scale_ub = 1
+    , int_levels = 3
+  ) -> dbl_classification
+  
+  # Keep only dominant and auxiliary (drop minor)
+  dbl_factor_scores[
+    dbl_classification > 1
+  ] -> dbl_factor_scores
+  
+  # ACTI list class
+  list(
+    acti = dbl_factor_scores,
+    class = dbl_classification
+  ) -> list_acti
+  
+  rm(dbl_factor_scores)
+  rm(dbl_classification)
+  
+  c(
+    class(list_acti)
+    , 'ACTI'
+  ) -> class(list_acti)
+  
+  # Output
+  return(list_acti)
+  
+}
+
+df_occupations %>% 
+  slice_sample() -> 
+  dsds
+
+dsds$occupation
+
+fun_acti_numerical_type(
+  df_data = dsds
+  , efa_model = 
+    efa_model
+  , dbl_scale_lb = 0
+)
 
 # [K-MEANS ACTI] ----------------------------------------------------------
 
@@ -610,25 +634,605 @@ fun_acti_code <- function(
 # - ACTI matching ---------------------------------------------------------
 # fun_eqvl_equivalence_acti
 
+# [VECTORIZED FUNCTIONS] --------------------------------------------------
+# # - Generalism function ---------------------------------------------------
+# fun_acti_generalism <- function(
+    #     mtx_data
+#     , dbl_scale_lb = 0
+# ){
+#   
+#   # Arguments validation
+#   stopifnot(
+#     "'mtx_data' must be a numeric matrix." =
+#       all(
+#         is.numeric(mtx_data)
+#       )
+#   )
+#   
+#   stopifnot(
+#     "'dbl_scale_lb' must be numeric." =
+#       is.numeric(dbl_scale_lb)
+#   )
+#   
+#   # Data wrangling
+#   rbind(mtx_data) -> mtx_data
+#   
+#   dbl_scale_lb[[1]] -> dbl_scale_lb
+#   
+#   # Generalism helper function
+#   fun_acti_generalism_helper <- function(dbl_profile){
+#     
+#     # Drop NAs
+#     dbl_profile[!is.na(
+#       dbl_profile
+#     )] -> dbl_profile
+#     
+#     # Apply bounded variable skewness function
+#     fun_skew_sdmode(
+#       dbl_var =
+#         dbl_profile
+#       , dbl_scale_lb =
+#         dbl_scale_lb
+#       , dbl_scale_ub =
+#         max(dbl_profile)
+#     ) -> dbl_generalism
+#     
+#     rm(dbl_profile)
+#     
+#     # Output
+#     return(dbl_generalism)
+#     
+#   }
+#   
+#   # Apply generalism function to each row
+#   apply(
+#     mtx_data, 1
+#     , fun_acti_generalism_helper
+#   ) -> mtx_generalism
+#   
+#   # Output
+#   return(mtx_generalism)
+#   
+# }
+
+# # - Indispensability function ---------------------------------------------
+# fun_acti_indispensability <- function(
+    #     mtx_data
+#     , dbl_scale_lb
+#     , dbl_generalism
+# ){
+#   
+#   # Arguments validation
+#   stopifnot(
+#     "'mtx_data' must be a numeric matrix." =
+#       all(
+#         is.numeric(mtx_data)
+#       )
+#   )
+#   
+#   stopifnot(
+#     "'dbl_scale_lb' must be numeric." =
+#       is.numeric(dbl_scale_lb)
+#   )
+#   
+#   stopifnot(
+#     "'dbl_generalism' must be a numeric vector with one element for each row in 'mtx_data'." =
+#       all(
+#         is.numeric(dbl_generalism)
+#         , length(dbl_generalism) ==
+#           nrow(rbind(mtx_data))
+#       )
+#   )
+#   
+#   # Data wrangling
+#   rbind(mtx_data) -> mtx_data
+#   
+#   dbl_scale_lb[[1]] -> dbl_scale_lb
+#   
+#   # Indispensability helper function
+#   fun_acti_indispensability_helper <- function(
+    #     dbl_profile
+#     , dbl_generalism
+#   ){
+#     
+#     # Drop NA's
+#     dbl_profile[!is.na(
+#       dbl_profile
+#     )] -> dbl_profile
+#     
+#     # Equivalence of normalized scores
+#     fun_eqvl_equivalence(
+#       dbl_var =
+#         dbl_profile
+#       , dbl_scale_lb =
+#         dbl_scale_lb
+#       , dbl_scale_ub =
+#         max(dbl_profile)
+#       , dbl_scaling =
+#         1 - dbl_generalism
+#     ) -> dbl_indispensability
+#     
+#     # Output
+#     return(dbl_indispensability)
+#     
+#   }
+#   
+#   # Apply indispensability function to each row
+#   mapply(
+#     function(profile, generalism){
+#       
+#       # Call helper function
+#       fun_acti_indispensability_helper(
+#         dbl_profile = profile
+#         , dbl_generalism = generalism
+#       ) -> dbl_indispensability
+#       
+#       # Output
+#       return(dbl_indispensability)
+#       
+#     }
+#     , profile = as.data.frame(t(mtx_data))
+#     , generalism = dbl_generalism
+#   ) -> mtx_indispensability
+#   
+#   # Output
+#   return(mtx_indispensability)
+#   
+# }
+# 
+# df_occupations %>% 
+#   filter(
+#     occupation ==
+#       'Statisticians'
+#   ) %>%
+#   select(
+#     occupation
+#     , starts_with(
+#       'item'
+#     )
+#   ) %>% 
+#   pivot_longer(
+#     cols = -1
+#     , names_to = 'item'
+#     , values_to = 'item_score'
+#   ) %>% 
+#   mutate(
+#     generalism = 
+#       fun_acti_generalism(
+#         mtx_data = 
+#           item_score
+#         , dbl_scale_lb = 0
+#       )
+#     , item_indispensability = 
+#       fun_acti_indispensability(
+#         mtx_data = item_score
+#         , dbl_scale_lb = 0
+#         , dbl_generalism = 
+#           first(generalism)
+#       ) %>% 
+#       as.numeric() %>%
+#       round(4)
+#   ) %>% 
+#   arrange(desc(
+#     item_score
+#   )) %>% 
+#   print(n = Inf)
+# 
+# fun_acti_indispensability(
+#   mtx_data =
+#     df_input[-1] %>% 
+#     as.numeric()
+#   , dbl_scale_lb = 0
+#   , dbl_generalism = 
+#     fun_acti_generalism(
+#       mtx_data = 
+#         df_input[-1] %>% 
+#         as.numeric()
+#       , dbl_scale_lb = 0
+#     )
+# ) %>% round(2)
+# 
+# 
+# df_occupations %>%
+#   select(starts_with(
+#     'item'
+#   )) %>% 
+#   select(1:10) %>% 
+#   slice_head(n = 1) %>%
+#   as.numeric() -> dsds
+# 
+# (dsds * 0.5) %>% 
+#   as_tibble() %>%
+#   mutate(
+#     .after = value
+#     , normvalue = 
+#       value / max(value)
+#     , lalala = 
+#       fun_eqvl_equivalence(
+#         normvalue
+#         , dbl_scale_lb = 0
+#         , dbl_scale_ub = 1
+#         , dbl_scaling = 
+#           1 - fun_acti_generalism(value)
+#       )
+#     , lb0 = 
+#       fun_eqvl_equivalence(
+#         dbl_var = value
+#         , dbl_scale_lb = 0
+#         , dbl_scale_ub = 
+#           max(value)
+#         , dbl_scaling = 
+#           1 - fun_acti_generalism(value)
+#       )
+#     , lbmin = 
+#       fun_eqvl_equivalence(
+#         dbl_var = value
+#         , dbl_scale_lb = 
+#           min(value)
+#         , dbl_scale_ub = 
+#           max(value)
+#         , dbl_scaling = 
+#           1 - fun_acti_generalism(value)
+#       )
+#     , lbmax_min = 
+#       fun_eqvl_equivalence(
+#         dbl_var = value
+#         , dbl_scale_lb = 
+#           max(value) - 
+#           min(value)
+#         , dbl_scale_ub = 
+#           max(value)
+#         , dbl_scaling = 
+#           1 - fun_acti_generalism(value)
+#       )
+#   ) %>%
+#   arrange(-value) %>% 
+#   round(2)
+# 
+# fun_eqvl_equivalence(
+#   dbl_var = dsds
+#   , dbl_scale_lb =
+#     # 0
+#     # min(dsds)
+#     max(dsds) - min(dsds)
+#   , dbl_scale_ub =
+#     max(dsds)
+#   , dbl_scaling =
+#     1 - fun_acti_generalism(dsds)
+# ) %>% 
+#   bind_cols(dsds) %>% 
+#   rename(
+#     
+#   )
+
+# # - Competency function (ps: this only measures intra-occupation competency! it doesn't account for attribute difficulty) ---------------------------------------------------
+# fun_acti_competency <- function(
+    #     mtx_data
+#     , dbl_scale_lb = 0
+#     , dbl_scale_ub = 100
+#     , dbl_generalism
+# ){
+#   
+#   # Arguments validation
+#   stopifnot(
+#     "'mtx_data' must be a numeric matrix." =
+#       all(
+#         is.numeric(mtx_data)
+#       )
+#   )
+#   
+#   stopifnot(
+#     "'dbl_scale_lb' must be numeric." =
+#       is.numeric(dbl_scale_lb)
+#   )
+#   
+#   stopifnot(
+#     "'dbl_scale_ub' must be numeric." =
+#       is.numeric(dbl_scale_ub)
+#   )
+#   
+#   stopifnot(
+#     "'dbl_generalism' must be a numeric vector with one element for each row in 'mtx_data'." =
+#       all(
+#         is.numeric(dbl_generalism)
+#         , length(dbl_generalism) ==
+#           nrow(rbind(mtx_data))
+#       )
+#   )
+#   
+#   # Data wrangling
+#   dbl_scale_lb[[1]] -> dbl_scale_lb
+#   
+#   dbl_scale_ub[[1]] -> dbl_scale_ub
+#   
+#   rbind(mtx_data) -> mtx_data
+#   
+#   # Weigh each attribute by its capital macro-flexibility?
+#   # Competency level helper function
+#   fun_acti_competency_helper <- function(
+    #     dbl_profile
+#     , dbl_generalism
+#   ){
+#     
+#     # Drop NA's
+#     dbl_profile[!is.na(
+#       dbl_profile
+#     )] -> dbl_profile
+#     
+#     # Weighted mean of normalized item scores
+#     # adjusted by item importance and generalism
+#     weighted.mean(
+#       x =
+#         dbl_profile / (
+#           dbl_scale_ub -
+#             dbl_scale_lb
+#         ) -
+#         dbl_scale_lb / (
+#           dbl_scale_ub -
+#             dbl_scale_lb
+#         )
+#       , w =
+#         fun_eqvl_equivalence(
+#           dbl_var =
+#             dbl_profile
+#           , dbl_scale_lb =
+#             dbl_scale_lb
+#           # max(dbl_profile) -
+#           # min(dbl_profile)
+#           # min(dbl_profile)
+#           , dbl_scale_ub =
+#             max(dbl_profile)
+#           , dbl_scaling =
+#             1 - dbl_generalism
+#         )
+#     ) -> dbl_competency
+#     
+#     # Output
+#     return(dbl_competency)
+#     
+#   }
+#   
+#   # Apply competency level helper function
+#   mapply(
+#     function(profile, generalism){
+#       
+#       # Call helper function
+#       fun_acti_competency_helper(
+#         dbl_profile = profile
+#         , dbl_generalism = generalism
+#       ) -> dbl_competency
+#       
+#       # Output
+#       return(dbl_competency)
+#       
+#     }
+#     , profile = as.data.frame(t(mtx_data))
+#     , generalism = dbl_generalism
+#   ) -> mtx_competency
+#   
+#   # Output
+#   return(mtx_competency)
+#   
+# }
+
+# # - Competency function ---------------------------------------------------
+# fun_acti_competency <- function(
+    #     mtx_data
+#     , mtx_weights = NULL
+#     , dbl_scale_lb = 0
+#     , dbl_scale_ub = 100
+#     , dbl_generalism
+# ){
+#   
+#   # Arguments validation
+#   stopifnot(
+#     "'mtx_data' must be a numeric matrix." =
+#       all(
+#         is.numeric(mtx_data)
+#       )
+#   )
+#   
+#   stopifnot(
+#     "'mtx_weights' must be a numeric matrix." =
+#       any(
+#         is.null(mtx_weights)
+#         , all(
+#           is.numeric(mtx_weights)
+#           , dim(mtx_weights) ==
+#             dim(mtx_data)
+#         )
+#       )
+#   )
+#   
+#   stopifnot(
+#     "'dbl_scale_lb' must be numeric." =
+#       is.numeric(dbl_scale_lb)
+#   )
+#   
+#   stopifnot(
+#     "'dbl_scale_ub' must be numeric." =
+#       is.numeric(dbl_scale_ub)
+#   )
+#   
+#   stopifnot(
+#     "'dbl_generalism' must be a numeric vector with one element for each row in 'mtx_data'." =
+#       all(
+#         is.numeric(dbl_generalism)
+#         , length(dbl_generalism) ==
+#           nrow(rbind(mtx_data))
+#       )
+#   )
+#   
+#   # Data wrangling
+#   dbl_scale_lb[[1]] -> dbl_scale_lb
+#   
+#   dbl_scale_ub[[1]] -> dbl_scale_ub
+#   
+#   rbind(mtx_data) -> mtx_data
+#   
+#   # Weigh each attribute by its capital macro-flexibility?
+#   # Competency level helper function
+#   fun_acti_competency_helper <- function(
+    #     dbl_profile
+#     , dbl_generalism
+#     , dbl_weights
+#   ){
+#     
+#     # Drop NA's
+#     dbl_profile[!is.na(
+#       dbl_profile
+#     )] -> dbl_profile
+#     
+#     # Weighted mean of normalized item scores
+#     # adjusted by item importance and generalism
+#     weighted.mean(
+#       x =
+#         dbl_profile / (
+#           dbl_scale_ub -
+#             dbl_scale_lb
+#         ) -
+#         dbl_scale_lb / (
+#           dbl_scale_ub -
+#             dbl_scale_lb
+#         )
+#       , w =
+#         fun_eqvl_equivalence(
+#           dbl_var =
+#             dbl_profile
+#           , dbl_scale_lb =
+#             # min(dbl_profile)
+#             dbl_scale_lb
+#           , dbl_scale_ub =
+#             max(dbl_profile)
+#           , dbl_scaling =
+#             1 - dbl_generalism
+#         ) +
+#         fun_eqvl_equivalence(
+#           dbl_var =
+#             dbl_weights
+#           , dbl_scale_lb =
+#             # min(dbl_weights)
+#             dbl_scale_lb
+#           , dbl_scale_ub =
+#             max(dbl_weights)
+#           , dbl_scaling =
+#             1 - dbl_generalism
+#         )
+#     ) -> dbl_competency
+#     
+#     # Output
+#     return(dbl_competency)
+#     
+#   }
+#   
+#   # Weights
+#   if(!length(mtx_weights)){
+#     
+#     mtx_data -> mtx_weights
+#     
+#   }
+#   
+#   # Apply competency level helper function
+#   mapply(
+#     function(profile, generalism, weight){
+#       
+#       # Call helper function
+#       fun_acti_competency_helper(
+#         dbl_profile = profile
+#         , dbl_generalism = generalism
+#         , dbl_weights = weight
+#       ) -> dbl_competency
+#       
+#       # Output
+#       return(dbl_competency)
+#       
+#     }
+#     , profile = as.data.frame(t(mtx_data))
+#     , generalism = dbl_generalism
+#     , weight = as.data.frame(t(mtx_weights))
+#   ) -> mtx_competency
+#   
+#   # Output
+#   return(mtx_competency)
+#   
+# }
+# 
+# # # - Competency function ---------------------------------------------------
+# # fun_acti_competency <- function(
+    #     #     mtx_data
+# #     , dbl_scale_lb = 0
+# #     , dbl_scale_ub = 100
+# # ){
+# # 
+# #   # Arguments validation
+# # 
+# #   # Data wrangling
+# # 
+# #   # Weigh each attribute by its capital macro-flexibility?
+# #   # Competency level helper function
+# #   fun_acti_competency_helper <- function(dbl_profile){
+# # 
+# #     # Drop NAs
+# #     dbl_profile[!is.na(
+# #       dbl_profile
+# #     )] -> dbl_profile
+# # 
+# #     # Normalize item scores
+# #     dbl_profile / (
+# #       dbl_scale_ub -
+# #         dbl_scale_lb
+# #     ) -> dbl_profile
+# # 
+# #     dbl_profile -
+# #       dbl_scale_lb / (
+# #         dbl_scale_ub -
+# #           dbl_scale_lb
+# #       ) -> dbl_profile
+# # 
+# #     # Self-weighted mean of item scores
+# #     weighted.mean(
+# #       x = dbl_profile
+# #       , w = dbl_profile
+# #       # , w = 1 + dbl_profile
+# #       # , w =
+# #       #   dbl_profile /
+# #       #   max(dbl_profile)
+# #     ) -> dbl_competency
+# # 
+# #     rm(dbl_profile)
+# # 
+# #     # Output
+# #     return(dbl_competency)
+# # 
+# #   }
+# # 
+# #   # Apply competency level helper function
+# #   apply(
+# #     mtx_data, 1
+# #     , fun_acti_competency_helper
+# #   ) -> mtx_competency
+# # 
+# #   # Output
+# #   return(mtx_competency)
+# # 
+# # }
+
+
 # # [TEST] ------------------------------------------------------------------
 # - Data ------------------------------------------------------------------
 library(readr)
 
-# read_rds(
-#   'C:/Users/Cao/Documents/Github/atlas-research/data/efa_model_equamax_15_factors.rds'
-# ) -> efa_model
-# 
-# read_csv(
-#   'C:/Users/Cao/Documents/Github/Atlas-Research/Data/df_atlas_complete_equamax_15_factors.csv'
-# ) -> df_occupations
+read_rds(
+  'C:/Users/Cao/Documents/Github/atlas-research/data/efa/efa_equamax_14factors.rds'
+) -> efa_model
 
 read_csv(
-  'C:/Users/Cao/Documents/Github/Atlas-Research/Data/df_occupations_2023.csv'
+  'C:/Users/Cao/Documents/Github/Atlas-Research/Data/df_occupations_2023_efa.csv'
 ) -> df_occupations
 
-read_csv(
-  'https://docs.google.com/spreadsheets/d/e/2PACX-1vSVdXvQMe4DrKS0LKhY0CZRlVuCCkEMHVJHQb_U-GKF21CjcchJ5jjclGSlQGYa5Q/pub?gid=1515296378&single=true&output=csv'
-) -> df_input
+# read_csv(
+#   'https://docs.google.com/spreadsheets/d/e/2PACX-1vSVdXvQMe4DrKS0LKhY0CZRlVuCCkEMHVJHQb_U-GKF21CjcchJ5jjclGSlQGYa5Q/pub?gid=1515296378&single=true&output=csv'
+# ) -> df_input
 
 # kmeans ------------------------------------------------------------------
 df_occupations %>% 
@@ -947,11 +1551,13 @@ filter(stringr::str_detect(
 df_input[-1] %>% 
   as.matrix() %>% 
   rbind(.,.) %>% 
-  fun_acti_generalism()
+  fun_acti_generalism(
+    dbl_scale_lb = 0
+  )
 
-fun_acti_generalism(matrix(1, 2, 5) * rnorm(10, 0.5, 0.025))
-fun_acti_generalism(matrix(1, 2, 5) * rnorm(10, 0.5, 0.25))
-fun_acti_generalism(matrix(1, 2, 5) * rnorm(10, 0, 1000))
+fun_acti_generalism(matrix(1, 2, 5) * pmax(rnorm(10, 0.5, 0.025), 0))
+fun_acti_generalism(matrix(1, 2, 5) * pmax(rnorm(10, 0.5, 0.25), 0))
+fun_acti_generalism(matrix(1, 2, 5) * pmax(rnorm(10, 0, 1000), 0))
 
 # - Competency test -------------------------------------------------------
 df_occupations %>% 
@@ -1248,7 +1854,18 @@ tibble(
 )
 
 # - Atlas Career Type Indicator test --------------------------------------
-fun_acti_derive_types
+fun_acti_numerical_type(
+  dbl_profile = 
+    df_occupations %>% 
+    slice_head() %>% 
+    select(starts_with(
+      'item'
+    )) %>% 
+    as.matrix()
+  , efa_model = 
+    efa_model
+  , dbl_scale_lb = 0
+)
 
 # dsds --------------------------------------------------------------------
 df_input[-1] %>%
@@ -1328,3 +1945,87 @@ print(n = Inf)
 
 
 
+
+# [TEST] ------------------------------------------------------------------
+# - Generalism test -------------------------------------------------------
+fun_acti_generalism(
+  dbl_profile = 
+    rnorm(50, 50, 25) %>%
+    pmax(0) %>%
+    pmin(100)
+  , dbl_scale_lb = 0
+)
+
+fun_acti_generalism(
+  dbl_profile = 
+    rnorm(50, 50, 5) %>%
+    pmax(0) %>%
+    pmin(100)
+  , dbl_scale_lb = 0
+)
+
+fun_acti_generalism(
+  dbl_profile = 
+    rnorm(50, 50, 0) %>%
+    pmax(0) %>%
+    pmin(100)
+  , dbl_scale_lb = 0
+)
+
+# - Indispensability test -------------------------------------------------
+fun_acti_indispensability(
+  dbl_profile =
+    rnorm(50, 50, 25) %>% 
+    pmax(0) %>% 
+    pmin(100)
+  , dbl_scale_lb = 0
+) %>% round(4)
+
+
+
+# - Competency test -------------------------------------------------------
+fun_acti_competency(
+  dbl_profile = 
+    rnorm(50, 100, 25) %>%
+    pmax(0) %>%
+    pmin(100)
+  , dbl_scale_lb = 0
+  , dbl_scale_ub = 100
+)
+
+fun_acti_competency(
+  dbl_profile = 
+    rnorm(50, 50, 25) %>%
+    pmax(0) %>%
+    pmin(100)
+  , dbl_scale_lb = 0
+  , dbl_scale_ub = 100
+)
+
+fun_acti_competency(
+  dbl_profile = 
+    rnorm(50, 50, 5) %>%
+    pmax(0) %>%
+    pmin(100)
+  , dbl_scale_lb = 0
+  , dbl_scale_ub = 100
+)
+
+fun_acti_competency(
+  dbl_profile = 
+    rnorm(50, 50, 0) %>%
+    pmax(0) %>%
+    pmin(100)
+  , dbl_scale_lb = 0
+  , dbl_scale_ub = 100
+)
+
+# - Numerical ACTI test ---------------------------------------------------
+fun_acti_numerical_type(
+  dbl_profile = 
+    rnorm(14, 0, 50) %>%
+    pmax(0) %>% 
+    pmin(100)
+  , dbl_scale_lb = 0
+  , dbl_generalism = NULL
+)
