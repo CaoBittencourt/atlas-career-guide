@@ -14,6 +14,7 @@ pkg <- c(
   # , 'atlas.kcoef'
   , 'atlas.eqvl'
   , 'ggplot2'
+  , 'vctrs'
   # , 'modeest' #Mode
 )
 
@@ -28,6 +29,9 @@ lapply(pkg, function(x)
 
 # remotes::install_github('Van1yu3/SWKM')
 # library(SWKM)
+
+# - temp ------------------------------------------------------------------
+source('C:/Users/Cao/Documents/Github/atlas-research/functions/methods/fun_plots.R')
 
 # [FUNCTIONS] ---------------------------
 # - Generalism function ---------------------------------------------------
@@ -288,10 +292,189 @@ fun_acti_classifier <- function(
 fun_acti_numerical_type <- function(
     df_data
     , efa_model
+    , chr_factor_labels = NULL
     , df_factor_scores = NULL
     , dbl_weights = NULL
     , dbl_scale_lb = 0
     # , dbl_scale_ub = 100
+    , dbl_generalism = NULL
+){
+  
+  # Arguments validation
+  stopifnot(
+    "'df_data' must be a data frame containing item scores." =
+      all(
+        is.data.frame(df_data)
+        , any(
+          loadings(efa_model)[,] %>%
+            rownames() %in%
+            names(df_data)
+        )))
+  
+  stopifnot(
+    "'chr_factor_labels' must be either NULL or a character vector with labels for each factor." =
+      any(
+        is.null(chr_factor_labels)
+        , all(
+          is.character(chr_factor_labels)
+          , length(chr_factor_labels) ==
+            efa_model$factors
+        )
+      )
+  )
+  
+  stopifnot(
+    "'dbl_scale_lb' must be numeric." =
+      is.numeric(dbl_scale_lb)
+  )
+  
+  # stopifnot(
+  #   "'dbl_scale_ub' must be numeric." =
+  #     is.numeric(dbl_scale_ub)
+  # )
+  
+  stopifnot(
+    "'dbl_generalism' must be either NULL or numeric." =
+      any(
+        is.numeric(dbl_generalism)
+        , is.null(dbl_generalism)
+      )
+  )
+  
+  # Data wrangling
+  dbl_scale_lb[[1]] -> dbl_scale_lb
+  
+  # dbl_scale_ub[[1]] -> dbl_scale_ub
+  
+  df_data %>%
+    select(any_of(
+      efa_model$
+        model %>%
+        colnames()
+    )) -> df_data
+  
+  if(is.null(dbl_generalism)){
+    
+    fun_acti_generalism(
+      as.numeric(df_data)
+      , dbl_scale_lb =
+        dbl_scale_lb
+    ) -> dbl_generalism
+    
+  }
+  
+  dbl_generalism[[1]] -> dbl_generalism
+  
+  # Factor scores
+  fun_ftools_factor_scores(
+    df_data =
+      df_data
+    , efa_model =
+      efa_model
+    , lgc_pivot = F
+  ) -> df_factor_scores
+  
+  rm(df_data)
+  
+  df_factor_scores %>%
+    as.matrix() %>%
+    as.numeric() ->
+    dbl_factor_scores
+  
+  names(df_factor_scores) ->
+    names(dbl_factor_scores)
+  
+  rm(df_factor_scores)
+  
+  # Apply indispensability function
+  fun_acti_indispensability(
+    dbl_profile =
+      dbl_factor_scores
+    , dbl_scale_lb =
+      dbl_scale_lb
+    , dbl_generalism =
+      dbl_generalism
+  ) -> dbl_factor_scores
+  
+  # Name factors
+  if(is.null(chr_factor_labels)){
+    
+    paste0('F', 1:length(
+      dbl_factor_scores
+    )) -> chr_factor_labels
+    
+  }
+  
+  names(
+    dbl_factor_scores
+  ) <- chr_factor_labels
+  
+  rm(chr_factor_labels)
+  
+  # Sort
+  sort(
+    dbl_factor_scores
+    , decreasing = T
+  ) -> dbl_factor_scores
+  
+  # Classify scores
+  fun_acti_classifier(
+    dbl_var = dbl_factor_scores
+    , dbl_scale_lb = 0
+    , dbl_scale_ub = 1
+    , int_levels = 3
+  ) -> dbl_classification
+  
+  # Keep only dominant and auxiliary factors (drop minor)
+  dbl_factor_scores[
+    dbl_classification > 1
+  ] -> dbl_factor_scores
+  
+  dbl_classification[
+    dbl_classification > 1
+  ] -> dbl_classification
+  
+  dbl_classification[
+    dbl_classification == 3
+  ] <- 'Dominant'
+  
+  dbl_classification[
+    dbl_classification == 2
+  ] <- 'Auxliary'
+  
+  # ACTI data frame
+  new_data_frame(
+    x = 
+      list(
+        factor = names(dbl_factor_scores),
+        acti_score = dbl_factor_scores,
+        class = dbl_classification
+      )
+    , class = c('ACTI', 'tbl')
+  ) -> df_acti
+  
+  # list(
+  #   acti = dbl_factor_scores,
+  #   class = dbl_classification
+  # ) -> list_acti
+  
+  rm(dbl_factor_scores)
+  rm(dbl_classification)
+  
+  # Output
+  # return(list_acti)
+  return(df_acti)
+  
+}
+
+# - Numerical ACTI 2 ------------------------------------------------------
+fun_acti_numerical_type <- function(
+    df_query
+    , df_data
+    , efa_model
+    , chr_factor_labels = NULL
+    , dbl_weights
+    , dbl_scale_lb = 0
     , dbl_generalism = NULL
 ){
   
@@ -324,15 +507,27 @@ fun_acti_numerical_type <- function(
       )
   )
   
+  stopifnot(
+    "'chr_factor_labels' must be either NULL or a character vector with labels for each factor." =
+      any(
+        is.null(chr_factor_labels)
+        , all(
+          is.character(chr_factor_labels)
+          , length(chr_factor_labels) ==
+            efa_model$factors
+        )
+      )
+  )
+  
   # Data wrangling
   dbl_scale_lb[[1]] -> dbl_scale_lb
   
   # dbl_scale_ub[[1]] -> dbl_scale_ub
   
-  df_data %>% 
+  df_data %>%
     select(any_of(
       efa_model$
-        model %>% 
+        model %>%
         colnames()
     )) -> df_data
   
@@ -350,30 +545,28 @@ fun_acti_numerical_type <- function(
   
   # Factor scores
   fun_ftools_factor_scores(
-    df_data = 
+    df_data =
       df_data
-    , efa_model = 
+    , efa_model =
       efa_model
     , lgc_pivot = F
   ) -> df_factor_scores
   
   rm(df_data)
+  rm(efa_model)
   
-  df_factor_scores %>% 
-    as.matrix() %>% 
+  df_factor_scores %>%
+    as.matrix() %>%
     as.numeric() ->
     dbl_factor_scores
-  
-  names(df_factor_scores) -> 
-    names(dbl_factor_scores)
   
   rm(df_factor_scores)
   
   # Apply indispensability function
   fun_acti_indispensability(
-    dbl_profile = 
+    dbl_profile =
       dbl_factor_scores
-    , dbl_scale_lb = 
+    , dbl_scale_lb =
       dbl_scale_lb
     , dbl_generalism =
       dbl_generalism
@@ -387,38 +580,20 @@ fun_acti_numerical_type <- function(
     , decreasing = T
   ) -> dbl_factor_scores
   
-  # temp
-  names(dbl_factor_scores) %>% 
-    case_match(
-      'factor1' ~ 'Ds',
-      'factor2' ~ 'Eg',
-      'factor3' ~ 'Hs',
-      'factor4' ~ 'Bs',
-      'factor5' ~ 'Tr',
-      'factor6' ~ 'Ad',
-      'factor7' ~ 'Sm',
-      'factor8' ~ 'Ah',
-      'factor9' ~ 'Hz',
-      'factor10' ~ 'An',
-      'factor11' ~ 'Mt',
-      'factor12' ~ 'Rb',
-      'factor13' ~ 'Id',
-      'factor14' ~ 'Mc'
-      # 'factor1' ~ 'discernment',
-      # 'factor2' ~ 'engineering',
-      # 'factor3' ~ 'health_science',
-      # 'factor4' ~ 'business',
-      # 'factor5' ~ 'transportation',
-      # 'factor6' ~ 'administrative',
-      # 'factor7' ~ 'sales_marketing',
-      # 'factor8' ~ 'arts_humanities',
-      # 'factor9' ~ 'hazards',
-      # 'factor10' ~ 'analystical_skills',
-      # 'factor11' ~ 'mathematics',
-      # 'factor12' ~ 'robustness',
-      # 'factor13' ~ 'industrial',
-      # 'factor14' ~ 'mechanical_skills'
-    ) -> names(dbl_factor_scores)
+  # Name factors
+  if(is.null(chr_factor_labels)){
+    
+    paste0('F', 1:length(
+      dbl_factor_scores
+    )) -> chr_factor_labels
+    
+  }
+  
+  names(
+    dbl_factor_scores
+  ) <- chr_factor_labels
+  
+  rm(chr_factor_labels)
   
   # Classify scores
   fun_acti_classifier(
@@ -428,27 +603,15 @@ fun_acti_numerical_type <- function(
     , int_levels = 3
   ) -> dbl_classification
   
-  # Keep only dominant and auxiliary (drop minor)
+  # Keep only dominant and auxiliary factors (drop minor)
   dbl_factor_scores[
     dbl_classification > 1
   ] -> dbl_factor_scores
   
-  # ACTI list class
-  list(
-    acti = dbl_factor_scores,
-    class = dbl_classification
-  ) -> list_acti
-  
-  rm(dbl_factor_scores)
   rm(dbl_classification)
   
-  c(
-    class(list_acti)
-    , 'ACTI'
-  ) -> class(list_acti)
-  
   # Output
-  return(list_acti)
+  return(dbl_factor_scores)
   
 }
 
@@ -1221,6 +1384,95 @@ read_csv(
 #   'https://docs.google.com/spreadsheets/d/e/2PACX-1vSVdXvQMe4DrKS0LKhY0CZRlVuCCkEMHVJHQb_U-GKF21CjcchJ5jjclGSlQGYa5Q/pub?gid=1515296378&single=true&output=csv'
 # ) -> df_input
 
+# # - Skewness-centered data ------------------------------------------------
+# map(
+#   # seq(0, 1, length.out = 5) %>%
+#   # seq(0, 1, length.out = 6) %>%
+#   # c(0, 0.025, 0.05, 0.1, 0.2, 0.5, 1) %>%
+#   c(0, 0.05, 0.1, 0.2, 0.5, 0.8, 1) %>%
+#     set_names(paste0('desdmode_', .))
+#   , ~ 
+#     df_occupations %>% 
+#     select(
+#       starts_with(
+#         'item'
+#       )) %>%
+#     fun_skew_desdmode(
+#       dbl_weights = 
+#         df_occupations$
+#         employment_variants
+#       , dbl_scale_lb = 0
+#       , dbl_scale_ub = 100
+#       , lgc_sample_variance = F
+#       , dbl_pct_remove = .x
+#     ) %>% 
+#     as_tibble()
+# ) -> list_desdmode
+# 
+# map(
+#   list_desdmode
+#   , ~ 
+#     df_occupations %>% 
+#     select(!starts_with(
+#       'item'
+#     )) %>% 
+#     bind_cols(.x)
+# ) -> list_desdmode
+
+# # - Mode-centered data ------------------------------------------------
+# map(
+#   # seq(0, 1, length.out = 5) %>%
+#   seq(0, .25, length.out = 6) %>%
+#     set_names(paste0('demode_', .))
+#   , ~ 
+#     df_occupations %>% 
+#     select(
+#       starts_with(
+#         'item'
+#       )) %>%
+#     fun_skew_demode(
+#       dbl_weights = 
+#         df_occupations$
+#         employment_variants
+#       , dbl_scale_lb = 0
+#       , dbl_pct_remove = .x
+#     ) %>% 
+#     as_tibble()
+# ) -> list_demode
+# 
+# map(
+#   list_demode
+#   , ~ 
+#     df_occupations %>% 
+#     select(!starts_with(
+#       'item'
+#     )) %>% 
+#     bind_cols(.x)
+# ) -> list_demode
+
+# # - Original data vs recentered data --------------------------------------
+# map(
+#   list_desdmode
+#   , ~ .x %>% 
+#     fun_plot.density(aes(
+#       x = item_administrative
+#       # x = item_oral_comprehension
+#       # x = item_pure_mathematics
+#       # x = item_electronic_mail
+#       # x = item_economics_and_accounting
+#       , weight = employment_variants
+#     )
+#     , .list_axis.x.args = list(
+#       limits = c(-.25,1.25) * 100
+#     )
+#     , .fun_format.x = number
+#     , .list_labs = list(
+#       y = NULL
+#     ))
+# ) -> list_plt_desdmode
+# 
+# list_plt_desdmode
+
 # kmeans ------------------------------------------------------------------
 df_occupations %>% 
   select(starts_with(
@@ -1454,405 +1706,529 @@ map(
 )
 
 
-# - Generalism test -------------------------------------------------------
-df_occupations %>% 
-  transmute(
-    occupation = 
-      occupation
-    , employment_norm =
-      employment_norm
-    , generalism = 
-      df_occupations %>% 
-      select(starts_with(
-        'item'
-      )) %>% 
-      as.matrix() %>% 
-      fun_acti_generalism()
-  ) -> dsdsds
-
-dsdsds %>% 
-  arrange(desc(
-    generalism
-  )) %>% 
-  print(n = Inf)
-
-dsdsds %>% 
-  mutate(
-    generalism = 
-      fun_acti_classifier(
-        generalism
-        , dbl_scale_lb = 0
-        , dbl_scale_ub = 1
-        , int_levels = 2
-      )
-    , generalism =
-      generalism - 1
-  ) %>% 
-  reframe(
-    weighted.mean(
-      generalism
-      , employment_norm
-    )
-  )
-
-dsdsds %>% 
-  arrange(desc(
-    generalism
-  )) %>% 
-  ggplot(aes(
-    x = 
-      generalism
-    , weights = 
-      employment_norm
-  )) + 
-  geom_density() + 
-  geom_vline(
-    xintercept = 0.5
-  ) +
-  xlim(c(0,1))
-
-
-dsdsds %>% 
-  arrange(desc(
-    generalism
-  )) %>% 
-  # mutate(
-  #   generalism = 
-  #     fun_acti_classifier(
-  #       generalism
-  #       , dbl_scale_lb = 0
-  #       , dbl_scale_ub = 1
-  #       , int_levels = 2
-  #     ) %>% 
-  #     case_match(
-  #       1 ~ 'specialist'
-  #       , .default = 'generalist'
+# # - Generalism test -------------------------------------------------------
+# df_occupations %>% 
+#   transmute(
+#     occupation = 
+#       occupation
+#     , employment_norm =
+#       employment_norm
+#     , generalism = 
+#       df_occupations %>% 
+#       select(starts_with(
+#         'item'
+#       )) %>% 
+#       as.matrix() %>% 
+#       fun_acti_generalism()
+#   ) -> dsdsds
+# 
+# dsdsds %>% 
+#   arrange(desc(
+#     generalism
+#   )) %>% 
+#   print(n = Inf)
+# 
+# dsdsds %>% 
+#   mutate(
+#     generalism = 
+#       fun_acti_classifier(
+#         generalism
+#         , dbl_scale_lb = 0
+#         , dbl_scale_ub = 1
+#         , int_levels = 2
+#       )
+#     , generalism =
+#       generalism - 1
+#   ) %>% 
+#   reframe(
+#     weighted.mean(
+#       generalism
+#       , employment_norm
 #     )
-# ) %>% 
-filter(stringr::str_detect(
-  tolower(occupation)
-  , 'data|statis'
-)) %>%
-  print(n = Inf)
+#   )
+# 
+# dsdsds %>% 
+#   arrange(desc(
+#     generalism
+#   )) %>% 
+#   ggplot(aes(
+#     x = 
+#       generalism
+#     , weights = 
+#       employment_norm
+#   )) + 
+#   geom_density() + 
+#   geom_vline(
+#     xintercept = 0.5
+#   ) +
+#   xlim(c(0,1))
+# 
+# 
+# dsdsds %>% 
+#   arrange(desc(
+#     generalism
+#   )) %>% 
+#   # mutate(
+#   #   generalism = 
+#   #     fun_acti_classifier(
+#   #       generalism
+#   #       , dbl_scale_lb = 0
+#   #       , dbl_scale_ub = 1
+#   #       , int_levels = 2
+#   #     ) %>% 
+#   #     case_match(
+#   #       1 ~ 'specialist'
+#   #       , .default = 'generalist'
+# #     )
+# # ) %>% 
+# filter(stringr::str_detect(
+#   tolower(occupation)
+#   , 'data|statis'
+# )) %>%
+#   print(n = Inf)
+# 
+# df_input[-1] %>% 
+#   as.matrix() %>% 
+#   rbind(.,.) %>% 
+#   fun_acti_generalism(
+#     dbl_scale_lb = 0
+#   )
+# 
+# fun_acti_generalism(matrix(1, 2, 5) * pmax(rnorm(10, 0.5, 0.025), 0))
+# fun_acti_generalism(matrix(1, 2, 5) * pmax(rnorm(10, 0.5, 0.25), 0))
+# fun_acti_generalism(matrix(1, 2, 5) * pmax(rnorm(10, 0, 1000), 0))
+# 
+# # - Competency test -------------------------------------------------------
+# df_occupations %>% 
+#   transmute(
+#     occupation = 
+#       occupation
+#     , employment_norm =
+#       employment_norm
+#     , competency = 
+#       df_occupations %>% 
+#       select(starts_with(
+#         'item'
+#       )) %>% 
+#       as.matrix() %>% 
+#       fun_acti_competency(
+#         dbl_scale_lb = 0
+#         , dbl_scale_ub = 100
+#         , dbl_generalism = 
+#           df_occupations %>% 
+#           select(starts_with(
+#             'item'
+#           )) %>% 
+#           as.matrix() %>% 
+#           fun_acti_generalism()
+#       )
+#     # fun_acti_competency(
+#     #   dbl_scale_lb = 0
+#     #   , dbl_scale_ub = 100
+#     # )
+#     , competency_level =
+#       fun_acti_classifier(
+#         dbl_var = competency
+#         , dbl_scale_lb = 0
+#         , dbl_scale_ub = 1
+#         , int_levels = 5
+#       )
+#   ) -> dsdsds
+# 
+# dsdsds %>% 
+#   arrange(desc(
+#     competency
+#   )) %>% 
+#   print(n = Inf)
+# 
+# dsdsds %>% 
+#   arrange(desc(
+#     competency
+#   )) %>% 
+#   ggplot(aes(
+#     x = 
+#       competency
+#     , weights = 
+#       employment_norm
+#   )) + 
+#   geom_density() + 
+#   xlim(c(0,1))
+# 
+# dsdsds %>% 
+#   arrange(desc(
+#     competency
+#   )) %>% 
+#   filter(stringr::str_detect(
+#     tolower(occupation)
+#     , 'data|statis'
+#   )) %>%
+#   print(n = Inf)
+# 
+# dsdsds %>% 
+#   arrange(desc(
+#     competency
+#   )) %>% 
+#   filter(stringr::str_detect(
+#     tolower(occupation)
+#     , 'engineers'
+#   )) %>%
+#   print(n = Inf)
+# 
+# # LL
+# # LM
+# # MM
+# # HM
+# # HH
+# library(stringr)
+# 
+# df_occupations %>% 
+#   filter(str_detect(
+#     str_to_lower(occupation)
+#     , 'k-12'
+#   )) %>% 
+#   select(starts_with(
+#     'item'
+#   )) %>% 
+#   as.numeric() %>% 
+#   qplot(geom = 'density')
+# 
+# df_input[-1] %>% 
+#   as.matrix() %>%
+#   rbind(.,.) %>% 
+#   fun_acti_competency(
+#     dbl_scale_lb = 0
+#     , dbl_scale_ub = 100
+#     , dbl_generalism = 
+#       df_input[-1] %>% 
+#       as.matrix() %>%
+#       rbind(.,.) %>% 
+#       fun_acti_generalism()
+#   )
+# 
+# # - Generalism vs Competency test -------------------------------------------------------
+# df_occupations %>% 
+#   transmute(
+#     occupation = 
+#       occupation
+#     , wage_mean = 
+#       wage_mean
+#     , employment_norm =
+#       employment_norm
+#     , generalism = 
+#       df_occupations %>% 
+#       select(starts_with(
+#         'item'
+#       )) %>% 
+#       as.matrix() %>%
+#       fun_acti_generalism()
+#     , competency = 
+#       df_occupations %>% 
+#       select(starts_with(
+#         'item'
+#       )) %>% 
+#       as.matrix() %>% 
+#       fun_acti_competency(
+#         dbl_scale_lb = 0
+#         , dbl_scale_ub = 100
+#         , dbl_generalism = 
+#           generalism
+#       )
+#   ) -> dsdsds
+# 
+# df_occupations %>% 
+#   filter(
+#     str_detect(
+#       str_to_lower(occupation)
+#       , 'maids'
+#     )
+#   ) %>% 
+#   select(starts_with(
+#     'item'
+#   )) %>%
+#   pivot_longer(
+#     cols = everything()
+#     , names_to = 'item'
+#     , values_to = 'item_score'
+#   ) %>% 
+#   arrange(desc(
+#     item_score
+#   )) %>% 
+#   print(n = Inf)
+# 
+# dsdsds %>% 
+#   arrange(desc(
+#     competency
+#   )) %>% 
+#   print(n = Inf)
+# 
+# weights::wtd.cors(
+#   x = dsdsds$generalism
+#   , y = dsdsds$competency
+#   , weight = dsdsds$employment_norm
+# )
+# 
+# weights::wtd.cors(
+#   x = dsdsds$generalism
+#   , y = dsdsds$wage_mean
+#   , weight = dsdsds$employment_norm
+# )
+# 
+# weights::wtd.cors(
+#   x = dsdsds$competency
+#   , y = dsdsds$wage_mean
+#   , weight = dsdsds$employment_norm
+# )
+# 
+# weights::wtd.cors(
+#   x = dsdsds$employment_norm
+#   , y = dsdsds$wage_mean
+#   , weight = dsdsds$employment_norm
+# )
+# 
+# dsdsds %>% 
+#   ggplot(aes(
+#     x = 
+#       competency
+#     , weights = 
+#       employment_norm
+#   )) + 
+#   geom_density() + 
+#   xlim(c(0,1))
+# 
+# dsdsds %>% 
+#   # group_by(occupation) %>%
+#   # slice(rep(1:n(), employment_norm)) %>%
+#   # ungroup() %>%
+#   ggplot(aes(
+#     x = 
+#       generalism
+#     , y = 
+#       competency
+#     , weights = 
+#       employment_norm
+#   )) + 
+#   geom_point() + 
+#   xlim(c(0,1)) + 
+#   ylim(c(0,1)) 
+# 
+# dsdsds %>% 
+#   arrange(desc(
+#     competency
+#   )) %>% 
+#   filter(stringr::str_detect(
+#     tolower(occupation)
+#     , 'data|statis'
+#   )) %>%
+#   print(n = Inf)
+# 
+# dsdsds %>% 
+#   arrange(desc(
+#     competency
+#   )) %>% 
+#   filter(stringr::str_detect(
+#     tolower(occupation)
+#     , 'engineers'
+#   )) %>%
+#   print(n = Inf)
+# 
+# # LL
+# # LM
+# # MM
+# # HM
+# # HH
+# library(stringr)
+# 
+# 100 - 
+#   df_occupations %>% 
+#   filter(str_detect(
+#     str_to_lower(occupation)
+#     , 'k-12'
+#   )) %>% 
+#   select(starts_with(
+#     'item'
+#   )) %>%
+#   as.numeric() %>%
+#   mlv()
+# 
+# df_occupations %>% 
+#   filter(str_detect(
+#     str_to_lower(occupation)
+#     , 'k-12'
+#   )) %>% 
+#   select(starts_with(
+#     'item'
+#   )) %>%
+#   as.numeric() %>%
+#   fun_skew_sdmode(
+#     dbl_scale_lb = 0
+#     , dbl_scale_ub = 100
+#   )
+# 
+# # df_occupations %>% 
+# list_desdmode$
+#   demode_0.5 %>% 
+#   filter(str_detect(
+#     str_to_lower(occupation)
+#     , 'k-12'
+#   )) %>% 
+#   select(starts_with(
+#     'item'
+#   )) %>% 
+#   as.numeric() %>% 
+#   qplot(geom = 'density')
+# 
+# tibble(
+#   occupation = 'Cao'
+#   , generalism = 
+#     df_input[-1] %>% 
+#     as.matrix() %>% 
+#     fun_acti_generalism()
+#   , competency = 
+#     df_input[-1] %>% 
+#     as.matrix() %>% 
+#     fun_acti_competency(
+#       dbl_scale_ub = 100
+#       , dbl_scale_lb = 0
+#       , dbl_generalism = 
+#         generalism
+#     )
+# )
 
-df_input[-1] %>% 
-  as.matrix() %>% 
-  rbind(.,.) %>% 
-  fun_acti_generalism(
-    dbl_scale_lb = 0
-  )
-
-fun_acti_generalism(matrix(1, 2, 5) * pmax(rnorm(10, 0.5, 0.025), 0))
-fun_acti_generalism(matrix(1, 2, 5) * pmax(rnorm(10, 0.5, 0.25), 0))
-fun_acti_generalism(matrix(1, 2, 5) * pmax(rnorm(10, 0, 1000), 0))
-
-# - Competency test -------------------------------------------------------
-df_occupations %>% 
-  transmute(
-    occupation = 
+# - Generalism with mode-centered data --------------------------------------
+map(
+  # list_demode
+  list_desdmode
+  , ~ .x %>% 
+    select(
       occupation
-    , employment_norm =
-      employment_norm
-    , competency = 
-      df_occupations %>% 
-      select(starts_with(
+      , employment_variants
+      , starts_with(
         'item'
       )) %>% 
-      as.matrix() %>% 
-      fun_acti_competency(
-        dbl_scale_lb = 0
-        , dbl_scale_ub = 100
-        , dbl_generalism = 
-          df_occupations %>% 
-          select(starts_with(
-            'item'
-          )) %>% 
-          as.matrix() %>% 
-          fun_acti_generalism()
-      )
-    # fun_acti_competency(
-    #   dbl_scale_lb = 0
-    #   , dbl_scale_ub = 100
-    # )
-    , competency_level =
-      fun_acti_classifier(
-        dbl_var = competency
-        , dbl_scale_lb = 0
-        , dbl_scale_ub = 1
-        , int_levels = 5
-      )
-  ) -> dsdsds
-
-dsdsds %>% 
-  arrange(desc(
-    competency
-  )) %>% 
-  print(n = Inf)
-
-dsdsds %>% 
-  arrange(desc(
-    competency
-  )) %>% 
-  ggplot(aes(
-    x = 
-      competency
-    , weights = 
-      employment_norm
-  )) + 
-  geom_density() + 
-  xlim(c(0,1))
-
-dsdsds %>% 
-  arrange(desc(
-    competency
-  )) %>% 
-  filter(stringr::str_detect(
-    tolower(occupation)
-    , 'data|statis'
-  )) %>%
-  print(n = Inf)
-
-dsdsds %>% 
-  arrange(desc(
-    competency
-  )) %>% 
-  filter(stringr::str_detect(
-    tolower(occupation)
-    , 'engineers'
-  )) %>%
-  print(n = Inf)
-
-# LL
-# LM
-# MM
-# HM
-# HH
-library(stringr)
-
-df_occupations %>% 
-  filter(str_detect(
-    str_to_lower(occupation)
-    , 'k-12'
-  )) %>% 
-  select(starts_with(
-    'item'
-  )) %>% 
-  as.numeric() %>% 
-  qplot(geom = 'density')
-
-df_input[-1] %>% 
-  as.matrix() %>%
-  rbind(.,.) %>% 
-  fun_acti_competency(
-    dbl_scale_lb = 0
-    , dbl_scale_ub = 100
-    , dbl_generalism = 
-      df_input[-1] %>% 
-      as.matrix() %>%
-      rbind(.,.) %>% 
-      fun_acti_generalism()
-  )
-
-# - Generalism vs Competency test -------------------------------------------------------
-df_occupations %>% 
-  transmute(
-    occupation = 
+    pivot_longer(
+      cols = starts_with('item')
+      , names_to = 'item'
+      , values_to = 'item_score'
+    ) %>% 
+    group_by(
       occupation
-    , wage_mean = 
-      wage_mean
-    , employment_norm =
-      employment_norm
-    , generalism = 
-      df_occupations %>% 
-      select(starts_with(
-        'item'
-      )) %>% 
-      as.matrix() %>%
-      fun_acti_generalism()
-    , competency = 
-      df_occupations %>% 
-      select(starts_with(
-        'item'
-      )) %>% 
-      as.matrix() %>% 
-      fun_acti_competency(
-        dbl_scale_lb = 0
-        , dbl_scale_ub = 100
-        , dbl_generalism = 
-          generalism
-      )
-  ) -> dsdsds
-
-df_occupations %>% 
-  filter(
-    str_detect(
-      str_to_lower(occupation)
-      , 'maids'
+      , employment_variants
+    ) %>% 
+    reframe(
+      generalism = 
+        fun_acti_generalism(
+          dbl_profile = 
+            item_score
+          , dbl_scale_lb = 0
+        )
     )
-  ) %>% 
-  select(starts_with(
-    'item'
-  )) %>%
-  pivot_longer(
-    cols = everything()
-    , names_to = 'item'
-    , values_to = 'item_score'
-  ) %>% 
-  arrange(desc(
-    item_score
-  )) %>% 
-  print(n = Inf)
+) -> list_df_generalism
 
-dsdsds %>% 
-  arrange(desc(
-    competency
-  )) %>% 
-  print(n = Inf)
+map(
+  list_df_generalism
+  , ~ .x %>% 
+    fun_plot.density(aes(
+      x = generalism
+      , weight = employment_variants
+    )
+    , .list_axis.x.args = list(
+      limits = c(-.25,1.25)
+    )
+    , .fun_format.x = percent
+    , .list_labs = list(
+      y = NULL
+    ))
+) -> list_plt_generalism
 
-weights::wtd.cors(
-  x = dsdsds$generalism
-  , y = dsdsds$competency
-  , weight = dsdsds$employment_norm
-)
+list_plt_generalism
 
-weights::wtd.cors(
-  x = dsdsds$generalism
-  , y = dsdsds$wage_mean
-  , weight = dsdsds$employment_norm
-)
+# - Competency with mode-centered data --------------------------------------
+map(
+  # list_demode
+  list_desdmode
+  , ~ .x %>% 
+    select(
+      occupation
+      , employment_variants
+      , starts_with(
+        'item'
+      )) %>% 
+    pivot_longer(
+      cols = starts_with('item')
+      , names_to = 'item'
+      , values_to = 'item_score'
+    ) %>% 
+    group_by(
+      occupation
+      , employment_variants
+    ) %>% 
+    reframe(
+      competency = 
+        fun_acti_competency(
+          dbl_profile = 
+            item_score
+          , dbl_scale_lb = 0
+          , dbl_scale_ub = 100
+        )
+    )
+) -> list_df_competency
 
-weights::wtd.cors(
-  x = dsdsds$competency
-  , y = dsdsds$wage_mean
-  , weight = dsdsds$employment_norm
-)
+map(
+  list_df_competency
+  , ~ .x %>% 
+    fun_plot.density(aes(
+      x = competency
+      , weight = employment_variants
+    )
+    , .list_axis.x.args = list(
+      limits = c(-.25,1.25)
+    )
+    , .fun_format.x = percent
+    , .list_labs = list(
+      y = NULL
+    ))
+) -> list_plt_competency
 
-weights::wtd.cors(
-  x = dsdsds$employment_norm
-  , y = dsdsds$wage_mean
-  , weight = dsdsds$employment_norm
-)
+list_plt_competency
 
-dsdsds %>% 
-  ggplot(aes(
-    x = 
-      competency
-    , weights = 
-      employment_norm
-  )) + 
-  geom_density() + 
-  xlim(c(0,1))
-
-dsdsds %>% 
-  # group_by(occupation) %>%
-  # slice(rep(1:n(), employment_norm)) %>%
-  # ungroup() %>%
-  ggplot(aes(
-    x = 
-      generalism
-    , y = 
-      competency
-    , weights = 
-      employment_norm
-  )) + 
-  geom_point() + 
-  xlim(c(0,1)) + 
-  ylim(c(0,1)) 
-
-dsdsds %>% 
-  arrange(desc(
-    competency
-  )) %>% 
-  filter(stringr::str_detect(
-    tolower(occupation)
-    , 'data|statis'
-  )) %>%
-  print(n = Inf)
-
-dsdsds %>% 
-  arrange(desc(
-    competency
-  )) %>% 
-  filter(stringr::str_detect(
-    tolower(occupation)
-    , 'engineers'
-  )) %>%
-  print(n = Inf)
-
-# LL
-# LM
-# MM
-# HM
-# HH
-library(stringr)
-
-100 - 
-  df_occupations %>% 
-  filter(str_detect(
-    str_to_lower(occupation)
-    , 'k-12'
-  )) %>% 
-  select(starts_with(
-    'item'
-  )) %>%
-  as.numeric() %>%
-  mlv()
-
-df_occupations %>% 
-  filter(str_detect(
-    str_to_lower(occupation)
-    , 'k-12'
-  )) %>% 
-  select(starts_with(
-    'item'
-  )) %>%
-  as.numeric() %>%
-  fun_skew_sdmode(
-    dbl_scale_lb = 0
-    , dbl_scale_ub = 100
+list_df_competency %>% 
+  map(
+    ~ .x %>% 
+      arrange(desc(
+        competency
+      ))
   )
-
-df_occupations %>% 
-  filter(str_detect(
-    str_to_lower(occupation)
-    , 'k-12'
-  )) %>% 
-  select(starts_with(
-    'item'
-  )) %>% 
-  as.numeric() %>% 
-  qplot(geom = 'density')
-
-tibble(
-  occupation = 'Cao'
-  , generalism = 
-    df_input[-1] %>% 
-    as.matrix() %>% 
-    fun_acti_generalism()
-  , competency = 
-    df_input[-1] %>% 
-    as.matrix() %>% 
-    fun_acti_competency(
-      dbl_scale_ub = 100
-      , dbl_scale_lb = 0
-      , dbl_generalism = 
-        generalism
-    )
-)
 
 # - Atlas Career Type Indicator test --------------------------------------
-fun_acti_numerical_type(
-  dbl_profile = 
-    df_occupations %>% 
-    slice_head() %>% 
-    select(starts_with(
-      'item'
-    )) %>% 
-    as.matrix()
-  , efa_model = 
-    efa_model
-  , dbl_scale_lb = 0
-)
+sample(df_occupations$occupation, 1) -> dsds
+
+# dsds <- 'Musicians and Singers'
+# dsds <- 'Economists'
+
+# map_df(
+map(
+  # list_demode
+  list_desdmode
+  , ~ .x %>% 
+    filter(occupation == dsds) %>% 
+    select(starts_with('item')) %>% 
+    fun_acti_numerical_type(
+      efa_model = efa_model
+      , chr_factor_labels = c(
+        'Ds', 'Eg', 'Hs',
+        'Mn', 'Tr', 'Ad', 
+        'So', 'Ah', 'Hz',
+        'An', 'Mt', 'Rb',
+        'In', 'Mc'
+      )
+      , dbl_scale_lb = 0
+    )
+  # , .id = 'model'
+) -> list_acti
+
+dsds
+list_acti
+dsds
 
 # dsds --------------------------------------------------------------------
 df_input[-1] %>%
