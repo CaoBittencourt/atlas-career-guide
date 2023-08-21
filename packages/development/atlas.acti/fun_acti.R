@@ -452,19 +452,6 @@ fun_acti_numerical_type <- function(
   
 }
 
-df_occupations %>% 
-  slice_sample() -> 
-  dsds
-
-dsds$occupation
-
-fun_acti_numerical_type(
-  df_data = dsds
-  , efa_model = 
-    efa_model
-  , dbl_scale_lb = 0
-)
-
 # [K-MEANS ACTI] ----------------------------------------------------------
 
 # - Create Clustering Career Types ---------------------------------------------------
