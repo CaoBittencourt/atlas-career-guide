@@ -289,7 +289,7 @@ fun_acti_classifier <- function(
 }
 
 # - Numerical ACTI --------------------------------------------------------
-fun_acti_numerical_type <- function(
+fun_acti_type <- function(
     df_data
     , efa_model
     , chr_factor_labels = NULL
@@ -521,21 +521,58 @@ fun_acti_numerical_type <- function(
       acti_score
     ), .by_group = T
     ) %>% 
-    # ACTI type acronym
-    # mutate(
-    #   .after = occupation
-    #   , acti_type = 
-    #     paste0(
-    #       
-    #     )
-    # )
     ungroup() -> 
     df_acti
   
-  # df_acti %>% 
-  #   new_data_frame(
-  #     class = c('ACTI', 'tbl')
-  #   ) -> df_acti
+  # ACTI type acronym helper function
+  fun_acti_type_helper <- function(df_data){
+    
+    # ACTI type acronym
+    paste0(
+      df_data %>%
+        filter(
+          class == 'Dom'
+        ) %>%
+        pull(factor) %>%
+        paste0(
+          collapse = '-'
+        )
+      , '/'
+      , df_data %>%
+        filter(
+          class != 'Dom'
+        ) %>%
+        pull(factor) %>%
+        paste0(
+          collapse = '-'
+        )
+    ) -> chr_acti_type
+    
+    # Output
+    return(chr_acti_type)
+    
+  }
+  
+  # Calculate ACTI acronyms
+  df_acti %>% 
+    split(.$occupation) %>% 
+    sapply(
+      fun_acti_type_helper
+    ) %>% 
+    as_tibble(
+      rownames = 'occupation'
+    ) %>%
+    rename(
+      acti_type = 2
+    ) %>% 
+    left_join(
+      df_acti
+    ) -> df_acti
+    
+  df_acti %>%
+    new_data_frame(
+      class = c('ACTI', 'tbl')
+    ) -> df_acti
   
   # Output
   return(df_acti)
@@ -543,7 +580,7 @@ fun_acti_numerical_type <- function(
 }
 
 # # - Numerical ACTI 2 ------------------------------------------------------
-# fun_acti_numerical_type <- function(
+# fun_acti_type <- function(
     #     df_query
 #     , df_data
 #     , efa_model
@@ -858,6 +895,62 @@ fun_acti_code <- function(
 
 # - ACTI matching ---------------------------------------------------------
 # fun_eqvl_equivalence_acti
+
+# [PLOTTING FUNCTIONS] -----------------------------------------------------
+# - ACTI molecule --------------------------------------------------------------
+df_occupations %>% 
+  # slice_head() -> dsds
+  slice_sample(n = 2) -> dsds
+
+dsds %>% 
+  fun_acti_type(
+    efa_model = efa_model
+    , chr_factor_labels = c(
+      'Ds', 'Eg', 'Hs',
+      'Mn', 'Tr', 'Ad',
+      'So', 'Ah', 'Hz',
+      'An', 'Mt', 'Rb',
+      'In', 'Mc'
+    )
+    , dbl_scale_lb = 0
+    , chr_data_id = 
+      dsds$
+      occupation
+  ) -> acti_dsds
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+# - ACTI molecule plot ----------------------------------------------------
+fun_acti_plot_molecule <- function(
+    df_acti
+    , chr_palette
+){
+  
+  # Arguments validation
+  
+  # Data wrangling
+  
+  # Calculate bubble positions
+  
+  # Calculate molecule bonds
+  
+  # Plot profile molecule
+  
+  # Output
+  
+}
 
 # [VECTORIZED FUNCTIONS] --------------------------------------------------
 # # - Generalism function ---------------------------------------------------
@@ -1494,64 +1587,64 @@ read_csv(
 #     bind_cols(.x)
 # ) -> list_desdmode
 
-# - Mode-centered data ------------------------------------------------
-map(
-  # seq(0, 1, length.out = 5) %>%
-  # seq(0, .25, length.out = 6) %>%
-  c(0, 0.05, 0.1, 0.2, 0.5, 0.8, 1) %>%
-    set_names(paste0('demode_', .))
-  , ~
-    df_occupations %>%
-    select(
-      starts_with(
-        'item'
-      )) %>%
-    fun_skew_demode(
-      dbl_weights =
-        df_occupations$
-        employment_variants
-      , dbl_scale_lb = 0
-      , dbl_scale_ub = 100
-      , dbl_pct_remove = .x
-    ) %>%
-    as_tibble()
-) -> list_demode
+# # - Mode-centered data ------------------------------------------------
+# map(
+#   # seq(0, 1, length.out = 5) %>%
+#   # seq(0, .25, length.out = 6) %>%
+#   c(0, 0.05, 0.1, 0.2, 0.5, 0.8, 1) %>%
+#     set_names(paste0('demode_', .))
+#   , ~
+#     df_occupations %>%
+#     select(
+#       starts_with(
+#         'item'
+#       )) %>%
+#     fun_skew_demode(
+#       dbl_weights =
+#         df_occupations$
+#         employment_variants
+#       , dbl_scale_lb = 0
+#       , dbl_scale_ub = 100
+#       , dbl_pct_remove = .x
+#     ) %>%
+#     as_tibble()
+# ) -> list_demode
+# 
+# map(
+#   list_demode
+#   , ~
+#     df_occupations %>%
+#     select(!starts_with(
+#       'item'
+#     )) %>%
+#     bind_cols(.x)
+# ) -> list_demode
 
-map(
-  list_demode
-  , ~
-    df_occupations %>%
-    select(!starts_with(
-      'item'
-    )) %>%
-    bind_cols(.x)
-) -> list_demode
-
-# - Original data vs recentered data --------------------------------------
-map(
-  # list_desdmode
-  list_demode
-  , ~ .x %>%
-    fun_plot.density(aes(
-      # x = item_administrative
-      # x = item_oral_comprehension
-      # x = item_pure_mathematics
-      # x = item_electronic_mail
-      # x = item_engineering_and_technology
-      # x = item_economics_and_accounting
-      x = item_analyzing_data_or_information
-      , weight = employment_variants
-    )
-    , .list_axis.x.args = list(
-      limits = c(-.25,1.25) * 100
-    )
-    , .fun_format.x = number
-    , .list_labs = list(
-      y = NULL
-    ))
-) -> list_plt_centered
-
-list_plt_centered
+# # - Original data vs recentered data --------------------------------------
+# map(
+#   # list_desdmode
+#   list_demode
+#   , ~ .x %>%
+#     fun_plot.density(aes(
+#       # x = item_administrative
+#       # x = item_oral_comprehension
+#       # x = item_pure_mathematics
+#       # x = item_electronic_mail
+#       # x = item_engineering_and_technology
+#       # x = item_economics_and_accounting
+#       x = item_analyzing_data_or_information
+#       , weight = employment_variants
+#     )
+#     , .list_axis.x.args = list(
+#       limits = c(-.25,1.25) * 100
+#     )
+#     , .fun_format.x = number
+#     , .list_labs = list(
+#       y = NULL
+#     ))
+# ) -> list_plt_centered
+# 
+# list_plt_centered
 
 # # kmeans ------------------------------------------------------------------
 # df_occupations %>% 
@@ -2292,7 +2385,7 @@ list_plt_centered
 #   , ~ .x %>% 
 #     filter(occupation == dsds) %>% 
 #     select(starts_with('item')) %>% 
-#     fun_acti_numerical_type(
+#     fun_acti_type(
 #       efa_model = efa_model
 #       , chr_factor_labels = c(
 #         'Ds', 'Eg', 'Hs',
@@ -2466,7 +2559,7 @@ df_occupations %>%
   slice_sample(n = 10) -> 
   dsds
 
-fun_acti_numerical_type(
+fun_acti_type(
   df_data = dsds
   , chr_factor_labels = c(
     'Ds', 'Eg', 'Hs',
@@ -2500,7 +2593,7 @@ lalala %>%
     occupation ==
       sample(occupation, 1)
   ) -> lala
-  
+
 lala %>% 
   mutate(
     x = 1:n()
