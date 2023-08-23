@@ -568,7 +568,7 @@ fun_acti_type <- function(
     left_join(
       df_acti
     ) -> df_acti
-    
+  
   df_acti %>%
     new_data_frame(
       class = c('ACTI', 'tbl')
@@ -899,8 +899,11 @@ fun_acti_code <- function(
 # [PLOTTING FUNCTIONS] -----------------------------------------------------
 # - ACTI molecule --------------------------------------------------------------
 df_occupations %>% 
+  # filter(
+  #   occupation == 'Economists'
+  # ) -> dsds
   # slice_head() -> dsds
-  slice_sample(n = 2) -> dsds
+  slice_sample(n = 1) -> dsds
 
 dsds %>% 
   fun_acti_type(
@@ -915,21 +918,195 @@ dsds %>%
     , dbl_scale_lb = 0
     , chr_data_id = 
       dsds$
+      # df_occupations$
       occupation
   ) -> acti_dsds
 
+acti_dsds$acti_score / length(acti_dsds$acti_score)
+
+acti_dsds %>% 
+  group_by(occupation) %>%
+  tally() %>%
+  reframe(min(n))
+
+tibble(
+  acti = rep(1, 14),
+  class = 'Dom'
+) %>%
+  mutate(
+    nrows = n()
+  )
+
+# x axis in [1,nfactors] = [1,14]
+# y axis in [1,nfactors] = [1,14]
+# 1 factor ACTI type
+f1_position = c(7, 7)
+
+tibble(
+  x = 7 + 0.5,
+  y = 7 + 0.5
+)
+
+# 2 factor specialist ACTI type
+f1_position = c(7, 7)
+f2_position = c(7, 6)
+
+tibble(
+  x = c(7, 7) + 0.5,
+  y = c(7, 6) + 0.5
+)
+
+# 2 factor generalist ACTI type
+f1_position = c(7, 7)
+f2_position = c(8, 7)
+
+tibble(
+  x = c(7, 8) + 0.5,
+  y = c(7, 7) + 0.5
+)
+
+# 3 factor ACTI specialist type
+f1_position = c(7, 7)
+f2_position = c(8, 6)
+f3_position = c(6, 6)
+
+tibble(
+  x = c(7, 8, 6) + 0.5,
+  y = c(7, 6, 6) + 0.5
+)
+
+# 3 factor ACTI generalist type
+f1_position = c(7, 7)
+f2_position = c(8, 6)
+f3_position = c(6, 6)
+
+tibble(
+  x = c(7, 8, 6) + 0.5,
+  y = c(7, 6, 6) + 0.5
+)
+
+# 4 factor ACTI specialist type
+f1_position = c(7, 7)
+f2_position = c(8, 7)
+f3_position = c(6, 7)
+f4_position = c(7, 6)
+
+tibble(
+  x = c(7, 8, 6, 7) + 0.5,
+  y = c(7, 7, 7, 6) + 0.5,
+  group = c(1, 2, 2, 1)
+)
+
+tibble(
+  x = c(6, 7, 7, 8, 7) + 0.5,
+  y = c(6, 7, 7, 6, 5) + 0.5,
+  group = c(1, 2, 1, 2, 1)
+)
 
 
+# 4 factor ACTI generalist type
+f1_position = c(7, 7)
+f2_position = c(8, 6)
+f3_position = c(6, 6)
+f4_position = c(7, 5)
 
+tibble(
+  x = c(6, 7, 8, 7) + 0.5,
+  y = c(6, 7, 6, 5) + 0.5,
+  group = c(1, 2, 2, 1)
+)
 
+tibble(
+  x = c(6, 7, 7, 8, 7) + 0.5,
+  y = c(6, 7, 7, 6, 5) + 0.5,
+  group = c(1, 2, 1, 2, 1)
+)
 
+# 5 factor ACTI specialist type
+f1_position = c(7, 7)
+f2_position = c(8, 7)
+f3_position = c(6, 7)
+f4_position = c(7, 6)
+f5_position = c(7, 6)
 
+tibble(
+  x = c(7, 8, 6, 7) + 0.5,
+  y = c(7, 7, 7, 6) + 0.5
+)
 
+# 5 factor ACTI generalist type
+f1_position = c(7, 7)
+f2_position = c(8, 6)
+f3_position = c(6, 6)
+f4_position = c(7, 5)
 
+tibble(
+  x = c(6, 7, 8, 7) + 0.5,
+  y = c(6, 7, 6, 5) + 0.5,
+  group = c(1,2,2,1)
+)
 
+library(ggplot2)
 
+lalala %>%
+  mutate(
+    factor = paste0('f', row_number()),
+    color = if_else(
+      acti > 0.67
+      , factor
+      , 'aux'
+    )
+  ) -> lalala
 
-
+lalala %>%
+  ggplot(aes(
+    x = x,
+    y = y,
+    size = acti,
+    color = color
+    , group = group
+  )) + 
+  # geom_polygon(
+  # geom_path(
+  geom_line(
+    # group = c(1,2,2,1),
+    group = c(1,2,1,2,1),
+    size = 2,
+    color = '#212121'
+    # , fill = NA
+  ) + 
+  geom_point(
+    # shape = 21
+  ) +
+  scale_size_continuous(
+    # range = c(15,30)
+    range = c(5,10) * 2
+  ) +
+  # geom_text(aes(
+  #   x = x,
+  #   y = y, 
+  #   label = factor
+  # )
+  # , color = '#212121'
+  # , size = 7.5
+  # ) + 
+  xlim(c(1,14)) + 
+  ylim(c(1,14)) + 
+  guides(
+    size = 'none',
+    color = 'none'
+  ) + 
+  scale_color_manual(
+    values = c(
+      viridis(nrow(lalala)) %>% 
+        set_names(
+          lalala$factor
+        )
+      , 'aux' = 'lightgrey'
+    )
+  ) +
+  theme_void() #+ 
+# theme(aspect.ratio = 1)
 
 
 # - ACTI molecule plot ----------------------------------------------------
