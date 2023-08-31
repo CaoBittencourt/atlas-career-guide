@@ -596,1108 +596,1267 @@ fun_acti_type <- function(
   
 }
 
-# # - Numerical ACTI 2 ------------------------------------------------------
-# fun_acti_type <- function(
-    #     df_query
-#     , df_data
+# # # - Numerical ACTI 2 ------------------------------------------------------
+# # fun_acti_type <- function(
+#     #     df_query
+# #     , df_data
+# #     , efa_model
+# #     , chr_factor_labels = NULL
+# #     , dbl_weights
+# #     , dbl_scale_lb = 0
+# #     , dbl_generalism = NULL
+# # ){
+# #   
+# #   # Arguments validation
+# #   stopifnot(
+# #     "'df_data' must be a data frame containing item scores." =
+# #       all(
+# #         is.data.frame(df_data)
+# #         , any(
+# #           loadings(efa_model)[,] %>%
+# #             rownames() %in%
+# #             names(df_data)
+# #         )))
+# #   
+# #   stopifnot(
+# #     "'dbl_scale_lb' must be numeric." =
+# #       is.numeric(dbl_scale_lb)
+# #   )
+# #   
+# #   # stopifnot(
+# #   #   "'dbl_scale_ub' must be numeric." =
+# #   #     is.numeric(dbl_scale_ub)
+# #   # )
+# #   
+# #   stopifnot(
+# #     "'dbl_generalism' must be either NULL or numeric." =
+# #       any(
+# #         is.numeric(dbl_generalism)
+# #         , is.null(dbl_generalism)
+# #       )
+# #   )
+# #   
+# #   stopifnot(
+# #     "'chr_factor_labels' must be either NULL or a character vector with labels for each factor." =
+# #       any(
+# #         is.null(chr_factor_labels)
+# #         , all(
+# #           is.character(chr_factor_labels)
+# #           , length(chr_factor_labels) ==
+# #             efa_model$factors
+# #         )
+# #       )
+# #   )
+# #   
+# #   # Data wrangling
+# #   dbl_scale_lb[[1]] -> dbl_scale_lb
+# #   
+# #   # dbl_scale_ub[[1]] -> dbl_scale_ub
+# #   
+# #   df_data %>%
+# #     select(any_of(
+# #       efa_model$
+# #         model %>%
+# #         colnames()
+# #     )) -> df_data
+# #   
+# #   if(is.null(dbl_generalism)){
+# #     
+# #     fun_acti_generalism(
+# #       as.numeric(df_data)
+# #       , dbl_scale_lb =
+# #         dbl_scale_lb
+# #     ) -> dbl_generalism
+# #     
+# #   }
+# #   
+# #   dbl_generalism[[1]] -> dbl_generalism
+# #   
+# #   # Factor scores
+# #   fun_ftools_factor_scores(
+# #     df_data =
+# #       df_data
+# #     , efa_model =
+# #       efa_model
+# #     , lgc_pivot = F
+# #   ) -> df_factor_scores
+# #   
+# #   rm(df_data)
+# #   rm(efa_model)
+# #   
+# #   df_factor_scores %>%
+# #     as.matrix() %>%
+# #     as.numeric() ->
+# #     dbl_factor_scores
+# #   
+# #   rm(df_factor_scores)
+# #   
+# #   # Apply indispensability function
+# #   fun_acti_indispensability(
+# #     dbl_profile =
+# #       dbl_factor_scores
+# #     , dbl_scale_lb =
+# #       dbl_scale_lb
+# #     , dbl_generalism =
+# #       dbl_generalism
+# #   ) -> dbl_factor_scores
+# #   
+# #   # Normalize
+# #   
+# #   # Sort
+# #   sort(
+# #     dbl_factor_scores
+# #     , decreasing = T
+# #   ) -> dbl_factor_scores
+# #   
+# #   # Name factors
+# #   if(is.null(chr_factor_labels)){
+# #     
+# #     paste0('F', 1:length(
+# #       dbl_factor_scores
+# #     )) -> chr_factor_labels
+# #     
+# #   }
+# #   
+# #   names(
+# #     dbl_factor_scores
+# #   ) <- chr_factor_labels
+# #   
+# #   rm(chr_factor_labels)
+# #   
+# #   # Classify scores
+# #   fun_acti_classifier(
+# #     dbl_var = dbl_factor_scores
+# #     , dbl_scale_lb = 0
+# #     , dbl_scale_ub = 1
+# #     , int_levels = 3
+# #   ) -> dbl_classification
+# #   
+# #   # Keep only dominant and auxiliary factors (drop minor)
+# #   dbl_factor_scores[
+# #     dbl_classification > 1
+# #   ] -> dbl_factor_scores
+# #   
+# #   rm(dbl_classification)
+# #   
+# #   # Output
+# #   return(dbl_factor_scores)
+# #   
+# # }
+# 
+# # [K-MEANS ACTI] ----------------------------------------------------------
+# 
+# # - Create Clustering Career Types ---------------------------------------------------
+# fun_acti_kmeans_types <- function(
+#     df_data
 #     , efa_model
-#     , chr_factor_labels = NULL
-#     , dbl_weights
+#     , dbl_weights = NULL
 #     , dbl_scale_lb = 0
-#     , dbl_generalism = NULL
+#     , dbl_scale_ub = 100
+#     , int_types = 16  
+# ){
+#   
+#   # Arguments validation
+#   
+#   # Data wrangling
+#   
+#   # Estimate factor scores
+#   
+#   # K-means clustering
+#   
+#   # Remove irrelevant factors
+#   
+#   # Output
+#   
+# }
+# 
+# # [NUMERICAL ACTI] --------------------------------------------------------
+# # - Create Numerical Career types -----------------------------------------------------
+# fun_acti_derive_types <- function(
+#     df_data
+#     , efa_model
+#     , dbl_weights = NULL
+#     , dbl_scale_lb = 0
+#     , dbl_scale_ub = 100
+#     # , int_types = 16
 # ){
 #   
 #   # Arguments validation
 #   stopifnot(
-#     "'df_data' must be a data frame containing item scores." =
+#     "'df_data' must be a data frame with numeric columns." =
 #       all(
-#         is.data.frame(df_data)
-#         , any(
-#           loadings(efa_model)[,] %>%
-#             rownames() %in%
-#             names(df_data)
-#         )))
-#   
-#   stopifnot(
-#     "'dbl_scale_lb' must be numeric." =
-#       is.numeric(dbl_scale_lb)
-#   )
-#   
-#   # stopifnot(
-#   #   "'dbl_scale_ub' must be numeric." =
-#   #     is.numeric(dbl_scale_ub)
-#   # )
-#   
-#   stopifnot(
-#     "'dbl_generalism' must be either NULL or numeric." =
-#       any(
-#         is.numeric(dbl_generalism)
-#         , is.null(dbl_generalism)
+#         is.data.frame(df_data),
+#         df_data %>%
+#           map_lgl(is.numeric) %>%
+#           any()
 #       )
 #   )
 #   
 #   stopifnot(
-#     "'chr_factor_labels' must be either NULL or a character vector with labels for each factor." =
+#     "'dbl_weights' must be either NULL or a numeric vector the same length as the number of rows in 'df_data'." =
 #       any(
-#         is.null(chr_factor_labels)
-#         , all(
-#           is.character(chr_factor_labels)
-#           , length(chr_factor_labels) ==
-#             efa_model$factors
+#         is.null(dbl_weights),
+#         all(
+#           is.numeric(dbl_weights),
+#           length(dbl_weights) ==
+#             nrow(df_data)
 #         )
 #       )
 #   )
 #   
 #   # Data wrangling
-#   dbl_scale_lb[[1]] -> dbl_scale_lb
 #   
-#   # dbl_scale_ub[[1]] -> dbl_scale_ub
+#   # Determine generalist vs specialist scope descriptor
 #   
-#   df_data %>%
-#     select(any_of(
-#       efa_model$
-#         model %>%
-#         colnames()
-#     )) -> df_data
 #   
-#   if(is.null(dbl_generalism)){
-#     
-#     fun_acti_generalism(
-#       as.numeric(df_data)
-#       , dbl_scale_lb =
-#         dbl_scale_lb
-#     ) -> dbl_generalism
-#     
-#   }
+#   # Determine high-mid-low level competency descriptor
 #   
-#   dbl_generalism[[1]] -> dbl_generalism
-#   
-#   # Factor scores
-#   fun_ftools_factor_scores(
-#     df_data =
-#       df_data
-#     , efa_model =
-#       efa_model
-#     , lgc_pivot = F
+#   # Determine career type
+#   # Calculate factor scores
+#   atlas.ftools::fun_ftools_factor_scores(
+#     df_data = df_data
+#     , efa_model = efa_model
+#     , lgc_pivot = T
 #   ) -> df_factor_scores
 #   
 #   rm(df_data)
-#   rm(efa_model)
 #   
-#   df_factor_scores %>%
-#     as.matrix() %>%
-#     as.numeric() ->
-#     dbl_factor_scores
+#   # Calculate capital flexibility for each factor
+#   atlas.kcoef::fun_kcoef_kflex_macro_df(
+#     df_data = df_factor_scores
+#     , dbl_weights = dbl_weights
+#     , dbl_scale_lb = dbl_scale_lb
+#     , dbl_scale_ub = dbl_scale_ub
+#     , dbl_discount = dbl_discount
+#     , lgc_sample_variance = F
+#   ) -> df_kflex_macro
 #   
-#   rm(df_factor_scores)
+#   # Define relevance as 1 - kflex_macro
+#   df_kflex_macro %>% 
+#     mutate(
+#       relevance = 
+#         1 - kflex_macro
+#     ) %>% 
+#     select(!kflex_macro) -> 
+#     df_kflex_macro
 #   
-#   # Apply indispensability function
-#   fun_acti_indispensability(
-#     dbl_profile =
-#       dbl_factor_scores
-#     , dbl_scale_lb =
-#       dbl_scale_lb
-#     , dbl_generalism =
-#       dbl_generalism
-#   ) -> dbl_factor_scores
+#   # Join data frames
+#   df_factor_scores %>% 
+#     left_join(
+#       df_kflex_macro
+#     ) -> df_factor_scores
 #   
-#   # Normalize
+#   rm(df_kflex_macro)
 #   
-#   # Sort
-#   sort(
-#     dbl_factor_scores
-#     , decreasing = T
-#   ) -> dbl_factor_scores
+#   # Truncate factor scores
+#   df_factor_scores
 #   
-#   # Name factors
-#   if(is.null(chr_factor_labels)){
-#     
-#     paste0('F', 1:length(
-#       dbl_factor_scores
-#     )) -> chr_factor_labels
-#     
-#   }
+#   # Remove useless factors
 #   
-#   names(
-#     dbl_factor_scores
-#   ) <- chr_factor_labels
+#   # Classify type
 #   
-#   rm(chr_factor_labels)
 #   
-#   # Classify scores
-#   fun_acti_classifier(
-#     dbl_var = dbl_factor_scores
-#     , dbl_scale_lb = 0
-#     , dbl_scale_ub = 1
-#     , int_levels = 3
-#   ) -> dbl_classification
-#   
-#   # Keep only dominant and auxiliary factors (drop minor)
-#   dbl_factor_scores[
-#     dbl_classification > 1
-#   ] -> dbl_factor_scores
-#   
-#   rm(dbl_classification)
 #   
 #   # Output
-#   return(dbl_factor_scores)
 #   
 # }
-
-# [K-MEANS ACTI] ----------------------------------------------------------
-
-# - Create Clustering Career Types ---------------------------------------------------
-fun_acti_kmeans_types <- function(
-    df_data
-    , efa_model
-    , dbl_weights = NULL
-    , dbl_scale_lb = 0
-    , dbl_scale_ub = 100
-    , int_types = 16  
-){
-  
-  # Arguments validation
-  
-  # Data wrangling
-  
-  # Estimate factor scores
-  
-  # K-means clustering
-  
-  # Remove irrelevant factors
-  
-  # Output
-  
-}
-
-# [NUMERICAL ACTI] --------------------------------------------------------
-# - Create Numerical Career types -----------------------------------------------------
-fun_acti_derive_types <- function(
-    df_data
-    , efa_model
-    , dbl_weights = NULL
-    , dbl_scale_lb = 0
-    , dbl_scale_ub = 100
-    # , int_types = 16
-){
-  
-  # Arguments validation
-  stopifnot(
-    "'df_data' must be a data frame with numeric columns." =
-      all(
-        is.data.frame(df_data),
-        df_data %>%
-          map_lgl(is.numeric) %>%
-          any()
-      )
-  )
-  
-  stopifnot(
-    "'dbl_weights' must be either NULL or a numeric vector the same length as the number of rows in 'df_data'." =
-      any(
-        is.null(dbl_weights),
-        all(
-          is.numeric(dbl_weights),
-          length(dbl_weights) ==
-            nrow(df_data)
-        )
-      )
-  )
-  
-  # Data wrangling
-  
-  # Determine generalist vs specialist scope descriptor
-  
-  
-  # Determine high-mid-low level competency descriptor
-  
-  # Determine career type
-  # Calculate factor scores
-  atlas.ftools::fun_ftools_factor_scores(
-    df_data = df_data
-    , efa_model = efa_model
-    , lgc_pivot = T
-  ) -> df_factor_scores
-  
-  rm(df_data)
-  
-  # Calculate capital flexibility for each factor
-  atlas.kcoef::fun_kcoef_kflex_macro_df(
-    df_data = df_factor_scores
-    , dbl_weights = dbl_weights
-    , dbl_scale_lb = dbl_scale_lb
-    , dbl_scale_ub = dbl_scale_ub
-    , dbl_discount = dbl_discount
-    , lgc_sample_variance = F
-  ) -> df_kflex_macro
-  
-  # Define relevance as 1 - kflex_macro
-  df_kflex_macro %>% 
-    mutate(
-      relevance = 
-        1 - kflex_macro
-    ) %>% 
-    select(!kflex_macro) -> 
-    df_kflex_macro
-  
-  # Join data frames
-  df_factor_scores %>% 
-    left_join(
-      df_kflex_macro
-    ) -> df_factor_scores
-  
-  rm(df_kflex_macro)
-  
-  # Truncate factor scores
-  df_factor_scores
-  
-  # Remove useless factors
-  
-  # Classify type
-  
-  
-  
-  # Output
-  
-}
-
-# - ACTI code -------------------------------------------------------------
-fun_acti_code <- function(
-    dbl_factor_scores
-    # , dsds
-    , dbl_generalism
-    , dbl_competency
-    , int_generalism_levels = 2
-    , int_competency_levels = 5
-){
-  
-  # Arguments validation
-  
-  # Data wrangling
-  
-  # Apply generalism classifier
-  fun_acti_classifier(
-    dbl_var = dbl_generalism
-    , dbl_scale_lb = 0
-    , dbl_scale_ub = 1
-    , int_levels = 
-      int_generalism_levels
-  ) -> int_generalism_id
-  
-  # Apply competency classifier
-  fun_acti_classifier(
-    dbl_var = dbl_competency
-    , dbl_scale_lb = 0
-    , dbl_scale_ub = 1
-    , int_levels = 
-      int_competency_levels
-  ) -> int_competency_id
-  
-  # Compose ACTI code
-  paste0() ->
-    chr_acti_code
-  
-  # Output
-  return(list(
-    'acti_code' = chr_acti_code,
-    'generalism_id' = int_generalism_id,
-    'competency_id' = int_competency_id
-  ))
-  
-}
-
-# - ACTI estimator helper function --------------------------------------------------------
-
-# - ACTI estimator --------------------------------------------------------
-
-# - ACTI matching ---------------------------------------------------------
-# fun_eqvl_equivalence_acti
-
-# [PLOTTING FUNCTIONS] -----------------------------------------------------
-# - Polygon helper function -----------------------------------------------
-fun_acti_plot_polygon <- function(int_sides){
-  
-  # Arguments validation
-  stopifnot(
-    "'int_sides' must be numeric." = 
-      is.numeric(int_sides)
-  )
-  
-  # Data wrangling
-  ceiling(int_sides) -> int_sides
-  
-  # Calculate coordinates
-  (2 * pi * 1:int_sides) /
-    int_sides -> int_sq
-  
-  rm(int_sides)
-  
-  cbind(
-    sin(int_sq),
-    cos(int_sq)
-  ) -> df_polygon
-  
-  rm(int_sq)
-  
-  # Data wrangling
-  as_tibble(
-    df_polygon
-  ) -> df_polygon
-  
-  names(
-    df_polygon
-  ) <- c('x', 'y')
-  
-  new_data_frame(
-    df_polygon
-    , class = c(
-      'tbl', 'df_polygon'
-    )
-  ) -> df_polygon
-  
-  # Output
-  return(df_polygon)
-  
-}
-
-# - Rotation matrix helper function ---------------------------------------
-fun_acti_plot_rotate <- function(df_polygon, dbl_theta){
-  
-  # Arguments validation
-  stopifnot(
-    "'df_polygon' must be a data frame of the 'df_polygon' class." = 
-      any(class(df_polygon) == 'df_polygon')
-  )
-  
-  stopifnot(
-    "'dbl_theta' must be numeric." = 
-      is.numeric(dbl_theta)
-  )
-  
-  # Data wrangling
-  dbl_theta[[1]] -> dbl_theta
-  
-  # Rotation matrix
-  rbind(
-    c(cos(dbl_theta), -sin(dbl_theta)),
-    c(sin(dbl_theta), cos(dbl_theta))
-  ) -> mtx_rotation
-  
-  rm(dbl_theta)
-  
-  # Rotate polygon
-  as.matrix(
-    df_polygon
-  ) %*% 
-    mtx_rotation -> 
-    df_polygon
-  
-  rm(mtx_rotation)
-  
-  as_tibble(
-    df_polygon
-  ) -> df_polygon
-  
-  names(
-    df_polygon
-  ) <- c('x', 'y')
-  
-  new_data_frame(
-    df_polygon
-    , class = c(
-      'tbl', 'df_polygon'
-    )
-  ) -> df_polygon
-  
-  # Output
-  return(df_polygon)
-  
-}
-
-# # - Displacement matrix helper function -----------------------------------
-# fun_acti_plot_displacement <- function(int_nrow = 1, ...){
+# 
+# # - ACTI code -------------------------------------------------------------
+# fun_acti_code <- function(
+#     dbl_factor_scores
+#     # , dsds
+#     , dbl_generalism
+#     , dbl_competency
+#     , int_generalism_levels = 2
+#     , int_competency_levels = 5
+# ){
 #   
-#   # Dynamic dots
-#   c(...) -> dbl_args
+#   # Arguments validation
+#   
+#   # Data wrangling
+#   
+#   # Apply generalism classifier
+#   fun_acti_classifier(
+#     dbl_var = dbl_generalism
+#     , dbl_scale_lb = 0
+#     , dbl_scale_ub = 1
+#     , int_levels = 
+#       int_generalism_levels
+#   ) -> int_generalism_id
+#   
+#   # Apply competency classifier
+#   fun_acti_classifier(
+#     dbl_var = dbl_competency
+#     , dbl_scale_lb = 0
+#     , dbl_scale_ub = 1
+#     , int_levels = 
+#       int_competency_levels
+#   ) -> int_competency_id
+#   
+#   # Compose ACTI code
+#   paste0() ->
+#     chr_acti_code
+#   
+#   # Output
+#   return(list(
+#     'acti_code' = chr_acti_code,
+#     'generalism_id' = int_generalism_id,
+#     'competency_id' = int_competency_id
+#   ))
+#   
+# }
+# 
+# # - ACTI estimator helper function --------------------------------------------------------
+# 
+# # - ACTI estimator --------------------------------------------------------
+# 
+# # - ACTI matching ---------------------------------------------------------
+# # fun_eqvl_equivalence_acti
+# 
+# # [PLOTTING FUNCTIONS] -----------------------------------------------------
+# # - Polygon helper function -----------------------------------------------
+# fun_acti_plot_polygon <- function(int_sides){
 #   
 #   # Arguments validation
 #   stopifnot(
-#     "'...' must be numeric." = 
-#       all(
-#         is.numeric(dbl_args),
-#         !is.matrix(dbl_args)
-#       )
-#   )
-#   
-#   stopifnot(
-#     "'int_nrow' must be numeric." = 
-#       is.numeric(int_nrow)
+#     "'int_sides' must be numeric." = 
+#       is.numeric(int_sides)
 #   )
 #   
 #   # Data wrangling
-#   int_nrow[[1]] -> int_nrow
-#   ceiling(int_nrow) -> int_nrow
+#   ceiling(int_sides) -> int_sides
 #   
-#   # Displacement matrix
-#   rbind(dbl_args)[rep(
-#     1, int_nrow
-#   ), ] -> mtx_displacement
+#   # Calculate coordinates
+#   (2 * pi * 1:int_sides) /
+#     int_sides -> int_sq
 #   
-#   rm(dbl_args)
-#   rm(int_nrow)
+#   rm(int_sides)
 #   
-#   unname(mtx_displacement) ->
-#     mtx_displacement
+#   cbind(
+#     sin(int_sq),
+#     cos(int_sq)
+#   ) -> df_polygon
+#   
+#   rm(int_sq)
+#   
+#   # Data wrangling
+#   as_tibble(
+#     df_polygon
+#   ) -> df_polygon
+#   
+#   names(
+#     df_polygon
+#   ) <- c('x', 'y')
+#   
+#   new_data_frame(
+#     df_polygon
+#     , class = c(
+#       'tbl', 'df_polygon'
+#     )
+#   ) -> df_polygon
 #   
 #   # Output
-#   return(mtx_displacement)
+#   return(df_polygon)
 #   
 # }
-
-# - ACTI generalist plotting function ------------------------------
-# Generalist plotting function
-fun_acti_plot_generalist <- function(df_acti){
-  
-  df_acti %>% 
-    ggplot(aes(
-      x = x,
-      y = y,
-      color = color
-      , group = group
-    )) + 
-    geom_polygon(
-      size = 2,
-      color = '#212121',
-      fill = NA
-    ) + 
-    geom_point(
-      size = 10
-    ) + 
-    xlim(c(1, 14)) + 
-    ylim(c(1, 14)) + 
-    guides(
-      size = 'none',
-      color = 'none'
-    ) + 
-    scale_color_manual(
-      values = c(
-        viridis(nrow(df_acti)) %>% 
-          set_names(
-            df_acti$factor
-          )
-        , 'aux' = 'lightgrey'
-      )
-    ) +
-    theme_void() -> 
-    plt_acti_molecule
-  
-  rm(df_acti)
-  
-  # Output
-  return(plt_acti_molecule)
-  
-}
-
-bind_rows(
-  fun_acti_plot_rotate(
-    fun_acti_plot_polygon(4)
-    , dbl_theta = -3*pi/2
-  ) %>% mutate(x = x + 3.5)
-  , fun_acti_plot_rotate(
-    fun_acti_plot_polygon(4)
-    , dbl_theta = 3*pi/2
-  ) %>% mutate(x = x - 3.5)
-  , fun_acti_plot_polygon(2) %>% 
-    mutate(x = x - 1.25)
-  , fun_acti_plot_polygon(2) %>% 
-    mutate(x = x + 1.25)
-) -> df_polygon
-
-bind_rows(
-  tibble(x = 0, y = 0)
-  , df_polygon
-) -> df_polygon
-
-df_polygon %>%
-  ggplot(aes(
-    x = x,
-    y = y
-  )) +
-  geom_point(
-    color = 'red'
-    , size = 20
-  ) +
-  xlim(c(-5, 5)) +
-  ylim(c(-1.5, 1.5))
-
-bind_rows(
-  fun_acti_plot_rotate(
-    fun_acti_plot_polygon(2)
-    , dbl_theta = -3*pi/2
-  ) %>% mutate(x = x + 3.5)
-  , fun_acti_plot_rotate(
-    fun_acti_plot_polygon(2)
-    , dbl_theta = 3*pi/2
-  ) %>% mutate(x = x - 3.5)
-  , fun_acti_plot_polygon(2) %>% 
-    mutate(x = x - 1.25)
-  , fun_acti_plot_polygon(2) %>% 
-    mutate(x = x + 1.25)
-) -> df_polygon
-
-bind_rows(
-  tibble(x = 0, y = 0)
-  , df_polygon
-) -> df_polygon
-
-df_polygon %>%
-  ggplot(aes(
-    x = x,
-    y = y
-  )) +
-  geom_point(
-    color = 'red'
-    , size = 20
-  ) +
-  xlim(c(-5, 5)) +
-  ylim(c(-1.5, 1.5))
-
-# - ACTI specialist plotting function ------------------------------
-# Specialist plotting function
-fun_acti_plot_specialist <- function(df_acti){
-  
-  # Arguments validation
-  stopifnot(
-    "'df_acti' must be a data frame of the 'df_acti' class." = 
-      any(class(df_acti) == 'df_acti')
-  )
-  
-  # Specialist molecule helper functions
-  if(nrow(df_acti) == 1){
-    
-    fun_acti_plot_polygon(1) %>%
-      mutate(y = y - 0.75) ->
-      df_polygon
-    
-    df_polygon %>%
-      ggplot(aes(
-        x = x,
-        y = y
-      )) +
-      geom_point(
-        color = 'red'
-        , size = 20
-      ) +
-      xlim(c(-2, 2)) +
-      ylim(c(-2, 2))
-    
-  }
-  
-  if(nrow(df_acti) == 2){
-    
-    bind_rows(
-      fun_acti_plot_polygon(1),
-      fun_acti_plot_polygon(1) + 
-        c(0, -1.5)
-    ) -> df_polygon
-    
-    df_polygon %>%
-      ggplot(aes(
-        x = x,
-        y = y
-      )) +
-      geom_point(
-        color = 'red'
-        , size = 20
-      ) +
-      xlim(c(-2, 2)) +
-      ylim(c(-2, 2))
-    
-  }
-  
-  if(nrow(df_acti) == 3){
-    
-    fun_acti_plot_polygon(3) ->
-      df_polygon
-    
-    df_polygon %>%
-      ggplot(aes(
-        x = x,
-        y = y
-      )) +
-      geom_point(
-        color = 'red'
-        , size = 20
-      ) +
-      xlim(c(-2, 2)) +
-      ylim(c(-2, 2))
-    
-  }
-  
-  if(nrow(df_acti) == 4){
-    
-    fun_acti_plot_polygon(4) ->
-      df_polygon
-    
-    df_polygon %>%
-      ggplot(aes(
-        x = x,
-        y = y
-      )) +
-      geom_point(
-        color = 'red'
-        , size = 20
-      ) +
-      xlim(c(-2, 2)) +
-      ylim(c(-2, 2))
-    
-  }
-  
-  if(nrow(df_acti) == 5){
-    
-    bind_rows(
-      tibble(x = 0, y = 0)
-      , fun_acti_plot_polygon(4)
-    ) -> df_polygon
-    
-    df_polygon %>%
-      ggplot(aes(
-        x = x,
-        y = y
-      )) +
-      geom_point(
-        color = 'red'
-        , size = 20
-      ) +
-      xlim(c(-1.5, 1.5)) +
-      ylim(c(-1.5, 1.5))
-    
-  }
-  
-  if(nrow(df_acti) == 6){
-    
-    bind_rows(
-      fun_acti_plot_rotate(
-        fun_acti_plot_polygon(3)
-        , dbl_theta = -pi/2
-      ) %>% mutate(x = x + 2)
-      , fun_acti_plot_rotate(
-        fun_acti_plot_polygon(3)
-        , dbl_theta = pi/2
-      ) %>% mutate(x = x - 2)
-    ) -> df_polygon
-    
-    df_polygon %>%
-      ggplot(aes(
-        x = x,
-        y = y
-      )) +
-      geom_point(
-        color = 'red'
-        , size = 20
-      ) +
-      xlim(c(-3, 3)) +
-      ylim(c(-1.25, 1.25))
-    
-  }
-  
-  if(nrow(df_acti) == 7){
-    
-    bind_rows(
-      tibble(x = 0, y = 0)
-      , fun_acti_plot_rotate(
-        fun_acti_plot_polygon(3)
-        , dbl_theta = -pi/2
-      ) %>% mutate(x = x + 3)
-      , fun_acti_plot_rotate(
-        fun_acti_plot_polygon(3)
-        , dbl_theta = pi/2
-      ) %>% mutate(x = x - 3)
-    ) -> df_polygon
-    
-    df_polygon %>%
-      ggplot(aes(
-        x = x,
-        y = y
-      )) +
-      geom_point(
-        color = 'red'
-        , size = 20
-      ) +
-      xlim(c(-4, 4)) +
-      ylim(c(-1.25, 1.25))
-    
-  }
-  
-  if(nrow(df_acti) == 8){
-    
-    bind_rows(
-      fun_acti_plot_rotate(
-        fun_acti_plot_polygon(2)
-        , dbl_theta = -pi/2
-      ) %>% mutate(x = x + 2.25)
-      , fun_acti_plot_rotate(
-        fun_acti_plot_polygon(2)
-        , dbl_theta = pi/2
-      ) %>% mutate(x = x - 2.25)
-      , fun_acti_plot_polygon(2) %>% 
-        mutate(x = x - 1.25)
-      , fun_acti_plot_polygon(2) %>% 
-        mutate(x = x + 1.25)
-    ) -> df_polygon
-    
-    # bind_rows(
-    #   fun_acti_plot_rotate(
-    #     fun_acti_plot_polygon(3)
-    #     , dbl_theta = -pi/2
-    #   ) %>% mutate(x = x + 2)
-    #   , fun_acti_plot_rotate(
-    #     fun_acti_plot_polygon(3)
-    #     , dbl_theta = pi/2
-    #   ) %>% mutate(x = x - 2)
-    #   , fun_acti_plot_polygon(2)
-    # ) -> df_polygon
-
-    bind_rows(
-      fun_acti_plot_rotate(
-        fun_acti_plot_polygon(4)
-        , dbl_theta = -pi/2
-      # ) %>% mutate(x = x + 2)
-      ) %>% mutate(x = x + 1.75)
-      , fun_acti_plot_rotate(
-        fun_acti_plot_polygon(4)
-        , dbl_theta = pi/2
-      # ) %>% mutate(x = x - 2)
-      ) %>% mutate(x = x - 1.75)
-    ) -> df_polygon
-    
-    df_polygon %>%
-      ggplot(aes(
-        x = x,
-        y = y
-      )) +
-      geom_point(
-        color = 'red'
-        , size = 20
-      ) +
-      # xlim(c(-3.5, 3.5)) +
-      # ylim(c(-1.25, 1.25))
-      xlim(c(-3, 3)) +
-      ylim(c(-1.5, 1.5))
-    
-  }
-  
-  if(nrow(df_acti) == 9){
-    
-    bind_rows(
-      tibble(x = 0, y = 0)
-      , fun_acti_plot_rotate(
-        fun_acti_plot_polygon(3)
-        , dbl_theta = -pi/2
-      ) %>% mutate(x = x + 3)
-      , fun_acti_plot_rotate(
-        fun_acti_plot_polygon(3)
-        , dbl_theta = pi/2
-      ) %>% mutate(x = x - 3)
-      , fun_acti_plot_polygon(2)
-    ) -> df_polygon
-    
-    df_polygon %>%
-      ggplot(aes(
-        x = x,
-        y = y
-      )) +
-      geom_point(
-        color = 'red'
-        , size = 20
-      ) +
-      xlim(c(-4, 4)) +
-      ylim(c(-1.25, 1.25))
-    
-  }
-  
-  if(nrow(df_acti) == 10){
-    
-    # bind_rows(
-    #   bind_rows(
-    #     fun_acti_plot_rotate(
-    #       fun_acti_plot_polygon(4)
-    #       , dbl_theta = -pi/2
-    #     )
-    #     , tibble(x = 0, y = 0)
-    #   ) %>% mutate(x = x + 1.5)
-    #   , bind_rows(
-    #     fun_acti_plot_rotate(
-    #       fun_acti_plot_polygon(4)
-    #       , dbl_theta = pi/2
-    #     )
-    #     , tibble(x = 0, y = 0)
-    #   ) %>% mutate(x = x - 1.5)
-    # ) -> df_polygon
-    
-    # bind_rows(
-    #   tibble(x = 0, y = 0)
-    #   , fun_acti_plot_rotate(
-    #     fun_acti_plot_polygon(3)
-    #     , dbl_theta = -3*pi/2
-    #   ) %>% mutate(
-    #     x = x + 2.5,
-    #     y = y + 1
-    #     )
-    #   , fun_acti_plot_rotate(
-    #     fun_acti_plot_polygon(3)
-    #     , dbl_theta = 3*pi/2
-    #   ) %>% mutate(
-    #     x = x - 2.5,
-    #     y = y + 1
-    #   )
-    #   , fun_acti_plot_polygon(3) %>% 
-    #     mutate(y = y - 3) 
-    # ) -> df_polygon
-    
-    # bind_rows(
-    #   tibble(x = 0, y = 0)
-    #   , fun_acti_plot_polygon(3) %>% 
-    #     mutate(y = y - 3)
-    #   , fun_acti_plot_rotate(
-    #     fun_acti_plot_polygon(3)
-    #     , dbl_theta = 4*pi/3
-    #   ) %>% mutate(
-    #     x = x - 2
-    #     , y = y + 2
-    #   )
-    #   , fun_acti_plot_rotate(
-    #     fun_acti_plot_polygon(3)
-    #     , dbl_theta = -4*pi/3
-    #   ) %>% mutate(
-    #     x = x + 2
-    #     , y = y + 2
-    #   )
-    # ) -> df_polygon
-    
-    bind_rows(
-      tibble(x = 0, y = 0)
-      , fun_acti_plot_polygon(3) %>% 
-        mutate(y = y - 3)
-      , fun_acti_plot_rotate(
-        fun_acti_plot_polygon(3) %>% 
-          mutate(y = y - 3)
-        # , dbl_theta = -(pi/2 + pi/3)
-        , dbl_theta = -(pi/2)
-      )
-      , fun_acti_plot_rotate(
-        fun_acti_plot_polygon(3) %>% 
-          mutate(y = y - 3)
-        # , dbl_theta = pi/2 + pi/3
-        , dbl_theta = pi/2
-      )
-    ) -> df_polygon
-    
-    # bind_rows(
-    #   tibble(x = 0, y = 0)
-    #   , fun_acti_plot_rotate(
-    #     fun_acti_plot_polygon(3)
-    #     , dbl_theta = -pi/2
-    #   ) %>% mutate(x = x + 3)
-    #   , fun_acti_plot_rotate(
-    #     fun_acti_plot_polygon(3)
-    #     , dbl_theta = pi/2
-    #   ) %>% mutate(x = x - 3)
-    #   , fun_acti_plot_polygon(3) %>% 
-    #     mutate(y = y - 3) 
-    # ) -> df_polygon
-    
-    df_polygon %>%
-      ggplot(aes(
-        x = x,
-        y = y
-      )) +
-      geom_point(
-        color = 'red'
-        , size = 20
-      ) +
-      xlim(c(-4, 4)) +
-      # ylim(c(-4, 4))
-      ylim(c(-4, 1.5))
-    
-  }
-  
-  if(nrow(df_acti) == 11){
-    
-    bind_rows(
-      tibble(x = 0, y = 0)
-      , fun_acti_plot_rotate(
-        fun_acti_plot_polygon(2)
-        , dbl_theta = -pi/2
-      ) %>% mutate(x = x + 3)
-      , fun_acti_plot_rotate(
-        fun_acti_plot_polygon(2)
-        , dbl_theta = pi/2
-      ) %>% mutate(x = x - 3)
-      , fun_acti_plot_polygon(2)
-      , fun_acti_plot_polygon(2) %>% 
-        # mutate(x = x - 2.5)
-        # mutate(x = x - 2.25)
-        mutate(x = x - 2)
-      , fun_acti_plot_polygon(2) %>% 
-        # mutate(x = x + 2.5)
-        # mutate(x = x + 2.25)
-        mutate(x = x + 2)
-    ) -> df_polygon
-    
-    df_polygon %>%
-      ggplot(aes(
-        x = x,
-        y = y
-      )) +
-      geom_point(
-        color = 'red'
-        , size = 20
-      ) +
-      xlim(c(-4, 4)) +
-      # xlim(c(-3, 3)) +
-      ylim(c(-1.25, 1.25))
-    
-  }
-  
-  if(nrow(df_acti) == 12){
-    
-    bind_rows(
-      fun_acti_plot_polygon(4)
-      , fun_acti_plot_rotate(
-        fun_acti_plot_polygon(3) %>% 
-          mutate(y = y - 2)
-        , dbl_theta = -(pi/2)
-      )
-      , fun_acti_plot_rotate(
-        fun_acti_plot_polygon(3) %>% 
-          mutate(y = y - 2)
-        , dbl_theta = pi/2
-      )
-      , fun_acti_plot_rotate(
-        fun_acti_plot_polygon(3) %>% 
-          mutate(y = y - 2)
-        , dbl_theta = -pi
-      )
-      , fun_acti_plot_polygon(3) %>% 
-          mutate(y = y - 2)
-    ) -> df_polygon
-    
-    df_polygon %>%
-      ggplot(aes(
-        x = x,
-        y = y
-      )) +
-      geom_point(
-        color = 'red'
-        , size = 20
-      ) + 
-      xlim(c(-3, 3)) +
-      ylim(c(-3, 3))
-    
-  }
-  
-  if(nrow(df_acti) == 13){
-    
-    bind_rows(
-      tibble(x = 0, y = 0)
-      , fun_acti_plot_polygon(4) * 2 
-      , fun_acti_plot_rotate(
-        fun_acti_plot_polygon(3) %>%
-          mutate(y = y - 3)
-        , dbl_theta = -(pi/2)
-      )
-      , fun_acti_plot_rotate(
-        fun_acti_plot_polygon(3) %>%
-          mutate(y = y - 3)
-        , dbl_theta = pi/2
-      )
-      , fun_acti_plot_rotate(
-        fun_acti_plot_polygon(3) %>%
-          mutate(y = y - 3)
-        , dbl_theta = -pi
-      )
-      , fun_acti_plot_polygon(3) %>%
-          mutate(y = y - 3)
-    ) -> df_polygon
-    
-    df_polygon %>%
-      ggplot(aes(
-        x = x,
-        y = y
-      )) +
-      geom_point(
-        color = 'red'
-        , size = 20
-      ) + 
-      xlim(c(-4, 4)) +
-      ylim(c(-4, 4))
-    
-  }
-  
-  df_acti %>% 
-    ggplot(aes(
-      x = x,
-      y = y,
-      color = color,
-      group = group
-    )) + 
-    geom_line(
-      size = 2,
-      color = '#212121'
-    ) + 
-    geom_point(
-      size = 10
-    ) + 
-    xlim(c(1, 14)) + 
-    ylim(c(1, 14)) + 
-    guides(
-      size = 'none',
-      color = 'none'
-    ) + 
-    scale_color_manual(
-      values = c(
-        viridis(nrow(df_acti)) %>% 
-          set_names(
-            df_acti$factor
-          )
-        , 'aux' = 'lightgrey'
-      )
-    ) +
-    theme_void() -> 
-    plt_acti_molecule
-  
-  rm(df_acti)
-  
-  # Output
-  return(plt_acti_molecule)
-  
-}
-
-# - ACTI molecule plotting function ---------------------------------------
-fun_acti_plot_molecule <- function(df_acti, dbl_generalism){
-  
-  # Arguments validation
-  stopifnot(
-    "'df_acti' must be a ACTI data frame." = 
-      any(class(df_acti) == 'df_acti')
-  )
-  
-  # Data wrangling
-  
-  # If generalist, call generalist function
-  fun_acti_plot_generalist(df_acti) -> 
-    plot_acti_molecule
-  
-  # If specialist, call specialist function
-  fun_acti_plot_specialist(df_acti) -> 
-    plot_acti_molecule
-  
-  # Output
-  return(plot_acti_molecule)
-  
-}
-
+# 
+# # - Rotation matrix helper function ---------------------------------------
+# fun_acti_plot_rotate <- function(df_polygon, dbl_theta){
+#   
+#   # Arguments validation
+#   stopifnot(
+#     "'df_polygon' must be a data frame of the 'df_polygon' class." = 
+#       any(class(df_polygon) == 'df_polygon')
+#   )
+#   
+#   stopifnot(
+#     "'dbl_theta' must be numeric." = 
+#       is.numeric(dbl_theta)
+#   )
+#   
+#   # Data wrangling
+#   dbl_theta[[1]] -> dbl_theta
+#   
+#   # Rotation matrix
+#   rbind(
+#     c(cos(dbl_theta), -sin(dbl_theta)),
+#     c(sin(dbl_theta), cos(dbl_theta))
+#   ) -> mtx_rotation
+#   
+#   rm(dbl_theta)
+#   
+#   # Rotate polygon
+#   as.matrix(
+#     df_polygon[c(
+#       'x', 'y'
+#     )]
+#   ) %*% 
+#     mtx_rotation -> 
+#     df_polygon[c(
+#       'x', 'y'
+#     )]
+#   
+#   rm(mtx_rotation)
+#   
+#   # Output
+#   return(df_polygon)
+#   
+# }
+# 
+# # # - Displacement matrix helper function -----------------------------------
+# # fun_acti_plot_displacement <- function(int_nrow = 1, ...){
+# #   
+# #   # Dynamic dots
+# #   c(...) -> dbl_args
+# #   
+# #   # Arguments validation
+# #   stopifnot(
+# #     "'...' must be numeric." = 
+# #       all(
+# #         is.numeric(dbl_args),
+# #         !is.matrix(dbl_args)
+# #       )
+# #   )
+# #   
+# #   stopifnot(
+# #     "'int_nrow' must be numeric." = 
+# #       is.numeric(int_nrow)
+# #   )
+# #   
+# #   # Data wrangling
+# #   int_nrow[[1]] -> int_nrow
+# #   ceiling(int_nrow) -> int_nrow
+# #   
+# #   # Displacement matrix
+# #   rbind(dbl_args)[rep(
+# #     1, int_nrow
+# #   ), ] -> mtx_displacement
+# #   
+# #   rm(dbl_args)
+# #   rm(int_nrow)
+# #   
+# #   unname(mtx_displacement) ->
+# #     mtx_displacement
+# #   
+# #   # Output
+# #   return(mtx_displacement)
+# #   
+# # }
+# 
+# # - ACTI generalist plotting function ------------------------------
+# # Generalist plotting function
+# fun_acti_plot_generalist <- function(df_acti){
+#   
+#   df_acti %>% 
+#     ggplot(aes(
+#       x = x,
+#       y = y,
+#       color = color
+#       , group = group
+#     )) + 
+#     geom_polygon(
+#       size = 2,
+#       color = '#212121',
+#       fill = NA
+#     ) + 
+#     geom_point(
+#       size = 10
+#     ) + 
+#     xlim(c(1, 14)) + 
+#     ylim(c(1, 14)) + 
+#     guides(
+#       size = 'none',
+#       color = 'none'
+#     ) + 
+#     scale_color_manual(
+#       values = c(
+#         viridis(nrow(df_acti)) %>% 
+#           set_names(
+#             df_acti$factor
+#           )
+#         , 'aux' = 'lightgrey'
+#       )
+#     ) +
+#     theme_void() -> 
+#     plt_acti_molecule
+#   
+#   rm(df_acti)
+#   
+#   # Output
+#   return(plt_acti_molecule)
+#   
+# }
+# 
+# bind_rows(
+#   fun_acti_plot_rotate(
+#     fun_acti_plot_polygon(4)
+#     , dbl_theta = -3*pi/2
+#   ) %>% mutate(x = x + 3.5)
+#   , fun_acti_plot_rotate(
+#     fun_acti_plot_polygon(4)
+#     , dbl_theta = 3*pi/2
+#   ) %>% mutate(x = x - 3.5)
+#   , fun_acti_plot_polygon(2) %>% 
+#     mutate(x = x - 1.25)
+#   , fun_acti_plot_polygon(2) %>% 
+#     mutate(x = x + 1.25)
+# ) -> df_polygon
+# 
+# bind_rows(
+#   tibble(x = 0, y = 0)
+#   , df_polygon
+# ) -> df_polygon
+# 
+# df_polygon %>%
+#   ggplot(aes(
+#     x = x,
+#     y = y
+#   )) +
+#   geom_point(
+#     color = 'red'
+#     , size = 20
+#   ) +
+#   xlim(c(-5, 5)) +
+#   ylim(c(-1.5, 1.5))
+# 
+# bind_rows(
+#   fun_acti_plot_rotate(
+#     fun_acti_plot_polygon(2)
+#     , dbl_theta = -3*pi/2
+#   ) %>% mutate(x = x + 3.5)
+#   , fun_acti_plot_rotate(
+#     fun_acti_plot_polygon(2)
+#     , dbl_theta = 3*pi/2
+#   ) %>% mutate(x = x - 3.5)
+#   , fun_acti_plot_polygon(2) %>% 
+#     mutate(x = x - 1.25)
+#   , fun_acti_plot_polygon(2) %>% 
+#     mutate(x = x + 1.25)
+# ) -> df_polygon
+# 
+# bind_rows(
+#   tibble(x = 0, y = 0)
+#   , df_polygon
+# ) -> df_polygon
+# 
+# df_polygon %>%
+#   ggplot(aes(
+#     x = x,
+#     y = y
+#   )) +
+#   geom_point(
+#     color = 'red'
+#     , size = 20
+#   ) +
+#   xlim(c(-5, 5)) +
+#   ylim(c(-1.5, 1.5))
+# 
+# # - ACTI specialist plotting function ------------------------------
+# # Specialist plotting function
+# fun_acti_plot_specialist <- function(df_acti){
+#   
+#   # Arguments validation
+#   stopifnot(
+#     "'df_acti' must be a data frame of the 'df_acti' class." = 
+#       any(class(df_acti) == 'df_acti')
+#   )
+#   
+#   # Specialist molecule helper functions
+#   if(nrow(df_acti) == 1){
+#     
+#     fun_acti_plot_polygon(1) %>%
+#       mutate(y = y - 0.75) ->
+#       df_polygon
+#     
+#     df_polygon %>%
+#       ggplot(aes(
+#         x = x,
+#         y = y
+#       )) +
+#       geom_point(
+#         color = 'red'
+#         , size = 20
+#       ) +
+#       xlim(c(-2, 2)) +
+#       ylim(c(-2, 2))
+#     
+#   }
+#   
+#   if(nrow(df_acti) == 2){
+#     
+#     bind_rows(
+#       
+#       fun_acti_plot_polygon(1),
+#       
+#       fun_acti_plot_polygon(1) + 
+#         c(0, -1.5)
+#       
+#     ) -> df_polygon
+#     
+#     df_polygon$group <- 1
+#     
+#     df_polygon %>%
+#       ggplot(aes(
+#         x = x,
+#         y = y,
+#         group = group
+#       )) +
+#       geom_line(
+#         color = '#212121',
+#         alpha = 0.8,
+#         size = 1.5
+#       ) + 
+#       geom_point(
+#         color = 'red'
+#         , size = 20
+#       ) +
+#       xlim(c(-2, 2)) +
+#       ylim(c(-2, 2))
+#     
+#   }
+#   
+#   if(nrow(df_acti) == 3){
+#     
+#     fun_acti_plot_polygon(3) ->
+#       df_polygon
+#     
+#     df_polygon$group <- 1
+#     
+#     df_polygon %>%
+#       ggplot(aes(
+#         x = x,
+#         y = y,
+#         group = group
+#       )) +
+#       geom_line(
+#         color = '#212121',
+#         alpha = 0.8,
+#         size = 1.5
+#       ) + 
+#       geom_point(
+#         color = 'red'
+#         , size = 20
+#       ) +
+#       xlim(c(-2, 2)) +
+#       ylim(c(-2, 2))
+#     
+#   }
+#   
+#   if(nrow(df_acti) == 4){
+#     
+#     fun_acti_plot_polygon(4) ->
+#       df_polygon
+#     
+#     # bind_rows(
+#     #   
+#     #   df_polygon,
+#     #   
+#     #   tibble(x = 0, y = 1)
+#     #   
+#     # ) -> df_polygon
+#     
+#     # df_polygon[c(
+#     #   1:nrow(df_polygon),
+#     #   nrow(df_polygon)
+#     # ), ] -> df_polygon
+#     
+#     df_polygon[c(1:4, 4), ] -> 
+#       df_polygon
+#     
+#     c(1, 2, 1, 1, 2) ->
+#       df_polygon$
+#       group
+#     
+#     df_polygon %>%
+#       ggplot(aes(
+#         x = x,
+#         y = y,
+#         group = group
+#       )) +
+#       geom_line(
+#         color = '#212121',
+#         alpha = 0.8,
+#         size = 1.5
+#       ) + 
+#       geom_point(
+#         color = 'red'
+#         , size = 20
+#       ) +
+#       xlim(c(-2, 2)) +
+#       ylim(c(-2, 2))
+#     
+#   }
+#   
+#   if(nrow(df_acti) == 5){
+#     
+#     bind_rows(
+#       
+#       fun_acti_plot_polygon(4),
+#       
+#       tibble(x = 0, y = 0)
+#       
+#     ) -> df_polygon
+#     
+#     c(1, 2, 1, 2, 1) ->
+#       df_polygon$
+#       group
+#     
+#     df_polygon %>%
+#       ggplot(aes(
+#         x = x,
+#         y = y,
+#         group = group
+#       )) +
+#       geom_line(
+#         color = '#212121',
+#         alpha = 0.8,
+#         size = 1.5
+#       ) + 
+#       geom_point(
+#         color = 'red'
+#         , size = 20
+#       ) +
+#       xlim(c(-2, 2)) +
+#       ylim(c(-1.5, 1.5))
+#     
+#   }
+#   
+#   if(nrow(df_acti) == 6){
+#     
+#     bind_rows(
+#       
+#       fun_acti_plot_polygon(3) %>% 
+#         mutate(group = 1) %>% 
+#         fun_acti_plot_rotate(
+#           dbl_theta = -pi/2
+#         ) %>% 
+#         mutate(x = x + 2),
+#       
+#       fun_acti_plot_polygon(3) %>% 
+#         mutate(group = 2) %>% 
+#         fun_acti_plot_rotate(
+#           dbl_theta = pi/2
+#         ) %>% 
+#         mutate(x = x - 2)
+#       
+#     ) -> df_polygon
+#     
+#     # bind_rows(
+#     #   
+#     #   fun_acti_plot_rotate(
+#     #     fun_acti_plot_polygon(3)
+#     #     , dbl_theta = -pi/2
+#     #   ) %>% mutate(x = x + 2),
+#     #   
+#     #   fun_acti_plot_rotate(
+#     #     fun_acti_plot_polygon(3)
+#     #     , dbl_theta = pi/2
+#     #   ) %>% mutate(x = x - 2)
+#     #   
+#     # ) -> df_polygon
+#     
+#     # bind_rows(
+#     #   
+#     #   df_polygon,
+#     #   
+#     #   tibble(x = 0, y = 1)
+#     #   
+#     # ) -> df_polygon
+#     
+#     # df_polygon[c(
+#     #   1:nrow(df_polygon),
+#     #   nrow(df_polygon)
+#     # ), ] -> df_polygon
+#     
+#     # df_polygon[c(
+#     #   1:6, 3, 6
+#     # ), ] -> df_polygon
+#     # 
+#     # round(df_polygon, 1)
+#     # 
+#     # c(1, 1, 1, 2, 2, 2, 3, 3) ->
+#     #   df_polygon$
+#     #   group
+#     
+#     df_polygon %>% 
+#       ggplot(aes(
+#         x = x,
+#         y = y,
+#         # group = group
+#       )) +
+#       # geom_line(
+#       geom_path(
+#         color = '#212121',
+#         alpha = 0.8,
+#         size = 1.5
+#       ) + 
+#       geom_point(
+#         color = 'red'
+#         , size = 20
+#       ) +
+#       xlim(c(-3, 3)) +
+#       ylim(c(-1.25, 1.25))
+#     
+#   }
+#   
+#   if(nrow(df_acti) == 7){
+#     
+#     bind_rows(
+#       
+#       fun_acti_plot_rotate(
+#         fun_acti_plot_polygon(3)
+#         , dbl_theta = -pi/2
+#       ) %>% mutate(x = x + 3),
+#       
+#       fun_acti_plot_rotate(
+#         fun_acti_plot_polygon(3)
+#         , dbl_theta = pi/2
+#       ) %>% mutate(x = x - 3),
+#       
+#       tibble(x = 0, y = 0)
+#       
+#     ) -> df_polygon
+#     
+#     df_polygon %>%
+#       ggplot(aes(
+#         x = x,
+#         y = y
+#       )) +
+#       geom_point(
+#         color = 'red'
+#         , size = 20
+#       ) +
+#       xlim(c(-4, 4)) +
+#       ylim(c(-1.25, 1.25))
+#     
+#   }
+#   
+#   if(nrow(df_acti) == 8){
+#     
+#     # bind_rows(
+#     #   fun_acti_plot_rotate(
+#     #     fun_acti_plot_polygon(2)
+#     #     , dbl_theta = -pi/2
+#     #   ) %>% mutate(x = x + 2.25)
+#     #   , fun_acti_plot_rotate(
+#     #     fun_acti_plot_polygon(2)
+#     #     , dbl_theta = pi/2
+#     #   ) %>% mutate(x = x - 2.25)
+#     #   , fun_acti_plot_polygon(2) %>% 
+#     #     mutate(x = x - 1.25)
+#     #   , fun_acti_plot_polygon(2) %>% 
+#     #     mutate(x = x + 1.25)
+#     # ) -> df_polygon
+#     
+#     # bind_rows(
+#     #   fun_acti_plot_rotate(
+#     #     fun_acti_plot_polygon(3)
+#     #     , dbl_theta = -pi/2
+#     #   ) %>% mutate(x = x + 2)
+#     #   , fun_acti_plot_rotate(
+#     #     fun_acti_plot_polygon(3)
+#     #     , dbl_theta = pi/2
+#     #   ) %>% mutate(x = x - 2)
+#     #   , fun_acti_plot_polygon(2)
+#     # ) -> df_polygon
+#     
+#     bind_rows(
+#       
+#       fun_acti_plot_rotate(
+#         fun_acti_plot_polygon(4)
+#         , dbl_theta = -pi/2
+#       ) %>% mutate(x = x + 1.75),
+#       
+#       fun_acti_plot_rotate(
+#         fun_acti_plot_polygon(4)
+#         , dbl_theta = pi/2
+#       ) %>% mutate(x = x - 1.75)
+#       
+#     ) -> df_polygon
+#     
+#     df_polygon %>%
+#       ggplot(aes(
+#         x = x,
+#         y = y
+#       )) +
+#       geom_point(
+#         color = 'red'
+#         , size = 20
+#       ) +
+#       xlim(c(-3, 3)) +
+#       ylim(c(-1.5, 1.5))
+#     
+#   }
+#   
+#   if(nrow(df_acti) == 9){
+#     
+#     bind_rows(
+#       
+#       fun_acti_plot_rotate(
+#         fun_acti_plot_polygon(3)
+#         , dbl_theta = -pi/2
+#       ) %>% mutate(x = x + 3),
+#       
+#       fun_acti_plot_rotate(
+#         fun_acti_plot_polygon(3)
+#         , dbl_theta = pi/2
+#       ) %>% mutate(x = x - 3),
+#       
+#       fun_acti_plot_polygon(2),
+#       
+#       tibble(x = 0, y = 0)
+#       
+#     ) -> df_polygon
+#     
+#     df_polygon %>%
+#       ggplot(aes(
+#         x = x,
+#         y = y
+#       )) +
+#       geom_point(
+#         color = 'red'
+#         , size = 20
+#       ) +
+#       xlim(c(-4, 4)) +
+#       ylim(c(-1.25, 1.25))
+#     
+#   }
+#   
+#   if(nrow(df_acti) == 10){
+#     
+#     # bind_rows(
+#     #   bind_rows(
+#     #     fun_acti_plot_rotate(
+#     #       fun_acti_plot_polygon(4)
+#     #       , dbl_theta = -pi/2
+#     #     )
+#     #     , tibble(x = 0, y = 0)
+#     #   ) %>% mutate(x = x + 1.5)
+#     #   , bind_rows(
+#     #     fun_acti_plot_rotate(
+#     #       fun_acti_plot_polygon(4)
+#     #       , dbl_theta = pi/2
+#     #     )
+#     #     , tibble(x = 0, y = 0)
+#     #   ) %>% mutate(x = x - 1.5)
+#     # ) -> df_polygon
+#     
+#     # bind_rows(
+#     #   tibble(x = 0, y = 0)
+#     #   , fun_acti_plot_rotate(
+#     #     fun_acti_plot_polygon(3)
+#     #     , dbl_theta = -3*pi/2
+#     #   ) %>% mutate(
+#     #     x = x + 2.5,
+#     #     y = y + 1
+#     #     )
+#     #   , fun_acti_plot_rotate(
+#     #     fun_acti_plot_polygon(3)
+#     #     , dbl_theta = 3*pi/2
+#     #   ) %>% mutate(
+#     #     x = x - 2.5,
+#     #     y = y + 1
+#     #   )
+#     #   , fun_acti_plot_polygon(3) %>% 
+#     #     mutate(y = y - 3) 
+#     # ) -> df_polygon
+#     
+#     # bind_rows(
+#     #   tibble(x = 0, y = 0)
+#     #   , fun_acti_plot_polygon(3) %>% 
+#     #     mutate(y = y - 3)
+#     #   , fun_acti_plot_rotate(
+#     #     fun_acti_plot_polygon(3)
+#     #     , dbl_theta = 4*pi/3
+#     #   ) %>% mutate(
+#     #     x = x - 2
+#     #     , y = y + 2
+#     #   )
+#     #   , fun_acti_plot_rotate(
+#     #     fun_acti_plot_polygon(3)
+#     #     , dbl_theta = -4*pi/3
+#     #   ) %>% mutate(
+#     #     x = x + 2
+#     #     , y = y + 2
+#     #   )
+#     # ) -> df_polygon
+#     
+#     bind_rows(
+#       
+#       fun_acti_plot_polygon(3) %>% 
+#         mutate(y = y - 3),
+#       
+#       fun_acti_plot_rotate(
+#         fun_acti_plot_polygon(3) %>% 
+#           mutate(y = y - 3)
+#         , dbl_theta = -(pi/2)
+#       ),
+#       
+#       fun_acti_plot_rotate(
+#         fun_acti_plot_polygon(3) %>% 
+#           mutate(y = y - 3)
+#         , dbl_theta = pi/2
+#       ),
+#       
+#       tibble(x = 0, y = 0)
+#       
+#     ) -> df_polygon
+#     
+#     df_polygon %>%
+#       ggplot(aes(
+#         x = x,
+#         y = y
+#       )) +
+#       geom_point(
+#         color = 'red'
+#         , size = 20
+#       ) +
+#       xlim(c(-4, 4)) +
+#       ylim(c(-4, 1.5))
+#     
+#   }
+#   
+#   if(nrow(df_acti) == 11){
+#     
+#     bind_rows(
+#       
+#       fun_acti_plot_rotate(
+#         fun_acti_plot_polygon(2)
+#         , dbl_theta = -pi/2
+#       ) %>% mutate(x = x + 3),
+#       
+#       fun_acti_plot_rotate(
+#         fun_acti_plot_polygon(2)
+#         , dbl_theta = pi/2
+#       ) %>% mutate(x = x - 3),
+#       
+#       fun_acti_plot_polygon(2),
+#       
+#       fun_acti_plot_polygon(2) %>% 
+#         mutate(x = x - 3), 
+#       
+#       fun_acti_plot_polygon(2) %>% 
+#         mutate(x = x + 3),
+#       
+#       tibble(x = 0, y = 0)
+#       
+#     ) -> df_polygon
+#     
+#     df_polygon %>%
+#       ggplot(aes(
+#         x = x,
+#         y = y
+#       )) +
+#       geom_point(
+#         color = 'red'
+#         , size = 20
+#       ) +
+#       xlim(c(-4, 4)) +
+#       ylim(c(-1.25, 1.25))
+#     
+#   }
+#   
+#   if(nrow(df_acti) == 12){
+#     
+#     bind_rows(
+#       
+#       fun_acti_plot_rotate(
+#         fun_acti_plot_polygon(3)
+#         , dbl_theta = -pi/2
+#       ) %>% mutate(x = x + 2),
+#       
+#       fun_acti_plot_rotate(
+#         fun_acti_plot_polygon(3)
+#         , dbl_theta = pi/2
+#       ) %>% mutate(x = x - 2)
+#       
+#     ) -> df_polygon
+#     
+#     bind_rows(
+#       
+#       df_polygon,
+#       
+#       fun_acti_plot_rotate(
+#         df_polygon
+#         , dbl_theta = pi/2
+#       )
+#       
+#     ) -> df_polygon
+#     
+#     df_polygon %>%
+#       ggplot(aes(
+#         x = x,
+#         y = y
+#       )) +
+#       geom_point(
+#         color = 'red'
+#         , size = 20
+#       ) + 
+#       # xlim(c(-3, 3)*2) +
+#       xlim(c(-3, 3)) +
+#       ylim(c(-3, 3))
+#     
+#   }
+#   
+#   if(nrow(df_acti) == 13){
+#     
+#     bind_rows(
+#       
+#       fun_acti_plot_rotate(
+#         fun_acti_plot_polygon(3)
+#         , dbl_theta = -pi/2
+#       ) %>% mutate(x = x + 3),
+#       
+#       fun_acti_plot_rotate(
+#         fun_acti_plot_polygon(3)
+#         , dbl_theta = pi/2
+#       ) %>% mutate(x = x - 3),
+#       
+#       tibble(x = 0, y = 0)
+#       
+#     ) -> df_polygon
+#     
+#     bind_rows(
+#       
+#       df_polygon,
+#       
+#       fun_acti_plot_rotate(
+#         df_polygon
+#         , dbl_theta = pi/2
+#       )
+#       
+#     ) -> df_polygon
+#     
+#     df_polygon %>%
+#       ggplot(aes(
+#         x = x,
+#         y = y
+#       )) +
+#       geom_point(
+#         color = 'red'
+#         , size = 20
+#       ) + 
+#       xlim(c(-4, 4)) +
+#       ylim(c(-4, 4))
+#     
+#   }
+#   
+#   if(nrow(df_acti) == 14){
+#     
+#     bind_rows(
+#       
+#       bind_rows(
+#         
+#         fun_acti_plot_rotate(
+#           fun_acti_plot_polygon(4)
+#           , dbl_theta = -pi/2
+#         ),
+#         
+#         tibble(x = 0, y = 0)
+#         
+#         # ) %>% mutate(x = x + 1.5),
+#       ) %>% mutate(x = x + c(
+#         2, 1.5, 2, 1.5, 1.5
+#       )),
+#       
+#       bind_rows(
+#         
+#         fun_acti_plot_rotate(
+#           fun_acti_plot_polygon(4)
+#           , dbl_theta = pi/2
+#         ), 
+#         
+#         tibble(x = 0, y = 0)
+#         
+#       ) %>% mutate(x = x - c(
+#         2, 1.5, 2, 1.5, 1.5
+#       )), 
+#       
+#       fun_acti_plot_polygon(2) %>% 
+#         mutate(x = x - 0.5),
+#       
+#       fun_acti_plot_polygon(2) %>% 
+#         mutate(x = x + 0.5),
+#       
+#     ) -> df_polygon
+#     
+#     df_polygon %>%
+#       ggplot(aes(
+#         x = x,
+#         y = y
+#       )) +
+#       geom_point(
+#         color = 'red'
+#         , size = 20
+#       ) + 
+#       xlim(c(-2.5, 2.5)) +
+#       ylim(c(-1.5, 1.5))
+#     
+#   }
+#   
+#   df_acti %>% 
+#     ggplot(aes(
+#       x = x,
+#       y = y,
+#       color = color,
+#       group = group
+#     )) + 
+#     geom_line(
+#       size = 2,
+#       color = '#212121'
+#     ) + 
+#     geom_point(
+#       size = 10
+#     ) + 
+#     xlim(c(1, 14)) + 
+#     ylim(c(1, 14)) + 
+#     guides(
+#       size = 'none',
+#       color = 'none'
+#     ) + 
+#     scale_color_manual(
+#       values = c(
+#         viridis(nrow(df_acti)) %>% 
+#           set_names(
+#             df_acti$factor
+#           )
+#         , 'aux' = 'lightgrey'
+#       )
+#     ) +
+#     theme_void() -> 
+#     plt_acti_molecule
+#   
+#   rm(df_acti)
+#   
+#   # Output
+#   return(plt_acti_molecule)
+#   
+# }
+# 
+# # - ACTI molecule plotting function ---------------------------------------
+# fun_acti_plot_molecule <- function(df_acti, dbl_generalism){
+#   
+#   # Arguments validation
+#   stopifnot(
+#     "'df_acti' must be a ACTI data frame." = 
+#       any(class(df_acti) == 'df_acti')
+#   )
+#   
+#   # Data wrangling
+#   
+#   # If generalist, call generalist function
+#   fun_acti_plot_generalist(df_acti) -> 
+#     plot_acti_molecule
+#   
+#   # If specialist, call specialist function
+#   fun_acti_plot_specialist(df_acti) -> 
+#     plot_acti_molecule
+#   
+#   # Output
+#   return(plot_acti_molecule)
+#   
+# }
+# 
 # dsdsds --------------------------------------------------------------------
 fun_acti_plot_polygon(3) -> dsdsds
 
@@ -3886,87 +4045,4 @@ fun_acti_type(
     dsds$occupation
   , efa_model = efa_model
   , dbl_scale_lb = 0
-) -> lalala
-
-ggthemes::palette_pander(14) %>%
-  set_names(
-    c(
-      'Ds', 'Eg', 'Hs',
-      'Mn', 'Tr', 'Ad',
-      'So', 'Ah', 'Hz',
-      'An', 'Mt', 'Rb',
-      'In', 'Mc'
-    )
-  ) -> chr_pal
-
-lalala %>% 
-  split(.$occupation)
-
-lalala %>% 
-  filter(
-    occupation ==
-      sample(occupation, 1)
-  ) -> lala
-
-lala %>% 
-  mutate(
-    x = 1:n()
-    , y = 1:n()
-    , x = x / max(x)
-    , y = y / max(y)
-    , fill = 
-      if_else(
-        class == 'Aux'
-        , 'Aux'
-        , factor
-      )
-    , color = 
-      ggthemes::gdocs_pal()(n())
-    , color = if_else(
-      class == 'Aux'
-      , 'grey'
-      , color
-    )
-  ) %>%  
-  fun_plot.scatter(aes(
-    x = x
-    , y = y
-    , size = acti_score
-    , fill = fill
-  )
-  , .list_geom.param = list(
-    shape = 21
-    , stroke = 2
-    , color = '#212121'
-  )
-  , .list_axis.x.args = list(
-    limits = c(-.1, 1.1)
-  )
-  , .list_axis.y.args = list(
-    limits = c(-.1, 1.1)
-  )
-  , .chr_manual.aes = 'fill'
-  , .chr_manual.pal = 
-    set_names(
-      .$color, .$fill
-    )
-  , .lgc_smooth = F
-  # , .chr_manual.pal = c(
-  #   'Aux' = 'Grey'
-  # )
-  , .list_legend = list(
-    fill = 'none',
-    size = 'none'
-  )
-  , .theme = theme_void()
-  ) + 
-  geom_text(aes(
-    label = factor
-    , x = x
-    , y = y
-  )
-  , fontface = 'bold'
-  ) +
-  scale_size_continuous(
-    range = c(20, 30)
-  )
+)

@@ -1,18 +1,20 @@
 library(devtools)
 
-devtools::install_github('CaoBittencourtFerreira/atlas.ftools', force = T)
-devtools::install_github('CaoBittencourtFerreira/atlas.efa', force = T)
-devtools::install_github('CaoBittencourtFerreira/atlas.fstatics', force = T)
-devtools::install_github('CaoBittencourtFerreira/atlas.eqvl', force = T)
-devtools::install_github('CaoBittencourtFerreira/atlas.match', force = T)
-devtools::install_github('CaoBittencourtFerreira/atlas.intc', force = T)
-devtools::install_github('CaoBittencourtFerreira/atlas.skew', force = T)
-devtools::install_github('CaoBittencourtFerreira/atlas.kcoef', force = T)
-devtools::install_github('CaoBittencourtFerreira/atlas.notiq', force = T)
-devtools::install_github('CaoBittencourtFerreira/atlas.misc', force = T)
+devtools::install_github('CaoBittencourt/atlas.ftools', force = T)
+devtools::install_github('CaoBittencourt/atlas.efa', force = T)
+devtools::install_github('CaoBittencourt/atlas.fstatics', force = T)
+devtools::install_github('CaoBittencourt/atlas.eqvl', force = T)
+devtools::install_github('CaoBittencourt/atlas.match', force = T)
+devtools::install_github('CaoBittencourt/atlas.intc', force = T)
+devtools::install_github('CaoBittencourt/atlas.skew', force = T)
+devtools::install_github('CaoBittencourt/atlas.kcoef', force = T)
+devtools::install_github('CaoBittencourt/atlas.notiq', force = T)
+devtools::install_github('CaoBittencourt/atlas.misc', force = T)
+devtools::install_github('CaoBittencourt/atlas.acti', force = T)
+devtools::install_github('CaoBittencourt/atlas.plot', force = T)
 
 # library(atlas.efa)
-# library(atlas.ftools)
+library(atlas.ftools)
 # library(atlas.fstatics)
 # library(atlas.eqvl)
 # library(atlas.match)
@@ -20,6 +22,8 @@ devtools::install_github('CaoBittencourtFerreira/atlas.misc', force = T)
 # library(atlas.skew)
 # library(atlas.kcoef)
 # library(atlas.notiq)
+# library(atlas.acti)
+library(atlas.plot)
 
 
 # [TEST] ------------------------------------------------------------------
@@ -405,3 +409,207 @@ fun_notiq_quotient(
   , dbl_proxy_mean = 33
   , dbl_proxy_sd = 14.8
 )
+
+# [TEST] ------------------------------------------------------------------
+# - Data ------------------------------------------------------------------
+library(readr)
+
+read_rds(
+  'C:/Users/Cao/Documents/Github/atlas-research/data/efa/efa_equamax_14factors.rds'
+) -> efa_model
+
+read_csv(
+  'C:/Users/Cao/Documents/Github/Atlas-Research/Data/df_occupations_2023_efa.csv'
+) -> df_occupations
+
+# read_csv(
+#   'https://docs.google.com/spreadsheets/d/e/2PACX-1vSVdXvQMe4DrKS0LKhY0CZRlVuCCkEMHVJHQb_U-GKF21CjcchJ5jjclGSlQGYa5Q/pub?gid=1515296378&single=true&output=csv'
+# ) -> df_input
+
+
+# - Histogram -----------------------------------------------------------------
+df_occupations %>% 
+  fun_plot.histogram(aes(
+    x = wage_mean
+    # , weights = employment_variants
+  )
+  , .list_axis.x.args = list(
+    limits = c(-50000, NA)
+  )
+  , .fun_format.x = dollar
+  )
+
+df_occupations %>% 
+  fun_plot.histogram(aes(
+    x = wage_mean
+    , weights = employment_variants
+  )
+  , .list_axis.x.args = list(
+    limits = c(-50000, NA)
+  )
+  , .fun_format.x = dollar
+  )
+
+
+# - Density -----------------------------------------------------------------
+df_occupations %>% 
+  fun_plot.density(aes(
+    x = wage_mean
+    # , weights = employment_variants
+  )
+  , .list_axis.x.args = list(
+    limits = c(-50000, NA)
+  )
+  , .fun_format.x = dollar
+  )
+
+df_occupations %>% 
+  fun_plot.density(aes(
+    x = wage_mean
+    , weights = employment_variants
+  )
+  , .list_axis.x.args = list(
+    limits = c(-50000, NA)
+  )
+  , .fun_format.x = dollar
+  )
+
+# - Heatmap ---------------------------------------------------------------
+library(atlas.ftools)
+
+df_occupations %>% 
+  slice_sample(
+    n = 10
+  ) %>% 
+  fun_ftools_factor_scores(
+    efa_model = efa_model
+    , lgc_pivot = T
+  ) %>% 
+  select(
+    occupation
+    , starts_with('factor')
+  ) %>%
+  fun_plot.heatmap(aes(
+    x = factor
+    , y = occupation
+    , fill = factor_score
+    , label = number(
+      factor_score
+      , accuracy = .01
+    )
+  )
+  , .fun_format.y = function(y){y}
+  , .reorder_desc = T
+  )
+
+# - Bar chart --------------------------------------------------------------
+df_occupations %>% 
+  slice_sample(n = 2) %>% 
+  fun_ftools_factor_scores(
+    efa_model = 
+      efa_model
+    , lgc_pivot = T
+  ) %>% 
+  select(
+    occupation
+    , starts_with('factor')
+  ) %>% 
+  fun_plot.bar(aes(
+    x = factor
+    , y = factor_score
+    , fill = occupation
+  ))
+
+df_occupations %>% 
+  select(
+    occupation
+    , item_originality
+    , wage_mean
+  ) %>% 
+  fun_plot.bar(aes(
+    x = occupation
+    , y = item_originality
+    , fill = wage_mean
+  )
+  , .list_labs = list(
+    y = 'Originality'
+  )
+  , .coord_polar = T
+  , .list_axis.y.args = list(
+    breaks = seq(0, 100, length.out = 5)
+  )
+  , .scale_colors = list(
+    scale_fill_viridis(discrete = F)
+  )
+  , .fun_format.y = number
+  )
+
+# - Lollipop chart --------------------------------------------------------
+df_occupations %>% 
+  slice_sample(n = 1) %>% 
+  fun_ftools_factor_scores(
+    efa_model = 
+      efa_model
+    , lgc_pivot = T
+  ) %>% 
+  select(
+    occupation
+    , starts_with('factor')
+  ) %>% 
+  fun_plot.lollipop(aes(
+    x = factor
+    , y = factor_score
+  ))
+
+
+# - Dumbbell plot --------------------------------------------------------
+df_occupations %>%
+  slice_sample(n = 3) %>% 
+  fun_ftools_factor_scores(
+    efa_model = 
+      efa_model
+    , lgc_pivot = T
+  ) %>% 
+  select(
+    occupation
+    , starts_with('factor')
+  ) %>% 
+  fun_plot.dumbbell(aes(
+    x = factor_score
+    , y = factor
+    , color = occupation
+  ))
+
+# - Ridge plot -----------------------------------------------------------------
+df_occupations %>% 
+  select(
+    occupation
+    , employment_variants
+    , starts_with('item')
+  ) %>% 
+  fun_ftools_factor_scores(
+    efa_model = 
+      efa_model
+    , lgc_pivot = T
+  ) %>% 
+  fun_plot.ridges(aes(
+    x = factor_score
+    , y = factor
+  ))
+
+# - Scatter plot ----------------------------------------------------------
+df_occupations %>%
+  select(
+    wage_mean
+    , item_engineering_and_technology
+    , item_pure_mathematics
+    , employment_variants
+  ) %>% 
+  fun_plot.scatter(aes(
+    x = item_engineering_and_technology
+    , y = wage_mean
+    , color = item_pure_mathematics
+  )
+  , .scale_colors = list(
+    scale_color_viridis(discrete = F)
+  ))

@@ -1683,16 +1683,7 @@ fun_plot.bar <- function(
   , .fun_polar.labels = function(x){number(x, accuracy = .01)}
   
   # Theme
-  , .theme = 
-    ggridges::theme_ridges(
-      center_axis_labels = T
-      , font_size = 12
-    ) + 
-    theme(
-      axis.text.y = element_text(vjust = 0.5)
-      , legend.position = 'bottom'
-      , legend.direction = 'horizontal'
-    )
+  , .theme = ggridges::theme_ridges(font_size = 12, center_axis_labels = T)
   
 ){
   
