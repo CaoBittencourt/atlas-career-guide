@@ -11,6 +11,7 @@ pkg <- c(
   # , 'atlas.skew'
   , 'atlas.skew'
   , 'atlas.ftools'
+  , 'atlas.plot' #temp
   # , 'atlas.kcoef'
   , 'atlas.eqvl'
   , 'ggplot2'
@@ -31,9 +32,6 @@ lapply(pkg, function(x)
 
 # remotes::install_github('Van1yu3/SWKM')
 # library(SWKM)
-
-# - temp ------------------------------------------------------------------
-source('C:/Users/Cao/Documents/Github/atlas-research/functions/methods/fun_plots.R')
 
 # [FUNCTIONS] ---------------------------
 # - Generalism function ---------------------------------------------------
@@ -598,7 +596,7 @@ fun_acti_type <- function(
 
 # # # - Numerical ACTI 2 ------------------------------------------------------
 # # fun_acti_type <- function(
-#     #     df_query
+    #     #     df_query
 # #     , df_data
 # #     , efa_model
 # #     , chr_factor_labels = NULL
@@ -748,7 +746,7 @@ fun_acti_type <- function(
 # 
 # # - Create Clustering Career Types ---------------------------------------------------
 # fun_acti_kmeans_types <- function(
-#     df_data
+    #     df_data
 #     , efa_model
 #     , dbl_weights = NULL
 #     , dbl_scale_lb = 0
@@ -773,7 +771,7 @@ fun_acti_type <- function(
 # # [NUMERICAL ACTI] --------------------------------------------------------
 # # - Create Numerical Career types -----------------------------------------------------
 # fun_acti_derive_types <- function(
-#     df_data
+    #     df_data
 #     , efa_model
 #     , dbl_weights = NULL
 #     , dbl_scale_lb = 0
@@ -863,7 +861,7 @@ fun_acti_type <- function(
 # 
 # # - ACTI code -------------------------------------------------------------
 # fun_acti_code <- function(
-#     dbl_factor_scores
+    #     dbl_factor_scores
 #     # , dsds
 #     , dbl_generalism
 #     , dbl_competency
@@ -913,251 +911,143 @@ fun_acti_type <- function(
 # # - ACTI matching ---------------------------------------------------------
 # # fun_eqvl_equivalence_acti
 # 
-# # [PLOTTING FUNCTIONS] -----------------------------------------------------
-# # - Polygon helper function -----------------------------------------------
-# fun_acti_plot_polygon <- function(int_sides){
-#   
+# [PLOTTING FUNCTIONS] -----------------------------------------------------
+# - Polygon helper function -----------------------------------------------
+fun_acti_plot_polygon <- function(int_sides){
+  
+  # Arguments validation
+  stopifnot(
+    "'int_sides' must be numeric." =
+      is.numeric(int_sides)
+  )
+  
+  # Data wrangling
+  ceiling(int_sides) -> int_sides
+  
+  # Calculate coordinates
+  (2 * pi * 1:int_sides) /
+    int_sides -> int_sq
+  
+  rm(int_sides)
+  
+  cbind(
+    sin(int_sq),
+    cos(int_sq)
+  ) -> df_polygon
+  
+  rm(int_sq)
+  
+  # Data wrangling
+  as_tibble(
+    df_polygon
+  ) -> df_polygon
+  
+  names(
+    df_polygon
+  ) <- c('x', 'y')
+  
+  new_data_frame(
+    df_polygon
+    , class = c(
+      'tbl', 'df_polygon'
+    )
+  ) -> df_polygon
+  
+  # Output
+  return(df_polygon)
+  
+}
+
+# - Rotation matrix helper function ---------------------------------------
+fun_acti_plot_rotate <- function(df_polygon, dbl_theta){
+  
+  # Arguments validation
+  stopifnot(
+    "'df_polygon' must be a data frame of the 'df_polygon' class." =
+      any(class(df_polygon) == 'df_polygon')
+  )
+  
+  stopifnot(
+    "'dbl_theta' must be numeric." =
+      is.numeric(dbl_theta)
+  )
+  
+  # Data wrangling
+  dbl_theta[[1]] -> dbl_theta
+  
+  # Rotation matrix
+  rbind(
+    c(cos(dbl_theta), -sin(dbl_theta)),
+    c(sin(dbl_theta), cos(dbl_theta))
+  ) -> mtx_rotation
+  
+  rm(dbl_theta)
+  
+  # Rotate polygon
+  as.matrix(
+    df_polygon[c(
+      'x', 'y'
+    )]
+  ) %*%
+    mtx_rotation ->
+    df_polygon[c(
+      'x', 'y'
+    )]
+  
+  rm(mtx_rotation)
+  
+  # Output
+  return(df_polygon)
+  
+}
+
+# # - Displacement matrix helper function -----------------------------------
+# fun_acti_plot_displacement <- function(int_nrow = 1, ...){
+#
+#   # Dynamic dots
+#   c(...) -> dbl_args
+#
 #   # Arguments validation
 #   stopifnot(
-#     "'int_sides' must be numeric." = 
-#       is.numeric(int_sides)
-#   )
-#   
-#   # Data wrangling
-#   ceiling(int_sides) -> int_sides
-#   
-#   # Calculate coordinates
-#   (2 * pi * 1:int_sides) /
-#     int_sides -> int_sq
-#   
-#   rm(int_sides)
-#   
-#   cbind(
-#     sin(int_sq),
-#     cos(int_sq)
-#   ) -> df_polygon
-#   
-#   rm(int_sq)
-#   
-#   # Data wrangling
-#   as_tibble(
-#     df_polygon
-#   ) -> df_polygon
-#   
-#   names(
-#     df_polygon
-#   ) <- c('x', 'y')
-#   
-#   new_data_frame(
-#     df_polygon
-#     , class = c(
-#       'tbl', 'df_polygon'
-#     )
-#   ) -> df_polygon
-#   
-#   # Output
-#   return(df_polygon)
-#   
-# }
-# 
-# # - Rotation matrix helper function ---------------------------------------
-# fun_acti_plot_rotate <- function(df_polygon, dbl_theta){
-#   
-#   # Arguments validation
-#   stopifnot(
-#     "'df_polygon' must be a data frame of the 'df_polygon' class." = 
-#       any(class(df_polygon) == 'df_polygon')
-#   )
-#   
-#   stopifnot(
-#     "'dbl_theta' must be numeric." = 
-#       is.numeric(dbl_theta)
-#   )
-#   
-#   # Data wrangling
-#   dbl_theta[[1]] -> dbl_theta
-#   
-#   # Rotation matrix
-#   rbind(
-#     c(cos(dbl_theta), -sin(dbl_theta)),
-#     c(sin(dbl_theta), cos(dbl_theta))
-#   ) -> mtx_rotation
-#   
-#   rm(dbl_theta)
-#   
-#   # Rotate polygon
-#   as.matrix(
-#     df_polygon[c(
-#       'x', 'y'
-#     )]
-#   ) %*% 
-#     mtx_rotation -> 
-#     df_polygon[c(
-#       'x', 'y'
-#     )]
-#   
-#   rm(mtx_rotation)
-#   
-#   # Output
-#   return(df_polygon)
-#   
-# }
-# 
-# # # - Displacement matrix helper function -----------------------------------
-# # fun_acti_plot_displacement <- function(int_nrow = 1, ...){
-# #   
-# #   # Dynamic dots
-# #   c(...) -> dbl_args
-# #   
-# #   # Arguments validation
-# #   stopifnot(
-# #     "'...' must be numeric." = 
-# #       all(
-# #         is.numeric(dbl_args),
-# #         !is.matrix(dbl_args)
-# #       )
-# #   )
-# #   
-# #   stopifnot(
-# #     "'int_nrow' must be numeric." = 
-# #       is.numeric(int_nrow)
-# #   )
-# #   
-# #   # Data wrangling
-# #   int_nrow[[1]] -> int_nrow
-# #   ceiling(int_nrow) -> int_nrow
-# #   
-# #   # Displacement matrix
-# #   rbind(dbl_args)[rep(
-# #     1, int_nrow
-# #   ), ] -> mtx_displacement
-# #   
-# #   rm(dbl_args)
-# #   rm(int_nrow)
-# #   
-# #   unname(mtx_displacement) ->
-# #     mtx_displacement
-# #   
-# #   # Output
-# #   return(mtx_displacement)
-# #   
-# # }
-# 
-# # - ACTI generalist plotting function ------------------------------
-# # Generalist plotting function
-# fun_acti_plot_generalist <- function(df_acti){
-#   
-#   df_acti %>% 
-#     ggplot(aes(
-#       x = x,
-#       y = y,
-#       color = color
-#       , group = group
-#     )) + 
-#     geom_polygon(
-#       size = 2,
-#       color = '#212121',
-#       fill = NA
-#     ) + 
-#     geom_point(
-#       size = 10
-#     ) + 
-#     xlim(c(1, 14)) + 
-#     ylim(c(1, 14)) + 
-#     guides(
-#       size = 'none',
-#       color = 'none'
-#     ) + 
-#     scale_color_manual(
-#       values = c(
-#         viridis(nrow(df_acti)) %>% 
-#           set_names(
-#             df_acti$factor
-#           )
-#         , 'aux' = 'lightgrey'
+#     "'...' must be numeric." =
+#       all(
+#         is.numeric(dbl_args),
+#         !is.matrix(dbl_args)
 #       )
-#     ) +
-#     theme_void() -> 
-#     plt_acti_molecule
-#   
-#   rm(df_acti)
-#   
+#   )
+#
+#   stopifnot(
+#     "'int_nrow' must be numeric." =
+#       is.numeric(int_nrow)
+#   )
+#
+#   # Data wrangling
+#   int_nrow[[1]] -> int_nrow
+#   ceiling(int_nrow) -> int_nrow
+#
+#   # Displacement matrix
+#   rbind(dbl_args)[rep(
+#     1, int_nrow
+#   ), ] -> mtx_displacement
+#
+#   rm(dbl_args)
+#   rm(int_nrow)
+#
+#   unname(mtx_displacement) ->
+#     mtx_displacement
+#
 #   # Output
-#   return(plt_acti_molecule)
-#   
+#   return(mtx_displacement)
+#
 # }
-# 
-# bind_rows(
-#   fun_acti_plot_rotate(
-#     fun_acti_plot_polygon(4)
-#     , dbl_theta = -3*pi/2
-#   ) %>% mutate(x = x + 3.5)
-#   , fun_acti_plot_rotate(
-#     fun_acti_plot_polygon(4)
-#     , dbl_theta = 3*pi/2
-#   ) %>% mutate(x = x - 3.5)
-#   , fun_acti_plot_polygon(2) %>% 
-#     mutate(x = x - 1.25)
-#   , fun_acti_plot_polygon(2) %>% 
-#     mutate(x = x + 1.25)
-# ) -> df_polygon
-# 
-# bind_rows(
-#   tibble(x = 0, y = 0)
-#   , df_polygon
-# ) -> df_polygon
-# 
-# df_polygon %>%
-#   ggplot(aes(
-#     x = x,
-#     y = y
-#   )) +
-#   geom_point(
-#     color = 'red'
-#     , size = 20
-#   ) +
-#   xlim(c(-5, 5)) +
-#   ylim(c(-1.5, 1.5))
-# 
-# bind_rows(
-#   fun_acti_plot_rotate(
-#     fun_acti_plot_polygon(2)
-#     , dbl_theta = -3*pi/2
-#   ) %>% mutate(x = x + 3.5)
-#   , fun_acti_plot_rotate(
-#     fun_acti_plot_polygon(2)
-#     , dbl_theta = 3*pi/2
-#   ) %>% mutate(x = x - 3.5)
-#   , fun_acti_plot_polygon(2) %>% 
-#     mutate(x = x - 1.25)
-#   , fun_acti_plot_polygon(2) %>% 
-#     mutate(x = x + 1.25)
-# ) -> df_polygon
-# 
-# bind_rows(
-#   tibble(x = 0, y = 0)
-#   , df_polygon
-# ) -> df_polygon
-# 
-# df_polygon %>%
-#   ggplot(aes(
-#     x = x,
-#     y = y
-#   )) +
-#   geom_point(
-#     color = 'red'
-#     , size = 20
-#   ) +
-#   xlim(c(-5, 5)) +
-#   ylim(c(-1.5, 1.5))
-# 
+
 # # - ACTI specialist plotting function ------------------------------
 # # Specialist plotting function
 # fun_acti_plot_specialist <- function(df_acti){
 #   
 #   # Arguments validation
 #   stopifnot(
-#     "'df_acti' must be a data frame of the 'df_acti' class." = 
+#     "'df_acti' must be a data frame of the 'df_acti' class." =
 #       any(class(df_acti) == 'df_acti')
 #   )
 #   
@@ -1184,14 +1074,8 @@ fun_acti_type <- function(
 #   
 #   if(nrow(df_acti) == 2){
 #     
-#     bind_rows(
-#       
-#       fun_acti_plot_polygon(1),
-#       
-#       fun_acti_plot_polygon(1) + 
-#         c(0, -1.5)
-#       
-#     ) -> df_polygon
+#     fun_acti_plot_polygon(2) -> 
+#       df_polygon
 #     
 #     df_polygon$group <- 1
 #     
@@ -1203,15 +1087,14 @@ fun_acti_type <- function(
 #       )) +
 #       geom_line(
 #         color = '#212121',
-#         alpha = 0.8,
 #         size = 1.5
-#       ) + 
+#       ) +
 #       geom_point(
 #         color = 'red'
 #         , size = 20
 #       ) +
 #       xlim(c(-2, 2)) +
-#       ylim(c(-2, 2))
+#       ylim(c(-3, 2.5))
 #     
 #   }
 #   
@@ -1230,9 +1113,8 @@ fun_acti_type <- function(
 #       )) +
 #       geom_line(
 #         color = '#212121',
-#         alpha = 0.8,
 #         size = 1.5
-#       ) + 
+#       ) +
 #       geom_point(
 #         color = 'red'
 #         , size = 20
@@ -1248,11 +1130,11 @@ fun_acti_type <- function(
 #       df_polygon
 #     
 #     # bind_rows(
-#     #   
+#     #
 #     #   df_polygon,
-#     #   
+#     #
 #     #   tibble(x = 0, y = 1)
-#     #   
+#     #
 #     # ) -> df_polygon
 #     
 #     # df_polygon[c(
@@ -1260,7 +1142,7 @@ fun_acti_type <- function(
 #     #   nrow(df_polygon)
 #     # ), ] -> df_polygon
 #     
-#     df_polygon[c(1:4, 4), ] -> 
+#     df_polygon[c(1:4, 4), ] ->
 #       df_polygon
 #     
 #     c(1, 2, 1, 1, 2) ->
@@ -1275,9 +1157,8 @@ fun_acti_type <- function(
 #       )) +
 #       geom_line(
 #         color = '#212121',
-#         alpha = 0.8,
 #         size = 1.5
-#       ) + 
+#       ) +
 #       geom_point(
 #         color = 'red'
 #         , size = 20
@@ -1309,9 +1190,8 @@ fun_acti_type <- function(
 #       )) +
 #       geom_line(
 #         color = '#212121',
-#         alpha = 0.8,
 #         size = 1.5
-#       ) + 
+#       ) +
 #       geom_point(
 #         color = 'red'
 #         , size = 20
@@ -1325,71 +1205,50 @@ fun_acti_type <- function(
 #     
 #     bind_rows(
 #       
-#       fun_acti_plot_polygon(3) %>% 
-#         mutate(group = 1) %>% 
+#       fun_acti_plot_polygon(3) %>%
 #         fun_acti_plot_rotate(
 #           dbl_theta = -pi/2
-#         ) %>% 
-#         mutate(x = x + 2),
+#         ) %>%
+#         mutate(
+#           x = x + 2,
+#           group = c(
+#             1, 2, 1
+#           )
+#         ),
 #       
-#       fun_acti_plot_polygon(3) %>% 
-#         mutate(group = 2) %>% 
+#       fun_acti_plot_polygon(3) %>%
 #         fun_acti_plot_rotate(
 #           dbl_theta = pi/2
-#         ) %>% 
-#         mutate(x = x - 2)
+#         ) %>%
+#         mutate(
+#           x = x - 2,
+#           group = c(
+#             2, 1, 1
+#           )
+#         )
 #       
 #     ) -> df_polygon
 #     
-#     # bind_rows(
-#     #   
-#     #   fun_acti_plot_rotate(
-#     #     fun_acti_plot_polygon(3)
-#     #     , dbl_theta = -pi/2
-#     #   ) %>% mutate(x = x + 2),
-#     #   
-#     #   fun_acti_plot_rotate(
-#     #     fun_acti_plot_polygon(3)
-#     #     , dbl_theta = pi/2
-#     #   ) %>% mutate(x = x - 2)
-#     #   
-#     # ) -> df_polygon
+#     bind_rows(
+#       
+#       df_polygon,
+#       
+#       df_polygon %>% 
+#         slice(3, 6) %>%
+#         mutate(group = 2)
+#       
+#     ) -> df_polygon
 #     
-#     # bind_rows(
-#     #   
-#     #   df_polygon,
-#     #   
-#     #   tibble(x = 0, y = 1)
-#     #   
-#     # ) -> df_polygon
-#     
-#     # df_polygon[c(
-#     #   1:nrow(df_polygon),
-#     #   nrow(df_polygon)
-#     # ), ] -> df_polygon
-#     
-#     # df_polygon[c(
-#     #   1:6, 3, 6
-#     # ), ] -> df_polygon
-#     # 
-#     # round(df_polygon, 1)
-#     # 
-#     # c(1, 1, 1, 2, 2, 2, 3, 3) ->
-#     #   df_polygon$
-#     #   group
-#     
-#     df_polygon %>% 
+#     df_polygon %>%
 #       ggplot(aes(
 #         x = x,
 #         y = y,
-#         # group = group
+#         group = group
 #       )) +
-#       # geom_line(
-#       geom_path(
+#       geom_line(
 #         color = '#212121',
-#         alpha = 0.8,
 #         size = 1.5
-#       ) + 
+#       ) +
 #       geom_point(
 #         color = 'red'
 #         , size = 20
@@ -1403,25 +1262,52 @@ fun_acti_type <- function(
 #     
 #     bind_rows(
 #       
-#       fun_acti_plot_rotate(
-#         fun_acti_plot_polygon(3)
-#         , dbl_theta = -pi/2
-#       ) %>% mutate(x = x + 3),
+#       fun_acti_plot_polygon(3) %>%
+#         fun_acti_plot_rotate(
+#           dbl_theta = -pi/2
+#         ) %>% 
+#         mutate(
+#           x = x + 3,
+#           group = c(
+#             1, 2, 1
+#           )
+#         ),
 #       
-#       fun_acti_plot_rotate(
-#         fun_acti_plot_polygon(3)
-#         , dbl_theta = pi/2
-#       ) %>% mutate(x = x - 3),
+#       fun_acti_plot_polygon(3) %>% 
+#         fun_acti_plot_rotate(
+#           dbl_theta = pi/2
+#         ) %>% 
+#         mutate(
+#           x = x - 3,
+#           group = c(
+#             2, 1, 1
+#           )
+#         ),
 #       
 #       tibble(x = 0, y = 0)
+#       
+#     ) -> df_polygon
+#     
+#     bind_rows(
+#       
+#       df_polygon,
+#       
+#       df_polygon %>% 
+#         slice(3, 6) %>%
+#         mutate(group = 2)
 #       
 #     ) -> df_polygon
 #     
 #     df_polygon %>%
 #       ggplot(aes(
 #         x = x,
-#         y = y
+#         y = y,
+#         group = group
 #       )) +
+#       geom_line(
+#         color = '#212121',
+#         size = 1.5
+#       ) +
 #       geom_point(
 #         color = 'red'
 #         , size = 20
@@ -1442,9 +1328,9 @@ fun_acti_type <- function(
 #     #     fun_acti_plot_polygon(2)
 #     #     , dbl_theta = pi/2
 #     #   ) %>% mutate(x = x - 2.25)
-#     #   , fun_acti_plot_polygon(2) %>% 
+#     #   , fun_acti_plot_polygon(2) %>%
 #     #     mutate(x = x - 1.25)
-#     #   , fun_acti_plot_polygon(2) %>% 
+#     #   , fun_acti_plot_polygon(2) %>%
 #     #     mutate(x = x + 1.25)
 #     # ) -> df_polygon
 #     
@@ -1462,23 +1348,54 @@ fun_acti_type <- function(
 #     
 #     bind_rows(
 #       
-#       fun_acti_plot_rotate(
-#         fun_acti_plot_polygon(4)
-#         , dbl_theta = -pi/2
-#       ) %>% mutate(x = x + 1.75),
+#       fun_acti_plot_polygon(4) %>%
+#         fun_acti_plot_rotate(
+#           dbl_theta = -pi/2
+#         ) %>% 
+#         mutate(
+#           x = x + 1.75,
+#           group = c(
+#             2, 1, 3, 1
+#           )
+#         ),
 #       
-#       fun_acti_plot_rotate(
-#         fun_acti_plot_polygon(4)
-#         , dbl_theta = pi/2
-#       ) %>% mutate(x = x - 1.75)
+#       fun_acti_plot_polygon(4) %>%
+#         fun_acti_plot_rotate(
+#           dbl_theta = pi/2
+#         ) %>% 
+#         mutate(
+#           x = x - 1.75,
+#           group = c(
+#             3, 1, 2, 1
+#           )
+#         )
+#       
+#     ) -> df_polygon
+#     
+#     bind_rows(
+#       
+#       df_polygon,
+#       
+#       df_polygon %>%
+#         slice(4, 8) %>% 
+#         mutate(group = 2),
+#       
+#       df_polygon %>%
+#         slice(4, 8) %>% 
+#         mutate(group = 3)
 #       
 #     ) -> df_polygon
 #     
 #     df_polygon %>%
 #       ggplot(aes(
 #         x = x,
-#         y = y
+#         y = y,
+#         group = group
 #       )) +
+#       geom_line(
+#         color = '#212121',
+#         size = 1.5
+#       ) +
 #       geom_point(
 #         color = 'red'
 #         , size = 20
@@ -1492,27 +1409,56 @@ fun_acti_type <- function(
 #     
 #     bind_rows(
 #       
-#       fun_acti_plot_rotate(
-#         fun_acti_plot_polygon(3)
-#         , dbl_theta = -pi/2
-#       ) %>% mutate(x = x + 3),
+#       fun_acti_plot_polygon(3) %>%
+#         fun_acti_plot_rotate(
+#           dbl_theta = -pi/2
+#         ) %>% 
+#         mutate(
+#           x = x + 3,
+#           group = c(
+#             2, 1, 2
+#           )
+#         ),
 #       
-#       fun_acti_plot_rotate(
-#         fun_acti_plot_polygon(3)
-#         , dbl_theta = pi/2
-#       ) %>% mutate(x = x - 3),
+#       fun_acti_plot_polygon(3) %>%
+#         fun_acti_plot_rotate(
+#           dbl_theta = pi/2
+#         ) %>% 
+#         mutate(
+#           x = x - 3,
+#           group = c(
+#             1, 2, 2
+#           )
+#         ),
 #       
-#       fun_acti_plot_polygon(2),
+#       fun_acti_plot_polygon(2) %>% 
+#         mutate(group = 3),
 #       
-#       tibble(x = 0, y = 0)
+#       tibble(x = 0, y = 0) %>% 
+#         mutate(group = 2)
+#       
+#     ) -> df_polygon
+#     
+#     bind_rows(
+#       
+#       df_polygon,
+#       
+#       df_polygon %>% 
+#         slice(3, 6, 9) %>% 
+#         mutate(group = 1),
 #       
 #     ) -> df_polygon
 #     
 #     df_polygon %>%
 #       ggplot(aes(
 #         x = x,
-#         y = y
+#         y = y,
+#         group = group
 #       )) +
+#       geom_line(
+#         color = '#212121',
+#         size = 1.5
+#       ) +
 #       geom_point(
 #         color = 'red'
 #         , size = 20
@@ -1524,22 +1470,51 @@ fun_acti_type <- function(
 #   
 #   if(nrow(df_acti) == 10){
 #     
-#     # bind_rows(
-#     #   bind_rows(
-#     #     fun_acti_plot_rotate(
-#     #       fun_acti_plot_polygon(4)
-#     #       , dbl_theta = -pi/2
-#     #     )
-#     #     , tibble(x = 0, y = 0)
-#     #   ) %>% mutate(x = x + 1.5)
-#     #   , bind_rows(
-#     #     fun_acti_plot_rotate(
-#     #       fun_acti_plot_polygon(4)
-#     #       , dbl_theta = pi/2
-#     #     )
-#     #     , tibble(x = 0, y = 0)
-#     #   ) %>% mutate(x = x - 1.5)
-#     # ) -> df_polygon
+#     bind_rows(
+#       
+#       bind_rows(
+#         
+#         fun_acti_plot_polygon(4) %>%
+#           fun_acti_plot_rotate(
+#             # dbl_theta = -pi/2
+#             dbl_theta = -pi/4
+#             # dbl_theta = -pi/3
+#             # dbl_theta = -pi/6
+#             # dbl_theta = -pi/9
+#           ),
+#         
+#         tibble(x = 0, y = 0)
+#         
+#       ) %>% 
+#         mutate(
+#           x = x + 1.5,
+#           group = c(
+#             1, 2, 1, 2, 2
+#           )
+#         ), 
+#       
+#       bind_rows(
+#         
+#         fun_acti_plot_polygon(4) %>%
+#           fun_acti_plot_rotate(
+#             # dbl_theta = pi/2
+#             dbl_theta = pi/4
+#             # dbl_theta = pi/3
+#             # dbl_theta = pi/6
+#             # dbl_theta = pi/9
+#           ),
+#         
+#         tibble(x = 0, y = 0)
+#         
+#       ) %>% 
+#         mutate(
+#           x = x - 1.5,
+#           group = c(
+#             3, 2, 3, 2, 2
+#           )
+#         )
+#       
+#     ) -> df_polygon
 #     
 #     # bind_rows(
 #     #   tibble(x = 0, y = 0)
@@ -1557,62 +1532,59 @@ fun_acti_type <- function(
 #     #     x = x - 2.5,
 #     #     y = y + 1
 #     #   )
-#     #   , fun_acti_plot_polygon(3) %>% 
-#     #     mutate(y = y - 3) 
+#     #   , fun_acti_plot_polygon(3) %>%
+#     #     mutate(y = y - 3)
 #     # ) -> df_polygon
 #     
 #     # bind_rows(
-#     #   tibble(x = 0, y = 0)
-#     #   , fun_acti_plot_polygon(3) %>% 
-#     #     mutate(y = y - 3)
-#     #   , fun_acti_plot_rotate(
-#     #     fun_acti_plot_polygon(3)
-#     #     , dbl_theta = 4*pi/3
-#     #   ) %>% mutate(
-#     #     x = x - 2
-#     #     , y = y + 2
-#     #   )
-#     #   , fun_acti_plot_rotate(
-#     #     fun_acti_plot_polygon(3)
-#     #     , dbl_theta = -4*pi/3
-#     #   ) %>% mutate(
-#     #     x = x + 2
-#     #     , y = y + 2
-#     #   )
+#     # 
+#     #   fun_acti_plot_polygon(3) %>%
+#     #     mutate(
+#     #       y = y - 3,
+#     #       group = 1
+#     #       ),
+#     # 
+#     #   fun_acti_plot_polygon(3) %>%
+#     #     mutate(
+#     #       y = y - 3,
+#     #       group = 2
+#     #       ) %>%
+#     #     fun_acti_plot_rotate(
+#     #       dbl_theta = -pi/2
+#     #     ),
+#     # 
+#     #   fun_acti_plot_polygon(3) %>%
+#     #     mutate(
+#     #       y = y - 3,
+#     #       group = 3
+#     #       ) %>%
+#     #     fun_acti_plot_rotate(
+#     #       dbl_theta = pi/2
+#     #     ),
+#     # 
+#     #   tibble(x = 0, y = 0) %>%
+#     #     mutate(group = 4)
+#     # 
 #     # ) -> df_polygon
-#     
-#     bind_rows(
-#       
-#       fun_acti_plot_polygon(3) %>% 
-#         mutate(y = y - 3),
-#       
-#       fun_acti_plot_rotate(
-#         fun_acti_plot_polygon(3) %>% 
-#           mutate(y = y - 3)
-#         , dbl_theta = -(pi/2)
-#       ),
-#       
-#       fun_acti_plot_rotate(
-#         fun_acti_plot_polygon(3) %>% 
-#           mutate(y = y - 3)
-#         , dbl_theta = pi/2
-#       ),
-#       
-#       tibble(x = 0, y = 0)
-#       
-#     ) -> df_polygon
 #     
 #     df_polygon %>%
 #       ggplot(aes(
 #         x = x,
-#         y = y
+#         y = y,
+#         group = group
 #       )) +
+#       geom_line(
+#         color = '#212121',
+#         size = 1.5
+#       ) +
 #       geom_point(
 #         color = 'red'
 #         , size = 20
 #       ) +
-#       xlim(c(-4, 4)) +
-#       ylim(c(-4, 1.5))
+#       xlim(c(-3, 3)) + 
+#       ylim(c(-1.5, 1.5))
+#     # xlim(c(-4, 4)) +
+#     # ylim(c(-4, 1.5))
 #     
 #   }
 #   
@@ -1620,33 +1592,76 @@ fun_acti_type <- function(
 #     
 #     bind_rows(
 #       
-#       fun_acti_plot_rotate(
-#         fun_acti_plot_polygon(2)
-#         , dbl_theta = -pi/2
-#       ) %>% mutate(x = x + 3),
-#       
-#       fun_acti_plot_rotate(
-#         fun_acti_plot_polygon(2)
-#         , dbl_theta = pi/2
-#       ) %>% mutate(x = x - 3),
-#       
-#       fun_acti_plot_polygon(2),
+#       fun_acti_plot_polygon(2) %>% 
+#         fun_acti_plot_rotate(
+#           dbl_theta = -pi/2
+#         ) %>% 
+#         mutate(
+#           x = x + 3,
+#           group = c(
+#             4, 4
+#           )
+#         ),
 #       
 #       fun_acti_plot_polygon(2) %>% 
-#         mutate(x = x - 3), 
+#         fun_acti_plot_rotate(
+#           dbl_theta = pi/2
+#         ) %>% 
+#         mutate(
+#           x = x - 3,
+#           group = c(
+#             4, 4
+#           )
+#         ),
 #       
 #       fun_acti_plot_polygon(2) %>% 
-#         mutate(x = x + 3),
+#         mutate(group = 1),
 #       
-#       tibble(x = 0, y = 0)
+#       fun_acti_plot_polygon(2) %>%
+#         mutate(
+#           x = x - 3,
+#           group = c(
+#             2, 3
+#           )
+#         ),
+#       
+#       fun_acti_plot_polygon(2) %>%
+#         mutate(
+#           x = x + 3,
+#           group = c(
+#             2, 3
+#           )
+#         ),
+#       
+#       tibble(x = 0, y = 0) %>%
+#         mutate(group = 1)
+#       
+#     ) -> df_polygon
+#     
+#     bind_rows(
+#       
+#       df_polygon,
+#       
+#       df_polygon %>% 
+#         slice(2, 4) %>% 
+#         mutate(group = 2),
+#       
+#       df_polygon %>% 
+#         slice(2, 4) %>% 
+#         mutate(group = 3)
 #       
 #     ) -> df_polygon
 #     
 #     df_polygon %>%
 #       ggplot(aes(
 #         x = x,
-#         y = y
+#         y = y,
+#         group = group
 #       )) +
+#       geom_line(
+#         color = '#212121',
+#         size = 1.5
+#       ) +
 #       geom_point(
 #         color = 'red'
 #         , size = 20
@@ -1660,15 +1675,22 @@ fun_acti_type <- function(
 #     
 #     bind_rows(
 #       
-#       fun_acti_plot_rotate(
-#         fun_acti_plot_polygon(3)
-#         , dbl_theta = -pi/2
-#       ) %>% mutate(x = x + 2),
+#       fun_acti_plot_polygon(3) %>% 
+#         
+#         fun_acti_plot_rotate(
+#           dbl_theta = -pi/2
+#         ) %>% 
+#         mutate(
+#           x = x + 2
+#         ),
 #       
-#       fun_acti_plot_rotate(
-#         fun_acti_plot_polygon(3)
-#         , dbl_theta = pi/2
-#       ) %>% mutate(x = x - 2)
+#       fun_acti_plot_polygon(3) %>% 
+#         fun_acti_plot_rotate(
+#           dbl_theta = pi/2
+#         ) %>% 
+#         mutate(
+#           x = x - 2
+#         )
 #       
 #     ) -> df_polygon
 #     
@@ -1676,22 +1698,30 @@ fun_acti_type <- function(
 #       
 #       df_polygon,
 #       
-#       fun_acti_plot_rotate(
-#         df_polygon
-#         , dbl_theta = pi/2
-#       )
+#       df_polygon %>% 
+#         fun_acti_plot_rotate(
+#           dbl_theta = pi/2
+#         ) %>% 
+#         mutate(
+#           # group = 2
+#         )
 #       
 #     ) -> df_polygon
 #     
 #     df_polygon %>%
 #       ggplot(aes(
 #         x = x,
-#         y = y
+#         y = y,
+#         # group = group
 #       )) +
+#       # geom_line(
+#       #   color = '#212121',
+#       #   size = 1.5
+#       # ) +
 #       geom_point(
 #         color = 'red'
 #         , size = 20
-#       ) + 
+#       ) +
 #       # xlim(c(-3, 3)*2) +
 #       xlim(c(-3, 3)) +
 #       ylim(c(-3, 3))
@@ -1702,15 +1732,21 @@ fun_acti_type <- function(
 #     
 #     bind_rows(
 #       
-#       fun_acti_plot_rotate(
-#         fun_acti_plot_polygon(3)
-#         , dbl_theta = -pi/2
-#       ) %>% mutate(x = x + 3),
+#       fun_acti_plot_polygon(3) %>% 
+#         fun_acti_plot_rotate(
+#           dbl_theta = -pi/2
+#         ) %>% 
+#         mutate(
+#           x = x + 3
+#         ),
 #       
-#       fun_acti_plot_rotate(
-#         fun_acti_plot_polygon(3)
-#         , dbl_theta = pi/2
-#       ) %>% mutate(x = x - 3),
+#       fun_acti_plot_polygon(3) %>% 
+#         fun_acti_plot_rotate(
+#           dbl_theta = pi/2
+#         ) %>% 
+#         mutate(
+#           x = x - 3
+#         ),
 #       
 #       tibble(x = 0, y = 0)
 #       
@@ -1720,10 +1756,10 @@ fun_acti_type <- function(
 #       
 #       df_polygon,
 #       
-#       fun_acti_plot_rotate(
-#         df_polygon
-#         , dbl_theta = pi/2
-#       )
+#       df_polygon %>% 
+#         fun_acti_plot_rotate(
+#           dbl_theta = pi/2
+#         )
 #       
 #     ) -> df_polygon
 #     
@@ -1735,7 +1771,7 @@ fun_acti_type <- function(
 #       geom_point(
 #         color = 'red'
 #         , size = 20
-#       ) + 
+#       ) +
 #       xlim(c(-4, 4)) +
 #       ylim(c(-4, 4))
 #     
@@ -1747,83 +1783,119 @@ fun_acti_type <- function(
 #       
 #       bind_rows(
 #         
-#         fun_acti_plot_rotate(
-#           fun_acti_plot_polygon(4)
-#           , dbl_theta = -pi/2
-#         ),
+#         fun_acti_plot_polygon(4) %>% 
+#           fun_acti_plot_rotate(
+#             dbl_theta = -pi/2
+#           ),
 #         
 #         tibble(x = 0, y = 0)
 #         
-#         # ) %>% mutate(x = x + 1.5),
-#       ) %>% mutate(x = x + c(
-#         2, 1.5, 2, 1.5, 1.5
-#       )),
+#       ) %>% 
+#         mutate(
+#           x = x + c(
+#             2, 1.5, 2, 1.5, 1.5
+#           ),
+#           group = c(
+#             2, 1, 3, 1, 1
+#           )
+#         ),
 #       
 #       bind_rows(
 #         
-#         fun_acti_plot_rotate(
-#           fun_acti_plot_polygon(4)
-#           , dbl_theta = pi/2
-#         ), 
+#         fun_acti_plot_polygon(4) %>% 
+#           fun_acti_plot_rotate(
+#             dbl_theta = pi/2
+#           ),
 #         
 #         tibble(x = 0, y = 0)
 #         
-#       ) %>% mutate(x = x - c(
-#         2, 1.5, 2, 1.5, 1.5
-#       )), 
+#       ) %>% 
+#         mutate(
+#           x = x - c(
+#             2, 1.5, 2, 1.5, 1.5
+#           ),
+#           group = c(
+#             3, 1, 2, 1, 1 
+#           )
+#         ),
 #       
-#       fun_acti_plot_polygon(2) %>% 
-#         mutate(x = x - 0.5),
+#       fun_acti_plot_polygon(2) %>%
+#         mutate(
+#           x = x - 0.5,
+#           group = 4
+#         ),
 #       
-#       fun_acti_plot_polygon(2) %>% 
-#         mutate(x = x + 0.5),
+#       fun_acti_plot_polygon(2) %>%
+#         mutate(
+#           x = x + 0.5,
+#           group = 5
+#         ),
+#       
+#     ) -> df_polygon
+#     
+#     bind_rows(
+#       
+#       df_polygon,
+#       
+#       df_polygon %>% 
+#         slice(5, 10) %>% 
+#         mutate(group = 2),
+#       
+#       df_polygon %>% 
+#         slice(5, 10) %>%
+#         mutate(group = 3),
 #       
 #     ) -> df_polygon
 #     
 #     df_polygon %>%
 #       ggplot(aes(
 #         x = x,
-#         y = y
+#         y = y,
+#         group = group
 #       )) +
+#       geom_line(
+#         color = '#212121',
+#         size = 1.5
+#       ) +
 #       geom_point(
 #         color = 'red'
 #         , size = 20
-#       ) + 
+#       ) +
 #       xlim(c(-2.5, 2.5)) +
 #       ylim(c(-1.5, 1.5))
 #     
 #   }
 #   
-#   df_acti %>% 
+#   df_acti %>%
 #     ggplot(aes(
 #       x = x,
 #       y = y,
 #       color = color,
 #       group = group
-#     )) + 
+#     )) +
 #     geom_line(
 #       size = 2,
 #       color = '#212121'
-#     ) + 
+#     ) +
 #     geom_point(
 #       size = 10
-#     ) + 
-#     xlim(c(1, 14)) + 
-#     ylim(c(1, 14)) + 
+#     ) +
+#     xlim(c(1, 14)) +
+#     ylim(c(1, 14)) +
 #     guides(
 #       size = 'none',
 #       color = 'none'
-#     ) + 
+#     ) +
 #     scale_color_manual(
 #       values = c(
-#         viridis(nrow(df_acti)) %>% 
+#         viridis(nrow(df_acti)) %>%
 #           set_names(
 #             df_acti$factor
 #           )
 #         , 'aux' = 'lightgrey'
 #       )
 #     ) +
-#     theme_void() -> 
+#     theme_void() ->
 #     plt_acti_molecule
 #   
 #   rm(df_acti)
@@ -1832,31 +1904,806 @@ fun_acti_type <- function(
 #   return(plt_acti_molecule)
 #   
 # }
-# 
-# # - ACTI molecule plotting function ---------------------------------------
-# fun_acti_plot_molecule <- function(df_acti, dbl_generalism){
-#   
-#   # Arguments validation
-#   stopifnot(
-#     "'df_acti' must be a ACTI data frame." = 
-#       any(class(df_acti) == 'df_acti')
-#   )
-#   
-#   # Data wrangling
-#   
-#   # If generalist, call generalist function
-#   fun_acti_plot_generalist(df_acti) -> 
-#     plot_acti_molecule
-#   
-#   # If specialist, call specialist function
-#   fun_acti_plot_specialist(df_acti) -> 
-#     plot_acti_molecule
-#   
-#   # Output
-#   return(plot_acti_molecule)
-#   
-# }
-# 
+
+# - ACTI generalist plotting function ------------------------------
+# Specialist plotting function
+fun_acti_plot_specialist <- function(df_acti){
+  
+  # Arguments validation
+  stopifnot(
+    "'df_acti' must be a data frame of the 'df_acti' class." =
+      any(class(df_acti) == 'df_acti')
+  )
+  
+  # Specialist molecule helper functions
+  if(nrow(df_acti) == 1){
+    
+    fun_acti_plot_polygon(1) %>%
+      mutate(y = y - 0.75) ->
+      df_polygon
+    
+    df_polygon %>%
+      ggplot(aes(
+        x = x,
+        y = y
+      )) +
+      geom_point(
+        color = 'green'
+        , size = 20
+      ) +
+      xlim(c(-2, 2)) +
+      ylim(c(-2, 2))
+    
+  }
+  
+  if(nrow(df_acti) == 2){
+    
+    fun_acti_plot_polygon(2) %>% 
+      fun_acti_plot_rotate(
+        dbl_theta = pi/2
+      ) -> df_polygon
+    
+    df_polygon$group <- 1
+    
+    df_polygon %>%
+      ggplot(aes(
+        x = x,
+        y = y,
+        group = group
+      )) +
+      geom_line(
+        color = '#212121',
+        size = 1.5
+      ) +
+      geom_point(
+        color = 'green'
+        , size = 20
+      ) +
+      xlim(c(-4, 4)) +
+      ylim(c(-2, 2))
+    
+  }
+  
+  if(nrow(df_acti) == 3){
+    
+    fun_acti_plot_polygon(3) ->
+      df_polygon
+    
+    df_polygon %>%
+      ggplot(aes(
+        x = x,
+        y = y
+      )) +
+      geom_polygon(
+        color = '#212121',
+        size = 1.5,
+        fill = NA
+      ) +
+      geom_point(
+        color = 'green'
+        , size = 20
+      ) +
+      xlim(c(-2, 2)) +
+      ylim(c(-2, 2))
+    
+  }
+  
+  if(nrow(df_acti) == 4){
+    
+    fun_acti_plot_polygon(4) ->
+      df_polygon
+    
+    df_polygon %>%
+      ggplot(aes(
+        x = x,
+        y = y
+      )) +
+      geom_polygon(
+        color = '#212121',
+        size = 1.5,
+        fill = NA
+      ) +
+      geom_point(
+        color = 'green'
+        , size = 20
+      ) +
+      xlim(c(-2, 2)) +
+      ylim(c(-2, 2))
+    
+  }
+  
+  if(nrow(df_acti) == 5){
+    
+    fun_acti_plot_polygon(5) -> 
+      df_polygon
+    
+    df_polygon %>%
+      ggplot(aes(
+        x = x,
+        y = y
+      )) +
+      geom_polygon(
+        color = '#212121',
+        size = 1.5,
+        fill = NA
+      ) +
+      geom_point(
+        color = 'green'
+        , size = 20
+      ) +
+      xlim(c(-2.25, 2.25)) +
+      ylim(c(-1.25, 1.25))
+    
+  }
+  
+  if(nrow(df_acti) == 6){
+    
+    fun_acti_plot_polygon(6) %>% 
+      fun_acti_plot_rotate(
+        dbl_theta = pi/2
+      ) -> 
+      df_polygon
+    
+    df_polygon %>%
+      ggplot(aes(
+        x = x,
+        y = y
+      )) +
+      geom_polygon(
+        color = '#212121',
+        size = 1.5,
+        fill = NA
+      ) +
+      geom_point(
+        color = 'green'
+        , size = 20
+      ) +
+      xlim(c(-1.5, 1.5)) +
+      ylim(c(-1.5, 1.5))
+    
+  }
+  
+  if(nrow(df_acti) == 7){
+    
+    df_polygon %>%
+      ggplot(aes(
+        x = x,
+        y = y
+      )) +
+      geom_polygon(
+        color = '#212121',
+        size = 1.5,
+        fill = NA
+      ) +
+      geom_point(
+        color = 'green'
+        , size = 20
+      ) +
+      xlim(c(-4, 4)) +
+      ylim(c(-1.25, 1.25))
+    
+  }
+  
+  if(nrow(df_acti) == 8){
+    
+    fun_acti_plot_polygon(6) %>% 
+      fun_acti_plot_rotate(
+        dbl_theta = pi/2
+      ) -> df_polygon
+    
+      bind_rows(
+        
+        df_polygon %>% 
+          mutate(
+            x = x * 1.5
+          ),
+        
+        fun_acti_plot_polygon(2)
+        
+      ) -> df_polygon
+      
+      df_polygon %>%
+        slice(
+          3, 
+          4, 8, 5,
+          6,
+          1, 7, 2
+        ) -> df_polygon
+      
+      df_polygon[
+        round(df_polygon$y, 1) > 0, 
+      ]$y <- 1
+      
+      df_polygon[
+        round(df_polygon$y, 1) < 0, 
+      ]$y <- -1
+      
+    df_polygon %>%
+      ggplot(aes(
+        x = x,
+        y = y
+      )) +
+      geom_polygon(
+        color = '#212121',
+        size = 1.5,
+        fill = NA
+      ) +
+      geom_point(
+        color = 'green'
+        , size = 20
+      ) +
+      xlim(c(-2.25, 2.25)) +
+      ylim(c(-1.5, 1.5))
+    
+  }
+  
+  if(nrow(df_acti) == 9){
+    
+    bind_rows(
+      
+      fun_acti_plot_polygon(3) %>%
+        fun_acti_plot_rotate(
+          dbl_theta = -pi/2
+        ) %>% 
+        mutate(
+          x = x + 3,
+          group = c(
+            2, 1, 2
+          )
+        ),
+      
+      fun_acti_plot_polygon(3) %>%
+        fun_acti_plot_rotate(
+          dbl_theta = pi/2
+        ) %>% 
+        mutate(
+          x = x - 3,
+          group = c(
+            1, 2, 2
+          )
+        ),
+      
+      fun_acti_plot_polygon(2) %>% 
+        mutate(group = 3),
+      
+      tibble(x = 0, y = 0) %>% 
+        mutate(group = 2)
+      
+    ) -> df_polygon
+    
+    bind_rows(
+      
+      df_polygon,
+      
+      df_polygon %>% 
+        slice(3, 6, 9) %>% 
+        mutate(group = 1),
+      
+    ) -> df_polygon
+    
+    df_polygon %>%
+      ggplot(aes(
+        x = x,
+        y = y,
+        group = group
+      )) +
+      geom_line(
+        color = '#212121',
+        size = 1.5
+      ) +
+      geom_point(
+        color = 'green'
+        , size = 20
+      ) +
+      xlim(c(-4, 4)) +
+      ylim(c(-1.25, 1.25))
+    
+  }
+  
+  if(nrow(df_acti) == 10){
+    
+    bind_rows(
+      
+      fun_acti_plot_polygon(3) %>% 
+        fun_acti_plot_rotate(
+          dbl_theta = -pi/2
+        ) %>% 
+        mutate(
+          x = x - 2,
+          y = y * 3
+        ),
+      
+      fun_acti_plot_polygon(3) %>% 
+        fun_acti_plot_rotate(
+          dbl_theta = pi/2
+        ) %>% 
+        mutate(
+          x = x + 2,
+          y = y * 3
+        ),
+      
+      fun_acti_plot_polygon(4) %>% 
+        fun_acti_plot_rotate(
+          dbl_theta = pi/2
+        ) %>%
+        mutate(
+          y = y * 2
+        )
+      
+    ) -> df_polygon
+    
+    
+    bind_rows(
+      
+      bind_rows(
+        
+        fun_acti_plot_polygon(4) %>%
+          fun_acti_plot_rotate(
+            # dbl_theta = -pi/2
+            dbl_theta = -pi/4
+            # dbl_theta = -pi/3
+            # dbl_theta = -pi/6
+            # dbl_theta = -pi/9
+          ),
+        
+        tibble(x = 0, y = 0)
+        
+      ) %>% 
+        mutate(
+          x = x + 1.5,
+          group = c(
+            1, 2, 1, 2, 2
+          )
+        ), 
+      
+      bind_rows(
+        
+        fun_acti_plot_polygon(4) %>%
+          fun_acti_plot_rotate(
+            # dbl_theta = pi/2
+            dbl_theta = pi/4
+            # dbl_theta = pi/3
+            # dbl_theta = pi/6
+            # dbl_theta = pi/9
+          ),
+        
+        tibble(x = 0, y = 0)
+        
+      ) %>% 
+        mutate(
+          x = x - 1.5,
+          group = c(
+            3, 2, 3, 2, 2
+          )
+        )
+      
+    ) -> df_polygon
+    
+    df_polygon %>%
+      ggplot(aes(
+        x = x,
+        y = y
+      )) +
+      # geom_line(
+      #   color = '#212121',
+      #   size = 1.5
+      # ) +
+      geom_point(
+        color = 'green'
+        , size = 20
+      ) +
+      xlim(c(-3.5, 3.5)) + 
+      ylim(c(-3, 3)) 
+    # xlim(c(-4, 4)) +
+    # ylim(c(-4, 1.5))
+    
+  }
+  
+  if(nrow(df_acti) == 11){
+    
+    bind_rows(
+      
+      fun_acti_plot_polygon(2) %>% 
+        fun_acti_plot_rotate(
+          dbl_theta = -pi/2
+        ) %>% 
+        mutate(
+          x = x + 3,
+          group = c(
+            4, 4
+          )
+        ),
+      
+      fun_acti_plot_polygon(2) %>% 
+        fun_acti_plot_rotate(
+          dbl_theta = pi/2
+        ) %>% 
+        mutate(
+          x = x - 3,
+          group = c(
+            4, 4
+          )
+        ),
+      
+      fun_acti_plot_polygon(2) %>% 
+        mutate(group = 1),
+      
+      fun_acti_plot_polygon(2) %>%
+        mutate(
+          x = x - 3,
+          group = c(
+            2, 3
+          )
+        ),
+      
+      fun_acti_plot_polygon(2) %>%
+        mutate(
+          x = x + 3,
+          group = c(
+            2, 3
+          )
+        ),
+      
+      tibble(x = 0, y = 0) %>%
+        mutate(group = 1)
+      
+    ) -> df_polygon
+    
+    bind_rows(
+      
+      df_polygon,
+      
+      df_polygon %>% 
+        slice(2, 4) %>% 
+        mutate(group = 2),
+      
+      df_polygon %>% 
+        slice(2, 4) %>% 
+        mutate(group = 3)
+      
+    ) -> df_polygon
+    
+    df_polygon %>%
+      ggplot(aes(
+        x = x,
+        y = y,
+        group = group
+      )) +
+      geom_line(
+        color = '#212121',
+        size = 1.5
+      ) +
+      geom_point(
+        color = 'green'
+        , size = 20
+      ) +
+      xlim(c(-4, 4)) +
+      ylim(c(-1.25, 1.25))
+    
+  }
+  
+  if(nrow(df_acti) == 12){
+    
+    bind_rows(
+      
+      fun_acti_plot_polygon(3) %>% 
+        
+        fun_acti_plot_rotate(
+          dbl_theta = -pi/2
+        ) %>% 
+        mutate(
+          x = x + 2
+        ),
+      
+      fun_acti_plot_polygon(3) %>% 
+        fun_acti_plot_rotate(
+          dbl_theta = pi/2
+        ) %>% 
+        mutate(
+          x = x - 2
+        )
+      
+    ) -> df_polygon
+    
+    bind_rows(
+      
+      df_polygon,
+      
+      df_polygon %>% 
+        fun_acti_plot_rotate(
+          dbl_theta = pi/2
+        ) %>% 
+        mutate(
+          # group = 2
+        )
+      
+    ) -> df_polygon
+    
+    df_polygon %>%
+      ggplot(aes(
+        x = x,
+        y = y,
+        # group = group
+      )) +
+      # geom_line(
+      #   color = '#212121',
+      #   size = 1.5
+      # ) +
+      geom_point(
+        color = 'green'
+        , size = 20
+      ) +
+      # xlim(c(-3, 3)*2) +
+      xlim(c(-3, 3)) +
+      ylim(c(-3, 3))
+    
+  }
+  
+  if(nrow(df_acti) == 13){
+    
+    bind_rows(
+      
+      fun_acti_plot_polygon(3) %>% 
+        fun_acti_plot_rotate(
+          dbl_theta = -pi/2
+        ) %>% 
+        mutate(
+          x = x + 3
+        ),
+      
+      fun_acti_plot_polygon(3) %>% 
+        fun_acti_plot_rotate(
+          dbl_theta = pi/2
+        ) %>% 
+        mutate(
+          x = x - 3
+        ),
+      
+      tibble(x = 0, y = 0)
+      
+    ) -> df_polygon
+    
+    bind_rows(
+      
+      df_polygon,
+      
+      df_polygon %>% 
+        fun_acti_plot_rotate(
+          dbl_theta = pi/2
+        )
+      
+    ) -> df_polygon
+    
+    df_polygon %>%
+      ggplot(aes(
+        x = x,
+        y = y
+      )) +
+      geom_point(
+        color = 'green'
+        , size = 20
+      ) +
+      xlim(c(-4, 4)) +
+      ylim(c(-4, 4))
+    
+  }
+  
+  if(nrow(df_acti) == 14){
+    
+    bind_rows(
+      
+      bind_rows(
+        
+        fun_acti_plot_polygon(4) %>% 
+          fun_acti_plot_rotate(
+            dbl_theta = -pi/2
+          ),
+        
+        tibble(x = 0, y = 0)
+        
+      ) %>% 
+        mutate(
+          x = x + c(
+            2, 1.5, 2, 1.5, 1.5
+          ),
+          group = c(
+            2, 1, 3, 1, 1
+          )
+        ),
+      
+      bind_rows(
+        
+        fun_acti_plot_polygon(4) %>% 
+          fun_acti_plot_rotate(
+            dbl_theta = pi/2
+          ),
+        
+        tibble(x = 0, y = 0)
+        
+      ) %>% 
+        mutate(
+          x = x - c(
+            2, 1.5, 2, 1.5, 1.5
+          ),
+          group = c(
+            3, 1, 2, 1, 1 
+          )
+        ),
+      
+      fun_acti_plot_polygon(2) %>%
+        mutate(
+          x = x - 0.5,
+          group = 4
+        ),
+      
+      fun_acti_plot_polygon(2) %>%
+        mutate(
+          x = x + 0.5,
+          group = 5
+        ),
+      
+    ) -> df_polygon
+    
+    bind_rows(
+      
+      df_polygon,
+      
+      df_polygon %>% 
+        slice(5, 10) %>% 
+        mutate(group = 2),
+      
+      df_polygon %>% 
+        slice(5, 10) %>%
+        mutate(group = 3),
+      
+    ) -> df_polygon
+    
+    df_polygon %>%
+      ggplot(aes(
+        x = x,
+        y = y,
+        group = group
+      )) +
+      geom_line(
+        color = '#212121',
+        size = 1.5
+      ) +
+      geom_point(
+        color = 'green'
+        , size = 20
+      ) +
+      xlim(c(-2.5, 2.5)) +
+      ylim(c(-1.5, 1.5))
+    
+  }
+  
+  df_acti %>%
+    ggplot(aes(
+      x = x,
+      y = y,
+      color = color,
+      group = group
+    )) +
+    geom_line(
+      size = 2,
+      color = '#212121'
+    ) +
+    geom_point(
+      size = 10
+    ) +
+    xlim(c(1, 14)) +
+    ylim(c(1, 14)) +
+    guides(
+      size = 'none',
+      color = 'none'
+    ) +
+    scale_color_manual(
+      values = c(
+        viridis(nrow(df_acti)) %>%
+          set_names(
+            df_acti$factor
+          )
+        , 'aux' = 'lightgrey'
+      )
+    ) +
+    theme_void() ->
+    plt_acti_molecule
+  
+  rm(df_acti)
+  
+  # Output
+  return(plt_acti_molecule)
+  
+}
+
+bind_rows(
+  fun_acti_plot_rotate(
+    fun_acti_plot_polygon(4)
+    , dbl_theta = -3*pi/2
+  ) %>% mutate(x = x + 3.5)
+  , fun_acti_plot_rotate(
+    fun_acti_plot_polygon(4)
+    , dbl_theta = 3*pi/2
+  ) %>% mutate(x = x - 3.5)
+  , fun_acti_plot_polygon(2) %>%
+    mutate(x = x - 1.25)
+  , fun_acti_plot_polygon(2) %>%
+    mutate(x = x + 1.25)
+) -> df_polygon
+
+bind_rows(
+  tibble(x = 0, y = 0)
+  , df_polygon
+) -> df_polygon
+
+df_polygon %>%
+  ggplot(aes(
+    x = x,
+    y = y
+  )) +
+  geom_point(
+    color = 'green'
+    , size = 20
+  ) +
+  xlim(c(-5, 5)) +
+  ylim(c(-1.5, 1.5))
+
+bind_rows(
+  fun_acti_plot_rotate(
+    fun_acti_plot_polygon(2)
+    , dbl_theta = -3*pi/2
+  ) %>% mutate(x = x + 3.5)
+  , fun_acti_plot_rotate(
+    fun_acti_plot_polygon(2)
+    , dbl_theta = 3*pi/2
+  ) %>% mutate(x = x - 3.5)
+  , fun_acti_plot_polygon(2) %>%
+    mutate(x = x - 1.25)
+  , fun_acti_plot_polygon(2) %>%
+    mutate(x = x + 1.25)
+) -> df_polygon
+
+bind_rows(
+  tibble(x = 0, y = 0)
+  , df_polygon
+) -> df_polygon
+
+df_polygon %>%
+  ggplot(aes(
+    x = x,
+    y = y
+  )) +
+  geom_point(
+    color = 'green'
+    , size = 20
+  ) +
+  xlim(c(-5, 5)) +
+  ylim(c(-1.5, 1.5))
+
+# - ACTI molecule plotting function ---------------------------------------
+fun_acti_plot_molecule <- function(df_acti, dbl_generalism){
+  
+  # Arguments validation
+  stopifnot(
+    "'df_acti' must be a ACTI data frame." =
+      any(class(df_acti) == 'df_acti')
+  )
+  
+  # Data wrangling
+  
+  # If generalist, call generalist function
+  fun_acti_plot_generalist(df_acti) ->
+    plot_acti_molecule
+  
+  # If specialist, call specialist function
+  fun_acti_plot_specialist(df_acti) ->
+    plot_acti_molecule
+  
+  # Output
+  return(plot_acti_molecule)
+  
+}
+
 # dsdsds --------------------------------------------------------------------
 fun_acti_plot_polygon(3) -> dsdsds
 
