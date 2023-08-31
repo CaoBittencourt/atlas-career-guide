@@ -168,11 +168,12 @@ fun_appg_profile <- function(
       dbl_factor_preferences
       ){
         
-        1 - sum(((
-          mtx_factor_scores * dbl_item -
-            dbl_factor_pref
-        ) / nrow(mtx_factor_scores)) ^ 2) ->
+        1 - sum(((rowMeans(
+          mtx_factor_scores * dbl_item
+        ) - cbind(dbl_factor_pref)
+        ) ^ 2) / nrow(mtx_factor_scores)) ->
           dbl_utility
+        
         # 1 -
         #   sum(((
         #     mtx_factor_scores * dbl_item -
@@ -539,12 +540,21 @@ fun_ftools_factor_match(
       nth(2)
   )
 
+library(atlas.ftools)
+
 list_profile$
   profile %>% 
   as_tibble(
     rownames = 'item'
   ) %>% 
-  View
+  pivot_wider(
+    names_from = 'item'
+    , values_from = 'value'
+  ) %>% 
+  fun_ftools_factor_scores(
+    efa_model = 
+      efa_model
+  )
 
 # # dsds --------------------------------------------------------------------
 # view(dsds$profile)
