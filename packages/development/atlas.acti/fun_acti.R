@@ -1,37 +1,59 @@
 # [SETUP] -----------------------------------------------------------------
 # - Packages ----------------------------------------------------------------
-pkg <- c(
-  # 'bvls'
-  # , 'fastglm'
-  # , 'weights'
-  # 'atlas.ftools' #Factor analysis tools
-  'dplyr', 'tidyr'#, 'purrr' #Data wrangling
-  # , 'kselection' #K-means clustering
-  # , 'vctrs' #Data wrangling
-  # , 'atlas.skew'
-  , 'atlas.skew'
-  , 'atlas.ftools'
-  , 'atlas.plot' #temp
-  # , 'atlas.kcoef'
-  , 'atlas.eqvl'
-  , 'ggplot2'
-  # , 'igraph', 'networkD3'
-  , 'networkR'
-  , 'vctrs'
-  # , 'modeest' #Mode
+# CRAN packages
+chr_pkg <- c(
+  'devtools' #GitHub packages
+  , 'ggplot2' #Data visualization
+  , 'readr' #Read data (temp)
+  , 'vctrs' #Data frame subclasses
+  , 'tidyr', 'dplyr' #Data wrangling
 )
 
-# Activate / install packages
-lapply(pkg, function(x)
-  if(!require(x, character.only = T))
-  {install.packages(x); require(x)})
+# Git packages
+chr_git <- c(
+  'CaoBittencourt' = 'atlas.skew',
+  'CaoBittencourt' = 'atlas.ftools',
+  'CaoBittencourt' = 'atlas.eqvl'
+)
 
-# Package citation
-# lapply(pkg, function(x)
-#   {citation(package = x)})
+# Activate / install CRAN packages
+lapply(
+  chr_pkg
+  , function(pkg){
+    
+    if(!require(pkg, character.only = T)){
+      
+      install.packages(pkg)
+      
+    }
+    
+    require(pkg, character.only = T)
+    
+  }
+)
 
-# remotes::install_github('Van1yu3/SWKM')
-# library(SWKM)
+# Activate / install Git packages
+Map(
+  function(git, profile){
+    
+    if(!require(git, character.only = T)){
+      
+      install_github(
+        paste0(profile, '/', git)
+        , upgrade = F
+        , force = T
+      )
+      
+    }
+    
+    require(git, character.only = T)
+    
+  }
+  , git = chr_git
+  , profile = names(chr_git)
+)
+
+rm(chr_pkg, chr_git)
 
 # [FUNCTIONS] ---------------------------
 # - Generalism function ---------------------------------------------------
@@ -2465,32 +2487,14 @@ fun_acti_plot_molecule <- function(df_acti, dbl_generalism){
 }
 
 # dsdsds --------------------------------------------------------------------
-fun_acti_plot_polygon(3) -> dsdsds
-
-dsdsds %>% 
-  ggplot(aes(
-    x = x,
-    y = y
-  )) + 
-  geom_point(
-    size = 10
-    , color = 'blue'
+fun_acti_type(
+  df_data = 
+    df_occupations %>% 
+    slice_head(n = 1)
+  , efa_model =
+    efa_model
   )
 
-fun_acti_plot_rotate(
-  df_polygon = dsdsds
-  , dbl_theta = -pi/2
-) -> dsdsds
-
-dsdsds %>% 
-  ggplot(aes(
-    x = x,
-    y = y
-  )) + 
-  geom_point(
-    size = 10
-    , color = 'blue'
-  )
 
 # fun_acti_plot_displacement(
 #   int_nrow = nrow(dsdsds),
