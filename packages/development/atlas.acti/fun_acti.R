@@ -2217,10 +2217,11 @@ fun_acti_plot_specialist <- function(df_acti){
   } else if(nrow(df_acti) == 2){
     
     # Polygon
-    fun_acti_plot_polygon(2) ->
-      df_polygon
-    
-    df_polygon$group <- 1
+    fun_acti_plot_polygon(2) %>%
+      mutate(
+        rank = c(2, 1),
+        group = 1
+      ) -> df_polygon
     
     # Plot elements
     aes(x = x, y = y, group = group) -> aes_map
@@ -2231,10 +2232,11 @@ fun_acti_plot_specialist <- function(df_acti){
   } else if(nrow(df_acti) == 3){
     
     # Polygon
-    fun_acti_plot_polygon(3) ->
-      df_polygon
-    
-    df_polygon$group <- 1
+    fun_acti_plot_polygon(3) %>%
+      mutate(
+        rank = c(2, 3, 1),
+        group = 1
+      ) -> df_polygon
     
     # Plot elements
     aes(x = x, y = y, group = group) -> aes_map
@@ -2248,12 +2250,12 @@ fun_acti_plot_specialist <- function(df_acti){
     fun_acti_plot_polygon(4) ->
       df_polygon
     
-    df_polygon[c(1:4, 4), ] ->
-      df_polygon
-    
-    c(1, 2, 1, 1, 2) ->
-      df_polygon$
-      group
+    df_polygon %>% 
+      slice(1:4, 4) %>%
+      mutate(
+        rank = c(2, 4, 3, 1, 1),
+        group = c(1, 2, 1, 1, 2)
+      ) -> df_polygon
     
     # Plot elements
     aes(x = x, y = y, group = group) -> aes_map
@@ -2272,9 +2274,11 @@ fun_acti_plot_specialist <- function(df_acti){
       
     ) -> df_polygon
     
-    c(1, 2, 1, 2, 1) ->
-      df_polygon$
-      group
+    df_polygon %>%
+      mutate(
+        rank = c(2, 3, 5, 4, 1),
+        group = c(1, 2, 1, 2, 1)
+      ) -> df_polygon
     
     # Plot elements
     aes(x = x, y = y, group = group) -> aes_map
@@ -2311,7 +2315,7 @@ fun_acti_plot_specialist <- function(df_acti){
       
     ) -> df_polygon
     
-    df_polygon %>% 
+    df_polygon %>%
       mutate(
         rank = c(
           6, 3, 2,
@@ -2366,6 +2370,15 @@ fun_acti_plot_specialist <- function(df_acti){
       
     ) -> df_polygon
     
+    df_polygon %>%
+      mutate(
+        rank = c(
+          6, 7, 2,
+          5, 4, 3,
+          1
+        )
+      ) -> df_polygon
+    
     bind_rows(
       
       df_polygon,
@@ -2410,6 +2423,14 @@ fun_acti_plot_specialist <- function(df_acti){
         )
       
     ) -> df_polygon
+    
+    df_polygon %>%
+      mutate(
+        rank = c(
+          4, 8, 5, 1,
+          6, 7, 3, 2
+        )
+      ) -> df_polygon
     
     bind_rows(
       
@@ -2465,6 +2486,15 @@ fun_acti_plot_specialist <- function(df_acti){
         mutate(group = 2)
       
     ) -> df_polygon
+    
+    df_polygon %>%
+      mutate(
+        rank = c(
+          6, 7, 2, 4,
+          5, 3, 8, 9,
+          1
+        )
+      ) -> df_polygon
     
     bind_rows(
       
@@ -2531,6 +2561,14 @@ fun_acti_plot_specialist <- function(df_acti){
       
     ) -> df_polygon
     
+    df_polygon %>% 
+      mutate(
+        rank = c(
+          8, 10, 6, 4, 1, 
+          5, 9, 7, 3, 2 
+        )
+      ) -> df_polygon
+    
     # Plot elements
     aes(x = x, y = y, group = group) -> aes_map
     geom_line(color = 'lightgrey', linewidth = 1.25) -> geom_connection
@@ -2588,6 +2626,15 @@ fun_acti_plot_specialist <- function(df_acti){
       
     ) -> df_polygon
     
+    df_polygon %>% 
+      mutate(
+        rank = c(
+          11, 2, 10, 3, 5,
+          4, 7, 6, 8, 9,
+          1
+        )
+      ) -> df_polygon
+    
     bind_rows(
       
       df_polygon,
@@ -2643,6 +2690,14 @@ fun_acti_plot_specialist <- function(df_acti){
       
     ) -> df_polygon
     
+    df_polygon %>% 
+      mutate(
+        rank = c(
+          9, 10, 2, 7, 8, 3,
+          6, 5, 4, 11, 12, 1
+        )
+      ) -> df_polygon
+    
     df_polygon %>%
       slice(
         5, 6, 4, 6,
@@ -2696,6 +2751,15 @@ fun_acti_plot_specialist <- function(df_acti){
       tibble(x = 0, y = 0)
       
     ) -> df_polygon
+    
+    df_polygon %>% 
+      mutate(
+        rank = c(
+          6, 7, 2, 8, 9, 3,
+          11, 10, 5, 12, 13, 4,
+          1
+        )
+      ) -> df_polygon
     
     df_polygon %>%
       slice(
@@ -2772,6 +2836,14 @@ fun_acti_plot_specialist <- function(df_acti){
       
     ) -> df_polygon
     
+    df_polygon %>% 
+      mutate(
+        rank= c(
+          7, 10, 8, 1, 4, 6, 9,
+          5, 2, 3, 11, 12, 13, 14
+        )
+      ) -> df_polygon
+    
     bind_rows(
       
       df_polygon,
@@ -2804,6 +2876,9 @@ fun_acti_plot_specialist <- function(df_acti){
   
   # Plot ACTI molecule
   df_polygon %>%
+    mutate(
+      label = row_number()
+    ) %>%
     left_join(df_acti) %>%
     ggplot(aes_map) +
     geom_connection +
@@ -2850,8 +2925,10 @@ fun_acti_plot_generalist <- function(df_acti){
     
     # Polygon
     fun_acti_plot_polygon(1) %>%
-      mutate(y = y - 0.75) ->
-      df_polygon
+      mutate(
+        y = y - 0.75,
+        rank = 1
+      ) -> df_polygon
     
     # Plot elements
     aes(x = x, y = y) -> aes_map
@@ -2862,9 +2939,12 @@ fun_acti_plot_generalist <- function(df_acti){
   } else if(nrow(df_acti) == 2){
     
     # Polygon
-    fun_acti_plot_polygon(2) %>% 
+    fun_acti_plot_polygon(2) %>%
       fun_acti_plot_rotate(
         dbl_theta = pi/2
+      ) %>% 
+      mutate(
+        rank = c(2, 1)
       ) -> df_polygon
     
     # Plot elements
@@ -2876,8 +2956,10 @@ fun_acti_plot_generalist <- function(df_acti){
   } else if(nrow(df_acti) == 3){
     
     # Polygon
-    fun_acti_plot_polygon(3) ->
-      df_polygon
+    fun_acti_plot_polygon(3) %>% 
+      mutate(
+        rank = c(2, 3, 1)
+      ) -> df_polygon
     
     # Plot elements
     aes(x = x, y = y) -> aes_map
@@ -2888,8 +2970,10 @@ fun_acti_plot_generalist <- function(df_acti){
   } else if(nrow(df_acti) == 4){
     
     # Polygon
-    fun_acti_plot_polygon(4) ->
-      df_polygon
+    fun_acti_plot_polygon(4) %>%
+      mutate(
+        rank = c()
+      ) -> df_polygon
     
     # Plot elements
     aes(x = x, y = y) -> aes_map
@@ -3360,12 +3444,8 @@ c(
   , 'Aux' = 'lightgrey'
 ) -> chr_factor_pal
 
-df_occupations %>% 
-  slice_head(n = 1) -> 
-  dsds
-
 fun_acti_type(
-  df_data = dsds
+  df_data = df_occupations
   , chr_factor_labels = c(
     'Ds', 'Eg', 'Hs',
     'Mn', 'Tr', 'Ad',
@@ -3374,14 +3454,23 @@ fun_acti_type(
     'In', 'Mc'
   )
   , chr_data_id = 
-    dsds$occupation
+    df_occupations$occupation
   , efa_model = efa_model
   , dbl_scale_lb = 0
 ) -> df_acti
 
-df_acti %>%
-  mutate(generalism = 0) %>%
-  fun_acti_plot_molecule()
+df_acti %>% 
+  filter(
+    occupation == 'Crematory Operators'
+  ) -> df_acti
+
+map(
+  1:nrow(df_acti)
+  , ~ df_acti %>%
+    mutate(generalism = 0) %>%
+    slice_head(n = .x) %>% 
+    fun_acti_plot_molecule()
+) -> list_plt_acti
 
 # lalala --------------------------------------------------------------------
 c(
