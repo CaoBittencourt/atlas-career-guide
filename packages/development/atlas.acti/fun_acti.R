@@ -5,6 +5,7 @@ chr_pkg <- c(
   'devtools' #GitHub packages
   , 'ggplot2' #Data visualization
   , 'readr' #Read data (temp)
+  , 'viridis' #Palette (temp)
   , 'vctrs' #Data frame subclasses
   , 'tidyr', 'dplyr' #Data wrangling
 )
@@ -547,8 +548,24 @@ fun_acti_type <- function(
       acti_score
     ), .by_group = T
     ) %>% 
+    mutate(
+      rank = row_number()
+    ) %>% 
     ungroup() -> 
     df_acti
+  
+  # Factor and font color
+  df_acti %>%
+    mutate(
+      atom_color = 
+        if_else(
+          class == 'Aux'
+          , class
+          , factor
+        )
+      , font_color = 
+        atom_color
+    ) -> df_acti
   
   # ACTI type acronym helper function
   fun_acti_type_helper <- function(df_data){
@@ -606,6 +623,7 @@ fun_acti_type <- function(
       df_acti
     ) -> df_acti
   
+  # 'df_acti' subclass
   df_acti %>%
     new_data_frame(
       class = c('df_acti', 'tbl')
@@ -615,6 +633,329 @@ fun_acti_type <- function(
   return(df_acti)
   
 }
+
+# # - keep actual factor scores in df_acti data frame --------------------------------------------------------
+# fun_acti_type <- function(
+    #     df_data
+#     , efa_model
+#     , chr_factor_labels = NULL
+#     , chr_data_id = NULL
+#     , dbl_scale_lb = 0
+#     , dbl_generalism = NULL
+# ){
+#   
+#   # Arguments validation
+#   stopifnot(
+#     "'df_data' must be a data frame containing item scores." =
+#       all(
+#         is.data.frame(df_data)
+#         , any(
+#           loadings(efa_model)[,] %>%
+#             rownames() %in%
+#             names(df_data)
+#         )))
+#   
+#   stopifnot(
+#     "'chr_factor_labels' must be either NULL or a character vector with labels for each factor." =
+#       any(
+#         is.null(chr_factor_labels)
+#         , all(
+#           is.character(chr_factor_labels)
+#           , length(chr_factor_labels) ==
+#             efa_model$factors
+#         )
+#       )
+#   )
+#   
+#   stopifnot(
+#     "'chr_data_id' must be either NULL or a character vector with labels for each observation." =
+#       any(
+#         is.null(chr_data_id)
+#         , all(
+#           is.character(chr_data_id)
+#           , length(chr_data_id) ==
+#             nrow(df_data)
+#         )
+#       )
+#   )
+#   
+#   stopifnot(
+#     "'dbl_scale_lb' must be numeric." =
+#       is.numeric(dbl_scale_lb)
+#   )
+#   
+#   stopifnot(
+#     "'dbl_generalism' must be either NULL or numeric." =
+#       any(
+#         is.numeric(dbl_generalism)
+#         , is.null(dbl_generalism)
+#       )
+#   )
+#   
+#   # Data wrangling
+#   dbl_scale_lb[[1]] -> dbl_scale_lb
+#   
+#   df_data %>%
+#     select(any_of(
+#       efa_model$
+#         model %>%
+#         colnames()
+#     )) -> df_data
+#   
+#   dbl_generalism[[1]] -> dbl_generalism
+#   
+#   if(is.null(dbl_generalism)){
+#     
+#     apply(
+#       df_data, 1
+#       , fun_acti_generalism
+#       , dbl_scale_lb =
+#         dbl_scale_lb
+#     ) -> dbl_generalism
+#     
+#   }
+#   
+#   # Factor scores
+#   fun_ftools_factor_scores(
+#     df_data =
+#       df_data
+#     , efa_model =
+#       efa_model
+#     , lgc_pivot = F
+#   ) -> df_factor_scores
+#   
+#   rm(df_data)
+#   
+#   # Apply indispensability function
+#   mapply(
+#     function(profile, generalism){
+#       
+#       # Calculate item indispensability
+#       fun_acti_indispensability(
+#         dbl_profile = profile
+#         , dbl_scale_lb = dbl_scale_lb
+#         , dbl_generalism = generalism
+#       ) -> dbl_indispensability
+#       
+#       # Output
+#       return(dbl_indispensability)
+#       
+#     }
+#     , profile = as_tibble(t(
+#       df_factor_scores
+#     )) 
+#     , generalism = dbl_generalism
+#   ) %>% 
+#     t() %>%
+#     as_tibble() -> 
+#     df_factor_scores
+#   
+#   # Name factors
+#   if(is.null(chr_factor_labels)){
+#     
+#     paste0('F', 1:ncol(
+#       df_factor_scores
+#     )) -> chr_factor_labels
+#     
+#   }
+#   
+#   names(
+#     df_factor_scores
+#   ) <- chr_factor_labels
+#   
+#   rm(chr_factor_labels)
+#   
+#   # Sort
+#   apply(
+#     df_factor_scores, 1
+#     , sort
+#     , decreasing = T
+#     , simplify = F
+#   ) -> list_factor_scores
+#   
+#   rm(df_factor_scores)
+#   
+#   # Classify scores
+#   lapply(
+#     list_factor_scores
+#     , function(x){
+#       
+#       fun_acti_classifier(
+#         dbl_var = x
+#         , dbl_scale_lb = 0
+#         , dbl_scale_ub = 1
+#         , int_levels = 3
+#       )
+#       
+#     }
+#   ) -> list_classification
+#   
+#   # Keep only dominant and auxiliary factors (drop minor)
+#   lapply(
+#     list_classification
+#     , function(x){return(x[x > 1])}
+#   ) -> list_classification
+#   
+#   Map(
+#     function(factor_scores, factor_class){
+#       
+#       # Get dominant and auxiliary factors
+#       factor_scores[
+#         names(factor_scores) %in%
+#           names(factor_class)
+#       ] -> factor_scores
+#       
+#       # Output
+#       return(factor_scores)
+#       
+#     }
+#     , factor_scores = list_factor_scores
+#     , factor_class = list_classification
+#   ) -> list_factor_scores
+#   
+#   chr_data_id -> names(list_classification)
+#   chr_data_id -> names(list_factor_scores)
+#   chr_data_id -> names(dbl_generalism)
+#   
+#   rm(chr_data_id)
+#   
+#   # ACTI data frame
+#   dbl_generalism %>%
+#     as_tibble(
+#       rownames = 'occupation'
+#     ) %>%
+#     rename(
+#       generalism = 2
+#     ) %>% 
+#     full_join(
+#       bind_rows(
+#         list_factor_scores
+#         , .id = 'occupation'
+#       ) %>% 
+#         pivot_longer(
+#           cols = where(is.numeric)
+#           , names_to = 'factor'
+#           , values_to = 'acti_score'
+#         )
+#     ) %>%
+#     full_join(
+#       bind_rows(
+#         list_classification
+#         , .id = 'occupation'
+#       ) %>% 
+#         pivot_longer(
+#           cols = where(is.numeric)
+#           , names_to = 'factor'
+#           , values_to = 'class'
+#         )
+#     ) -> df_acti
+#   
+#   rm(list_factor_scores)
+#   rm(list_classification)
+#   rm(dbl_generalism)
+#   
+#   df_acti %>% 
+#     mutate(
+#       class = 
+#         case_match(
+#           class
+#           , 2 ~ 'Aux'
+#           , 3 ~ 'Dom'
+#         )
+#     ) %>%
+#     drop_na() %>% 
+#     group_by(
+#       occupation
+#     ) %>% 
+#     arrange(desc(
+#       acti_score
+#     ), .by_group = T
+#     ) %>% 
+#     mutate(
+#       rank = row_number()
+#     ) %>% 
+#     ungroup() -> 
+#     df_acti
+#   
+#   # Factor and font color
+#   df_acti %>%
+#     mutate(
+#       atom_color = 
+#         if_else(
+#           class == 'Aux'
+#           , class
+#           , factor
+#         )
+#       , font_color = 
+#         atom_color
+#     ) -> df_acti
+#   
+#   # ACTI type acronym helper function
+#   fun_acti_type_helper <- function(df_data){
+#     
+#     # ACTI type acronym
+#     df_data %>%
+#       filter(
+#         class == 'Dom'
+#       ) %>%
+#       pull(factor) %>%
+#       paste0(
+#         collapse = '-'
+#       ) -> chr_dom
+#     
+#     df_data %>%
+#       filter(
+#         class != 'Dom'
+#       ) %>%
+#       pull(factor) %>%
+#       paste0(
+#         collapse = '-'
+#       ) -> chr_aux
+#     
+#     if(chr_aux != ''){
+#       
+#       paste0(
+#         '/', chr_aux
+#       ) -> chr_aux
+#       
+#     }
+#     
+#     paste0(
+#       chr_dom
+#       , chr_aux
+#     ) -> chr_acti_type
+#     
+#     # Output
+#     return(chr_acti_type)
+#     
+#   }
+#   
+#   # Calculate ACTI acronyms
+#   df_acti %>% 
+#     split(.$occupation) %>% 
+#     sapply(
+#       fun_acti_type_helper
+#     ) %>% 
+#     as_tibble(
+#       rownames = 'occupation'
+#     ) %>%
+#     rename(
+#       acti_type = 2
+#     ) %>% 
+#     left_join(
+#       df_acti
+#     ) -> df_acti
+#   
+#   # 'df_acti' subclass
+#   df_acti %>%
+#     new_data_frame(
+#       class = c('df_acti', 'tbl')
+#     ) -> df_acti
+#   
+#   # Output
+#   return(df_acti)
+#   
+# }
 
 # # # - Numerical ACTI 2 ------------------------------------------------------
 # # fun_acti_type <- function(
@@ -1063,6 +1404,790 @@ fun_acti_plot_rotate <- function(df_polygon, dbl_theta){
 #
 # }
 
+# # - ACTI specialist plotting function ------------------------------
+# # Specialist plotting function
+# fun_acti_plot_specialist <- function(df_acti){
+#   
+#   # Arguments validation
+#   stopifnot(
+#     "'df_acti' must be a data frame of the 'df_acti' class." =
+#       any(class(df_acti) == 'df_acti')
+#   )
+#   
+#   # Specialist molecule helper functions
+#   if(nrow(df_acti) == 1){
+#     
+#     fun_acti_plot_polygon(1) %>%
+#       mutate(y = y - 0.75) ->
+#       df_polygon
+#     
+#     df_polygon %>%
+#       ggplot(aes(
+#         x = x,
+#         y = y
+#       )) +
+#       geom_point(
+#         color = 'red'
+#         , size = 20
+#       ) +
+#       xlim(c(-2, 2)) +
+#       ylim(c(-2, 2)) ->
+#       plt_polygon
+#     
+#   } else if(nrow(df_acti) == 2){
+#     
+#     fun_acti_plot_polygon(2) ->
+#       df_polygon
+#     
+#     df_polygon$group <- 1
+#     
+#     df_polygon %>%
+#       ggplot(aes(
+#         x = x,
+#         y = y,
+#         group = group
+#       )) +
+#       geom_line(
+#         color = '#212121',
+#         linewidth = 1.25
+#       ) +
+#       geom_point(
+#         color = 'red'
+#         , size = 20
+#       ) +
+#       xlim(c(-2, 2)) +
+#       ylim(c(-3, 2.5)) -> 
+#       plt_polygon
+#     
+#   } else if(nrow(df_acti) == 3){
+#     
+#     fun_acti_plot_polygon(3) ->
+#       df_polygon
+#     
+#     df_polygon$group <- 1
+#     
+#     df_polygon %>%
+#       ggplot(aes(
+#         x = x,
+#         y = y,
+#         group = group
+#       )) +
+#       geom_line(
+#         color = '#212121',
+#         linewidth = 1.25
+#       ) +
+#       geom_point(
+#         color = 'red'
+#         , size = 20
+#       ) +
+#       xlim(c(-2, 2)) +
+#       ylim(c(-2, 2)) -> 
+#       plt_polygon
+#     
+#   } else if(nrow(df_acti) == 4){
+#     
+#     fun_acti_plot_polygon(4) ->
+#       df_polygon
+#     
+#     df_polygon[c(1:4, 4), ] ->
+#       df_polygon
+#     
+#     c(1, 2, 1, 1, 2) ->
+#       df_polygon$
+#       group
+#     
+#     df_polygon %>%
+#       ggplot(aes(
+#         x = x,
+#         y = y,
+#         group = group
+#       )) +
+#       geom_line(
+#         color = '#212121',
+#         linewidth = 1.25
+#       ) +
+#       geom_point(
+#         color = 'red'
+#         , size = 20
+#       ) +
+#       xlim(c(-2, 2)) +
+#       ylim(c(-2, 2)) -> 
+#       plt_polygon
+#     
+#   } else if(nrow(df_acti) == 5){
+#     
+#     bind_rows(
+#       
+#       fun_acti_plot_polygon(4),
+#       
+#       tibble(x = 0, y = 0)
+#       
+#     ) -> df_polygon
+#     
+#     c(1, 2, 1, 2, 1) ->
+#       df_polygon$
+#       group
+#     
+#     df_polygon %>%
+#       ggplot(aes(
+#         x = x,
+#         y = y,
+#         group = group
+#       )) +
+#       geom_line(
+#         color = '#212121',
+#         linewidth = 1.25
+#       ) +
+#       geom_point(
+#         color = 'red'
+#         , size = 20
+#       ) +
+#       xlim(c(-2, 2)) +
+#       ylim(c(-1.5, 1.5)) -> 
+#       plt_polygon
+#     
+#   } else if(nrow(df_acti) == 6){
+#     
+#     bind_rows(
+#       
+#       fun_acti_plot_polygon(3) %>%
+#         fun_acti_plot_rotate(
+#           dbl_theta = -pi/2
+#         ) %>%
+#         mutate(
+#           x = x + 2,
+#           group = c(
+#             1, 2, 1
+#           )
+#         ),
+#       
+#       fun_acti_plot_polygon(3) %>%
+#         fun_acti_plot_rotate(
+#           dbl_theta = pi/2
+#         ) %>%
+#         mutate(
+#           x = x - 2,
+#           group = c(
+#             2, 1, 1
+#           )
+#         )
+#       
+#     ) -> df_polygon
+#     
+#     bind_rows(
+#       
+#       df_polygon,
+#       
+#       df_polygon %>%
+#         slice(3, 6) %>%
+#         mutate(group = 2)
+#       
+#     ) -> df_polygon
+#     
+#     df_polygon %>%
+#       ggplot(aes(
+#         x = x,
+#         y = y,
+#         group = group
+#       )) +
+#       geom_line(
+#         color = '#212121',
+#         linewidth = 1.25
+#       ) +
+#       geom_point(
+#         color = 'red'
+#         , size = 20
+#       ) +
+#       xlim(c(-3, 3)) +
+#       ylim(c(-1.25, 1.25)) -> 
+#       plt_polygon
+#     
+#   } else if(nrow(df_acti) == 7){
+#     
+#     bind_rows(
+#       
+#       fun_acti_plot_polygon(3) %>%
+#         fun_acti_plot_rotate(
+#           dbl_theta = -pi/2
+#         ) %>%
+#         mutate(
+#           x = x + 3,
+#           group = c(
+#             1, 2, 1
+#           )
+#         ),
+#       
+#       fun_acti_plot_polygon(3) %>%
+#         fun_acti_plot_rotate(
+#           dbl_theta = pi/2
+#         ) %>%
+#         mutate(
+#           x = x - 3,
+#           group = c(
+#             2, 1, 1
+#           )
+#         ),
+#       
+#       tibble(x = 0, y = 0)
+#       
+#     ) -> df_polygon
+#     
+#     bind_rows(
+#       
+#       df_polygon,
+#       
+#       df_polygon %>%
+#         slice(3, 6) %>%
+#         mutate(group = 2)
+#       
+#     ) -> df_polygon
+#     
+#     df_polygon %>%
+#       ggplot(aes(
+#         x = x,
+#         y = y,
+#         group = group
+#       )) +
+#       geom_line(
+#         color = '#212121',
+#         linewidth = 1.25
+#       ) +
+#       geom_point(
+#         color = 'red'
+#         , size = 20
+#       ) +
+#       xlim(c(-4, 4)) +
+#       ylim(c(-1.25, 1.25)) -> 
+#       plt_polygon
+#     
+#   } else if(nrow(df_acti) == 8){
+#     
+#     bind_rows(
+#       
+#       fun_acti_plot_polygon(4) %>%
+#         fun_acti_plot_rotate(
+#           dbl_theta = -pi/2
+#         ) %>%
+#         mutate(
+#           x = x + 1.75,
+#           group = c(
+#             2, 1, 3, 1
+#           )
+#         ),
+#       
+#       fun_acti_plot_polygon(4) %>%
+#         fun_acti_plot_rotate(
+#           dbl_theta = pi/2
+#         ) %>%
+#         mutate(
+#           x = x - 1.75,
+#           group = c(
+#             3, 1, 2, 1
+#           )
+#         )
+#       
+#     ) -> df_polygon
+#     
+#     bind_rows(
+#       
+#       df_polygon,
+#       
+#       df_polygon %>%
+#         slice(4, 8) %>%
+#         mutate(group = 2),
+#       
+#       df_polygon %>%
+#         slice(4, 8) %>%
+#         mutate(group = 3)
+#       
+#     ) -> df_polygon
+#     
+#     df_polygon %>%
+#       ggplot(aes(
+#         x = x,
+#         y = y,
+#         group = group
+#       )) +
+#       geom_line(
+#         color = '#212121',
+#         linewidth = 1.25
+#       ) +
+#       geom_point(
+#         color = 'red'
+#         , size = 20
+#       ) +
+#       xlim(c(-3, 3)) +
+#       ylim(c(-1.5, 1.5)) -> 
+#       plt_polygon
+#     
+#   } else if(nrow(df_acti) == 9){
+#     
+#     bind_rows(
+#       
+#       fun_acti_plot_polygon(3) %>%
+#         fun_acti_plot_rotate(
+#           dbl_theta = -pi/2
+#         ) %>%
+#         mutate(
+#           x = x + 3,
+#           group = c(
+#             2, 1, 2
+#           )
+#         ),
+#       
+#       fun_acti_plot_polygon(3) %>%
+#         fun_acti_plot_rotate(
+#           dbl_theta = pi/2
+#         ) %>%
+#         mutate(
+#           x = x - 3,
+#           group = c(
+#             1, 2, 2
+#           )
+#         ),
+#       
+#       fun_acti_plot_polygon(2) %>%
+#         mutate(group = 3),
+#       
+#       tibble(x = 0, y = 0) %>%
+#         mutate(group = 2)
+#       
+#     ) -> df_polygon
+#     
+#     bind_rows(
+#       
+#       df_polygon,
+#       
+#       df_polygon %>%
+#         slice(3, 6, 9) %>%
+#         mutate(group = 1),
+#       
+#     ) -> df_polygon
+#     
+#     df_polygon %>%
+#       ggplot(aes(
+#         x = x,
+#         y = y,
+#         group = group
+#       )) +
+#       geom_line(
+#         color = '#212121',
+#         linewidth = 1.25
+#       ) +
+#       geom_point(
+#         color = 'red'
+#         , size = 20
+#       ) +
+#       xlim(c(-4, 4)) +
+#       ylim(c(-1.25, 1.25)) -> 
+#       plt_polygon
+#     
+#   } else if(nrow(df_acti) == 10){
+#     
+#     bind_rows(
+#       
+#       bind_rows(
+#         
+#         fun_acti_plot_polygon(4) %>%
+#           fun_acti_plot_rotate(
+#             # dbl_theta = -pi/2
+#             dbl_theta = -pi/4
+#             # dbl_theta = -pi/3
+#             # dbl_theta = -pi/6
+#             # dbl_theta = -pi/9
+#           ),
+#         
+#         tibble(x = 0, y = 0)
+#         
+#       ) %>%
+#         mutate(
+#           x = x + 1.5,
+#           group = c(
+#             1, 2, 1, 2, 2
+#           )
+#         ),
+#       
+#       bind_rows(
+#         
+#         fun_acti_plot_polygon(4) %>%
+#           fun_acti_plot_rotate(
+#             # dbl_theta = pi/2
+#             dbl_theta = pi/4
+#             # dbl_theta = pi/3
+#             # dbl_theta = pi/6
+#             # dbl_theta = pi/9
+#           ),
+#         
+#         tibble(x = 0, y = 0)
+#         
+#       ) %>%
+#         mutate(
+#           x = x - 1.5,
+#           group = c(
+#             3, 2, 3, 2, 2
+#           )
+#         )
+#       
+#     ) -> df_polygon
+#     
+#     df_polygon %>%
+#       ggplot(aes(
+#         x = x,
+#         y = y,
+#         group = group
+#       )) +
+#       geom_line(
+#         color = '#212121',
+#         linewidth = 1.25
+#       ) +
+#       geom_point(
+#         color = 'red'
+#         , size = 20
+#       ) +
+#       xlim(c(-3, 3)) +
+#       ylim(c(-1.5, 1.5)) -> 
+#       plt_polygon
+#     
+#   } else if(nrow(df_acti) == 11){
+#     
+#     bind_rows(
+#       
+#       fun_acti_plot_polygon(2) %>%
+#         fun_acti_plot_rotate(
+#           dbl_theta = -pi/2
+#         ) %>%
+#         mutate(
+#           x = x + 3,
+#           group = c(
+#             4, 4
+#           )
+#         ),
+#       
+#       fun_acti_plot_polygon(2) %>%
+#         fun_acti_plot_rotate(
+#           dbl_theta = pi/2
+#         ) %>%
+#         mutate(
+#           x = x - 3,
+#           group = c(
+#             4, 4
+#           )
+#         ),
+#       
+#       fun_acti_plot_polygon(2) %>%
+#         mutate(group = 1),
+#       
+#       fun_acti_plot_polygon(2) %>%
+#         mutate(
+#           x = x - 3,
+#           group = c(
+#             2, 3
+#           )
+#         ),
+#       
+#       fun_acti_plot_polygon(2) %>%
+#         mutate(
+#           x = x + 3,
+#           group = c(
+#             2, 3
+#           )
+#         ),
+#       
+#       tibble(x = 0, y = 0) %>%
+#         mutate(group = 1)
+#       
+#     ) -> df_polygon
+#     
+#     bind_rows(
+#       
+#       df_polygon,
+#       
+#       df_polygon %>%
+#         slice(2, 4) %>%
+#         mutate(group = 2),
+#       
+#       df_polygon %>%
+#         slice(2, 4) %>%
+#         mutate(group = 3)
+#       
+#     ) -> df_polygon
+#     
+#     df_polygon %>%
+#       ggplot(aes(
+#         x = x,
+#         y = y,
+#         group = group
+#       )) +
+#       geom_line(
+#         color = '#212121',
+#         linewidth = 1.25
+#       ) +
+#       geom_point(
+#         color = 'red'
+#         , size = 20
+#       ) +
+#       xlim(c(-4, 4)) +
+#       ylim(c(-1.25, 1.25)) -> 
+#       plt_polygon
+#     
+#   } else if(nrow(df_acti) == 12){
+#     
+#     bind_rows(
+#       
+#       fun_acti_plot_polygon(3) %>%
+#         
+#         fun_acti_plot_rotate(
+#           dbl_theta = -pi/2
+#         ) %>%
+#         mutate(
+#           x = x + 2
+#         ),
+#       
+#       fun_acti_plot_polygon(3) %>%
+#         fun_acti_plot_rotate(
+#           dbl_theta = pi/2
+#         ) %>%
+#         mutate(
+#           x = x - 2
+#         )
+#       
+#     ) -> df_polygon
+#     
+#     bind_rows(
+#       
+#       df_polygon,
+#       
+#       df_polygon %>%
+#         fun_acti_plot_rotate(
+#           dbl_theta = pi/2
+#         )
+#       
+#     ) -> df_polygon
+#     
+#     df_polygon %>%
+#       slice(
+#         5, 6, 4, 6,
+#         
+#         12, 11, 12, 10, 12,
+#         
+#         3, 1, 3, 2, 3,
+#         
+#         9, 7, 9, 8, 9, 6
+#         
+#       ) -> df_polygon
+#     
+#     df_polygon %>%
+#       ggplot(aes(
+#         x = x,
+#         y = y
+#       )) +
+#       geom_path(
+#         color = '#212121',
+#         linewidth = 1.25
+#       ) +
+#       geom_point(
+#         color = 'red'
+#         , size = 20
+#       ) +
+#       xlim(c(-3, 3)) +
+#       ylim(c(-3, 3)) -> 
+#       plt_polygon
+#     
+#   } else if(nrow(df_acti) == 13){
+#     
+#     bind_rows(
+#       
+#       fun_acti_plot_polygon(3) %>%
+#         fun_acti_plot_rotate(
+#           dbl_theta = -pi/2
+#         ) %>%
+#         mutate(
+#           x = x + 3
+#         ),
+#       
+#       fun_acti_plot_polygon(3) %>%
+#         fun_acti_plot_rotate(
+#           dbl_theta = pi/2
+#         ) %>%
+#         mutate(
+#           x = x - 3
+#         )
+#       
+#     ) -> df_polygon
+#     
+#     bind_rows(
+#       
+#       df_polygon,
+#       
+#       df_polygon %>%
+#         fun_acti_plot_rotate(
+#           dbl_theta = pi/2
+#         ),
+#       
+#       tibble(x = 0, y = 0)
+#       
+#     ) -> df_polygon
+#     
+#     df_polygon %>%
+#       slice(
+#         5, 6, 4, 6,
+#         
+#         3, 1, 3, 2, 3,
+#         
+#         13, 12, 10, 12, 11, 12,
+#         
+#         9, 7, 9, 8
+#         
+#       ) %>% 
+#       ggplot(aes(
+#         x = x,
+#         y = y
+#       )) +
+#       geom_path(
+#         color = '#212121',
+#         linewidth = 1.25
+#       ) +
+#       geom_point(
+#         color = 'red'
+#         , size = 20
+#       ) +
+#       xlim(c(-4, 4)) +
+#       ylim(c(-4, 4)) -> 
+#       plt_polygon
+#     
+#   } else if(nrow(df_acti) == 14){
+#     
+#     bind_rows(
+#       
+#       bind_rows(
+#         
+#         fun_acti_plot_polygon(4) %>%
+#           fun_acti_plot_rotate(
+#             dbl_theta = -pi/2
+#           ),
+#         
+#         tibble(x = 0, y = 0)
+#         
+#       ) %>%
+#         mutate(
+#           x = x + c(
+#             2, 1.5, 2, 1.5, 1.5
+#           ),
+#           group = c(
+#             2, 1, 3, 1, 1
+#           )
+#         ),
+#       
+#       bind_rows(
+#         
+#         fun_acti_plot_polygon(4) %>%
+#           fun_acti_plot_rotate(
+#             dbl_theta = pi/2
+#           ),
+#         
+#         tibble(x = 0, y = 0)
+#         
+#       ) %>%
+#         mutate(
+#           x = x - c(
+#             2, 1.5, 2, 1.5, 1.5
+#           ),
+#           group = c(
+#             3, 1, 2, 1, 1
+#           )
+#         ),
+#       
+#       fun_acti_plot_polygon(2) %>%
+#         mutate(
+#           x = x - 0.5,
+#           group = 4
+#         ),
+#       
+#       fun_acti_plot_polygon(2) %>%
+#         mutate(
+#           x = x + 0.5,
+#           group = 5
+#         ),
+#       
+#     ) -> df_polygon
+#     
+#     bind_rows(
+#       
+#       df_polygon,
+#       
+#       df_polygon %>%
+#         slice(5, 10) %>%
+#         mutate(group = 2),
+#       
+#       df_polygon %>%
+#         slice(5, 10) %>%
+#         mutate(group = 3),
+#       
+#     ) -> df_polygon
+#     
+#     df_polygon %>%
+#       ggplot(aes(
+#         x = x,
+#         y = y,
+#         group = group
+#       )) +
+#       geom_line(
+#         color = '#212121',
+#         linewidth = 1.25
+#       ) +
+#       geom_point(
+#         color = 'red'
+#         , size = 20
+#       ) +
+#       xlim(c(-2.5, 2.5)) +
+#       ylim(c(-1.5, 1.5)) -> 
+#       plt_polygon
+#     
+#   } else {
+#     
+#     NULL -> plt_polygon
+#     
+#   }
+#   
+#   df_acti %>%
+#     ggplot(aes(
+#       x = x,
+#       y = y,
+#       color = color,
+#       group = group
+#     )) +
+#     geom_line(
+#       size = 2,
+#       color = '#212121'
+#     ) +
+#     geom_point(
+#       size = 10
+#     ) +
+#     xlim(c(1, 14)) +
+#     ylim(c(1, 14)) +
+#     guides(
+#       size = 'none',
+#       color = 'none'
+#     ) +
+#     scale_color_manual(
+#       values = c(
+#         viridis(nrow(df_acti)) %>%
+#           set_names(
+#             df_acti$factor
+#           )
+#         , 'aux' = 'lightgrey'
+#       )
+#     ) +
+#     theme_void() ->
+#     plt_acti_molecule
+#   
+#   rm(df_acti)
+#   
+#   # Output
+#   return(plt_acti_molecule)
+#   
+# }
+
 # - ACTI specialist plotting function ------------------------------
 # Specialist plotting function
 fun_acti_plot_specialist <- function(df_acti){
@@ -1076,75 +2201,50 @@ fun_acti_plot_specialist <- function(df_acti){
   # Specialist molecule helper functions
   if(nrow(df_acti) == 1){
     
+    # Polygon
     fun_acti_plot_polygon(1) %>%
-      mutate(y = y - 0.75) ->
-      df_polygon
+      mutate(
+        y = y - 0.75,
+        rank = 1
+      ) -> df_polygon
     
-    df_polygon %>%
-      ggplot(aes(
-        x = x,
-        y = y
-      )) +
-      geom_point(
-        color = 'red'
-        , size = 20
-      ) +
-      xlim(c(-2, 2)) +
-      ylim(c(-2, 2)) ->
-      plt_polygon
+    # Plot elements
+    aes(x = x, y = y) -> aes_map
+    NULL -> geom_connection
+    xlim(c(-2, 2)) -> scale_xlim
+    ylim(c(-2, 2)) -> scale_ylim
     
   } else if(nrow(df_acti) == 2){
     
+    # Polygon
     fun_acti_plot_polygon(2) ->
       df_polygon
     
     df_polygon$group <- 1
     
-    df_polygon %>%
-      ggplot(aes(
-        x = x,
-        y = y,
-        group = group
-      )) +
-      geom_line(
-        color = '#212121',
-        linewidth = 1.25
-      ) +
-      geom_point(
-        color = 'red'
-        , size = 20
-      ) +
-      xlim(c(-2, 2)) +
-      ylim(c(-3, 2.5)) -> 
-      plt_polygon
+    # Plot elements
+    aes(x = x, y = y, group = group) -> aes_map
+    geom_line(color = 'lightgrey', linewidth = 1.25) -> geom_connection
+    xlim(c(-2, 2)) -> scale_xlim
+    ylim(c(-4, 2.5)) -> scale_ylim
     
   } else if(nrow(df_acti) == 3){
     
+    # Polygon
     fun_acti_plot_polygon(3) ->
       df_polygon
     
     df_polygon$group <- 1
     
-    df_polygon %>%
-      ggplot(aes(
-        x = x,
-        y = y,
-        group = group
-      )) +
-      geom_line(
-        color = '#212121',
-        linewidth = 1.25
-      ) +
-      geom_point(
-        color = 'red'
-        , size = 20
-      ) +
-      xlim(c(-2, 2)) +
-      ylim(c(-2, 2)) -> 
-      plt_polygon
+    # Plot elements
+    aes(x = x, y = y, group = group) -> aes_map
+    geom_line(color = 'lightgrey', linewidth = 1.25) -> geom_connection
+    xlim(c(-2, 2)) -> scale_xlim
+    ylim(c(-2, 2)) -> scale_ylim
     
   } else if(nrow(df_acti) == 4){
     
+    # Polygon
     fun_acti_plot_polygon(4) ->
       df_polygon
     
@@ -1155,26 +2255,15 @@ fun_acti_plot_specialist <- function(df_acti){
       df_polygon$
       group
     
-    df_polygon %>%
-      ggplot(aes(
-        x = x,
-        y = y,
-        group = group
-      )) +
-      geom_line(
-        color = '#212121',
-        linewidth = 1.25
-      ) +
-      geom_point(
-        color = 'red'
-        , size = 20
-      ) +
-      xlim(c(-2, 2)) +
-      ylim(c(-2, 2)) -> 
-      plt_polygon
+    # Plot elements
+    aes(x = x, y = y, group = group) -> aes_map
+    geom_line(color = 'lightgrey', linewidth = 1.25) -> geom_connection
+    xlim(c(-2, 2)) -> scale_xlim
+    ylim(c(-2, 2)) -> scale_ylim
     
   } else if(nrow(df_acti) == 5){
     
+    # Polygon
     bind_rows(
       
       fun_acti_plot_polygon(4),
@@ -1187,26 +2276,15 @@ fun_acti_plot_specialist <- function(df_acti){
       df_polygon$
       group
     
-    df_polygon %>%
-      ggplot(aes(
-        x = x,
-        y = y,
-        group = group
-      )) +
-      geom_line(
-        color = '#212121',
-        linewidth = 1.25
-      ) +
-      geom_point(
-        color = 'red'
-        , size = 20
-      ) +
-      xlim(c(-2, 2)) +
-      ylim(c(-1.5, 1.5)) -> 
-      plt_polygon
+    # Plot elements
+    aes(x = x, y = y, group = group) -> aes_map
+    geom_line(color = 'lightgrey', linewidth = 1.25) -> geom_connection
+    xlim(c(-2, 2)) -> scale_xlim
+    ylim(c(-1.5, 1.5)) -> scale_ylim
     
   } else if(nrow(df_acti) == 6){
     
+    # Polygon
     bind_rows(
       
       fun_acti_plot_polygon(3) %>%
@@ -1233,6 +2311,14 @@ fun_acti_plot_specialist <- function(df_acti){
       
     ) -> df_polygon
     
+    df_polygon %>% 
+      mutate(
+        rank = c(
+          6, 3, 2,
+          5, 4, 1
+        )
+      ) -> df_polygon
+    
     bind_rows(
       
       df_polygon,
@@ -1243,26 +2329,15 @@ fun_acti_plot_specialist <- function(df_acti){
       
     ) -> df_polygon
     
-    df_polygon %>%
-      ggplot(aes(
-        x = x,
-        y = y,
-        group = group
-      )) +
-      geom_line(
-        color = '#212121',
-        linewidth = 1.25
-      ) +
-      geom_point(
-        color = 'red'
-        , size = 20
-      ) +
-      xlim(c(-3, 3)) +
-      ylim(c(-1.25, 1.25)) -> 
-      plt_polygon
+    # Plot elements
+    aes(x = x, y = y, group = group) -> aes_map
+    geom_line(color = 'lightgrey', linewidth = 1.25) -> geom_connection
+    xlim(c(-3, 3)) -> scale_xlim
+    ylim(c(-1.25, 1.25)) -> scale_ylim
     
   } else if(nrow(df_acti) == 7){
     
+    #Polygon
     bind_rows(
       
       fun_acti_plot_polygon(3) %>%
@@ -1301,26 +2376,15 @@ fun_acti_plot_specialist <- function(df_acti){
       
     ) -> df_polygon
     
-    df_polygon %>%
-      ggplot(aes(
-        x = x,
-        y = y,
-        group = group
-      )) +
-      geom_line(
-        color = '#212121',
-        linewidth = 1.25
-      ) +
-      geom_point(
-        color = 'red'
-        , size = 20
-      ) +
-      xlim(c(-4, 4)) +
-      ylim(c(-1.25, 1.25)) -> 
-      plt_polygon
+    # Plot elements
+    aes(x = x, y = y, group = group) -> aes_map
+    geom_line(color = 'lightgrey', linewidth = 1.25) -> geom_connection
+    xlim(c(-4, 4)) -> scale_xlim
+    ylim(c(-1.25, 1.25)) -> scale_ylim
     
   } else if(nrow(df_acti) == 8){
     
+    # Polygon
     bind_rows(
       
       fun_acti_plot_polygon(4) %>%
@@ -1361,26 +2425,15 @@ fun_acti_plot_specialist <- function(df_acti){
       
     ) -> df_polygon
     
-    df_polygon %>%
-      ggplot(aes(
-        x = x,
-        y = y,
-        group = group
-      )) +
-      geom_line(
-        color = '#212121',
-        linewidth = 1.25
-      ) +
-      geom_point(
-        color = 'red'
-        , size = 20
-      ) +
-      xlim(c(-3, 3)) +
-      ylim(c(-1.5, 1.5)) -> 
-      plt_polygon
+    # Plot elements
+    aes(x = x, y = y, group = group) -> aes_map
+    geom_line(color = 'lightgrey', linewidth = 1.25) -> geom_connection
+    xlim(c(-3, 3)) -> scale_xlim
+    ylim(c(-1.5, 1.5)) -> scale_ylim
     
   } else if(nrow(df_acti) == 9){
     
+    # Polygon
     bind_rows(
       
       fun_acti_plot_polygon(3) %>%
@@ -1423,26 +2476,15 @@ fun_acti_plot_specialist <- function(df_acti){
       
     ) -> df_polygon
     
-    df_polygon %>%
-      ggplot(aes(
-        x = x,
-        y = y,
-        group = group
-      )) +
-      geom_line(
-        color = '#212121',
-        linewidth = 1.25
-      ) +
-      geom_point(
-        color = 'red'
-        , size = 20
-      ) +
-      xlim(c(-4, 4)) +
-      ylim(c(-1.25, 1.25)) -> 
-      plt_polygon
+    # Plot elements
+    aes(x = x, y = y, group = group) -> aes_map
+    geom_line(color = 'lightgrey', linewidth = 1.25) -> geom_connection
+    xlim(c(-4, 4)) -> scale_xlim
+    ylim(c(-1.25, 1.25)) -> scale_ylim
     
   } else if(nrow(df_acti) == 10){
     
+    # Polygon
     bind_rows(
       
       bind_rows(
@@ -1489,26 +2531,15 @@ fun_acti_plot_specialist <- function(df_acti){
       
     ) -> df_polygon
     
-    df_polygon %>%
-      ggplot(aes(
-        x = x,
-        y = y,
-        group = group
-      )) +
-      geom_line(
-        color = '#212121',
-        linewidth = 1.25
-      ) +
-      geom_point(
-        color = 'red'
-        , size = 20
-      ) +
-      xlim(c(-3, 3)) +
-      ylim(c(-1.5, 1.5)) -> 
-      plt_polygon
+    # Plot elements
+    aes(x = x, y = y, group = group) -> aes_map
+    geom_line(color = 'lightgrey', linewidth = 1.25) -> geom_connection
+    xlim(c(-3, 3)) -> scale_xlim
+    ylim(c(-1.5, 1.5)) -> scale_ylim
     
   } else if(nrow(df_acti) == 11){
     
+    # Polygon
     bind_rows(
       
       fun_acti_plot_polygon(2) %>%
@@ -1571,26 +2602,15 @@ fun_acti_plot_specialist <- function(df_acti){
       
     ) -> df_polygon
     
-    df_polygon %>%
-      ggplot(aes(
-        x = x,
-        y = y,
-        group = group
-      )) +
-      geom_line(
-        color = '#212121',
-        linewidth = 1.25
-      ) +
-      geom_point(
-        color = 'red'
-        , size = 20
-      ) +
-      xlim(c(-4, 4)) +
-      ylim(c(-1.25, 1.25)) -> 
-      plt_polygon
+    # Plot elements
+    aes(x = x, y = y, group = group) -> aes_map
+    geom_line(color = 'lightgrey', linewidth = 1.25) -> geom_connection
+    xlim(c(-4, 4)) -> scale_xlim
+    ylim(c(-1.25, 1.25)) -> scale_ylim
     
   } else if(nrow(df_acti) == 12){
     
+    # Polygon
     bind_rows(
       
       fun_acti_plot_polygon(3) %>%
@@ -1633,25 +2653,17 @@ fun_acti_plot_specialist <- function(df_acti){
         
         9, 7, 9, 8, 9, 6
         
-      ) %>%
-      ggplot(aes(
-        x = x,
-        y = y
-      )) +
-      geom_path(
-        color = '#212121',
-        linewidth = 1.25
-      ) +
-      geom_point(
-        color = 'red'
-        , size = 20
-      ) +
-      xlim(c(-3, 3)) +
-      ylim(c(-3, 3)) -> 
-      plt_polygon
+      ) -> df_polygon
+    
+    # Plot elements
+    aes(x = x, y = y) -> aes_map
+    geom_path(color = 'lightgrey', linewidth = 1.25) -> geom_connection
+    xlim(c(-3, 3)) -> scale_xlim
+    ylim(c(-3, 3)) -> scale_ylim
     
   } else if(nrow(df_acti) == 13){
     
+    # Polygon
     bind_rows(
       
       fun_acti_plot_polygon(3) %>%
@@ -1695,25 +2707,17 @@ fun_acti_plot_specialist <- function(df_acti){
         
         9, 7, 9, 8
         
-      ) %>% 
-      ggplot(aes(
-        x = x,
-        y = y
-      )) +
-      geom_path(
-        color = '#212121',
-        linewidth = 1.25
-      ) +
-      geom_point(
-        color = 'red'
-        , size = 20
-      ) +
-      xlim(c(-4, 4)) +
-      ylim(c(-4, 4)) -> 
-      plt_polygon
+      ) -> df_polygon
+    
+    # Plot elements
+    aes(x = x, y = y) -> aes_map
+    geom_path(color = 'lightgrey', linewidth = 1.25) -> geom_connection
+    xlim(c(-4, 4)) -> scale_xlim
+    ylim(c(-4, 4)) -> scale_ylim
     
   } else if(nrow(df_acti) == 14){
     
+    # Polygon
     bind_rows(
       
       bind_rows(
@@ -1782,63 +2786,49 @@ fun_acti_plot_specialist <- function(df_acti){
       
     ) -> df_polygon
     
-    df_polygon %>%
-      ggplot(aes(
-        x = x,
-        y = y,
-        group = group
-      )) +
-      geom_line(
-        color = '#212121',
-        linewidth = 1.25
-      ) +
-      geom_point(
-        color = 'red'
-        , size = 20
-      ) +
-      xlim(c(-2.5, 2.5)) +
-      ylim(c(-1.5, 1.5)) -> 
-      plt_polygon
+    # Plot elements
+    aes(x = x, y = y, group = group) -> aes_map
+    geom_line(color = 'lightgrey', linewidth = 1.25) -> geom_connection
+    xlim(c(-2.5, 2.5)) -> scale_xlim
+    ylim(c(-1.5, 1.5)) -> scale_ylim
     
   } else {
     
-    NULL -> plt_polygon
+    # Warning
+    warning("Invalid ACTI type.")
+    
+    # Output
+    return(NULL)
     
   }
   
-  df_acti %>%
-    ggplot(aes(
-      x = x,
-      y = y,
-      color = color,
-      group = group
+  # Plot ACTI molecule
+  df_polygon %>%
+    left_join(df_acti) %>%
+    ggplot(aes_map) +
+    geom_connection +
+    geom_point(aes(
+      size = acti_score,
+      color = atom_color
     )) +
-    geom_line(
-      size = 2,
-      color = '#212121'
+    geom_text(aes(
+      label = factor
+    ), size = 5) +
+    scale_xlim +
+    scale_ylim +
+    scale_size_continuous(
+      range = c(20, 30)
     ) +
-    geom_point(
-      size = 10
-    ) +
-    xlim(c(1, 14)) +
-    ylim(c(1, 14)) +
+    # scale_color_manual() + 
     guides(
       size = 'none',
       color = 'none'
     ) +
-    scale_color_manual(
-      values = c(
-        viridis(nrow(df_acti)) %>%
-          set_names(
-            df_acti$factor
-          )
-        , 'aux' = 'lightgrey'
-      )
-    ) +
     theme_void() ->
     plt_acti_molecule
   
-  rm(df_acti)
+  # rm(df_acti)
+  # rm(df_polygon)
   
   # Output
   return(plt_acti_molecule)
@@ -1858,150 +2848,84 @@ fun_acti_plot_generalist <- function(df_acti){
   # Specialist molecule helper functions
   if(nrow(df_acti) == 1){
     
+    # Polygon
     fun_acti_plot_polygon(1) %>%
       mutate(y = y - 0.75) ->
       df_polygon
     
-    df_polygon %>%
-      ggplot(aes(
-        x = x,
-        y = y
-      )) +
-      geom_point(
-        color = 'green'
-        , size = 20
-      ) +
-      xlim(c(-2, 2)) +
-      ylim(c(-2, 2))
+    # Plot elements
+    aes(x = x, y = y) -> aes_map
+    NULL -> geom_connection
+    xlim(c(-2, 2)) -> scale_xlim
+    ylim(c(-2, 2)) -> scale_ylim
     
-  }
-  
-  if(nrow(df_acti) == 2){
+  } else if(nrow(df_acti) == 2){
     
+    # Polygon
     fun_acti_plot_polygon(2) %>% 
       fun_acti_plot_rotate(
         dbl_theta = pi/2
       ) -> df_polygon
     
-    df_polygon %>%
-      ggplot(aes(
-        x = x,
-        y = y
-      )) +
-      geom_polygon(
-        color = '#212121',
-        linewidth = 1.25,
-        fill = NA
-      ) +
-      geom_point(
-        color = 'green'
-        , size = 20
-      ) +
-      xlim(c(-4, 4)) +
-      ylim(c(-2, 2))
+    # Plot elements
+    aes(x = x, y = y) -> aes_map
+    geom_path(color = 'lightgrey', linewidth = 1.25) -> geom_connection
+    xlim(c(-4, 4)) -> scale_xlim
+    ylim(c(-2, 2)) -> scale_ylim
     
-  }
-  
-  if(nrow(df_acti) == 3){
+  } else if(nrow(df_acti) == 3){
     
+    # Polygon
     fun_acti_plot_polygon(3) ->
       df_polygon
     
-    df_polygon %>%
-      ggplot(aes(
-        x = x,
-        y = y
-      )) +
-      geom_polygon(
-        color = '#212121',
-        linewidth = 1.25,
-        fill = NA
-      ) +
-      geom_point(
-        color = 'green'
-        , size = 20
-      ) +
-      xlim(c(-2, 2)) +
-      ylim(c(-2, 2))
+    # Plot elements
+    aes(x = x, y = y) -> aes_map
+    geom_polygon(color = 'lightgrey', linewidth = 1.25, fill = NA) -> geom_connection
+    xlim(c(-2, 2)) -> scale_xlim
+    ylim(c(-2, 2)) -> scale_ylim
     
-  }
-  
-  if(nrow(df_acti) == 4){
+  } else if(nrow(df_acti) == 4){
     
+    # Polygon
     fun_acti_plot_polygon(4) ->
       df_polygon
     
-    df_polygon %>%
-      ggplot(aes(
-        x = x,
-        y = y
-      )) +
-      geom_polygon(
-        color = '#212121',
-        linewidth = 1.25,
-        fill = NA
-      ) +
-      geom_point(
-        color = 'green'
-        , size = 20
-      ) +
-      xlim(c(-2, 2)) +
-      ylim(c(-2, 2))
+    # Plot elements
+    aes(x = x, y = y) -> aes_map
+    geom_polygon(color = 'lightgrey', linewidth = 1.25, fill = NA) -> geom_connection
+    xlim(c(-2, 2)) -> scale_xlim
+    ylim(c(-2, 2)) -> scale_ylim
     
-  }
-  
-  if(nrow(df_acti) == 5){
+  } else if(nrow(df_acti) == 5){
     
+    # Polygon
     fun_acti_plot_polygon(5) -> 
       df_polygon
     
-    df_polygon %>%
-      ggplot(aes(
-        x = x,
-        y = y
-      )) +
-      geom_polygon(
-        color = '#212121',
-        linewidth = 1.25,
-        fill = NA
-      ) +
-      geom_point(
-        color = 'green'
-        , size = 20
-      ) +
-      xlim(c(-2.25, 2.25)) +
-      ylim(c(-1.25, 1.25))
+    # Plot elements
+    aes(x = x, y = y) -> aes_map
+    geom_polygon(color = 'lightgrey', linewidth = 1.25, fill = NA) -> geom_connection
+    xlim(c(-2.25, 2.25)) -> scale_xlim
+    ylim(c(-1.25, 1.25)) -> scale_ylim
     
-  }
-  
-  if(nrow(df_acti) == 6){
+  } else if(nrow(df_acti) == 6){
     
+    # Polygon
     fun_acti_plot_polygon(6) %>% 
       fun_acti_plot_rotate(
         dbl_theta = pi/2
       ) -> df_polygon
     
-    df_polygon %>%
-      ggplot(aes(
-        x = x,
-        y = y
-      )) +
-      geom_polygon(
-        color = '#212121',
-        linewidth = 1.25,
-        fill = NA
-      ) +
-      geom_point(
-        color = 'green'
-        , size = 20
-      ) +
-      xlim(c(-1.5, 1.5)) +
-      ylim(c(-1.5, 1.5))
+    # Plot elements
+    aes(x = x, y = y) -> aes_map
+    geom_polygon(color = 'lightgrey', linewidth = 1.25, fill = NA) -> geom_connection
+    xlim(c(-1.5, 1.5)) -> scale_xlim
+    ylim(c(-1.5, 1.5)) -> scale_ylim
     
-  }
-  
-  if(nrow(df_acti) == 7){
+  } else if(nrow(df_acti) == 7){
     
+    # Polygon
     bind_rows(
       
       fun_acti_plot_polygon(6) %>% 
@@ -2023,27 +2947,17 @@ fun_acti_plot_generalist <- function(df_acti){
         
         1, 7, 2
         
-      ) %>%
-      ggplot(aes(
-        x = x,
-        y = y
-      )) +
-      geom_polygon(
-        color = '#212121',
-        linewidth = 1.25,
-        fill = NA
-      ) +
-      geom_point(
-        color = 'green'
-        , size = 20
-      ) +
-      xlim(c(-1.5, 1.5)) +
-      ylim(c(-1.5, 1.5))
+      ) -> df_polygon
     
-  }
-  
-  if(nrow(df_acti) == 8){
+    # Plot elements
+    aes(x = x, y = y) -> aes_map
+    geom_polygon(color = 'lightgrey', linewidth = 1.25, fill = NA) -> geom_connection
+    xlim(c(-1.5, 1.5)) -> scale_xlim
+    ylim(c(-1.5, 1.5)) -> scale_ylim
     
+  } else if(nrow(df_acti) == 8){
+    
+    # Polygon
     bind_rows(
       
       fun_acti_plot_polygon(6) %>% 
@@ -2066,27 +2980,17 @@ fun_acti_plot_generalist <- function(df_acti){
         4, 8, 5,
         6,
         1, 7, 2
-      ) %>% 
-      ggplot(aes(
-        x = x,
-        y = y
-      )) +
-      geom_polygon(
-        color = '#212121',
-        linewidth = 1.25,
-        fill = NA
-      ) +
-      geom_point(
-        color = 'green'
-        , size = 20
-      ) +
-      xlim(c(-2, 2)) +
-      ylim(c(-1.5, 1.5))
+      ) -> df_polygon
     
-  }
-  
-  if(nrow(df_acti) == 9){
+    # Plot elements
+    aes(x = x, y = y) -> aes_map
+    geom_polygon(color = 'lightgrey', linewidth = 1.25, fill = NA) -> geom_connection
+    xlim(c(-2, 2)) -> scale_xlim
+    ylim(c(-1.5, 1.5)) -> scale_ylim
     
+  } else if(nrow(df_acti) == 9){
+    
+    # Polygon
     bind_rows(
       
       fun_acti_plot_polygon(2) %>% 
@@ -2119,27 +3023,17 @@ fun_acti_plot_generalist <- function(df_acti){
         7, 9, 5, 3,
         
         9, 1, 2
-      ) %>%
-      ggplot(aes(
-        x = x,
-        y = y
-      )) +
-      geom_polygon(
-        color = '#212121'
-        , linewidth = 1.25
-        , fill = NA
-      ) +
-      geom_point(
-        color = 'green'
-        , size = 20
-      ) +
-      xlim(c(-5, 5)) +
-      ylim(c(-1.5, 1.5))
+      ) -> df_polygon
     
-  }
-  
-  if(nrow(df_acti) == 10){
+    # Plot elements
+    aes(x = x, y = y) -> aes_map
+    geom_polygon(color = 'lightgrey', linewidth = 1.25, fill = NA) -> geom_connection
+    xlim(c(-5, 5)) -> scale_xlim
+    ylim(c(-1.5, 1.5)) -> scale_ylim
     
+  } else if(nrow(df_acti) == 10){
+    
+    # Polygon
     bind_rows(
       
       fun_acti_plot_polygon(5) %>% 
@@ -2172,29 +3066,17 @@ fun_acti_plot_generalist <- function(df_acti){
         7, 3, 5,
         
         1, 9, 10, 6, 4
-      ) %>%
-      ggplot(aes(
-        x = x,
-        y = y
-      )) +
-      geom_polygon(
-        color = '#212121',
-        # color = 'lightgrey',
-        # color = 'grey',
-        linewidth = 1.25,
-        fill = NA
-      ) +
-      geom_point(
-        color = 'green'
-        , size = 20
-      ) +
-      xlim(c(-3, 3)) + 
-      ylim(c(-4, 4))
+      ) -> df_polygon
     
-  }
-  
-  if(nrow(df_acti) == 11){
+    # Plot elements
+    aes(x = x, y = y) -> aes_map
+    geom_polygon(color = 'lightgrey', linewidth = 1.25, fill = NA) -> geom_connection
+    xlim(c(-3, 3)) -> scale_xlim
+    ylim(c(-4, 4)) -> scale_ylim
     
+  } else if(nrow(df_acti) == 11){
+    
+    # Polygon
     bind_rows(
       
       fun_acti_plot_polygon(4) %>% 
@@ -2228,29 +3110,17 @@ fun_acti_plot_generalist <- function(df_acti){
         
         10, 9, 11, 3
         
-      ) %>%
-      ggplot(aes(
-        x = x,
-        y = y
-      )) +
-      geom_polygon(
-        color = '#212121',
-        # color = 'lightgrey',
-        # color = 'grey',
-        linewidth = 1.25,
-        fill = NA
-      ) +
-      geom_point(
-        color = 'green'
-        , size = 20
-      ) +
-      xlim(c(-2, 2)) +
-      ylim(c(-3, 3))
+      ) -> df_polygon
     
-  }
-  
-  if(nrow(df_acti) == 12){
+    # Plot elements
+    aes(x = x, y = y) -> aes_map
+    geom_polygon(color = 'lightgrey', linewidth = 1.25, fill = NA) -> geom_connection
+    xlim(c(-2, 2)) -> scale_xlim
+    ylim(c(-3, 3)) -> scale_ylim
     
+  } else if(nrow(df_acti) == 12){
+    
+    # Polygon
     bind_rows(
       
       fun_acti_plot_polygon(6) %>% 
@@ -2285,26 +3155,17 @@ fun_acti_plot_generalist <- function(df_acti){
       slice(
         11, 7, 8, 9, 10, 12, 6, 1, 2, 3,
         11, 7, 4, 3, 4, 5, 10, 5, 6, 5
-      ) %>%
-      ggplot(aes(
-        x = x,
-        y = y
-      )) +
-      geom_path(
-        color = '#212121',
-        linewidth = 1.25
-      ) +
-      geom_point(
-        color = 'green',
-        size = 20
-      ) +
-      xlim(c(-1.5, 1.5)) +
-      ylim(c(-1.5, 3.5))
+      ) -> df_polygon
     
-  }
-  
-  if(nrow(df_acti) == 13){
+    # Plot elements
+    aes(x = x, y = y) -> aes_map
+    geom_path(color = 'lightgrey', linewidth = 1.25) -> geom_connection
+    xlim(c(-1.5, 1.5)) -> scale_xlim
+    ylim(c(-1.5, 3.5)) -> scale_ylim
     
+  } else if(nrow(df_acti) == 13){
+    
+    # Polygon
     bind_rows(
       
       fun_acti_plot_polygon(6) %>% 
@@ -2343,26 +3204,17 @@ fun_acti_plot_generalist <- function(df_acti){
         
         4, 10, 11, 7, 2, 3, 11
         
-      ) %>%
-      ggplot(aes(
-        x = x,
-        y = y
-      )) +
-      geom_path(
-        color = '#212121',
-        linewidth = 1.25
-      ) +
-      geom_point(
-        color = 'green'
-        , size = 20
-      ) +
-      xlim(c(-2, 2)) +
-      ylim(c(-1.5, 1.5))
+      ) -> df_polygon
     
-  }
-  
-  if(nrow(df_acti) == 14){
+    # Plot elements
+    aes(x = x, y = y) -> aes_map
+    geom_path(color = 'lightgrey', linewidth = 1.25) -> geom_connection
+    xlim(c(-2, 2)) -> scale_xlim
+    ylim(c(-1.5, 1.5)) -> scale_ylim
     
+  } else if(nrow(df_acti) == 14){
+    
+    # Polygon
     bind_rows(
       
       fun_acti_plot_polygon(6) %>% 
@@ -2405,57 +3257,51 @@ fun_acti_plot_generalist <- function(df_acti){
         11, 14, 10, 9, 8,
         14, 7
         
-      ) %>%
-      ggplot(aes(
-        x = x,
-        y = y
-      )) +
-      geom_path(
-        color = '#212121',
-        linewidth = 1.25
-      ) +
-      geom_point(
-        color = 'green'
-        , size = 20
-      ) +
-      xlim(c(-2.5, 2.5)) +
-      ylim(c(-1.5, 1.5))
+      ) -> df_polygon
+    
+    # Plot elements
+    aes(x = x, y = y) -> aes_map
+    geom_path(color = 'lightgrey', linewidth = 1.25) -> geom_connection
+    xlim(c(-2.5, 2.5)) -> scale_xlim
+    ylim(c(-1.5, 1.5)) -> scale_ylim
+    
+  } else {
+    
+    # Warning
+    warning("Invalid ACTI type.")
+    
+    # Output
+    return(NULL)
     
   }
   
-  df_acti %>%
-    ggplot(aes(
-      x = x,
-      y = y,
-      color = color,
-      group = group
+  # Plot ACTI molecule
+  df_polygon %>%
+    left_join(df_acti) %>%
+    ggplot(aes_map) +
+    geom_connection +
+    geom_point(aes(
+      size = acti_score,
+      color = atom_color
     )) +
-    geom_line(
-      size = 2,
-      color = '#212121'
+    geom_text(aes(
+      label = factor
+    ), size = 5) +
+    scale_xlim +
+    scale_ylim +
+    scale_size_continuous(
+      range = c(20, 30)
     ) +
-    geom_point(
-      size = 10
-    ) +
-    xlim(c(1, 14)) +
-    ylim(c(1, 14)) +
+    # scale_color_manual() + 
     guides(
       size = 'none',
       color = 'none'
     ) +
-    scale_color_manual(
-      values = c(
-        viridis(nrow(df_acti)) %>%
-          set_names(
-            df_acti$factor
-          )
-        , 'aux' = 'lightgrey'
-      )
-    ) +
     theme_void() ->
     plt_acti_molecule
   
-  rm(df_acti)
+  # rm(df_acti)
+  # rm(df_polygon)
   
   # Output
   return(plt_acti_molecule)
@@ -2463,7 +3309,7 @@ fun_acti_plot_generalist <- function(df_acti){
 }
 
 # - ACTI molecule plotting function ---------------------------------------
-fun_acti_plot_molecule <- function(df_acti, dbl_generalism){
+fun_acti_plot_molecule <- function(df_acti){
   
   # Arguments validation
   stopifnot(
@@ -2473,548 +3319,183 @@ fun_acti_plot_molecule <- function(df_acti, dbl_generalism){
   
   # Data wrangling
   
-  # If generalist, call generalist function
-  fun_acti_plot_generalist(df_acti) ->
-    plot_acti_molecule
-  
-  # If specialist, call specialist function
-  fun_acti_plot_specialist(df_acti) ->
-    plot_acti_molecule
+  if(first(df_acti$generalism) > 0.5){
+    
+    # If generalist, call generalist function
+    fun_acti_plot_generalist(df_acti) ->
+      plt_acti_molecule
+    
+    
+  } else {
+    
+    # If specialist, call specialist function
+    fun_acti_plot_specialist(df_acti) ->
+      plt_acti_molecule
+    
+  }
   
   # Output
-  return(plot_acti_molecule)
+  return(plt_acti_molecule)
   
 }
 
 # dsdsds --------------------------------------------------------------------
+c(
+  'Ds', 'Eg', 'Hs',
+  'Mn', 'Tr', 'Ad',
+  'So', 'Ah', 'Hz',
+  'An', 'Mt', 'Rb',
+  'In', 'Mc'
+) -> chr_factor_pal
+
+chr_factor_pal %>% 
+  length() %>% 
+  viridis() %>% 
+  set_names(
+    chr_factor_pal
+  ) -> chr_factor_pal
+
+c(
+  chr_factor_pal
+  , 'Aux' = 'lightgrey'
+) -> chr_factor_pal
+
+df_occupations %>% 
+  slice_head(n = 1) -> 
+  dsds
+
 fun_acti_type(
-  df_data = 
-    df_occupations %>% 
-    slice_head(n = 1)
-  , efa_model =
-    efa_model
+  df_data = dsds
+  , chr_factor_labels = c(
+    'Ds', 'Eg', 'Hs',
+    'Mn', 'Tr', 'Ad',
+    'So', 'Ah', 'Hz',
+    'An', 'Mt', 'Rb',
+    'In', 'Mc'
   )
+  , chr_data_id = 
+    dsds$occupation
+  , efa_model = efa_model
+  , dbl_scale_lb = 0
+) -> df_acti
 
-
-# fun_acti_plot_displacement(
-#   int_nrow = nrow(dsdsds),
-#   x = -0.25, y = -1
-# ) + dsdsds -> dsdsds
-# 
-# dsdsds %>% 
-#   ggplot(aes(
-#     x = x,
-#     y = y
-#   )) + 
-#   geom_point(
-#     size = 10
-#     , color = 'blue'
-#   )
-# 
-# as.matrix(dsdsds) %*% 
-#   fun_acti_plot_rotate(pi/2) -> 
-#   dsdsds
-# 
-# dsdsds %>% 
-#   as_tibble() %>% 
-#   rename(
-#     x = 1,
-#     y = 2
-#   ) -> dsdsds
-# 
-# dsdsds %>% 
-#   ggplot(aes(
-#     x = x,
-#     y = y
-#   )) + 
-#   geom_point(
-#     size = 10
-#     , color = 'blue'
-#   )
+df_acti %>%
+  mutate(generalism = 0) %>%
+  fun_acti_plot_molecule()
 
 # lalala --------------------------------------------------------------------
-fun_acti_plot_polygon(3) -> lalala
+c(
+  'Ds', 'Eg', 'Hs',
+  'Mn', 'Tr', 'Ad',
+  'So', 'Ah', 'Hz',
+  'An', 'Mt', 'Rb',
+  'In', 'Mc'
+) -> chr_factor_pal
 
-lalala %>% 
-  ggplot(aes(
-    x = x,
-    y = y
-  )) + 
-  geom_point(
-    size = 10
-    , color = 'green'
-  )
+chr_factor_pal %>% 
+  length() %>% 
+  viridis() %>% 
+  set_names(
+    chr_factor_pal
+  ) -> chr_factor_pal
 
-fun_acti_plot_rotate(
-  df_polygon = lalala
-  , dbl_theta = pi/2
-) -> lalala
+c(
+  chr_factor_pal
+  , 'Aux' = 'lightgrey'
+) -> chr_factor_pal
 
-lalala %>% 
-  ggplot(aes(
-    x = x,
-    y = y
-  )) + 
-  geom_point(
-    size = 10
-    , color = 'green'
-  )
-
-# dsdslala ----------------------------------------------------------------
-bind_rows(
-  lalala %>% 
-    mutate(
-      color = 'lalala'
-      , x = x - 2
-    ),
-  dsdsds %>% 
-    mutate(
-      color = 'dsdsds'
-      , x = x + 2
-    )
-) -> dsdslala
-
-dsdslala %>% 
-  ggplot(aes(
-    x = x,
-    y = y,
-    color = color
-  )) + 
-  geom_point(
-    size = 20
-  ) + 
-  guides(
-    color = 'none'
-  ) + 
-  theme_void()
-
-
-
-# - ACTI molecule --------------------------------------------------------------
 df_occupations %>% 
-  # filter(
-  #   occupation == 'Economists'
-  # ) -> dsds
-  # slice_head() -> dsds
-  slice_sample(n = 1) -> dsds
+  slice_sample(n = 1) -> 
+  dsds
 
-dsds %>% 
-  fun_acti_type(
-    efa_model = efa_model
-    , chr_factor_labels = c(
-      'Ds', 'Eg', 'Hs',
-      'Mn', 'Tr', 'Ad',
-      'So', 'Ah', 'Hz',
-      'An', 'Mt', 'Rb',
-      'In', 'Mc'
+fun_acti_type(
+  df_data = dsds
+  , chr_factor_labels = c(
+    'Ds', 'Eg', 'Hs',
+    'Mn', 'Tr', 'Ad',
+    'So', 'Ah', 'Hz',
+    'An', 'Mt', 'Rb',
+    'In', 'Mc'
+  )
+  , chr_data_id = 
+    dsds$occupation
+  , efa_model = efa_model
+  , dbl_scale_lb = 0
+) -> df_acti
+
+df_acti
+
+fun_acti_plot_polygon(6) %>% 
+  fun_acti_plot_rotate(
+    dbl_theta = pi/2
+  ) -> df_polygon
+
+
+df_polygon %>% round(1)
+
+df_polygon %>% 
+  mutate(
+    rank = c(
+      6, 3, 2,
+      5, 4, 1
     )
-    , dbl_scale_lb = 0
-    , chr_data_id = 
-      dsds$
-      # df_occupations$
-      occupation
-  ) -> acti_dsds
+  ) -> df_polygon
 
-acti_dsds %>% print(n = Inf)
-
-acti_dsds %>% 
-  filter(
-    occupation ==
-      last(occupation)
+df_polygon %>% 
+  left_join(
+    df_acti
   ) %>% 
   mutate(
-    generalist = 
-      generalism >= 0.5
-  ) %>% View
-
-acti_dsds$acti_score / length(acti_dsds$acti_score)
-
-acti_dsds %>% 
-  group_by(occupation) %>%
-  tally() %>%
-  reframe(min(n))
-
-tibble(
-  acti = rep(1, 14),
-  class = 'Dom'
-) %>%
-  mutate(
-    nrows = n()
-  )
-
-# x axis in [1,nfactors] = [1,14]
-# y axis in [1,nfactors] = [1,14]
-# 1 factor ACTI type
-f1_position = c(7, 7)
-
-tibble(
-  x = 7 + 0.5,
-  y = 7 + 0.5,
-  acti = 1,
-  group = 1
-) -> lalala
-
-# 2 factor specialist ACTI type
-f1_position = c(7, 7)
-f2_position = c(7, 6)
-
-tibble(
-  x = c(7, 7) + 0.5,
-  y = c(7, 6) + 0.5,
-  acti = c(1, 0.5),
-  group = c(1, 1)
-) -> lalala
-
-# 2 factor generalist ACTI type
-f1_position = c(7, 7)
-f2_position = c(8, 7)
-
-tibble(
-  x = c(7, 8) + 0.5,
-  y = c(7, 7) + 0.5,
-  acti = c(1, 0.8),
-  group = c(1, 1)
-) -> lalala
-
-# 3 factor ACTI specialist type
-f1_position = c(7, 7)
-f2_position = c(8, 6)
-f3_position = c(6, 6)
-
-tibble(
-  x = c(7, 8, 6) + 0.5,
-  y = c(7, 6, 6) + 0.5,
-  acti = c(1, 0.8, 0.5),
-  group = c(1, 1, 1)
-) -> lalala
-
-# 3 factor ACTI generalist type
-f1_position = c(7, 7)
-f2_position = c(8, 6)
-f3_position = c(6, 6)
-
-tibble(
-  x = c(7, 8, 6) + 0.5,
-  y = c(7, 6, 6) + 0.5,
-  acti = c(1, 0.8, 0.7),
-  group = c(1, 1, 1)
-) -> lalala
-
-# 4 factor ACTI specialist type
-# f1_position = c(7, 7)
-# f2_position = c(8, 7)
-# f3_position = c(6, 7)
-# f4_position = c(7, 6)
-
-tibble(
-  x = c(6, 7, 8, 7) + 0.5,
-  y = c(6, 7, 6, 5) + 0.5,
-  acti = c(0.8, 1, 0.5, 0.25),
-  group = c(1, 1, 2, 1)
-) -> lalala
-
-lalala[c(
-  which.max(lalala$acti)
-  , 1:nrow(lalala)
-), ] -> lalala
-
-lalala$group[1] <- 2
-
-# 4 factor ACTI generalist type
-f1_position = c(7, 7)
-f2_position = c(8, 6)
-f3_position = c(6, 6)
-f4_position = c(7, 5)
-
-tibble(
-  x = c(6, 7, 8, 7) + 0.5,
-  y = c(6, 7, 6, 5) + 0.5,
-  acti = c(1, 0.8, 0.8, 0.5),
-  # group = c(1, 2, 2, 1)
-  group = c(1, 1, 1, 1)
-) -> lalala
-
-# tibble(
-#   x = c(6, 7, 7, 8, 7) + 0.5,
-#   y = c(6, 7, 7, 6, 5) + 0.5,
-#   acti = c(0.8, 1, 0.8, 0.8, 0.5),
-#   group = c(1, 2, 1, 2, 1)
-# ) -> lalala
-
-# 5 factor ACTI specialist type
-f1_position = c(7, 7)
-f2_position = c(6, 8)
-f3_position = c(8, 6)
-f4_position = c(6, 6)
-f5_position = c(8, 8)
-
-tibble(
-  x = c(7, 6, 8, 6, 8) + 0.5,
-  y = c(7, 8, 6, 6, 8) + 0.5,
-  acti = c(1, 0.8, 0.6, 0.5, 0.3),
-  group = c(1, 2, 2, 1, 1)
-) -> lalala
-
-# 5 factor ACTI generalist type
-f1_position = c(9, 7)
-f2_position = c(6, 8)
-f3_position = c(8, 6)
-f4_position = c(6, 6)
-f5_position = c(8, 8)
-
-tibble(
-  x = c(7, 6, 8, 6, 8) + 0.5,
-  y = c(9, 8, 6, 6, 8) + 0.5,
-  acti = c(1, 0.8, 0.6, 0.5, 0.3),
-  group = c(1, 2, 2, 1, 1)
-) -> lalala
-
-lalala %>%
-  mutate(
-    factor = paste0('f', row_number()),
-    color = if_else(
-      acti > 0.67
-      , factor
-      , 'aux'
-    )
-  ) -> lalala
-
-fun_acti_plot_generalist(lalala)
-
-fun_acti_plot_specialist(lalala)
-
-df_nodes
-df_links
-
-rbind(
-  f1 = c(0, 1, 1, 0, 0),
-  f2 = c(1, 0, 0, 1, 0),
-  f3 = c(1, 0, 0, 0, 1),
-  f4 = c(0, 1, 0, 0, 1),
-  f5 = c(0, 0, 1, 1, 0)
-) -> mtx_adj
-
-rownames(mtx_adj) ->
-  colnames(mtx_adj)
-
-mtx_adj
-
-
-
-tibble(
-  x = c(0, 2, 0, 2),
-  y = c(0, 0, 1, 1)
-) %>% 
-  arrange(
-    x + y
+    atom_color = 
+      if_else(
+        class == 'Aux'
+        , class
+        , factor
+      )
+    , font_color = 
+      if_else(
+        atom_color == 'Aux'
+        , '#212121'
+        , 'white'
+      )
   ) %>% 
-  ggplot(aes(
-    x = x,
-    y = y
-  )) +
-  geom_polygon(
-    color = '#212121',
-    size = 2,
-    fill = NA
-  )
-
-fun_acti_plot_polygon(6) -> dsds
-
-dsds %>% 
-  mutate(
-    order = 
-      (x - y^2)
-  )
-
-arrange(dsds, -x)
-
-round(dsds, 1) -> dsds
-
-dsds[c(
-  rep(1:3),
-  
-  rep(4:6)
-)]
-
-fun_acti_plot_polygon(3) -> dsdsds
-
-fun_acti_plot_rotate(-pi/2) * 
-  dsdsds ->
-  dsdsds
-
-fun_acti_plot_displacement(int_nrow = nrow(dsdsds), 1, 0) -> dsdsds
-
-# round(dsdsds, 1) +
-rbind(
-  c(1, 0),
-  c(1, 0)
-) + 
-  dsdsds -> 
-  dsdsds
-
-fun_acti_plot_polygon(3) -> lalala
-
-
-
-
-(
-  fun_acti_plot_rotate(pi/2) * 
-    fun_acti_plot_polygon(3) + 
-    rbind(
-      c(0.5,0)
-    )
-) -> lalala
-
-dsdsds %>%
-  ggplot(aes(
-    x = x,
-    y = y 
-  )) + 
-  geom_point(
-    size = 10,
-    color = 'red'
-  )
-
-lalala %>% 
-  ggplot(aes(
-    x = x,
-    y = y 
-  )) + 
-  geom_point(
-    size = 10,
-    color = 'red'
-  )
-
-bind_rows(
-  dsdsds + c(-.5, 0),
-  lalala + c(-.5, 0)
-) %>% 
-  ggplot(aes(
-    x = x,
-    y = y 
-  )) + 
-  geom_point(
-    size = 10,
-    color = 'red'
-  ) 
-
-
-fun_acti_plot_rotate(-pi/2)
-
-# round(fun_acti_plot_polygon(6), 1) %>%
-#   rbind(
-#     round(fun_acti_plot_polygon(4) * 0.5, 1)
-#   ) %>%
-dsds %>% 
-  ggplot(aes(
-    x = x,
-    y = y
-  )) +
-  geom_polygon(
-    color = '#212121',
-    size = 2,
-    fill = NA
-  ) + 
-  geom_point(
-    size = 10
-    , color = 'blue'
-  )
-
-# library(igraph)
-# library(networkD3)
-# 
-# # create a dataset:
-# data <- data_frame(
-#   from=c("A", "A", "B", "D", "C", "D", "E", "B", "C", "D", "K", "A", "M"),
-#   to=c("B", "E", "F", "A", "C", "A", "B", "Z", "A", "C", "A", "B", "K")
-# )
-# 
-# networkR::adjacency(
-#   from = paste0('f', c(1, 1, 2, 3, 4)),
-#   to = paste0('f', c(2, 3, 5, 4, 5)),
-#   directed = F
-# ) %>% 
-#   graph_from_adjacency_matrix(
-#     mode = 'lower'
-#     ) -> dsds
-# 
-# tibble(
-#   from = paste0('f', c(1, 1, 2, 3, 4)),
-#   to = paste0('f', c(2, 3, 5, 4, 5))
-# ) %>% 
-#   graph_from_data_frame(
-#     directed = F
-#   ) %>% 
-#   plot()
-# 
-# # Plot
-# p <- simpleNetwork(data, height="100px", width="100px", zoom = 100)
-# 
-# networkD3::MisNodes
-# networkD3::MisLinks
-# 
-# tibble(
-#   name = paste0('f', 1:5),
-#   group = 1:5,
-#   size = 1
-# ) -> df_nodes
-# 
-# tibble(
-#   source = c(1, 1, 2, 3, 4),
-#   target = c(2, 3, 5, 4, 5),
-#   value = 1
-# ) -> df_links
-
-lalala %>%
   ggplot(aes(
     x = x,
     y = y,
-    size = acti,
-    color = color
-    , group = group
-  )) + 
-  # geom_polygon(
-  # geom_path(
-  geom_line(
-    # group = c(1,2,2,1),
-    group = c(1,2,1,2,1),
-    size = 2,
-    color = '#212121'
-    # , fill = NA
+    label = factor,
+    size = acti_score
+  )) +
+  geom_polygon(
+    color = 'grey',
+    linewidth = 1.25,
+    fill = NA
+  ) +
+  geom_point(aes(
+    color = atom_color
+  )) +
+  geom_text(size = 5) + 
+  scale_color_manual(
+    values = chr_factor_pal
   ) + 
-  geom_point(
-    # shape = 21
-  ) +
   scale_size_continuous(
-    # range = c(15,30)
-    range = c(5,10) * 2
-  ) +
-  # geom_text(aes(
-  #   x = x,
-  #   y = y, 
-  #   label = factor
-  # )
-  # , color = '#212121'
-  # , size = 7.5
-  # ) + 
-  xlim(c(1,14)) + 
-  ylim(c(1,14)) + 
+    range = c(20, 30)
+  ) + 
   guides(
     size = 'none',
     color = 'none'
-  ) + 
-  scale_color_manual(
-    values = c(
-      viridis(nrow(lalala)) %>% 
-        set_names(
-          lalala$factor
-        )
-      , 'aux' = 'lightgrey'
-    )
   ) +
-  theme_void() #+ 
-# theme(aspect.ratio = 1)
-
+  xlim(c(-1.5, 1.5)) +
+  ylim(c(-1.5, 1.5)) + 
+  theme_void() + 
+  theme(plot.margin = unit(rep(.5, 4), 'cm')) + 
+  labs(
+    title = dsds$occupation
+    , subtitle = paste(
+      'ACTI Type:',
+      first(df_acti$acti_type)
+      , '(Generalist)'
+    )
+  )
 
 # - ACTI molecule plot ----------------------------------------------------
 fun_acti_plot_molecule <- function(
