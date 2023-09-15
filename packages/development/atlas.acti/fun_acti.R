@@ -2958,7 +2958,7 @@ fun_acti_plot_generalist <- function(df_acti){
     # Polygon
     fun_acti_plot_polygon(3) %>% 
       mutate(
-        rank = c(2, 3, 1)
+        rank = c(1, 2, 3)
       ) -> df_polygon
     
     # Plot elements
@@ -2972,7 +2972,7 @@ fun_acti_plot_generalist <- function(df_acti){
     # Polygon
     fun_acti_plot_polygon(4) %>%
       mutate(
-        rank = c()
+        rank = c(1, 3, 2, 4)
       ) -> df_polygon
     
     # Plot elements
@@ -2984,7 +2984,10 @@ fun_acti_plot_generalist <- function(df_acti){
   } else if(nrow(df_acti) == 5){
     
     # Polygon
-    fun_acti_plot_polygon(5) -> 
+    fun_acti_plot_polygon(5) %>% 
+      mutate(
+        rank = c()
+      ) -> 
       df_polygon
     
     # Plot elements
