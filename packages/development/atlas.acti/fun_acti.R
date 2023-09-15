@@ -2902,8 +2902,8 @@ fun_acti_plot_specialist <- function(df_acti){
     theme_void() ->
     plt_acti_molecule
   
-  # rm(df_acti)
-  # rm(df_polygon)
+  rm(df_acti)
+  rm(df_polygon)
   
   # Output
   return(plt_acti_molecule)
@@ -2986,9 +2986,8 @@ fun_acti_plot_generalist <- function(df_acti){
     # Polygon
     fun_acti_plot_polygon(5) %>% 
       mutate(
-        rank = c()
-      ) -> 
-      df_polygon
+        rank = c(3, 1, 4, 2, 5)
+      ) -> df_polygon
     
     # Plot elements
     aes(x = x, y = y) -> aes_map
@@ -3002,6 +3001,12 @@ fun_acti_plot_generalist <- function(df_acti){
     fun_acti_plot_polygon(6) %>% 
       fun_acti_plot_rotate(
         dbl_theta = pi/2
+      ) %>% 
+      mutate(
+        rank = c(
+          5, 4, 2, 
+          3, 6, 1
+        )
       ) -> df_polygon
     
     # Plot elements
@@ -3023,6 +3028,15 @@ fun_acti_plot_generalist <- function(df_acti){
       tibble(x = 0, y = 0)
       
     ) -> df_polygon
+    
+    df_polygon %>% 
+      mutate(
+        rank = c(
+          6, 3, 2,
+          4, 5, 1,
+          7
+        )
+      ) -> df_polygon
     
     df_polygon %>%
       slice(
@@ -3060,6 +3074,14 @@ fun_acti_plot_generalist <- function(df_acti){
         mutate(y = round(y))
       
     ) -> df_polygon
+    
+    df_polygon %>% 
+      mutate(
+        rank = c(
+          6, 3, 2, 4,
+          5, 1, 8, 7
+        )
+      ) -> df_polygon
     
     df_polygon %>%
       slice(
@@ -3102,6 +3124,15 @@ fun_acti_plot_generalist <- function(df_acti){
       
     ) -> df_polygon
     
+    df_polygon %>% 
+      mutate(
+        rank = c(
+          4, 1, 3, 2,
+          6, 8, 7, 5,
+          9
+        )
+      ) -> df_polygon
+    
     df_polygon %>%
       slice(
         4, 6, 8, 2, 7, 5, 4,
@@ -3143,6 +3174,14 @@ fun_acti_plot_generalist <- function(df_acti){
         )
       
     ) -> df_polygon
+    
+    df_polygon %>%
+      mutate(
+        rank = c(
+          3, 10, 7, 5, 2,
+          4, 9, 8, 6, 1
+        )
+      ) -> df_polygon
     
     df_polygon %>%
       slice(
@@ -3188,6 +3227,15 @@ fun_acti_plot_generalist <- function(df_acti){
       tibble(x = -.85, y = 0),
       
     ) -> df_polygon
+    
+    df_polygon %>% 
+      mutate(
+        rank = c(
+          1, 3, 2, 4, 7,
+          9, 6, 8, 5, 11,
+          10
+        )
+      ) -> df_polygon
     
     df_polygon %>%
       slice(
@@ -3238,6 +3286,14 @@ fun_acti_plot_generalist <- function(df_acti){
       
     ) -> df_polygon
     
+    df_polygon %>% 
+      mutate(
+        rank = c(
+          4, 6, 9, 7, 8, 10,
+          11, 3, 5, 12, 2, 1
+        )
+      ) -> df_polygon
+    
     df_polygon %>%
       slice(
         11, 7, 8, 9, 10, 12, 6, 1, 2, 3,
@@ -3281,6 +3337,15 @@ fun_acti_plot_generalist <- function(df_acti){
       tibble(x = 1, y = 0)
       
     ) -> df_polygon
+    
+    df_polygon %>% 
+      mutate(
+        rank = c(
+          11, 6, 2, 4, 9, 3,
+          5, 8, 10, 7, 1, 12,
+          13
+        )
+      ) -> df_polygon
     
     df_polygon %>%
       slice(
@@ -3330,6 +3395,14 @@ fun_acti_plot_generalist <- function(df_acti){
       tibble(x = 1.5, y = 0),
       
     ) -> df_polygon
+    
+    df_polygon %>% 
+      mutate(
+        rank = c(
+          9, 7, 2, 5, 11, 3, 6,
+          10, 4, 12, 8, 1, 13, 14
+        )
+      ) -> df_polygon
     
     df_polygon %>%
       slice(
@@ -3387,8 +3460,8 @@ fun_acti_plot_generalist <- function(df_acti){
     theme_void() ->
     plt_acti_molecule
   
-  # rm(df_acti)
-  # rm(df_polygon)
+  rm(df_acti)
+  rm(df_polygon)
   
   # Output
   return(plt_acti_molecule)
@@ -3473,7 +3546,17 @@ map(
     mutate(generalism = 0) %>%
     slice_head(n = .x) %>% 
     fun_acti_plot_molecule()
-) -> list_plt_acti
+) -> list_plt_acti_specialist
+
+map(
+  1:nrow(df_acti)
+  , ~ df_acti %>%
+    slice_head(n = .x) %>% 
+    fun_acti_plot_molecule()
+) -> list_plt_acti_generalist
+
+list_plt_acti_specialist
+list_plt_acti_generalist
 
 # lalala --------------------------------------------------------------------
 c(
