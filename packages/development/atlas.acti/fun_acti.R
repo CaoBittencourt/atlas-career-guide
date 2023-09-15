@@ -2702,7 +2702,8 @@ df_occupations %>%
   ) -> dsds
 
 fun_acti_type(
-  df_data = dsds
+  # df_data = dsds
+  df_data = df_occupations
   , chr_factor_labels = c(
     'Ds', 'Eg', 'Hs',
     'Mn', 'Tr', 'Ad',
@@ -2711,7 +2712,7 @@ fun_acti_type(
     'In', 'Mc'
   )
   , chr_data_id = 
-    dsds$occupation
+    df_occupations$occupation
   , efa_model = efa_model
   , dbl_scale_lb = 0
 ) -> df_acti
