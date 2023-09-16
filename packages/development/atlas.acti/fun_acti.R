@@ -2782,7 +2782,6 @@ fun_acti_plot_polygon(6) %>%
     dbl_theta = pi/2
   ) -> df_polygon
 
-
 df_polygon %>% round(1)
 
 df_polygon %>% 
@@ -3451,8 +3450,6 @@ fun_acti_plot_molecule <- function(
 # #   return(mtx_competency)
 # # 
 # # }
-
-
 # # [TEST] ------------------------------------------------------------------
 # - Data ------------------------------------------------------------------
 library(readr)
@@ -4355,7 +4352,6 @@ weighted.mean(
 kmeans_dsds$centers[1,] == mean(dsds[!as.logical(kmeans_dsds$cluster - 1)])
 kmeans_dsds$centers[2,] == mean(dsds[as.logical(kmeans_dsds$cluster - 1)])
 
-
 kmeans_dsds$centers
 kmeans_dsds$
   cluster %>% 
@@ -4382,22 +4378,6 @@ kmeans_dsds$
       mean(item_score)
   )
 print(n = Inf)
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 # [TEST] ------------------------------------------------------------------
 # - Generalism test -------------------------------------------------------
