@@ -256,7 +256,7 @@ fun_acti_competency <- function(
   return(dbl_competency)
   
 }
-a
+
 #endregion
 #region: Classifier Function 
 fun_acti_classifier <- function(
