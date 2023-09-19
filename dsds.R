@@ -2189,17 +2189,17 @@ df_acti %>%
       cumsum(pct_population)
   ) -> df_acti_freq
 
-# library(atlas.plot)
+library(atlas.plot)
 
-# df_acti_freq %>%
-#   fun_plot.bar(aes(
-#     x = acti_type,
-#     y = pct_population
-#   )
-#   , .coord_polar = T
-#   , .fun_format.y = percent
-#   , .list_labs = list(
-#     y = 'ACTI Types Frequency'
-#   ))
+df_acti_freq %>%
+  fun_plot.bar(aes(
+    x = acti_type,
+    y = pct_population
+  )
+  , .coord_polar = T
+  , .fun_format.y = percent
+  , .list_labs = list(
+    y = 'ACTI Types Frequency'
+  ))
 
 #endregion
