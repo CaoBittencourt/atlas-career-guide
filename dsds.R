@@ -2076,7 +2076,7 @@ read_csv(
   'C:/Users/Cao/Documents/Github/Atlas-Research/Data/df_occupations_2023_efa.csv'
 ) -> df_occupations
 
-View(df_occupations)
+# View(df_occupations)
 
 #endregion
 #region: Test ACTI Plotting Function 
@@ -2130,7 +2130,7 @@ df_acti %>%
         chr_factor_pal
       )
   ) -> list_plt_acti
-  
+
 map(
   1:nrow(df_acti)
   , ~ df_acti %>%
