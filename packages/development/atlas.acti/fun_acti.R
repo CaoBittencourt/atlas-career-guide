@@ -2645,7 +2645,7 @@ fun_acti_plot_generalist <- function(df_acti){
 }
 
 # - ACTI molecule plotting function ---------------------------------------
-fun_acti_plot_molecule <- function(df_acti){
+fun_acti_plot_molecule <- function(df_acti, chr_factor_pal = NULL){
   
   # Arguments validation
   stopifnot(
@@ -2653,14 +2653,27 @@ fun_acti_plot_molecule <- function(df_acti){
       any(class(df_acti) == 'df_acti')
   )
   
+  stopifnot(
+    "'chr_factor_pal' must be either NULL or a named character vector." = 
+      any(
+        is.character(chr_factor_pal),
+        is.null(chr_factor_pal)
+      )
+  )
+  
   # Data wrangling
+  if(!length(names(chr_factor_pal))){
+    
+    paste0('F', 1:length(chr_factor_pal)) ->
+      names(chr_factor_pal)
+    
+  }
   
   if(first(df_acti$generalism) > 0.5){
     
     # If generalist, call generalist function
     fun_acti_plot_generalist(df_acti) ->
       plt_acti_molecule
-    
     
   } else {
     
@@ -2670,203 +2683,17 @@ fun_acti_plot_molecule <- function(df_acti){
     
   }
   
+  # Apply manual palette
+  plt_acti_molecule + 
+    scale_color_manual(
+      values = chr_factor_pal
+      , aesthetics = 'colour'
+    ) -> plt_acti_molecule
+  
   # Output
   return(plt_acti_molecule)
   
-}
-
-# dsdsds --------------------------------------------------------------------
-c(
-  'Ds', 'Eg', 'Hs',
-  'Mn', 'Tr', 'Ad',
-  'So', 'Ah', 'Hz',
-  'An', 'Mt', 'Rb',
-  'In', 'Mc'
-) -> chr_factor_pal
-
-chr_factor_pal %>% 
-  length() %>% 
-  viridis() %>% 
-  set_names(
-    chr_factor_pal
-  ) -> chr_factor_pal
-
-c(
-  chr_factor_pal
-  , 'Aux' = 'lightgrey'
-) -> chr_factor_pal
-
-df_occupations %>% 
-  filter(
-    occupation == 'Crematory Operators'
-  ) -> dsds
-
-fun_acti_type(
-  # df_data = dsds
-  df_data = df_occupations
-  , chr_factor_labels = c(
-    'Ds', 'Eg', 'Hs',
-    'Mn', 'Tr', 'Ad',
-    'So', 'Ah', 'Hz',
-    'An', 'Mt', 'Rb',
-    'In', 'Mc'
-  )
-  , chr_data_id = 
-    df_occupations$occupation
-  , efa_model = efa_model
-  , dbl_scale_lb = 0
-) -> df_acti
-
-map(
-  nrow(df_acti):1
-  , ~ df_acti %>%
-    mutate(generalism = 0) %>%
-    slice_head(n = .x) %>% 
-    fun_acti_plot_molecule()
-) -> list_plt_acti_specialist
-
-map(
-  nrow(df_acti):1
-  , ~ df_acti %>%
-    slice_head(n = .x) %>% 
-    fun_acti_plot_molecule()
-) -> list_plt_acti_generalist
-
-list_plt_acti_specialist
-list_plt_acti_generalist
-
-# lalala --------------------------------------------------------------------
-c(
-  'Ds', 'Eg', 'Hs',
-  'Mn', 'Tr', 'Ad',
-  'So', 'Ah', 'Hz',
-  'An', 'Mt', 'Rb',
-  'In', 'Mc'
-) -> chr_factor_pal
-
-chr_factor_pal %>% 
-  length() %>% 
-  viridis() %>% 
-  set_names(
-    chr_factor_pal
-  ) -> chr_factor_pal
-
-c(
-  chr_factor_pal
-  , 'Aux' = 'lightgrey'
-) -> chr_factor_pal
-
-df_occupations %>% 
-  slice_sample(n = 1) -> 
-  dsds
-
-fun_acti_type(
-  df_data = dsds
-  , chr_factor_labels = c(
-    'Ds', 'Eg', 'Hs',
-    'Mn', 'Tr', 'Ad',
-    'So', 'Ah', 'Hz',
-    'An', 'Mt', 'Rb',
-    'In', 'Mc'
-  )
-  , chr_data_id = 
-    dsds$occupation
-  , efa_model = efa_model
-  , dbl_scale_lb = 0
-) -> df_acti
-
-df_acti
-
-fun_acti_plot_polygon(6) %>% 
-  fun_acti_plot_rotate(
-    dbl_theta = pi/2
-  ) -> df_polygon
-
-df_polygon %>% round(1)
-
-df_polygon %>% 
-  mutate(
-    rank = c(
-      6, 3, 2,
-      5, 4, 1
-    )
-  ) -> df_polygon
-
-df_polygon %>% 
-  left_join(
-    df_acti
-  ) %>% 
-  mutate(
-    atom_color = 
-      if_else(
-        class == 'Aux'
-        , class
-        , factor
-      )
-    , font_color = 
-      if_else(
-        atom_color == 'Aux'
-        , '#212121'
-        , 'white'
-      )
-  ) %>% 
-  ggplot(aes(
-    x = x,
-    y = y,
-    label = factor,
-    size = acti_score
-  )) +
-  geom_polygon(
-    color = 'grey',
-    linewidth = 1.25,
-    fill = NA
-  ) +
-  geom_point(aes(
-    color = atom_color
-  )) +
-  geom_text(size = 5) + 
-  scale_color_manual(
-    values = chr_factor_pal
-  ) + 
-  scale_size_continuous(
-    range = c(20, 30)
-  ) + 
-  guides(
-    size = 'none',
-    color = 'none'
-  ) +
-  xlim(c(-1.5, 1.5)) +
-  ylim(c(-1.5, 1.5)) + 
-  theme_void() + 
-  theme(plot.margin = unit(rep(.5, 4), 'cm')) + 
-  labs(
-    title = dsds$occupation
-    , subtitle = paste(
-      'ACTI Type:',
-      first(df_acti$acti_type)
-      , '(Generalist)'
-    )
-  )
-
-# - ACTI molecule plot ----------------------------------------------------
-fun_acti_plot_molecule <- function(
-    df_acti
-    , chr_palette
-){
-  
-  # Arguments validation
-  
-  # Data wrangling
-  
-  # Calculate bubble positions
-  
-  # Calculate molecule bonds
-  
-  # Plot profile molecule
-  
-  # Output
-  
-}
+  }
 
 # [VECTORIZED FUNCTIONS] --------------------------------------------------
 # # - Generalism function ---------------------------------------------------
@@ -2928,8 +2755,8 @@ fun_acti_plot_molecule <- function(
 #   return(mtx_generalism)
 #   
 # }
-
 # # - Indispensability function ---------------------------------------------
+
 # fun_acti_indispensability <- function(
     #     mtx_data
 #     , dbl_scale_lb
@@ -4470,3 +4297,237 @@ fun_acti_type(
   , efa_model = efa_model
   , dbl_scale_lb = 0
 )
+# ACTI Molecules --------------------------------------------------------------------
+c(
+  'Ds', 'Eg', 'Hs',
+  'Mn', 'Tr', 'Ad',
+  'So', 'Ah', 'Hz',
+  'An', 'Mt', 'Rb',
+  'In', 'Mc'
+) -> chr_factor_pal
+
+chr_factor_pal %>%
+  length() %>%
+  viridis() %>%
+  set_names(
+    chr_factor_pal
+  ) -> chr_factor_pal
+
+c(
+  chr_factor_pal
+  , 'Aux' = 'lightgrey'
+) -> chr_factor_pal
+
+df_occupations %>%
+  filter(
+    occupation == 'Crematory Operators'
+  ) -> dsds
+
+fun_acti_type(
+  df_data = dsds
+  # df_data = df_occupations
+  , chr_factor_labels = c(
+    'Ds', 'Eg', 'Hs',
+    'Mn', 'Tr', 'Ad',
+    'So', 'Ah', 'Hz',
+    'An', 'Mt', 'Rb',
+    'In', 'Mc'
+  )
+  , chr_data_id =
+    dsds$occupation
+  # df_occupations$occupation
+  , efa_model = efa_model
+  , dbl_scale_lb = 0
+) -> df_acti
+
+df_acti %>%
+  split(.$occupation) %>%
+  map(
+    ~ .x %>%
+      fun_acti_plot_molecule(
+        chr_factor_pal
+      )
+  ) -> list_plt_acti
+
+map(
+  1:nrow(df_acti)
+  , ~ df_acti %>%
+    mutate(generalism = 0) %>%
+    slice_head(n = .x) %>%
+    fun_acti_plot_molecule(
+      chr_factor_pal
+    )
+) -> list_plt_acti_specialist
+
+map(
+  1:nrow(df_acti)
+  , ~ df_acti %>%
+    slice_head(n = .x) %>%
+    fun_acti_plot_molecule(
+      chr_factor_pal
+    )
+) -> list_plt_acti_generalist
+
+list_plt_acti_specialist
+
+list_plt_acti_generalist
+
+df_acti %>%
+  group_by(
+    occupation
+  ) %>%
+  reframe(
+    acti_type =
+      first(acti_type)
+  ) %>%
+  left_join(
+    df_occupations %>%
+      select(
+        occupation,
+        employment_variants
+      )
+  ) %>%
+  mutate(
+    pct_population =
+      employment_variants /
+      sum(employment_variants)
+  ) %>%
+  group_by(
+    acti_type
+  ) %>%
+  reframe(
+    pct_population =
+      sum(pct_population)
+  ) %>%
+  arrange(desc(
+    pct_population
+  )) %>%
+  mutate(
+    pct_cum_sum =
+      cumsum(pct_population)
+  ) -> df_acti_freq
+
+df_acti_freq %>%
+  fun_plot.bar(aes(
+    x = acti_type,
+    y = pct_population
+  )
+  , .coord_polar = T
+  , .fun_format.y = percent
+  , .list_labs = list(
+    y = 'ACTI Types Frequency'
+  ))
+
+# # lalala --------------------------------------------------------------------
+# # c(
+# #   'Ds', 'Eg', 'Hs',
+# #   'Mn', 'Tr', 'Ad',
+# #   'So', 'Ah', 'Hz',
+# #   'An', 'Mt', 'Rb',
+# #   'In', 'Mc'
+# # ) -> chr_factor_pal
+# 
+# # chr_factor_pal %>% 
+# #   length() %>% 
+# #   viridis() %>% 
+# #   set_names(
+# #     chr_factor_pal
+# #   ) -> chr_factor_pal
+# 
+# # c(
+# #   chr_factor_pal
+# #   , 'Aux' = 'lightgrey'
+# # ) -> chr_factor_pal
+# 
+# # df_occupations %>% 
+# #   slice_sample(n = 1) -> 
+# #   dsds
+# 
+# # fun_acti_type(
+# #   df_data = dsds
+# #   , chr_factor_labels = c(
+# #     'Ds', 'Eg', 'Hs',
+# #     'Mn', 'Tr', 'Ad',
+# #     'So', 'Ah', 'Hz',
+# #     'An', 'Mt', 'Rb',
+# #     'In', 'Mc'
+# #   )
+# #   , chr_data_id = 
+# #     dsds$occupation
+# #   , efa_model = efa_model
+# #   , dbl_scale_lb = 0
+# # ) -> df_acti
+# 
+# # df_acti
+# 
+# # fun_acti_plot_polygon(6) %>% 
+# #   fun_acti_plot_rotate(
+# #     dbl_theta = pi/2
+# #   ) -> df_polygon
+# 
+# # df_polygon %>% round(1)
+# 
+# # df_polygon %>% 
+# #   mutate(
+# #     rank = c(
+# #       6, 3, 2,
+# #       5, 4, 1
+# #     )
+# #   ) -> df_polygon
+# 
+# # df_polygon %>% 
+# #   left_join(
+# #     df_acti
+# #   ) %>% 
+# #   mutate(
+# #     atom_color = 
+# #       if_else(
+# #         class == 'Aux'
+# #         , class
+# #         , factor
+# #       )
+# #     , font_color = 
+# #       if_else(
+# #         atom_color == 'Aux'
+# #         , '#212121'
+# #         , 'white'
+# #       )
+# #   ) %>% 
+# #   ggplot(aes(
+# #     x = x,
+# #     y = y,
+# #     label = factor,
+# #     size = acti_score
+# #   )) +
+# #   geom_polygon(
+# #     color = 'grey',
+# #     linewidth = 1.25,
+# #     fill = NA
+# #   ) +
+# #   geom_point(aes(
+# #     color = atom_color
+# #   )) +
+# #   geom_text(size = 5) + 
+# #   scale_color_manual(
+# #     values = chr_factor_pal
+# #   ) + 
+# #   scale_size_continuous(
+# #     range = c(20, 30)
+# #   ) + 
+# #   guides(
+# #     size = 'none',
+# #     color = 'none'
+# #   ) +
+# #   xlim(c(-1.5, 1.5)) +
+# #   ylim(c(-1.5, 1.5)) + 
+# #   theme_void() + 
+# #   theme(plot.margin = unit(rep(.5, 4), 'cm')) + 
+# #   labs(
+# #     title = dsds$occupation
+# #     , subtitle = paste(
+# #       'ACTI Type:',
+# #       first(df_acti$acti_type)
+# #       , '(Generalist)'
+# #     )
+# #   )
+
