@@ -1,5 +1,5 @@
 # SETUP ----------------------------------------------------------------
-# region: Packages 
+#region: Packages 
 # CRAN packages
 chr_pkg <- c(
   'devtools' #GitHub packages
