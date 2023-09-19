@@ -2,8 +2,8 @@
 # - Packages ----------------------------------------------------------------
 # CRAN packages
 chr_pkg <- c(
-  'devtools' #GitHub packages
-  , 'ggplot2' #Data visualization
+  'devtools' #GitHub packages a(temp)
+  , 'ggplot2', 'scales' #Data visualization
   , 'readr' #Read data (temp)
   , 'viridis' #Palette (temp)
   , 'vctrs' #Data frame subclasses
@@ -530,6 +530,14 @@ fun_acti_type <- function(
   rm(list_factor_scores)
   rm(list_classification)
   rm(dbl_generalism)
+  
+  df_acti %>% 
+    mutate(
+      factor = 
+        factor(
+          factor
+        )
+    ) -> df_acti
   
   df_acti %>% 
     mutate(
@@ -2644,6 +2652,144 @@ fun_acti_plot_generalist <- function(df_acti){
   
 }
 
+# # - ACTI molecule plotting function ---------------------------------------
+# fun_acti_plot_molecule <- function(
+    #     df_acti
+#     , chr_factor_pal = NULL
+#     , int_factors = NULL
+# ){
+#   
+#   # Arguments validation
+#   stopifnot(
+#     "'df_acti' must be a ACTI data frame." =
+#       any(class(df_acti) == 'df_acti')
+#   )
+#   
+#   stopifnot(
+#     "'chr_factor_pal' must be either NULL or a named character vector." = 
+#       any(
+#         is.character(chr_factor_pal),
+#         is.null(chr_factor_pal)
+#       )
+#   )
+#   
+#   stopifnot(
+#     "'int_factors' must be either NULL or an integer." = 
+#       any(
+#         int_factors > 0,
+#         is.null(int_factors)
+#       )
+#   )
+#   
+#   # Data wrangling
+#   int_factors[[1]] -> int_factors
+#   
+#   if(is.null(int_factors)){
+#     
+#     df_acti %>% 
+#       group_by(
+#         occupation
+#       ) %>% 
+#       tally() %>%
+#       pull(n) %>%
+#       max() -> 
+#       int_factors
+#     
+#   } 
+#   
+#   ceiling(
+#     int_factors
+#   ) -> int_factors
+#   
+#   # Check if valid colors
+#   if(!is.null(chr_factor_pal)){
+#     
+#     tryCatch(
+#       expr = {col2hcl(chr_factor_pal)}
+#       , error = function(e){
+#         
+#         # Warning
+#         warning("'chr_factor_pal' are not valid colors.")
+#         
+#         # Output
+#         return(NULL)
+#         
+#       }
+#     ) -> chr_factor_pal
+#     
+#   }
+#   
+#   # Generate palette if NULL
+#   if(is.null(chr_factor_pal)){
+#     
+#     hue_pal()(int_factors) ->
+#       chr_factor_pal
+#     
+#   }
+#   
+#   rm(int_factors)
+#   
+#   if(!length(names(chr_factor_pal))){
+#     
+#     paste0('F', 1:length(chr_factor_pal)) ->
+#       names(chr_factor_pal)
+#     
+#   }
+#   
+#   # Auxiliary factors
+#   c(
+#     chr_factor_pal,
+#     'Aux' = 'lightgrey'
+#   ) -> chr_factor_pal
+#   
+#   # Conditionally apply plotting functions
+#   df_acti %>% 
+#     split(.$occupation) %>% 
+#     lapply(
+#       function(acti){
+#         
+#         if(first(acti$generalism) > 0.5){
+#           
+#           # If generalist, call generalist function
+#           fun_acti_plot_generalist(acti) ->
+#             plt_acti_molecule
+#           
+#         } else {
+#           
+#           # If specialist, call specialist function
+#           fun_acti_plot_specialist(acti) ->
+#             plt_acti_molecule
+#           
+#         }
+#         
+#         # Output
+#         return(plt_acti_molecule)
+#         
+#       }
+#     ) -> list_plt_acti_molecule
+#   
+#   # Apply manual palette
+#   list_plt_acti_molecule %>% 
+#     lapply(
+#       function(plt_acti_molecule){
+#         
+#         plt_acti_molecule +
+#           scale_color_manual(
+#             values = chr_factor_pal
+#             , aesthetics = 'colour'
+#           ) -> plt_acti_molecule
+#         
+#         # Output
+#         return(plt_acti_molecule)
+#         
+#       }
+#     ) -> list_plt_acti_molecule
+#   
+#   # Output
+#   return(list_plt_acti_molecule)
+#   
+# }
+
 # - ACTI molecule plotting function ---------------------------------------
 fun_acti_plot_molecule <- function(df_acti, chr_factor_pal = NULL){
   
@@ -2662,38 +2808,103 @@ fun_acti_plot_molecule <- function(df_acti, chr_factor_pal = NULL){
   )
   
   # Data wrangling
-  if(!length(names(chr_factor_pal))){
+  # Check if valid colors
+  if(!is.null(chr_factor_pal)){
     
-    paste0('F', 1:length(chr_factor_pal)) ->
+    tryCatch(
+      expr = {col2hcl(chr_factor_pal)}
+      , error = function(e){
+        
+        # Warning
+        warning("'chr_factor_pal' are not valid colors.")
+        
+        # Output
+        return(NULL)
+        
+      }
+    ) -> chr_factor_pal
+    
+  }
+  
+  # Generate palette if NULL
+  if(is.null(chr_factor_pal)){
+    
+    hue_pal()(
+      length(levels(
+        df_acti$factor
+      ))
+    ) -> chr_factor_pal
+    
+  }
+  
+  # Valid factor names
+  if(any(
+    !length(names(chr_factor_pal)),
+    !all(
+      names(chr_factor_pal) %in%
+      levels(df_acti$factor)
+    )
+  )){
+    
+    # Assign valid names
+    levels(df_acti$factor) ->
       names(chr_factor_pal)
     
   }
   
-  if(first(df_acti$generalism) > 0.5){
-    
-    # If generalist, call generalist function
-    fun_acti_plot_generalist(df_acti) ->
-      plt_acti_molecule
-    
-  } else {
-    
-    # If specialist, call specialist function
-    fun_acti_plot_specialist(df_acti) ->
-      plt_acti_molecule
-    
-  }
+  # Auxiliary factors
+  c(
+    chr_factor_pal,
+    'Aux' = 'lightgrey'
+  ) -> chr_factor_pal
+  
+  # Conditionally apply plotting functions
+  df_acti %>% 
+    split(.$occupation) %>% 
+    lapply(
+      function(acti){
+        
+        if(first(acti$generalism) > 0.5){
+          
+          # If generalist, call generalist function
+          fun_acti_plot_generalist(acti) ->
+            plt_acti_molecule
+          
+        } else {
+          
+          # If specialist, call specialist function
+          fun_acti_plot_specialist(acti) ->
+            plt_acti_molecule
+          
+        }
+        
+        # Output
+        return(plt_acti_molecule)
+        
+      }
+    ) -> list_plt_acti_molecule
   
   # Apply manual palette
-  plt_acti_molecule + 
-    scale_color_manual(
-      values = chr_factor_pal
-      , aesthetics = 'colour'
-    ) -> plt_acti_molecule
+  list_plt_acti_molecule %>% 
+    lapply(
+      function(plt_acti_molecule){
+        
+        plt_acti_molecule +
+          scale_color_manual(
+            values = chr_factor_pal
+            , aesthetics = 'colour'
+          ) -> plt_acti_molecule
+        
+        # Output
+        return(plt_acti_molecule)
+        
+      }
+    ) -> list_plt_acti_molecule
   
   # Output
-  return(plt_acti_molecule)
+  return(list_plt_acti_molecule)
   
-  }
+}
 
 # [VECTORIZED FUNCTIONS] --------------------------------------------------
 # # - Generalism function ---------------------------------------------------
@@ -4306,17 +4517,17 @@ c(
   'In', 'Mc'
 ) -> chr_factor_pal
 
-chr_factor_pal %>%
-  length() %>%
-  viridis() %>%
-  set_names(
-    chr_factor_pal
-  ) -> chr_factor_pal
+# chr_factor_pal %>%
+#   length() %>%
+#   viridis() %>%
+#   set_names(
+#     chr_factor_pal
+#   ) -> chr_factor_pal
 
-c(
-  chr_factor_pal
-  , 'Aux' = 'lightgrey'
-) -> chr_factor_pal
+# c(
+#   chr_factor_pal
+#   , 'Aux' = 'lightgrey'
+# ) -> chr_factor_pal
 
 df_occupations %>%
   filter(
@@ -4324,29 +4535,28 @@ df_occupations %>%
   ) -> dsds
 
 fun_acti_type(
-  df_data = dsds
-  # df_data = df_occupations
-  , chr_factor_labels = c(
-    'Ds', 'Eg', 'Hs',
-    'Mn', 'Tr', 'Ad',
-    'So', 'Ah', 'Hz',
-    'An', 'Mt', 'Rb',
-    'In', 'Mc'
-  )
+  # df_data = dsds
+  df_data = 
+    df_occupations %>% 
+    slice_head(n = 10)
+  # , chr_factor_labels = c(
+  #   'Ds', 'Eg', 'Hs',
+  #   'Mn', 'Tr', 'Ad',
+  #   'So', 'Ah', 'Hz',
+  #   'An', 'Mt', 'Rb',
+  #   'In', 'Mc'
+  # )
   , chr_data_id =
-    dsds$occupation
-  # df_occupations$occupation
+    # dsds$occupation
+  df_occupations$occupation[1:10]
   , efa_model = efa_model
   , dbl_scale_lb = 0
 ) -> df_acti
 
 df_acti %>%
-  split(.$occupation) %>%
-  map(
-    ~ .x %>%
-      fun_acti_plot_molecule(
-        chr_factor_pal
-      )
+  fun_acti_plot_molecule(
+    # chr_factor_pal =
+    #   chr_factor_pal
   ) -> list_plt_acti
 
 map(
