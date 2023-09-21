@@ -1381,14 +1381,13 @@ fun_acti_plot_specialist <- function(df_acti){
     "'df_acti' must be a data frame of the 'df_acti' class." =
       any(class(df_acti) == 'df_acti')
   )
-  
   # Specialist molecule helper functions
   if(nrow(df_acti) == 1){
     
     # Polygon
     fun_acti_plot_polygon(1) %>%
       mutate(
-        y = y - 0.75,
+        # y = y - 0.75,
         rank = 1
       ) -> df_polygon
     
@@ -2073,8 +2072,16 @@ fun_acti_plot_specialist <- function(df_acti){
     geom_text(aes(
       label = factor
     ), size = 5) +
-    scale_xlim +
-    scale_ylim +
+    xlim(c(
+      min(df_polygon$x) - 0.5,
+      max(df_polygon$x) + 0.5
+    )) + 
+    ylim(c(
+      min(df_polygon$y) - 0.5,
+      max(df_polygon$y) + 0.5
+    )) + 
+    # scale_xlim +
+    # scale_ylim +
     scale_size_continuous(
       range = c(20, 30)
     ) +
@@ -2631,8 +2638,16 @@ fun_acti_plot_generalist <- function(df_acti){
     geom_text(aes(
       label = factor
     ), size = 5) +
-    scale_xlim +
-    scale_ylim +
+    xlim(c(
+      min(df_polygon$x) - 0.5,
+      max(df_polygon$x) + 0.5
+    )) + 
+    ylim(c(
+      min(df_polygon$y) - 0.5,
+      max(df_polygon$y) + 0.5
+    )) + 
+    # scale_xlim +
+    # scale_ylim +
     scale_size_continuous(
       range = c(20, 30)
     ) +
@@ -2651,144 +2666,6 @@ fun_acti_plot_generalist <- function(df_acti){
   return(plt_acti_molecule)
   
 }
-
-# # - ACTI molecule plotting function ---------------------------------------
-# fun_acti_plot_molecule <- function(
-    #     df_acti
-#     , chr_factor_pal = NULL
-#     , int_factors = NULL
-# ){
-#   
-#   # Arguments validation
-#   stopifnot(
-#     "'df_acti' must be a ACTI data frame." =
-#       any(class(df_acti) == 'df_acti')
-#   )
-#   
-#   stopifnot(
-#     "'chr_factor_pal' must be either NULL or a named character vector." = 
-#       any(
-#         is.character(chr_factor_pal),
-#         is.null(chr_factor_pal)
-#       )
-#   )
-#   
-#   stopifnot(
-#     "'int_factors' must be either NULL or an integer." = 
-#       any(
-#         int_factors > 0,
-#         is.null(int_factors)
-#       )
-#   )
-#   
-#   # Data wrangling
-#   int_factors[[1]] -> int_factors
-#   
-#   if(is.null(int_factors)){
-#     
-#     df_acti %>% 
-#       group_by(
-#         occupation
-#       ) %>% 
-#       tally() %>%
-#       pull(n) %>%
-#       max() -> 
-#       int_factors
-#     
-#   } 
-#   
-#   ceiling(
-#     int_factors
-#   ) -> int_factors
-#   
-#   # Check if valid colors
-#   if(!is.null(chr_factor_pal)){
-#     
-#     tryCatch(
-#       expr = {col2hcl(chr_factor_pal)}
-#       , error = function(e){
-#         
-#         # Warning
-#         warning("'chr_factor_pal' are not valid colors.")
-#         
-#         # Output
-#         return(NULL)
-#         
-#       }
-#     ) -> chr_factor_pal
-#     
-#   }
-#   
-#   # Generate palette if NULL
-#   if(is.null(chr_factor_pal)){
-#     
-#     hue_pal()(int_factors) ->
-#       chr_factor_pal
-#     
-#   }
-#   
-#   rm(int_factors)
-#   
-#   if(!length(names(chr_factor_pal))){
-#     
-#     paste0('F', 1:length(chr_factor_pal)) ->
-#       names(chr_factor_pal)
-#     
-#   }
-#   
-#   # Auxiliary factors
-#   c(
-#     chr_factor_pal,
-#     'Aux' = 'lightgrey'
-#   ) -> chr_factor_pal
-#   
-#   # Conditionally apply plotting functions
-#   df_acti %>% 
-#     split(.$occupation) %>% 
-#     lapply(
-#       function(acti){
-#         
-#         if(first(acti$generalism) > 0.5){
-#           
-#           # If generalist, call generalist function
-#           fun_acti_plot_generalist(acti) ->
-#             plt_acti_molecule
-#           
-#         } else {
-#           
-#           # If specialist, call specialist function
-#           fun_acti_plot_specialist(acti) ->
-#             plt_acti_molecule
-#           
-#         }
-#         
-#         # Output
-#         return(plt_acti_molecule)
-#         
-#       }
-#     ) -> list_plt_acti_molecule
-#   
-#   # Apply manual palette
-#   list_plt_acti_molecule %>% 
-#     lapply(
-#       function(plt_acti_molecule){
-#         
-#         plt_acti_molecule +
-#           scale_color_manual(
-#             values = chr_factor_pal
-#             , aesthetics = 'colour'
-#           ) -> plt_acti_molecule
-#         
-#         # Output
-#         return(plt_acti_molecule)
-#         
-#       }
-#     ) -> list_plt_acti_molecule
-#   
-#   # Output
-#   return(list_plt_acti_molecule)
-#   
-# }
 
 # - ACTI molecule plotting function ---------------------------------------
 fun_acti_plot_molecule <- function(df_acti, chr_factor_pal = NULL){
@@ -3489,21 +3366,6 @@ fun_acti_plot_molecule <- function(df_acti, chr_factor_pal = NULL){
 # # 
 # # }
 # # [TEST] ------------------------------------------------------------------
-# - Data ------------------------------------------------------------------
-library(readr)
-
-read_rds(
-  'C:/Users/Cao/Documents/Github/atlas-research/data/efa/efa_equamax_14factors.rds'
-) -> efa_model
-
-read_csv(
-  'C:/Users/Cao/Documents/Github/Atlas-Research/Data/df_occupations_2023_efa.csv'
-) -> df_occupations
-
-# read_csv(
-#   'https://docs.google.com/spreadsheets/d/e/2PACX-1vSVdXvQMe4DrKS0LKhY0CZRlVuCCkEMHVJHQb_U-GKF21CjcchJ5jjclGSlQGYa5Q/pub?gid=1515296378&single=true&output=csv'
-# ) -> df_input
-
 # # - Skewness-centered data ------------------------------------------------
 # map(
 #   # seq(0, 1, length.out = 5) %>%
@@ -4418,6 +4280,21 @@ kmeans_dsds$
 print(n = Inf)
 
 # [TEST] ------------------------------------------------------------------
+# - Data ------------------------------------------------------------------
+library(readr)
+
+read_rds(
+  'C:/Users/Cao/Documents/Github/atlas-research/data/efa/efa_equamax_14factors.rds'
+) -> efa_model
+
+read_csv(
+  'C:/Users/Cao/Documents/Github/Atlas-Research/Data/df_occupations_2023_efa.csv'
+) -> df_occupations
+
+# read_csv(
+#   'https://docs.google.com/spreadsheets/d/e/2PACX-1vSVdXvQMe4DrKS0LKhY0CZRlVuCCkEMHVJHQb_U-GKF21CjcchJ5jjclGSlQGYa5Q/pub?gid=1515296378&single=true&output=csv'
+# ) -> df_input
+
 # - Generalism test -------------------------------------------------------
 fun_acti_generalism(
   dbl_profile = 
@@ -4535,95 +4412,115 @@ df_occupations %>%
   ) -> dsds
 
 fun_acti_type(
-  # df_data = dsds
-  df_data = 
-    df_occupations %>% 
-    slice_head(n = 10)
-  # , chr_factor_labels = c(
-  #   'Ds', 'Eg', 'Hs',
-  #   'Mn', 'Tr', 'Ad',
-  #   'So', 'Ah', 'Hz',
-  #   'An', 'Mt', 'Rb',
-  #   'In', 'Mc'
-  # )
+  df_data = dsds
+  # df_data = 
+  # df_occupations %>% 
+  # slice_head(n = 10)
+  , chr_factor_labels = c(
+    'Ds', 'Eg', 'Hs',
+    'Mn', 'Tr', 'Ad',
+    'So', 'Ah', 'Hz',
+    'An', 'Mt', 'Rb',
+    'In', 'Mc'
+  )
   , chr_data_id =
-    # dsds$occupation
-  df_occupations$occupation[1:10]
+    dsds$occupation
+  # df_occupations$occupation[1:10]
   , efa_model = efa_model
   , dbl_scale_lb = 0
 ) -> df_acti
 
-df_acti %>%
+map_df(
+  1:nrow(df_acti)
+  , ~ df_acti %>% 
+    slice_head(
+      n = .x
+    ) %>% 
+    mutate(
+      generalism = 0
+      , occupation = 
+        paste0(
+          occupation,
+          '_specialist'
+        )
+      , occupation = 
+        paste0(
+          occupation, .x
+        )
+    )
+) %>% 
+  bind_rows(
+    map_df(
+      1:nrow(df_acti)
+      , ~ df_acti %>% 
+        slice_head(
+          n = .x
+        ) %>% 
+        mutate(
+          occupation = 
+            paste0(
+              occupation,
+              '_generalist'
+            )
+          , occupation = 
+            paste0(
+              occupation, .x
+            )
+        ))
+  ) -> df_acti
+
+df_acti %>% 
+  mutate(
+    occupation =
+      str_replace_all(
+        occupation
+        , ' ', '_'
+      )
+    , occupation = 
+      str_to_lower(
+        occupation
+      )
+    , occupation = factor(
+      occupation
+      , levels = unique(
+        occupation
+      )
+    )
+  ) -> df_acti
+
+# df_acti %>% 
+#   fun_acti_plot_molecule(
+#     # chr_factor_pal =
+#     #   chr_factor_pal
+#   ) -> list_plt_acti
+# 
+# list(
+#   'height' = 210,
+#   'width' = 148
+# ) -> list_paper_a5
+# 
+# map2(
+#   .x = list_plt_acti
+#   , .y = names(list_plt_acti)
+#   , ~ ggsave(
+#     filename = paste0(.y, '.pdf')
+#     , plot = .x
+#     , height = 
+#       list_paper_a5$
+#       width
+#     , width = 
+#       list_paper_a5$
+#       height
+#     , units = 'mm'
+#     , device = 'pdf'
+#     , path = getwd()
+#   )
+# )
+
+df_acti %>% 
   fun_acti_plot_molecule(
     # chr_factor_pal =
     #   chr_factor_pal
   ) -> list_plt_acti
 
-map(
-  1:nrow(df_acti)
-  , ~ df_acti %>%
-    mutate(generalism = 0) %>%
-    slice_head(n = .x) %>%
-    fun_acti_plot_molecule(
-      chr_factor_pal
-    )
-) -> list_plt_acti_specialist
-
-map(
-  1:nrow(df_acti)
-  , ~ df_acti %>%
-    slice_head(n = .x) %>%
-    fun_acti_plot_molecule(
-      chr_factor_pal
-    )
-) -> list_plt_acti_generalist
-
-list_plt_acti_specialist
-
-list_plt_acti_generalist
-
-df_acti %>%
-  group_by(
-    occupation
-  ) %>%
-  reframe(
-    acti_type =
-      first(acti_type)
-  ) %>%
-  left_join(
-    df_occupations %>%
-      select(
-        occupation,
-        employment_variants
-      )
-  ) %>%
-  mutate(
-    pct_population =
-      employment_variants /
-      sum(employment_variants)
-  ) %>%
-  group_by(
-    acti_type
-  ) %>%
-  reframe(
-    pct_population =
-      sum(pct_population)
-  ) %>%
-  arrange(desc(
-    pct_population
-  )) %>%
-  mutate(
-    pct_cum_sum =
-      cumsum(pct_population)
-  ) -> df_acti_freq
-
-df_acti_freq %>%
-  fun_plot.bar(aes(
-    x = acti_type,
-    y = pct_population
-  )
-  , .coord_polar = T
-  , .fun_format.y = percent
-  , .list_labs = list(
-    y = 'ACTI Types Frequency'
-  ))
+list_plt_acti
