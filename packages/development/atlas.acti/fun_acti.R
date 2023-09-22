@@ -3093,7 +3093,7 @@ fun_acti_plot_molecule <- function(df_acti, chr_factor_pal = NULL){
 # # read_csv(
 # #   'https://docs.google.com/spreadsheets/d/e/2PACX-1vSVdXvQMe4DrKS0LKhY0CZRlVuCCkEMHVJHQb_U-GKF21CjcchJ5jjclGSlQGYa5Q/pub?gid=1515296378&single=true&output=csv'
 # # ) -> df_input
-# 
+
 # # - Generalism test -------------------------------------------------------
 # fun_acti_generalism(
 #   dbl_profile = 
@@ -3212,8 +3212,8 @@ fun_acti_plot_molecule <- function(df_acti, chr_factor_pal = NULL){
 # 
 # fun_acti_type(
 #   df_data = dsds
-#   # df_data = 
-#   # df_occupations %>% 
+#   # df_data =
+#   # df_occupations %>%
 #   # slice_head(n = 10)
 #   , chr_factor_labels = c(
 #     'Ds', 'Eg', 'Hs',
@@ -3231,51 +3231,51 @@ fun_acti_plot_molecule <- function(df_acti, chr_factor_pal = NULL){
 # 
 # map_df(
 #   1:nrow(df_acti)
-#   , ~ df_acti %>% 
+#   , ~ df_acti %>%
 #     slice_head(
 #       n = .x
-#     ) %>% 
+#     ) %>%
 #     mutate(
 #       generalism = 0
-#       , occupation = 
+#       , occupation =
 #         paste0(
 #           occupation,
 #           '_specialist'
 #         )
-#       , occupation = 
+#       , occupation =
 #         paste0(
 #           occupation, .x
 #         )
 #     )
-# ) %>% 
+# ) %>%
 #   bind_rows(
 #     map_df(
 #       1:nrow(df_acti)
-#       , ~ df_acti %>% 
+#       , ~ df_acti %>%
 #         slice_head(
 #           n = .x
-#         ) %>% 
+#         ) %>%
 #         mutate(
-#           occupation = 
+#           occupation =
 #             paste0(
 #               occupation,
 #               '_generalist'
 #             )
-#           , occupation = 
+#           , occupation =
 #             paste0(
 #               occupation, .x
 #             )
 #         ))
 #   ) -> df_acti
 # 
-# df_acti %>% 
+# df_acti %>%
 #   mutate(
 #     occupation =
 #       str_replace_all(
 #         occupation
 #         , ' ', '_'
 #       )
-#     , occupation = 
+#     , occupation =
 #       str_to_lower(
 #         occupation
 #       )
@@ -3303,7 +3303,7 @@ fun_acti_plot_molecule <- function(df_acti, chr_factor_pal = NULL){
 #   'width' = 105
 # ) -> list_paper_a6
 # 
-# map2(
+# map2
 #   .x = list_plt_acti
 #   , .y = names(list_plt_acti)
 #   , ~ ggsave(
