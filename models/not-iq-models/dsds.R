@@ -81,7 +81,7 @@ df_occupations %>%
     sd = sqrt(wtd.var(value, employment_variants))
   ) -> df_notiq
 
-128/atlas.notiq::fun_notiq_quotient(
+atlas.notiq::fun_notiq_quotient(
   dbl_proxy_scores = 
     df_data %>% 
     select(any_of(
@@ -97,6 +97,24 @@ df_occupations %>%
   , dbl_iq_sd = 15
 )
 
+(
+  128 /
+atlas.notiq::fun_notiq_quotient(
+  dbl_proxy_scores = 
+    df_data %>% 
+    select(any_of(
+      chr_notiq
+    )) %>% 
+    slice(2) %>%
+    as.numeric()
+  , dbl_proxy_mean = 
+    df_notiq$mean
+  , dbl_proxy_sd = 
+    df_notiq$sd
+  , dbl_iq_mean = 100
+  , dbl_iq_sd = 15
+  )
+) - 1
 
 map_df(
   100 * round(seq(0, 1, length.out = 7), 2) %>% 
@@ -109,4 +127,3 @@ map_df(
     , dbl_iq_sd = 15
   )
 )
-
