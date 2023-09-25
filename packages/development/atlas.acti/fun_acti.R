@@ -2,7 +2,7 @@
 # - Packages ----------------------------------------------------------------
 # CRAN packages
 chr_pkg <- c(
-  'devtools' #GitHub packages a(temp)
+  'devtools' #GitHub packages (temp)
   , 'ggplot2', 'scales' #Data visualization
   , 'readr' #Read data (temp)
   , 'viridis' #Palette (temp)
@@ -254,12 +254,70 @@ fun_acti_competency <- function(
   
 }
 
+# # - Classifier function -------------------------------------------------
+# fun_acti_classifier <- function(
+#     dbl_var
+#     , dbl_scale_lb = 0
+#     , dbl_scale_ub = 1
+#     , int_levels = 5
+# ){
+#   
+#   # Arguments validation
+#   stopifnot(
+#     "'dbl_var' must be numeric." = 
+#       is.numeric(dbl_var)
+#   )
+#   
+#   stopifnot(
+#     "'dbl_scale_lb' must be numeric." = 
+#       is.numeric(dbl_scale_lb)
+#   )
+#   
+#   stopifnot(
+#     "'dbl_scale_ub' must be numeric." = 
+#       is.numeric(dbl_scale_ub)
+#   )
+#   
+#   stopifnot(
+#     "'int_levels' must be an integer." = 
+#       is.numeric(int_levels)
+#   )
+#   
+#   # Data wrangling
+#   dbl_scale_lb[[1]] -> dbl_scale_lb
+#   
+#   dbl_scale_ub[[1]] -> dbl_scale_ub
+#   
+#   int_levels[[1]] -> int_levels
+#   ceiling(int_levels) -> int_levels
+#   
+#   # Classify competency level
+#   findInterval(
+#     dbl_var
+#     , seq(
+#       dbl_scale_lb, 
+#       dbl_scale_ub, 
+#       length.out = 1 +
+#         int_levels
+#     )
+#     , all.inside = T
+#   ) -> int_class_id
+#   
+#   names(dbl_var) -> 
+#     names(int_class_id)
+#   
+#   # Output
+#   return(int_class_id)
+#   
+# }
+
 # - Classifier function -------------------------------------------------
 fun_acti_classifier <- function(
     dbl_var
     , dbl_scale_lb = 0
     , dbl_scale_ub = 1
     , int_levels = 5
+    , chr_class_labels = NULL
 ){
   
   # Arguments validation
@@ -283,6 +341,18 @@ fun_acti_classifier <- function(
       is.numeric(int_levels)
   )
   
+  stopifnot(
+    "'chr_class_labels' must be either NULL or a character vector with length equal to 'int_levels'." = 
+      any(
+        is.null(chr_class_labels),
+        all(
+          is.character(chr_class_labels),
+          length(chr_class_labels) ==
+            ceiling(int_levels[[1]])
+        )
+      )
+  )
+  
   # Data wrangling
   dbl_scale_lb[[1]] -> dbl_scale_lb
   
@@ -291,7 +361,7 @@ fun_acti_classifier <- function(
   int_levels[[1]] -> int_levels
   ceiling(int_levels) -> int_levels
   
-  # Classify competency level
+  # Classify variable
   findInterval(
     dbl_var
     , seq(
@@ -306,19 +376,381 @@ fun_acti_classifier <- function(
   names(dbl_var) -> 
     names(int_class_id)
   
+  if(!is.null(chr_class_labels)){
+    
+    factor(
+      int_class_id
+      , levels =
+        1:int_levels
+      , labels =
+        chr_class_labels
+      , ordered = T
+    ) -> int_class_id
+    
+  }
+  
   # Output
   return(int_class_id)
   
 }
+
+# # - Numerical ACTI --------------------------------------------------------
+# fun_acti_type <- function(
+#     df_data
+#     , efa_model
+#     , chr_factor_labels = NULL
+#     , chr_data_id = NULL
+#     , dbl_scale_lb = 0
+#     , dbl_generalism = NULL
+# ){
+# 
+#   # Arguments validation
+#   stopifnot(
+#     "'df_data' must be a data frame containing item scores." =
+#       all(
+#         is.data.frame(df_data)
+#         , any(
+#           loadings(efa_model)[,] %>%
+#             rownames() %in%
+#             names(df_data)
+#         )))
+# 
+#   stopifnot(
+#     "'chr_factor_labels' must be either NULL or a character vector with labels for each factor." =
+#       any(
+#         is.null(chr_factor_labels)
+#         , all(
+#           is.character(chr_factor_labels)
+#           , length(chr_factor_labels) ==
+#             efa_model$factors
+#         )
+#       )
+#   )
+# 
+#   stopifnot(
+#     "'chr_data_id' must be either NULL or a character vector with labels for each observation." =
+#       any(
+#         is.null(chr_data_id)
+#         , all(
+#           is.character(chr_data_id)
+#           , length(chr_data_id) ==
+#             nrow(df_data)
+#         )
+#       )
+#   )
+# 
+#   stopifnot(
+#     "'dbl_scale_lb' must be numeric." =
+#       is.numeric(dbl_scale_lb)
+#   )
+# 
+#   stopifnot(
+#     "'dbl_generalism' must be either NULL or numeric." =
+#       any(
+#         is.numeric(dbl_generalism)
+#         , is.null(dbl_generalism)
+#       )
+#   )
+# 
+#   # Data wrangling
+#   dbl_scale_lb[[1]] -> dbl_scale_lb
+# 
+#   df_data %>%
+#     select(any_of(
+#       efa_model$
+#         model %>%
+#         colnames()
+#     )) -> df_data
+# 
+#   dbl_generalism[[1]] -> dbl_generalism
+# 
+#   if(is.null(dbl_generalism)){
+# 
+#     apply(
+#       df_data, 1
+#       , fun_acti_generalism
+#       , dbl_scale_lb =
+#         dbl_scale_lb
+#     ) -> dbl_generalism
+# 
+#   }
+# 
+#   # Factor scores
+#   fun_ftools_factor_scores(
+#     df_data =
+#       df_data
+#     , efa_model =
+#       efa_model
+#     , lgc_pivot = F
+#   ) -> df_factor_scores
+# 
+#   rm(df_data)
+# 
+#   # Apply indispensability function
+#   mapply(
+#     function(profile, generalism){
+# 
+#       # Calculate item indispensability
+#       fun_acti_indispensability(
+#         dbl_profile = profile
+#         , dbl_scale_lb = dbl_scale_lb
+#         , dbl_generalism = generalism
+#       ) -> dbl_indispensability
+# 
+#       # Output
+#       return(dbl_indispensability)
+# 
+#     }
+#     , profile = as_tibble(t(
+#       df_factor_scores
+#     ))
+#     , generalism = dbl_generalism
+#   ) %>%
+#     t() %>%
+#     as_tibble() ->
+#     df_factor_scores
+# 
+#   # Name factors
+#   if(is.null(chr_factor_labels)){
+# 
+#     paste0('F', 1:ncol(
+#       df_factor_scores
+#     )) -> chr_factor_labels
+# 
+#   }
+# 
+#   names(
+#     df_factor_scores
+#   ) <- chr_factor_labels
+# 
+#   rm(chr_factor_labels)
+# 
+#   # Sort
+#   apply(
+#     df_factor_scores, 1
+#     , sort
+#     , decreasing = T
+#     , simplify = F
+#   ) -> list_factor_scores
+# 
+#   rm(df_factor_scores)
+# 
+#   # Classify scores
+#   lapply(
+#     list_factor_scores
+#     , function(x){
+# 
+#       fun_acti_classifier(
+#         dbl_var = x
+#         , dbl_scale_lb = 0
+#         , dbl_scale_ub = 1
+#         , int_levels = 3
+#       )
+# 
+#     }
+#   ) -> list_classification
+# 
+#   # Keep only dominant and auxiliary factors (drop minor)
+#   lapply(
+#     list_classification
+#     , function(x){return(x[x > 1])}
+#   ) -> list_classification
+# 
+#   Map(
+#     function(factor_scores, factor_class){
+# 
+#       # Get dominant and auxiliary factors
+#       factor_scores[
+#         names(factor_scores) %in%
+#           names(factor_class)
+#       ] -> factor_scores
+# 
+#       # Output
+#       return(factor_scores)
+# 
+#     }
+#     , factor_scores = list_factor_scores
+#     , factor_class = list_classification
+#   ) -> list_factor_scores
+# 
+#   chr_data_id -> names(list_classification)
+#   chr_data_id -> names(list_factor_scores)
+#   chr_data_id -> names(dbl_generalism)
+# 
+#   rm(chr_data_id)
+# 
+#   # ACTI data frame
+#   dbl_generalism %>%
+#     as_tibble(
+#       rownames = 'occupation'
+#     ) %>%
+#     rename(
+#       generalism = 2
+#     ) %>%
+#     full_join(
+#       bind_rows(
+#         list_factor_scores
+#         , .id = 'occupation'
+#       ) %>%
+#         pivot_longer(
+#           cols = where(is.numeric)
+#           , names_to = 'factor'
+#           , values_to = 'acti_score'
+#         )
+#     ) %>%
+#     full_join(
+#       bind_rows(
+#         list_classification
+#         , .id = 'occupation'
+#       ) %>%
+#         pivot_longer(
+#           cols = where(is.numeric)
+#           , names_to = 'factor'
+#           , values_to = 'class'
+#         )
+#     ) -> df_acti
+# 
+#   rm(list_factor_scores)
+#   rm(list_classification)
+#   rm(dbl_generalism)
+# 
+#   df_acti %>%
+#     mutate(
+#       factor =
+#         factor(
+#           factor
+#         )
+#     ) -> df_acti
+# 
+#   df_acti %>%
+#     mutate(
+#       class =
+#         case_match(
+#           class
+#           , 2 ~ 'Aux'
+#           , 3 ~ 'Dom'
+#         )
+#     ) %>%
+#     drop_na() %>%
+#     group_by(
+#       occupation
+#     ) %>%
+#     arrange(desc(
+#       acti_score
+#     ), .by_group = T
+#     ) %>%
+#     mutate(
+#       rank = row_number()
+#     ) %>%
+#     ungroup() ->
+#     df_acti
+# 
+#   # Factor and font color
+#   df_acti %>%
+#     mutate(
+#       atom_color =
+#         if_else(
+#           class == 'Aux'
+#           , class
+#           , factor
+#         )
+#       , font_color =
+#         atom_color
+#     ) -> df_acti
+# 
+#   # ACTI type acronym helper function
+#   fun_acti_type_helper <- function(df_data){
+# 
+#     # ACTI type acronym
+#     df_data %>%
+#       filter(
+#         class == 'Dom'
+#       ) %>%
+#       pull(factor) %>%
+#       paste0(
+#         collapse = '-'
+#       ) -> chr_dom
+# 
+#     df_data %>%
+#       filter(
+#         class != 'Dom'
+#       ) %>%
+#       pull(factor) %>%
+#       paste0(
+#         collapse = '-'
+#       ) -> chr_aux
+# 
+#     if(chr_aux != ''){
+# 
+#       paste0(
+#         '/', chr_aux
+#       ) -> chr_aux
+# 
+#     }
+# 
+#     paste0(
+#       chr_dom
+#       , chr_aux
+#     ) -> chr_acti_type
+# 
+#     if(
+#       first(
+#         df_data$
+#         generalism
+#       ) > 0.5
+#     ){
+# 
+#       paste0(
+#         'G:', chr_acti_type
+#       ) -> chr_acti_type
+# 
+#     } else {
+# 
+#       paste0(
+#         'S:', chr_acti_type
+#       ) -> chr_acti_type
+# 
+#     }
+# 
+#     # Output
+#     return(chr_acti_type)
+# 
+#   }
+# 
+#   # Calculate ACTI acronyms
+#   df_acti %>%
+#     split(.$occupation) %>%
+#     sapply(
+#       fun_acti_type_helper
+#     ) %>%
+#     as_tibble(
+#       rownames = 'occupation'
+#     ) %>%
+#     rename(
+#       acti_type = 2
+#     ) %>%
+#     left_join(
+#       df_acti
+#     ) -> df_acti
+# 
+#   # 'df_acti' subclass
+#   df_acti %>%
+#     new_data_frame(
+#       class = c('df_acti', 'tbl')
+#     ) -> df_acti
+# 
+#   # Output
+#   return(df_acti)
+# 
+# }
 
 # - Numerical ACTI --------------------------------------------------------
 fun_acti_type <- function(
     df_data
     , efa_model
     , chr_factor_labels = NULL
-    , chr_data_id = NULL
+    , chr_id_col = NULL
     , dbl_scale_lb = 0
-    , dbl_generalism = NULL
 ){
   
   # Arguments validation
@@ -345,13 +777,12 @@ fun_acti_type <- function(
   )
   
   stopifnot(
-    "'chr_data_id' must be either NULL or a character vector with labels for each observation." =
+    "'chr_id_col' must be either NULL or a string indicating an ID column in 'df_data'." =
       any(
-        is.null(chr_data_id)
+        is.null(chr_id_col)
         , all(
-          is.character(chr_data_id)
-          , length(chr_data_id) ==
-            nrow(df_data)
+          is.character(chr_id_col)
+          , chr_id_col %in% names(df_data)
         )
       )
   )
@@ -361,36 +792,35 @@ fun_acti_type <- function(
       is.numeric(dbl_scale_lb)
   )
   
-  stopifnot(
-    "'dbl_generalism' must be either NULL or numeric." =
-      any(
-        is.numeric(dbl_generalism)
-        , is.null(dbl_generalism)
-      )
-  )
-  
   # Data wrangling
   dbl_scale_lb[[1]] -> dbl_scale_lb
   
   df_data %>%
-    select(any_of(
-      efa_model$
-        model %>%
-        colnames()
-    )) -> df_data
+    select(
+      any_of(c(
+        chr_id_col,
+        efa_model$
+          model %>%
+          colnames()
+      ))
+    ) -> df_data
   
-  dbl_generalism[[1]] -> dbl_generalism
+  # Generalism
+  df_data %>% 
+    group_by(any_of(
+      chr_id_col
+    )) %>% 
+    reframe(
+      generalism = 
+        fun_acti_generalism()
+    )
   
-  if(is.null(dbl_generalism)){
-    
-    apply(
-      df_data, 1
-      , fun_acti_generalism
-      , dbl_scale_lb =
-        dbl_scale_lb
-    ) -> dbl_generalism
-    
-  }
+  # apply(
+  #   df_data, 1
+  #   , fun_acti_generalism
+  #   , dbl_scale_lb =
+  #     dbl_scale_lb
+  # ) -> dbl_generalism
   
   # Factor scores
   fun_ftools_factor_scores(
@@ -398,10 +828,36 @@ fun_acti_type <- function(
       df_data
     , efa_model =
       efa_model
-    , lgc_pivot = F
+    , lgc_pivot = T
   ) -> df_factor_scores
   
+  return(df_factor_scores)
+  
+  rm(efa_model)
   rm(df_data)
+  
+  df_factor_scores %>% 
+    group_by(
+      occupation
+    ) %>% 
+    mutate(
+      acti_score = 
+        fun_acti_indispensability(
+          dbl_profile = factor_score
+        )
+      , acti_class = 
+        fun_acti_classifier(
+          acti_score
+          , dbl_scale_ub = 1
+          , dbl_scale_lb = 0
+          , int_levels = 3
+          , chr_class_labels = 
+            c('Dom', 'Aux', 'Min')
+        )
+    ) %>% 
+    filter(
+      acti_class != 'Min'
+    )
   
   # Apply indispensability function
   mapply(
@@ -490,11 +946,11 @@ fun_acti_type <- function(
     , factor_class = list_classification
   ) -> list_factor_scores
   
-  chr_data_id -> names(list_classification)
-  chr_data_id -> names(list_factor_scores)
-  chr_data_id -> names(dbl_generalism)
+  chr_id_col -> names(list_classification)
+  chr_id_col -> names(list_factor_scores)
+  chr_id_col -> names(dbl_generalism)
   
-  rm(chr_data_id)
+  rm(chr_id_col)
   
   # ACTI data frame
   dbl_generalism %>%
@@ -660,6 +1116,23 @@ fun_acti_type <- function(
   return(df_acti)
   
 }
+
+# dsds -------------------------------------------------------------------
+fun_acti_type(
+  df_data = dsds
+  , chr_factor_labels = c(
+    'Ds', 'Eg', 'Hs',
+    'Mn', 'Tr', 'Ad',
+    'So', 'Ah', 'Hz',
+    'An', 'Mt', 'Rb',
+    'In', 'Mc'
+  )
+  , chr_id_col = 'occupation'
+  , efa_model = efa_model
+  , dbl_scale_lb = 0
+) -> lalala
+
+lalala
 
 # [PLOTTING FUNCTIONS] -----------------------------------------------------
 # - Polygon helper function -----------------------------------------------
@@ -3078,263 +3551,298 @@ fun_acti_plot_molecule <- function(df_acti, chr_factor_pal = NULL){
 # list_acti
 # dsds
 
-# # [TEST] ------------------------------------------------------------------
-# # - Data ------------------------------------------------------------------
-# library(readr)
-# 
-# read_rds(
-#   'C:/Users/Cao/Documents/Github/atlas-research/data/efa/efa_equamax_14factors.rds'
-# ) -> efa_model
-# 
-# read_csv(
-#   'C:/Users/Cao/Documents/Github/Atlas-Research/Data/df_occupations_2023_efa.csv'
-# ) -> df_occupations
-# 
-# # read_csv(
-# #   'https://docs.google.com/spreadsheets/d/e/2PACX-1vSVdXvQMe4DrKS0LKhY0CZRlVuCCkEMHVJHQb_U-GKF21CjcchJ5jjclGSlQGYa5Q/pub?gid=1515296378&single=true&output=csv'
-# # ) -> df_input
+# [TEST] ------------------------------------------------------------------
+# - Data ------------------------------------------------------------------
+library(readr)
 
-# # - Generalism test -------------------------------------------------------
-# fun_acti_generalism(
-#   dbl_profile = 
-#     rnorm(50, 50, 25) %>%
-#     pmax(0) %>%
-#     pmin(100)
-#   , dbl_scale_lb = 0
-# )
-# 
-# fun_acti_generalism(
-#   dbl_profile = 
-#     rnorm(50, 50, 5) %>%
-#     pmax(0) %>%
-#     pmin(100)
-#   , dbl_scale_lb = 0
-# )
-# 
-# fun_acti_generalism(
-#   dbl_profile = 
-#     rnorm(50, 50, 0) %>%
-#     pmax(0) %>%
-#     pmin(100)
-#   , dbl_scale_lb = 0
-# )
-# 
-# # - Indispensability test -------------------------------------------------
-# fun_acti_indispensability(
-#   dbl_profile =
-#     rnorm(50, 50, 25) %>% 
-#     pmax(0) %>% 
-#     pmin(100)
-#   , dbl_scale_lb = 0
-# ) %>% round(4)
-# 
-# # - Competency test -------------------------------------------------------
-# fun_acti_competency(
-#   dbl_profile = 
-#     rnorm(50, 100, 25) %>%
-#     pmax(0) %>%
-#     pmin(100)
-#   , dbl_scale_lb = 0
-#   , dbl_scale_ub = 100
-# )
-# 
-# fun_acti_competency(
-#   dbl_profile = 
-#     rnorm(50, 50, 25) %>%
-#     pmax(0) %>%
-#     pmin(100)
-#   , dbl_scale_lb = 0
-#   , dbl_scale_ub = 100
-# )
-# 
-# fun_acti_competency(
-#   dbl_profile = 
-#     rnorm(50, 50, 5) %>%
-#     pmax(0) %>%
-#     pmin(100)
-#   , dbl_scale_lb = 0
-#   , dbl_scale_ub = 100
-# )
-# 
-# fun_acti_competency(
-#   dbl_profile = 
-#     rnorm(50, 50, 0) %>%
-#     pmax(0) %>%
-#     pmin(100)
-#   , dbl_scale_lb = 0
-#   , dbl_scale_ub = 100
-# )
-# 
-# # - Numerical ACTI test ---------------------------------------------------
-# df_occupations %>% 
-#   slice_sample(n = 10) -> 
-#   dsds
-# 
-# fun_acti_type(
-#   df_data = dsds
-#   , chr_factor_labels = c(
-#     'Ds', 'Eg', 'Hs',
-#     'Mn', 'Tr', 'Ad',
-#     'So', 'Ah', 'Hz',
-#     'An', 'Mt', 'Rb',
-#     'In', 'Mc'
-#   )
-#   , chr_data_id = 
-#     dsds$occupation
-#   , efa_model = efa_model
-#   , dbl_scale_lb = 0
-# )
-# # - ACTI Molecules --------------------------------------------------------------------
+read_rds(
+  'C:/Users/Cao/Documents/Github/atlas-research/data/efa/efa_equamax_14factors.rds'
+) -> efa_model
+
+read_csv(
+  'C:/Users/Cao/Documents/Github/Atlas-Research/Data/df_occupations_2023_efa.csv'
+) -> df_occupations
+
+# read_csv(
+#   'https://docs.google.com/spreadsheets/d/e/2PACX-1vSVdXvQMe4DrKS0LKhY0CZRlVuCCkEMHVJHQb_U-GKF21CjcchJ5jjclGSlQGYa5Q/pub?gid=1515296378&single=true&output=csv'
+# ) -> df_input
+
+# - Generalism test -------------------------------------------------------
+fun_acti_generalism(
+  dbl_profile =
+    rnorm(50, 50, 25) %>%
+    pmax(0) %>%
+    pmin(100)
+  , dbl_scale_lb = 0
+)
+
+fun_acti_generalism(
+  dbl_profile =
+    rnorm(50, 50, 5) %>%
+    pmax(0) %>%
+    pmin(100)
+  , dbl_scale_lb = 0
+)
+
+fun_acti_generalism(
+  dbl_profile =
+    rnorm(50, 50, 0) %>%
+    pmax(0) %>%
+    pmin(100)
+  , dbl_scale_lb = 0
+)
+
+# - Indispensability test -------------------------------------------------
+fun_acti_indispensability(
+  dbl_profile =
+    rnorm(50, 50, 25) %>%
+    pmax(0) %>%
+    pmin(100)
+  , dbl_scale_lb = 0
+) %>% round(4)
+
+# - Competency test -------------------------------------------------------
+fun_acti_competency(
+  dbl_profile =
+    rnorm(50, 100, 25) %>%
+    pmax(0) %>%
+    pmin(100)
+  , dbl_scale_lb = 0
+  , dbl_scale_ub = 100
+)
+
+fun_acti_competency(
+  dbl_profile =
+    rnorm(50, 50, 25) %>%
+    pmax(0) %>%
+    pmin(100)
+  , dbl_scale_lb = 0
+  , dbl_scale_ub = 100
+)
+
+fun_acti_competency(
+  dbl_profile =
+    rnorm(50, 50, 5) %>%
+    pmax(0) %>%
+    pmin(100)
+  , dbl_scale_lb = 0
+  , dbl_scale_ub = 100
+)
+
+fun_acti_competency(
+  dbl_profile =
+    rnorm(50, 50, 0) %>%
+    pmax(0) %>%
+    pmin(100)
+  , dbl_scale_lb = 0
+  , dbl_scale_ub = 100
+)
+
+# - Numerical ACTI test ---------------------------------------------------
+df_occupations %>%
+  slice_sample(n = 10) ->
+  dsds
+
+fun_acti_type(
+  df_data = dsds
+  , chr_factor_labels = c(
+    'Ds', 'Eg', 'Hs',
+    'Mn', 'Tr', 'Ad',
+    'So', 'Ah', 'Hz',
+    'An', 'Mt', 'Rb',
+    'In', 'Mc'
+  )
+  , chr_data_id =
+    dsds$occupation
+  , efa_model = efa_model
+  , dbl_scale_lb = 0
+) -> lalala
+
+lalala %>% 
+  mutate(
+    occupation = row_number()
+    , occupation = factor(
+      occupation
+    )
+  ) %>% 
+  pivot_longer(
+    cols = -occupation
+    , names_to = 'factor'
+    , values_to = 'factor_score'
+  ) %>% 
+  group_by(
+    occupation
+  ) %>% 
+  mutate(
+    factor_indispensability = 
+      fun_acti_indispensability(
+        dbl_profile = factor_score
+      )
+    , factor_class = 
+      fun_acti_classifier(
+        factor_indispensability
+        , dbl_scale_ub = 1
+        , dbl_scale_lb = 0
+        , int_levels = 3
+        , chr_class_labels = 
+          c('Dom', 'Aux', 'Min')
+      )
+  ) %>% 
+  filter(
+    factor_class != 'Min'
+  )
+
+# - ACTI Molecules --------------------------------------------------------------------
+c(
+  'Ds', 'Eg', 'Hs',
+  'Mn', 'Tr', 'Ad',
+  'So', 'Ah', 'Hz',
+  'An', 'Mt', 'Rb',
+  'In', 'Mc'
+) -> chr_factor_pal
+
+# chr_factor_pal %>%
+#   length() %>%
+#   viridis() %>%
+#   set_names(
+#     chr_factor_pal
+#   ) -> chr_factor_pal
+
 # c(
-#   'Ds', 'Eg', 'Hs',
-#   'Mn', 'Tr', 'Ad',
-#   'So', 'Ah', 'Hz',
-#   'An', 'Mt', 'Rb',
-#   'In', 'Mc'
+#   chr_factor_pal
+#   , 'Aux' = 'lightgrey'
 # ) -> chr_factor_pal
-# 
-# # chr_factor_pal %>%
-# #   length() %>%
-# #   viridis() %>%
-# #   set_names(
-# #     chr_factor_pal
-# #   ) -> chr_factor_pal
-# 
-# # c(
-# #   chr_factor_pal
-# #   , 'Aux' = 'lightgrey'
-# # ) -> chr_factor_pal
-# 
-# df_occupations %>%
-#   filter(
-#     occupation == 'Crematory Operators'
-#   ) -> dsds
-# 
-# fun_acti_type(
-#   df_data = dsds
-#   # df_data =
-#   # df_occupations %>%
-#   # slice_head(n = 10)
-#   , chr_factor_labels = c(
-#     'Ds', 'Eg', 'Hs',
-#     'Mn', 'Tr', 'Ad',
-#     'So', 'Ah', 'Hz',
-#     'An', 'Mt', 'Rb',
-#     'In', 'Mc'
-#   )
-#   , chr_data_id =
-#     dsds$occupation
-#   # df_occupations$occupation[1:10]
-#   , efa_model = efa_model
-#   , dbl_scale_lb = 0
-# ) -> df_acti
-# 
-# map_df(
-#   1:nrow(df_acti)
-#   , ~ df_acti %>%
-#     slice_head(
-#       n = .x
-#     ) %>%
-#     mutate(
-#       generalism = 0
-#       , occupation =
-#         paste0(
-#           occupation,
-#           '_specialist'
-#         )
-#       , occupation =
-#         paste0(
-#           occupation, .x
-#         )
-#     )
-# ) %>%
-#   bind_rows(
-#     map_df(
-#       1:nrow(df_acti)
-#       , ~ df_acti %>%
-#         slice_head(
-#           n = .x
-#         ) %>%
-#         mutate(
-#           occupation =
-#             paste0(
-#               occupation,
-#               '_generalist'
-#             )
-#           , occupation =
-#             paste0(
-#               occupation, .x
-#             )
-#         ))
-#   ) -> df_acti
-# 
-# df_acti %>%
-#   mutate(
-#     occupation =
-#       str_replace_all(
-#         occupation
-#         , ' ', '_'
-#       )
-#     , occupation =
-#       str_to_lower(
-#         occupation
-#       )
-#     , occupation = factor(
-#       occupation
-#       , levels = unique(
-#         occupation
-#       )
-#     )
-#   ) -> df_acti
-# 
-# df_acti %>%
-#   fun_acti_plot_molecule(
-#     # chr_factor_pal =
-#     #   chr_factor_pal
-#   ) -> list_plt_acti
-# 
-# list(
-#   'height' = 210,
-#   'width' = 148
-# ) -> list_paper_a5
-# 
-# list(
-#   'height' = 148.5,
-#   'width' = 105
-# ) -> list_paper_a6
-# 
-# map2
-#   .x = list_plt_acti
-#   , .y = names(list_plt_acti)
-#   , ~ ggsave(
-#     filename = paste0('a5_', .y, '.pdf')
-#     , plot = .x
-#     , height =
-#       list_paper_a5$
-#       width
-#     , width =
-#       list_paper_a5$
-#       height
-#     , units = 'mm'
-#     , device = 'pdf'
-#     , path = getwd()
-#   )
-# )
-# 
-# map2(
-#   .x = list_plt_acti
-#   , .y = names(list_plt_acti)
-#   , ~ ggsave(
-#     filename = paste0('a6_', .y, '.pdf')
-#     , plot = .x
-#     , height =
-#       list_paper_a6$
-#       width
-#     , width =
-#       list_paper_a6$
-#       height
-#     , units = 'mm'
-#     , device = 'pdf'
-#     , path = getwd()
-#   )
-# )
+
+df_occupations %>%
+  filter(
+    occupation == 'Crematory Operators'
+  ) -> dsds
+
+fun_acti_type(
+  df_data = dsds
+  # df_data =
+  # df_occupations %>%
+  # slice_head(n = 10)
+  , chr_factor_labels = c(
+    'Ds', 'Eg', 'Hs',
+    'Mn', 'Tr', 'Ad',
+    'So', 'Ah', 'Hz',
+    'An', 'Mt', 'Rb',
+    'In', 'Mc'
+  )
+  , chr_data_id =
+    dsds$occupation
+  # df_occupations$occupation[1:10]
+  , efa_model = efa_model
+  , dbl_scale_lb = 0
+) -> df_acti
+
+map_df(
+  1:nrow(df_acti)
+  , ~ df_acti %>%
+    slice_head(
+      n = .x
+    ) %>%
+    mutate(
+      generalism = 0
+      , occupation =
+        paste0(
+          occupation,
+          '_specialist'
+        )
+      , occupation =
+        paste0(
+          occupation, .x
+        )
+    )
+) %>%
+  bind_rows(
+    map_df(
+      1:nrow(df_acti)
+      , ~ df_acti %>%
+        slice_head(
+          n = .x
+        ) %>%
+        mutate(
+          occupation =
+            paste0(
+              occupation,
+              '_generalist'
+            )
+          , occupation =
+            paste0(
+              occupation, .x
+            )
+        ))
+  ) -> df_acti
+
+df_acti %>%
+  mutate(
+    occupation =
+      str_replace_all(
+        occupation
+        , ' ', '_'
+      )
+    , occupation =
+      str_to_lower(
+        occupation
+      )
+    , occupation = factor(
+      occupation
+      , levels = unique(
+        occupation
+      )
+    )
+  ) -> df_acti
+
+df_acti %>%
+  fun_acti_plot_molecule(
+    # chr_factor_pal =
+    #   chr_factor_pal
+  ) -> list_plt_acti
+
+list(
+  'height' = 210,
+  'width' = 148
+) -> list_paper_a5
+
+list(
+  'height' = 148.5,
+  'width' = 105
+) -> list_paper_a6
+
+map2(
+  .x = list_plt_acti
+  , .y = names(list_plt_acti)
+  , ~ ggsave(
+    filename = paste0('a5_', .y, '.pdf')
+    , plot = .x
+    , height =
+      list_paper_a5$
+      width
+    , width =
+      list_paper_a5$
+      height
+    , units = 'mm'
+    , device = 'pdf'
+    , path = getwd()
+  )
+)
+
+map2(
+  .x = list_plt_acti
+  , .y = names(list_plt_acti)
+  , ~ ggsave(
+    filename = paste0('a6_', .y, '.pdf')
+    , plot = .x
+    , height =
+      list_paper_a6$
+      width
+    , width =
+      list_paper_a6$
+      height
+    , units = 'mm'
+    , device = 'pdf'
+    , path = getwd()
+  )
+)
