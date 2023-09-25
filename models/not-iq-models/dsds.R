@@ -1,5 +1,5 @@
 library(readr)
-library(atlas.acti)
+# library(atlas.acti)
 library(atlas.notiq)
 library(Hmisc)
 
@@ -9,7 +9,7 @@ df_occupations <- read_csv('C:/Users/Cao/Documents/Github/Atlas-Research/Data/df
 
 efa_model <- read_rds('C:/Users/CAO/Documents/GitHub/atlas-research/data/efa/efa_equamax_14factors.rds')
 
-atlas.acti::fun_acti_type(
+fun_acti_type(
   df_data = df_data
   , efa_model = efa_model
   , chr_factor_labels = c(
@@ -19,14 +19,13 @@ atlas.acti::fun_acti_type(
       'An', 'Mt', 'Rb',
       'In', 'Mc'
     )
-  , chr_data_id = 
-    df_data$occupation
+  , chr_id_col = 'occupation'
   , dbl_scale_lb = 0
 ) -> df_acti
 
 df_acti$acti_type %>% first() %>% writeClipboard()
 
-atlas.acti::fun_acti_plot_molecule(df_acti)
+fun_acti_plot_molecule(df_acti)
 
 efa_model %>% 
   atlas.ftools::fun_ftools_factor_match() %>% 
