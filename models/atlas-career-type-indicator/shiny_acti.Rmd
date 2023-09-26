@@ -71,11 +71,18 @@ DT::renderDT({
   datatable(
   list_df_acti[[
     reactive_occupation()
-    ]][-1]
+    ]][c(
+      'acti_type',
+      'generality',
+      'factor',
+      'factor_score',
+      'acti_score',
+      'acti_class'
+    )]
   , options = list(dom = 't')
   ) %>%
     DT::formatRound(
-      c('generalism', 'factor_score', 'acti_score')
+      c('generality', 'factor_score', 'acti_score')
       , digits = 2
       )
   })

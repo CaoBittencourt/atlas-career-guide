@@ -138,4 +138,4 @@ setwd(dirname(
 ))
 
 # - Save .RData image --------------------------------------------------
-save.image('image_acti.RData')
+save.image('./image_acti.RData')
