@@ -1,0 +1,82 @@
+---
+title: 'The Atlas Career Type Indicator'
+output: 
+  flexdashboard::flex_dashboard:
+    orientation: columns
+    social: menu
+    source_code: embed
+    theme:
+      bslib: true
+      version: 4
+      bootswatch: minty
+runtime: shiny
+---
+
+## Inputs {.sidebar}
+
+```{r}
+selectInput(
+  inputId = 'occupation'
+  , label = 'Occupation'
+  , choices = names(
+    list_plt_acti
+    )
+  )
+
+selectInput(
+  inputId = 'theme'
+  , label = 'Theme'
+  , choices =
+    bootswatch_themes(
+      version = 4
+      )
+  , selected = 'minty'
+  )
+
+reactive_occupation <- reactive({input$occupation})
+
+reactive_theme <- reactive({input$theme})
+
+observeEvent(
+  eventExpr =
+    input$
+    theme, {
+      session$
+        setCurrentTheme(
+          bs_theme(
+            version = 4,
+            preset = reactive_theme()
+            )
+        )
+      }
+  )
+```
+
+## ACTI {.tabset}
+
+### ACTI Type Molecule
+
+```{r}
+renderPlot({
+  list_plt_acti[[
+    reactive_occupation()
+    ]]
+  })
+```
+
+### ACTI Type Table
+
+```{r}
+DT::renderDT({
+  datatable(
+  list_df_acti[[
+    reactive_occupation()
+    ]][-1]
+  , options = list(dom = 't')
+  ) %>%
+    DT::formatRound(
+      c('generalism', 'factor_score', 'acti_score')
+      , digits = 2
+      )
+  })
+```

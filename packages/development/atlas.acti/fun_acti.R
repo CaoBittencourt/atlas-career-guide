@@ -3038,93 +3038,93 @@ fun_acti_plot_molecule <- function(df_acti, chr_factor_pal = NULL){
 # list_acti
 # dsds
 
-# [TEST] ------------------------------------------------------------------
-# - Data ------------------------------------------------------------------
-library(readr)
-
-read_rds(
-  'C:/Users/Cao/Documents/Github/atlas-research-dev/data/efa/efa_equamax_14factors.rds'
-) -> efa_model
-
-read_csv(
-  'C:/Users/Cao/Documents/Github/Atlas-Research-dev/Data/df_occupations_2023_efa.csv'
-) -> df_occupations
-
+# # [TEST] ------------------------------------------------------------------
+# # - Data ------------------------------------------------------------------
+# library(readr)
+# 
+# read_rds(
+#   'C:/Users/Cao/Documents/Github/atlas-research-dev/data/efa/efa_equamax_14factors.rds'
+# ) -> efa_model
+# 
 # read_csv(
-#   'https://docs.google.com/spreadsheets/d/e/2PACX-1vSVdXvQMe4DrKS0LKhY0CZRlVuCCkEMHVJHQb_U-GKF21CjcchJ5jjclGSlQGYa5Q/pub?gid=1515296378&single=true&output=csv'
-# ) -> df_input
+#   'C:/Users/Cao/Documents/Github/Atlas-Research-dev/Data/df_occupations_2023_efa.csv'
+# ) -> df_occupations
+# 
+# # read_csv(
+# #   'https://docs.google.com/spreadsheets/d/e/2PACX-1vSVdXvQMe4DrKS0LKhY0CZRlVuCCkEMHVJHQb_U-GKF21CjcchJ5jjclGSlQGYa5Q/pub?gid=1515296378&single=true&output=csv'
+# # ) -> df_input
 
-# - Generalism test -------------------------------------------------------
-fun_acti_generalism(
-  dbl_profile =
-    rnorm(50, 50, 25) %>%
-    pmax(0) %>%
-    pmin(100)
-  , dbl_scale_lb = 0
-)
-
-fun_acti_generalism(
-  dbl_profile =
-    rnorm(50, 50, 5) %>%
-    pmax(0) %>%
-    pmin(100)
-  , dbl_scale_lb = 0
-)
-
-fun_acti_generalism(
-  dbl_profile =
-    rnorm(50, 50, 0) %>%
-    pmax(0) %>%
-    pmin(100)
-  , dbl_scale_lb = 0
-)
-
-# - Indispensability test -------------------------------------------------
-fun_acti_indispensability(
-  dbl_profile =
-    rnorm(50, 50, 25) %>%
-    pmax(0) %>%
-    pmin(100)
-  , dbl_scale_lb = 0
-) %>% round(4)
-
-# - Competency test -------------------------------------------------------
-fun_acti_competency(
-  dbl_profile =
-    rnorm(50, 100, 25) %>%
-    pmax(0) %>%
-    pmin(100)
-  , dbl_scale_lb = 0
-  , dbl_scale_ub = 100
-)
-
-fun_acti_competency(
-  dbl_profile =
-    rnorm(50, 50, 25) %>%
-    pmax(0) %>%
-    pmin(100)
-  , dbl_scale_lb = 0
-  , dbl_scale_ub = 100
-)
-
-fun_acti_competency(
-  dbl_profile =
-    rnorm(50, 50, 5) %>%
-    pmax(0) %>%
-    pmin(100)
-  , dbl_scale_lb = 0
-  , dbl_scale_ub = 100
-)
-
-fun_acti_competency(
-  dbl_profile =
-    rnorm(50, 50, 0) %>%
-    pmax(0) %>%
-    pmin(100)
-  , dbl_scale_lb = 0
-  , dbl_scale_ub = 100
-)
-
+# # - Generalism test -------------------------------------------------------
+# fun_acti_generalism(
+#   dbl_profile =
+#     rnorm(50, 50, 25) %>%
+#     pmax(0) %>%
+#     pmin(100)
+#   , dbl_scale_lb = 0
+# )
+# 
+# fun_acti_generalism(
+#   dbl_profile =
+#     rnorm(50, 50, 5) %>%
+#     pmax(0) %>%
+#     pmin(100)
+#   , dbl_scale_lb = 0
+# )
+# 
+# fun_acti_generalism(
+#   dbl_profile =
+#     rnorm(50, 50, 0) %>%
+#     pmax(0) %>%
+#     pmin(100)
+#   , dbl_scale_lb = 0
+# )
+# 
+# # - Indispensability test -------------------------------------------------
+# fun_acti_indispensability(
+#   dbl_profile =
+#     rnorm(50, 50, 25) %>%
+#     pmax(0) %>%
+#     pmin(100)
+#   , dbl_scale_lb = 0
+# ) %>% round(4)
+# 
+# # - Competency test -------------------------------------------------------
+# fun_acti_competency(
+#   dbl_profile =
+#     rnorm(50, 100, 25) %>%
+#     pmax(0) %>%
+#     pmin(100)
+#   , dbl_scale_lb = 0
+#   , dbl_scale_ub = 100
+# )
+# 
+# fun_acti_competency(
+#   dbl_profile =
+#     rnorm(50, 50, 25) %>%
+#     pmax(0) %>%
+#     pmin(100)
+#   , dbl_scale_lb = 0
+#   , dbl_scale_ub = 100
+# )
+# 
+# fun_acti_competency(
+#   dbl_profile =
+#     rnorm(50, 50, 5) %>%
+#     pmax(0) %>%
+#     pmin(100)
+#   , dbl_scale_lb = 0
+#   , dbl_scale_ub = 100
+# )
+# 
+# fun_acti_competency(
+#   dbl_profile =
+#     rnorm(50, 50, 0) %>%
+#     pmax(0) %>%
+#     pmin(100)
+#   , dbl_scale_lb = 0
+#   , dbl_scale_ub = 100
+# )
+# 
 # - Numerical ACTI test ---------------------------------------------------
 df_occupations %>%
   slice_sample(n = 10) ->
