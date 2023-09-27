@@ -74,15 +74,20 @@ DT::renderDT({
     ]][c(
       'acti_type',
       'generality',
+      'competence',
       'factor',
       'factor_score',
       'acti_score',
       'acti_class'
     )]
-  , options = list(dom = 't')
+  # , options = list(dom = 't')
   ) %>%
-    DT::formatRound(
-      c('generality', 'factor_score', 'acti_score')
+    DT::formatRound(c(
+      'generality',
+      'competence',
+      'factor_score',
+      'acti_score'
+      )
       , digits = 2
       )
   })
