@@ -1,0 +1,17 @@
+factor,factor_name,factor_acronym
+factor1,Discernment,Ds
+factor2,Engineering,Eg
+factor3,Health Science,Hs
+factor4,Management,Mn
+factor5,Transportation,Tr
+factor6,Administrative,Ad
+factor7,Social Skills,So
+factor8,Arts & Humanities,Ah
+factor9,Hazards,Hz
+factor10,Analytical Skills,An
+factor11,Mathematics,Mt
+factor11,Intelligence,Iq
+factor12,Robustness,Rb
+factor13,Industrial,In
+factor14,Mechanical,Mc
+
