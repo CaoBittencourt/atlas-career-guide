@@ -11,7 +11,7 @@ chr_pkg <- c(
 # Activate / install CRAN packages
 lapply(
   chr_pkg,
-  function(pkg) {
+  function(pkg){
     if (!require(pkg, character.only = T)) {
       install.packages(pkg)
     }
