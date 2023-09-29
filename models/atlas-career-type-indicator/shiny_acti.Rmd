@@ -67,8 +67,7 @@ renderPlot({
 ### ACTI Type Table
 
 ```{r}
-DT::renderDT({
-  datatable(
+renderTable({
   list_df_acti[[
     reactive_occupation()
     ]][c(
@@ -80,15 +79,32 @@ DT::renderDT({
       'acti_score',
       'acti_class'
     )]
-  # , options = list(dom = 't')
-  ) %>%
-    DT::formatRound(c(
-      'generality',
-      'competence',
-      'factor_score',
-      'acti_score'
-      )
-      , digits = 2
-      )
-  })
+  }
+  , digits = 2
+  )
+
+# DT::renderDT({
+#   datatable(
+#   list_df_acti[[
+#     reactive_occupation()
+#     ]][c(
+#       'acti_type',
+#       'generality',
+#       'competence',
+#       'factor',
+#       'factor_score',
+#       'acti_score',
+#       'acti_class'
+#     )]
+#   # , options = list(dom = 't')
+#   ) %>%
+#     DT::formatRound(c(
+#       'generality',
+#       'competence',
+#       'factor_score',
+#       'acti_score'
+#       )
+#       , digits = 2
+#       )
+#   })
 ```
