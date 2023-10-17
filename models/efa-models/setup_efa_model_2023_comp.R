@@ -84,7 +84,7 @@ chr_names[
   paste0('.l') -> 
   chr_names
 
-
+chr_names %>% 
   str_split(
     '\\.'
     , n = 5
