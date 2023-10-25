@@ -27,7 +27,7 @@ read_csv(
   'C:/Users/Cao/Documents/Github/atlas-research/data/occupations.csv'
 ) -> df_occupations
 
-# [DATA] ------------------------------------------------------------------
+# [DATA] ----------------------------------------------------------------- 
 # - Problematic items -----------------------------------------------------
 c(
   # poorly measured items:

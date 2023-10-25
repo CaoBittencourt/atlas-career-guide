@@ -1,6 +1,5 @@
 # [SETUP] -----------------------------------------------------------------
 # - Packages ----------------------------------------------------------------
-# CRAN packages
 chr_pkg <- c(
   'devtools' #GitHub packages
   , 'rstudioapi' #Current file directory
