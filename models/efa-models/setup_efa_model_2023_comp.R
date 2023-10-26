@@ -11,7 +11,8 @@ chr_pkg <- c(
 # Git packages
 chr_git <- c(
   'CaoBittencourt' = 'atlas.efa',
-  'CaoBittencourt' = 'atlas.misc'
+  'CaoBittencourt' = 'atlas.misc',
+  'CaoBittencourt' = 'atlas.class'
 )
 
 # Activate / install CRAN packages
