@@ -69,8 +69,6 @@ df_employment_2022_na <- read_csv(
   '/home/Cao/Storage/github/atlas-research/data/employment/bls-oes-2022/national_M2022_na.csv'
 )
 
-df_employment_2022 <- as_tibble(df_employment_2022)
-
 # # Education, experience codes
 # df_education <- read.xlsx(
 #   '/home/Cao/Storage/github/atlas-research/data/education/id_education_experience.xlsx'
@@ -196,6 +194,92 @@ df_employment_2022 <- as_tibble(df_employment_2022)
 #       item_design
 #   ) -> df_occupations
 
+# # - Years of education ---------------------------------------------
+# df_education %>% 
+#   atlas.misc::fun_misc_rename_df() %>% 
+#   mutate(
+#     element_name = 
+#       atlas.misc::fun_misc_str_standard(
+#         element_name
+#       ) %>% 
+#       str_remove_all('required_') %>%
+#       str_replace_all('level_of_', 'id_')
+#   ) %>%
+#   filter(
+#     element_name == 'id_education'
+#   ) %>% 
+#   select(
+#     element_name
+#     , category
+#     , category_description
+#   ) %>%
+#   pivot_wider(
+#     names_from = element_name
+#     , values_from = category
+#   ) %>%
+#   rename(
+#     education_desc = 1
+#   ) %>%
+#   mutate(
+#     education_years = 
+#       case_match(
+#         id_education
+#         , 1 ~ 14 
+#         , 2 ~ 17
+#         , 3 ~ 17 + 1
+#         , 4 ~ 17 + 1.5
+#         , 5 ~ 17 + 2
+#         , 6 ~ 17 + 4
+#         , 7 ~ 17 + 4 + 1
+#         , 8 ~ 17 + 5
+#         , 9 ~ 17 + 5 + 1
+#         , 10 ~ 17 + 6
+#         , 11 ~ 17 + 7
+#         , 12 ~ 17 + 7 + 1
+#         , .default = 14
+#       )
+#   ) %>% 
+#   right_join(
+#     df_occupations
+#     , multiple = 'all'
+#   ) -> df_occupations
+
+
+# # - Input NA -------------------------------------------------------------
+# df_occupations %>%
+#   filter(is.na(
+#     employment
+#   ))
+# 
+# df_occupations %>%
+#   filter(if_any(
+#     .cols = everything()
+#     ,.fns = is.na
+#   )) %>% 
+#   pull(soc_code)
+# 
+# df_occupations %>% 
+#   group_by(cluster) %>%
+#   mutate(
+#     wage_mean = if_else(
+#       is.na(wage_mean)
+#       , weighted.mean(
+#         wage_mean
+#         , employment_variants
+#         , na.rm = T
+#       )
+#       , wage_mean
+#     )
+#   ) %>% 
+#   ungroup() -> 
+#   df_occupations
+# 
+# df_occupations %>% 
+#   filter(if_any(
+#     .cols = everything()
+#     ,.fns = is.na
+#   ))
+
 # - Occupations data frame ------------------------------------------------------
 # Standardize names
 df_occupations %>% 
@@ -292,55 +376,23 @@ df_occupations %>%
     )
   ) -> df_occupations
 
-# # - Years of education ---------------------------------------------
-# df_education %>% 
-#   atlas.misc::fun_misc_rename_df() %>% 
-#   mutate(
-#     element_name = 
-#       atlas.misc::fun_misc_str_standard(
-#         element_name
-#       ) %>% 
-#       str_remove_all('required_') %>%
-#       str_replace_all('level_of_', 'id_')
-#   ) %>%
-#   filter(
-#     element_name == 'id_education'
-#   ) %>% 
-#   select(
-#     element_name
-#     , category
-#     , category_description
-#   ) %>%
-#   pivot_wider(
-#     names_from = element_name
-#     , values_from = category
-#   ) %>%
-#   rename(
-#     education_desc = 1
-#   ) %>%
-#   mutate(
-#     education_years = 
-#       case_match(
-#         id_education
-#         , 1 ~ 14 
-#         , 2 ~ 17
-#         , 3 ~ 17 + 1
-#         , 4 ~ 17 + 1.5
-#         , 5 ~ 17 + 2
-#         , 6 ~ 17 + 4
-#         , 7 ~ 17 + 4 + 1
-#         , 8 ~ 17 + 5
-#         , 9 ~ 17 + 5 + 1
-#         , 10 ~ 17 + 6
-#         , 11 ~ 17 + 7
-#         , 12 ~ 17 + 7 + 1
-#         , .default = 14
-#       )
-#   ) %>% 
-#   right_join(
-#     df_occupations
-#     , multiple = 'all'
-#   ) -> df_occupations
+# SOC code variants
+df_occupations %>% 
+  mutate(
+    id_soc_code = substr(
+      id_soc_code
+      , 1, 7
+    )
+  ) %>% 
+  group_by(
+    id_soc_code
+  ) %>% 
+  mutate(
+    soc_code_variants = n()
+    , .after = id_soc_code
+  ) %>% 
+  ungroup() -> 
+  df_occupations
 
 # - Years of education ---------------------------------------------
 # # Education ID inconsistency
@@ -366,41 +418,44 @@ df_occupations %>%
       8 - id_education + 1
   ) -> df_occupations
 
-mutate(
-  education_years = 
-    case_match(
-      id_education
-      , 1 ~ 14 
-      , 2 ~ 17
-      , 3 ~ 17 + 1
-      , 4 ~ 17 + 1.5
-      , 5 ~ 17 + 2
-      , 6 ~ 17 + 4
-      , 7 ~ 17 + 4 + 1
-      , 8 ~ 17 + 5
-      , 9 ~ 17 + 5 + 1
-      , 10 ~ 17 + 6
-      , 11 ~ 17 + 7
-      , 12 ~ 17 + 7 + 1
-      , .default = 14
-    )
-) %>% 
-  right_join(
-    df_occupations
-    , multiple = 'all'
+# Years of education
+df_occupations %>% 
+  mutate(
+    .after = education
+    , education_years = 
+      case_match(
+        id_education
+        , 1 ~ 14
+        , 2 ~ 17
+        , 3 ~ 17 + 1
+        , 4 ~ 17 + 1.5
+        , 5 ~ 17 + 2
+        , 6 ~ 17 + 4
+        , 7 ~ 17 + 4 + 1
+        , 8 ~ 17 + 5
+        , 9 ~ 17 + 5 + 1
+        , 10 ~ 17 + 6
+        , 11 ~ 17 + 7
+        , 12 ~ 17 + 7 + 1
+        , .default = 14
+      )
   ) -> df_occupations
 
 # - Employment data frame -------------------------------------------------
+df_employment_2022 %>%  
+  as_tibble() ->
+  df_employment_2022
+
 df_employment_2022 %>% 
   rename(
-    soc_code = OCC_CODE
+    id_soc_code = OCC_CODE
     , employment = TOT_EMP
   ) %>%
   select(
-    soc_code
+    id_soc_code
     , employment
   ) %>% 
-  group_by(soc_code) %>%
+  group_by(id_soc_code) %>%
   reframe(
     employment = 
       max(employment)
@@ -416,12 +471,17 @@ df_employment_2022 %>%
   right_join(
     df_occupations
     , multiple = 'all'
-  ) %>%
+  ) -> df_occupations
+
+rm(df_employment_2022)
+
+# Employment per variant
+df_occupations %>% 
   mutate(
     .after = employment
     , employment_variants = 
       employment / 
-      nvariants
+      soc_code_variants
     , employment_norm = 
       employment_variants / 
       min(employment_variants)
@@ -429,47 +489,10 @@ df_employment_2022 %>%
       ceiling(employment_norm)
   ) -> df_occupations
 
-rm(df_employment_2022)
-
-# - Input NA -------------------------------------------------------------
-df_occupations %>%
-  filter(is.na(
-    employment
-  ))
-
-df_occupations %>%
-  filter(if_any(
-    .cols = everything()
-    ,.fns = is.na
-  )) %>% 
-  pull(soc_code)
-
-df_occupations %>% 
-  group_by(cluster) %>%
-  mutate(
-    wage_mean = if_else(
-      is.na(wage_mean)
-      , weighted.mean(
-        wage_mean
-        , employment_variants
-        , na.rm = T
-      )
-      , wage_mean
-    )
-  ) %>% 
-  ungroup() -> 
-  df_occupations
-
-df_occupations %>% 
-  filter(if_any(
-    .cols = everything()
-    ,.fns = is.na
-  ))
-
 # - Relocate --------------------------------------------------------------
 df_occupations %>% 
   relocate(
-    soc_code
+    id_soc_code
     , occupation
   ) -> df_occupations
 
@@ -481,5 +504,5 @@ setwd(dirname(
 
 write_csv(
   df_occupations
-  , file = './df_occupations_2023.csv'
+  , file = './occupations/df_occupations_2022.csv'
 )

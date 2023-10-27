@@ -5,13 +5,11 @@ chr_pkg <- c(
   , 'rstudioapi' #Current file directory
   , 'readr' #Read data
   , 'tidyr', 'dplyr', 'stringr' #Data wrangling
-  , 'writexl' #Write xlsx
 )
 
 # Git packages
 chr_git <- c(
-  'CaoBittencourt' = 'atlas.efa',
-  'CaoBittencourt' = 'atlas.misc'
+  'CaoBittencourt' = 'atlas.efa'
 )
 
 # Activate / install CRAN packages
@@ -21,7 +19,7 @@ lapply(
     
     if(!require(pkg, character.only = T)){
       
-      install.packages(pkg)
+      install.packages(pkg, dependencies = T)
       
     }
     
@@ -38,6 +36,7 @@ Map(
       
       install_github(
         paste0(profile, '/', git)
+        , dependencies = T
         , upgrade = F
         , force = T
       )
@@ -58,121 +57,88 @@ Map(
 # - Data ------------------------------------------------------------------
 # Occupations data frame
 read_csv(
-  'https://docs.google.com/spreadsheets/d/e/2PACX-1vROh3DoPWCg9Nj8aK1VBQdNlGKk5Z9QOBnIAOSQ44UHMcLJwNEt6m1Pfha7E3f8pb346g-EO3RTRDxo/pub?gid=1060672467&single=true&output=csv'
+  '/home/Cao/Storage/github/atlas-research/data/occupations/df_occupations_2022.csv'
 ) -> df_occupations
 
 # [DATA] ------------------------------------------------------------------
-# - Data wrangling ------------------------------------------------------
-# Standardize names
-df_occupations %>% 
-  names() %>%
-  str_to_lower() %>%
-  str_remove_all(
-    'basic_|cross_functional_'
-  ) -> chr_names
-
-chr_names[
-  str_starts(
-    chr_names,
-    'work_context|work_styles'
-  )
-] %>% 
-  paste0('.l') -> 
-  chr_names[
-    str_starts(
-      chr_names,
-      'work_context|work_styles'
-    )
-  ]
-
-chr_names %>% 
-  str_split(
-    '\\.'
-    , n = 5
-  ) -> chr_names
-
-chr_names %>% 
-  map_chr(
-    ~ .x[c(
-      1, 
-      length(.x) - 1, 
-      length(.x)
-    )] %>%
-      na.omit() %>% 
-      unique() %>% 
-      paste0(
-        collapse = '.'
-      )
-  ) -> chr_names
-
-chr_names %>% 
-  fun_misc_str_standard() -> 
-  chr_names
-
-chr_names %>% 
-  str_replace_all(
-    'skills_',
-    'skl_'
-  ) %>% 
-  str_replace_all(
-    'abilities_',
-    'abl_'
-  ) %>% 
-  str_replace_all(
-    'knowledge_',
-    'knw_'
-  ) %>% 
-  str_replace_all(
-    'work_context_',
-    'ctx_'
-  ) %>% 
-  str_replace_all(
-    'work_activities_',
-    'act_'
-  ) %>%
-  str_replace_all(
-    'work_styles_',
-    'stl_'
-  ) %>% 
-  str_replace_all(
-    'work_values_',
-    'val_'
-  ) -> chr_names
-
-df_occupations %>% 
-  set_names(
-    chr_names
-  ) -> df_occupations
-
-# Drop importance levels
-df_occupations %>% 
-  select(
-    -ends_with('_i')
-  ) -> df_occupations
-
-# Remove suffix
-df_occupations %>% 
-  rename_with(
-    .fn = ~ str_remove_all(
-      .x, '_l$'
-    )
-  ) -> df_occupations
-
-# - Select competencies (skl, abl, knw) -----------------------------------
-# Keep only categories of interest
+# - Variables of interest -----------------------------------
+# Keep only employment levels (for sample weights), as well as skl, abl, knw
 df_occupations %>%
   select(
-    starts_with('skl'),
-    starts_with('abl'),
-    starts_with('knw')
-  ) -> df_occupations_efa
+    employment_variants
+    , starts_with('skl')
+    , starts_with('abl')
+    , starts_with('knw')
+  ) -> df_occupations
 
 # [MODEL] --------------------------------------------------------------
-# - Parameters ------------------------------------------------------------
-# 
-
 # - Estimate models ---------------------------------------------------------
 # Run EFA with defined parameters
+fun_efa_vfa(
+  df_data = 
+    df_occupations[-1]
+  , int_factors = NULL
+  , chr_rotation = 'equamax'
+  , dbl_weights = 
+    df_occupations$
+    employment_variants
+  , int_min_items_factor = 4
+  , lgc_remove_low_msai_items = T
+  , lgc_adequacy_testing = T
+  , lgc_optimal_nfactors = T
+) -> list_efa
+
+# [EVALUATE] --------------------------------------------------------------
+# - Evaluate models -------------------------------------------------------
+# Factor adequacy tests
+# list_efa$adequacy_tests
+
+# Optimal number of factors
+# list_efa$nfactors
+
+# Reliability metrics
+# list_efa$reliability_metrics
+# list_efa$reliability_evaluation
+
+# Overall model performance
+# list_efa$model_performance
+
+# - Interpret factors -----------------------------------------------------
+# list_efa$
+#   loadings_long$
+#   split(.$factor)
+
+# 10 factor model
+# f1 discernment
+# f2 dexterity
+# f3 arts_humanities
+# f4 business (shit)
+# f5 spatial_orientation/transportation
+# f6 engineering_tech
+# f7 health_science (foreign language, law, social perceptiveness, public safety, education and training, sociology, etc etc)
+# f8 robustness (food_production)
+# f9 intelligence (near_vision)
+# f10 management
+
+# list_efa$
+#   loadings_long$
+#   efa_equamax_11factors %>% 
+#   split(.$factor)
+
+# 10 factor model
+# f1 discernment
+# f2 perception/cognition (shit)
+# f3 arts_humanities
+# f4 business (SHIT)
+# f5 spatial_orientation/transportation
+# f6 engineering_tech
+# f7 health_science (foreign language, law, social perceptiveness, public safety, education and training, sociology, etc etc)
+# etc etc
+
+# list_efa$
+#   loadings_long$
+#   efa_equamax_13factors %>% 
+#   split(.$factor)
 
 # [PLOTS] -----------------------------------------------------------------
 # - Plot results ---------------------------------------------------------
