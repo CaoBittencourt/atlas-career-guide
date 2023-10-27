@@ -11,8 +11,7 @@ chr_pkg <- c(
 # Git packages
 chr_git <- c(
   'CaoBittencourt' = 'atlas.efa',
-  'CaoBittencourt' = 'atlas.misc',
-  'CaoBittencourt' = 'atlas.class'
+  'CaoBittencourt' = 'atlas.misc'
 )
 
 # Activate / install CRAN packages
@@ -62,9 +61,6 @@ read_csv(
   'https://docs.google.com/spreadsheets/d/e/2PACX-1vROh3DoPWCg9Nj8aK1VBQdNlGKk5Z9QOBnIAOSQ44UHMcLJwNEt6m1Pfha7E3f8pb346g-EO3RTRDxo/pub?gid=1060672467&single=true&output=csv'
 ) -> df_occupations
 
-# - Parameters ------------------------------------------------------------
-# 
-
 # [DATA] ------------------------------------------------------------------
 # - Data wrangling ------------------------------------------------------
 # Standardize names
@@ -78,11 +74,16 @@ df_occupations %>%
 chr_names[
   str_starts(
     chr_names,
-    'work_context'
+    'work_context|work_styles'
   )
 ] %>% 
   paste0('.l') -> 
-  chr_names
+  chr_names[
+    str_starts(
+      chr_names,
+      'work_context|work_styles'
+    )
+  ]
 
 chr_names %>% 
   str_split(
@@ -149,9 +150,29 @@ df_occupations %>%
     -ends_with('_i')
   ) -> df_occupations
 
+# Remove suffix
+df_occupations %>% 
+  rename_with(
+    .fn = ~ str_remove_all(
+      .x, '_l$'
+    )
+  ) -> df_occupations
+
+# - Select competencies (skl, abl, knw) -----------------------------------
+# Keep only categories of interest
+df_occupations %>%
+  select(
+    starts_with('skl'),
+    starts_with('abl'),
+    starts_with('knw')
+  ) -> df_occupations_efa
+
 # [MODEL] --------------------------------------------------------------
-# - Estimate models ---------------------------------------------------------
+# - Parameters ------------------------------------------------------------
 # 
+
+# - Estimate models ---------------------------------------------------------
+# Run EFA with defined parameters
 
 # [PLOTS] -----------------------------------------------------------------
 # - Plot results ---------------------------------------------------------
