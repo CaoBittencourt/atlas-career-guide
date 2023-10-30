@@ -69,8 +69,11 @@ c(
   
   , 'skl_service_orientation'
   
-  # 'abl_selective_attention',
-  
+  # redundant items:
+  , 'skl_speaking'
+  # , 'skl_reading_comprehension'
+  , 'skl_writing'
+
   # poorly clustering items:
   , 'abl_near_vision'
   , 'knw_food_production'
@@ -78,6 +81,7 @@ c(
   , 'knw_foreign_language'
   , 'knw_public_safety_and_security'
   , 'knw_telecommunications'
+  , 'abl_speech_recognition'
   
 ) -> chr_items_remove
 
@@ -289,12 +293,12 @@ list_efa$
   # efa_equamax_11factors %>%
   # efa_equamax_12factors %>%
   # efa_equamax_13factors %>%
-  # efa_equamax_14factors %>% #good
+  # efa_equamax_14factors %>%
   # efa_oblimin_10factors %>%
   # efa_oblimin_11factors %>%
   # efa_oblimin_12factors %>%
-  # efa_oblimin_13factors %>%
-  # efa_oblimin_14factors %>% #unacceptable
+  efa_oblimin_13factors %>%
+  # efa_oblimin_14factors %>%
   split(.$factor) %>% 
   map(print, n = Inf) %>% 
   invisible()
