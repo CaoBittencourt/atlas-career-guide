@@ -63,26 +63,69 @@ read_csv(
 # [DATA] ------------------------------------------------------------------
 # - Problematic items -------------------------------------------------
 # These variables had to be removed from the model
-c(
-  # useless items:
-  'abl_near_vision'
-  
-  , 'skl_service_orientation'
-  
-  # redundant items:
-  , 'skl_speaking'
-  # , 'skl_reading_comprehension'
-  , 'skl_writing'
+# c(
+#   # useless items:
+#   'abl_near_vision' #low variance, poor clustering, bullshit item => drop
+#   
+#   , 'skl_service_orientation' #low variance, poor clustering, bullshit item => drop
+#   
+#   # redundant items:
+#   # , 'skl_speaking' #low variance, ok clustering, bullshit item => drop or rename
+#   # , 'skl_reading_comprehension' #low variance, ok clustering, bullshit item => drop or rename
+#   , 'skl_writing' #low variance, ok clustering, bullshit item => drop or rename
+#   
+#   # poorly clustering items:
+#   , 'abl_near_vision' #low variance, poor clustering, bullshit item => drop
+#   , 'knw_food_production' #mid variance, poor clustering, bullshit item => drop
+#   , 'knw_law_and_government' #mid variance, poor clustering, not bullshit => drop
+#   , 'knw_foreign_language' #low variance, poor clustering, bullshit item => drop
+#   , 'knw_public_safety_and_security' #mid variance, poor clustering, convoluted item => drop
+#   , 'knw_telecommunications' #mid-low variance, poor clustering, not bullshit => drop
+#   , 'abl_speech_recognition' #low variance, poor clustering, bullshit item => drop
+#   , 'knw_computers_and_electronics' #mid-high variance, poor clustering, not bullshit => drop
+#   
+# ) -> chr_items_remove
 
-  # poorly clustering items:
-  , 'abl_near_vision'
-  , 'knw_food_production'
-  , 'knw_law_and_government'
-  , 'knw_foreign_language'
-  , 'knw_public_safety_and_security'
-  , 'knw_telecommunications'
-  , 'abl_speech_recognition'
+# # working with oblimin 13
+# c(
+#   # drop to round off
+#   # , 'skl_speaking' #low variance, ok clustering, bullshit item => drop or rename
+#   # , 'skl_reading_comprehension' #low variance, ok clustering, bullshit item => drop or rename
+#   # 'skl_writing' #low variance, ok clustering, bullshit item => drop or rename
+#   
+#   # have to go
+#    'knw_telecommunications' #mid-low variance, poor clustering, not bullshit => drop
+#   , 'abl_speech_recognition' #low variance, poor clustering, bullshit item => drop
+#   , 'knw_computers_and_electronics' #mid-high variance, poor clustering, not bullshit => drop
+#   , 'knw_public_safety_and_security' #mid variance, poor clustering, convoluted item => drop
+#   
+#   # absolutely have to go
+#   , 'abl_near_vision' #low variance, poor clustering, bullshit item => drop
+#   , 'skl_service_orientation' #low variance, poor clustering, bullshit item => drop
+#   , 'knw_food_production' #mid variance, poor clustering, bullshit item => drop
+#   , 'knw_law_and_government' #mid variance, poor clustering, not bullshit => drop
+#   , 'knw_foreign_language' #low variance, poor clustering, bullshit item => drop
+# ) -> chr_items_remove
+
+# working with oblimin 13
+c(
+  # drop to round off
+  # , 'skl_speaking' #low variance, ok clustering, bullshit item => drop or rename
+  # , 'skl_reading_comprehension' #low variance, ok clustering, bullshit item => drop or rename
+  # 'skl_writing' #low variance, ok clustering, bullshit item => drop or rename
   
+  # have to go
+  # 'knw_telecommunications' #mid-low variance, poor clustering, not bullshit => drop
+  'abl_speech_recognition' #low variance, poor clustering, bullshit item => drop
+  , 'knw_computers_and_electronics' #mid-high variance, poor clustering, not bullshit => drop
+  , 'knw_public_safety_and_security' #mid variance, poor clustering, convoluted item => drop
+  
+  # absolutely have to go
+  , 'abl_near_vision' #low variance, poor clustering, bullshit item => drop
+  , 'skl_service_orientation' #low variance, poor clustering, bullshit item => drop
+  , 'knw_food_production' #mid variance, poor clustering, bullshit item => drop
+  , 'knw_law_and_government' #mid variance, poor clustering, not bullshit => drop
+  , 'knw_foreign_language' #low variance, poor clustering, bullshit item => drop
 ) -> chr_items_remove
 
 unique(
@@ -92,62 +135,45 @@ unique(
 # Number of items
 120 - length(chr_items_remove)
 
-# # - Item correlation ------------------------------------------------------
-# df_occupations %>%
-#   select(
-#     starts_with('skl'),
-#     starts_with('abl'),
-#     starts_with('knw')
-#   ) %>% 
-#   fun_efa_correlations(
-#     dbl_weights =
-#       df_occupations$
-#       employment_variants
-#   ) -> mtx_correlations
-# 
-# diag(mtx_correlations) <- NA
-# 
-# mtx_correlations %>% 
-#   as_tibble(
-#     rownames = 'item'
-#   ) %>% 
-#   pivot_longer(
-#     cols = -1,
-#     names_to = 'correlate_item',
-#     values_to = 'correlation'
-#   ) %>% 
-#   na.omit() ->
-#   df_correlations
-# 
-# df_correlations %>% 
-#   filter(
-#     str_detect(
-#       # item, 'food_production'
-#       # item, 'near_vision'
-#       # item, 'law'
-#       # item, 'foreign_language'
-#       item, 'public_safety'
-#     )
-#   ) %>% View
-# 
-# # 
-# # diag(mtx_correlations) <- NA
-# # 
-# # mtx_correlations %>% 
-# #   abs() %>% 
-# #   rowMeans(na.rm = T) %>% 
-# #   as_tibble(
-# #     rownames = 'item'
-# #   ) %>% 
-# #   rename(
-# #     mean_abs_r = 2
-# #   ) %>% 
-# #   arrange(desc(
-# #     -mean_abs_r
-# #   )) %>% 
-# #   print(
-# #     n = 120
-# #   )
+# - Item correlation ------------------------------------------------------
+df_occupations %>%
+  select(
+    starts_with('skl'),
+    starts_with('abl'),
+    starts_with('knw')
+  ) %>%
+  fun_efa_correlations(
+    dbl_weights =
+      df_occupations$
+      employment_variants
+  ) -> mtx_correlations
+
+diag(mtx_correlations) <- NA
+
+mtx_correlations %>%
+  as_tibble(
+    rownames = 'item'
+  ) %>%
+  pivot_longer(
+    cols = -1,
+    names_to = 'correlate_item',
+    values_to = 'correlation'
+  ) %>%
+  na.omit() ->
+  df_correlations
+
+df_correlations %>% 
+  group_by(
+    item
+  ) %>% 
+  reframe(
+    mean_abs_r = mean(abs(
+      correlation
+    ), na.rm = T)
+  ) %>% 
+  arrange(desc(
+    mean_abs_r
+  )) -> df_mean_r
 
 # - Item variance -----------------------------------------------------
 df_occupations %>% 
@@ -185,15 +211,20 @@ df_occupations %>%
       )
   ) -> df_variance
 
-df_variance %>%
+df_variance %>% 
+  right_join(
+    df_mean_r
+  ) -> df_items
+
+df_items %>%
   arrange(desc(
-    variance
+    variance * (1 - mean_abs_r)
   )) %>% 
   print(
     n = Inf
   )
 
-df_variance %>% 
+df_items %>% 
   filter(
     !problematic
   ) %>% 
@@ -293,7 +324,13 @@ list_efa$
   # efa_equamax_11factors %>%
   # efa_equamax_12factors %>%
   # efa_equamax_13factors %>%
-  # efa_equamax_14factors %>%
+  efa_equamax_14factors %>%
+  split(.$factor) %>%
+  map(print, n = Inf) %>%
+  invisible()
+
+list_efa$
+  loadings_long$
   # efa_oblimin_10factors %>%
   # efa_oblimin_11factors %>%
   # efa_oblimin_12factors %>%
