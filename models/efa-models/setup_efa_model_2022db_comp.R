@@ -447,7 +447,30 @@ list_efa$
     )
   )
 
+list_efa$
+  models[[
+    chr_efa_model
+  ]] %>%
+  write_rds(
+    file = paste0(
+      '/home/Cao/Storage/github/atlas-research/data/efa/',
+      chr_efa_model,
+      '.rds'
+    )
+  )
+
 # - Write xlsx file (questionnaires) -------------------------------------------------------
+map2(
+  .x = list_questionnaires
+  , .y = names(list_questionnaires)
+  , .f =
+    ~ .x %>%
+    write.xlsx(
+      file = paste0('./', 'questionnaire_', .y, '.xlsx')
+    )
+) %>% 
+  invisible()
+
 map2(
   .x = list_questionnaires
   , .y = names(list_questionnaires)
@@ -467,6 +490,17 @@ map2(
     ~ .x %>%
     write_csv(
       file = paste0('./', 'questionnaire_', .y, '.csv')
+    )
+) %>% 
+  invisible()
+
+map2(
+  .x = list_questionnaires
+  , .y = names(list_questionnaires)
+  , .f =
+    ~ .x %>%
+    write_csv(
+      file = paste0('/home/Cao/Storage/github/atlas-research/data/efa/', 'questionnaire_', .y, '.csv')
     )
 ) %>% 
   invisible()
