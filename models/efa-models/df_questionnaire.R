@@ -5,6 +5,7 @@ chr_pkg <- c(
   , 'rstudioapi' #Current file directory
   , 'readr', 'openxlsx' #Read data
   , 'tidyr', 'dplyr', 'stringr' #Data wrangling
+  , 'Hmisc' #Weighted var
 )
 
 # Git packages
@@ -135,7 +136,6 @@ c(
   'analytical_skills'
 ) -> chr_notiq_factors
 
-
 # Calculate descriptive statistics for IQ proxies
 df_questionnaire_full %>% 
   filter(
@@ -146,18 +146,46 @@ df_questionnaire_full %>%
     item
   ) -> chr_notiq_items
 
-df_occupations %>% 
-  select(all_of(
-    chr_notiq_items
-  )) %>% 
+df_occupations %>%
+  select(
+    employment_variants,
+    any_of(chr_notiq_items)
+  ) %>%
+  pivot_longer(
+    cols = -1,
+    names_to = 'item',
+    values_to = 'item_score'
+  ) %>% 
+  reframe(
+    notiq_sd = sqrt(wtd.var(
+      x = item_score,
+      weights = employment_variants
+    )),
+    notiq_mean = wtd.mean(
+      x = item_score,
+      weights = employment_variants
+    )
+  ) -> df_notiq_stats
   
-  
-  # - NOT IQ model ----------------------------------------------------------
-
-
-atlas.notiq::fun_notiq_quotient(
-  
-)
+# - NOT IQ model ----------------------------------------------------------
+df_capabilities %>%
+  filter(
+    factor_name %in% 
+      chr_notiq_factors
+  ) %>% 
+  pull(
+    capability
+  ) %>%
+  fun_notiq_quotient(
+    dbl_proxy_mean = 
+      df_notiq_stats$
+      notiq_mean,
+    dbl_proxy_sd = 
+      df_notiq_stats$
+      notiq_sd,
+    dbl_iq_mean = 100,
+    dbl_iq_sd = 15
+  )
 
 # [ACTI] ------------------------------------------------------------------
 # - Generality ------------------------------------------------------------
