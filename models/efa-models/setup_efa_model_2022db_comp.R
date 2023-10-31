@@ -3,13 +3,14 @@
 chr_pkg <- c(
   'devtools' #GitHub packages
   , 'rstudioapi' #Current file directory
-  , 'readr' #Read data
+  , 'readr', 'openxlsx' #Read data
   , 'tidyr', 'dplyr', 'stringr' #Data wrangling
 )
 
 # Git packages
 chr_git <- c(
-  'CaoBittencourt' = 'atlas.efa'
+  'CaoBittencourt' = 'atlas.efa',
+  'CaoBittencourt' = 'atlas.plot'
 )
 
 # Activate / install CRAN packages
@@ -156,6 +157,25 @@ unique(
 # Number of items
 120 - length(chr_items_remove)
 
+# - Problematic items distribution ----------------------------------------
+for(item in chr_items_remove){
+  
+  df_occupations %>%
+     fun_plot.density(aes(
+      x = !!sym(item)
+      , weight = employment_variants
+    )
+    , .list_axis.x.args = list(
+      limits = c(-25,125)
+    )
+    , .fun_format.x = number_format(1)
+    , .list_labs = list(
+      y = NULL
+    )) %>%
+    plot()
+  
+}
+
 # - Item correlation ------------------------------------------------------
 df_occupations %>%
   select(
@@ -190,11 +210,23 @@ df_correlations %>%
   reframe(
     mean_abs_r = mean(abs(
       correlation
-    ), na.rm = T)
+    ), na.rm = T),
+    max_r = max(
+      correlation
+      , na.rm = T),
+    min_r = min(
+      correlation
+      , na.rm = T)
   ) %>% 
   arrange(desc(
     mean_abs_r
   )) -> df_mean_r
+
+df_mean_r %>% 
+  print(
+    n = Inf
+  )
+
 
 # - Item variance -----------------------------------------------------
 df_occupations %>% 
@@ -301,45 +333,11 @@ list_efa$reliability_evaluation
 # Overall model performance
 list_efa$model_performance
 
-# # - Interpret factors (with problematic items) -----------------------------------------------------
-# list_efa$
-#   loadings_long$
-#   efa_equamax_10factors %>% 
-#   split(.$factor)
-# 
-# # 10 factor model
-# # f1 discernment
-# # f2 dexterity
-# # f3 arts_humanities
-# # f4 business (shit)
-# # f5 spatial_orientation/transportation
-# # f6 engineering_tech
-# # f7 health_science (foreign language, law, social perceptiveness, public safety, education and training, sociology, etc etc)
-# # f8 robustness (food_production)
-# # f9 intelligence (near_vision)
-# # f10 management
-# 
-# # list_efa$
-# #   loadings_long$
-# #   efa_equamax_11factors %>% 
-# #   split(.$factor)
-# 
-# # 10 factor model
-# # f1 discernment
-# # f2 perception/cognition (shit)
-# # f3 arts_humanities
-# # f4 business (SHIT)
-# # f5 spatial_orientation/transportation
-# # f6 engineering_tech
-# # f7 health_science (foreign language, law, social perceptiveness, public safety, education and training, sociology, etc etc)
-# # etc etc
-# 
-# # list_efa$
-# #   loadings_long$
-# #   efa_equamax_13factors %>% 
-# #   split(.$factor)
+# Factor correlation
+list_efa$factor_correlations
 
-# - Interpret factors (without problematic items) -----------------------------------------------------
+# - Interpret factors -----------------------------------------------------
+# Equamax
 list_efa$
   loadings_long$
   # efa_equamax_10factors %>%
@@ -351,6 +349,7 @@ list_efa$
   map(print, n = Inf) %>%
   invisible()
 
+# Oblimin
 list_efa$
   loadings_long$
   # efa_oblimin_10factors %>%
@@ -362,77 +361,8 @@ list_efa$
   map(print, n = Inf) %>% 
   invisible()
 
-list_efa$
-  factor_correlations$
-  efa_oblimin_13factors
-
-# 10 factor model
-# f1 discernment
-# f2 dexterity
-# f3 arts_humanities
-# f4 business (shit)
-# f5 spatial_orientation/transportation
-# f6 engineering_tech
-# f7 health_science (foreign language, law, social perceptiveness, public safety, education and training, sociology, etc etc)
-# f8 robustness (food_production)
-# f9 intelligence (near_vision)
-# f10 management
-
-list_efa$
-  loadings_long$
-  efa_equamax_12factors %>% 
-  split(.$factor) %>% 
-  map(print, n = Inf) %>% 
-  invisible()
-
-# list_efa$
-#   loadings_long$
-#   efa_equamax_13factors %>%
-#   split(.$factor) %>% 
-#   map(print, n = Inf) %>% 
-#   invisible()
-
 # - Choose model ----------------------------------------------------------
-list_efa$
-  loadings_long$
-  # efa_oblimin_13factors -> 
-  efa_equamax_14factors -> 
-  df_model
-
-# # - Name factors ----------------------------------------------------------
-# c(
-#   'factor1' = 'discernment',
-#   'factor2' = 'perception',
-#   'factor3' = 'health_science',
-#   'factor4' = 'business',
-#   'factor5' = 'spatial_abilities',
-#   'factor6' = 'arts_and_humanities',
-#   'factor7' = 'engineering',
-#   'factor8' = 'intelligence',
-#   'factor9' = 'robustness',
-#   'factor10' = 'management',
-#   'factor11' = 'mechanical_skills',
-#   'factor12' = 'dexterity',
-#   'factor13' = 'analytical_skills'
-# ) %>% 
-#   as_tibble(
-#     rownames = 'factor'
-#   ) %>% 
-#   rename(
-#     factor_name = 2
-#   ) %>% 
-#   mutate(
-#     factor_abbv = c(
-#       'Ds', 'Pc', 'Hs',
-#       'Bs', 'Sp', 'Ah',
-#       'Eg', 'Iq', 'Rb',
-#       'Mn', 'Mc', 'Dx',
-#       'An'
-#     )
-#   ) %>% 
-#   right_join(
-#     df_model
-#   ) -> df_model
+chr_efa_model <- 'efa_equamax_14factors'
 
 # - Name factors ----------------------------------------------------------
 c(
@@ -465,33 +395,38 @@ c(
       'Rb', 'Mc', 'Ad',
       'An', 'Dx'
     )
-  ) %>% 
-  right_join(
-    df_model
-  ) -> df_model
+  ) -> df_factors
 
-# [PLOTS] -----------------------------------------------------------------
-# - Plot results ---------------------------------------------------------
-# 
+df_factors
 
-# [CLEAR] -----------------------------------------------------------------
-# - Keep only necessary variables --------------------------
-# Variables to keep
-c() -> chr_var_keep
+# [QUESTIONNAIRES] -------------------------------------------------------
+# - Estimate variance-weighted questionnaires -----------------------------
+fun_efa_top_items(
+  df_data = 
+    df_occupations_efa[-1]
+  , dbl_weights = 
+    df_occupations_efa$
+    employment_variants
+  , efa_model = 
+    list_efa$
+    models[[
+      chr_efa_model
+    ]]
+  , int_items_total_vector = 
+    seq(60, 114, length.out = 3)
+  # ncol(df_occupations_efa[-1]) * 
+  # c(1, 0.5, 0.25)
+  , lgc_uneven_factors = T
+  , int_min_items_factor = 4
+) -> list_questionnaires
 
-# Remove everything else
-rm(
-  list =
-    .GlobalEnv %>% 
-    as.list() %>% 
-    names() %>% 
-    subset(!(
-      .GlobalEnv %>% 
-        as.list() %>% 
-        names() %in% 
-        chr_var_keep
-    ))
-)
+list_questionnaires %>% 
+  map(
+    ~ right_join(df_factors, .x)
+  ) -> list_questionnaires
+
+list_questionnaires[[1]] %>% 
+  print(n = Inf)
 
 # [EXPORT] ----------------------------------------------------------------
 # - Working directory -----------------------------------------------------
@@ -500,18 +435,38 @@ setwd(dirname(
   rstudioapi::getSourceEditorContext()$path
 ))
 
-# - Write xlsx file -------------------------------------------------------
-df_model %>% 
-  openxlsx::write.xlsx(
-    file = './efa_oblimin_13factors.xlsx'
+# - Write rds file (EFA model) --------------------------------------------------------
+list_efa$
+  models[[
+    chr_efa_model
+  ]] %>%
+  write_rds(
+    file = paste0(
+      chr_efa_model,
+      '.rds'
+    )
   )
 
-# - Write csv file --------------------------------------------------------
-df_model %>% 
-  write_csv(
-    file = './efa_oblimin_13factors.csv'
-  )
+# - Write xlsx file (questionnaires) -------------------------------------------------------
+map2(
+  .x = list_questionnaires
+  , .y = names(list_questionnaires)
+  , .f =
+    ~ .x %>%
+    write.xlsx(
+      file = paste0('./', 'questionnaire_', .y, '.xlsx')
+    )
+) %>% 
+  invisible()
 
-# # - Save .RData image --------------------------------------------------
-# # Save work space image
-# save.image('./image_file.RData')
+# - Write csv file (questionnaires) -------------------------------------------------------
+map2(
+  .x = list_questionnaires
+  , .y = names(list_questionnaires)
+  , .f =
+    ~ .x %>%
+    write_csv(
+      file = paste0('./', 'questionnaire_', .y, '.csv')
+    )
+) %>% 
+  invisible()
