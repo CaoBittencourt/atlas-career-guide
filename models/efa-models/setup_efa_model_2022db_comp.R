@@ -107,25 +107,46 @@ read_csv(
 #   , 'knw_foreign_language' #low variance, poor clustering, bullshit item => drop
 # ) -> chr_items_remove
 
-# working with oblimin 13
+# # working with equamax 14
+# c(
+#   # drop to round off
+#   # 'skl_reading_comprehension' #low variance, ok clustering, bullshit item => drop or rename
+#   # , 'skl_speaking' #low variance, ok clustering, bullshit item => drop or rename
+#   # 'skl_writing' #low variance, ok clustering, bullshit item => drop or rename
+#   
+#   # have to go
+#   # 'knw_telecommunications' #mid-low variance, poor clustering, bullshit item => drop
+#   # , 'abl_speech_recognition' #low variance, poor clustering, bullshit item => drop
+#   # , 'knw_computers_and_electronics' #mid-high variance, poor clustering, not bullshit => drop
+# 
+#   # absolutely have to go
+#   'abl_near_vision' #low variance, poor clustering, bullshit item => drop
+#   , 'skl_service_orientation' #low variance, poor clustering, bullshit item => drop
+#   , 'knw_food_production' #mid variance, poor clustering, bullshit item => drop
+#   , 'knw_law_and_government' #mid variance, poor clustering, not bullshit => drop
+#   , 'knw_foreign_language' #low variance, poor clustering, bullshit item => drop
+#   , 'knw_public_safety_and_security' #mid variance, poor clustering, convoluted item => drop
+# ) -> chr_items_remove
+
+# working with equamax 14
 c(
   # drop to round off
+  # 'skl_reading_comprehension' #low variance, ok clustering, bullshit item => drop or rename
   # , 'skl_speaking' #low variance, ok clustering, bullshit item => drop or rename
-  # , 'skl_reading_comprehension' #low variance, ok clustering, bullshit item => drop or rename
   # 'skl_writing' #low variance, ok clustering, bullshit item => drop or rename
   
   # have to go
-  # 'knw_telecommunications' #mid-low variance, poor clustering, not bullshit => drop
-  'abl_speech_recognition' #low variance, poor clustering, bullshit item => drop
-  , 'knw_computers_and_electronics' #mid-high variance, poor clustering, not bullshit => drop
-  , 'knw_public_safety_and_security' #mid variance, poor clustering, convoluted item => drop
+  # , 'knw_telecommunications' #mid-low variance, poor clustering, bullshit item => drop
+  # 'abl_speech_recognition' #low variance, poor clustering, bullshit item => drop
+  # , 'knw_computers_and_electronics' #mid-high variance, poor clustering, not bullshit => drop
   
   # absolutely have to go
-  , 'abl_near_vision' #low variance, poor clustering, bullshit item => drop
+  'abl_near_vision' #low variance, poor clustering, bullshit item => drop
   , 'skl_service_orientation' #low variance, poor clustering, bullshit item => drop
   , 'knw_food_production' #mid variance, poor clustering, bullshit item => drop
   , 'knw_law_and_government' #mid variance, poor clustering, not bullshit => drop
   , 'knw_foreign_language' #low variance, poor clustering, bullshit item => drop
+  , 'knw_public_safety_and_security' #mid variance, poor clustering, convoluted item => drop
 ) -> chr_items_remove
 
 unique(
@@ -251,7 +272,8 @@ fun_efa_vfa(
   df_data = 
     df_occupations_efa[-1]
   # , int_factors = NULL
-  , int_factors = c(10:14)
+  # , int_factors = c(10:14)
+  , int_factors = c(13, 14)
   # , chr_rotation = 'equamax'
   # , chr_rotation = c('oblimin', 'equamax', 'promax') #promax doesn't work
   , chr_rotation = c('oblimin', 'equamax')
@@ -334,11 +356,15 @@ list_efa$
   # efa_oblimin_10factors %>%
   # efa_oblimin_11factors %>%
   # efa_oblimin_12factors %>%
-  efa_oblimin_13factors %>%
-  # efa_oblimin_14factors %>%
+  # efa_oblimin_13factors %>%
+  efa_oblimin_14factors %>%
   split(.$factor) %>% 
   map(print, n = Inf) %>% 
   invisible()
+
+list_efa$
+  factor_correlations$
+  efa_oblimin_13factors
 
 # 10 factor model
 # f1 discernment
@@ -365,6 +391,84 @@ list_efa$
 #   split(.$factor) %>% 
 #   map(print, n = Inf) %>% 
 #   invisible()
+
+# - Choose model ----------------------------------------------------------
+list_efa$
+  loadings_long$
+  # efa_oblimin_13factors -> 
+  efa_equamax_14factors -> 
+  df_model
+
+# # - Name factors ----------------------------------------------------------
+# c(
+#   'factor1' = 'discernment',
+#   'factor2' = 'perception',
+#   'factor3' = 'health_science',
+#   'factor4' = 'business',
+#   'factor5' = 'spatial_abilities',
+#   'factor6' = 'arts_and_humanities',
+#   'factor7' = 'engineering',
+#   'factor8' = 'intelligence',
+#   'factor9' = 'robustness',
+#   'factor10' = 'management',
+#   'factor11' = 'mechanical_skills',
+#   'factor12' = 'dexterity',
+#   'factor13' = 'analytical_skills'
+# ) %>% 
+#   as_tibble(
+#     rownames = 'factor'
+#   ) %>% 
+#   rename(
+#     factor_name = 2
+#   ) %>% 
+#   mutate(
+#     factor_abbv = c(
+#       'Ds', 'Pc', 'Hs',
+#       'Bs', 'Sp', 'Ah',
+#       'Eg', 'Iq', 'Rb',
+#       'Mn', 'Mc', 'Dx',
+#       'An'
+#     )
+#   ) %>% 
+#   right_join(
+#     df_model
+#   ) -> df_model
+
+# - Name factors ----------------------------------------------------------
+c(
+  'factor1' = 'rhetoric',
+  'factor2' = 'engineering',
+  'factor3' = 'health_science',
+  'factor4' = 'spatial_abilities',
+  'factor5' = 'management',
+  'factor6' = 'arts_and_humanities',
+  'factor7' = 'mathematics',
+  'factor8' = 'business',
+  'factor9' = 'perception',
+  'factor10' = 'robustness',
+  'factor11' = 'mechanical_skills',
+  'factor12' = 'administrative_skills',
+  'factor13' = 'analytical_skills',
+  'factor14' = 'dexterity'
+) %>% 
+  as_tibble(
+    rownames = 'factor'
+  ) %>% 
+  rename(
+    factor_name = 2
+  ) %>% 
+  mutate(
+    factor_abbv = c(
+      'Rt', 'Eg', 'Hs',
+      'Sp', 'Mn', 'Ah',
+      'Mt', 'Bs', 'Pc',
+      'Rb', 'Mc', 'Ad',
+      'An', 'Dx'
+    )
+  ) %>% 
+  right_join(
+    df_model
+  ) -> df_model
 
 # [PLOTS] -----------------------------------------------------------------
 # - Plot results ---------------------------------------------------------
@@ -396,6 +500,18 @@ setwd(dirname(
   rstudioapi::getSourceEditorContext()$path
 ))
 
-# - Save .RData image --------------------------------------------------
-# Save work space image
-save.image('./image_file.RData')
+# - Write xlsx file -------------------------------------------------------
+df_model %>% 
+  openxlsx::write.xlsx(
+    file = './efa_oblimin_13factors.xlsx'
+  )
+
+# - Write csv file --------------------------------------------------------
+df_model %>% 
+  write_csv(
+    file = './efa_oblimin_13factors.csv'
+  )
+
+# # - Save .RData image --------------------------------------------------
+# # Save work space image
+# save.image('./image_file.RData')
