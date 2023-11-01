@@ -304,8 +304,8 @@ fun_efa_vfa(
   df_data = 
     df_occupations_efa[-1]
   # , int_factors = NULL
-  # , int_factors = c(10:14)
-  , int_factors = c(13, 14)
+  , int_factors = c(10:14)
+  # , int_factors = c(13, 14)
   # , chr_rotation = 'equamax'
   # , chr_rotation = c('oblimin', 'equamax', 'promax') #promax doesn't work
   , chr_rotation = c('oblimin', 'equamax')

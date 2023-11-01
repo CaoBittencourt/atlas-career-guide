@@ -73,7 +73,7 @@ df_questionnaire_full <- read_csv('/home/Cao/Storage/github/atlas-research/data/
 efa_model <- read_rds('/home/Cao/Storage/github/atlas-research/data/efa/efa_equamax_14factors.rds')
 
 # My questionnaire
-df_input <- read.xlsx('/home/Cao/Storage/github/atlas-research/models/efa-models/questionnaire.xlsx')
+df_input <- read.xlsx('/home/Cao/Storage/github/atlas-research/data/questionnaires/questionnaire_Cao.xlsx')
 
 
 # [DATA] ------------------------------------------------------------------
@@ -134,6 +134,7 @@ df_match %>%
 c(
   'mathematics',
   'analytical_skills'
+  # , 'rhetoric'
 ) -> chr_notiq_factors
 
 # Calculate descriptive statistics for IQ proxies
@@ -166,6 +167,8 @@ df_occupations %>%
       weights = employment_variants
     )
   ) -> df_notiq_stats
+
+df_notiq_stats
   
 # - NOT IQ model ----------------------------------------------------------
 df_capabilities %>%
@@ -281,6 +284,7 @@ df_acti_preferred %>%
 
 plt_acti_capabilities
 plt_acti_preferred
+
 # dsds --------------------------------------------------------------------
 atlas.acti::fun_acti_type(
   df_data = 
