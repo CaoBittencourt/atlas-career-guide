@@ -63,71 +63,71 @@ read_csv(
 
 # [DATA] ------------------------------------------------------------------
 # - Problematic items -------------------------------------------------
-# These variables had to be removed from the model
-# c(
-#   # useless items:
-#   'abl_near_vision' #low variance, poor clustering, bullshit item => drop
-#   
-#   , 'skl_service_orientation' #low variance, poor clustering, bullshit item => drop
-#   
-#   # redundant items:
-#   # , 'skl_speaking' #low variance, ok clustering, bullshit item => drop or rename
-#   # , 'skl_reading_comprehension' #low variance, ok clustering, bullshit item => drop or rename
-#   , 'skl_writing' #low variance, ok clustering, bullshit item => drop or rename
-#   
-#   # poorly clustering items:
-#   , 'abl_near_vision' #low variance, poor clustering, bullshit item => drop
-#   , 'knw_food_production' #mid variance, poor clustering, bullshit item => drop
-#   , 'knw_law_and_government' #mid variance, poor clustering, not bullshit => drop
-#   , 'knw_foreign_language' #low variance, poor clustering, bullshit item => drop
-#   , 'knw_public_safety_and_security' #mid variance, poor clustering, convoluted item => drop
-#   , 'knw_telecommunications' #mid-low variance, poor clustering, not bullshit => drop
-#   , 'abl_speech_recognition' #low variance, poor clustering, bullshit item => drop
-#   , 'knw_computers_and_electronics' #mid-high variance, poor clustering, not bullshit => drop
-#   
-# ) -> chr_items_remove
-
-# # working with oblimin 13
-# c(
-#   # drop to round off
-#   # , 'skl_speaking' #low variance, ok clustering, bullshit item => drop or rename
-#   # , 'skl_reading_comprehension' #low variance, ok clustering, bullshit item => drop or rename
-#   # 'skl_writing' #low variance, ok clustering, bullshit item => drop or rename
-#   
-#   # have to go
-#    'knw_telecommunications' #mid-low variance, poor clustering, not bullshit => drop
-#   , 'abl_speech_recognition' #low variance, poor clustering, bullshit item => drop
-#   , 'knw_computers_and_electronics' #mid-high variance, poor clustering, not bullshit => drop
-#   , 'knw_public_safety_and_security' #mid variance, poor clustering, convoluted item => drop
-#   
-#   # absolutely have to go
-#   , 'abl_near_vision' #low variance, poor clustering, bullshit item => drop
-#   , 'skl_service_orientation' #low variance, poor clustering, bullshit item => drop
-#   , 'knw_food_production' #mid variance, poor clustering, bullshit item => drop
-#   , 'knw_law_and_government' #mid variance, poor clustering, not bullshit => drop
-#   , 'knw_foreign_language' #low variance, poor clustering, bullshit item => drop
-# ) -> chr_items_remove
-
-# # working with equamax 14
-# c(
-#   # drop to round off
-#   # 'skl_reading_comprehension' #low variance, ok clustering, bullshit item => drop or rename
-#   # , 'skl_speaking' #low variance, ok clustering, bullshit item => drop or rename
-#   # 'skl_writing' #low variance, ok clustering, bullshit item => drop or rename
-#   
-#   # have to go
-#   # 'knw_telecommunications' #mid-low variance, poor clustering, bullshit item => drop
-#   # , 'abl_speech_recognition' #low variance, poor clustering, bullshit item => drop
-#   # , 'knw_computers_and_electronics' #mid-high variance, poor clustering, not bullshit => drop
+# # These variables had to be removed from the model
+# # c(
+# #   # useless items:
+# #   'abl_near_vision' #low variance, poor clustering, bullshit item => drop
+# #   
+# #   , 'skl_service_orientation' #low variance, poor clustering, bullshit item => drop
+# #   
+# #   # redundant items:
+# #   # , 'skl_speaking' #low variance, ok clustering, bullshit item => drop or rename
+# #   # , 'skl_reading_comprehension' #low variance, ok clustering, bullshit item => drop or rename
+# #   , 'skl_writing' #low variance, ok clustering, bullshit item => drop or rename
+# #   
+# #   # poorly clustering items:
+# #   , 'abl_near_vision' #low variance, poor clustering, bullshit item => drop
+# #   , 'knw_food_production' #mid variance, poor clustering, bullshit item => drop
+# #   , 'knw_law_and_government' #mid variance, poor clustering, not bullshit => drop
+# #   , 'knw_foreign_language' #low variance, poor clustering, bullshit item => drop
+# #   , 'knw_public_safety_and_security' #mid variance, poor clustering, convoluted item => drop
+# #   , 'knw_telecommunications' #mid-low variance, poor clustering, not bullshit => drop
+# #   , 'abl_speech_recognition' #low variance, poor clustering, bullshit item => drop
+# #   , 'knw_computers_and_electronics' #mid-high variance, poor clustering, not bullshit => drop
+# #   
+# # ) -> chr_items_remove
 # 
-#   # absolutely have to go
-#   'abl_near_vision' #low variance, poor clustering, bullshit item => drop
-#   , 'skl_service_orientation' #low variance, poor clustering, bullshit item => drop
-#   , 'knw_food_production' #mid variance, poor clustering, bullshit item => drop
-#   , 'knw_law_and_government' #mid variance, poor clustering, not bullshit => drop
-#   , 'knw_foreign_language' #low variance, poor clustering, bullshit item => drop
-#   , 'knw_public_safety_and_security' #mid variance, poor clustering, convoluted item => drop
-# ) -> chr_items_remove
+# # # working with oblimin 13
+# # c(
+# #   # drop to round off
+# #   # , 'skl_speaking' #low variance, ok clustering, bullshit item => drop or rename
+# #   # , 'skl_reading_comprehension' #low variance, ok clustering, bullshit item => drop or rename
+# #   # 'skl_writing' #low variance, ok clustering, bullshit item => drop or rename
+# #   
+# #   # have to go
+# #    'knw_telecommunications' #mid-low variance, poor clustering, not bullshit => drop
+# #   , 'abl_speech_recognition' #low variance, poor clustering, bullshit item => drop
+# #   , 'knw_computers_and_electronics' #mid-high variance, poor clustering, not bullshit => drop
+# #   , 'knw_public_safety_and_security' #mid variance, poor clustering, convoluted item => drop
+# #   
+# #   # absolutely have to go
+# #   , 'abl_near_vision' #low variance, poor clustering, bullshit item => drop
+# #   , 'skl_service_orientation' #low variance, poor clustering, bullshit item => drop
+# #   , 'knw_food_production' #mid variance, poor clustering, bullshit item => drop
+# #   , 'knw_law_and_government' #mid variance, poor clustering, not bullshit => drop
+# #   , 'knw_foreign_language' #low variance, poor clustering, bullshit item => drop
+# # ) -> chr_items_remove
+# 
+# # # working with equamax 14
+# # c(
+# #   # drop to round off
+# #   # 'skl_reading_comprehension' #low variance, ok clustering, bullshit item => drop or rename
+# #   # , 'skl_speaking' #low variance, ok clustering, bullshit item => drop or rename
+# #   # 'skl_writing' #low variance, ok clustering, bullshit item => drop or rename
+# #   
+# #   # have to go
+# #   # 'knw_telecommunications' #mid-low variance, poor clustering, bullshit item => drop
+# #   # , 'abl_speech_recognition' #low variance, poor clustering, bullshit item => drop
+# #   # , 'knw_computers_and_electronics' #mid-high variance, poor clustering, not bullshit => drop
+# # 
+# #   # absolutely have to go
+# #   'abl_near_vision' #low variance, poor clustering, bullshit item => drop
+# #   , 'skl_service_orientation' #low variance, poor clustering, bullshit item => drop
+# #   , 'knw_food_production' #mid variance, poor clustering, bullshit item => drop
+# #   , 'knw_law_and_government' #mid variance, poor clustering, not bullshit => drop
+# #   , 'knw_foreign_language' #low variance, poor clustering, bullshit item => drop
+# #   , 'knw_public_safety_and_security' #mid variance, poor clustering, convoluted item => drop
+# # ) -> chr_items_remove
 
 # working with equamax 14
 c(
@@ -135,12 +135,12 @@ c(
   # 'skl_reading_comprehension' #low variance, ok clustering, bullshit item => drop or rename
   # , 'skl_speaking' #low variance, ok clustering, bullshit item => drop or rename
   # 'skl_writing' #low variance, ok clustering, bullshit item => drop or rename
-  
+
   # have to go
   # , 'knw_telecommunications' #mid-low variance, poor clustering, bullshit item => drop
   # 'abl_speech_recognition' #low variance, poor clustering, bullshit item => drop
   # , 'knw_computers_and_electronics' #mid-high variance, poor clustering, not bullshit => drop
-  
+
   # absolutely have to go
   'abl_near_vision' #low variance, poor clustering, bullshit item => drop
   , 'skl_service_orientation' #low variance, poor clustering, bullshit item => drop
@@ -308,6 +308,8 @@ fun_efa_vfa(
   # , int_factors = c(13, 14)
   # , chr_rotation = 'equamax'
   # , chr_rotation = c('oblimin', 'equamax', 'promax') #promax doesn't work
+  # , chr_rotation = c('oblimin', 'equamax', 'quartimax', 'varimax', 'bentlerQ', 'simplimax', 'promax') #'quartimax', 'varimax', 'bentlerQ', 'simplimax', 'promax' don't work
+  # , chr_rotation = c('oblimin', 'equamax', 'bentlerQ') # bentlerQ doesn't work either
   , chr_rotation = c('oblimin', 'equamax')
   , dbl_weights = 
     df_occupations_efa$
@@ -331,10 +333,21 @@ list_efa$reliability_metrics
 list_efa$reliability_evaluation
 
 # Overall model performance
-list_efa$model_performance
+list_efa$model_performance %>% print(n = Inf)
+
+list_efa$
+  model_performance %>% 
+  filter(
+    performance > 0
+  ) %>% 
+  print(n = Inf)
 
 # Factor correlation
 list_efa$factor_correlations
+
+list_efa$
+  factor_correlations %>% 
+  map( ~ .x$suggested_rotation)
 
 # - Interpret factors -----------------------------------------------------
 # Equamax
@@ -357,8 +370,8 @@ list_efa$
   # efa_oblimin_12factors %>%
   # efa_oblimin_13factors %>%
   efa_oblimin_14factors %>%
-  split(.$factor) %>% 
-  map(print, n = Inf) %>% 
+  split(.$factor) %>%
+  map(print, n = Inf) %>%
   invisible()
 
 # - Choose model ----------------------------------------------------------
