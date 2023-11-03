@@ -54,23 +54,23 @@ chr_pkg <- c(
 
 # - Data ------------------------------------------------------------------
 # Occupations data frame
-df_occupations <- read_csv('C:/Users/Cao/Documents/Github/Atlas-Research-dev/Data/df_occupations_2023_efa.csv')
+df_occupations <- read_csv('/home/Cao/Storage/github/atlas-research/data/occupations/df_occupations_2022.csv')
+
+# Questionnaire
+df_questionnaire <- read_csv('/home/Cao/Storage/github/atlas-research/data/efa/questionnaire_efa_equamax_14factors_60items.csv')
 
 # My own professional profile
-df_input <- read_csv('https://docs.google.com/spreadsheets/d/e/2PACX-1vSj7u2N59j8MTa7MZqk2Y-VDVWIWEDzAR_0gkb_jB_pBX4sm8yMS1N26ClmY6iWXA/pub?gid=145103706&single=true&output=csv')
+df_input <- read_csv('/home/Cao/Storage/github/atlas-research/data/questionnaires/questionnaire_Cao.csv')
 
 # Factor model
-efa_model <- read_rds('C:/Users/Cao/Documents/Github/atlas-research-dev/data/efa/efa_equamax_14factors.rds')
+efa_model <- read_rds('/home/Cao/Storage/github/atlas-research/data/efa/efa_equamax_14factors.rds')
 
 # - Parameters ------------------------------------------------------------
 # Factor symbols
-c(
-  'Ds', 'Eg', 'Hs',
-  'Mn', 'Tr', 'Ad',
-  'So', 'Ah', 'Hz',
-  'An', 'Mt', 'Rb',
-  'In', 'Mc'
-) -> chr_factor_labels
+df_questionnaire$
+  factor_abbv %>% 
+  unique() -> 
+  chr_factor_labels
 
 # [DATA] ------------------------------------------------------------------
 # - Bind data frames ------------------------------------------------------
