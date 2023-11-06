@@ -13,6 +13,8 @@ chr_git <- c(
   'CaoBittencourt' = 'atlas.notiq',
   'CaoBittencourt' = 'atlas.acti',
   'CaoBittencourt' = 'atlas.match',
+  'CaoBittencourt' = 'atlas.intc',
+  'CaoBittencourt' = 'atlas.employ',
   'CaoBittencourt' = 'atlas.plot'
 )
 
@@ -115,17 +117,61 @@ fun_match_similarity(
   dbl_scale_ub = 100,
   dbl_scale_lb = 0,
   chr_id_col = 'occupation',
-  lgc_sort = T
+  lgc_sort = F
 )[[1]] -> df_match
+
+# - Interchangeability ----------------------------------------------------
+df_match %>% 
+  mutate(
+    interchangeablity = 
+      df_match$
+      similarity %>%
+      fun_intc_interchangeability(
+        dbl_years_education = 21
+        , dbl_years_education_min = 
+          df_occupations$
+          education_years
+      ) %>% 
+      round(4)
+  ) -> df_match
 
 df_match %>% 
   select(
     occupation,
-    similarity
+    education_years,
+    similarity,
+    interchangeablity
+  ) %>% 
+  arrange(desc(
+    interchangeablity
+  )) %>% 
+  print(
+    n = 30
+  )
+
+df_match %>% 
+  select(
+    occupation,
+    education_years,
+    similarity,
+    interchangeablity
+  ) %>% 
+  arrange(
+    interchangeablity
   ) %>% 
   print(
     n = 30
   )
+
+# - Employability ---------------------------------------------------------
+fun_employ_employability(
+  int_employment = 
+    df_occupations$
+    employment_variants
+  , dbl_interchangeability = 
+    df_match$
+    interchangeablity
+)
 
 # [NOT IQ] ---------------------------------------------------------------
 # - Parameters ------------------------------------------------------------
@@ -169,7 +215,7 @@ df_occupations %>%
   ) -> df_notiq_stats
 
 df_notiq_stats
-  
+
 # - NOT IQ model ----------------------------------------------------------
 df_capabilities %>%
   filter(
@@ -284,38 +330,3 @@ df_acti_preferred %>%
 
 plt_acti_capabilities
 plt_acti_preferred
-
-# dsds --------------------------------------------------------------------
-atlas.acti::fun_acti_type(
-  df_data = 
-    df_occupations %>% 
-    filter(str_detect(
-      occupation,
-      'Statisticians|Economists|Mathematicians|Business Intelligence'
-    ))
-  , efa_model = efa_model
-  , chr_factor_labels = 
-    df_questionnaire$
-    factor_abbv %>% 
-    unique()
-  , chr_id_col = 
-    'occupation'
-  , dbl_scale_lb = 0
-  , dbl_scale_ub = 100
-) -> df_acti_stats
-
-df_acti_stats %>%
-  fun_acti_plot_molecule() ->
-  plt_acti_stats
-
-plt_acti_stats$`Business Intelligence Analysts`
-plt_acti_stats$Economists
-plt_acti_stats$`Environmental Economists`
-plt_acti_stats$Mathematicians
-plt_acti_stats$Statisticians
-
-df_acti_stats %>% 
-  group_by(
-    id_profile
-  ) %>% 
-  slice(1)
