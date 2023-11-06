@@ -311,7 +311,7 @@ fun_efa_vfa(
   # , chr_rotation = c('oblimin', 'equamax', 'quartimax', 'varimax', 'bentlerQ', 'simplimax', 'promax') #'quartimax', 'varimax', 'bentlerQ', 'simplimax', 'promax' don't work
   # , chr_rotation = c('oblimin', 'equamax', 'bentlerQ') # bentlerQ doesn't work either
   , chr_rotation = c('oblimin', 'equamax')
-  , dbl_weights = 
+  , dbl_weights =
     df_occupations_efa$
     employment_variants
   , int_min_items_factor = 4
