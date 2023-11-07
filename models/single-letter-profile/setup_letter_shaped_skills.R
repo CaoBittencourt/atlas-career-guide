@@ -10,7 +10,8 @@ chr_pkg <- c(
 # Git packages
 chr_git <- c(
   'CaoBittencourt' = 'atlas.ftools', #Factor scores
-  'CaoBittencourt' = 'atlas.class' #Classification
+  'CaoBittencourt' = 'atlas.class', #Classification
+  'coolbutuseless' = 'hershey' #Vector letters
 )
 
 # Activate / install CRAN packages
@@ -73,6 +74,9 @@ df_questionnaire$
   factor_abbv %>% 
   unique() -> 
   chr_factor_labels
+
+# - Letters --------------------------------------------------------------
+hershey::create_string_df(letters)
 
 # [DATA] ------------------------------------------------------------------
 # - Bind data frames ------------------------------------------------------
