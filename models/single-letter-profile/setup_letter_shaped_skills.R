@@ -5,6 +5,8 @@ chr_pkg <- c(
   'devtools' #GitHub packages
   , 'readr' #Read data
   , 'tidyr', 'dplyr' #Data wrangling
+  , 'ggplot2' #Data visualization
+  , 'vctrs' #Data frame subclasses
 )
 
 # Git packages
@@ -76,7 +78,289 @@ df_questionnaire$
   chr_factor_labels
 
 # - Letters --------------------------------------------------------------
-hershey::create_string_df(letters)
+fun_letters_plot <- function(chr_string = 'A', chr_font = c()){
+  
+  # Arguments validation
+  stopifnot(
+    "'chr_string' must be a character string or a number coercible to a character string." = 
+      any(
+        is.character(chr_string),
+        is.numeric(chr_string)
+      )
+  )
+  
+  # Data wrangling
+  chr_string[[1]] -> chr_string
+  
+  # Plot string
+  tryCatch(
+    expr = {
+      
+      hershey::hershey$
+        font %>% 
+        unique()
+      
+      create_string_df(
+        # chr_string
+        # 'b', 'greek'
+        # 'b', 'greekc'
+        # 'a', 'greeks'
+        # '5', 'mathlow'
+        # 'A', 'cyrillic'
+        # 'A', 'gothgrt'
+        # 'A', 'cursive'
+        # 'A', 'cyrilc_1'
+        # 'T', 'futural'
+        # 'T', 'timesg'
+        # 'T', 'timesrb'
+        # 'T', 'rowmans'
+        'T', 'rowmant'
+        # 'A', 'futuram'
+      ) %>% 
+        mutate(
+          # y = -(y + min(y)),
+          y = -(y + min(y)),
+          y = y * 100 / max(y)
+          # y = pmax(y, 0),
+          # y = pmin(y, 100)
+          # , x = factor(x, labels = '')
+        ) %>% 
+        ggplot(aes(
+          x = x,
+          y = y,
+          group = stroke
+        )) + 
+        scale_y_reverse() +
+        geom_path() + 
+        geom_point() +
+        coord_equal() + 
+        theme_minimal() + 
+        labs(
+          x = 'Skill',
+          y = 'Competence'
+        )
+      
+    }
+  )
+  
+  hershey %>%
+    group_by(
+      char
+    ) %>% 
+    tally()
+  
+  
+  
+}
+
+hershey::hershey %>% 
+  group_by(
+    char, font
+  ) %>% 
+  slice(1) %>% 
+  group_by(font) %>% 
+  tally()  %>% 
+  # filter(
+  #   char != '',
+  #   char != ' '
+  # ) %>% 
+  print(
+    n = Inf
+  )
+
+fun_letter_profile <- function(){
+  
+  hershey::hershey %>% 
+    group_by(
+      char, font,
+      factor(x)
+    ) %>% 
+    slice_min(
+      order_by = y,
+      n = 1
+    ) %>% 
+    ungroup() ->
+    df_letters
+  
+  # df_letters %>%
+  hershey::hershey %>%
+    filter(
+      char == 'P',
+      # font == 'rowmant'
+      # font == 'futuram'
+      # font == 'futural'
+      font == 'greek'
+    ) %>% 
+    # nrow()
+    ggplot(aes(
+      x = x,
+      y = y,
+      group = stroke
+    )) + 
+    geom_path() +
+    geom_point() + 
+    coord_equal() + 
+    theme_minimal()
+  
+  # decide methodology
+  df_letters %>% 
+    group_by(
+      char,
+      font
+    ) %>% 
+    mutate(
+      item = factor(x),
+      # item_score = -(y + min(y)),
+      # item_score = 
+      #   item_score * 100 / 
+      #   max(item_score)
+      item_score = 
+        y / (max(y) - min(y)) - 
+        min(y) / (max(y) - min(y)),
+      item_score = 100 * item_score
+    ) %>%
+    ungroup() %>%
+    select(
+      char,
+      font,
+      item,
+      item_score
+    ) %>% 
+    group_by(
+      char, font
+    ) %>% 
+    reframe(
+      min = min(item_score),
+      max = max(item_score)
+    )
+  pivot_wider(
+    
+  )
+  
+  
+  
+}
+
+
+hershey::create_string_df('dsds') %>%
+  ggplot(aes(
+    x = x,
+    y = y,
+    group = stroke
+  )) + 
+  geom_path() +
+  geom_point() + 
+  coord_equal() + 
+  theme_minimal()
+
+# [FUNCTIONS] -------------------------------------------------------------
+# - Letters data frame ----------------------------------------------------
+fun_letters_data <- function(chr_font = 'futural'){
+  
+  # Arguments validation
+  stopifnot(
+    "'chr_font' must be one of the following fonts: 'cyrillic', 'futural', 'greek', 'rowmans', '' "
+  )
+  
+  hershey::hershey %>%
+    pull(font) %>% 
+    unique()
+  
+  
+}
+
+hershey::hershey %>%
+  group_by(
+    glyph, font
+  ) %>% 
+  reframe(
+    min = min(y),
+    max = max(y),
+  ) %>% 
+  filter(
+    font == 'futural'
+  ) %>% 
+  arrange(desc(
+    max
+  ))
+
+
+hershey::hershey %>%
+  filter(
+    
+    # very cool (single stroke)
+    # font == 'rowmans'
+    # font == 'futural'
+    
+    # very cool (double / triple stroke)
+    # font == 'timesg'
+    # font == 'timesr'
+    # font == 'timesrb'
+    # font == 'rowmand'
+    # font == 'rowmant'
+    # font == 'cyrilc_1'
+    # font == 'cyrillic'
+    
+    # font == 'mathlow'
+    # font == 'mathupp'
+    # font == 'greek'
+    # font == 'greeks'
+    # font == 'greekc'
+    # font == 'futuram'
+  
+    # no 
+    # font == 'markers'
+    # font == 'scriptc'
+    # font == 'scripts'
+    # font == 'meteorology'
+    # font == 'astrology'
+    # font == 'japanese'
+    # font == 'music'
+    # font == 'scripts'
+    # font == 'scriptc'
+    # font == 'cursive'
+    # font == 'symbolic'
+    
+    # good but alternative (non essential)
+    # font == 'timesi'
+    # font == 'timesib'
+  ) %>% 
+  # filter(
+  #   glyph %in% 1:20
+  # ) %>%
+  ggplot() + 
+  geom_path(aes(x, y, group = stroke)) + 
+  coord_equal() + 
+  theme_void() + 
+  facet_wrap(~glyph, labeller = label_both, ncol = 10)
+
+
+# - Plot letter -----------------------------------------------------------
+fun_letter_plot <- function(df_letter){
+  
+  # Arguments validation
+  stopifnot(
+    "'df_letter' must be a data frame with the 'df_letter' subclass." = 
+      any(class(df_letter) == 'df_letter')
+  )
+  
+  # Plot letter
+  df_letter %>%
+    ggplot(aes(
+      x = x,
+      y = y,
+      group = stroke
+    )) + 
+    geom_path() +
+    geom_point() + 
+    coord_equal() + 
+    theme_minimal() -> 
+    plt_letter
+  
+  # Output
+  return(plt_letter)
+  
+}
 
 # [DATA] ------------------------------------------------------------------
 # - Bind data frames ------------------------------------------------------
