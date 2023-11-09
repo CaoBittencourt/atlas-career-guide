@@ -255,19 +255,106 @@ hershey::create_string_df('dsds') %>%
 
 # [FUNCTIONS] -------------------------------------------------------------
 # - Letters data frame ----------------------------------------------------
-fun_letters_data <- function(chr_font = 'futural'){
+fun_letters_data <- function(
+    chr_font = c('cyrillic', 'greek', 'rowmans')
+    , dbl_scale_ub = 100
+    , dbl_scale_lb = 0
+    , lgc_upside_down = T
+){
   
   # Arguments validation
   stopifnot(
-    "'chr_font' must be one of the following fonts: 'cyrillic', 'futural', 'greek', 'rowmans', '' "
+    "'chr_font' must be 'cyrillic', 'greek', and/or 'rowmans'." = 
+      chr_font %in% c('cyrillic', 'greek', 'rowmans')
   )
   
-  hershey::hershey %>%
-    pull(font) %>% 
-    unique()
+  stopifnot(
+    "'dbl_scale_ub' must be numeric." =
+      is.numeric(dbl_scale_ub)
+  )
   
+  stopifnot(
+    "'dbl_scale_lb' must be numeric." =
+      is.numeric(dbl_scale_lb)
+  )
+  
+  stopifnot(
+    "'lgc_upside_down' must be either TRUE or FALSE." = 
+      all(
+        is.logical(lgc_upside_down),
+        !is.na(lgc_upside_down)
+      )
+  )
+  
+  # Data wrangling
+  dbl_scale_ub[[1]] -> dbl_scale_ub
+  dbl_scale_lb[[1]] -> dbl_scale_lb
+  
+  hershey::hershey %>%
+    filter(
+      font %in% 
+        chr_font
+    ) -> df_letters
+  
+  # Upside down characters
+  if(lgc_upside_down){
+    
+    df_letters %>%
+      group_by(font) %>% 
+      mutate(
+        glyph = glyph + max(glyph),
+        char = paste0(
+          char, '_upside_down'
+        ),
+        y = -y
+      ) %>% 
+      bind_rows(
+        df_letters
+      ) -> df_letters
+    
+  }
+  
+  # Normalize font scales
+  df_letters %>% 
+    group_by(font) %>% 
+    mutate(
+      .after = y
+      , item = x
+      , item_score = 
+        y / (max(y) - min(y)) - 
+        min(y) / (max(y) - min(y))
+      , item_score = 
+        dbl_scale_ub * 
+        item_score
+    ) %>% 
+    ungroup() -> 
+    df_letters
+  
+  # Add 'df_letters' subclass
+  df_letters %>%
+    new_data_frame(
+      class = c(
+        class(df_letters),
+        'df_letters'
+      )
+    ) -> df_letters
+  
+  # Output
+  return(df_letters)
   
 }
+
+fun_letters_data() %>% 
+  group_by(
+    glyph, font
+  ) %>% 
+  slice(1) %>% 
+  ungroup() %>% 
+  nrow()
+  reframe(
+    max(item_score),
+    min(item_score)
+  )
 
 hershey::hershey %>%
   group_by(
@@ -290,7 +377,6 @@ hershey::hershey %>%
     
     # very cool (single stroke)
     # font == 'rowmans'
-    # font == 'futural'
     
     # very cool (double / triple stroke)
     # font == 'timesg'
@@ -307,7 +393,7 @@ hershey::hershey %>%
     # font == 'greeks'
     # font == 'greekc'
     # font == 'futuram'
-  
+    
     # no 
     # font == 'markers'
     # font == 'scriptc'
@@ -321,9 +407,10 @@ hershey::hershey %>%
     # font == 'cursive'
     # font == 'symbolic'
     
-    # good but alternative (non essential)
+    # good but no (non essential)
     # font == 'timesi'
     # font == 'timesib'
+    # font == 'futural' # redundant with rowmans
   ) %>% 
   # filter(
   #   glyph %in% 1:20
@@ -332,8 +419,15 @@ hershey::hershey %>%
   geom_path(aes(x, y, group = stroke)) + 
   coord_equal() + 
   theme_void() + 
-  facet_wrap(~glyph, labeller = label_both, ncol = 10)
+  facet_wrap(~glyph, labeller = label_both, ncol = 20)
 
+# 1. [ ] select fonts
+# 2. [ ] select glyphs
+# 3. [x] normalize glyph scale by font max and min
+# 4. [x] invert all glyphs (bind_row upside down)
+# 5. [/] convert glyph coordinates to professional profile
+# 6. [ ] letter matching function
+# 7. [/] letter plotting function
 
 # - Plot letter -----------------------------------------------------------
 fun_letter_plot <- function(df_letter){
