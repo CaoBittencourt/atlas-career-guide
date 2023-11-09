@@ -12,7 +12,7 @@ chr_pkg <- c(
 
 # Git packages
 chr_git <- c(
-  # 'CaoBittencourt' = 'atlas.ftools', #Factor scores
+  'CaoBittencourt' = 'atlas.ftools', #Factor scores (temp)
   'CaoBittencourt' = 'atlas.class', #Classification
   'coolbutuseless' = 'hershey' #Vector letters
 )
@@ -458,11 +458,29 @@ fun_letters_plot <- function(df_letters){
 }
 
 # - Lowest Common Multiple (MMC) ------------------------------------------
-fun_letters_lcm_rows <- function(df_data_cols, df_letters_cols, lgc_output_list = F){
+fun_letters_lcm_rows <- function(df_factor_scores_long, df_letters, lgc_output_list = F){
   
   # Arguments validation
+  stopifnot(
+    "'df_factor_scores_long' must be a data frame with the 'df_factor_scores_long' subclass." = 
+      any(class(df_factor_scores_long) == 'df_factor_scores_long')
+  )
+  
+  stopifnot(
+    "'df_letters' must be a data frame with the 'df_letters' subclass." = 
+      any(class(df_letters) == 'df_letters')
+  )
+  
+  stopifnot(
+    "'lgc_output_list' must be either TRUE or FALSE." = 
+      all(
+        is.logical(lgc_output_list),
+        !is.na(lgc_output_list)
+      )
+  )
   
   # Data wrangling
+  lgc_output_list[[1]] -> lgc_output_list
   
   # Lowest common multiple of row number
   df_letters_cols %>% 
@@ -478,6 +496,38 @@ fun_letters_lcm_rows <- function(df_data_cols, df_letters_cols, lgc_output_list 
         ))
     ) -> df_lcm
 
+  
+  fun_letters_data() %>% 
+    split(.[, c('font', 'glyph')]) ->
+    list_glyphs
+  
+  fun_letters_data() %>% 
+    group_by(
+      glyph,
+      font
+    ) %>% 
+    reframe(
+      lcm_rows = 
+        numbers::mLCM(c(
+          nrow(df_data_cols),
+          n()
+        ))
+    ) -> df_lcm
+
+  df_occupations %>% 
+    select(
+      occupation,
+      efa_model %>% 
+        loadings() %>% 
+        rownames() %>% 
+        any_of()
+    ) %>%
+    fun_ftools_factor_scores(
+      efa_model = efa_model,
+      lgc_factors_only = T,
+      lgc_pivot = T
+    )
+  
   hershey %>% 
     group_by(
       glyph,
@@ -495,9 +545,9 @@ fun_letters_lcm_rows <- function(df_data_cols, df_letters_cols, lgc_output_list 
     df_lcm %>% 
       filter(
         font %in% c(
-          'cyrillic',
-          'rowmans',
-          'greek'
+          # 'cyrillic',
+          'rowmans'#,
+          # 'greek'
         )
       ) %>% 
     arrange(
@@ -507,7 +557,7 @@ fun_letters_lcm_rows <- function(df_data_cols, df_letters_cols, lgc_output_list 
   
   fun_letters_data(
     chr_font = 'rowmans',
-    int_glyph = 34,
+    int_glyph = 7,
     lgc_upside_down = F
   ) %>% 
     fun_letters_plot()
