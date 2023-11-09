@@ -7,11 +7,12 @@ chr_pkg <- c(
   , 'tidyr', 'dplyr' #Data wrangling
   , 'ggplot2' #Data visualization
   , 'vctrs' #Data frame subclasses
+  , 'numbers' #Lowest common multiple
 )
 
 # Git packages
 chr_git <- c(
-  'CaoBittencourt' = 'atlas.ftools', #Factor scores
+  # 'CaoBittencourt' = 'atlas.ftools', #Factor scores
   'CaoBittencourt' = 'atlas.class', #Classification
   'coolbutuseless' = 'hershey' #Vector letters
 )
@@ -315,6 +316,7 @@ hershey::create_string_df('dsds') %>%
 # - Letters data frame ----------------------------------------------------
 fun_letters_data <- function(
     chr_font = c('cyrillic', 'greek', 'rowmans')
+    , int_glyph = NULL
     , dbl_scale_ub = 100
     , dbl_scale_lb = 0
     , lgc_upside_down = T
@@ -324,6 +326,14 @@ fun_letters_data <- function(
   stopifnot(
     "'chr_font' must be 'cyrillic', 'greek', and/or 'rowmans'." = 
       chr_font %in% c('cyrillic', 'greek', 'rowmans')
+  )
+  
+  stopifnot(
+    "'int_glyph' must be either NULL or an integer vector." = 
+      any(
+        is.numeric(int_glyph),
+        is.null(int_glyph)
+      )
   )
   
   stopifnot(
@@ -354,13 +364,25 @@ fun_letters_data <- function(
         chr_font
     ) -> df_letters
   
+  if(length(int_glyph)){
+    
+    df_letters %>%
+      filter(
+        glyph %in%
+          ceiling(
+            int_glyph
+          )
+      ) -> df_letters
+    
+  }
+  
   # Upside down characters
   if(lgc_upside_down){
     
     df_letters %>%
       group_by(font) %>% 
       mutate(
-        glyph = glyph + max(glyph),
+        glyph = -glyph,
         char = paste0(
           char, '_upside_down'
         ),
@@ -378,7 +400,6 @@ fun_letters_data <- function(
     mutate(
       .after = y
       , item = x
-      
       , item_score = 
         y / (max(y) - min(y)) - 
         min(y) / (max(y) - min(y))
@@ -433,6 +454,109 @@ fun_letters_plot <- function(df_letters){
   
   # Output
   return(plt_letters)
+  
+}
+
+# - Lowest Common Multiple (MMC) ------------------------------------------
+fun_letters_lcm_rows <- function(df_data_cols, df_letters_cols, lgc_output_list = F){
+  
+  # Arguments validation
+  
+  # Data wrangling
+  
+  # Lowest common multiple of row number
+  df_letters_cols %>% 
+    group_by(
+      glyph,
+      font
+    ) %>% 
+    reframe(
+      lcm_rows = 
+        numbers::mLCM(c(
+          nrow(df_data_cols),
+          n()
+        ))
+    ) -> df_lcm
+
+  hershey %>% 
+    group_by(
+      glyph,
+      font
+    ) %>% 
+    reframe(
+      lcm_rows = 
+        numbers::mLCM(c(
+          # nrow(df_questionnaire),
+          14,
+          n()
+        ))
+    ) -> df_lcm
+  
+    df_lcm %>% 
+      filter(
+        font %in% c(
+          'cyrillic',
+          'rowmans',
+          'greek'
+        )
+      ) %>% 
+    arrange(
+      -lcm_rows
+    ) %>%
+    print(n = Inf)
+  
+  fun_letters_data(
+    chr_font = 'rowmans',
+    int_glyph = 34,
+    lgc_upside_down = F
+  ) %>% 
+    fun_letters_plot()
+  
+  rm(df_lcm)
+
+  
+  
+    
+  lapply(1, print)
+  
+  numbers::mLCM(c(
+    nrow(df_data_cols),
+    nrow(df_letters_cols)
+  )) -> int_lcm_rows
+  
+  # Repeat rows in accordance with lcm
+  df_data_cols[
+    rep(1:nrow(df_data_cols))
+    , nrow(df_data_cols) *
+      nrow(df_data_cols) /
+      int_lcm
+    , ] -> df_data_cols
+
+  df_glyph[
+    rep(1:nrow(df_glyph))
+    , nrow(df_glyph) *
+      nrow(df_glyph) /
+      int_lcm
+    , ] -> df_glyph
+
+  df_letters_cols %>% 
+    group_by(
+      glyph, 
+      font
+    ) %>% 
+    slice(
+      
+    )
+  
+  
+  10 * 
+    numbers::mLCM(c(
+      60,
+      10
+    )) / 10 
+  
+  # vectorize
+  
   
 }
 
