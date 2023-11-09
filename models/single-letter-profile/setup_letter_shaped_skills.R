@@ -78,6 +78,64 @@ df_questionnaire$
   chr_factor_labels
 
 # - Letters --------------------------------------------------------------
+hershey::hershey %>%
+  filter(
+    
+    # very cool (single stroke)
+    # font == 'rowmans'
+    
+    # very cool (double / triple stroke)
+    # font == 'timesg'
+    # font == 'timesr'
+    # font == 'timesrb'
+    # font == 'rowmand'
+    # font == 'rowmant'
+    # font == 'cyrilc_1'
+    # font == 'cyrillic'
+    
+    # font == 'mathlow'
+    # font == 'mathupp'
+    # font == 'greek'
+    # font == 'greeks'
+    # font == 'greekc'
+    # font == 'futuram'
+    
+    # no 
+    # font == 'markers'
+    # font == 'scriptc'
+    # font == 'scripts'
+    # font == 'meteorology'
+    # font == 'astrology'
+    # font == 'japanese'
+    # font == 'music'
+    # font == 'scripts'
+    # font == 'scriptc'
+    # font == 'cursive'
+    # font == 'symbolic'
+    
+    # good but no (non essential)
+    # font == 'timesi'
+    # font == 'timesib'
+    # font == 'futural' # redundant with rowmans
+  ) %>% 
+  # filter(
+  #   glyph %in% 1:20
+  # ) %>%
+  ggplot() + 
+  geom_path(aes(x, y, group = stroke)) + 
+  coord_equal() + 
+  theme_void() + 
+  facet_wrap(~glyph, labeller = label_both, ncol = 20)
+
+# 1. [ ] select fonts
+# 2. [ ] select glyphs
+# 3. [x] normalize glyph scale by font max and min
+# 4. [x] invert all glyphs (bind_row upside down)
+# 5. [/] convert glyph coordinates to professional profile
+# 6. [ ] letter matching function
+# 7. [/] letter plotting function
+
+
 fun_letters_plot <- function(chr_string = 'A', chr_font = c()){
   
   # Arguments validation
@@ -320,12 +378,19 @@ fun_letters_data <- function(
     mutate(
       .after = y
       , item = x
+      
       , item_score = 
         y / (max(y) - min(y)) - 
         min(y) / (max(y) - min(y))
       , item_score = 
         dbl_scale_ub * 
         item_score
+      # , item = 
+      #   x / (max(x) - min(x)) - 
+      #   min(x) / (max(x) - min(x))
+      # , item = 
+      #   dbl_scale_ub * 
+      #   item
     ) %>% 
     ungroup() -> 
     df_letters
@@ -344,115 +409,30 @@ fun_letters_data <- function(
   
 }
 
-fun_letters_data() %>% 
-  group_by(
-    glyph, font
-  ) %>% 
-  slice(1) %>% 
-  ungroup() %>% 
-  nrow()
-  reframe(
-    max(item_score),
-    min(item_score)
-  )
-
-hershey::hershey %>%
-  group_by(
-    glyph, font
-  ) %>% 
-  reframe(
-    min = min(y),
-    max = max(y),
-  ) %>% 
-  filter(
-    font == 'futural'
-  ) %>% 
-  arrange(desc(
-    max
-  ))
-
-
-hershey::hershey %>%
-  filter(
-    
-    # very cool (single stroke)
-    # font == 'rowmans'
-    
-    # very cool (double / triple stroke)
-    # font == 'timesg'
-    # font == 'timesr'
-    # font == 'timesrb'
-    # font == 'rowmand'
-    # font == 'rowmant'
-    # font == 'cyrilc_1'
-    # font == 'cyrillic'
-    
-    # font == 'mathlow'
-    # font == 'mathupp'
-    # font == 'greek'
-    # font == 'greeks'
-    # font == 'greekc'
-    # font == 'futuram'
-    
-    # no 
-    # font == 'markers'
-    # font == 'scriptc'
-    # font == 'scripts'
-    # font == 'meteorology'
-    # font == 'astrology'
-    # font == 'japanese'
-    # font == 'music'
-    # font == 'scripts'
-    # font == 'scriptc'
-    # font == 'cursive'
-    # font == 'symbolic'
-    
-    # good but no (non essential)
-    # font == 'timesi'
-    # font == 'timesib'
-    # font == 'futural' # redundant with rowmans
-  ) %>% 
-  # filter(
-  #   glyph %in% 1:20
-  # ) %>%
-  ggplot() + 
-  geom_path(aes(x, y, group = stroke)) + 
-  coord_equal() + 
-  theme_void() + 
-  facet_wrap(~glyph, labeller = label_both, ncol = 20)
-
-# 1. [ ] select fonts
-# 2. [ ] select glyphs
-# 3. [x] normalize glyph scale by font max and min
-# 4. [x] invert all glyphs (bind_row upside down)
-# 5. [/] convert glyph coordinates to professional profile
-# 6. [ ] letter matching function
-# 7. [/] letter plotting function
-
-# - Plot letter -----------------------------------------------------------
-fun_letter_plot <- function(df_letter){
+# - Plot letters -----------------------------------------------------------
+fun_letters_plot <- function(df_letters){
   
   # Arguments validation
   stopifnot(
-    "'df_letter' must be a data frame with the 'df_letter' subclass." = 
-      any(class(df_letter) == 'df_letter')
+    "'df_letters' must be a data frame with the 'df_letters' subclass." = 
+      any(class(df_letters) == 'df_letters')
   )
   
-  # Plot letter
-  df_letter %>%
+  # Plot letters
+  df_letters %>%
     ggplot(aes(
       x = x,
-      y = y,
+      y = item_score,
       group = stroke
     )) + 
     geom_path() +
     geom_point() + 
-    coord_equal() + 
+    coord_equal() +
     theme_minimal() -> 
-    plt_letter
+    plt_letters
   
   # Output
-  return(plt_letter)
+  return(plt_letters)
   
 }
 
