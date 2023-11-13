@@ -12,7 +12,7 @@ chr_pkg <- c(
 
 # Git packages
 chr_git <- c(
-  'CaoBittencourt' = 'atlas.ftools', #Factor scores (temp)
+  'CaoBittencourt' = 'atlas.match', #Matching 
   'CaoBittencourt' = 'atlas.class', #Classification
   'coolbutuseless' = 'hershey' #Vector letters
 )
@@ -399,19 +399,23 @@ fun_letters_data <- function(
     group_by(font) %>% 
     mutate(
       .after = y
-      , item = x
       , item_score = 
         y / (max(y) - min(y)) - 
         min(y) / (max(y) - min(y))
       , item_score = 
         dbl_scale_ub * 
         item_score
-      # , item = 
-      #   x / (max(x) - min(x)) - 
-      #   min(x) / (max(x) - min(x))
-      # , item = 
-      #   dbl_scale_ub * 
-      #   item
+    ) %>% 
+    group_by(
+      glyph,
+      font
+    ) %>% 
+    mutate(
+      .before = item_score
+      , item = paste0(
+        'item_'
+        , 1:n()
+      )
     ) %>% 
     ungroup() -> 
     df_letters
@@ -444,6 +448,7 @@ fun_letters_plot <- function(df_letters){
     ggplot(aes(
       x = x,
       y = item_score,
+      # y = y,
       group = stroke
     )) + 
     geom_path() +
@@ -457,158 +462,136 @@ fun_letters_plot <- function(df_letters){
   
 }
 
-# - Lowest Common Multiple (MMC) ------------------------------------------
-fun_letters_lcm_rows <- function(df_factor_scores_long, df_letters, lgc_output_list = F){
+# - Letters to professional profiles ------------------------------------------
+fun_letters_profiles <- function(df_letters, int_items, lgc_pivot_long = F){
   
   # Arguments validation
-  stopifnot(
-    "'df_factor_scores_long' must be a data frame with the 'df_factor_scores_long' subclass." = 
-      any(class(df_factor_scores_long) == 'df_factor_scores_long')
-  )
-  
   stopifnot(
     "'df_letters' must be a data frame with the 'df_letters' subclass." = 
       any(class(df_letters) == 'df_letters')
   )
   
   stopifnot(
-    "'lgc_output_list' must be either TRUE or FALSE." = 
+    "'int_items' must be numeric." = 
+      is.numeric(int_items)
+  )
+  
+  stopifnot(
+    "'lgc_pivot_long' must be either TRUE or FALSE." = 
       all(
-        is.logical(lgc_output_list),
-        !is.na(lgc_output_list)
+        is.logical(lgc_pivot_long),
+        !is.na(lgc_pivot_long)
       )
   )
   
   # Data wrangling
-  lgc_output_list[[1]] -> lgc_output_list
+  int_items[[1]] -> int_items
+  
+  lgc_pivot_long[[1]] -> lgc_pivot_long
   
   # Lowest common multiple of row number
-  df_letters_cols %>% 
+  df_letters %>% 
     group_by(
       glyph,
       font
     ) %>% 
-    reframe(
+    mutate(
       lcm_rows = 
         numbers::mLCM(c(
-          nrow(df_data_cols),
+          int_items,
           n()
-        ))
-    ) -> df_lcm
-
-  
-  fun_letters_data() %>% 
-    split(.[, c('font', 'glyph')]) ->
-    list_glyphs
-  
-  fun_letters_data() %>% 
-    group_by(
-      glyph,
-      font
+        )),
+      rep_rows = 
+        lcm_rows / 
+        n()
     ) %>% 
-    reframe(
-      lcm_rows = 
-        numbers::mLCM(c(
-          nrow(df_data_cols),
-          n()
-        ))
-    ) -> df_lcm
-
-  df_occupations %>% 
-    select(
-      occupation,
-      efa_model %>% 
-        loadings() %>% 
-        rownames() %>% 
-        any_of()
-    ) %>%
-    fun_ftools_factor_scores(
-      efa_model = efa_model,
-      lgc_factors_only = T,
-      lgc_pivot = T
-    )
+    ungroup() -> 
+    df_letters
   
-  hershey %>% 
-    group_by(
-      glyph,
-      font
-    ) %>% 
-    reframe(
-      lcm_rows = 
-        numbers::mLCM(c(
-          # nrow(df_questionnaire),
-          14,
-          n()
-        ))
-    ) -> df_lcm
-  
-    df_lcm %>% 
-      filter(
-        font %in% c(
-          # 'cyrillic',
-          'rowmans'#,
-          # 'greek'
-        )
-      ) %>% 
-    arrange(
-      -lcm_rows
-    ) %>%
-    print(n = Inf)
-  
-  fun_letters_data(
-    chr_font = 'rowmans',
-    int_glyph = 7,
-    lgc_upside_down = F
-  ) %>% 
-    fun_letters_plot()
-  
-  rm(df_lcm)
-
-  
-  
-    
-  lapply(1, print)
-  
-  numbers::mLCM(c(
-    nrow(df_data_cols),
-    nrow(df_letters_cols)
-  )) -> int_lcm_rows
-  
-  # Repeat rows in accordance with lcm
-  df_data_cols[
-    rep(1:nrow(df_data_cols))
-    , nrow(df_data_cols) *
-      nrow(df_data_cols) /
-      int_lcm
-    , ] -> df_data_cols
-
-  df_glyph[
-    rep(1:nrow(df_glyph))
-    , nrow(df_glyph) *
-      nrow(df_glyph) /
-      int_lcm
-    , ] -> df_glyph
-
-  df_letters_cols %>% 
+  # Convert letters to professional profiles
+  df_letters %>% 
     group_by(
       glyph, 
       font
     ) %>% 
-    slice(
-      
-    )
+    slice(rep(
+      1:n(),
+      first(
+        rep_rows
+      )
+    )) %>% 
+    arrange(
+      item_score
+    ) %>% 
+    mutate(
+      item = 
+        rep(
+          paste0('item_', 1:int_items)
+          , each = n() / int_items
+        )
+    ) %>% 
+    group_by(
+      glyph,
+      font,
+      item,
+      char
+    ) %>%
+    reframe(
+      item_score = 
+        mean(
+          item_score
+        )
+    ) -> df_letters_profile
   
+  rm(df_letters)
+  rm(int_items)
   
-  10 * 
-    numbers::mLCM(c(
-      60,
-      10
-    )) / 10 
+  # Pivot
+  if(!lgc_pivot_long){
+    
+    df_letters_profile %>% 
+      pivot_wider(
+        id_cols = c(
+          'glyph',
+          'font',
+          'char'
+        )
+        , names_from = 'item'
+        , values_from = 'item_score'
+      ) -> df_letters_profile
+    
+    # Add 'df_letters_profile' subclass
+    df_letters_profile %>%
+      new_data_frame(
+        class = c(
+          class(df_letters_profile),
+          'df_letters_profile'
+        )
+      ) -> df_letters_profile
+    
+    
+  } else {
+    
+    # Add 'df_letters_profile_long' subclass
+    df_letters_profile %>%
+      new_data_frame(
+        class = c(
+          class(df_letters_profile),
+          'df_letters_profile_long'
+        )
+      ) -> df_letters_profile
+    
+  }
   
-  # vectorize
-  
+  # Output
+  return(df_letters_profile)
   
 }
+
+# - Letter matching ----------------------------------------------
+fun_letters_similarity <- function(){}
+
+atlas.match::fun_match_similarity()
 
 # [DATA] ------------------------------------------------------------------
 # - Bind data frames ------------------------------------------------------
