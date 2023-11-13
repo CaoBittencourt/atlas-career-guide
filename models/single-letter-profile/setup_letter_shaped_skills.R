@@ -589,9 +589,115 @@ fun_letters_profiles <- function(df_letters, int_items, lgc_pivot_long = F){
 }
 
 # - Letter matching ----------------------------------------------
-fun_letters_similarity <- function(){}
+fun_letters_similarity <- function(){
+  
+  # Arguments validation
+  
+  # Data wrangling
+  df_data %>% 
+    select(
+      chr_id_col
+      , where(
+        is.numeric
+      )
+    )
+  
+  # Apply matching function
+  
+  # Output
+  
+}
 
-atlas.match::fun_match_similarity()
+df_occupations %>% 
+  select(
+    occupation,
+    starts_with('skl_'),
+    starts_with('abl_'),
+    starts_with('knw_')
+  ) %>%
+  pivot_longer(
+    cols = -1
+    , names_to = 'item'
+    , values_to = 'item_score'
+  ) %>% 
+  group_by(
+    occupation
+  ) %>% 
+  arrange(
+    item_score
+  ) %>% 
+  mutate(
+    item = paste0('item_', 1:n())
+  ) %>% 
+  pivot_wider(
+    id_cols = 1
+    , names_from = 'item'
+    , values_from = 'item_score'
+  ) %>% 
+  ungroup() -> dsds
+
+atlas.match::fun_match_similarity(
+  df_data_rows =
+    fun_letters_data() %>% 
+    fun_letters_profiles(
+      int_items = 
+        ncol(dsds) - 1
+    ) %>% 
+    mutate(
+      .before = 1
+      , occupation = paste0(glyph, font)
+    ) %>%
+    select(
+      occupation
+      , starts_with('item')
+    ) %>% slice(1:10)
+  , df_query_rows = 
+    dsds %>% 
+    slice(1)
+  , chr_method = 'logit'
+  , dbl_scale_ub = 100
+  , dbl_scale_lb = 0
+  , chr_id_col = 
+    'occupation'
+) -> lalala
+
+
+fun_letters_data() %>%
+  filter(
+    glyph == -1,
+    font == 'cyrillic'
+  ) %>% 
+  fun_letters_profiles(
+    int_items = 120
+  ) %>%
+  atlas.match::fun_match_similarity(
+    df_query_rows = 
+      dsds %>% 
+      slice(1)
+    , chr_method = 'bvls'
+    , dbl_scale_ub = 100
+    , dbl_scale_lb = 0
+    , chr_id_col = 
+      'occupation'
+  ) -> lalala
+
+lalala$
+  df_similarity$
+  similarity
+
+# atlas.match::fun_match_similarity(
+#   df_data_rows = df_input
+#   , df_query_rows = 
+#     fun_letters_data() %>%
+#     fun_letters_profiles(
+#       int = 
+#         ncol(df_input) - 1
+#     )
+#   # , chr_method = 'bvls'
+#   , dbl_scale_ub = 100
+#   , dbl_scale_lb = 0
+#   # , chr_id_col = ''
+# )
 
 # [DATA] ------------------------------------------------------------------
 # - Bind data frames ------------------------------------------------------
