@@ -439,23 +439,123 @@ fun_letters_plot <- function(df_letters){
   
   # Arguments validation
   stopifnot(
-    "'df_letters' must be a data frame with the 'df_letters' subclass." = 
-      any(class(df_letters) == 'df_letters')
+    "'df_letters' must be a data frame with any of the following subclasses: 'df_letters', 'df_letters_profile', 'df_letters_profile_long'." = 
+      any(
+        class(df_letters) == 'df_letters',
+        class(df_letters) == 'df_letters_profile',
+        class(df_letters) == 'df_letters_profile_long'
+      )
   )
   
-  # Plot letters
-  df_letters %>%
-    ggplot(aes(
-      x = x,
-      y = item_score,
-      # y = y,
-      group = stroke
-    )) + 
-    geom_path() +
-    geom_point() + 
-    coord_equal() +
-    theme_minimal() -> 
-    plt_letters
+  # Plot df_letters
+  if(any(class(
+    df_letters == 
+    'df_letters'
+    # df_letters_profile
+  ))){
+    
+    df_letters %>%
+      ggplot(aes(
+        x = x,
+        y = item_score,
+        # y = y,
+        group = stroke
+      )) + 
+      geom_path() +
+      geom_point() + 
+      coord_equal() +
+      theme_minimal() -> 
+      plt_letters
+    
+  }
+  
+  # Plot df_letters_long
+  if(any(class(
+    df_letters == 
+    'df_letters_profile_long'
+  ))){
+    
+    fun_letters_data(
+      int_glyph = 90
+      , chr_font = 'rowmans'
+      , lgc_upside_down = T
+    ) %>% 
+      filter(
+        glyph < 0 
+      ) %>%
+      ggplot(aes(
+        x = x,
+        y = item_score,
+        # y = y,
+        group = stroke
+      )) + 
+      geom_path() +
+      geom_point() + 
+      coord_equal() +
+      theme_minimal() +
+      scale_y_reverse() + 
+      ylim(100, 0)
+    
+    dsds %>% 
+      slice(1) %>% 
+      pivot_longer(
+        cols = -1
+        , names_to = 'item'
+        , values_to = 'item_score'
+      ) %>% 
+      right_join(
+        fun_letters_data(
+          int_glyph = 90
+          , chr_font = 'rowmans'
+          , lgc_upside_down = T
+        ) %>% 
+          filter(
+            glyph < 0 
+          ) %>%
+          fun_letters_profiles(
+            int_items = 120
+            , lgc_pivot_long = T
+          ) %>%
+          select(
+            x, item
+          )
+      ) %>%
+      ggplot(aes(
+        x = x,
+        y = item_score,
+        # y = y,
+        # group = stroke
+      )) + 
+      geom_path() +
+      geom_point() + 
+      coord_equal() +
+      theme_minimal() +
+      scale_y_reverse() + 
+      ylim(100, 0)
+      
+    
+    fun_letters_data(
+      int_glyph = 19
+      , chr_font = 'rowmans'
+      , lgc_upside_down = F
+    ) %>% 
+      fun_letters_profiles(
+        int_items = 7
+        , lgc_pivot_long = T
+      ) %>%
+      ggplot(aes(
+        x = x,
+        # y = item_score,
+        y = y,
+        group = stroke
+      )) + 
+      geom_path() +
+      geom_point() + 
+      coord_equal() +
+      theme_minimal() -> 
+      plt_letters
+    
+  }
   
   # Output
   return(plt_letters)
@@ -541,6 +641,9 @@ fun_letters_profiles <- function(df_letters, int_items, lgc_pivot_long = F){
         mean(
           item_score
         )
+      , across(
+        .fns = first
+      )
     ) -> df_letters_profile
   
   rm(df_letters)
@@ -608,6 +711,8 @@ fun_letters_similarity <- function(){
   
 }
 
+# [DATA] ------------------------------------------------------------------
+# - Letters vs occupations match ------------------------------------------
 df_occupations %>% 
   select(
     occupation,
@@ -636,21 +741,29 @@ df_occupations %>%
   ) %>% 
   ungroup() -> dsds
 
+fun_letters_data() %>% 
+  fun_letters_profiles(
+    int_items = 
+      ncol(dsds) - 1
+  ) -> lalala
+
+lalala %>% 
+  mutate(
+    .before = 1
+    , occupation = 
+      paste0(
+        glyph,
+        '_', 
+        font
+      )
+  ) -> lalala
+
 atlas.match::fun_match_similarity(
-  df_data_rows =
-    fun_letters_data() %>% 
-    fun_letters_profiles(
-      int_items = 
-        ncol(dsds) - 1
-    ) %>% 
-    mutate(
-      .before = 1
-      , occupation = paste0(glyph, font)
-    ) %>%
-    select(
-      occupation
-      , starts_with('item')
-    ) %>% slice(1:10)
+  df_data_rows = 
+    lalala %>%
+    filter(
+      font == 'rowmans'
+    )
   , df_query_rows = 
     dsds %>% 
     slice(1)
@@ -659,7 +772,48 @@ atlas.match::fun_match_similarity(
   , dbl_scale_lb = 0
   , chr_id_col = 
     'occupation'
-) -> lalala
+) -> dsdsds
+
+dsdsds$
+  df_similarity %>% 
+  select(
+    glyph,
+    font,
+    similarity
+  ) %>% 
+  arrange(desc(
+    similarity
+  ))
+
+lalala %>% 
+  filter(
+    font == 'rowmans',
+    glyph == 90
+  ) %>% 
+  fun_letters_plot()
+  
+  
+
+dsdsds$
+  df_similarity %>% 
+  select(
+    glyph,
+    font,
+    similarity
+  ) %>% 
+  arrange(desc(
+    similarity
+  )) %>% 
+  fun_plot.density(aes(
+    x = similarity
+  )
+  , .list_axis.x.args = list(
+    limits = c(-0.19, 1.19)
+    , breaks = seq(0, 1, 0.25)
+  )
+  , .fun_format.x = percent
+  )
+
 
 
 fun_letters_data() %>%
@@ -684,29 +838,6 @@ fun_letters_data() %>%
 lalala$
   df_similarity$
   similarity
-
-# atlas.match::fun_match_similarity(
-#   df_data_rows = df_input
-#   , df_query_rows = 
-#     fun_letters_data() %>%
-#     fun_letters_profiles(
-#       int = 
-#         ncol(df_input) - 1
-#     )
-#   # , chr_method = 'bvls'
-#   , dbl_scale_ub = 100
-#   , dbl_scale_lb = 0
-#   # , chr_id_col = ''
-# )
-
-# [DATA] ------------------------------------------------------------------
-# - Bind data frames ------------------------------------------------------
-# Bind occupations and input data frames
-df_occupations %>%
-  bind_rows(df_input) -> 
-  df_occupations
-
-rm(df_input)
 
 # [MODEL] --------------------------------------------------------------
 # - Estimate factor scores ---------------------------------------------------------
