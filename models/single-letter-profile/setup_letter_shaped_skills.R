@@ -12,7 +12,7 @@ chr_pkg <- c(
 
 # Git packages
 chr_git <- c(
-  'CaoBittencourt' = 'atlas.match', #Matching 
+  'CaoBittencourt' = 'atlas.match', #Matching
   'CaoBittencourt' = 'atlas.plot', #Data viz (temp)
   'CaoBittencourt' = 'atlas.class', #Classification
   'coolbutuseless' = 'hershey' #Vector letters
@@ -365,6 +365,10 @@ fun_letters_data <- function(
         chr_font
     ) -> df_letters
   
+  df_letters %>% 
+    drop_na() -> 
+    df_letters
+  
   if(length(int_glyph)){
     
     df_letters %>%
@@ -400,9 +404,15 @@ fun_letters_data <- function(
     group_by(font) %>% 
     mutate(
       .after = y
-      , item_score = 
-        y / (max(y) - min(y)) - 
+      , item_score =
+        y / (max(y) - min(y)) -
         min(y) / (max(y) - min(y))
+      , item_score = 
+        if_else(
+          !is.na(item_score)
+          , item_score
+          , 0.5
+        )
       , item_score = 
         dbl_scale_ub * 
         item_score
@@ -668,8 +678,8 @@ fun_letters_profiles <- function(
   
   rm(df_letters)
   rm(int_items)
-  
   # Pivot
+  
   if(!lgc_pivot_long){
     
     df_letters_profile %>% 
@@ -788,18 +798,84 @@ fun_letters_data() %>%
     , lgc_pivot_long = T
   ) -> lalala
 
-lalala %>% names()
+fun_letters_data(
+  chr_font = 'greek'
+  , int_glyph = 64
+  , dbl_scale_ub = 100
+  , dbl_scale_lb = 0
+  , lgc_upside_down = F
+)
 
 lalala %>% 
+  filter(
+    font == 'greek'
+    , glyph == 64
+  ) %>% 
+  pull(
+    item_score
+  )
+
+lalala %>% 
+  group_by(
+    glyph,
+    font
+  ) %>% 
   mutate(
-    .before = 1
-    , occupation = 
-      paste0(
-        glyph,
-        '_', 
-        font
+    generality = 
+      fun_gene_generality(
+        dbl_profile = item_score
+        , dbl_scale_ub = 100
+        , dbl_scale_lb = 0
+      ) %>% 
+      as.numeric()
+  ) %>% 
+  slice(1) %>% 
+  ungroup() %>%
+  mutate(
+    class = 
+      fun_class_classifier(
+        dbl_var = generality
+        , dbl_scale_lb = 0
+        , dbl_scale_ub = 1
+        , int_levels = 6
+        , chr_class_labels = rev(c(
+          'very generalist',
+          'generalist',
+          'somewhat generalist',
+          'somewhat specialist',
+          'specialist',
+          'very specialist'
+        ))
       )
-  ) -> lalala
+  ) %>% 
+  group_by(
+    class
+  ) %>% 
+  tally()
+  reframe(
+    min = min(generality),
+    max = max(generality)
+  )
+  select(
+    occupation
+    , generality
+  ) %>% 
+  fun_plot.density(aes(
+    x = generality
+  )
+  , .list_axis.x.args = list(
+    limits = c(-.19, 1.19)
+    , breaks = seq(0, 1, .25)
+  )
+  , .fun_format.x = percent
+  )
+
+
+
+
+atlas.gene::fun_gene_generality(rep(0,120), 0)
+
+atlas.comp::fun_comp_competence()
 
 atlas.match::fun_match_similarity(
   df_data_rows = 
@@ -810,7 +886,8 @@ atlas.match::fun_match_similarity(
   , df_query_rows = 
     dsds %>% 
     slice(1)
-  , chr_method = 'logit'
+  # , chr_method = 'logit'
+  , chr_method = 'pearson'
   , dbl_scale_ub = 100
   , dbl_scale_lb = 0
   , chr_id_col = 
@@ -832,7 +909,7 @@ dsdsds$
 
 fun_letters_data(
   chr_font = 'cyrillic'
-  , int_glyph = 69
+  , int_glyph = 19
   , dbl_scale_ub = 100
   , dbl_scale_lb = 0
   , lgc_upside_down = F
@@ -939,7 +1016,7 @@ bind_rows(
   facet_grid(
     rows = vars(occupation)
   )
-  coord_equal() +
+coord_equal() +
   theme_minimal() +
   # scale_y_reverse() +
   ylim(100, 0)
