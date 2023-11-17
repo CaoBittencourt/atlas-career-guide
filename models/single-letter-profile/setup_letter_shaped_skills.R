@@ -815,6 +815,9 @@ lalala %>%
     item_score
   )
 
+library(atlas.gene)
+library(atlas.comp)
+
 lalala %>% 
   group_by(
     glyph,
@@ -828,11 +831,23 @@ lalala %>%
         , dbl_scale_lb = 0
       ) %>% 
       as.numeric()
+    , competence = 
+      fun_comp_competence(
+        dbl_profile = item_score
+        , dbl_scale_ub = 100
+        , dbl_scale_lb = 0
+        , generality
+      )
   ) %>% 
-  slice(1) %>% 
+  # slice(1) %>% 
   ungroup() %>%
+  filter(
+    is.na(competence)
+  ) %>% 
+  View
+  
   mutate(
-    class = 
+    gene_class = 
       fun_class_classifier(
         dbl_var = generality
         , dbl_scale_lb = 0
@@ -847,15 +862,32 @@ lalala %>%
           'very specialist'
         ))
       )
+    , comp_class = 
+      fun_class_classifier(
+        dbl_var = competence
+        , dbl_scale_lb = 0
+        , dbl_scale_ub = 1
+        , int_levels = 6
+        , chr_class_labels = rev(c(
+          'very competent',
+          'competent',
+          'somewhat competent',
+          'somewhat incompetent',
+          'incompetent',
+          'very incompetent'
+        ))
+      )
   ) %>% 
   group_by(
-    class
+    comp_class
   ) %>% 
   tally()
+
   reframe(
     min = min(generality),
     max = max(generality)
   )
+  
   select(
     occupation
     , generality
@@ -869,9 +901,6 @@ lalala %>%
   )
   , .fun_format.x = percent
   )
-
-
-
 
 atlas.gene::fun_gene_generality(rep(0,120), 0)
 
