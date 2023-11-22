@@ -42,6 +42,7 @@ Map(
       
       install_github(
         paste0(profile, '/', git)
+        , dependencies = T
         , upgrade = F
         , force = T
       )
@@ -54,6 +55,27 @@ Map(
   , git = chr_git
   , profile = names(chr_git)
 )
+
+# # Activate / install Git packages
+# Map(
+#   function(git, profile){
+#     
+#     if(!require(git, character.only = T)){
+#       
+#       install_github(
+#         paste0(profile, '/', git)
+#         , upgrade = F
+#         , force = T
+#       )
+#       
+#     }
+#     
+#     require(git, character.only = T)
+#     
+#   }
+#   , git = chr_git
+#   , profile = names(chr_git)
+# )
 
 chr_pkg <- c(
   'devtools' #GitHub packages
@@ -734,27 +756,156 @@ fun_letters_profiles <- function(
 }
 
 # - Letter matching ----------------------------------------------
-fun_letters_similarity <- function(){
+fun_letters_similarity <- function(
+    df_letters_profile
+    , df_query_rows
+    , chr_method = c(
+      'bvls'
+      , 'logit'
+      , 'probit'
+      , 'pearson'
+      , 'knn'
+    )
+    , dbl_scale_ub = 100
+    , dbl_scale_lb = 0
+    , chr_id_col = NULL
+    , lgc_sort = F
+){
   
   # Arguments validation
+  stopifnot(
+    "'df_letters_profile' must be a data frame with the 'df_letters_profile' subclass." =
+      any(class(df_letters_profile) == 'df_letters_profile') 
+  )
+  
+  stopifnot(
+    "'df_query_rows' must be a data frame." =
+      is.data.frame(df_query_rows)
+  )
+  
+  stopifnot(
+    "'chr_method' must be one of the following methods: 'bvls', 'logit', 'probit', 'pearson', or 'knn'." =
+      any(
+        chr_method == 'bvls',
+        chr_method == 'logit',
+        chr_method == 'probit',
+        chr_method == 'pearson',
+        chr_method == 'knn'
+      )
+  )
+  
+  stopifnot(
+    "'dbl_scale_ub' must be numeric and greater than 'dbl_scale_lb'." =
+      all(
+        is.numeric(dbl_scale_ub)
+        , dbl_scale_ub > 
+          dbl_scale_lb
+      )
+  )
+  
+  stopifnot(
+    "'dbl_scale_lb' must be numeric." =
+      is.numeric(dbl_scale_lb)
+  )
+  
+  stopifnot(
+    "'lgc_sort' must be either TRUE or FALSE." =
+      all(
+        is.logical(lgc_sort)
+        , !is.na(lgc_sort)
+      )
+  )
+  
+  stopifnot(
+    "'chr_id_col' must be either NULL or a character string with the name of an ID column present in both 'df_letters_profile' and 'df_query_rows'." = 
+      any(
+        is.null(chr_id_col)
+        , all(
+          is.character(chr_id_col)
+          , chr_id_col %in% names(df_query_rows)
+          , chr_id_col %in% names(df_letters_profile)
+        )
+      )
+  )
   
   # Data wrangling
-  df_data %>% 
+  chr_id_col[[1]] -> chr_id_col
+  
+  df_query_rows %>% 
     select(
       chr_id_col
       , where(
         is.numeric
       )
+    ) -> df_query_rows
+  
+  c(
+    chr_id_col
+    , paste0(
+      'item_'
+      , 1:(
+        ncol(df_query_rows) -
+          !is.null(chr_id_col)
+      )
     )
+  ) -> names(df_query_rows)
   
   # Apply matching function
+  # map for each row?
+  fun_match_similarity(
+    df_data_rows = df_letters_profile
+    , df_query_rows = df_query_rows[1, ]
+    , chr_method = chr_method
+    , dbl_scale_ub = dbl_scale_ub
+    , dbl_scale_lb = dbl_scale_lb
+    , chr_id_col = chr_id_col
+    , lgc_sort = lgc_sort
+  ) -> list_letters_match
   
   # Output
+  return(list_letters_match)
   
 }
 
 # [DATA] ------------------------------------------------------------------
 # - Letters vs occupations match ------------------------------------------
+fun_letters_similarity(
+  df_letters_profile = 
+    fun_letters_data() %>% 
+    fun_letters_profiles(
+      int_items = 120
+      , chr_id_col =
+        'occupation'
+      , lgc_pivot_long = F
+    )
+  , df_query_rows = 
+    df_occupations %>%
+    select(
+      occupation,
+      starts_with('skl_'),
+      starts_with('abl_'),
+      starts_with('knw_')
+    ) %>% 
+    slice(1)
+  , chr_method = 
+    'bvls'
+  , dbl_scale_ub = 100
+  , dbl_scale_lb = 0
+  , chr_id_col = 
+    'occupation'
+  , lgc_sort = F
+) -> list_letters_match
+
+fun_letters_data() %>% 
+  fun_letters_profiles(
+    int_items = 120
+    , chr_id_col =
+      'occupation'
+    , lgc_pivot_long = F
+  ) %>% 
+  class()
+
+
 df_occupations %>% 
   select(
     occupation,
@@ -783,19 +934,13 @@ df_occupations %>%
   ) %>% 
   ungroup() -> dsds
 
-weighted.mean(
-  dsds$item_120
-  , df_occupations$
-    employment_variants
-)
-
 fun_letters_data() %>% 
   fun_letters_profiles(
     int_items = 
       ncol(dsds) - 1
     , chr_id_col =
       'occupation'
-    , lgc_pivot_long = T
+    , lgc_pivot_long = F
   ) -> lalala
 
 fun_letters_data(
@@ -818,11 +963,20 @@ lalala %>%
 library(atlas.gene)
 library(atlas.comp)
 
-lalala %>% 
+# dsds %>% 
+#   group_by(
+#     occupation
+#   ) %>% 
+#   pivot_longer(
+#     cols = -1,
+#     names_to = 'item',
+#     values_to = 'item_score'
+#   ) %>%
+lalala %>%
   group_by(
     glyph,
     font
-  ) %>% 
+  ) %>%
   mutate(
     generality = 
       fun_gene_generality(
@@ -839,13 +993,8 @@ lalala %>%
         , generality
       )
   ) %>% 
-  # slice(1) %>% 
+  slice(1) %>%
   ungroup() %>%
-  filter(
-    is.na(competence)
-  ) %>% 
-  View
-  
   mutate(
     gene_class = 
       fun_class_classifier(
@@ -879,19 +1028,23 @@ lalala %>%
       )
   ) %>% 
   group_by(
-    comp_class
+    # comp_class,
+    gene_class
   ) %>% 
-  tally()
-
-  reframe(
-    min = min(generality),
-    max = max(generality)
+  tally() %>% 
+  print(
+    n = Inf
   )
-  
-  select(
-    occupation
-    , generality
-  ) %>% 
+
+reframe(
+  min = min(generality),
+  max = max(generality)
+)
+
+select(
+  occupation
+  , generality
+) %>% 
   fun_plot.density(aes(
     x = generality
   )
