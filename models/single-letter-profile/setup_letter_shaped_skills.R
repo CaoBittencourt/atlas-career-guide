@@ -100,7 +100,8 @@ fun_letters_similarity(
   df_letters_profile = 
     fun_letters_data() %>%
     fun_letters_profiles(
-      int_items = 120
+      # int_items = 120
+      int_items = 60
       , chr_id_col =
         'occupation'
       , lgc_pivot_long = F
@@ -110,14 +111,15 @@ fun_letters_similarity(
       starts_with('item_')
     )
   , df_query_rows = 
-    df_occupations %>%
-    select(
-      occupation,
-      starts_with('skl_'),
-      starts_with('abl_'),
-      starts_with('knw_')
-    ) %>% 
-    slice(1)
+    df_input
+    # df_occupations %>%
+    # select(
+    #   occupation,
+    #   starts_with('skl_'),
+    #   starts_with('abl_'),
+    #   starts_with('knw_')
+    # ) %>% 
+    # slice(1)
   , chr_method =
     'bvls'
     ## 'logit'
@@ -130,13 +132,31 @@ fun_letters_similarity(
   , lgc_sort = T
 ) -> list_letters_match
 
+library(atlas.plot)
+
+list_letters_match$
+  df_similarity %>% 
+  select(
+    occupation,
+    similarity
+  )
+
+fun_letters_data() %>% 
+  filter(
+    font == 'latin',
+    glyph == 86
+    # font == 'cyrillic',
+    # glyph == 95
+  ) %>% 
+  fun_letters_plot()
+
 list_letters_match$
   df_similarity %>% 
   select(
     occupation,
     similarity
   ) %>% 
-  atlas.plot::fun_plot.density(aes(
+  fun_plot.density(aes(
     x = similarity
   )
   , .list_axis.x.args = list(
@@ -145,18 +165,6 @@ list_letters_match$
   )
   , .fun_format.x = percent
   )
-
-fun_letters_data(
-  lgc_upside_down = F
-) %>% 
-  filter(
-    font == 'latin',
-    # glyph == 86
-    glyph == 84
-    # glyph == 78
-    # glyph == 68
-  ) %>% 
-  fun_letters_plot()
 
 df_occupations %>% 
   select(
@@ -194,11 +202,6 @@ fun_letters_data() %>%
       'occupation'
     , lgc_pivot_long = F
   ) -> lalala
-
-lalala %>% 
-  filter(
-    
-  )
 
 fun_letters_data(
   chr_font = 'greek'
