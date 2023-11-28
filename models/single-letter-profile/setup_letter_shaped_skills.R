@@ -111,7 +111,24 @@ fun_letters_similarity(
       starts_with('item_')
     )
   , df_query_rows = 
-    df_input
+    fun_letters_data() %>%
+    fun_letters_profiles(
+      # int_items = 120
+      int_items = 60
+      , chr_id_col =
+        'occupation'
+      , lgc_pivot_long = F
+    ) %>% 
+    select(
+      occupation,
+      starts_with('item_')
+    )
+    
+    # df_input %>% 
+    # bind_rows(
+    #   df_input
+    # )
+  
     # df_occupations %>%
     # select(
     #   occupation,
@@ -129,8 +146,12 @@ fun_letters_similarity(
   , dbl_scale_lb = 0
   , chr_id_col = 
     'occupation'
-  , lgc_sort = T
+  , lgc_sort = F
 ) -> list_letters_match
+
+list_letters_match$
+  mtx_similarity %>% 
+  View()
 
 library(atlas.plot)
 
