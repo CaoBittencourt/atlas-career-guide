@@ -89,17 +89,26 @@ df_input <- read_csv('/home/Cao/Storage/github/atlas-research/data/questionnaire
 # # Factor model
 # efa_model <- read_rds('/home/Cao/Storage/github/atlas-research/data/efa/efa_equamax_14factors.rds')
 
+# - Parameters ------------------------------------------------------------
+# Define scale
+dbl_scale <- round(seq(0, 100, length.out = 7))
+
 # [DATA] ------------------------------------------------------------------
 # - Long data frame -------------------------------------------------------
 df_occupations %>% 
   select(
     employment_variants,
+    employment_norm,
     starts_with('skl_'),
     starts_with('abl_'),
     starts_with('knw_')
   ) %>% 
   pivot_longer(
-    cols = -1
+    cols = c(
+      starts_with('skl_'),
+      starts_with('abl_'),
+      starts_with('knw_')
+    )
     , names_to = 'item'
     , values_to = 'item_score'
   ) -> df_attributes
@@ -125,27 +134,24 @@ df_attributes %>%
   ) -> df_stats
 
 # - Percentiles for item scores -------------------------------------------
-# Define scale
-dbl_scale <- round(seq(0, 100, length.out = 7))
-
 # Calculate scale percentiles
 vapply(
-    dbl_scale
-    , function(x){
-      
-      pnorm(
-        x, 
-        df_stats$
-          mean
-        , df_stats$
-          sd
-      )
-      
-    }
-    , FUN.VALUE = 
-      numeric(nrow(
-        df_stats
-      ))
+  dbl_scale
+  , function(x){
+    
+    pnorm(
+      x, 
+      df_stats$
+        mean
+      , df_stats$
+        sd
+    )
+    
+  }
+  , FUN.VALUE = 
+    numeric(nrow(
+      df_stats
+    ))
 ) -> mtx_percentiles
 
 # colnames(mtx_percentiles) <- paste0('lower_tail_', dbl_scale)
@@ -218,7 +224,7 @@ df_percentiles %>%
       if_else(
         !is.infinite(
           rank_population
-          )
+        )
         , rank_population
         , lag(rank_population, 1) * (
           lag(rank_population, 1) /
@@ -241,10 +247,91 @@ df_occupations %>%
   )
   , .fun_format.x = number
   )
-  
+
 df_percentiles %>% 
   print(
     n = Inf
   )
 
 # - Classify percentile ranks ---------------------------------------------
+
+# - Alternative method ----------------------------------------------------
+df_attributes %>% 
+  group_by(
+    item,
+    item_score
+  ) %>% 
+  reframe(
+    population = 
+      sum(
+        employment_norm
+      )
+  ) %>% 
+  group_by(
+    item
+  ) %>% 
+  mutate(
+    population = 
+      population / 
+      sum(population)
+  ) %>% 
+  arrange(
+    item_score
+  ) %>% 
+  mutate(
+    population_rank = 
+      cumsum(population) %>%
+      scales::percent(
+        accuracy = .01
+      )
+  ) %>%
+  View()
+
+df_attributes %>% 
+  mutate(
+    item_score = 
+      findInterval(
+        item_score
+        , dbl_scale
+      )
+    , item_score = 
+      item_score - 1
+    , item_score = 
+      item_score * (
+        max(dbl_scale) -
+          min(dbl_scale)
+      ) / (
+        length(dbl_scale) - 1
+      )
+    , item_score = 
+      round(item_score)
+  ) %>%
+  group_by(
+    item,
+    item_score
+  ) %>% 
+  reframe(
+    population = 
+      sum(
+        employment_norm
+      )
+  ) %>% 
+  group_by(
+    item
+  ) %>% 
+  mutate(
+    population = 
+      population / 
+      sum(population)
+  ) %>% 
+  arrange(
+    item_score
+  ) %>% 
+  mutate(
+    population_rank = 
+      cumsum(population) %>%
+      scales::percent(
+        accuracy = .01
+      )
+  ) %>%
+  View()

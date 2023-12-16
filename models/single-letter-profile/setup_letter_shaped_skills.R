@@ -103,79 +103,44 @@ df_input <- read_csv('/home/Cao/Storage/github/atlas-research/data/questionnaire
 #     list_letters_match = NULL
 #   )
 
-fun_letters_similarity(
-  df_letters_profile = 
-    fun_letters_data() %>%
-    fun_letters_profiles(
-      # int_items = 120
-      int_items = 60
-      , chr_id_col =
-        'occupation'
-      , lgc_pivot_long = F
-    ) %>% 
-    select(
-      occupation,
-      starts_with('item_')
-    )
-  , df_query_rows = 
-    # df_input
-  # df_input %>%
-  # bind_rows(
-  #   df_input
-  # )
+fun_letters_rearrange(
+  df_data_rows = 
     df_occupations %>% 
     select(any_of(
       names(df_input)
     )) %>% 
-    slice_head(
-      n = 10
-    )
-  , chr_method =
-    'bvls'
-  ## 'logit'
-  ## 'pearson'
-  ## 'knn'
-  , dbl_scale_ub = 100
-  , dbl_scale_lb = 0
+    slice(1:2)
   , chr_id_col = 
     'occupation'
-  , lgc_sort = T
-) -> list_letters_match
+  , lgc_pivot_long = T
+) -> dsdsds
 
-list_letters_match$list_similarity
-list_letters_match$mtx_similarity %>% View()
+fun_letters_data(
+  chr_font = 'latin'
+  , int_glyph = 
+    df_alphabets %>% 
+    filter(
+      font == 'latin'
+    ) %>% 
+    slice(1:10) %>%
+    pull(glyph)
+  , lgc_upside_down = F
+  , dbl_scale_ub = 100
+  , dbl_scale_lb = 0
+) -> dsds
 
-library(plyr)
-
-list_letters_match %>%
-  plyr::join_all(
-    by = 'occupation',
-    type = 'inner'
-  ) %>% 
-  View()
-
-list_letters_match %>% 
-  bind_rows(
-    .id = 'dsds'
-  ) %>% 
-  as.matrix()
-
-list_letters_match[[2]] %>% 
-  bind_cols() %>%
-  as.matrix()
-
-list_letters_match$
-  mtx_similarity %>% 
-  as_tibble(
-    rownames = 'id_glyph'
-  )
-
-list_letters_match$
-  df_similarity
+fun_letters_plot(
+  df_letters = dsds
+  , df_rearranged = dsdsds
+  , dbl_scale_ub = 100
+  , dbl_scale_lb = 0
+) -> dsdsdsds
 
 fun_letters_similarity(
   df_letters_profile = 
-    fun_letters_data() %>%
+    fun_letters_data(
+      chr_font = 'latin'
+    ) %>%
     fun_letters_profiles(
       # int_items = 120
       int_items = 60
@@ -188,37 +153,28 @@ fun_letters_similarity(
       starts_with('item_')
     )
   , df_query_rows = 
-    fun_letters_data() %>%
-    fun_letters_profiles(
-      # int_items = 120
-      int_items = 60
-      , chr_id_col =
-        'occupation'
-      , lgc_pivot_long = F
-    ) %>% 
-    select(
-      occupation,
-      starts_with('item_')
-    )
-  
-  # df_input %>% 
-  # bind_rows(
-  #   df_input
+    df_occupations %>% 
+    select(any_of(
+      names(df_input)
+    )) %>%
+    slice(1:2)
+    # df_input
+    # df_input %>%
+    # bind_rows(
+    #   df_input
+    # )
+  # df_occupations %>% 
+  # select(any_of(
+  #   names(df_input)
+  # )) %>% 
+  # slice_head(
+  #   n = 10
   # )
-  
-  # df_occupations %>%
-  # select(
-  #   occupation,
-  #   starts_with('skl_'),
-  #   starts_with('abl_'),
-  #   starts_with('knw_')
-  # ) %>% 
-  # slice(1)
   , chr_method =
-    'bvls'
-  ## 'logit'
-  ## 'pearson'
-  ## 'knn'
+    # 'bvls'
+    'logit'
+    # 'pearson'
+    # 'knn'
   , dbl_scale_ub = 100
   , dbl_scale_lb = 0
   , chr_id_col = 
@@ -226,39 +182,68 @@ fun_letters_similarity(
   , lgc_sort = F
 ) -> list_letters_match
 
-fun_letters_data() %>%
-  fun_letters_profiles(
-    # int_items = 120
-    int_items = 60
-    , chr_id_col =
-      'occupation'
-    , lgc_pivot_long = F
-  )
-
-list_letters_match$list_similarity
-list_letters_match$mtx_similarity %>% View()
-
-# fun_match_similarity(
-#   df_data_rows = 
-#     df_input %>% 
-#     bind_rows(
-#       df_input
-#     )
-#   , df_query_rows = 
-#     df_input %>% 
-#     bind_rows(
-#       df_input
-#     )
-#   , chr_method = 
-#     'bvls'
-#   , dbl_scale_ub = 100
-#   , dbl_scale_lb = 0
-#   , chr_id_col = 
-#     'occupation'
-# )
+list_letters_match$
+  list_similarity
 
 list_letters_match$
   mtx_similarity %>% 
+  View()
+
+fun_letters_similarity(
+  df_letters_profile = 
+    fun_letters_data(
+      chr_font = 'latin'
+    ) %>%
+    fun_letters_profiles(
+      # int_items = 120
+      int_items = 30
+      , chr_id_col =
+        'occupation'
+      , lgc_pivot_long = F
+    ) %>% 
+    select(
+      occupation,
+      starts_with('item_')
+    )
+  , df_query_rows = 
+    fun_letters_data(
+      chr_font = 'latin'
+    ) %>%
+    fun_letters_profiles(
+      # int_items = 120
+      int_items = 30
+      , chr_id_col =
+        'occupation'
+      , lgc_pivot_long = F
+    ) %>% 
+    select(
+      occupation,
+      starts_with('item_')
+    )
+  , chr_method =
+    # 'bvls'
+    'logit'
+    # 'pearson'
+    # 'knn'
+  , dbl_scale_ub = 100
+  , dbl_scale_lb = 0
+  , chr_id_col = 
+    'occupation'
+  , lgc_sort = F
+) -> list_letters_match
+
+list_letters_match$
+  list_similarity %>% 
+  bind_cols()
+
+list_letters_match$
+  mtx_similarity %>% 
+  as_tibble(
+    rownames = 'dsds'
+  ) %>% 
+  arrange(desc(
+    latin_72
+  )) %>%
   View()
 
 library(atlas.plot)
@@ -273,7 +258,14 @@ list_letters_match$
 fun_letters_data() %>% 
   filter(
     font == 'latin',
-    glyph == 86
+    glyph == 72
+    
+    # font == 'greek',
+    # glyph == 78
+    
+    # font == 'greek',
+    # glyph == 74
+    
     # font == 'cyrillic',
     # glyph == 95
   ) %>% 
@@ -559,7 +551,7 @@ bind_rows(
     ) %>%
     right_join(
       fun_letters_data(
-        int_glyph = 69
+        int_aglyph = 69
         , chr_font = 'cyrillic'
         , lgc_upside_down = F
       ) %>%
@@ -738,10 +730,37 @@ df_factor_class %>%
 
 # [PLOTS] -----------------------------------------------------------------
 # - Plot ACTI molecules ---------------------------------------------------------
-# Apply ACTI plot function
-df_acti %>%
-  fun_acti_plot_molecule() ->
-  list_plt_acti
+# Letter plots
+fun_letters_data(
+  chr_font = 'latin'
+) %>%
+  fun_letters_plot(
+    list_letters_match = NULL
+  ) -> list_plt_letters
+
+# Letter vs profile plots
+fun_letters_data(
+  chr_font = 'latin'
+) %>%
+  fun_letters_plot(
+    # df_data_long = 
+    df_occupations %>% 
+      select(any_of(
+        names(df_input)
+      )) %>% 
+      pivot_longer(
+        cols = -1
+        , names_to = 
+          'item'
+        , values_to = 
+          'item_score'
+      )
+    , dbl_scale_ub = 100
+    , dbl_scale_lb = 0
+    , chr_id_col = 
+      'occupation'
+  ) -> list_plt_letters
+
 
 # [CLEAR] -----------------------------------------------------------------
 # - ACTI table list -------------------------------------
