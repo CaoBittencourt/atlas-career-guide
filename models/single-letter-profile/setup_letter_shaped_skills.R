@@ -117,13 +117,13 @@ fun_letters_rearrange(
 
 fun_letters_data(
   chr_font = 'latin'
-  , int_glyph = 
-    df_alphabets %>% 
-    filter(
-      font == 'latin'
-    ) %>% 
-    slice(1:10) %>%
-    pull(glyph)
+  # , int_glyph = 
+  #   df_alphabets %>% 
+  #   filter(
+  #     font == 'latin'
+  #   ) %>% 
+  #   slice(1:10) %>%
+  #   pull(glyph)
   , lgc_upside_down = F
   , dbl_scale_ub = 100
   , dbl_scale_lb = 0
@@ -135,6 +135,22 @@ fun_letters_plot(
   , dbl_scale_ub = 100
   , dbl_scale_lb = 0
 ) -> dsdsdsds
+
+fun_letters_plot(
+  df_letters = dsds
+  # , df_rearranged = dsdsds
+  , df_rearranged = 
+    df_input %>%
+    fun_letters_rearrange(
+      chr_id_col = 'occupation'
+      , lgc_pivot_long = T
+    )
+  , dbl_scale_ub = 100
+  , dbl_scale_lb = 0
+) -> dsdsdsds
+
+dsdsdsds$profile_1
+dsdsdsds$profile_2
 
 fun_letters_similarity(
   df_letters_profile = 
