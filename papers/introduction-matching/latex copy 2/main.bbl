@@ -82,6 +82,35 @@
       \field{title}{{Making vocational choices: A theory of vocational personalities and work environments.}}
       \field{year}{1997}
     \endentry
+    \entry{mariani1999onet}{article}{}
+      \name{author}{1}{}{%
+        {{un=0,uniquepart=base,hash=e7559bfc44fb9d272f92c691ddf3cd73}{%
+           family={Mariani},
+           familyi={M\bibinitperiod},
+           given={M},
+           giveni={M\bibinitperiod},
+           givenun=0}}%
+      }
+      \list{publisher}{1}{%
+        {U.S. Bureau of Labor Statistics}%
+      }
+      \strng{namehash}{e7559bfc44fb9d272f92c691ddf3cd73}
+      \strng{fullhash}{e7559bfc44fb9d272f92c691ddf3cd73}
+      \strng{bibnamehash}{e7559bfc44fb9d272f92c691ddf3cd73}
+      \strng{authorbibnamehash}{e7559bfc44fb9d272f92c691ddf3cd73}
+      \strng{authornamehash}{e7559bfc44fb9d272f92c691ddf3cd73}
+      \strng{authorfullhash}{e7559bfc44fb9d272f92c691ddf3cd73}
+      \field{sortinit}{M}
+      \field{sortinithash}{4625c616857f13d17ce56f7d4f97d451}
+      \field{extradatescope}{labelyear}
+      \field{labeldatesource}{}
+      \true{uniqueprimaryauthor}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{journaltitle}{Occupational Outlook Quarterly}
+      \field{title}{{Replace with a database: O*NET replaces the Dictionary of Occupational Titles.}}
+      \field{year}{1999}
+    \endentry
     \entry{onet1998data}{online}{}
       \name{author}{1}{}{%
         {{hash=542cd90c52616746efdefa2118f486b3}{%
@@ -389,6 +418,35 @@
       \field{labeltitlesource}{title}
       \field{title}{{Making vocational choices: A theory of vocational personalities and work environments.}}
       \field{year}{1997}
+    \endentry
+    \entry{mariani1999onet}{article}{}
+      \name{author}{1}{}{%
+        {{un=0,uniquepart=base,hash=e7559bfc44fb9d272f92c691ddf3cd73}{%
+           family={Mariani},
+           familyi={M\bibinitperiod},
+           given={M},
+           giveni={M\bibinitperiod},
+           givenun=0}}%
+      }
+      \list{publisher}{1}{%
+        {U.S. Bureau of Labor Statistics}%
+      }
+      \strng{namehash}{e7559bfc44fb9d272f92c691ddf3cd73}
+      \strng{fullhash}{e7559bfc44fb9d272f92c691ddf3cd73}
+      \strng{bibnamehash}{e7559bfc44fb9d272f92c691ddf3cd73}
+      \strng{authorbibnamehash}{e7559bfc44fb9d272f92c691ddf3cd73}
+      \strng{authornamehash}{e7559bfc44fb9d272f92c691ddf3cd73}
+      \strng{authorfullhash}{e7559bfc44fb9d272f92c691ddf3cd73}
+      \field{sortinit}{M}
+      \field{sortinithash}{4625c616857f13d17ce56f7d4f97d451}
+      \field{extradatescope}{labelyear}
+      \field{labeldatesource}{}
+      \true{uniqueprimaryauthor}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{journaltitle}{Occupational Outlook Quarterly}
+      \field{title}{{Replace with a database: O*NET replaces the Dictionary of Occupational Titles.}}
+      \field{year}{1999}
     \endentry
     \entry{onet1998data}{online}{}
       \name{author}{1}{}{%

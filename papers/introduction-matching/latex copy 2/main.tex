@@ -9,7 +9,7 @@
     backend=biber,
     style=apa
 ]{biblatex}
-\usepackage[toc]{appendix}
+% \usepackage[title,titletoc]{appendix}
 
 % Equations
 % \include{equations}
@@ -77,11 +77,10 @@ In the late 1990s, however, a notable achievement in this area was brought
 about by the Occupational Information Network \parencite{onet1998data}. Sponsored by the United States Department of Labor, this
 program set out to quantify job requirements in a standardized fashion. Their
 research resulted in a robust database of career paths, which includes numeric
-estimates of required competence levels for dozens of abilities; as well as
-several other characteristics, such as the frequency of typical work
-activities, the seriousness of expected job hazards, etc. Their catalog of
-occupations is vast, and their data have been updated frequently for over two
-decades.
+estimates of competence levels for dozens of abilities; as well as several
+other characteristics, such as the frequency of typical work activities, the
+seriousness of expected job hazards, etc. Their catalog of occupations is vast,
+and their data have been updated frequently for over two decades.
 
 But even with such rich information publicly available, there is still a lack
 of statistical modeling of it. In this series of articles, we aim to fix this.
@@ -99,9 +98,11 @@ planning, talent acquisition, and much more.
 \section{Methods}
 \subsection{The Occupational Information Network}
 The Occupational Information Network (O*NET) is an American primary source of
-occupational information. This program has been sponsored by the Employment and
-Training Administration of the U.S. Department of Labor (USDOL/ETA) with the
-aim of facilitating the development and maintenance of a skilled workforce \parencite{onet2024about}.
+occupational information. It was developed during the mid 1990s, and published
+in 1998, by a team of public and private sector organizations, in partnership
+with the Department of Labor's Employment and Training Administration. Its aim
+is to facilitate the maintenance of a skilled workforce through the collection
+and dissemination of occupational data \parencites{mariani1999onet}{onet2024about}.
 
 Essentially, the O*NET model provides a thorough, quantitative, description of
 hundreds of SOC \parencite[Standard Occupational Classification, see][]{bls2018soc} career paths in
@@ -122,7 +123,7 @@ economic agent in the labor market. To do so, we establish a bounded, uniform
 scale from 0 (complete incompetence) to 100 (complete mastery), such that:
 \EqnAttribute where $a_{i}^{k}$ is the $i$-th professional attribute of a
 person $k$. Moreover, let us denote as a ``skill set", or ``career profile",
-the collection of their $m$ attributes, like so: \EqnSkillSet
+the vector of their $m$ attributes, like so: \EqnSkillSet
 
 Thus, all individuals in the economy -- whether employed, or not -- are
 mathematically described by their own skill sets, or career profiles; and this
@@ -144,9 +145,9 @@ function of Euclidean distance. Hence, we first define this concept:
 \EqnEuclideanDistance
 
 Equation (\ref{eqn:euclidean_distance}) measures the absolute distance from the
-professional attribute vector $\vb{a_{\boldsymbol{k}}}$ to a comparison vector
-$\vb{a_{q}}$; in other words, it tells us how these two skill sets are
-\textit{dissimilar}.
+professional attribute vector $\boldsymbol{a_{\boldsymbol{k}}}$ to a comparison
+vector $\boldsymbol{a_{q}}$; in other words, it tells us how these two skill
+sets are \textit{dissimilar}.
 
 But, of course, our interest here is career compatibility, not its opposite.
 Furthermore, similarity is typically expressed as a percentage; and for this,
@@ -156,15 +157,16 @@ metric, we need to employ some sort of normalization procedure, like the
 following: \EqnNormalizedDistance
 
 The denominator in equation (\ref{eqn:normalized_distance}) is the maximum
-theoretical distance to the $\vb{a_q}$ comparison skill set. That is, here we
-normalize distance (\ref{eqn:euclidean_distance}) by calculating the distance
-to $\vb{a_q}$ from its most dissimilar vector. So, for each coordinate of the
-$\vb{a_{q}}$ skill set, we measure which distance would be greater: that from
-the scale's lower bound (viz. 0), or that from the upper bound (viz. 100), as
-any other distance has to be less than those to the scale's limits. This way,
-the denominator corresponds to the maximum distance to $\vb{a_{q}}$; and,
-consequently, the normalized distance $\tilde{d}(\vb{a_{\boldsymbol{k}}},
-    \vb{a_{q}}) \in [0,1] \ \forall \ \vb{a_{\boldsymbol{k}}}, \vb{a_{q}}$.
+theoretical distance to the $\boldsymbol{a_q}$ comparison skill set. That is,
+here we normalize distance (\ref{eqn:euclidean_distance}) by calculating the
+distance to $\boldsymbol{a_q}$ from its most dissimilar vector. So, for each
+coordinate of the $\boldsymbol{a_{q}}$ skill set, we measure which distance
+would be greater: that from the scale's lower bound (viz. 0), or that from the
+upper bound (viz. 100), as any other distance has to be less than those to the
+scale's limits. This way, the denominator corresponds to the maximum distance
+to $\boldsymbol{a_{q}}$; and, consequently, the normalized distance
+$\tilde{d}(\boldsymbol{a_{\boldsymbol{k}}}, \boldsymbol{a_{q}}) \in [0,1] \
+    \forall \ \boldsymbol{a_{\boldsymbol{k}}}, \boldsymbol{a_{q}}$.
 
 At last, similarity is easily derived from the normalized dissimilarity:
 \EqnSimilarity
@@ -172,10 +174,10 @@ At last, similarity is easily derived from the normalized dissimilarity:
 As opposed to equations (\ref{eqn:euclidean_distance}) and
 (\ref{eqn:normalized_distance}), this formula describes the measure to which
 career profiles are \textit{similar}. Again, it is evident
-$s(\vb{a_{\boldsymbol{k}}}, \vb{a_{q}}) \in [0,1] \ \forall \
-    \vb{a_{\boldsymbol{k}}}, \vb{a_{q}}$. Thus, we can estimate, as a percentage,
-how compatible a person is with an occupation, and whether they are alike in
-terms of their competencies, or not.
+$s(\boldsymbol{a_{\boldsymbol{k}}}, \boldsymbol{a_{q}}) \in [0,1] \ \forall \
+    \boldsymbol{a_{\boldsymbol{k}}}, \boldsymbol{a_{q}}$. Thus, we can estimate, as
+a percentage, how compatible a person is with an occupation, and whether they
+are alike in terms of their competencies, or not.
 
 \subsubsection{A Weighted Euclidean Approach to Career Matching}
 Although straightforward, the above method is far too simplistic, for each and
@@ -218,19 +220,20 @@ and normalized distances are as follows: \EqnWeightedSimilarity where
 \EqnWeightedDistance
 
 With these adjusted equations, Euclidean distance is weighted proportionally to
-the professional attribute levels of the $\vb{a_{q}}$ career profile. This
-means that the matching algorithm optimizes itself for each comparison skill
-set, as irrelevant competencies are left out of the analysis, and the
+the professional attribute levels of the $\boldsymbol{a_{q}}$ career profile.
+This means that the matching algorithm optimizes itself for each comparison
+skill set, as irrelevant competencies are left out of the analysis, and the
 ``indispensable" ones (e.g. cutting hair for a barber, dentistry for a dentist)
 are given their full importance.
 
 \subsubsection{Adjusting for Overqualification}
-Another positive side effect of making use of weights in matching is an
-implicit correction for the algorithmic penalties associated with
-overqualification. For, if an individual has additional competencies from other
-fields, which are not necessary at a certain position, the normalized
-unadjusted distance (\ref{eqn:normalized_distance}) yields less favorable
-matching results: \EqnDistanceDerivative
+A positive side effect of the use of weights in career matching is an implicit
+correction for the statistical penalties of overqualification. These arise, in
+the original approach, whenever an individual has additional competencies from
+other fields that are not required at a certain position, and cause the
+unadjusted distance (\ref{eqn:normalized_distance}) to yield less favorable
+similarity estimates. For, if $a_{i}^{k} > a_{i}^{q}$, then
+\EqnDistanceDerivative
 
 This overqualification problem is highly detrimental for matching accuracy, as
 it tends to ``punish" people with many professional attributes, whether they
@@ -244,10 +247,10 @@ career compatibility.
 
 The application of matching weights helps to mitigate this, as the less
 important competencies are, rightly, given less importance; and those distances
-to completely irrelevant attributes (viz. with competence levels of 0) are even
+to completely irrelevant attributes (with competence levels of 0) are even
 nullified entirely, so that: \EqnUnweightedWeightedDistances
 
-Therefore, if a person has additional unnecessary skills, these weighting
+Therefore, if a person has additional, unnecessary, skills, these weighting
 techniques provide a correction for the penalties of overqualification,
 decreasing the normalized Euclidean distance and increasing compatibility.
 
@@ -304,42 +307,43 @@ to perform the job activities of dishwashers, but not the other way around.
 \section{Discussion}
 Assessing the matching results in Tables
 \ref{tab:similarity_engineers}--\ref{tab:similarity_dishwashers}, we could say
-this Euclidean model is quite accurate: mechanical engineers are matched with
-ten other types of engineers; while theoretical physicists have high similarity
-with astronomers, biophysicists, mathematicians, and scientific roles, in
-general; credit analysts are, adequately, matched to occupations in the
-financial industry; and dishwashers, in turn, are compatible with janitors,
-cleaners, and other so-called ``blue-collar" positions.
+this Euclidean model is quite accurate: mechanical engineers are matched to ten
+other types of engineers; while theoretical physicists are similar to
+astronomers, biophysicists, mathematicians, and scientific roles, in general;
+credit analysts, adequately, cluster with occupations in the financial
+industry; and dishwashers, in turn, have high compatibility with janitors,
+cleaners, and so-called ``blue-collar" positions.
 
 When we analyze Table \ref{tab:similarity_matrix}, we find results to be
 likewise accurate. Firstly, the S.T.E.M. career paths are fairly close to one
-another, with around 80\% similarity. This is expected, since engineers are, in
-a way, applied physicists. Dishwashers, on the other hand, are not really
-similar to either one, but are a little more compatible with credit analysts.
-And, finally, credit analysts, have roughly 60\% similarity with the other
-three occupations, indicating they are somewhat compatible, and
-undifferentiated in this respect. It also stands out, as already mentioned,
-that the more ``highly qualified" profiles have high compatibility scores with
-the ``less qualified", or ``simpler", ones, while the reverse is not true.
+another, at 80\% similarity. This is expected, since engineers are, in a way,
+applied physicists. Dishwashers, on the other hand, are not really similar to
+either one, but are a little more compatible with credit analysts. And,
+finally, credit analysts, have roughly 60\% similarity with the other three
+occupations, indicating they are somewhat compatible, and undifferentiated in
+this respect. It also stands out, as already mentioned, that the more ``highly
+qualified" profiles have high compatibility scores with the ``less qualified",
+or ``simpler", ones, while the reverse is not true.
 
-As regards precision, however, this model is evidently suboptimal. For one
-thing, similarity scores are too high, specially when comparing occupations
-that have little or nothing to do with one another, as we have in this
-exercise. That is, though the model's career matching predictions ``make
-sense'', the degree of similarity, in some matches, is grossly overestimated.
+As regards precision, however, the Euclidean approach to career matching is
+evidently suboptimal. For one thing, similarity scores are too high, specially
+when comparing occupations that have little or nothing to do with one another,
+as we have in this exercise. That is, though the model's matching predictions
+``make sense'', the degree of similarity, for some careers, is grossly
+overestimated.
 
-Indeed, the compatibility of, say, dishwashers with scientific occupations is
-relatively low, which is realistic; but, at almost 40\% similarity, it is
-still, objectively, not low enough. And the same applies to credit analysts, as
-well. For as an entry-level position in the field of Finance, credit analysts
-do seem to be some sort of ``middle ground" between the other selected roles:
-in fact, their job activities are mostly mathematical in nature, yet are
-neither as demanding and abstract as those of physicists, nor as direct and
-concrete as the repetitive manual labor of dishwashers. So, in this sense, the
-estimated compatibility scores are correct. Nevertheless, the actual numeric
-values of these similarities are, definitely, out of proportion; and more
-reasonable figures would be in the range of 30 to 40\%, much lower than the
-coefficients obtained with the Euclidean matching method.
+Indeed, the compatibility of, say, dishwashers with engineers and physicists is
+relatively low, which is realistic; but, at almost 40\%, it is still,
+objectively, not low enough. And the same applies to credit analysts, as well.
+For as an entry-level position in the field of Finance, credit analysts do seem
+to be some sort of ``middle ground" between the other selected roles: in fact,
+their job activities are mostly mathematical in nature, yet are neither as
+demanding and abstract as those of physicists, nor as direct and concrete as
+the repetitive manual labor of dishwashers. So, in this sense, the estimated
+compatibility scores are correct. Nevertheless, the actual numeric values of
+these similarities are, definitely, out of proportion; and more reasonable
+figures would be in the range of 30\% to 40\%, much lower than the coefficients
+obtained with the Euclidean matching method.
 
 A second, more encompassing, deficiency of this approach, that could even help
 to explain the first one, has to do with factors that we deliberately left out
@@ -376,18 +380,8 @@ An immediate improvement, for example, would be to adjust weighting procedures
 to further emphasize the core competencies of comparison occupations by
 substituting the linear weights with a polarizing, logistic-like function. And
 one could also apply scaling functions to normalized Euclidean distances, in
-order to correct the similarity metric, like so: \SimilarityScaling where
-$f(.)$ is an increasing function of $\tilde{d}_w(\vb{a_{\boldsymbol{k}}},
-    \vb{a_{q}})$, whether it be a square root, some linear interpolation, or any
-appropriate scaling function.
-% An immediate improvement, for example, would be to adjust weighting procedures
-% to further emphasize the core competencies of comparison occupations by
-% substituting the linear weights with a polarizing, logistic-like function. And
-% one could also apply scaling functions to normalized Euclidean distances, in
-% order to correct the similarity metric, like so: \SimilarityScaling where
-% $f(.)$ is an increasing function of $\tilde{d}_w(\vb{a_{\boldsymbol{k}}},
-%     \vb{a_{q}})$, whether it be a square root, some linear interpolation, or any
-% other appropriate scaling function.
+order to correct the similarity metric directly (via elaborate interpolations,
+or just a square root).
 
 Having said this, beyond some ``quick fixes", more dramatic improvements
 require rewriting the entire matching algorithm to another format. But then
@@ -432,11 +426,14 @@ it is, at least, a step in the right direction.
     title={References}
 ]
 
-% Appendices
+% Appendix
 \newpage
-\begin{appendices}
-    \section{Detailed Skill Sets}
-    \DetailedSkillSets
-\end{appendices}
+\section*{Appendix}
+\addcontentsline{toc}{section}{Appendix}
+\DetailedSkillSets
+% \begin{appendices}
+%     \section{Detailed Skill Sets}
+%     \DetailedSkillSets
+% \end{appendices}
 
 \end{document}
