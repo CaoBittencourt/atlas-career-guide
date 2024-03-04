@@ -163,12 +163,12 @@ INPUT /usr/share/texmf/fonts/tfm/public/amsfonts/cmextra/cmmib5.tfm
 INPUT /usr/share/texmf/fonts/tfm/public/cm/cmbsy10.tfm
 INPUT /usr/share/texmf/fonts/tfm/public/amsfonts/cmextra/cmbsy7.tfm
 INPUT /usr/share/texmf/fonts/tfm/public/amsfonts/cmextra/cmbsy5.tfm
+INPUT /usr/share/texmf/fonts/tfm/public/cm/cmbxti10.tfm
+INPUT /usr/share/texmf/fonts/tfm/public/cm/cmbxti10.tfm
+INPUT /usr/share/texmf/fonts/tfm/public/cm/cmbxti10.tfm
 INPUT /usr/share/texmf/fonts/tfm/public/cm/cmti10.tfm
 INPUT /usr/share/texmf/fonts/tfm/public/cm/cmti7.tfm
 INPUT /usr/share/texmf/fonts/tfm/public/cm/cmti7.tfm
-INPUT /usr/share/texmf/fonts/tfm/public/cm/cmbxti10.tfm
-INPUT /usr/share/texmf/fonts/tfm/public/cm/cmbxti10.tfm
-INPUT /usr/share/texmf/fonts/tfm/public/cm/cmbxti10.tfm
 OUTPUT notation.pdf
 INPUT /var/lib/texmf/fonts/map/pdftex/updmap/pdftex.map
 INPUT notation.aux

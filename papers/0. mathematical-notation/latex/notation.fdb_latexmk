@@ -1,7 +1,7 @@
 # Fdb version 4
-["pdflatex"] 1709571679 "/home/Cao/Storage/github/atlas-research/papers/0. mathematical-notation/latex/notation.tex" "notation.pdf" "notation" 1709571679 0
+["pdflatex"] 1709578733 "/home/Cao/Storage/github/atlas-research/papers/0. mathematical-notation/latex/notation.tex" "notation.pdf" "notation" 1709578733 0
   "/etc/texmf/web2c/texmf.cnf" 1679560553 41708 35590ff313aece27b3a573cac4cb3f85 ""
-  "/home/Cao/Storage/github/atlas-research/papers/0. mathematical-notation/latex/notation.tex" 1709571679 4653 7bf15603b17f699b4994a5ee72f6797e ""
+  "/home/Cao/Storage/github/atlas-research/papers/0. mathematical-notation/latex/notation.tex" 1709578733 8511 4987dbfdf31b85977049fdb6b61a16c5 ""
   "/usr/share/texmf/fonts/map/fontname/texfonts.map" 1577235249 3524 cb3e574dea2d1052e39280babc910dc8 ""
   "/usr/share/texmf/fonts/tfm/public/amsfonts/cmextra/cmbsy5.tfm" 1246382020 1120 1e8878807317373affa7f7bba4cf2f6a ""
   "/usr/share/texmf/fonts/tfm/public/amsfonts/cmextra/cmbsy7.tfm" 1246382020 1120 7f9f170e8aa57527ad6c49feafd45d54 ""
@@ -60,8 +60,8 @@
   "/usr/share/texmf/web2c/texmf.cnf" 1679560553 41708 35590ff313aece27b3a573cac4cb3f85 ""
   "/var/lib/texmf/fonts/map/pdftex/updmap/pdftex.map" 1708633164 535245 9b107176e732363f1a0002fe772e7314 ""
   "/var/lib/texmf/web2c/pdftex/pdflatex.fmt" 1708603829 7711834 e27ad7fee30420c46aeb69bc5f80e49d ""
-  "notation.aux" 1709571679 32 044b7f8fc9779af7531264e0c5c84b6d "pdflatex"
-  "notation.tex" 1709571679 4653 7bf15603b17f699b4994a5ee72f6797e ""
+  "notation.aux" 1709578733 32 044b7f8fc9779af7531264e0c5c84b6d "pdflatex"
+  "notation.tex" 1709578733 8511 4987dbfdf31b85977049fdb6b61a16c5 ""
   (generated)
   "notation.aux"
   "notation.log"
