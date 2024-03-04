@@ -1,0 +1,153 @@
+%SECTION: SETUP
+% region: document class
+\documentclass{article}
+
+% endregion
+
+% region: packages 
+\usepackage{xr}
+\usepackage{physics}
+\usepackage{amsmath}
+% \usepackage{float}
+% \usepackage{tabularray}
+% \UseTblrLibrary{booktabs}
+% \usepackage[
+%     backend=biber,
+%     style=apa
+% ]{biblatex}
+
+% endregion
+
+% region: source files 
+% equations
+
+% tables
+
+% references
+
+% endregion
+
+% region: title 
+% Title
+\title{
+    dsds
+}
+\author{Cao Bittencourt}
+\date{\today}
+
+% endregion
+
+%SECTION: PAPER
+\begin{document}
+
+\maketitle
+
+\begin{gather}
+    % \text{Interchangeability cannot be } I(s(\boldsymbol{a_k},\boldsymbol{a_k}) \text{because I is already the Identity Matrix.}
+    % german character ß (esset, eszet, or sharp s) is itself interchangeable with 'ss'
+    % thus ß could stand for sufficiently similar / sufficient similarity (ss)
+    \boldsymbol{\Lambda} = (\Lambda_{1}, ..., \Lambda_{n}),\\
+    \Lambda_{k} = 
+        \frac{
+            \sum_{q=1}^{n}{
+                \textit{\ss}_{k,q}
+                w_q
+                % \textit{\ss}(s(\boldsymbol{a_k},\boldsymbol{a_q}), \tau_k, \tau_q, c_q)
+            }
+        }{
+            W
+        },\\
+    \Lambda(\boldsymbol{\textbf{\textit{\ss}}_{k}}, \boldsymbol{w}) = 
+        \frac{
+            \sum_{q=1}^{n}{
+                \textit{\ss}_{k,q}
+                w_q
+                % \textit{\ss}(s(\boldsymbol{a_k},\boldsymbol{a_q}), \tau_k, \tau_q, c_q)
+            }
+        }{
+            W
+        },\\
+    \textit{\ss}_{k,q} = 
+        \text{eq}(s(\boldsymbol{a_k},\boldsymbol{a_q}), c_q)
+        \times
+        \text{eq}(\tau_k, \tau_q, c_q)\\
+    W = 
+        \sum_{q=1}^{n}{
+            w_q
+        }\\
+    \textbf{\ss} = 
+    % \textbf{SS} = 
+    \begin{bmatrix}
+        1 & \textit{\ss}_{2,1} & \hdots & \textit{\ss}_{n,1}\\
+        \textit{\ss}_{1,2} & 1 & \hdots & \vdots\\
+        \vdots & \vdots & \ddots & \vdots\\
+        \textit{\ss}_{1,n} & \hdots & \hdots & 1\\
+    \end{bmatrix}\\
+    \textbf{\ss} = 
+    % \textbf{SS} = 
+    \begin{bmatrix}
+        \textit{\ss}_{1,1} & \hdots & \textit{\ss}_{n,1}\\
+        \vdots & \ddots & \vdots\\
+        \textit{\ss}_{1,n} & \hdots & \textit{\ss}_{n,n}\\
+    \end{bmatrix}\\
+    \boldsymbol{\textbf{\textit{\ss}}_{k}} = (\textit{\ss}_{k,1}, ..., \textit{\ss}_{k,n})\\
+    \boldsymbol{\textbf{\textit{\ss}}_{q}} = (\textit{\ss}_{q,1}, ..., \textit{\ss}_{q,n})\\
+    \gamma_{k} = 
+    \gamma(\boldsymbol{a_k}) = 
+        \text{sq}(\boldsymbol{a_k})\\
+    c_{k} = 
+    c(\boldsymbol{a_k}, \gamma_{k}) = 
+        \left( \frac{1}{m} \right)
+        \sum_{i=1}^{m}{
+            \theta_{i}^{k}
+            \tilde{a}_{i}^{k}
+            },\\
+    \theta_{i}^{k} = \text{eq}(\tilde{a}_{i}^{k}, \gamma_{k})\\
+    \boldsymbol{\theta_{k}} = (\theta_{1}^{k}, ..., \theta_{m}^{k})\\
+    \boldsymbol{\theta_{q}} = (\theta_{1}^{q}, ..., \theta_{m}^{q})\\
+    \boldsymbol{\theta_{n}} = (\theta_{1}^{n}, ..., \theta_{m}^{n})\\
+    \boldsymbol{\Theta} = 
+    \begin{bmatrix}
+        \theta_{1}^{1} & \hdots & \theta_{m}^{1}\\
+        \vdots & \ddots & \vdots\\
+        \theta_{1}^{n} & \hdots & \theta_{m}^{n}\\
+    \end{bmatrix}
+\end{gather}
+
+% region: abstract 
+
+% endregion
+
+% table of contents
+
+% list of tables
+
+% region: introduction 
+
+% endregion
+
+% region: methods 
+
+% endregion
+
+% region: results 
+
+% endregion
+
+% region: discussion 
+
+% endregion
+
+% region: conclusion 
+
+% endregion
+
+% region: references 
+
+% endregion
+
+% region: appendices 
+
+% endregion
+
+\end{document}
