@@ -111,7 +111,65 @@
         \theta_{1}^{1} & \hdots & \theta_{m}^{1}\\
         \vdots & \ddots & \vdots\\
         \theta_{1}^{n} & \hdots & \theta_{m}^{n}\\
-    \end{bmatrix}
+    \end{bmatrix}\\
+    % \text{eq}(x,M,b) = 
+    % x\left(
+    %     1 + M (1 - x) \exp(-b(x - M))
+    % \right) ^ {
+    %     -\frac{
+    %         1 - x
+    %     }{
+    %         1 - M
+    %     }
+    % }\\
+    % \text{eq}(x,M,b) = 
+    % x\left[
+    %     1 + M (1 - x) \exp(-b(x - M))
+    % \right] ^ {
+    %     -\frac{
+    %         1 - x
+    %     }{
+    %         1 - M
+    %     }
+    % }\\
+    \text{eq}(x,M,b) = 
+    x\left\{
+        1 + M (1 - x) \exp[-b(x - M)]
+    \right\} ^ {
+        -\frac{
+            1 - x
+        }{
+            1 - M
+        }
+    }\\
+    % \text{eq}(x,M,b) = 
+    % \frac{x}{
+    %     \left(
+    %     1 + M (1 - x) \exp(-b(x - M))
+    % \right) ^ {
+    %     \frac{
+    %         1 - x
+    %     }{
+    %         1 - M
+    %     }
+    % }
+    % }
+    \text{sq}(x,\sigma_x) = 
+    \frac{\sigma_x}{2} + 
+    \left(
+        1 - \frac{\sigma_x}{2}
+    \right) \text{mlv}(x) -
+    \frac{\sigma_x ^ 2}{2} -
+    \frac{\sigma_x}{2} [
+        1 - \text{mlv}(x)
+    ] (
+        1 - 2\sigma_x
+    )
+    % 0.5 * dbl_sd +
+    % (1 - 0.5 * dbl_sd) * dbl_mode +
+    % -0.5 * dbl_sd * dbl_sd +
+    % -0.5 * dbl_sd * (1 - dbl_mode) *
+    % (1 - 2 * dbl_sd)
 \end{gather}
 
 % region: abstract 

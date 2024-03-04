@@ -176,12 +176,16 @@ INPUT /usr/share/texmf/fonts/type1/public/amsfonts/cm/cmbx10.pfb
 INPUT /usr/share/texmf/fonts/type1/public/amsfonts/cm/cmbxti10.pfb
 INPUT /usr/share/texmf/fonts/type1/public/amsfonts/cm/cmex10.pfb
 INPUT /usr/share/texmf/fonts/type1/public/amsfonts/cm/cmmi10.pfb
+INPUT /usr/share/texmf/fonts/type1/public/amsfonts/cm/cmmi5.pfb
 INPUT /usr/share/texmf/fonts/type1/public/amsfonts/cm/cmmi7.pfb
 INPUT /usr/share/texmf/fonts/type1/public/amsfonts/cm/cmmib10.pfb
 INPUT /usr/share/texmf/fonts/type1/public/amsfonts/cmextra/cmmib7.pfb
 INPUT /usr/share/texmf/fonts/type1/public/amsfonts/cm/cmr10.pfb
 INPUT /usr/share/texmf/fonts/type1/public/amsfonts/cm/cmr12.pfb
 INPUT /usr/share/texmf/fonts/type1/public/amsfonts/cm/cmr17.pfb
+INPUT /usr/share/texmf/fonts/type1/public/amsfonts/cm/cmr5.pfb
 INPUT /usr/share/texmf/fonts/type1/public/amsfonts/cm/cmr7.pfb
 INPUT /usr/share/texmf/fonts/type1/public/amsfonts/cm/cmsy10.pfb
+INPUT /usr/share/texmf/fonts/type1/public/amsfonts/cm/cmsy5.pfb
+INPUT /usr/share/texmf/fonts/type1/public/amsfonts/cm/cmsy7.pfb
 INPUT /usr/share/texmf/fonts/type1/public/amsfonts/cm/cmti10.pfb
