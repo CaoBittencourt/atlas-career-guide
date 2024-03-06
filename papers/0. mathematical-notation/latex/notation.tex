@@ -196,9 +196,30 @@
     %         1 - M
     %     }
     % }\\
-    \text{eq}(x,M,b) = 
+    % \text{eq}(x,M,b) = 
+    % x\left\{
+    %     1 + M (1 - x) \exp[-b(x - M)]
+    % \right\} ^ {
+    %     -\frac{
+    %         1 - x
+    %     }{
+    %         1 - M
+    %     }
+    % }, x, M \in [0,1]\\
+    \text{eq}(x,M) = 
     x\left\{
-        1 + M (1 - x) \exp[-b(x - M)]
+        1 + M (1 - x) \exp[-
+            % \tan\left[
+            \tan \bigg(
+                \frac{\pi}{2}
+                % (\pi / 2)
+                \cos\big(
+                    x (1 - M)
+                \big)
+            \bigg)
+            % \right]
+            (x - M)
+         ]
     \right\} ^ {
         -\frac{
             1 - x
@@ -206,6 +227,24 @@
             1 - M
         }
     }, x, M \in [0,1]\\
+    % \text{eq}(x,M) = 
+    % x\left\{
+    %     1 + M (1 - x) \exp[-
+    %         (x - M)
+    %         \tan{\theta}
+    %      ]
+    % \right\} ^ {
+    %     -\frac{
+    %         1 - x
+    %     }{
+    %         1 - M
+    %     }
+    % },\\
+    % \theta = 
+    %     % \frac{\pi}{2}
+    %     (\pi/2)
+    %     [1 - x(1 - M)] ^ {x(1 - M)},\\
+    % x, M \in [0,1].\\
     % \text{eq}(x,1,b) = 
     % x\left\{
     %     1 + 1 \times (1 - x) \exp[-b(x - 1)]
@@ -289,10 +328,13 @@
     % \right\}, x \in [0,1]
     \text{sq}(\boldsymbol{x}) = 
     \text{mlv}(\boldsymbol{x}) + 
-    \frac{\sigma_x}{2}\left\{
-        (1 + 2\sigma_x)[1 - \text{mlv}(\boldsymbol{x})] -
-        \frac{\sigma_x}{2}
-    \right\}, \boldsymbol{x} \in [0,1]
+    \frac{\tilde{\sigma}_{x}}{2}\left\{
+        (1 + 2\tilde{\sigma}_{x})[1 - \text{mlv}(\boldsymbol{x})] -
+        \frac{\tilde{\sigma}_{x}}{2}
+    \right\},\\
+    \tilde{\sigma}_{x} = \frac{\sigma_{x}}{\max \sigma_{x}},\\
+    % \tilde{\sigma}_{x} = \sigma_{x} / \max \sigma_{x},\\
+    \boldsymbol{x} \in [0,1]
     % \text{sq}(\tilde{x},\sigma_{\tilde{x}}) = 
     % \text{mlv}({\tilde{x}}) + 
     % \frac{\sigma_{\tilde{x}}}{2}\left\{
