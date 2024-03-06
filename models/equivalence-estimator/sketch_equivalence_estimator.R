@@ -1,6 +1,7 @@
 fun_scale <- function(x, m){
   
-  ((1 - x) * (1 - m)) ^ - (x - m)
+  # ((1 - x) * (1 - m)) ^ - (x - m)
+  # ((1 - x) * (1 - m)) ^ - (x - m)
   # 1 / m
   # (x/x) / (1 - m)
   # 1 / (1 + m)
@@ -9,10 +10,11 @@ fun_scale <- function(x, m){
   # 1 / ((x / x) - m)
   # ((x/x) / (1 - m)) ^ (1 / (1 - x))
   # ((1 / m) - x) / m
+  tan(m * (pi / 2))
   
 }
 
-curve(fun_scale(x = x, m = 0), from = 0, to = 1, col = 'red', ylim = c(0,100))
+curve(fun_scale(x = x, m = 0), from = 0, to = 1, col = 'red')
 # curve(fun_scale(x = x, m = 0), from = 0, to = 1, col = 'red')
 curve(expr = 30 * (1 + x - x), from = 0, to = 1, add = T)
 
@@ -79,29 +81,16 @@ fun_eqvl_logistic <- function(
     x
     , m
     , a = 0
-    # , b = 100
     # , b = 37
-    , b = 37
-    # , b = exp(1) * 10
-    # , b = exp(m) * 1 / m
-    # , b = exp(m) * 10
-    # , b = exp(m * ) * 10
-    # , b = 1
-    # , b = (1 / m) ^ 2
-    # , b = 10
-    # , b = Inf
-    # , b = 1 / m
-    # , b = x / m
-    # , b = (1 / x) ^ (m / (1 - m))
-    # , b = (1 / x * m) ^ (m / (1 - m))
-    # , b = (m / x) ^ (m / (1 - m))
-    # , b = (1 / m) ^ (1 / (1 - m))
-    # , b = (1 / m) ^ (x / (1 - m))
-    # , b = (x / m) ^ (1 / (1 - m))
-    # , b = (x / m) ^ (1 / x)
-    # , b = m / (x * (1 - m))
-    # , b = (1 / x) ^ ((1 / x) ^ (m / (1 - m)))
-    # , b = (1 / x) ^ ((1 / x) * (m / (1 - m)))
+    # , b = tan(m * (pi / 2))
+    # , b = tan(x * (pi / 2))
+    # , b = tan((x ^ m) * (pi / 2))
+    # , b = tan((m ^ x) * (pi / 2))
+    # , b = tan((m ^ (1 - x)) * (pi / 2))
+    # , b = tan(((1 - x) ^ m) * (pi / 2))
+    # , b = tan((q ^ m) * (pi / 2))
+    # , b = tan((m ^ q) * (pi / 2))
+    , b = tan((m ^ q) * (pi / 2))
     , c = 1
     , k = x
     , nu = (1 - m) / (1 - x)
@@ -127,6 +116,30 @@ fun_eqvl_logistic <- function(
 # fun_eqvl(seq(0, 1, .1), m = 0.99) |> round(2) |> setNames(seq(0, 1, .1))
 # fun_eqvl(seq(0, 1, .1), m = 1) |> round(2) |> setNames(seq(0, 1, .1))
 
+curve(fun_eqvl_logistic(x = x, m = 0), col = 'red'); curve(fun_eqvl_logistic(x = x, m = 0, b = 37), col = 'blue', add = T); curve(x ^ 1, add = T)
+curve(fun_eqvl_logistic(x = x, m = 0.01), col = 'red'); curve(fun_eqvl_logistic(x = x, m = 0.01, b = 37), col = 'blue', add = T); curve(x ^ 1, add = T)
+curve(fun_eqvl_logistic(x = x, m = 0.1), col = 'red'); curve(fun_eqvl_logistic(x = x, m = 0.1, b = 37), col = 'blue', add = T); curve(x ^ 1, add = T)
+curve(fun_eqvl_logistic(x = x, m = 0.25), col = 'red'); curve(fun_eqvl_logistic(x = x, m = 0.25, b = 37), col = 'blue', add = T); curve(x ^ 1, add = T)
+curve(fun_eqvl_logistic(x = x, m = 0.5), col = 'red'); curve(fun_eqvl_logistic(x = x, m = 0.5, b = 37), col = 'blue', add = T); curve(x ^ 1, add = T)
+curve(fun_eqvl_logistic(x = x, m = 0.67), col = 'red'); curve(fun_eqvl_logistic(x = x, m = 0.67, b = 37), col = 'blue', add = T); curve(x ^ 1, add = T)
+curve(fun_eqvl_logistic(x = x, m = 0.75), col = 'red'); curve(fun_eqvl_logistic(x = x, m = 0.75, b = 37), col = 'blue', add = T); curve(x ^ 1, add = T)
+curve(fun_eqvl_logistic(x = x, m = 0.9), col = 'red'); curve(fun_eqvl_logistic(x = x, m = 0.9, b = 37), col = 'blue', add = T); curve(x ^ 1, add = T)
+curve(fun_eqvl_logistic(x = x, m = 0.95), col = 'red'); curve(fun_eqvl_logistic(x = x, m = 0.95, b = 37), col = 'blue', add = T); curve(x ^ 1, add = T)
+curve(fun_eqvl_logistic(x = x, m = 0.99), col = 'red'); curve(fun_eqvl_logistic(x = x, m = 0.99, b = 37), col = 'blue', add = T); curve(x ^ 1, add = T)
+curve(fun_eqvl_logistic(x = x, m = 1), col = 'red'); curve(fun_eqvl_logistic(x = x, m = 1, b = 37), col = 'blue', add = T); curve(x ^ 1, add = T)
+
+# curve(fun_eqvl_logistic(x = x, m = 0), col = 'red'); curve(fun_eqvl(x = x, m = 0), col = 'blue', add = T); curve(x ^ 1, add = T)
+# curve(fun_eqvl_logistic(x = x, m = 0.01), col = 'red'); curve(fun_eqvl(x = x, m = 0.01), col = 'blue', add = T); curve(x ^ 1, add = T)
+# curve(fun_eqvl_logistic(x = x, m = 0.1), col = 'red'); curve(fun_eqvl(x = x, m = 0.1), col = 'blue', add = T); curve(x ^ 1, add = T)
+# curve(fun_eqvl_logistic(x = x, m = 0.25), col = 'red'); curve(fun_eqvl(x = x, m = 0.25), col = 'blue', add = T); curve(x ^ 1, add = T)
+# curve(fun_eqvl_logistic(x = x, m = 0.5), col = 'red'); curve(fun_eqvl(x = x, m = 0.5), col = 'blue', add = T); curve(x ^ 1, add = T)
+# curve(fun_eqvl_logistic(x = x, m = 0.67), col = 'red'); curve(fun_eqvl(x = x, m = 0.5), col = 'blue', add = T); curve(x ^ 1, add = T)
+# curve(fun_eqvl_logistic(x = x, m = 0.75), col = 'red'); curve(fun_eqvl(x = x, m = 0.75), col = 'blue', add = T); curve(x ^ 1, add = T)
+# curve(fun_eqvl_logistic(x = x, m = 0.9), col = 'red'); curve(fun_eqvl(x = x, m = 0.9), col = 'blue', add = T); curve(x ^ 1, add = T)
+# curve(fun_eqvl_logistic(x = x, m = 0.95), col = 'red'); curve(fun_eqvl(x = x, m = 0.95), col = 'blue', add = T); curve(x ^ 1, add = T)
+# curve(fun_eqvl_logistic(x = x, m = 0.99), col = 'red'); curve(fun_eqvl(x = x, m = 0.99), col = 'blue', add = T); curve(x ^ 1, add = T)
+# curve(fun_eqvl_logistic(x = x, m = 1), col = 'red'); curve(fun_eqvl(x = x, m = 1), col = 'blue', add = T); curve(x ^ 1, add = T)
+
 fun_eqvl_logistic(seq(0, 1, .1), m = 0) |> round(2) |> setNames(seq(0, 1, .1))
 fun_eqvl_logistic(seq(0, 1, .1), m = 0.25) |> round(2) |> setNames(seq(0, 1, .1))
 fun_eqvl_logistic(seq(0, 1, .1), m = 0.5) |> round(2) |> setNames(seq(0, 1, .1))
@@ -135,17 +148,6 @@ fun_eqvl_logistic(seq(0, 1, .1), m = 0.9) |> round(2) |> setNames(seq(0, 1, .1))
 fun_eqvl_logistic(seq(0, 1, .1), m = 0.95) |> round(2) |> setNames(seq(0, 1, .1))
 fun_eqvl_logistic(seq(0, 1, .1), m = 0.99) |> round(2) |> setNames(seq(0, 1, .1))
 fun_eqvl_logistic(seq(0, 1, .1), m = 1) |> round(2) |> setNames(seq(0, 1, .1))
-
-curve(fun_eqvl_logistic(x = x, m = 0), col = 'red'); curve(fun_eqvl(x = x, m = 0), col = 'blue', add = T); curve(x ^ 1, add = T)
-curve(fun_eqvl_logistic(x = x, m = 0.01), col = 'red'); curve(fun_eqvl(x = x, m = 0.01), col = 'blue', add = T); curve(x ^ 1, add = T)
-curve(fun_eqvl_logistic(x = x, m = 0.1), col = 'red'); curve(fun_eqvl(x = x, m = 0.1), col = 'blue', add = T); curve(x ^ 1, add = T)
-curve(fun_eqvl_logistic(x = x, m = 0.25), col = 'red'); curve(fun_eqvl(x = x, m = 0.25), col = 'blue', add = T); curve(x ^ 1, add = T)
-curve(fun_eqvl_logistic(x = x, m = 0.5), col = 'red'); curve(fun_eqvl(x = x, m = 0.5), col = 'blue', add = T); curve(x ^ 1, add = T)
-curve(fun_eqvl_logistic(x = x, m = 0.75), col = 'red'); curve(fun_eqvl(x = x, m = 0.75), col = 'blue', add = T); curve(x ^ 1, add = T)
-curve(fun_eqvl_logistic(x = x, m = 0.9), col = 'red'); curve(fun_eqvl(x = x, m = 0.9), col = 'blue', add = T); curve(x ^ 1, add = T)
-curve(fun_eqvl_logistic(x = x, m = 0.95), col = 'red'); curve(fun_eqvl(x = x, m = 0.95), col = 'blue', add = T); curve(x ^ 1, add = T)
-curve(fun_eqvl_logistic(x = x, m = 0.99), col = 'red'); curve(fun_eqvl(x = x, m = 0.99), col = 'blue', add = T); curve(x ^ 1, add = T)
-curve(fun_eqvl_logistic(x = x, m = 1), col = 'red'); curve(fun_eqvl(x = x, m = 1), col = 'blue', add = T); curve(x ^ 1, add = T)
 
 # curve(fun_eqvl_logistic(x = x, m = 0), col = 'red'); curve(x ^ 1, add = T)
 # curve(fun_eqvl_logistic(x = x, m = 0.01), col = 'red'); curve(x ^ 1, add = T)
