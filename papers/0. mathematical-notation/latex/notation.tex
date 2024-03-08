@@ -42,196 +42,369 @@
 
 \maketitle
 
-\begin{gather}
-    % \text{Interchangeability cannot be } I(s(\boldsymbol{a_k},\boldsymbol{a_k}) \text{because I is already the Identity Matrix.}
-    % german character ß (esset, eszet, or sharp s) is itself interchangeable with 'ss'
-    % thus ß could stand for sufficiently similar / sufficient similarity (ss)
-    \boldsymbol{\Lambda} = (\Lambda_{1}, ..., \Lambda_{n}),\\
-    % \Lambda_{k} = 
-    %     \frac{
-    %         \sum_{q=1}^{n}{
-    %             \textit{\ss}_{k,q}
-    %             w_q
-    %             % \textit{\ss}(s(\boldsymbol{a_k},\boldsymbol{a_q}), \tau_k, \tau_q, c_q)
-    %         }
-    %     }{
-    %         W
-    %     },\\
-    % \Lambda(\boldsymbol{\textbf{\textit{\ss}}_{k}}, \boldsymbol{w}) = 
-    %     \frac{
-    %         \sum_{q=1}^{n}{
-    %             \textit{\ss}_{k,q}
-    %             w_q
-    %             % \textit{\ss}(s(\boldsymbol{a_k},\boldsymbol{a_q}), \tau_k, \tau_q, c_q)
-    %         }
-    %     }{
-    %         W
-    %     },\\
-    % \Lambda_k = 
-    \Lambda(\boldsymbol{\textbf{\textit{\ss}}_{k}}, \boldsymbol{w}) = 
-        \left(
-            \frac{1}{W}
-        \right)
-        \sum_{q=1}^{n}{
-            \textit{\ss}_{k,q}
-            w_q
-            % \textit{\ss}(s(\boldsymbol{a_k},\boldsymbol{a_q}), \tau_k, \tau_q, c_q)
-        },\\
-    % \text{vs}(\boldsymbol{\textbf{\textit{\ss}}_{k}}, \boldsymbol{w}, \boldsymbol{y}) = 
-    %     \frac{
-    %         \sum_{q=1}^{n}{
-    %             \textit{\ss}_{q,k}
-    %             w_q
-    %             u(y_q,y_k)
-    %         }
-    %     }{
-    %         W
-    %     },\\
-    % \text{vs}_k = 
-    \text{vs}(\boldsymbol{\textbf{\textit{\ss}}_{k}}, \boldsymbol{w}, \boldsymbol{y}) = 
-    \left(
-        \frac{1}{W}
-    \right)
-        \sum_{q=1}^{n}{
-            \textit{\ss}_{q,k}
-            w_q
-            u(y_q,y_k)
-        }
-        ,\\
-    \textit{\ss}_{k,q} = 
-        \text{eq}(s(\boldsymbol{a_k},\boldsymbol{a_q}), c_q)\\
-    u(y_q,y_k) =
-    \begin{cases}
-        1, \text{if } y_k \geq y_q.\\
-        0, \text{otherwise.}
-    \end{cases}\\
-    % \textit{\ss}_{k,q} = 
-    %     \text{eq}(s(\boldsymbol{a_k},\boldsymbol{a_q}), c_q)
-    %     \times
-    %     \text{eq}(\tau_k, \tau_q, c_q)\\
-    W = 
-        \sum_{q=1}^{n}{
-            w_q
-        }\\
-    \textbf{\ss} = 
-    % \textbf{SS} = 
-    \begin{bmatrix}
-        1 & \textit{\ss}_{2,1} & \hdots & \textit{\ss}_{n,1}\\
-        \textit{\ss}_{1,2} & 1 & \hdots & \vdots\\
-        \vdots & \vdots & \ddots & \vdots\\
-        \textit{\ss}_{1,n} & \hdots & \hdots & 1\\
-    \end{bmatrix}\\
-    \textbf{\ss} = 
-    % \textbf{SS} = 
-    \begin{bmatrix}
-        \textit{\ss}_{1,1} & \hdots & \textit{\ss}_{n,1}\\
-        \vdots & \ddots & \vdots\\
-        \textit{\ss}_{1,n} & \hdots & \textit{\ss}_{n,n}\\
-    \end{bmatrix}\\
-    \boldsymbol{\textbf{\textit{\ss}}_{k}} = (\textit{\ss}_{k,1}, ..., \textit{\ss}_{k,n})\\
-    \boldsymbol{\textbf{\textit{\ss}}_{q}} = (\textit{\ss}_{q,1}, ..., \textit{\ss}_{q,n})\\
-    \gamma_{k} = 
-    % \gamma(\boldsymbol{\tilde{a}_k}) = 
-        \text{sq}(\boldsymbol{\tilde{a}_k})\\
-    % c_{k} = 
-    % c(\boldsymbol{a_k}, \gamma_{k}) = 
-    %     \left( \frac{1}{m} \right)
-    %     \sum_{i=1}^{m}{
-    %         \text{eq}\left(
-    %             \frac{
-    %                 a_{i}^{k}
-    %             }{
-    %                 a_{\max}^{k}
-    %             }, \gamma_{k}
-    %             \right)
-    %         }
-    %         \times
-    %         \tilde{a}_{i}^{k},\\
-    c_{k} = 
-    c(\boldsymbol{a_k}, \gamma_{k}) = 
-        \left( \frac{1}{m} \right)
-        \sum_{i=1}^{m}{
-            \theta_{i}^{k}
-            \tilde{a}_{i}^{k}
-            },\\
-    \theta_{i}^{k} =
-    % \theta(a_{i}^{k},a_{\max}^{k},\gamma_{k}) = 
-    \text{eq}\left(
-        \frac{
-            a_{i}^{k}
-        }{
-            % \max_{j}{a_{j}^{k}}
-            \max{a_{j}^{k}}
-            % a_{\max}^{k}
-        },
-        \gamma_{k}
-    \right)\\
-    % \theta_{i}^{k} = \text{eq}(\tilde{a}_{i}^{k}, \gamma_{k})\\
-    \boldsymbol{\theta_{k}} = (\theta_{1}^{k}, ..., \theta_{m}^{k})\\
-    \boldsymbol{\theta_{q}} = (\theta_{1}^{q}, ..., \theta_{m}^{q})\\
-    \boldsymbol{\theta_{n}} = (\theta_{1}^{n}, ..., \theta_{m}^{n})\\
-    \boldsymbol{\Theta} = 
-    \begin{bmatrix}
-        \theta_{1}^{1} & \hdots & \theta_{m}^{1}\\
-        \vdots & \ddots & \vdots\\
-        \theta_{1}^{n} & \hdots & \theta_{m}^{n}\\
-    \end{bmatrix}\\
-    % \text{eq}(x,M,b) = 
-    % x\left(
-    %     1 + M (1 - x) \exp(-b(x - M))
-    % \right) ^ {
-    %     -\frac{
-    %         1 - x
-    %     }{
-    %         1 - M
-    %     }
-    % }\\
-    % \text{eq}(x,M,b) = 
-    % x\left[
-    %     1 + M (1 - x) \exp(-b(x - M))
-    % \right] ^ {
-    %     -\frac{
-    %         1 - x
-    %     }{
-    %         1 - M
-    %     }
-    % }\\
-    % \text{eq}(x,M,b) = 
+% \begin{gather}
+%     % \text{Interchangeability cannot be } I(s(\boldsymbol{a_k},\boldsymbol{a_k}) \text{because I is already the Identity Matrix.}
+%     % german character ß (esset, eszet, or sharp s) is itself interchangeable with 'ss'
+%     % thus ß could stand for sufficiently similar / sufficient similarity (ss)
+%     \boldsymbol{\Lambda} = (\Lambda_{1}, ..., \Lambda_{n}),\\
+%     % \Lambda_{k} = 
+%     %     \frac{
+%     %         \sum_{q=1}^{n}{
+%     %             \textit{\ss}_{k,q}
+%     %             w_q
+%     %             % \textit{\ss}(s(\boldsymbol{a_k},\boldsymbol{a_q}), \tau_k, \tau_q, c_q)
+%     %         }
+%     %     }{
+%     %         W
+%     %     },\\
+%     % \Lambda(\boldsymbol{\textbf{\textit{\ss}}_{k}}, \boldsymbol{w}) = 
+%     %     \frac{
+%     %         \sum_{q=1}^{n}{
+%     %             \textit{\ss}_{k,q}
+%     %             w_q
+%     %             % \textit{\ss}(s(\boldsymbol{a_k},\boldsymbol{a_q}), \tau_k, \tau_q, c_q)
+%     %         }
+%     %     }{
+%     %         W
+%     %     },\\
+%     % \Lambda_k = 
+%     \Lambda(\boldsymbol{\textbf{\textit{\ss}}_{k}}, \boldsymbol{w}) = 
+%         \left(
+%             \frac{1}{W}
+%         \right)
+%         \sum_{q=1}^{n}{
+%             \textit{\ss}_{k,q}
+%             w_q
+%             % \textit{\ss}(s(\boldsymbol{a_k},\boldsymbol{a_q}), \tau_k, \tau_q, c_q)
+%         },\\
+%     % \text{vs}(\boldsymbol{\textbf{\textit{\ss}}_{k}}, \boldsymbol{w}, \boldsymbol{y}) = 
+%     %     \frac{
+%     %         \sum_{q=1}^{n}{
+%     %             \textit{\ss}_{q,k}
+%     %             w_q
+%     %             u(y_q,y_k)
+%     %         }
+%     %     }{
+%     %         W
+%     %     },\\
+%     % \text{vs}_k = 
+%     \text{vs}(\boldsymbol{\textbf{\textit{\ss}}_{k}}, \boldsymbol{w}, \boldsymbol{y}) = 
+%     \left(
+%         \frac{1}{W}
+%     \right)
+%         \sum_{q=1}^{n}{
+%             \textit{\ss}_{q,k}
+%             w_q
+%             u(y_q,y_k)
+%         }
+%         ,\\
+%     \textit{\ss}_{k,q} = 
+%         \text{eq}(s(\boldsymbol{a_k},\boldsymbol{a_q}), c_q)\\
+%     u(y_q,y_k) =
+%     \begin{cases}
+%         1, \text{if } y_k \geq y_q.\\
+%         0, \text{otherwise.}
+%     \end{cases}\\
+%     % \textit{\ss}_{k,q} = 
+%     %     \text{eq}(s(\boldsymbol{a_k},\boldsymbol{a_q}), c_q)
+%     %     \times
+%     %     \text{eq}(\tau_k, \tau_q, c_q)\\
+%     W = 
+%         \sum_{q=1}^{n}{
+%             w_q
+%         }\\
+%     \textbf{\ss} = 
+%     % \textbf{SS} = 
+%     \begin{bmatrix}
+%         1 & \textit{\ss}_{2,1} & \hdots & \textit{\ss}_{n,1}\\
+%         \textit{\ss}_{1,2} & 1 & \hdots & \vdots\\
+%         \vdots & \vdots & \ddots & \vdots\\
+%         \textit{\ss}_{1,n} & \hdots & \hdots & 1\\
+%     \end{bmatrix}\\
+%     \textbf{\ss} = 
+%     % \textbf{SS} = 
+%     \begin{bmatrix}
+%         \textit{\ss}_{1,1} & \hdots & \textit{\ss}_{n,1}\\
+%         \vdots & \ddots & \vdots\\
+%         \textit{\ss}_{1,n} & \hdots & \textit{\ss}_{n,n}\\
+%     \end{bmatrix}\\
+%     \boldsymbol{\textbf{\textit{\ss}}_{k}} = (\textit{\ss}_{k,1}, ..., \textit{\ss}_{k,n})\\
+%     \boldsymbol{\textbf{\textit{\ss}}_{q}} = (\textit{\ss}_{q,1}, ..., \textit{\ss}_{q,n})\\
+%     \gamma_{k} = 
+%     % \gamma(\boldsymbol{\tilde{a}_k}) = 
+%         \text{sq}(\boldsymbol{\tilde{a}_k})\\
+%     % c_{k} = 
+%     % c(\boldsymbol{a_k}, \gamma_{k}) = 
+%     %     \left( \frac{1}{m} \right)
+%     %     \sum_{i=1}^{m}{
+%     %         \text{eq}\left(
+%     %             \frac{
+%     %                 a_{i}^{k}
+%     %             }{
+%     %                 a_{\max}^{k}
+%     %             }, \gamma_{k}
+%     %             \right)
+%     %         }
+%     %         \times
+%     %         \tilde{a}_{i}^{k},\\
+%     c_{k} = 
+%     c(\boldsymbol{a_k}, \gamma_{k}) = 
+%         \left( \frac{1}{m} \right)
+%         \sum_{i=1}^{m}{
+%             \theta_{i}^{k}
+%             \tilde{a}_{i}^{k}
+%             },\\
+%     \theta_{i}^{k} =
+%     % \theta(a_{i}^{k},a_{\max}^{k},\gamma_{k}) = 
+%     \text{eq}\left(
+%         \frac{
+%             a_{i}^{k}
+%         }{
+%             % \max_{j}{a_{j}^{k}}
+%             \max{a_{j}^{k}}
+%             % a_{\max}^{k}
+%         },
+%         \gamma_{k}
+%     \right)\\
+%     % \theta_{i}^{k} = \text{eq}(\tilde{a}_{i}^{k}, \gamma_{k})\\
+%     \boldsymbol{\theta_{k}} = (\theta_{1}^{k}, ..., \theta_{m}^{k})\\
+%     \boldsymbol{\theta_{q}} = (\theta_{1}^{q}, ..., \theta_{m}^{q})\\
+%     \boldsymbol{\theta_{n}} = (\theta_{1}^{n}, ..., \theta_{m}^{n})\\
+%     \boldsymbol{\Theta} = 
+%     \begin{bmatrix}
+%         \theta_{1}^{1} & \hdots & \theta_{m}^{1}\\
+%         \vdots & \ddots & \vdots\\
+%         \theta_{1}^{n} & \hdots & \theta_{m}^{n}\\
+%     \end{bmatrix}\\
+%     % \text{eq}(x,M,b) = 
+%     % x\left(
+%     %     1 + M (1 - x) \exp(-b(x - M))
+%     % \right) ^ {
+%     %     -\frac{
+%     %         1 - x
+%     %     }{
+%     %         1 - M
+%     %     }
+%     % }\\
+%     % \text{eq}(x,M,b) = 
+%     % x\left[
+%     %     1 + M (1 - x) \exp(-b(x - M))
+%     % \right] ^ {
+%     %     -\frac{
+%     %         1 - x
+%     %     }{
+%     %         1 - M
+%     %     }
+%     % }\\
+%     % \text{eq}(x,M,b) = 
+%     % x\left\{
+%     %     1 + M (1 - x) \exp[-b(x - M)]
+%     % \right\} ^ {
+%     %     -\frac{
+%     %         1 - x
+%     %     }{
+%     %         1 - M
+%     %     }
+%     % }, x, M \in [0,1]\\
+%     % \text{eq}(x,M) = 
+%     % x\left\{
+%     %     1 + M (1 - x) \exp[-
+%     %         % \tan\left[
+%     %         \tan \bigg(
+%     %             \frac{\pi}{2}
+%     %             % (\pi / 2)
+%     %             \cos\big(
+%     %                 x (1 - M)
+%     %             \big)
+%     %         \bigg)
+%     %         % \right]
+%     %         (x - M)
+%     %      ]
+%     % \right\} ^ {
+%     %     -\frac{
+%     %         1 - x
+%     %     }{
+%     %         1 - M
+%     %     }
+%     % },\\ x, M \in [0,1].\\
+%     % \text{eq}(x,M) = 
+%     % x\left\{
+%     %     1 + M (1 - x) \exp[-
+%     %         (x - M)
+%     %         \tan{\theta}
+%     %      ]
+%     % \right\} ^ {
+%     %     -\frac{
+%     %         1 - x
+%     %     }{
+%     %         1 - M
+%     %     }
+%     % },\\
+%     % \theta = 
+%     %     % \frac{\pi}{2}
+%     %     (\pi/2)
+%     %     [1 - x(1 - M)] ^ {x(1 - M)},\\
+%     % x, M \in [0,1].\\
+%     % \text{eq}(x,1,b) = 
+%     % x\left\{
+%     %     1 + 1 \times (1 - x) \exp[-b(x - 1)]
+%     % \right\} ^ {
+%     %     -\frac{
+%     %         1 - x
+%     %     }{
+%     %         1 - 1
+%     %     }
+%     % } = \\
+%     % x\left\{
+%     %     1 + (1 - x) \exp[-b(x - 1)]
+%     % \right\} ^ {
+%     %     -\frac{
+%     %         1 - x
+%     %     }{
+%     %         0
+%     %     }
+%     % } = \\
+%     % \begin{cases}
+%     %     0, \text{if } x \neq 1.\\
+%     %     1, \text{otherwise}.
+%     % \end{cases},
+%     % x \in [0,1]\\
+%     % \text{eq}(x,0,b) =
+%     % x\left\{
+%     %     1 + 0 \times (1 - x) \exp[-b(x - 0)]
+%     % \right\} ^ {
+%     %     -\frac{
+%     %         1 - x
+%     %     }{
+%     %         1 - 0
+%     %     }
+%     % } =
+%     % \frac{x}{1} = 
+%     % x\\
+%     % \text{eq}(x,M,b) = 
+%     % \frac{x}{
+%     %     \left(
+%     %     1 + M (1 - x) \exp(-b(x - M))
+%     % \right) ^ {
+%     %     \frac{
+%     %         1 - x
+%     %     }{
+%     %         1 - M
+%     %     }
+%     % }
+%     % }
+%     % \text{sq}(x,\sigma_x) = 
+%     % \frac{\sigma_x}{2} + 
+%     % \left(
+%     %     1 - \frac{\sigma_x}{2}
+%     % \right) \text{mlv}(x) -
+%     % \frac{\sigma_x ^ 2}{2} -
+%     % \frac{\sigma_x}{2} [
+%     %     1 - \text{mlv}(x)
+%     % ] (
+%     %     1 - 2\sigma_x
+%     % )\\
+%     % \text{sq}(x,\sigma_x) = 
+%     % \text{mlv}(x) + 
+%     % \frac{\sigma_x}{2}\left\{
+%     %     1 -
+%     %     \text{mlv}(x) -
+%     %     \frac{\sigma_x}{2} - 
+%     %     [1 - \text{mlv}(x)] (
+%     %         1 - 2\sigma_x
+%     %     )
+%     % \right\}\\
+%     % \text{sq}(x,\sigma_x) = 
+%     % \text{mlv}(x) + 
+%     % \frac{\sigma_x}{2}\left\{
+%     %     [1 - \text{mlv}(x)][1 - (1 - 2\sigma_x)]-
+%     %     \frac{\sigma_x}{2}
+%     % \right\}
+%     % \text{sq}(x,\sigma_x) = 
+%     % \text{mlv}(x) + 
+%     % \frac{\sigma_x}{2}\left\{
+%     %     (1 + 2\sigma_x)[1 - \text{mlv}(x)] -
+%     %     \frac{\sigma_x}{2}
+%     % \right\}, x \in [0,1]
+%     \text{sq}(\boldsymbol{x}) = 
+%     \text{mlv}(\boldsymbol{x}) + 
+%     \frac{\tilde{\sigma}_{x}}{2}\left\{
+%         (1 + 2\tilde{\sigma}_{x})[1 - \text{mlv}(\boldsymbol{x})] -
+%         \frac{\tilde{\sigma}_{x}}{2}
+%     \right\},\\
+%     \tilde{\sigma}_{x} = \frac{\sigma_{x}}{\max \sigma_{x}},\\
+%     % \tilde{\sigma}_{x} = \sigma_{x} / \max \sigma_{x},\\
+%     \boldsymbol{x} \in [0,1]
+%     % \text{sq}(\tilde{x},\sigma_{\tilde{x}}) = 
+%     % \text{mlv}({\tilde{x}}) + 
+%     % \frac{\sigma_{\tilde{x}}}{2}\left\{
+%     %     (1 + 2\sigma_{\tilde{x}})[1 - \text{mlv}({\tilde{x}})] -
+%     %     \frac{\sigma_{\tilde{x}}}{2}
+%     % \right\}
+%     % \frac{\sigma_x}{2} -
+%     % \frac{\sigma_x}{2} \text{mlv}(x) -
+%     % \frac{\sigma_x ^ 2}{2} -
+%     % \frac{\sigma_x}{2} [
+%     %     1 - \text{mlv}(x)
+%     % ] (
+%     %     1 - 2\sigma_x
+%     % )\\
+%     % 0.5 * dbl_sd +
+%     % (1 - 0.5 * dbl_sd) * dbl_mode +
+%     % -0.5 * dbl_sd * dbl_sd +
+%     % -0.5 * dbl_sd * (1 - dbl_mode) *
+%     % (1 - 2 * dbl_sd)
+% \end{gather}
+\begin{gather*}
+    % \text{eq}(x,M) = 
     % x\left\{
-    %     1 + M (1 - x) \exp[-b(x - M)]
+    %     1 + M (1 - x) \exp[-
+    %         \tan \bigg(
+    %             \frac{\pi}{2}
+    %             \cos^{1 - M}\bigg(
+    %                 \frac{\pi}{2}
+    %                 x (1 - M)
+    %             \bigg)
+    %         \bigg)
+    %         (x - M)
+    %      ]
     % \right\} ^ {
     %     -\frac{
-    %         1 - x
+    %         M
     %     }{
-    %         1 - M
+    %         x
     %     }
-    % }, x, M \in [0,1]\\
+    % },\\
     \text{eq}(x,M) = 
     x\left\{
         1 + M (1 - x) \exp[-
-            % \tan\left[
             \tan \bigg(
-                \frac{\pi}{2}
-                % (\pi / 2)
-                \cos\big(
-                    x (1 - M)
+                \arccos ^ {\frac{1}{x}}\big(
+                    x(1 - M)
                 \big)
             \bigg)
-            % \right]
             (x - M)
          ]
     \right\} ^ {
         -\frac{
-            1 - x
+            M
         }{
-            1 - M
+            x
         }
-    }, x, M \in [0,1]\\
+    },\\
     % \text{eq}(x,M) = 
     % x\left\{
     %     1 + M (1 - x) \exp[-
+    %         % \tan\left[
+    %         \tan \bigg(
+    %             \frac{\pi}{2}
+    %             % (\pi / 2)
+    %             \cos\big(
+    %                 x (1 - M)
+    %             \big)
+    %         \bigg)
+    %         % \right]
     %         (x - M)
-    %         \tan{\theta}
     %      ]
     % \right\} ^ {
     %     -\frac{
@@ -240,121 +413,92 @@
     %         1 - M
     %     }
     % },\\
-    % \theta = 
-    %     % \frac{\pi}{2}
-    %     (\pi/2)
-    %     [1 - x(1 - M)] ^ {x(1 - M)},\\
-    % x, M \in [0,1].\\
-    % \text{eq}(x,1,b) = 
+    % \text{eq}(x,M) = 
     % x\left\{
-    %     1 + 1 \times (1 - x) \exp[-b(x - 1)]
+    %     1 + M (1 - x) \exp[-
+    %         % \tan\left[
+    %         \tan \bigg(
+    %             \frac{\pi}{2}
+    %             % (\pi / 2)
+    %             \cos\bigg(
+    %                 \frac{\pi}{2}
+    %                 x (1 - M)
+    %             \bigg)
+    %         \bigg)
+    %         % \right]
+    %         (x - M)
+    %      ]
     % \right\} ^ {
     %     -\frac{
-    %         1 - x
-    %     }{
-    %         1 - 1
-    %     }
-    % } = \\
-    % x\left\{
-    %     1 + (1 - x) \exp[-b(x - 1)]
-    % \right\} ^ {
-    %     -\frac{
-    %         1 - x
-    %     }{
-    %         0
-    %     }
-    % } = \\
-    % \begin{cases}
-    %     0, \text{if } x \neq 1.\\
-    %     1, \text{otherwise}.
-    % \end{cases},
-    % x \in [0,1]\\
-    % \text{eq}(x,0,b) =
-    % x\left\{
-    %     1 + 0 \times (1 - x) \exp[-b(x - 0)]
-    % \right\} ^ {
-    %     -\frac{
-    %         1 - x
-    %     }{
-    %         1 - 0
-    %     }
-    % } =
-    % \frac{x}{1} = 
-    % x\\
-    % \text{eq}(x,M,b) = 
-    % \frac{x}{
-    %     \left(
-    %     1 + M (1 - x) \exp(-b(x - M))
-    % \right) ^ {
-    %     \frac{
     %         1 - x
     %     }{
     %         1 - M
     %     }
-    % }
-    % }
-    % \text{sq}(x,\sigma_x) = 
-    % \frac{\sigma_x}{2} + 
-    % \left(
-    %     1 - \frac{\sigma_x}{2}
-    % \right) \text{mlv}(x) -
-    % \frac{\sigma_x ^ 2}{2} -
-    % \frac{\sigma_x}{2} [
-    %     1 - \text{mlv}(x)
-    % ] (
-    %     1 - 2\sigma_x
-    % )\\
-    % \text{sq}(x,\sigma_x) = 
-    % \text{mlv}(x) + 
-    % \frac{\sigma_x}{2}\left\{
-    %     1 -
-    %     \text{mlv}(x) -
-    %     \frac{\sigma_x}{2} - 
-    %     [1 - \text{mlv}(x)] (
-    %         1 - 2\sigma_x
-    %     )
-    % \right\}\\
-    % \text{sq}(x,\sigma_x) = 
-    % \text{mlv}(x) + 
-    % \frac{\sigma_x}{2}\left\{
-    %     [1 - \text{mlv}(x)][1 - (1 - 2\sigma_x)]-
-    %     \frac{\sigma_x}{2}
-    % \right\}
-    % \text{sq}(x,\sigma_x) = 
-    % \text{mlv}(x) + 
-    % \frac{\sigma_x}{2}\left\{
-    %     (1 + 2\sigma_x)[1 - \text{mlv}(x)] -
-    %     \frac{\sigma_x}{2}
-    % \right\}, x \in [0,1]
-    \text{sq}(\boldsymbol{x}) = 
-    \text{mlv}(\boldsymbol{x}) + 
-    \frac{\tilde{\sigma}_{x}}{2}\left\{
-        (1 + 2\tilde{\sigma}_{x})[1 - \text{mlv}(\boldsymbol{x})] -
-        \frac{\tilde{\sigma}_{x}}{2}
-    \right\},\\
-    \tilde{\sigma}_{x} = \frac{\sigma_{x}}{\max \sigma_{x}},\\
-    % \tilde{\sigma}_{x} = \sigma_{x} / \max \sigma_{x},\\
-    \boldsymbol{x} \in [0,1]
-    % \text{sq}(\tilde{x},\sigma_{\tilde{x}}) = 
-    % \text{mlv}({\tilde{x}}) + 
-    % \frac{\sigma_{\tilde{x}}}{2}\left\{
-    %     (1 + 2\sigma_{\tilde{x}})[1 - \text{mlv}({\tilde{x}})] -
-    %     \frac{\sigma_{\tilde{x}}}{2}
-    % \right\}
-    % \frac{\sigma_x}{2} -
-    % \frac{\sigma_x}{2} \text{mlv}(x) -
-    % \frac{\sigma_x ^ 2}{2} -
-    % \frac{\sigma_x}{2} [
-    %     1 - \text{mlv}(x)
-    % ] (
-    %     1 - 2\sigma_x
-    % )\\
-    % 0.5 * dbl_sd +
-    % (1 - 0.5 * dbl_sd) * dbl_mode +
-    % -0.5 * dbl_sd * dbl_sd +
-    % -0.5 * dbl_sd * (1 - dbl_mode) *
-    % (1 - 2 * dbl_sd)
-\end{gather}
+    % },\\
+    % \text{eq}(x,M) = 
+    % x\left\{
+    %     1 + M (1 - x) \exp[-
+    %         % \tan\left[
+    %         \tan \bigg(
+    %             \frac{\pi}{2}
+    %             \cos\bigg(
+    %                 \frac{\pi}{2} \times
+    %                 \frac{x (1 - M)}{\arccos(M (1 - x))}
+    %             \bigg)
+    %         \bigg)
+    %         % \right]
+    %         (x - M)
+    %      ]
+    % \right\} ^ {
+    %     -\frac{
+    %         1 - x
+    %     }{
+    %         1 - M
+    %     }
+    % },\\
+    % \text{eq}(x,M) = 
+    % x\left\{
+    %     1 + M (1 - x) \exp[-
+    %         % \tan\left[
+    %         \tan \bigg(
+    %             \arccos\big(
+    %             % \cos^{-1}\big(
+    %                 x (1 - M)
+    %             \big)
+    %         \bigg)
+    %         % \right]
+    %         (x - M)
+    %      ]
+    % \right\} ^ {
+    %     -\frac{
+    %         1
+    %     }{
+    %         x (1 - M)
+    %     }
+    % },\\
+    % \text{eq}(x,M) = 
+    % x\left\{
+    %     1 + M (1 - x) \exp[
+    %         -(x - M)
+    %         % \tan\left[
+    %         \tan \bigg(
+    %             \frac{\pi}{2}
+    %             % (\pi / 2)
+    %             \cos\big(
+    %                 x (1 - M)
+    %             \big)
+    %         \bigg)
+    %         % \right]
+    %      ]
+    % \right\} ^ {
+    %     -\frac{
+    %         1 - x
+    %     }{
+    %         1 - M
+    %     }
+    % },\\
+    x, M \in [0,1].\\
+\end{gather*}
 
 % region: abstract 
 
