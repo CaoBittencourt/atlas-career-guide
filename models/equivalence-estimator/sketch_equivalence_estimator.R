@@ -129,58 +129,145 @@ curve(1 / tanh(((1 - x)) * (pi / 2)), from = 0, to = 1)
 curve(1 / tan((1 - x) * (pi / 2)), from = 0, to = 1)
 curve(1 / tan((x) * (pi / 2)), from = 0, to = 1)
 
+# fun_eqvl_logistic_trig <- function(
+#     x
+#     , m
+#     , a = 0
+#     # , b = 37
+#     # , b = tan(
+#     #   (pi / 2) ^ (
+#     #     cos((pi / 2) * (x * (1 - m)))
+#     #   ))
+#     # , b = tan(
+#     #   (pi / 2) * 
+#     #     (cos((pi / 2) * x * (1 - m))) ^ (1 - m)
+#     #     # (cos((pi / 2) * x * (1 - m))) ^ x
+#     #     # (cos((pi / 2) * x * (1 - m))) ^ m
+#     #   )
+#     # , b = 
+#     #   tan(
+#     #     (pi / 2) * 
+#     #       cos(
+#     #         (pi / 2) * 
+#     #           (x * (1 - m)) ^ (1 / x)
+#     #           # (x * (1 - m)) ^ (m / x)
+#     #           # (x * (1 - m)) ^ ((1 - x) / (1 - m))
+#     #           # (x * (1 - m)) ^ (m / x)
+#     #           # (x * (1 - m)) ^ (m / (1 -x))
+#     #           # (x * (1 - m)) ^ (1 / (1 - m))
+#     #       )
+#     #   )
+#     # , b = tan((pi / 2) * (cos((pi / 2) * x * (1 - m))) ^ x)
+#     
+#     # , b = tan((pi / 2) * (cos((pi / 2) * x * (1 - m))) ^ (1 - m))
+#     # , b = tan((pi / 2) * (cos((pi / 2) * x * (1 - m))) ^ ((1 - m) * x))
+#     # , b = tan((pi / 2) * (cos((pi / 2) * x)) ^ ((1 - m) * x))
+#     # , b = tan((pi / 2) * (cos((pi / 2) * (1 - m) * x)) ^ x)
+#     
+#     # , b = tan(acos((x * (1 - m)) ^ (1 / (1 - m))))
+#     # , b = tan(acos((x * (1 - m)) ^ (1 / x)))
+#     , c = 1
+#     , q = m * (1 - x)
+#     , k = x
+#     , nu = x / m
+#     # , nu = x
+#     # , nu = (1 - m) / (1 - x)
+#     # , nu = (x / m) * (1 - m) / (1 - x)
+# ){
+# 
+#   # generalized logistic function
+#   a +
+#     (k - a) / (
+#       (c + q * exp(- b * (x - m))) ^ (1 / nu)
+#     ) -> eqvl
+# 
+#   return(eqvl)
+# 
+# }
+
 fun_eqvl_logistic_trig <- function(
     x
     , m
     , a = 0
-    # , b = 37
-    # , b = tan(m * (pi / 2))
-    # , b = tan((1 - x) * (pi / 2))
-    # , b = tan(((1 - x) ^ m) * (pi / 2))
-    # , b = tan((1 - x ^ m) * (pi / 2))
-    # , b = tan(((1 - x) ^ (1 - m)) * (pi / 2))
-    # , b = tan((1 - x * (1 - m)) * (pi / 2))
-
-    # , b = tan((1 - x) * (pi / 2))
-
-    # , b = tan((1 - x * (1 - m)) * (pi / 2))
-
-    # , b = tan(((1 - x * (1 - m)) ^ (x * (1 - m))) * (pi / 2))
-    # , b = tan(((1 - x * (1 - m)) ^ (x * (1 - m))) * (pi / 2))
-    # , b = tan((1 - x * (1 - m)) * (pi / 2))
-
-    # , b = tan(((1 - x * (1 - m)) ^ (1 - m)) * (pi / 2))
-
-    # , b = tan(
-    #   (pi / 2) ^ (
-    #     cos((pi / 2) * (x * (1 - m)))
-    #   ))
-
-    , b = tan((pi / 2) * (cos((pi / 2) * x * (1 - m))) ^ (1 - m))
-    # , b = tan((pi / 2) * (cos((pi / 2) * x * (1 - m))) ^ x)
-    # , b = tan((pi / 2) * (cos((pi / 2) * x * (1 - m))) ^ m)
     
-    # , b = tan((pi / 2) * (cos((pi / 2) * x * (1 - m))) ^ (1 - m))
-    # , b = tan((pi / 2) * (cos((pi / 2) * x * (1 - m))) ^ ((1 - m) * x))
-    # , b = tan((pi / 2) * (cos((pi / 2) * x)) ^ ((1 - m) * x))
-    # , b = tan((pi / 2) * (cos((pi / 2) * (1 - m) * x)) ^ x)
+    # trig tan
+    # , b = tan((pi/2) * (1 - x ^ (1 / (1 - m))))
+    # , b = tan((pi/2) * (1 - x) ^ (1 - m))
+    # , b = tan((pi/2) * (1 - x * (1 - m)) ^ ((1 - m)))
     
-    # , b = tan(acos((x * (1 - m)) ^ (1 / x)))
-    # , b = tan(acos((x * (1 - m)) ^ (1 / m)))
+    # trig tan arccos
+    # , b = tan(acos( (x * (1 - m)) ))
+    # , b = tan(acos( (x * (1 - m)) ^ (1 / (1 - m)) ))
+    # , b = tan(acos( (x * (1 - m)) ^ (1 / (1 - m)) ))
+    # , b = tan(acos( ((x ^ (1 / m)) * (1 - m)) ))
+    # , b = tan(acos( ((x ^ (1 / m)) * (1 - m)) ))
+    # , b = tan(acos(
+    # #   # (x * (1 - m)) ^ (1 / (1 - m))
+    # #   # (x * (1 - m)) ^ (1 / (x * (1 - m)))
+    # #   # (x * (1 - m)) ^ (1 / x)
+    # ))
+    # , b = tan(acos( (x * (1 - m)) ^ (1 / (1 - m)) ))
+    # , b = tan(acos( (x * (1 - m)) ^ (1 / (1 - m)) ))
+    # , b = tan(acos( x ^ (1 / (1 - m)) ))
+    # , b = tan(acos((1 - m) ^ (1 / x)))
+    # , b = tan(acos(x * (1 - m)))
+    # , b = tan(acos(x ^ (1 / (1 - m))))
+    # , b = tan(acos(x ^ (1 / (1 - m))))
+    
+    # trig tan pi/2 cos pi/2
+    , b = tan((pi/2) * (cos((pi/2) * x * (1 - m))) ^ (1 - m))
+    # , b = tan((pi/2) * cos(x * (1 - m)))
+    # , b = tan((pi/2) * cos((pi/2) * x ^ (1 / (1 - m))))    
+    # , b = tan((pi/2) * (cos((pi/2) * x * (1 - m))) ^ (1 / m))
+    # , b = tan((pi/2) * (cos((pi/2) * x * (1 - m))) ^ (x / m))
+    # , b = tan((pi/2) * (cos((pi/2) * x * (1 - m))) ^ ((1 - m) / (1 - x)))
+    # , b = tan((pi/2) * (cos((pi/2) * x * (1 - m))) ^ (x * (1 - m)))
+    # , b = tan((pi/2) * cos((pi/2) * x ^ (1 / (1 - m))))
+    # , b = tan((pi/2) * cos((pi/2) * x ^ (1 / (1 - m))))
+    
+    
+    
+    # factorial
+    # , b = factorial((x * (1 - m)) ^ -1/(1-x))
+    # , b = factorial((x * (1 - m)) ^ -1)
+    # , b = factorial((x * (1 - m)) ^ -1/(1-m))
+    # , b = factorial(x ^ (-1 / (1 - m)))
+    # , b = factorial(x ^ -(1 - m))
+    
+    # trig tan
+    # , b = tan((pi/2) * ((1 - x) ^ (1 - m)))
+    # , b = tan((pi/2) * m * (1 - x))
+    # , b = tan((pi/2) * (1 - x * (1 - m)))
+    # , b = tan((pi/2) * (1 - x * (1 - m)) ^ (1 - m))
+    # , b = tan((pi/2) * (1 - x * (1 - m)) ^ (1 - m))
+    
+    # 1/cos
+    # , b = (cos((pi/2) * (1 - x) ^ (x * (1 - m)))) ^ -1
+    
+    # exponential
+    # , b = (x * (1 - m)) ^ -(1 / (1 - m))
+    
+    # , b = x ^ - (1 / (1 - m))
+    # , b = (x / m) ^ - (1 / (1 - m))
+    # , b = x ^ - (m / (1 - m))
+    
     , c = 1
     , q = m * (1 - x)
     , k = x
+    # , nu = 1
     , nu = x / m
+    # , nu = (1 - m) / (1 - x)
+    # , nu = (x / m) * (1 - m) / (1 - x)
 ){
-
+  
   # generalized logistic function
   a +
     (k - a) / (
       (c + q * exp(- b * (x - m))) ^ (1 / nu)
     ) -> eqvl
-
+  
   return(eqvl)
-
+  
 }
 
 # fun_eqvl(seq(0, 1, .1), m = 0) |> round(2) |> setNames(seq(0, 1, .1))
@@ -259,4 +346,3 @@ fun_eqvl_logistic_trig(seq(0, 1, .1), m = 1) |> round(2) |> setNames(seq(0, 1, .
 # curve(fun_eqvl(x = x, t = 0.95), col = 'red'); curve(x ^ 1, add = T)
 # curve(fun_eqvl(x = x, t = 0.99), col = 'red'); curve(x ^ 1, add = T)
 # curve(fun_eqvl(x = x, t = 1), col = 'red'); curve(x ^ 1, add = T)
- 

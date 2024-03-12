@@ -1,0 +1,64 @@
+% % equivalence function
+% \DeclareMathOperator{\eq}{
+%     \text{eq}
+% }
+
+% linear-logistic trigonometrically-scaled equivalence estimator
+\newcommand{\EquivalenceEstimator}{
+\begin{gather}
+    \label{eqn:equivalence_estimator}
+    \text{eq}(x,M) = 
+        x\left\{
+            1 + M (1 - x) \exp[-
+                b(x - M)
+            ]
+        \right\} ^ {
+            -\frac{M}{x}
+    },\\
+    b = 
+    \tan\bigg[
+        \frac{\pi}{2}
+        \cos^{x(1 - M)}
+            \bigg(
+                \frac{\pi}{2} 
+                x (1 - M)
+            \bigg)
+    \bigg],\\
+    x, M \in [0,1].
+\end{gather}
+% \begin{gather}
+%     \label{eqn:equivalence_estimator}
+%     \eq(x,M) = 
+%         x\left\{
+%             1 + M (1 - x) \exp[-
+%                 \tan\bigg(
+%                     \frac{\pi}{2}
+%                         \cos^{x(1 - M)}
+%                         \bigg(
+%                             \frac{\pi}{2} 
+%                             x (1 - M)
+%                         \bigg)
+%                     \bigg)
+%                 (x - M)
+%             ]
+%         \right\} ^ {
+%             -\frac{M}{x}
+%     },\\
+%     x, M \in [0,1].
+% \end{gather}
+}
+
+% career interchangeability
+\newcommand{\Esset}{
+    \begin{gather}
+        \textit{\ss}(
+        s(\boldsymbol{a_k}, \boldsymbol{a_q}),
+        M
+    ) = 
+    \text{eq}(
+        s(\boldsymbol{a_k}, \boldsymbol{a_q}),
+        M
+    )
+    \end{gather}
+}
+% human capital indispensability
