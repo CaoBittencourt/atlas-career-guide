@@ -1,13 +1,20 @@
-% % equivalence function
-% \DeclareMathOperator{\eq}{
-%     \text{eq}
-% }
+% equivalence function
+\newcommand{\eq}{\text{eq}}
+
+% career interchangeability
+\newcommand{\esset}{\textit{\ss}}
+
+% career interchangeability vector
+\newcommand{\essetv}{\textbf{\textit{\ss}}}
+
+% career interchangeability matrix
+\newcommand{\Esset}{\textbf{\ss}}
 
 % linear-logistic trigonometrically-scaled equivalence estimator
 \newcommand{\EquivalenceEstimator}{
 \begin{gather}
     \label{eqn:equivalence_estimator}
-    \text{eq}(x,M) = 
+    \eq(x,M) = 
         x\left\{
             1 + M (1 - x) \exp[-
                 b(x - M)
@@ -18,9 +25,11 @@
     b = 
     \tan\bigg[
         \frac{\pi}{2}
-        \cos^{x(1 - M)}
+        \cos^{M(1 - M)}
+        % \cos^{x(1 - M)}
             \bigg(
                 \frac{\pi}{2} 
+                % M (1 - M)
                 x (1 - M)
             \bigg)
     \bigg],\\
@@ -49,16 +58,11 @@
 }
 
 % career interchangeability
-\newcommand{\Esset}{
+\newcommand{\InterchangeabilityFunction}{
     \begin{gather}
-        \textit{\ss}(
-        s(\boldsymbol{a_k}, \boldsymbol{a_q}),
-        M
-    ) = 
-    \text{eq}(
-        s(\boldsymbol{a_k}, \boldsymbol{a_q}),
-        M
-    )
+        \esset_{k,q} = 
+        \esset(s(\boldsymbol{a_k}, \boldsymbol{a_q}), M) = 
+        \eq(s(\boldsymbol{a_k}, \boldsymbol{a_q}), M)
     \end{gather}
 }
 % human capital indispensability
