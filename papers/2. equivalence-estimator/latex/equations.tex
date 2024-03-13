@@ -5,10 +5,14 @@
 \newcommand{\esset}{\textit{\ss}}
 
 % career interchangeability vector
-\newcommand{\essetv}{\textbf{\textit{\ss}}}
+\newcommand{\essetvec}{\textbf{\textit{\ss}}}
 
 % career interchangeability matrix
 \newcommand{\Esset}{\textbf{\ss}}
+
+% attribute equivalence
+% \newcommand{\aeq}{\textit{ä}}
+\newcommand{\aeq}{{\"a}}
 
 % linear-logistic trigonometrically-scaled equivalence estimator
 \newcommand{\EquivalenceEstimator}{
@@ -65,4 +69,51 @@
         \eq(s(\boldsymbol{a_k}, \boldsymbol{a_q}), M)
     \end{gather}
 }
-% human capital indispensability
+
+% {\"a}_{i}^{k} =
+%     % \theta(a_{i}^{k},a_{\max}^{k},\gamma_{k}) = 
+%     \text{eq}\left(
+%         \frac{
+%             a_{i}^{k}
+%         }{
+%             % \max_{j}{a_{j}^{k}}
+%             \max{a_{j}^{k}}
+%             % a_{\max}^{k}
+%         },
+%         \gamma_{k}
+%     \right)\\
+%     % \theta_{i}^{k} = \text{eq}(\tilde{a}_{i}^{k}, \gamma_{k})\\
+%     \boldsymbol{{\"a}_{k}} = ({\"a}_{1}^{k}, ..., {\"a}_{m}^{k})\\
+%     \boldsymbol{{\"a}_{q}} = ({\"a}_{1}^{q}, ..., {\"a}_{m}^{q})\\
+%     \boldsymbol{{\"a}_{n}} = ({\"a}_{1}^{n}, ..., {\"a}_{m}^{n})\\
+%     \textbf{{\"A}} = 
+%     \begin{bmatrix}
+%         {\"a}_{1}^{1} & \hdots & {\"a}_{m}^{1}\\
+%         \vdots & \ddots & \vdots\\
+%         {\"a}_{1}^{n} & \hdots & {\"a}_{m}^{n}\\
+%     \end{bmatrix}\\
+
+% % attribute equivalence definition
+% \newcommand{\AttributeEquivalence}{
+%     \begin{gather}
+%         \aeq_{i}^{k} = 
+%         \aeq(\boldsymbol{a_k}, M) = 
+%         \eq(\boldsymbol{a_k}, M)
+%     \end{gather}
+% }
+
+% attribute equivalence matrix
+\newcommand{\AttributeEquivalence}{
+    \begin{gather}
+        \aeq_{i}^{k} = 
+        \aeq(\boldsymbol{a_k}, M) = 
+        \eq\left(
+            \frac{
+                a_{i}^{k}
+            }{
+                \max{a_{j}^{k}}
+            }
+            , M
+        \right)
+    \end{gather}
+}

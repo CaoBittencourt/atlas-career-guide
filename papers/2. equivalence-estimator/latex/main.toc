@@ -1,15 +1,17 @@
 \contentsline {section}{\numberline {1}Introduction}{6}{}%
 \contentsline {section}{\numberline {2}Methods}{6}{}%
 \contentsline {subsection}{\numberline {2.1}Conceptual Background}{6}{}%
+\contentsline {subsubsection}{\numberline {2.1.1}Defining Sufficient Similarity}{6}{}%
+\contentsline {subsubsection}{\numberline {2.1.2}Identifying Core Attributes}{6}{}%
 \contentsline {subsection}{\numberline {2.2}A Multi-Purpose Equivalence Estimator}{6}{}%
 \contentsline {subsection}{\numberline {2.3}Applications of the Equivalence Estimator}{6}{}%
 \contentsline {subsubsection}{\numberline {2.3.1}Career Interchangeability}{6}{}%
-\contentsline {subsubsection}{\numberline {2.3.2}Attribute [Indispensability]}{6}{}%
-\contentsline {subsection}{\numberline {2.4}Data}{6}{}%
+\contentsline {subsubsection}{\numberline {2.3.2}Attribute Equivalence}{6}{}%
+\contentsline {subsection}{\numberline {2.4}Data and Implementation}{6}{}%
 \contentsline {section}{\numberline {3}Results}{6}{}%
-\contentsline {subsection}{\numberline {3.1}Centrality-Weighted Euclidean Matching}{6}{}%
+\contentsline {subsection}{\numberline {3.1}Equivalence-Weighted Euclidean Matching}{6}{}%
 \contentsline {subsection}{\numberline {3.2}Similarity-Interchangeability Matrix}{6}{}%
 \contentsline {section}{\numberline {4}Discussion}{6}{}%
-\contentsline {section}{\numberline {5}Conclusion}{6}{}%
-\contentsline {section}{References}{7}{}%
-\contentsline {section}{Appendix}{8}{}%
+\contentsline {section}{\numberline {5}Conclusion}{7}{}%
+\contentsline {section}{References}{8}{}%
+\contentsline {section}{Appendix}{9}{}%

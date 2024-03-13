@@ -204,9 +204,9 @@ weighting professional attributes. The first, which we cover below, is to use
 linear weights. This said, quadratic, logistic, or any other sort of increasing
 weights can be employed as well. In our more complex career matching
 algorithms, for example, we make use of a specific weighting function to
-determine the ``[indispensability]" of human capital (i.e. competencies' relative
-importance), and this vastly improves models' performance. For illustrative
-purposes, however, linear weights seem to suffice.
+determine the ``[indispensability]" of human capital (i.e. competencies'
+relative importance), and this vastly improves models' performance. For
+illustrative purposes, however, linear weights seem to suffice.
 
 \subsubsection{Linear Weights for Euclidean Career Matching}
 When implementing linear weights with the Euclidean approach, each distance
@@ -254,7 +254,7 @@ Therefore, if a person has additional, unnecessary, skills, these weighting
 techniques provide a correction for the penalties of overqualification,
 decreasing the normalized Euclidean distance and increasing compatibility.
 
-\subsection{Data}
+\subsection{Data and Implementation}
 The version of the O*NET database utilized contains 873 unique career profiles,
 even including a few variants on top of SOC occupations. For brevity's sake,
 though, they are succinctly described below in terms of general clusters:
@@ -266,9 +266,9 @@ matching against human subjects. This was done for a few reasons: to ensure the
 model's internal consistency; to avoid potential sampling biases; because
 matching occupations to occupations is, essentially, the same as matching
 individuals to occupations (for both are defined by competency vectors); and,
-finally, because the O*NET data are, themselves, derived from rigorous labor
-market surveys, and consequently career profiles already are representative of the
-skills of real people. So, even though one of the model's end goals is to
+of course, because the O*NET data are, themselves, derived from rigorous labor
+market surveys, and consequently career profiles already are representative of
+the skills of real people. So, even though one of the model's end goals is to
 help \textit{individuals} find the right career, at the present moment, we can
 test these methods ``internally", without resourcing to further empirical
 research.
@@ -302,6 +302,9 @@ remaining categories of attributes (e.g. ``Interests", ``Work Values") do not
 constitute ``competencies" in the strict sense of the word, so they were not
 included in the analysis. Additionally, a few of the original attribute names
 were changed to reduce ambiguity (e.g. from ``Design" to ``Industrial Design").
+
+Finally, career matching was implemented in the R programming language, with
+packages we wrote, and published to an online repository \parencite{atlas.match}, to carry out these calculations.
 
 % Results
 \section{Results}

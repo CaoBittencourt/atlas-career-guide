@@ -1,14 +1,14 @@
 # Fdb version 4
-["biber main"] 1710283442 "main.bcf" "main.bbl" "main" 1710283444 0
+["biber main"] 0 "main.bcf" "main.bbl" "main" 0 -1
   "./references.bib" 1709581264 360 65dede5532e1447bd54afe6668e1a5cf ""
-  "main.bcf" 1710283444 125683 b3dcf1336ad07c8ee951eb6e0100525e "pdflatex"
+  "main.bcf" 1710337008 125683 b3dcf1336ad07c8ee951eb6e0100525e "pdflatex"
   (generated)
   "main.bbl"
   "main.blg"
   (rewritten before read)
-["pdflatex"] 1710283443 "/home/Cao/Storage/github/atlas-research/papers/2. equivalence-estimator/latex/main.tex" "main.pdf" "main" 1710283444 0
+["pdflatex"] 1710337007 "/home/Cao/Storage/github/atlas-research/papers/2. equivalence-estimator/latex/main.tex" "main.pdf" "main" 1710337008 2
   "/etc/texmf/web2c/texmf.cnf" 1679560553 41708 35590ff313aece27b3a573cac4cb3f85 ""
-  "/home/Cao/Storage/github/atlas-research/papers/2. equivalence-estimator/latex/main.tex" 1710283438 2193 dd75311e906cc6d077a032f00f4efe18 ""
+  "/home/Cao/Storage/github/atlas-research/papers/2. equivalence-estimator/latex/main.tex" 1710333184 2257 5e9957ae7b2948a1b34bf24613360c5b ""
   "/usr/share/texmf/fonts/map/fontname/texfonts.map" 1577235249 3524 cb3e574dea2d1052e39280babc910dc8 ""
   "/usr/share/texmf/fonts/tfm/public/amsfonts/cmextra/cmbsy5.tfm" 1246382020 1120 1e8878807317373affa7f7bba4cf2f6a ""
   "/usr/share/texmf/fonts/tfm/public/amsfonts/cmextra/cmbsy7.tfm" 1246382020 1120 7f9f170e8aa57527ad6c49feafd45d54 ""
@@ -98,15 +98,15 @@
   "/usr/share/texmf/web2c/texmf.cnf" 1679560553 41708 35590ff313aece27b3a573cac4cb3f85 ""
   "/var/lib/texmf/fonts/map/pdftex/updmap/pdftex.map" 1710159943 535245 9b107176e732363f1a0002fe772e7314 ""
   "/var/lib/texmf/web2c/pdftex/pdflatex.fmt" 1708603829 7711834 e27ad7fee30420c46aeb69bc5f80e49d ""
-  "equations.tex" 1710283433 1682 cd2edd14eac86d016a79e88876b02344 ""
+  "equations.tex" 1710333061 3052 29f331101223e260ce936236df0a9983 ""
   "figures.tex" 1709581264 0 d41d8cd98f00b204e9800998ecf8427e ""
-  "main.aux" 1710283444 2444 bea3cf38491b98c94bb99f2c70d16378 "pdflatex"
-  "main.bbl" 1710283442 7490 9adc8b8b9a9b4f283c9302ffabd5820e "biber main"
-  "main.lof" 1710283443 0 d41d8cd98f00b204e9800998ecf8427e "pdflatex"
-  "main.lot" 1710283443 0 d41d8cd98f00b204e9800998ecf8427e "pdflatex"
-  "main.run.xml" 1710283444 2427 d1bfcd6d722f5bf4e724fdcb22d9bbf2 "pdflatex"
-  "main.tex" 1710283438 2193 dd75311e906cc6d077a032f00f4efe18 ""
-  "main.toc" 1710283444 1019 6aa2186064d6c8a3464ce2ce76d0521f "pdflatex"
+  "main.aux" 1710337008 2707 0b272f9654609b274dc78018508405b4 "pdflatex"
+  "main.bbl" 1710332807 7490 9adc8b8b9a9b4f283c9302ffabd5820e "biber main"
+  "main.lof" 1710337008 0 d41d8cd98f00b204e9800998ecf8427e "pdflatex"
+  "main.lot" 1710337008 0 d41d8cd98f00b204e9800998ecf8427e "pdflatex"
+  "main.run.xml" 1710337008 2427 45a054dcde815ab7ccf25c3018c24ea5 "pdflatex"
+  "main.tex" 1710333184 2257 5e9957ae7b2948a1b34bf24613360c5b ""
+  "main.toc" 1710337008 1203 f2ee7d8a2b7549815ed42e7119950f06 "pdflatex"
   "tables.tex" 1709581264 0 d41d8cd98f00b204e9800998ecf8427e ""
   (generated)
   "main.aux"
