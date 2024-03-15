@@ -18,29 +18,20 @@
 
 % endregion
 
-% region: source files 
-% equations
-
-% tables
-
-% references
-
-% endregion
-
 % region: title 
 % Title
-\title{
-    dsds
-}
-\author{Cao Bittencourt}
-\date{\today}
+% \title{
+%     dsds
+% }
+% \author{Cao Bittencourt}
+% \date{\today}
 
 % endregion
+
+\pagestyle{empty}
 
 %SECTION: PAPER
 \begin{document}
-
-\maketitle
 
 \begin{gather}
     % \text{Interchangeability cannot be } I(s(\boldsymbol{a_k},\boldsymbol{a_k}) \text{because I is already the Identity Matrix.}
@@ -69,9 +60,11 @@
     %     },\\
     \Lambda_k = 
     \Lambda(\boldsymbol{\textbf{\textit{\ss}}_{k}}, \boldsymbol{w}) = 
+        % \left(
         \left(
             \frac{1}{W}
         \right)
+        % \right)
         \sum_{q=1}^{n}{
             \textit{\ss}_{k,q}
             w_q
@@ -79,9 +72,11 @@
         },\\
     \text{vs}_k = 
     \text{vs}(\boldsymbol{\textbf{\textit{\ss}}_{k}}, \boldsymbol{w}, \boldsymbol{y}) = 
+    % \left(
     \left(
         \frac{1}{W}
     \right)
+    % \right)
         \sum_{q=1}^{n}{
             \textit{\ss}_{q,k}
             w_q
@@ -106,17 +101,18 @@
     \textbf{\ss} = 
     % \textbf{SS} = 
     \begin{bmatrix}
-        1 & \textit{\ss}_{2,1} & \hdots & \textit{\ss}_{n,1}\\
-        \textit{\ss}_{1,2} & 1 & \hdots & \vdots\\
-        \vdots & \vdots & \ddots & \vdots\\
-        \textit{\ss}_{1,n} & \hdots & \hdots & 1\\
-    \end{bmatrix}\\
-    \textbf{\ss} = 
-    % \textbf{SS} = 
-    \begin{bmatrix}
         \textit{\ss}_{1,1} & \hdots & \textit{\ss}_{n,1}\\
         \vdots & \ddots & \vdots\\
         \textit{\ss}_{1,n} & \hdots & \textit{\ss}_{n,n}\\
+    \end{bmatrix} = 
+    % \textbf{\ss} = 
+    % \textbf{SS} = 
+    \begin{bmatrix}
+        1 & \hdots & \textit{\ss}_{k,1} & \hdots & \textit{\ss}_{n,1}\\
+        \vdots & \ddots & \vdots & \vdots & \vdots\\
+        \textit{\ss}_{1,k} & \hdots & 1 & \hdots & \textit{\ss}_{n,k}\\
+        \vdots & \vdots & \vdots & \ddots & \vdots\\
+        \textit{\ss}_{1,n} & \hdots & \textit{\ss}_{k,n} & \hdots & 1\\
     \end{bmatrix}\\
     \boldsymbol{\textbf{\textit{\ss}}_{k}} = (\textit{\ss}_{k,1}, ..., \textit{\ss}_{k,n})\\
     \boldsymbol{\textbf{\textit{\ss}}_{q}} = (\textit{\ss}_{q,1}, ..., \textit{\ss}_{q,n})\\
@@ -359,7 +355,7 @@
     % -0.5 * dbl_sd * dbl_sd +
     % -0.5 * dbl_sd * (1 - dbl_mode) *
     % (1 - 2 * dbl_sd)
-    % \overset{¨}{\tau}_{k,q} = 
+    \ddot{\tau}_{k,q} = 
     \text{edq}(\tau_{k}, \tau_{q}, c_{q}) = 
     \left\{
         1 + \exp[-
@@ -379,64 +375,5 @@
     \times
     \text{edq}(\tau_{k}, \tau_{q}, c_{q})
 \end{gather}
-% \begin{gather*}
-%     \text{eq}(x,M) = 
-%     x\left\{
-%         1 + M (1 - x) \exp[-
-%         \tan\bigg(
-%             \frac{\pi}{2}
-%                 \cos^{x(1 - M)}
-%                 \bigg(
-%                     \frac{\pi}{2} 
-%                     x (1 - M)
-%                 \bigg)
-%         \bigg)
-%         (x - M)
-%          ]
-%     \right\} ^ {
-%         -\frac{
-%             M
-%         }{
-%             x
-%         }
-%     },\\
-%     x, M \in [0,1].\\
-% \end{gather*}
-
-% region: abstract 
-
-% endregion
-
-% table of contents
-
-% list of tables
-
-% region: introduction 
-
-% endregion
-
-% region: methods 
-
-% endregion
-
-% region: results 
-
-% endregion
-
-% region: discussion 
-
-% endregion
-
-% region: conclusion 
-
-% endregion
-
-% region: references 
-
-% endregion
-
-% region: appendices 
-
-% endregion
 
 \end{document}

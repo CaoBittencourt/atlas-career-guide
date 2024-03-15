@@ -34,8 +34,10 @@
       \strng{authorbibnamehash}{3fc5b083d748e229d5714c1904867b9c}
       \strng{authornamehash}{3fc5b083d748e229d5714c1904867b9c}
       \strng{authorfullhash}{3fc5b083d748e229d5714c1904867b9c}
+      \field{extraname}{1}
       \field{sortinit}{B}
       \field{sortinithash}{d7095fff47cda75ca2589920aae98399}
+      \field{extradate}{1}
       \field{extradatescope}{labelyear}
       \field{labeldatesource}{}
       \true{uniqueprimaryauthor}
@@ -48,6 +50,39 @@
       \endverb
       \verb{url}
       \verb https://github.com/CaoBittencourt/atlas.match
+      \endverb
+    \endentry
+    \entry{intro_career_matching}{online}{}
+      \name{author}{1}{}{%
+        {{un=0,uniquepart=base,hash=3fc5b083d748e229d5714c1904867b9c}{%
+           family={Bittencourt},
+           familyi={B\bibinitperiod},
+           given={Cao},
+           giveni={C\bibinitperiod},
+           givenun=0}}%
+      }
+      \strng{namehash}{3fc5b083d748e229d5714c1904867b9c}
+      \strng{fullhash}{3fc5b083d748e229d5714c1904867b9c}
+      \strng{bibnamehash}{3fc5b083d748e229d5714c1904867b9c}
+      \strng{authorbibnamehash}{3fc5b083d748e229d5714c1904867b9c}
+      \strng{authornamehash}{3fc5b083d748e229d5714c1904867b9c}
+      \strng{authorfullhash}{3fc5b083d748e229d5714c1904867b9c}
+      \field{extraname}{2}
+      \field{sortinit}{B}
+      \field{sortinithash}{d7095fff47cda75ca2589920aae98399}
+      \field{extradate}{2}
+      \field{extradatescope}{labelyear}
+      \field{labeldatesource}{}
+      \true{uniqueprimaryauthor}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{title}{Scripts and Data for ``Introduction to Quantitative Career Matching: How to Statistically Pick the Right Occupation"}
+      \field{year}{2024}
+      \verb{urlraw}
+      \verb https://github.com/CaoBittencourt/atlas-research
+      \endverb
+      \verb{url}
+      \verb https://github.com/CaoBittencourt/atlas-research
       \endverb
     \endentry
     \entry{holland1959theory}{article}{}
@@ -402,8 +437,10 @@
       \strng{authorbibnamehash}{3fc5b083d748e229d5714c1904867b9c}
       \strng{authornamehash}{3fc5b083d748e229d5714c1904867b9c}
       \strng{authorfullhash}{3fc5b083d748e229d5714c1904867b9c}
+      \field{extraname}{1}
       \field{sortinit}{B}
       \field{sortinithash}{d7095fff47cda75ca2589920aae98399}
+      \field{extradate}{1}
       \field{extradatescope}{labelyear}
       \field{labeldatesource}{}
       \true{uniqueprimaryauthor}
@@ -416,6 +453,39 @@
       \endverb
       \verb{url}
       \verb https://github.com/CaoBittencourt/atlas.match
+      \endverb
+    \endentry
+    \entry{intro_career_matching}{online}{}
+      \name{author}{1}{}{%
+        {{un=0,uniquepart=base,hash=3fc5b083d748e229d5714c1904867b9c}{%
+           family={Bittencourt},
+           familyi={B\bibinitperiod},
+           given={Cao},
+           giveni={C\bibinitperiod},
+           givenun=0}}%
+      }
+      \strng{namehash}{3fc5b083d748e229d5714c1904867b9c}
+      \strng{fullhash}{3fc5b083d748e229d5714c1904867b9c}
+      \strng{bibnamehash}{3fc5b083d748e229d5714c1904867b9c}
+      \strng{authorbibnamehash}{3fc5b083d748e229d5714c1904867b9c}
+      \strng{authornamehash}{3fc5b083d748e229d5714c1904867b9c}
+      \strng{authorfullhash}{3fc5b083d748e229d5714c1904867b9c}
+      \field{extraname}{2}
+      \field{sortinit}{B}
+      \field{sortinithash}{d7095fff47cda75ca2589920aae98399}
+      \field{extradate}{2}
+      \field{extradatescope}{labelyear}
+      \field{labeldatesource}{}
+      \true{uniqueprimaryauthor}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{title}{Scripts and Data for ``Introduction to Quantitative Career Matching: How to Statistically Pick the Right Occupation"}
+      \field{year}{2024}
+      \verb{urlraw}
+      \verb https://github.com/CaoBittencourt/atlas-research
+      \endverb
+      \verb{url}
+      \verb https://github.com/CaoBittencourt/atlas-research
       \endverb
     \endentry
     \entry{holland1959theory}{article}{}

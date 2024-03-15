@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.25 (TeX Live 2023/TeX Live for SUSE Linux) (preloaded format=pdflatex 2024.2.22)  13 MAR 2024 10:26
+This is pdfTeX, Version 3.141592653-2.6-1.40.25 (TeX Live 2023/TeX Live for SUSE Linux) (preloaded format=pdflatex 2024.2.22)  15 MAR 2024 12:31
 entering extended mode
  restricted \write18 enabled.
  file:line:error style messages enabled.
@@ -629,7 +629,7 @@ Overfull \hbox (2.7224pt too wide) in paragraph at lines 261--261
 > Step: calculate cell and line sizes.
 > Step: build the whole table.
  [13] [14] [15] [16]
-Overfull \hbox (7.88005pt too wide) in paragraph at lines 454--454
+Overfull \hbox (7.88005pt too wide) in paragraph at lines 453--453
 [][]\OT1/cmr/m/n/10 National Cen-ter for O*NET De-vel-op-ment. (2023). \OT1/cmr/m/it/10 O*NET 27.3. O*NET Database
  []
 
@@ -642,23 +642,23 @@ Overfull \hbox (7.88005pt too wide) in paragraph at lines 454--454
 > Step: execute table commands.
 > Step: calculate cell and line sizes.
 
-Overfull \hbox (1.38898pt too wide) in paragraph at lines 460--460
+Overfull \hbox (1.38898pt too wide) in paragraph at lines 459--459
  []\OT1/cmr/m/n/10 Mechanical 
  []
 
 
-Overfull \hbox (5.88895pt too wide) in paragraph at lines 460--460
+Overfull \hbox (5.88895pt too wide) in paragraph at lines 459--459
  []\OT1/cmr/m/n/10 Dishwashers 
  []
 
 > Step: build the whole table.
 
-Overfull \hbox (1.38898pt too wide) in paragraph at lines 460--460
+Overfull \hbox (1.38898pt too wide) in paragraph at lines 459--459
  []\OT1/cmr/m/n/10 Mechanical 
  []
 
 
-Overfull \hbox (5.88895pt too wide) in paragraph at lines 460--460
+Overfull \hbox (5.88895pt too wide) in paragraph at lines 459--459
  []\OT1/cmr/m/n/10 Dishwashers 
  []
 
@@ -668,15 +668,15 @@ Package logreq Info: Writing requests to 'main.run.xml'.
 
  ) 
 Here is how much of TeX's memory you used:
- 13830 strings out of 477062
- 287100 string characters out of 5816277
- 1930388 words of memory out of 5000000
- 34017 multiletter control sequences out of 15000+600000
+ 13837 strings out of 477062
+ 287364 string characters out of 5816277
+ 1929388 words of memory out of 5000000
+ 34024 multiletter control sequences out of 15000+600000
  542347 words of font info for 88 fonts, out of 8000000 for 9000
  475 hyphenation exceptions out of 8191
  72i,20n,109p,922b,5044s stack positions out of 10000i,1000n,20000p,200000b,200000s
 </usr/share/texmf/fonts/type1/public/amsfonts/cm/cmbx10.pfb></usr/share/texmf/fonts/type1/public/amsfonts/cm/cmbx12.pfb></usr/share/texmf/fonts/type1/public/amsfonts/cm/cmbx9.pfb></usr/share/texmf/fonts/type1/public/amsfonts/cm/cmex10.pfb></usr/share/texmf/fonts/type1/public/amsfonts/cm/cmmi10.pfb></usr/share/texmf/fonts/type1/public/amsfonts/cm/cmmi7.pfb></usr/share/texmf/fonts/type1/public/amsfonts/cm/cmmib10.pfb></usr/share/texmf/fonts/type1/public/amsfonts/cmextra/cmmib7.pfb></usr/share/texmf/fonts/type1/public/amsfonts/cm/cmr10.pfb></usr/share/texmf/fonts/type1/public/amsfonts/cm/cmr12.pfb></usr/share/texmf/fonts/type1/public/amsfonts/cm/cmr17.pfb></usr/share/texmf/fonts/type1/public/amsfonts/cm/cmr7.pfb></usr/share/texmf/fonts/type1/public/amsfonts/cm/cmr9.pfb></usr/share/texmf/fonts/type1/public/amsfonts/cm/cmss8.pfb></usr/share/texmf/fonts/type1/public/amsfonts/cm/cmsy10.pfb></usr/share/texmf/fonts/type1/public/amsfonts/cm/cmti10.pfb></usr/share/texmf/fonts/type1/public/cm-super/sfrm1000.pfb>
-Output written on main.pdf (22 pages, 247329 bytes).
+Output written on main.pdf (22 pages, 248804 bytes).
 PDF statistics:
  162 PDF objects out of 1000 (max. 8388607)
  102 compressed objects within 2 object streams

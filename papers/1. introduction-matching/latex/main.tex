@@ -201,12 +201,12 @@ indispensable for career matching algorithms to function properly.
 
 Now, as it is with matching methods, here also we find a variety of manners of
 weighting professional attributes. The first, which we cover below, is to use
-linear weights. This said, quadratic, logistic, or any other sort of increasing
+linear weights. This said, quadratic, logistic, or any sort of increasing
 weights can be employed as well. In our more complex career matching
-algorithms, for example, we make use of a specific weighting function to
-determine the ``[indispensability]" of human capital (i.e. competencies'
-relative importance), and this vastly improves models' performance. For
-illustrative purposes, however, linear weights seem to suffice.
+algorithms, for example, we make use of a specific function to determine skill
+sets' core competencies, and weight them accordingly, so as to vastly improve
+models' performance. For illustrative purposes, however, linear weights seem to
+suffice.
 
 \subsubsection{Linear Weights for Euclidean Career Matching}
 When implementing linear weights with the Euclidean approach, each distance
@@ -221,8 +221,8 @@ and normalized distances are as follows: \EqnWeightedSimilarity where
 
 With these adjusted equations, Euclidean distance is weighted proportionally to
 the professional attribute levels of the $\boldsymbol{a_{q}}$ career profile.
-This means that the matching algorithm optimizes itself for each comparison
-skill set, as irrelevant competencies are left out of the analysis, and the
+This means that the matching method is optimized for every comparison skill
+set, as irrelevant competencies are left out of the analysis, and the
 ``indispensable" ones (e.g. cutting hair for a barber, dentistry for a dentist)
 are given their full importance.
 
@@ -262,16 +262,23 @@ though, they are succinctly described below in terms of general clusters:
 
 As it concerns matching procedures, career compatibility coefficients were
 estimated by comparing all available occupations to one another, instead of
-matching against human subjects. This was done for a few reasons: to ensure the
-model's internal consistency; to avoid potential sampling biases; because
-matching occupations to occupations is, essentially, the same as matching
-individuals to occupations (for both are defined by competency vectors); and,
-of course, because the O*NET data are, themselves, derived from rigorous labor
-market surveys, and consequently career profiles already are representative of
-the skills of real people. So, even though one of the model's end goals is to
-help \textit{individuals} find the right career, at the present moment, we can
-test these methods ``internally", without resourcing to further empirical
-research.
+matching against human subjects. This was done for eight reasons: to ensure the
+model's internal consistency; to avoid potential sampling biases; to have more
+reliable ``targets" when assessing accuracy (as individuals' career profiles
+tend to be less defined than O*NET's ``canonical skill sets''); in a similar
+fashion, to make results more objectively interpretable for the reader; to
+simplify this initial model by postponing, for now, the making of a
+competence-preference distinction, that shall be needed later on to account for
+the fact that one's skills are not always aligned with their preferences;
+because matching careers to careers is, essentially, the same as matching
+individuals to careers (for both are defined by competency vectors); because
+O*NET's 873 occupations already provide a somewhat large sample size for this
+type of study; and, of course, because the O*NET data are, themselves, derived
+from rigorous labor market surveys, and consequently their career profiles are,
+in fact, representative of the skills of real people. So, even though one of
+the model's end goals is to help \textit{individuals} find the right career, at
+the present moment, we can test these methods ``internally", without resourcing
+to further empirical research.
 
 Unfortunately, this also means we cannot show most of our results, as the O*NET
 database contains too many career paths, and the scope of an introductory
@@ -284,27 +291,19 @@ economy (viz. dishwashers); and the other somewhere in between (viz. credit
 analysts). Their main characteristics are summarized in Table
 \ref{tab:summary_occupations}. \SummaryOccupations
 
-% As it concerns matching procedures themselves, career compatibility
-% coefficients were estimated for each one of the 873 available occupations.
-% Nevertheless, limitations of scope appropriate for an introductory article did
-% not allow for all these results to be displayed.
+The career profiles used for matching were composed of three broad categories
+of professional attributes from the O*NET framework, namely: ``Skills",
+``Abilities", and ``Fields of Knowledge". These three categories combined sum
+to exactly 120 competencies, and are detailed in the Appendix. The remaining
+categories of attributes (e.g. ``Interests", ``Work Values") do not constitute
+``competencies" in the strict sense of the word, so they were not included in
+the analysis. Additionally, a few of the original attribute names were changed
+to reduce ambiguity (e.g. from ``Design" to ``Industrial Design").
 
-% Hence, as the O*NET database contains too many career paths, for this exercise,
-% we only present four occupations. These are: mechanical engineers, physicists,
-% credit analysts, and dishwashers. Their main characteristics are summarized in
-% Table \ref{tab:summary_occupations}. \SummaryOccupations
-
-The career profiles, or skill sets, used for matching were composed of three
-broad categories of professional attributes from the O*NET framework, namely:
-``Skills", ``Abilities", and ``Fields of Knowledge". These three categories
-combined sum to exactly 120 competencies, and are detailed in the Appendix. The
-remaining categories of attributes (e.g. ``Interests", ``Work Values") do not
-constitute ``competencies" in the strict sense of the word, so they were not
-included in the analysis. Additionally, a few of the original attribute names
-were changed to reduce ambiguity (e.g. from ``Design" to ``Industrial Design").
-
-Finally, career matching was implemented in the R programming language, with
-packages we wrote, and published to an online repository \parencite{atlas.match}, to carry out these calculations.
+Finally, all calculations were implemented in the R programming language, with
+packages we wrote and published to carry out Euclidean matching and other
+algorithms \parencite{atlas.match}. The complete scripts and data can be found in an online
+repository \parencite{intro_career_matching}.
 
 % Results
 \section{Results}
