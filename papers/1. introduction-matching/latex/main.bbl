@@ -43,7 +43,7 @@
       \true{uniqueprimaryauthor}
       \field{labelnamesource}{author}
       \field{labeltitlesource}{title}
-      \field{title}{atlas.match: Quantitative Career Matching}
+      \field{title}{{atlas.match: Quantitative Career Matching}}
       \field{year}{2024}
       \verb{urlraw}
       \verb https://github.com/CaoBittencourt/atlas.match
@@ -76,13 +76,13 @@
       \true{uniqueprimaryauthor}
       \field{labelnamesource}{author}
       \field{labeltitlesource}{title}
-      \field{title}{Scripts and Data for ``Introduction to Quantitative Career Matching: How to Statistically Pick the Right Occupation"}
+      \field{title}{{Scripts and Data for ``Introduction to Quantitative Career Matching: How to Statistically Pick the Right Occupation"}}
       \field{year}{2024}
       \verb{urlraw}
-      \verb https://github.com/CaoBittencourt/atlas-research
+      \verb https://github.com/CaoBittencourt/introduction-matching
       \endverb
       \verb{url}
-      \verb https://github.com/CaoBittencourt/atlas-research
+      \verb https://github.com/CaoBittencourt/introduction-matching
       \endverb
     \endentry
     \entry{holland1959theory}{article}{}
@@ -446,7 +446,7 @@
       \true{uniqueprimaryauthor}
       \field{labelnamesource}{author}
       \field{labeltitlesource}{title}
-      \field{title}{atlas.match: Quantitative Career Matching}
+      \field{title}{{atlas.match: Quantitative Career Matching}}
       \field{year}{2024}
       \verb{urlraw}
       \verb https://github.com/CaoBittencourt/atlas.match
@@ -479,13 +479,13 @@
       \true{uniqueprimaryauthor}
       \field{labelnamesource}{author}
       \field{labeltitlesource}{title}
-      \field{title}{Scripts and Data for ``Introduction to Quantitative Career Matching: How to Statistically Pick the Right Occupation"}
+      \field{title}{{Scripts and Data for ``Introduction to Quantitative Career Matching: How to Statistically Pick the Right Occupation"}}
       \field{year}{2024}
       \verb{urlraw}
-      \verb https://github.com/CaoBittencourt/atlas-research
+      \verb https://github.com/CaoBittencourt/introduction-matching
       \endverb
       \verb{url}
-      \verb https://github.com/CaoBittencourt/atlas-research
+      \verb https://github.com/CaoBittencourt/introduction-matching
       \endverb
     \endentry
     \entry{holland1959theory}{article}{}
