@@ -1,13 +1,13 @@
 % equivalence function
 \newcommand{\eq}{\text{eq}}
 
-% career interchangeability
+% skill set interchangeability
 \newcommand{\esset}{\textit{\ss}}
 
-% career interchangeability vector
+% skill set interchangeability vector
 \newcommand{\essetvec}{\textbf{\textit{\ss}}}
 
-% career interchangeability matrix
+% skill set interchangeability matrix
 \newcommand{\Esset}{\textbf{\ss}}
 
 % attribute equivalence
@@ -16,6 +16,28 @@
 
 % linear-logistic trigonometrically-scaled equivalence estimator
 \newcommand{\EquivalenceEstimator}{
+% \begin{gather}
+%     \label{eqn:equivalence_estimator}
+%     \eq(x,M) = 
+%         x\left\{
+%             1 + M (1 - x) \exp[-
+%                 \tan\bigg(
+%                     \frac{\pi}{2}
+%                     \cos
+%                         \bigg(
+%                             \frac{\pi}{2} 
+%                             % M (1 - M)
+%                             x (1 - M)
+%                         \bigg)
+%                 \bigg)
+%                 (x - M)
+%             ]
+%         \right\} ^ {
+%             -\frac{M}{x}
+%     },\\
+%     x, M \in [0,1].
+% \end{gather}
+% 
 \begin{gather}
     \label{eqn:equivalence_estimator}
     \eq(x,M) = 
@@ -39,6 +61,7 @@
     \bigg],\\
     x, M \in [0,1].
 \end{gather}
+% 
 % \begin{gather}
 %     \label{eqn:equivalence_estimator}
 %     \eq(x,M) = 
@@ -61,7 +84,7 @@
 % \end{gather}
 }
 
-% career interchangeability
+% skill set interchangeability
 \newcommand{\InterchangeabilityFunction}{
     \begin{gather}
         \esset_{k,q} = 
@@ -70,37 +93,36 @@
     \end{gather}
 }
 
-% {\"a}_{i}^{k} =
-%     % \theta(a_{i}^{k},a_{\max}^{k},\gamma_{k}) = 
-%     \text{eq}\left(
-%         \frac{
-%             a_{i}^{k}
-%         }{
-%             % \max_{j}{a_{j}^{k}}
-%             \max{a_{j}^{k}}
-%             % a_{\max}^{k}
-%         },
-%         \gamma_{k}
-%     \right)\\
-%     % \theta_{i}^{k} = \text{eq}(\tilde{a}_{i}^{k}, \gamma_{k})\\
-%     \boldsymbol{{\"a}_{k}} = ({\"a}_{1}^{k}, ..., {\"a}_{m}^{k})\\
-%     \boldsymbol{{\"a}_{q}} = ({\"a}_{1}^{q}, ..., {\"a}_{m}^{q})\\
-%     \boldsymbol{{\"a}_{n}} = ({\"a}_{1}^{n}, ..., {\"a}_{m}^{n})\\
-%     \textbf{{\"A}} = 
-%     \begin{bmatrix}
-%         {\"a}_{1}^{1} & \hdots & {\"a}_{m}^{1}\\
-%         \vdots & \ddots & \vdots\\
-%         {\"a}_{1}^{n} & \hdots & {\"a}_{m}^{n}\\
-%     \end{bmatrix}\\
+% interchangeability matrix
+\newcommand{\InterchangeabilityMatrix}{
+    \begin{gather}
+        \Esset = 
+        \begin{bmatrix}
+            \textit{\ss}_{1,1} & \hdots & \textit{\ss}_{n,1}\\
+            \vdots & \ddots & \vdots\\
+            \textit{\ss}_{1,n} & \hdots & \textit{\ss}_{n,n}\\
+        \end{bmatrix} = 
+        \begin{bmatrix}
+            1 & \hdots & \textit{\ss}_{k,1} & \hdots & \textit{\ss}_{n,1}\\
+            \vdots & \ddots & \vdots & \vdots & \vdots\\
+            \textit{\ss}_{1,k} & \hdots & 1 & \hdots & \textit{\ss}_{n,k}\\
+            \vdots & \vdots & \vdots & \ddots & \vdots\\
+            \textit{\ss}_{1,n} & \hdots & \textit{\ss}_{k,n} & \hdots & 1\\
+        \end{bmatrix}\\
+    \end{gather}
+}
 
-% % attribute equivalence definition
-% \newcommand{\AttributeEquivalence}{
-%     \begin{gather}
-%         \aeq_{i}^{k} = 
-%         \aeq(\boldsymbol{a_k}, M) = 
-%         \eq(\boldsymbol{a_k}, M)
-%     \end{gather}
-% }
+% binary interchangeability (hireability)
+\newcommand{\SignalFunction}{
+    \begin{gather}
+        h_{k,q} = 
+        h(\esset_{k,q}) = 
+        \begin{cases}
+            1, \text{if } \esset_{k,q} \geq 0.5.\\
+            0, \text{otherwise.}
+        \end{cases}
+    \end{gather}
+}
 
 % attribute equivalence matrix
 \newcommand{\AttributeEquivalence}{

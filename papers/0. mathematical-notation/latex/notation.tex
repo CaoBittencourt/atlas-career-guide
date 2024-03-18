@@ -133,18 +133,30 @@
     %         }
     %         \times
     %         \tilde{a}_{i}^{k},\\
+    % c_{k} = 
+    % c(\boldsymbol{a_k}, \gamma_{k}) = 
+    %     \left( \frac{1}{m} \right)
+    %     \sum_{i=1}^{m}{
+    %         % \theta_{i}^{k}
+    %         % \"a_{i}^{k}
+    %         % \overset{e}{a}_{i}^{k}
+    %         % \"a_{i}^{k}
+    %         % ә_{i}^{k}
+    %         {\"a}_{i}^{k}
+    %         \tilde{a}_{i}^{k}
+    %         },\\
     c_{k} = 
     c(\boldsymbol{a_k}, \gamma_{k}) = 
-        \left( \frac{1}{m} \right)
+    \frac{
         \sum_{i=1}^{m}{
-            % \theta_{i}^{k}
-            % \"a_{i}^{k}
-            % \overset{e}{a}_{i}^{k}
-            % \"a_{i}^{k}
-            % ә_{i}^{k}
             {\"a}_{i}^{k}
             \tilde{a}_{i}^{k}
-            },\\
+            }
+    }{
+        \sum_{i=1}^{m}{
+            {\"a}_{i}^{k}
+            }
+    },\\
     % \theta_{i}^{k} =
     {\"a}_{i}^{k} =
     % \theta(a_{i}^{k},a_{\max}^{k},\gamma_{k}) = 
