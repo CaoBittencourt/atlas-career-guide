@@ -60,7 +60,7 @@ df_occupations %>%
   ) %>%
   mutate(
     item_indispensability =
-      fun_kind_indispensability(
+      fun_aeq_aequivalence(
         item_score,
         dbl_scale_lb = 0
       )

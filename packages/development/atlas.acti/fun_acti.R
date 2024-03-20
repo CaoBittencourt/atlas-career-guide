@@ -12,7 +12,7 @@
 # # Git packages
 # chr_git <- c(
 #   'CaoBittencourt' = 'atlas.gene',
-#   'CaoBittencourt' = 'atlas.kind',
+#   'CaoBittencourt' = 'atlas.aeq',
 #   'CaoBittencourt' = 'atlas.comp',
 #   'CaoBittencourt' = 'atlas.class',
 #   'CaoBittencourt' = 'atlas.ftools'
@@ -214,7 +214,7 @@ fun_acti_type <- function(
     ) %>% 
     mutate(
       acti_score = 
-        fun_kind_indispensability(
+        fun_aeq_aequivalence(
           dbl_profile = 
             factor_score
           , dbl_generality = 
