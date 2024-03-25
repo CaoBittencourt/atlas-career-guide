@@ -71,6 +71,34 @@ df_occupations %>%
     starts_with('knw_')
   ) -> df_matching
 
+# - dsds ------------------------------------------------------------------
+df_matching %>% 
+  filter(
+    occupation %in% c(
+      'Mechanical Engineers',
+      'Physicists',
+      'Credit Analysts',
+      'Dishwashers'
+    )
+  ) %>% 
+  slice(
+    2, 3, 1, 4
+  ) -> dsds
+
+fun_match_similarity(
+  df_data_rows = dsds
+  , df_query_rows = dsds
+  , chr_method = 'euclidean'
+  , chr_weights = 'attribute-eqvl'
+  , dbl_scale_ub = 100
+  , dbl_scale_lb = 0
+  , chr_id_col = 'occupation'
+  , lgc_sort = T
+) -> dsds
+
+dsds$mtx_similarity
+
+
 # [MODEL] --------------------------------------------------------------
 # - Estimate similarity model ---------------------------------------------------------
 # Run equivalence-weighted Euclidean matching
@@ -84,6 +112,9 @@ fun_match_similarity(
   , chr_id_col = 'occupation'
   , lgc_sort = T
 ) -> list_matching_aeq
+
+list_matching_aeq$
+  mtx_similarity
 
 # - Estimate interchangeability model -------------------------------------
 # Apply interchangeability function to similarity scores

@@ -1,0 +1,52 @@
+%SECTION: SETUP
+% region: document class
+\documentclass{article}
+
+% endregion
+
+% region: packages 
+\usepackage{xr}
+\usepackage{physics}
+\usepackage{amsmath}
+% \usepackage{float}
+% \usepackage{tabularray}
+% \UseTblrLibrary{booktabs}
+% \usepackage[
+%     backend=biber,
+%     style=apa
+% ]{biblatex}
+
+% endregion
+
+% region: title 
+% Title
+\title{Equivalence Estimators}
+\author{Cao Bittencourt}
+\date{\today}
+
+% endregion
+
+%SECTION: PAPER
+\maketitle
+
+\begin{document}
+    \begin{gather}
+        % inverse scaling equivalence
+        \text{eq}(x,M) = x \left\{ 
+            1 + M(1-x)\exp\left[
+                -\frac{x-m}{x(1-M)}
+            \right]
+        \right\} ^ {-\frac{M}{x}}\\
+        % trigonometrically-scaled equivalence 1
+        \text{eq}(x,M) = x \left\{ 
+            1 + M(1-x)\exp\left[
+                -(x-m)
+                \tan\bigg(
+                    \arccos\big(
+                        x(1-M)
+                    \big)
+                \bigg)
+            \right]
+        \right\} ^ {-\frac{M}{x}}
+    \end{gather}
+\end{document}
