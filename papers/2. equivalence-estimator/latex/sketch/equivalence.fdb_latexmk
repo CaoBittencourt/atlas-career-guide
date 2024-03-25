@@ -1,7 +1,7 @@
 # Fdb version 4
-["pdflatex"] 1711383500 "/home/Cao/Storage/github/atlas-research/papers/2. equivalence-estimator/latex/sketch/equivalence.tex" "equivalence.pdf" "equivalence" 1711383500 2
+["pdflatex"] 1711383946 "/home/Cao/Storage/github/atlas-research/papers/2. equivalence-estimator/latex/sketch/equivalence.tex" "equivalence.pdf" "equivalence" 1711383946 2
   "/etc/texmf/web2c/texmf.cnf" 1679560553 41708 35590ff313aece27b3a573cac4cb3f85 ""
-  "/home/Cao/Storage/github/atlas-research/papers/2. equivalence-estimator/latex/sketch/equivalence.tex" 1711383497 1050 d928129d77d8568f3655111c6290b627 ""
+  "/home/Cao/Storage/github/atlas-research/papers/2. equivalence-estimator/latex/sketch/equivalence.tex" 1711383945 1044 2b6411e86904abfcadaaea6547548c98 ""
   "/usr/share/texmf/fonts/map/fontname/texfonts.map" 1577235249 3524 cb3e574dea2d1052e39280babc910dc8 ""
   "/usr/share/texmf/fonts/tfm/public/amsfonts/cmextra/cmex7.tfm" 1246382020 1004 54797486969f23fa377b128694d548df ""
   "/usr/share/texmf/fonts/tfm/public/amsfonts/cmextra/cmex8.tfm" 1246382020 988 bdf658c3bfc2d96d3c8b02cfc1c94c20 ""
@@ -39,8 +39,8 @@
   "/usr/share/texmf/web2c/texmf.cnf" 1679560553 41708 35590ff313aece27b3a573cac4cb3f85 ""
   "/var/lib/texmf/fonts/map/pdftex/updmap/pdftex.map" 1711231982 535245 9b107176e732363f1a0002fe772e7314 ""
   "/var/lib/texmf/web2c/pdftex/pdflatex.fmt" 1708603829 7711834 e27ad7fee30420c46aeb69bc5f80e49d ""
-  "equivalence.aux" 1711383500 32 3985256e7290058c681f74d7a3565a19 "pdflatex"
-  "equivalence.tex" 1711383497 1050 d928129d77d8568f3655111c6290b627 ""
+  "equivalence.aux" 1711383946 32 3985256e7290058c681f74d7a3565a19 "pdflatex"
+  "equivalence.tex" 1711383945 1044 2b6411e86904abfcadaaea6547548c98 ""
   (generated)
   "equivalence.aux"
   "equivalence.log"

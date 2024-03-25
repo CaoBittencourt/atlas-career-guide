@@ -32,15 +32,15 @@
 \begin{document}
     \begin{gather}
         % inverse scaling equivalence
-        \text{eq}(x,M) = x \left\{ 
-            1 + M(1-x)\exp\left[
-                -\frac{x-m}{x(1-M)}
-            \right]
-        \right\} ^ {-\frac{M}{x}}\\
+        \text{eq}(x,M) = x \left[
+            1 + M(1-x)\exp\left(
+                -\frac{x-M}{1-M}
+            \right)
+        \right] ^ {-\frac{M}{x}}\\
         % trigonometrically-scaled equivalence 1
         \text{eq}(x,M) = x \left\{ 
             1 + M(1-x)\exp\left[
-                -(x-m)
+                -(x-M)
                 \tan\bigg(
                     \arccos\big(
                         x(1-M)

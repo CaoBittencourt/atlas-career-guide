@@ -203,6 +203,7 @@ df_occupations %>%
   )) -> df_competence
 
 df_competence
+df_competence %>% tail(5)
 dbl_competence
 
 # - Core attributes -------------------------------------------------------
@@ -219,6 +220,8 @@ df_profile_adjusted %>%
         dbl_profile = item_score
         , dbl_scale_lb = 0
       )
+    , item_eqvl = 
+      round(item_eqvl, 4)
     , item_class = 
       fun_class_classifier(
         dbl_var = item_eqvl
@@ -235,6 +238,9 @@ df_profile_adjusted %>%
   ) -> df_attribute_eqvl
 
 df_attribute_eqvl %>% 
+  arrange(
+    item_eqvl
+  ) %>%
   print(
     n = Inf
   )
