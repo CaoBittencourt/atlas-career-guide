@@ -12,8 +12,9 @@ chr_git <- c(
   'CaoBittencourt' = 'atlas.match',
   'CaoBittencourt' = 'atlas.comp',
   'CaoBittencourt' = 'atlas.gene',
-  'CaoBittencourt' = 'atlas.aeq'
+  'CaoBittencourt' = 'atlas.aeq',
   # 'CaoBittencourt' = 'atlas.notiq',
+  'CaoBittencourt' = 'atlas.class'
 )
 
 # Activate / install CRAN packages
@@ -59,7 +60,7 @@ df_occupations <- read_csv('/home/Cao/Storage/github/atlas-research/data/occupat
 
 # My preference-adjusted career profile
 df_profile_adjusted <- read_csv('/home/Cao/Storage/github/atlas-research/data/questionnaires/questionnaire_Cao.csv')
-  
+
 # [MODELS] ----------------------------------------------------------------
 # - Career matching -------------------------------------------------------
 # My career matches
@@ -106,9 +107,25 @@ list_matches$
   as_tibble(
     rownames = 'occupation'
   ) %>% 
+  mutate(
+    Cao = round(Cao, 4)
+  ) %>% 
+  arrange(
+    Cao
+  ) %>% 
+  print(n = 22)
+
+list_matches$
+  mtx_similarity %>% 
+  as_tibble(
+    rownames = 'occupation'
+  ) %>% 
+  mutate(
+    Cao = round(Cao, 4)
+  ) %>% 
   arrange(desc(
     Cao
-    )) %>% 
+    )) %>%
   print(n = 22)
 
 # - Generality ------------------------------------------------------------
@@ -185,6 +202,9 @@ df_occupations %>%
     competence
   )) -> df_competence
 
+df_competence
+dbl_competence
+
 # - Core attributes -------------------------------------------------------
 # My core attributes
 df_profile_adjusted %>% 
@@ -213,3 +233,8 @@ df_profile_adjusted %>%
         )
       )
   ) -> df_attribute_eqvl
+
+df_attribute_eqvl %>% 
+  print(
+    n = Inf
+  )
