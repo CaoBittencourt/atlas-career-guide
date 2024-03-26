@@ -78,11 +78,12 @@ df_matching %>%
       'Mechanical Engineers',
       'Physicists',
       'Credit Analysts',
-      'Dishwashers'
+      'Dishwashers',
+      'Hospitalists'
     )
   ) %>% 
   slice(
-    2, 3, 1, 4
+    2, 3, 1, 4, 5
   ) -> dsds
 
 fun_match_similarity(
@@ -100,21 +101,21 @@ dsds$mtx_similarity
 
 
 # [MODEL] --------------------------------------------------------------
-# - Estimate similarity model ---------------------------------------------------------
-# Run equivalence-weighted Euclidean matching
-fun_match_similarity(
-  df_data_rows = df_matching
-  , df_query_rows = df_matching
-  , chr_method = 'euclidean'
-  , chr_weights = 'attribute-eqvl'
-  , dbl_scale_ub = 100
-  , dbl_scale_lb = 0
-  , chr_id_col = 'occupation'
-  , lgc_sort = T
-) -> list_matching_aeq
-
-list_matching_aeq$
-  mtx_similarity
+# # - Estimate similarity model ---------------------------------------------------------
+# # Run equivalence-weighted Euclidean matching
+# fun_match_similarity(
+#   df_data_rows = df_matching
+#   , df_query_rows = df_matching
+#   , chr_method = 'euclidean'
+#   , chr_weights = 'attribute-eqvl'
+#   , dbl_scale_ub = 100
+#   , dbl_scale_lb = 0
+#   , chr_id_col = 'occupation'
+#   , lgc_sort = T
+# ) -> list_matching_aeq
+# 
+# list_matching_aeq$
+#   mtx_similarity
 
 # - Estimate interchangeability model -------------------------------------
 # Apply interchangeability function to similarity scores
@@ -146,6 +147,40 @@ df_matching %>%
         dbl_generality = generality
       )
   ) -> df_midpoint
+
+df_midpoint %>% 
+  filter(
+    occupation %in% c(
+      'Mechanical Engineers',
+      'Physicists',
+      'Credit Analysts',
+      'Hospitalists',
+      'Dishwashers'
+    )
+  ) %>% 
+  slice(
+    2, 3, 1, 4, 5
+  )
+
+# generalists vs specialists
+df_occupations %>% 
+  select(
+    occupation,
+    employment_variants
+  ) %>%
+  right_join(
+    df_midpoint
+  ) %>%
+  reframe(
+    correlation_generality_competence = 
+      weights::wtd.cors(
+        x = generality,
+        y = competence,
+        weight = 
+          employment_variants
+      ) %>% 
+      as.numeric()
+  )
 
 # [RESULTS] ---------------------------------------------------------------
 # - Select occupations to showcase matching results -----------------------
