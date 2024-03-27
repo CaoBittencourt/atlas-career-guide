@@ -78,26 +78,39 @@ df_matching %>%
       'Mechanical Engineers',
       'Physicists',
       'Credit Analysts',
-      'Dishwashers',
-      'Hospitalists'
+      'Dishwashers'
     )
   ) %>% 
   slice(
-    2, 3, 1, 4, 5
+    2, 3, 1, 4
   ) -> dsds
 
 fun_match_similarity(
   df_data_rows = dsds
   , df_query_rows = dsds
   , chr_method = 'euclidean'
+  # , chr_method = 'logit'
+  , chr_weights = 'linear'
+  , dbl_scale_ub = 100
+  , dbl_scale_lb = 0
+  , chr_id_col = 'occupation'
+  , lgc_sort = T
+) -> dsds_linear
+
+fun_match_similarity(
+  df_data_rows = dsds
+  , df_query_rows = dsds
+  , chr_method = 'euclidean'
+  # , chr_method = 'logit'
   , chr_weights = 'attribute-eqvl'
   , dbl_scale_ub = 100
   , dbl_scale_lb = 0
   , chr_id_col = 'occupation'
   , lgc_sort = T
-) -> dsds
+) -> dsds_eqvl
 
-dsds$mtx_similarity
+dsds_linear$mtx_similarity
+dsds_eqvl$mtx_similarity
 
 
 # [MODEL] --------------------------------------------------------------

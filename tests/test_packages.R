@@ -102,17 +102,18 @@ fun_match_similarity(
 # logit/probit quadratic 2
 # logit/probit speciality-root 2
 # logit/probit attribute-eqvl 3
+
 list_matches$
-  mtx_similarity %>% 
+  mtx_similarity %>%
   as_tibble(
     rownames = 'occupation'
-  ) %>% 
+  ) %>%
   mutate(
     Cao = round(Cao, 4)
-  ) %>% 
+  ) %>%
   arrange(
     Cao
-  ) %>% 
+  ) %>%
   print(n = 22)
 
 list_matches$
@@ -127,6 +128,82 @@ list_matches$
     Cao
     )) %>%
   print(n = 22)
+
+# - Generality vs Competence ----------------------------------------------
+df_occupations %>% 
+  select(
+    occupation,
+    starts_with('skl_'),
+    starts_with('abl_'),
+    starts_with('knw_')
+  ) %>% 
+  pivot_longer(
+    cols = -1,
+    names_to = 'item',
+    values_to = 'item_score'
+  ) %>% 
+  group_by(
+    occupation
+  ) %>% 
+  reframe(
+    generality = 
+      fun_gene_generality(
+        dbl_profile = item_score,
+        dbl_scale_ub = 100,
+        dbl_scale_lb = 0
+      ),
+    competence = 
+      fun_comp_competence(
+        dbl_profile = item_score,
+        dbl_scale_ub = 100,
+        dbl_scale_lb = 0,
+        dbl_generality = generality
+      )
+  ) -> df_midpoint
+
+df_midpoint %>%
+  arrange(desc(
+    competence
+  )) %>% 
+  mutate(
+    class = 
+      fun_class_classifier(
+        competence,
+        int_levels = 5,
+        chr_class_labels = c(
+          'very low level',
+          'low level',
+          'mid level',
+          'high level',
+          'very high level'
+        )
+      )
+  ) %>% 
+  print(
+    n = 50
+  )
+
+# - Generality vs Competence correlation ----------------------------------
+# generalists vs specialists
+df_occupations %>% 
+  select(
+    occupation,
+    employment_variants
+  ) %>%
+  right_join(
+    df_midpoint
+  ) %>%
+  reframe(
+    correlation_generality_competence = 
+      weights::wtd.cors(
+        x = generality,
+        y = competence,
+        weight = 
+          employment_variants
+      ) %>% 
+      as.numeric()
+  )
+
 
 # - Generality ------------------------------------------------------------
 # My generality
@@ -165,6 +242,10 @@ df_occupations %>%
     generality
   )) -> df_generality
 
+df_generality %>% print(n = 10)
+df_generality %>% tail(5)
+dbl_generality
+
 # - Competence ------------------------------------------------------------
 # My competence
 df_profile_adjusted[,-1] %>% 
@@ -202,7 +283,8 @@ df_occupations %>%
     competence
   )) -> df_competence
 
-df_competence
+df_competence %>% print(n = 50)
+df_competence %>% print(n = 10)
 df_competence %>% tail(5)
 dbl_competence
 
