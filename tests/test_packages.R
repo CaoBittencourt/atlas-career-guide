@@ -326,3 +326,45 @@ df_attribute_eqvl %>%
   print(
     n = Inf
   )
+
+# - Core attributes -------------------------------------------------------
+# My core attributes
+df_profile_adjusted %>% 
+  pivot_longer(
+    cols = -1
+    , names_to = 'item'
+    , values_to = 'item_score'
+  ) %>% 
+  mutate(
+    item_eqvl =
+      fun_eqvl_attribute(
+        dbl_profile = item_score,
+        dbl_midpoint = 
+          1 - fun_gene_generality(
+            item_score
+          )
+      )
+    , item_eqvl = 
+      round(item_eqvl, 4)
+    , item_class = 
+      fun_class_classifier(
+        dbl_var = item_eqvl
+        , dbl_scale_lb = 0
+        , dbl_scale_ub = 1
+        , int_levels = 4
+        , chr_class_labels = c(
+          'minor',
+          'auxiliary',
+          'important',
+          'core'
+        )
+      )
+  ) -> df_attribute_eqvl
+
+df_attribute_eqvl %>% 
+  arrange(
+    item_eqvl
+  ) %>%
+  print(
+    n = Inf
+  )

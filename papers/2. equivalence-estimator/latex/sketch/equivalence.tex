@@ -32,7 +32,8 @@
 \begin{document}
     \begin{gather}
         % inverse scaling equivalence
-        \text{eq}(x,M) = x \left[
+        % \ddot{a}_{i}^{k} = 
+        \text{aeq}(x,M) = x \left[
             1 + M(1-x)\exp\left(
                 -\frac{x-M}{1-M}
             \right)
@@ -43,8 +44,9 @@
         %         -(x-M)/(1-M)
         %     \right]
         % \right\} ^ {-\frac{M}{x}}\\
-        % trigonometrically-scaled equivalence 1
-        \text{eq}(x,M) = x \left\{ 
+        % trigonometrically-scaled equivalence
+        % \text{eq}(x,M) = x \left\{ 
+        \text{seq}(x,M) = x \left\{ 
             1 + M(1-x)\exp\left[
                 -(x-M)
                 \tan\bigg(
@@ -53,6 +55,19 @@
                     \big)
                 \bigg)
             \right]
-        \right\} ^ {-\frac{M}{x}}
+        \right\} ^ {-\frac{M}{x}}\\
+        % tau (education + xp) equivalence
+        \ddot{\tau}_{k,q} = 
+        \text{teq}(\tau_{k}, \tau_{q}, c_{q}) = 
+        \left\{
+            1 + \exp[-
+                \frac{
+                    \tau_{q}
+                    (\tau_{k} - \tau_{q})
+                }{
+                    1 - c_{q}
+                }
+            ]
+        \right\} ^ {-1}
     \end{gather}
 \end{document}
