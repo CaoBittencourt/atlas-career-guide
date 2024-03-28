@@ -109,18 +109,28 @@
     \end{bmatrix} = 
     % \textbf{\ss} = 
     % \textbf{SS} = 
+    % \begin{bmatrix}
+    %     1 & \hdots & \textit{\ss}_{k,1} & \hdots & \textit{\ss}_{n,1}\\
+    %     \vdots & \ddots & \vdots & \vdots & \vdots\\
+    %     \textit{\ss}_{1,k} & \hdots & 1 & \hdots & \textit{\ss}_{n,k}\\
+    %     \vdots & \vdots & \vdots & \ddots & \vdots\\
+    %     \textit{\ss}_{1,n} & \hdots & \textit{\ss}_{k,n} & \hdots & 1\\
+    % \end{bmatrix}\\
     \begin{bmatrix}
         1 & \hdots & \textit{\ss}_{k,1} & \hdots & \textit{\ss}_{n,1}\\
-        \vdots & \ddots & \vdots & \vdots & \vdots\\
+        \vdots & \ddots & \vdots & \ddots & \vdots\\
         \textit{\ss}_{1,k} & \hdots & 1 & \hdots & \textit{\ss}_{n,k}\\
-        \vdots & \vdots & \vdots & \ddots & \vdots\\
+        \vdots & \ddots & \vdots & \ddots & \vdots\\
         \textit{\ss}_{1,n} & \hdots & \textit{\ss}_{k,n} & \hdots & 1\\
     \end{bmatrix}\\
     \boldsymbol{\textbf{\textit{\ss}}_{k}} = (\textit{\ss}_{k,1}, ..., \textit{\ss}_{k,n})\\
     \boldsymbol{\textbf{\textit{\ss}}_{q}} = (\textit{\ss}_{q,1}, ..., \textit{\ss}_{q,n})\\
-    \gamma_{k} = 
-    % \gamma(\boldsymbol{\tilde{a}_k}) = 
-        \text{sq}(\boldsymbol{\tilde{a}_k})\\
+    \gamma_{k} = \text{sq}(\boldsymbol{â_k}),\\
+    \boldsymbol{â_k} = (â_{1}^{k}, ..., â_{m}^{k})\\
+    â_{i}^{k} = \frac{a_{i}^{k}}{\max{a_{j}^{k}}}\\
+    % \boldsymbol{â_k} = \frac{\boldsymbol{a_k}}{\max{\boldsymbol{a_k}}}\\
+    % \gamma_{k} = \text{sq}\left(\frac{\boldsymbol{a_k}}{\max_i{a_{i}^{k}}}\right)\\
+    % \gamma_{k} = \text{sq}\left(\frac{\boldsymbol{a_k}}{\max{\boldsymbol{a_k}}}\right)\\
     % c_{k} = 
     % c(\boldsymbol{a_k}, \gamma_{k}) = 
     %     \left( \frac{1}{m} \right)
@@ -161,6 +171,7 @@
     },\\
     % \theta_{i}^{k} =
     {\"a}_{i}^{k} =
+    \text{eq}(â_{i}^{k}, \gamma_{k}) = 
     % \theta(a_{i}^{k},a_{\max}^{k},\gamma_{k}) = 
     \text{eq}\left(
         \frac{
