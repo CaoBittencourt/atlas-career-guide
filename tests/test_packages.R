@@ -221,11 +221,11 @@ dbl_competence
 fun_match_similarity(
   df_data_rows = df_occupations
   , df_query_rows = df_profile_adjusted
-  , chr_method = 'euclidean'
+  # , chr_method = 'euclidean'
   # , chr_method = 'pearson'
   # , chr_method = 'bvls'
   # , chr_method = 'logit'
-  # , chr_method = 'probit'
+  , chr_method = 'probit'
   # , chr_weights = 'linear'
   # , chr_weights = 'quadratic'
   # , chr_weights = 'speciality-root'
@@ -277,11 +277,11 @@ list_matches$
       dbl_similarity = Cao
       , dbl_competence =
         competence
-      , dbl_years = NULL
-      , dbl_years_min = NULL
-      # , dbl_years = 22 + 1
-      # , dbl_years_min = 
-      #   education_years
+      # , dbl_years = NULL
+      # , dbl_years_min = NULL
+      , dbl_years = 22
+      , dbl_years_min =
+        education_years
     )
     , Cao = round(Cao, 4)
     , ß = round(ß, 4)
