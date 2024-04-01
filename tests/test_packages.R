@@ -13,6 +13,7 @@ chr_git <- c(
   'CaoBittencourt' = 'atlas.comp',
   'CaoBittencourt' = 'atlas.gene',
   'CaoBittencourt' = 'atlas.aeq',
+  'CaoBittencourt' = 'atlas.intc',
   # 'CaoBittencourt' = 'atlas.notiq',
   'CaoBittencourt' = 'atlas.class'
 )
@@ -62,73 +63,6 @@ df_occupations <- read_csv('/home/Cao/Storage/github/atlas-research/data/occupat
 df_profile_adjusted <- read_csv('/home/Cao/Storage/github/atlas-research/data/questionnaires/questionnaire_Cao.csv')
 
 # [MODELS] ----------------------------------------------------------------
-# - Career matching -------------------------------------------------------
-# My career matches
-fun_match_similarity(
-  df_data_rows = df_occupations
-  , df_query_rows = df_profile_adjusted
-  , chr_method = 'euclidean'
-  # , chr_method = 'pearson'
-  # , chr_method = 'bvls'
-  # , chr_method = 'logit'
-  # , chr_method = 'probit'
-  # , chr_weights = 'linear'
-  # , chr_weights = 'quadratic'
-  # , chr_weights = 'speciality-root'
-  , chr_weights = 'attribute-eqvl'
-  , dbl_scale_ub = 100
-  , dbl_scale_lb = 0
-  , chr_id_col = 'occupation'
-  , lgc_sort = T
-) -> list_matches
-
-# 0 = shit, 1 = ok, 2 = good, 3 = great, 4 = awesome
-# euclidean linear 1
-# euclidean quadratic 3
-# euclidean speciality-root 2
-# euclidean attribute-eqvl 3.5
-
-# pearson linear 2.5
-# pearson quadratic 1.5
-# pearson speciality-root 2
-# pearson attribute-eqvl 1
-
-# bvls linear 0
-# bvls quadratic 0
-# bvls speciality-root 0 
-# bvls attribute-eqvl 0.5
-
-# logit/probit linear 2
-# logit/probit quadratic 2
-# logit/probit speciality-root 2
-# logit/probit attribute-eqvl 3
-
-list_matches$
-  mtx_similarity %>%
-  as_tibble(
-    rownames = 'occupation'
-  ) %>%
-  mutate(
-    Cao = round(Cao, 4)
-  ) %>%
-  arrange(
-    Cao
-  ) %>%
-  print(n = 22)
-
-list_matches$
-  mtx_similarity %>% 
-  as_tibble(
-    rownames = 'occupation'
-  ) %>% 
-  mutate(
-    Cao = round(Cao, 4)
-  ) %>% 
-  arrange(desc(
-    Cao
-    )) %>%
-  print(n = 22)
-
 # - Generality vs Competence ----------------------------------------------
 df_occupations %>% 
   select(
@@ -288,6 +222,124 @@ df_competence %>% print(n = 10)
 df_competence %>% tail(5)
 dbl_competence
 
+# - Career matching (s, ß) -------------------------------------------------------
+# My career matches
+fun_match_similarity(
+  df_data_rows = df_occupations
+  , df_query_rows = df_profile_adjusted
+  , chr_method = 'euclidean'
+  # , chr_method = 'pearson'
+  # , chr_method = 'bvls'
+  # , chr_method = 'logit'
+  # , chr_method = 'probit'
+  # , chr_weights = 'linear'
+  # , chr_weights = 'quadratic'
+  # , chr_weights = 'speciality-root'
+  , chr_weights = 'attribute-eqvl'
+  , dbl_scale_ub = 100
+  , dbl_scale_lb = 0
+  , chr_id_col = 'occupation'
+  , lgc_sort = T
+) -> list_matches
+
+# 0 = shit, 1 = ok, 2 = good, 3 = great, 4 = awesome
+# euclidean linear 1
+# euclidean quadratic 3
+# euclidean speciality-root 2
+# euclidean attribute-eqvl 3.5
+
+# pearson linear 2.5
+# pearson quadratic 1.5
+# pearson speciality-root 2
+# pearson attribute-eqvl 1
+
+# bvls linear 0
+# bvls quadratic 0
+# bvls speciality-root 0 
+# bvls attribute-eqvl 0.5
+
+# logit/probit linear 2
+# logit/probit quadratic 2
+# logit/probit speciality-root 2
+# logit/probit attribute-eqvl 3
+
+list_matches$
+  mtx_similarity %>%
+  as_tibble(
+    rownames = 'occupation'
+  ) %>%
+  left_join(
+    df_occupations %>% 
+      select(
+        occupation,
+        education_years
+      )
+  ) %>%
+  left_join(
+    df_competence
+  ) %>% 
+  mutate(
+    ß = fun_intc_ss(
+      dbl_similarity = Cao
+      , dbl_competence =
+        competence
+      , dbl_years = NULL
+      , dbl_years_min = NULL
+      # , dbl_years = 22 + 1
+      # , dbl_years_min = 
+      #   education_years
+    )
+    , Cao = round(Cao, 4)
+    , ß = round(ß, 4)
+    , hireability = 
+      fun_eqvl_bin(ß)
+  ) %>%
+  select(
+    -education_years,
+    -competence
+  ) -> df_match
+
+# df_match %>%
+#   arrange(
+#     Cao
+#   ) %>%
+#   print(n = 22)
+# 
+# df_match %>%
+#   arrange(desc(
+#     Cao
+#   )) %>%
+#   print(n = 22)
+
+df_match %>%
+  arrange(
+    ß
+  ) %>%
+  print(n = 22)
+
+df_match %>%
+  arrange(desc(
+    ß
+  )) %>%
+  print(n = 22)
+
+df_match %>% 
+  left_join(
+    df_occupations %>% 
+      select(
+        occupation,
+        employment_variants
+      )
+  ) %>% 
+  reframe(
+    employability = sum(
+      weighted.mean(
+        x = hireability * ß,
+        w = employment_variants
+      )
+    )
+  )
+
 # - Core attributes -------------------------------------------------------
 # My core attributes
 df_profile_adjusted %>% 
@@ -301,48 +353,6 @@ df_profile_adjusted %>%
       fun_aeq_aequivalence(
         dbl_profile = item_score
         , dbl_scale_lb = 0
-      )
-    , item_eqvl = 
-      round(item_eqvl, 4)
-    , item_class = 
-      fun_class_classifier(
-        dbl_var = item_eqvl
-        , dbl_scale_lb = 0
-        , dbl_scale_ub = 1
-        , int_levels = 4
-        , chr_class_labels = c(
-          'minor',
-          'auxiliary',
-          'important',
-          'core'
-        )
-      )
-  ) -> df_attribute_eqvl
-
-df_attribute_eqvl %>% 
-  arrange(
-    item_eqvl
-  ) %>%
-  print(
-    n = Inf
-  )
-
-# - Core attributes -------------------------------------------------------
-# My core attributes
-df_profile_adjusted %>% 
-  pivot_longer(
-    cols = -1
-    , names_to = 'item'
-    , values_to = 'item_score'
-  ) %>% 
-  mutate(
-    item_eqvl =
-      fun_eqvl_attribute(
-        dbl_profile = item_score,
-        dbl_midpoint = 
-          1 - fun_gene_generality(
-            item_score
-          )
       )
     , item_eqvl = 
       round(item_eqvl, 4)

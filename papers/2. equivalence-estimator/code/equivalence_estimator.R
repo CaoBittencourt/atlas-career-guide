@@ -112,27 +112,7 @@ fun_match_similarity(
 dsds_linear$mtx_similarity
 dsds_eqvl$mtx_similarity
 
-
 # [MODEL] --------------------------------------------------------------
-# # - Estimate similarity model ---------------------------------------------------------
-# # Run equivalence-weighted Euclidean matching
-# fun_match_similarity(
-#   df_data_rows = df_matching
-#   , df_query_rows = df_matching
-#   , chr_method = 'euclidean'
-#   , chr_weights = 'attribute-eqvl'
-#   , dbl_scale_ub = 100
-#   , dbl_scale_lb = 0
-#   , chr_id_col = 'occupation'
-#   , lgc_sort = T
-# ) -> list_matching_aeq
-# 
-# list_matching_aeq$
-#   mtx_similarity
-
-# - Estimate interchangeability model -------------------------------------
-# Apply interchangeability function to similarity scores
-
 # - Equivalence midpoints to showcase ----------------------------------------
 # Use skill set generality as midpoint for attribute equivalence
 # Use skill set competence as midpoint for interchangeability
@@ -167,32 +147,110 @@ df_midpoint %>%
       'Mechanical Engineers',
       'Physicists',
       'Credit Analysts',
-      'Hospitalists',
       'Dishwashers'
     )
   ) %>% 
   slice(
-    2, 3, 1, 4, 5
+    2, 3, 1, 4
   )
 
-# generalists vs specialists
-df_occupations %>% 
-  select(
-    occupation,
-    employment_variants
+# - Estimate similarity model ---------------------------------------------------------
+# Run equivalence-weighted Euclidean matching
+fun_match_similarity(
+  # df_data_rows = df_matching
+  # , df_query_rows = df_matching
+  df_data_rows = 
+    df_matching %>% 
+    filter(
+      occupation %in% c(
+        'Mechanical Engineers',
+        'Physicists',
+        'Credit Analysts',
+        'Dishwashers'
+      )
+    ) %>% 
+    slice(
+      2, 3, 1, 4
+    )
+  , df_query_rows = 
+    df_matching %>% 
+    filter(
+      occupation %in% c(
+        'Mechanical Engineers',
+        'Physicists',
+        'Credit Analysts',
+        'Dishwashers'
+      )
+    ) %>% 
+    slice(
+      2, 3, 1, 4
+    )
+  , chr_method = 'euclidean'
+  , chr_weights = 'attribute-eqvl'
+  , dbl_scale_ub = 100
+  , dbl_scale_lb = 0
+  , chr_id_col = 'occupation'
+  , lgc_sort = T
+) -> list_matching_aeq
+
+list_matching_aeq$
+  mtx_similarity
+
+# - Estimate interchangeability model -------------------------------------
+# Apply interchangeability function to similarity scores
+list_matching_aeq$
+  mtx_similarity %>%
+  as_tibble(
+    rownames = 'comparison_occupation'
   ) %>%
-  right_join(
-    df_midpoint
-  ) %>%
-  reframe(
-    correlation_generality_competence = 
-      weights::wtd.cors(
-        x = generality,
-        y = competence,
-        weight = 
-          employment_variants
+  pivot_longer(
+    cols = -1
+    , names_to = 'occupation'
+    , values_to = 'similarity'
+  ) %>% 
+  left_join(
+    df_occupations %>% 
+      select(
+        occupation,
+        education_years
       ) %>% 
-      as.numeric()
+      rename(
+        years_min = 
+          education_years
+      )
+    , by = c(
+      'comparison_occupation' = 
+        'occupation'
+    )
+  ) %>%
+  left_join(
+    df_occupations %>% 
+      select(
+        occupation,
+        education_years
+      ) %>% 
+      rename(
+        years = 
+          education_years
+      )
+    , by = c(
+      'occupation' = 
+        'occupation'
+    )
+  ) %>%
+  left_join(
+    df_midpoint
+  ) %>% 
+  mutate(
+    ß = fun_intc_ss(
+      dbl_similarity = similarity
+      , dbl_competence = competence
+      , dbl_years = years
+      , dbl_years_min = years_min
+    )
+    # , similarity = round(similarity, 4)
+    # , ß = round(ß, 4)
+    , hireability = fun_eqvl_bin(ß)
   )
 
 # [RESULTS] ---------------------------------------------------------------
