@@ -82,9 +82,7 @@ df_occupations %>%
   reframe(
     generality = 
       fun_gene_generality(
-        dbl_profile = item_score,
-        dbl_scale_ub = 100,
-        dbl_scale_lb = 0
+        item_score
       ),
     competence = 
       fun_comp_competence(
@@ -143,10 +141,8 @@ df_occupations %>%
 # My generality
 df_profile_adjusted[,-1] %>% 
   as.numeric() %>% 
-  fun_gene_generality(
-    dbl_scale_lb = 0,
-    dbl_scale_ub = 100
-  ) -> dbl_generality
+  fun_gene_generality() -> 
+  dbl_generality
 
 # Occupations' generality
 df_occupations %>% 
@@ -167,9 +163,7 @@ df_occupations %>%
   reframe(
     generality =
       fun_gene_generality(
-        item_score,
-        dbl_scale_lb = 0,
-        dbl_scale_ub = 100
+        item_score
       )
   ) %>% 
   arrange(desc(
@@ -351,8 +345,7 @@ df_profile_adjusted %>%
   mutate(
     item_eqvl = 
       fun_aeq_aequivalence(
-        dbl_profile = item_score
-        , dbl_scale_lb = 0
+        item_score
       )
     , item_eqvl = 
       round(item_eqvl, 4)

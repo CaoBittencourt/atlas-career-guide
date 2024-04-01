@@ -128,9 +128,7 @@ df_matching %>%
   reframe(
     generality = 
       fun_gene_generality(
-        dbl_profile = item_score,
-        dbl_scale_ub = 100,
-        dbl_scale_lb = 0
+        item_score
       ),
     competence = 
       fun_comp_competence(
