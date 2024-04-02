@@ -98,7 +98,19 @@ df_midpoint %>%
     competence
   )) %>% 
   mutate(
-    class = 
+    gene_class = 
+      fun_class_classifier(
+        generality,
+        int_levels = 5,
+        chr_class_labels = c(
+          'very specialist',
+          'specialist',
+          'balanced',
+          'generalist',
+          'very generalist'
+        )
+      ),
+    comp_class = 
       fun_class_classifier(
         competence,
         int_levels = 5,
@@ -110,7 +122,9 @@ df_midpoint %>%
           'very high level'
         )
       )
-  ) %>% 
+  ) -> df_midpoint
+
+df_midpoint %>% 
   print(
     n = 50
   )
@@ -126,7 +140,7 @@ df_occupations %>%
     df_midpoint
   ) %>%
   reframe(
-    correlation_generality_competence = 
+    corr_gene_comp = 
       weights::wtd.cors(
         x = generality,
         y = competence,
@@ -136,46 +150,23 @@ df_occupations %>%
       as.numeric()
   )
 
-
-# - Generality ------------------------------------------------------------
-# My generality
+# - My generality ------------------------------------------------------------
 df_profile_adjusted[,-1] %>% 
   as.numeric() %>% 
   fun_gene_generality() -> 
   dbl_generality
 
 # Occupations' generality
-df_occupations %>% 
+df_midpoint %>% 
   select(
     occupation,
-    starts_with('skl_'),
-    starts_with('abl_'),
-    starts_with('knw_')
-  ) %>% 
-  pivot_longer(
-    cols = -1
-    , names_to = 'item'
-    , values_to = 'item_score'
-  ) %>% 
-  group_by(
-    occupation
-  ) %>%
-  reframe(
-    generality =
-      fun_gene_generality(
-        item_score
-      )
-  ) %>% 
-  arrange(desc(
-    generality
-  )) -> df_generality
+    generality,
+    gene_class
+  )
 
-df_generality %>% print(n = 10)
-df_generality %>% tail(5)
 dbl_generality
 
-# - Competence ------------------------------------------------------------
-# My competence
+# - My competence ------------------------------------------------------------
 df_profile_adjusted[,-1] %>% 
   as.numeric() %>% 
   fun_comp_competence(
@@ -184,48 +175,35 @@ df_profile_adjusted[,-1] %>%
   ) -> dbl_competence
 
 # Occupations' competence
-df_occupations %>% 
+df_midpoint %>% 
   select(
     occupation,
-    starts_with('skl_'),
-    starts_with('abl_'),
-    starts_with('knw_')
-  ) %>% 
-  pivot_longer(
-    cols = -1
-    , names_to = 'item'
-    , values_to = 'item_score'
-  ) %>% 
-  group_by(
-    occupation
-  ) %>%
-  reframe(
-    competence =
-      fun_comp_competence(
-        item_score,
-        dbl_scale_lb = 0,
-        dbl_scale_ub = 100
-      )
-  ) %>% 
-  arrange(desc(
-    competence
-  )) -> df_competence
+    competence,
+    comp_class
+  )
 
-df_competence %>% print(n = 50)
-df_competence %>% print(n = 10)
-df_competence %>% tail(5)
 dbl_competence
 
 # - Career matching (s, ß) -------------------------------------------------------
 # My career matches
 fun_match_similarity(
   df_data_rows = df_occupations
-  , df_query_rows = df_profile_adjusted
-  # , chr_method = 'euclidean'
+  , df_query_rows = 
+    # df_profile_adjusted
+  # df_occupations %>%
+  # select(
+  #   occupation,
+  #   career_cluster,
+  #   starts_with('skl_'),
+  #   starts_with('abl_'),
+  #   starts_with('knw_')
+  # ) %>%
+  # slice(1:2)
+  , chr_method = 'euclidean'
   # , chr_method = 'pearson'
   # , chr_method = 'bvls'
   # , chr_method = 'logit'
-  , chr_method = 'probit'
+  # , chr_method = 'probit'
   # , chr_weights = 'linear'
   # , chr_weights = 'quadratic'
   # , chr_weights = 'speciality-root'
@@ -234,7 +212,20 @@ fun_match_similarity(
   , dbl_scale_lb = 0
   , chr_id_col = 'occupation'
   , lgc_sort = T
+  # , lgc_overqualification_sub = T
 ) -> list_matches
+
+# list_matches$matches %>% map(length)
+# 
+# list_matches
+# 
+# df_profile_adjusted
+# 
+# list_matches$query %>% tail()
+# list_matches$data %>% tail()
+# 
+# list_matches$query %>% head(874) %>% tail()
+# list_matches$data %>% head(874) %>% tail()
 
 # 0 = shit, 1 = ok, 2 = good, 3 = great, 4 = awesome
 # euclidean linear 1
@@ -260,62 +251,116 @@ fun_match_similarity(
 list_matches$
   mtx_similarity %>%
   as_tibble(
-    rownames = 'occupation'
+    rownames = 'comparison_occupation'
+  ) %>%
+  pivot_longer(
+    cols = -1
+    , names_to = 'occupation'
+    , values_to = 'similarity'
   ) %>%
   left_join(
     df_occupations %>% 
       select(
         occupation,
         education_years
+      ) %>% 
+      rename(
+        years_min = education_years
+      )
+    , by = c(
+      'comparison_occupation' =
+        'occupation'
+    )
+  ) %>%
+  left_join(
+    df_occupations %>% 
+      select(
+        occupation,
+        education_years
+      ) %>% 
+      rename(
+        years = education_years
       )
   ) %>%
   left_join(
-    df_competence
+    df_midpoint
+    , by = c(
+      'comparison_occupation' =
+        'occupation'
+    )
   ) %>% 
   mutate(
-    ß = fun_intc_ss(
-      dbl_similarity = Cao
-      , dbl_competence =
-        competence
-      # , dbl_years = NULL
-      # , dbl_years_min = NULL
-      , dbl_years = 22
-      , dbl_years_min =
-        education_years
+    years = if_else(
+      occupation == 'Cao'
+      , 22
+      , years
     )
-    , Cao = round(Cao, 4)
-    , ß = round(ß, 4)
+    , ß = fun_intc_ss(
+      dbl_similarity = similarity
+      , dbl_competence = competence
+      , dbl_years = years
+      , dbl_years_min = years_min
+    )
     , hireability = 
       fun_eqvl_bin(ß)
-  ) %>%
+  ) %>% 
   select(
-    -education_years,
-    -competence
+    comparison_occupation,
+    occupation,
+    comp_class,
+    gene_class,
+    similarity,
+    ß,
+    hireability
   ) -> df_match
 
-# df_match %>%
-#   arrange(
-#     Cao
-#   ) %>%
-#   print(n = 22)
-# 
-# df_match %>%
-#   arrange(desc(
-#     Cao
-#   )) %>%
-#   print(n = 22)
+df_match %>% 
+  split(.$occupation) ->
+  list_match
 
-df_match %>%
-  arrange(
-    ß
-  ) %>%
-  print(n = 22)
+list_match %>% 
+  map(
+    arrange,
+    similarity
+  ) %>% 
+  map(
+    print,
+    n = 22
+  ) %>% 
+  invisible()
 
-df_match %>%
-  arrange(desc(
+list_match %>% 
+  map(
+    arrange,
+    -similarity
+  ) %>% 
+  map(
+    print,
+    n = 22
+  ) %>% 
+  invisible()
+
+list_match %>% 
+  map(
+    arrange,
     ß
-  )) %>%
-  print(n = 22)
+  ) %>% 
+  map(
+    print,
+    n = 22
+  ) %>% 
+  invisible()
+
+list_match %>% 
+  map(
+    arrange,
+    -ß
+  ) %>% 
+  map(
+    print,
+    n = 22
+  ) %>% 
+  invisible()
 
 df_match %>% 
   left_join(
@@ -324,10 +369,19 @@ df_match %>%
         occupation,
         employment_variants
       )
+    , by = c(
+      'comparison_occupation' =
+        'occupation'
+    )
   ) %>% 
+  group_by(
+    occupation
+  ) %>%
   reframe(
     employability = sum(
       weighted.mean(
+        # x = hireability,
+        # x = ß,
         x = hireability * ß,
         w = employment_variants
       )
@@ -371,3 +425,4 @@ df_attribute_eqvl %>%
   print(
     n = Inf
   )
+
