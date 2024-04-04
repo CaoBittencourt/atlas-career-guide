@@ -189,7 +189,7 @@ dbl_competence
 fun_match_similarity(
   df_data_rows = df_occupations
   , df_query_rows = 
-    # df_profile_adjusted
+    df_profile_adjusted
   # df_occupations %>%
   # select(
   #   occupation,
@@ -212,7 +212,7 @@ fun_match_similarity(
   , dbl_scale_lb = 0
   , chr_id_col = 'occupation'
   , lgc_sort = T
-  # , lgc_overqualification_sub = T
+  , lgc_overqualification_sub = T
 ) -> list_matches
 
 # list_matches$matches %>% map(length)
@@ -288,7 +288,11 @@ list_matches$
       'comparison_occupation' =
         'occupation'
     )
-  ) %>% 
+  ) -> df_match
+
+df_match$similarity[df_match$similarity < 0]
+
+df_match %>%
   mutate(
     years = if_else(
       occupation == 'Cao'
