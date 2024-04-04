@@ -88,25 +88,29 @@ df_matching %>%
 fun_match_similarity(
   df_data_rows = dsds
   , df_query_rows = dsds
-  , chr_method = 'euclidean'
+  # , chr_method = 'euclidean'
   # , chr_method = 'logit'
+  , chr_method = 'pearson'
   , chr_weights = 'linear'
   , dbl_scale_ub = 100
   , dbl_scale_lb = 0
   , chr_id_col = 'occupation'
   , lgc_sort = T
+  , lgc_overqualification_sub = F
 ) -> dsds_linear
 
 fun_match_similarity(
   df_data_rows = dsds
   , df_query_rows = dsds
-  , chr_method = 'euclidean'
+  # , chr_method = 'euclidean'
   # , chr_method = 'logit'
+  , chr_method = 'pearson'
   , chr_weights = 'attribute-eqvl'
   , dbl_scale_ub = 100
   , dbl_scale_lb = 0
   , chr_id_col = 'occupation'
   , lgc_sort = T
+  , lgc_overqualification_sub = F
 ) -> dsds_eqvl
 
 dsds_linear$mtx_similarity

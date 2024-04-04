@@ -126,7 +126,8 @@ df_midpoint %>%
 
 df_midpoint %>% 
   print(
-    n = 50
+    # n = 50
+    n = 28
   )
 
 # - Generality vs Competence correlation ----------------------------------
@@ -199,10 +200,10 @@ fun_match_similarity(
   #   starts_with('knw_')
   # ) %>%
   # slice(1:2)
-  , chr_method = 'euclidean'
+  # , chr_method = 'euclidean'
   # , chr_method = 'pearson'
   # , chr_method = 'bvls'
-  # , chr_method = 'logit'
+  , chr_method = 'logit'
   # , chr_method = 'probit'
   # , chr_weights = 'linear'
   # , chr_weights = 'quadratic'
@@ -212,7 +213,7 @@ fun_match_similarity(
   , dbl_scale_lb = 0
   , chr_id_col = 'occupation'
   , lgc_sort = T
-  , lgc_overqualification_sub = T
+  , lgc_overqualification_sub = F
 ) -> list_matches
 
 # list_matches$matches %>% map(length)
