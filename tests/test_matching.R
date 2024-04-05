@@ -4,7 +4,7 @@
 chr_pkg <- c(
   'devtools' #GitHub packages
   , 'readr' #Read data
-  , 'dplyr', 'tidyr' #Data wrangling
+  , 'dplyr', 'tidyr', 'stringr' #Data wrangling
 )
 
 # Git packages
@@ -1224,8 +1224,167 @@ fun_match_similarity(
 ) -> list_probit_eqvl_sub
 
 # [DATA WRANGLING] --------------------------------------------------------
+# - Lists' names -------------------------------------------------------------
+# Get names of lists in environment
+str_split(
+  string =
+    ls()[
+      str_detect(
+        ls(),
+        '(?=.*list)(?=.*mine)'
+      )
+    ]
+  , pattern = '_'
+  , simplify = T
+)[,2] %>%
+  unique() ->
+  chr_methods
+
+# My matches
+ls()[
+  str_detect(
+    ls()
+    , paste0(
+      '(?=.*'
+      , paste0(
+        chr_methods
+        , collapse = '|'
+      )
+      , ')(?=.*mine)'
+    )
+  )
+] -> chr_matches_mine
+
+# Occupations' matches
+ls()[
+  str_detect(
+    ls()
+    , paste0(
+      chr_methods
+      , collapse = '|'
+    )
+  ) &
+    str_detect(
+      ls()
+      , 'mine'
+      , negate = T
+    )
+] -> chr_matches
+
 # Euclidean matching
+chr_matches_mine %>%
+  syms() %>%
+  set_names(
+    chr_matches_mine
+  ) %>%
+  map(eval) %>%
+  map(
+    ~ .x$mtx_similarity %>%
+      as_tibble(
+        rownames =
+          'occupation'
+      ) %>%
+      rename(
+        similarity = 2
+      )
+  ) %>%
+  bind_rows(
+    .id = 'model'
+  ) %>%
+  mutate(
+    model =
+      str_split(
+        model
+        , '_'
+        , simplify = T
+      )[,c(2:3,5)]
+    , model =
+      paste0(
+        model[,1],
+        '_',
+        model[,2],
+        '_',
+        model[,3]
+      )
+    , model =
+      str_remove_all(
+        model
+        , '^*_$'
+      )
+  ) %>%
+  group_by(
+    model
+  ) %>%
+  arrange(desc(
+    similarity
+  ), .by_group = T
+  ) %>%
+  ungroup() ->
+  df_matches_mine
+
+df_matches_mine %>%
+  group_by(
+    model
+  ) %>%
+  reframe(
+    max = max(similarity),
+    min = min(similarity),
+    range = max - min,
+    mean = mean(similarity),
+    sd = sd(similarity)
+  ) %>%
+  left_join(
+    df_matches_mine %>%
+      select(
+        model,
+        occupation
+      ) %>%
+      rename(
+        best_match =
+          occupation
+      ) %>%
+      group_by(
+        model
+      ) %>%
+      slice(1)
+  ) %>%
+  left_join(
+    df_matches_mine %>%
+      select(
+        model,
+        occupation
+      ) %>%
+      rename(
+        worst_match =
+          occupation
+      ) %>%
+      group_by(
+        model
+      ) %>%
+      slice(n())
+  ) %>%
+  arrange(desc(
+    range
+  )) -> df_models_mine
+
+df_models_mine %>%
+  print(
+    n = Inf
+  )
+
+# - Euclidean matching ----------------------------------------------------
 # My career matches
+
+
+
+list(
+  list_euclidean_eqvl_mine,
+  list_euclidean_eqvl_mine_sub
+) %>%
+  map(
+    ~ .x$mtx_similarity
+  )
+
 
 # Sample occupations' matches
 
@@ -1436,3 +1595,7 @@ df_match %>%
       )
     )
   )
+
+
+
+
