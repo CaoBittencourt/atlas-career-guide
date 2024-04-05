@@ -22,34 +22,34 @@ chr_git <- c(
 lapply(
   chr_pkg
   , function(pkg){
-    
+
     if(!require(pkg, character.only = T)){
-      
+
       install.packages(pkg)
-      
+
     }
-    
+
     require(pkg, character.only = T)
-    
+
   }
 )
 
 # Activate / install Git packages
 Map(
   function(git, profile){
-    
+
     if(!require(git, character.only = T)){
-      
+
       install_github(
         paste0(profile, '/', git)
         , upgrade = F
         , force = T
       )
-      
+
     }
-    
+
     require(git, character.only = T)
-    
+
   }
   , git = chr_git
   , profile = names(chr_git)
@@ -64,27 +64,27 @@ df_profile_adjusted <- read_csv('/home/Cao/Storage/github/atlas-research/data/qu
 
 # [MODELS] ----------------------------------------------------------------
 # - Generality vs Competence ----------------------------------------------
-df_occupations %>% 
+df_occupations %>%
   select(
     occupation,
     starts_with('skl_'),
     starts_with('abl_'),
     starts_with('knw_')
-  ) %>% 
+  ) %>%
   pivot_longer(
     cols = -1,
     names_to = 'item',
     values_to = 'item_score'
-  ) %>% 
+  ) %>%
   group_by(
     occupation
-  ) %>% 
+  ) %>%
   reframe(
-    generality = 
+    generality =
       fun_gene_generality(
         item_score
       ),
-    competence = 
+    competence =
       fun_comp_competence(
         dbl_profile = item_score,
         dbl_scale_ub = 100,
@@ -96,9 +96,9 @@ df_occupations %>%
 df_midpoint %>%
   arrange(desc(
     competence
-  )) %>% 
+  )) %>%
   mutate(
-    gene_class = 
+    gene_class =
       fun_class_classifier(
         generality,
         int_levels = 5,
@@ -110,7 +110,7 @@ df_midpoint %>%
           'very generalist'
         )
       ),
-    comp_class = 
+    comp_class =
       fun_class_classifier(
         competence,
         int_levels = 5,
@@ -124,15 +124,15 @@ df_midpoint %>%
       )
   ) -> df_midpoint
 
-df_midpoint %>% 
+df_midpoint %>%
   print(
     # n = 50
-    n = 28
+    n = 22
   )
 
 # - Generality vs Competence correlation ----------------------------------
 # generalists vs specialists
-df_occupations %>% 
+df_occupations %>%
   select(
     occupation,
     employment_variants
@@ -141,24 +141,24 @@ df_occupations %>%
     df_midpoint
   ) %>%
   reframe(
-    corr_gene_comp = 
+    corr_gene_comp =
       weights::wtd.cors(
         x = generality,
         y = competence,
-        weight = 
+        weight =
           employment_variants
-      ) %>% 
+      ) %>%
       as.numeric()
   )
 
 # - My generality ------------------------------------------------------------
-df_profile_adjusted[,-1] %>% 
-  as.numeric() %>% 
-  fun_gene_generality() -> 
+df_profile_adjusted[,-1] %>%
+  as.numeric() %>%
+  fun_gene_generality() ->
   dbl_generality
 
 # Occupations' generality
-df_midpoint %>% 
+df_midpoint %>%
   select(
     occupation,
     generality,
@@ -168,15 +168,15 @@ df_midpoint %>%
 dbl_generality
 
 # - My competence ------------------------------------------------------------
-df_profile_adjusted[,-1] %>% 
-  as.numeric() %>% 
+df_profile_adjusted[,-1] %>%
+  as.numeric() %>%
   fun_comp_competence(
     dbl_scale_lb = 0,
     dbl_scale_ub = 100
   ) -> dbl_competence
 
 # Occupations' competence
-df_midpoint %>% 
+df_midpoint %>%
   select(
     occupation,
     competence,
@@ -189,7 +189,7 @@ dbl_competence
 # My career matches
 fun_match_similarity(
   df_data_rows = df_occupations
-  , df_query_rows = 
+  , df_query_rows =
     df_profile_adjusted
   # df_occupations %>%
   # select(
@@ -200,10 +200,10 @@ fun_match_similarity(
   #   starts_with('knw_')
   # ) %>%
   # slice(1:2)
-  # , chr_method = 'euclidean'
+  , chr_method = 'euclidean'
   # , chr_method = 'pearson'
   # , chr_method = 'bvls'
-  , chr_method = 'logit'
+  # , chr_method = 'logit'
   # , chr_method = 'probit'
   # , chr_weights = 'linear'
   # , chr_weights = 'quadratic'
@@ -217,14 +217,14 @@ fun_match_similarity(
 ) -> list_matches
 
 # list_matches$matches %>% map(length)
-# 
+#
 # list_matches
-# 
+#
 # df_profile_adjusted
-# 
+#
 # list_matches$query %>% tail()
 # list_matches$data %>% tail()
-# 
+#
 # list_matches$query %>% head(874) %>% tail()
 # list_matches$data %>% head(874) %>% tail()
 
@@ -241,7 +241,7 @@ fun_match_similarity(
 
 # bvls linear 0
 # bvls quadratic 0
-# bvls speciality-root 0 
+# bvls speciality-root 0
 # bvls attribute-eqvl 0.5
 
 # logit/probit linear 2
@@ -260,11 +260,11 @@ list_matches$
     , values_to = 'similarity'
   ) %>%
   left_join(
-    df_occupations %>% 
+    df_occupations %>%
       select(
         occupation,
         education_years
-      ) %>% 
+      ) %>%
       rename(
         years_min = education_years
       )
@@ -274,11 +274,11 @@ list_matches$
     )
   ) %>%
   left_join(
-    df_occupations %>% 
+    df_occupations %>%
       select(
         occupation,
         education_years
-      ) %>% 
+      ) %>%
       rename(
         years = education_years
       )
@@ -306,9 +306,9 @@ df_match %>%
       , dbl_years = years
       , dbl_years_min = years_min
     )
-    , hireability = 
+    , hireability =
       fun_eqvl_bin(ß)
-  ) %>% 
+  ) %>%
   select(
     comparison_occupation,
     occupation,
@@ -319,57 +319,57 @@ df_match %>%
     hireability
   ) -> df_match
 
-df_match %>% 
+df_match %>%
   split(.$occupation) ->
   list_match
 
-list_match %>% 
+list_match %>%
   map(
     arrange,
     similarity
-  ) %>% 
+  ) %>%
   map(
     print,
     n = 22
-  ) %>% 
+  ) %>%
   invisible()
 
-list_match %>% 
+list_match %>%
   map(
     arrange,
     -similarity
-  ) %>% 
+  ) %>%
   map(
     print,
     n = 22
-  ) %>% 
+  ) %>%
   invisible()
 
-list_match %>% 
+list_match %>%
   map(
     arrange,
     ß
-  ) %>% 
+  ) %>%
   map(
     print,
     n = 22
-  ) %>% 
+  ) %>%
   invisible()
 
-list_match %>% 
+list_match %>%
   map(
     arrange,
     -ß
-  ) %>% 
+  ) %>%
   map(
     print,
     n = 22
-  ) %>% 
+  ) %>%
   invisible()
 
-df_match %>% 
+df_match %>%
   left_join(
-    df_occupations %>% 
+    df_occupations %>%
       select(
         occupation,
         employment_variants
@@ -378,7 +378,7 @@ df_match %>%
       'comparison_occupation' =
         'occupation'
     )
-  ) %>% 
+  ) %>%
   group_by(
     occupation
   ) %>%
@@ -395,20 +395,20 @@ df_match %>%
 
 # - Core attributes -------------------------------------------------------
 # My core attributes
-df_profile_adjusted %>% 
+df_profile_adjusted %>%
   pivot_longer(
     cols = -1
     , names_to = 'item'
     , values_to = 'item_score'
-  ) %>% 
+  ) %>%
   mutate(
-    item_eqvl = 
+    item_eqvl =
       fun_aeq_aequivalence(
         item_score
       )
-    , item_eqvl = 
+    , item_eqvl =
       round(item_eqvl, 4)
-    , item_class = 
+    , item_class =
       fun_class_classifier(
         dbl_var = item_eqvl
         , dbl_scale_lb = 0
@@ -423,11 +423,10 @@ df_profile_adjusted %>%
       )
   ) -> df_attribute_eqvl
 
-df_attribute_eqvl %>% 
+df_attribute_eqvl %>%
   arrange(
     item_eqvl
   ) %>%
   print(
     n = Inf
   )
-

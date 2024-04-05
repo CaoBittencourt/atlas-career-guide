@@ -65,8 +65,8 @@ df_profile_adjusted
 df_profile_adjusted
 # [OUTPUT] -----------------------------------------------------------------
 # - Export career profiles ------------------------------------------------------------------
-df_profile: occupation = c('Cao (comp)', 'Cao (pref)', 'Cao (comp_pref)', 'Cao (pref_comp)')
-df_profile_pref: occupation = 'Cao (pref)'
-df_profile_comp: occupation = 'Cao (comp)'
-df_profile_comp_pref: occupation = 'Cao (comp_pref)'
-df_profile_pref_comp: occupation = 'Cao (pref_comp)'
+# df_profile: occupation = c('Cao (comp)', 'Cao (pref)', 'Cao (comp_pref)', 'Cao (pref_comp)')
+# df_profile_pref: occupation = 'Cao (pref)'
+# df_profile_comp: occupation = 'Cao (comp)'
+# df_profile_comp_pref: occupation = 'Cao (comp_pref)'
+# df_profile_pref_comp: occupation = 'Cao (pref_comp)'
