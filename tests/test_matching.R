@@ -69,9 +69,9 @@ c(
   'Mechanical Engineers',
   'Physicists',
   'Credit Analysts',
+  'Dishwashers',
   'Registered Nurses',
-  'Hospitalists',
-  'Dishwashers'
+  'Hospitalists'
 ) -> chr_sample
 
 # Sample occupations data frame
@@ -122,8 +122,8 @@ df_sample %>%
       )
   ) -> df_midpoint
 
-# [LINEAR WEIGHTS] ------------------------------------------------------
-# - Euclidean matching ----------------------------------------------------
+# [EUCLIDEAN MATCHING] ----------------------------------------------------
+# - Linear weights ----------------------------------------------------
 # Regular matching
 # My career matches
 fun_match_similarity(
@@ -140,7 +140,7 @@ fun_match_similarity(
 
 # Sample occupations' matches
 fun_match_similarity(
-  df_data_rows = df_sample
+  df_data_rows = df_occupations
   , df_query_rows = df_sample
   , chr_method = 'euclidean'
   , chr_weights = 'linear'
@@ -167,7 +167,7 @@ fun_match_similarity(
 
 # Sample occupations' matches
 fun_match_similarity(
-  df_data_rows = df_sample
+  df_data_rows = df_occupations
   , df_query_rows = df_sample
   , chr_method = 'euclidean'
   , chr_weights = 'linear'
@@ -178,228 +178,7 @@ fun_match_similarity(
   , lgc_overqualification_sub = T
 ) -> list_euclidean_linear_sub
 
-# - BVLS matching ----------------------------------------------------
-# Regular matching
-# My career matches
-fun_match_similarity(
-  df_data_rows = df_occupations
-  , df_query_rows = df_profile_adjusted
-  , chr_method = 'bvls'
-  , chr_weights = 'linear'
-  , dbl_scale_ub = 100
-  , dbl_scale_lb = 0
-  , chr_id_col = 'occupation'
-  , lgc_sort = T
-  , lgc_overqualification_sub = F
-) -> list_bvls_linear_mine
-
-# Sample occupations' matches
-fun_match_similarity(
-  df_data_rows = df_sample
-  , df_query_rows = df_sample
-  , chr_method = 'bvls'
-  , chr_weights = 'linear'
-  , dbl_scale_ub = 100
-  , dbl_scale_lb = 0
-  , chr_id_col = 'occupation'
-  , lgc_sort = T
-  , lgc_overqualification_sub = F
-) -> list_bvls_linear
-
-# With overqualification substitution
-# My career matches
-fun_match_similarity(
-  df_data_rows = df_occupations
-  , df_query_rows = df_profile_adjusted
-  , chr_method = 'bvls'
-  , chr_weights = 'linear'
-  , dbl_scale_ub = 100
-  , dbl_scale_lb = 0
-  , chr_id_col = 'occupation'
-  , lgc_sort = T
-  , lgc_overqualification_sub = T
-) -> list_bvls_linear_mine_sub
-
-# Sample occupations' matches
-fun_match_similarity(
-  df_data_rows = df_sample
-  , df_query_rows = df_sample
-  , chr_method = 'bvls'
-  , chr_weights = 'linear'
-  , dbl_scale_ub = 100
-  , dbl_scale_lb = 0
-  , chr_id_col = 'occupation'
-  , lgc_sort = T
-  , lgc_overqualification_sub = T
-) -> list_bvls_linear_sub
-
-# - Pearson matching ----------------------------------------------------
-# Regular matching
-# My career matches
-fun_match_similarity(
-  df_data_rows = df_occupations
-  , df_query_rows = df_profile_adjusted
-  , chr_method = 'pearson'
-  , chr_weights = 'linear'
-  , dbl_scale_ub = 100
-  , dbl_scale_lb = 0
-  , chr_id_col = 'occupation'
-  , lgc_sort = T
-  , lgc_overqualification_sub = F
-) -> list_pearson_linear_mine
-
-# Sample occupations' matches
-fun_match_similarity(
-  df_data_rows = df_sample
-  , df_query_rows = df_sample
-  , chr_method = 'pearson'
-  , chr_weights = 'linear'
-  , dbl_scale_ub = 100
-  , dbl_scale_lb = 0
-  , chr_id_col = 'occupation'
-  , lgc_sort = T
-  , lgc_overqualification_sub = F
-) -> list_pearson_linear
-
-# With overqualification substitution
-# My career matches
-fun_match_similarity(
-  df_data_rows = df_occupations
-  , df_query_rows = df_profile_adjusted
-  , chr_method = 'pearson'
-  , chr_weights = 'linear'
-  , dbl_scale_ub = 100
-  , dbl_scale_lb = 0
-  , chr_id_col = 'occupation'
-  , lgc_sort = T
-  , lgc_overqualification_sub = T
-) -> list_pearson_linear_mine_sub
-
-# Sample occupations' matches
-fun_match_similarity(
-  df_data_rows = df_sample
-  , df_query_rows = df_sample
-  , chr_method = 'pearson'
-  , chr_weights = 'linear'
-  , dbl_scale_ub = 100
-  , dbl_scale_lb = 0
-  , chr_id_col = 'occupation'
-  , lgc_sort = T
-  , lgc_overqualification_sub = T
-) -> list_pearson_linear_sub
-
-# - Logit matching ----------------------------------------------------
-# Regular matching
-# My career matches
-fun_match_similarity(
-  df_data_rows = df_occupations
-  , df_query_rows = df_profile_adjusted
-  , chr_method = 'logit'
-  , chr_weights = 'linear'
-  , dbl_scale_ub = 100
-  , dbl_scale_lb = 0
-  , chr_id_col = 'occupation'
-  , lgc_sort = T
-  , lgc_overqualification_sub = F
-) -> list_logit_linear_mine
-
-# Sample occupations' matches
-fun_match_similarity(
-  df_data_rows = df_sample
-  , df_query_rows = df_sample
-  , chr_method = 'logit'
-  , chr_weights = 'linear'
-  , dbl_scale_ub = 100
-  , dbl_scale_lb = 0
-  , chr_id_col = 'occupation'
-  , lgc_sort = T
-  , lgc_overqualification_sub = F
-) -> list_logit_linear
-
-# With overqualification substitution
-# My career matches
-fun_match_similarity(
-  df_data_rows = df_occupations
-  , df_query_rows = df_profile_adjusted
-  , chr_method = 'logit'
-  , chr_weights = 'linear'
-  , dbl_scale_ub = 100
-  , dbl_scale_lb = 0
-  , chr_id_col = 'occupation'
-  , lgc_sort = T
-  , lgc_overqualification_sub = T
-) -> list_logit_linear_mine_sub
-
-# Sample occupations' matches
-fun_match_similarity(
-  df_data_rows = df_sample
-  , df_query_rows = df_sample
-  , chr_method = 'logit'
-  , chr_weights = 'linear'
-  , dbl_scale_ub = 100
-  , dbl_scale_lb = 0
-  , chr_id_col = 'occupation'
-  , lgc_sort = T
-  , lgc_overqualification_sub = T
-) -> list_logit_linear_sub
-
-# - Probit matching ----------------------------------------------------
-# Regular matching
-# My career matches
-fun_match_similarity(
-  df_data_rows = df_occupations
-  , df_query_rows = df_profile_adjusted
-  , chr_method = 'probit'
-  , chr_weights = 'linear'
-  , dbl_scale_ub = 100
-  , dbl_scale_lb = 0
-  , chr_id_col = 'occupation'
-  , lgc_sort = T
-  , lgc_overqualification_sub = F
-) -> list_probit_linear_mine
-
-# Sample occupations' matches
-fun_match_similarity(
-  df_data_rows = df_sample
-  , df_query_rows = df_sample
-  , chr_method = 'probit'
-  , chr_weights = 'linear'
-  , dbl_scale_ub = 100
-  , dbl_scale_lb = 0
-  , chr_id_col = 'occupation'
-  , lgc_sort = T
-  , lgc_overqualification_sub = F
-) -> list_probit_linear
-
-# With overqualification substitution
-# My career matches
-fun_match_similarity(
-  df_data_rows = df_occupations
-  , df_query_rows = df_profile_adjusted
-  , chr_method = 'probit'
-  , chr_weights = 'linear'
-  , dbl_scale_ub = 100
-  , dbl_scale_lb = 0
-  , chr_id_col = 'occupation'
-  , lgc_sort = T
-  , lgc_overqualification_sub = T
-) -> list_probit_linear_mine_sub
-
-# Sample occupations' matches
-fun_match_similarity(
-  df_data_rows = df_sample
-  , df_query_rows = df_sample
-  , chr_method = 'probit'
-  , chr_weights = 'linear'
-  , dbl_scale_ub = 100
-  , dbl_scale_lb = 0
-  , chr_id_col = 'occupation'
-  , lgc_sort = T
-  , lgc_overqualification_sub = T
-) -> list_probit_linear_sub
-
-# [QUADRATIC WEIGHTS] ------------------------------------------------------
-# - Euclidean matching ----------------------------------------------------
+# - Quadratic weights ----------------------------------------------------
 # Regular matching
 # My career matches
 fun_match_similarity(
@@ -416,7 +195,7 @@ fun_match_similarity(
 
 # Sample occupations' matches
 fun_match_similarity(
-  df_data_rows = df_sample
+  df_data_rows = df_occupations
   , df_query_rows = df_sample
   , chr_method = 'euclidean'
   , chr_weights = 'quadratic'
@@ -443,7 +222,7 @@ fun_match_similarity(
 
 # Sample occupations' matches
 fun_match_similarity(
-  df_data_rows = df_sample
+  df_data_rows = df_occupations
   , df_query_rows = df_sample
   , chr_method = 'euclidean'
   , chr_weights = 'quadratic'
@@ -454,228 +233,7 @@ fun_match_similarity(
   , lgc_overqualification_sub = T
 ) -> list_euclidean_quadratic_sub
 
-# - BVLS matching ----------------------------------------------------
-# Regular matching
-# My career matches
-fun_match_similarity(
-  df_data_rows = df_occupations
-  , df_query_rows = df_profile_adjusted
-  , chr_method = 'bvls'
-  , chr_weights = 'quadratic'
-  , dbl_scale_ub = 100
-  , dbl_scale_lb = 0
-  , chr_id_col = 'occupation'
-  , lgc_sort = T
-  , lgc_overqualification_sub = F
-) -> list_bvls_quadratic_mine
-
-# Sample occupations' matches
-fun_match_similarity(
-  df_data_rows = df_sample
-  , df_query_rows = df_sample
-  , chr_method = 'bvls'
-  , chr_weights = 'quadratic'
-  , dbl_scale_ub = 100
-  , dbl_scale_lb = 0
-  , chr_id_col = 'occupation'
-  , lgc_sort = T
-  , lgc_overqualification_sub = F
-) -> list_bvls_quadratic
-
-# With overqualification substitution
-# My career matches
-fun_match_similarity(
-  df_data_rows = df_occupations
-  , df_query_rows = df_profile_adjusted
-  , chr_method = 'bvls'
-  , chr_weights = 'quadratic'
-  , dbl_scale_ub = 100
-  , dbl_scale_lb = 0
-  , chr_id_col = 'occupation'
-  , lgc_sort = T
-  , lgc_overqualification_sub = T
-) -> list_bvls_quadratic_mine_sub
-
-# Sample occupations' matches
-fun_match_similarity(
-  df_data_rows = df_sample
-  , df_query_rows = df_sample
-  , chr_method = 'bvls'
-  , chr_weights = 'quadratic'
-  , dbl_scale_ub = 100
-  , dbl_scale_lb = 0
-  , chr_id_col = 'occupation'
-  , lgc_sort = T
-  , lgc_overqualification_sub = T
-) -> list_bvls_quadratic_sub
-
-# - Pearson matching ----------------------------------------------------
-# Regular matching
-# My career matches
-fun_match_similarity(
-  df_data_rows = df_occupations
-  , df_query_rows = df_profile_adjusted
-  , chr_method = 'pearson'
-  , chr_weights = 'quadratic'
-  , dbl_scale_ub = 100
-  , dbl_scale_lb = 0
-  , chr_id_col = 'occupation'
-  , lgc_sort = T
-  , lgc_overqualification_sub = F
-) -> list_pearson_quadratic_mine
-
-# Sample occupations' matches
-fun_match_similarity(
-  df_data_rows = df_sample
-  , df_query_rows = df_sample
-  , chr_method = 'pearson'
-  , chr_weights = 'quadratic'
-  , dbl_scale_ub = 100
-  , dbl_scale_lb = 0
-  , chr_id_col = 'occupation'
-  , lgc_sort = T
-  , lgc_overqualification_sub = F
-) -> list_pearson_quadratic
-
-# With overqualification substitution
-# My career matches
-fun_match_similarity(
-  df_data_rows = df_occupations
-  , df_query_rows = df_profile_adjusted
-  , chr_method = 'pearson'
-  , chr_weights = 'quadratic'
-  , dbl_scale_ub = 100
-  , dbl_scale_lb = 0
-  , chr_id_col = 'occupation'
-  , lgc_sort = T
-  , lgc_overqualification_sub = T
-) -> list_pearson_quadratic_mine_sub
-
-# Sample occupations' matches
-fun_match_similarity(
-  df_data_rows = df_sample
-  , df_query_rows = df_sample
-  , chr_method = 'pearson'
-  , chr_weights = 'quadratic'
-  , dbl_scale_ub = 100
-  , dbl_scale_lb = 0
-  , chr_id_col = 'occupation'
-  , lgc_sort = T
-  , lgc_overqualification_sub = T
-) -> list_pearson_quadratic_sub
-
-# - Logit matching ----------------------------------------------------
-# Regular matching
-# My career matches
-fun_match_similarity(
-  df_data_rows = df_occupations
-  , df_query_rows = df_profile_adjusted
-  , chr_method = 'logit'
-  , chr_weights = 'quadratic'
-  , dbl_scale_ub = 100
-  , dbl_scale_lb = 0
-  , chr_id_col = 'occupation'
-  , lgc_sort = T
-  , lgc_overqualification_sub = F
-) -> list_logit_quadratic_mine
-
-# Sample occupations' matches
-fun_match_similarity(
-  df_data_rows = df_sample
-  , df_query_rows = df_sample
-  , chr_method = 'logit'
-  , chr_weights = 'quadratic'
-  , dbl_scale_ub = 100
-  , dbl_scale_lb = 0
-  , chr_id_col = 'occupation'
-  , lgc_sort = T
-  , lgc_overqualification_sub = F
-) -> list_logit_quadratic
-
-# With overqualification substitution
-# My career matches
-fun_match_similarity(
-  df_data_rows = df_occupations
-  , df_query_rows = df_profile_adjusted
-  , chr_method = 'logit'
-  , chr_weights = 'quadratic'
-  , dbl_scale_ub = 100
-  , dbl_scale_lb = 0
-  , chr_id_col = 'occupation'
-  , lgc_sort = T
-  , lgc_overqualification_sub = T
-) -> list_logit_quadratic_mine_sub
-
-# Sample occupations' matches
-fun_match_similarity(
-  df_data_rows = df_sample
-  , df_query_rows = df_sample
-  , chr_method = 'logit'
-  , chr_weights = 'quadratic'
-  , dbl_scale_ub = 100
-  , dbl_scale_lb = 0
-  , chr_id_col = 'occupation'
-  , lgc_sort = T
-  , lgc_overqualification_sub = T
-) -> list_logit_quadratic_sub
-
-# - Probit matching ----------------------------------------------------
-# Regular matching
-# My career matches
-fun_match_similarity(
-  df_data_rows = df_occupations
-  , df_query_rows = df_profile_adjusted
-  , chr_method = 'probit'
-  , chr_weights = 'quadratic'
-  , dbl_scale_ub = 100
-  , dbl_scale_lb = 0
-  , chr_id_col = 'occupation'
-  , lgc_sort = T
-  , lgc_overqualification_sub = F
-) -> list_probit_quadratic_mine
-
-# Sample occupations' matches
-fun_match_similarity(
-  df_data_rows = df_sample
-  , df_query_rows = df_sample
-  , chr_method = 'probit'
-  , chr_weights = 'quadratic'
-  , dbl_scale_ub = 100
-  , dbl_scale_lb = 0
-  , chr_id_col = 'occupation'
-  , lgc_sort = T
-  , lgc_overqualification_sub = F
-) -> list_probit_quadratic
-
-# With overqualification substitution
-# My career matches
-fun_match_similarity(
-  df_data_rows = df_occupations
-  , df_query_rows = df_profile_adjusted
-  , chr_method = 'probit'
-  , chr_weights = 'quadratic'
-  , dbl_scale_ub = 100
-  , dbl_scale_lb = 0
-  , chr_id_col = 'occupation'
-  , lgc_sort = T
-  , lgc_overqualification_sub = T
-) -> list_probit_quadratic_mine_sub
-
-# Sample occupations' matches
-fun_match_similarity(
-  df_data_rows = df_sample
-  , df_query_rows = df_sample
-  , chr_method = 'probit'
-  , chr_weights = 'quadratic'
-  , dbl_scale_ub = 100
-  , dbl_scale_lb = 0
-  , chr_id_col = 'occupation'
-  , lgc_sort = T
-  , lgc_overqualification_sub = T
-) -> list_probit_quadratic_sub
-
-# [SPEC-ROOT WEIGHTS] ------------------------------------------------------
-# - Euclidean matching ----------------------------------------------------
+# - Spec-root weights ----------------------------------------------------
 # Regular matching
 # My career matches
 fun_match_similarity(
@@ -692,7 +250,7 @@ fun_match_similarity(
 
 # Sample occupations' matches
 fun_match_similarity(
-  df_data_rows = df_sample
+  df_data_rows = df_occupations
   , df_query_rows = df_sample
   , chr_method = 'euclidean'
   , chr_weights = 'speciality-root'
@@ -719,7 +277,7 @@ fun_match_similarity(
 
 # Sample occupations' matches
 fun_match_similarity(
-  df_data_rows = df_sample
+  df_data_rows = df_occupations
   , df_query_rows = df_sample
   , chr_method = 'euclidean'
   , chr_weights = 'speciality-root'
@@ -730,228 +288,7 @@ fun_match_similarity(
   , lgc_overqualification_sub = T
 ) -> list_euclidean_spec_sub
 
-# - BVLS matching ----------------------------------------------------
-# Regular matching
-# My career matches
-fun_match_similarity(
-  df_data_rows = df_occupations
-  , df_query_rows = df_profile_adjusted
-  , chr_method = 'bvls'
-  , chr_weights = 'speciality-root'
-  , dbl_scale_ub = 100
-  , dbl_scale_lb = 0
-  , chr_id_col = 'occupation'
-  , lgc_sort = T
-  , lgc_overqualification_sub = F
-) -> list_bvls_spec_mine
-
-# Sample occupations' matches
-fun_match_similarity(
-  df_data_rows = df_sample
-  , df_query_rows = df_sample
-  , chr_method = 'bvls'
-  , chr_weights = 'speciality-root'
-  , dbl_scale_ub = 100
-  , dbl_scale_lb = 0
-  , chr_id_col = 'occupation'
-  , lgc_sort = T
-  , lgc_overqualification_sub = F
-) -> list_bvls_spec
-
-# With overqualification substitution
-# My career matches
-fun_match_similarity(
-  df_data_rows = df_occupations
-  , df_query_rows = df_profile_adjusted
-  , chr_method = 'bvls'
-  , chr_weights = 'speciality-root'
-  , dbl_scale_ub = 100
-  , dbl_scale_lb = 0
-  , chr_id_col = 'occupation'
-  , lgc_sort = T
-  , lgc_overqualification_sub = T
-) -> list_bvls_spec_mine_sub
-
-# Sample occupations' matches
-fun_match_similarity(
-  df_data_rows = df_sample
-  , df_query_rows = df_sample
-  , chr_method = 'bvls'
-  , chr_weights = 'speciality-root'
-  , dbl_scale_ub = 100
-  , dbl_scale_lb = 0
-  , chr_id_col = 'occupation'
-  , lgc_sort = T
-  , lgc_overqualification_sub = T
-) -> list_bvls_spec_sub
-
-# - Pearson matching ----------------------------------------------------
-# Regular matching
-# My career matches
-fun_match_similarity(
-  df_data_rows = df_occupations
-  , df_query_rows = df_profile_adjusted
-  , chr_method = 'pearson'
-  , chr_weights = 'speciality-root'
-  , dbl_scale_ub = 100
-  , dbl_scale_lb = 0
-  , chr_id_col = 'occupation'
-  , lgc_sort = T
-  , lgc_overqualification_sub = F
-) -> list_pearson_spec_mine
-
-# Sample occupations' matches
-fun_match_similarity(
-  df_data_rows = df_sample
-  , df_query_rows = df_sample
-  , chr_method = 'pearson'
-  , chr_weights = 'speciality-root'
-  , dbl_scale_ub = 100
-  , dbl_scale_lb = 0
-  , chr_id_col = 'occupation'
-  , lgc_sort = T
-  , lgc_overqualification_sub = F
-) -> list_pearson_spec
-
-# With overqualification substitution
-# My career matches
-fun_match_similarity(
-  df_data_rows = df_occupations
-  , df_query_rows = df_profile_adjusted
-  , chr_method = 'pearson'
-  , chr_weights = 'speciality-root'
-  , dbl_scale_ub = 100
-  , dbl_scale_lb = 0
-  , chr_id_col = 'occupation'
-  , lgc_sort = T
-  , lgc_overqualification_sub = T
-) -> list_pearson_spec_mine_sub
-
-# Sample occupations' matches
-fun_match_similarity(
-  df_data_rows = df_sample
-  , df_query_rows = df_sample
-  , chr_method = 'pearson'
-  , chr_weights = 'speciality-root'
-  , dbl_scale_ub = 100
-  , dbl_scale_lb = 0
-  , chr_id_col = 'occupation'
-  , lgc_sort = T
-  , lgc_overqualification_sub = T
-) -> list_pearson_spec_sub
-
-# - Logit matching ----------------------------------------------------
-# Regular matching
-# My career matches
-fun_match_similarity(
-  df_data_rows = df_occupations
-  , df_query_rows = df_profile_adjusted
-  , chr_method = 'logit'
-  , chr_weights = 'speciality-root'
-  , dbl_scale_ub = 100
-  , dbl_scale_lb = 0
-  , chr_id_col = 'occupation'
-  , lgc_sort = T
-  , lgc_overqualification_sub = F
-) -> list_logit_spec_mine
-
-# Sample occupations' matches
-fun_match_similarity(
-  df_data_rows = df_sample
-  , df_query_rows = df_sample
-  , chr_method = 'logit'
-  , chr_weights = 'speciality-root'
-  , dbl_scale_ub = 100
-  , dbl_scale_lb = 0
-  , chr_id_col = 'occupation'
-  , lgc_sort = T
-  , lgc_overqualification_sub = F
-) -> list_logit_spec
-
-# With overqualification substitution
-# My career matches
-fun_match_similarity(
-  df_data_rows = df_occupations
-  , df_query_rows = df_profile_adjusted
-  , chr_method = 'logit'
-  , chr_weights = 'speciality-root'
-  , dbl_scale_ub = 100
-  , dbl_scale_lb = 0
-  , chr_id_col = 'occupation'
-  , lgc_sort = T
-  , lgc_overqualification_sub = T
-) -> list_logit_spec_mine_sub
-
-# Sample occupations' matches
-fun_match_similarity(
-  df_data_rows = df_sample
-  , df_query_rows = df_sample
-  , chr_method = 'logit'
-  , chr_weights = 'speciality-root'
-  , dbl_scale_ub = 100
-  , dbl_scale_lb = 0
-  , chr_id_col = 'occupation'
-  , lgc_sort = T
-  , lgc_overqualification_sub = T
-) -> list_logit_spec_sub
-
-# - Probit matching ----------------------------------------------------
-# Regular matching
-# My career matches
-fun_match_similarity(
-  df_data_rows = df_occupations
-  , df_query_rows = df_profile_adjusted
-  , chr_method = 'probit'
-  , chr_weights = 'speciality-root'
-  , dbl_scale_ub = 100
-  , dbl_scale_lb = 0
-  , chr_id_col = 'occupation'
-  , lgc_sort = T
-  , lgc_overqualification_sub = F
-) -> list_probit_spec_mine
-
-# Sample occupations' matches
-fun_match_similarity(
-  df_data_rows = df_sample
-  , df_query_rows = df_sample
-  , chr_method = 'probit'
-  , chr_weights = 'speciality-root'
-  , dbl_scale_ub = 100
-  , dbl_scale_lb = 0
-  , chr_id_col = 'occupation'
-  , lgc_sort = T
-  , lgc_overqualification_sub = F
-) -> list_probit_spec
-
-# With overqualification substitution
-# My career matches
-fun_match_similarity(
-  df_data_rows = df_occupations
-  , df_query_rows = df_profile_adjusted
-  , chr_method = 'probit'
-  , chr_weights = 'speciality-root'
-  , dbl_scale_ub = 100
-  , dbl_scale_lb = 0
-  , chr_id_col = 'occupation'
-  , lgc_sort = T
-  , lgc_overqualification_sub = T
-) -> list_probit_spec_mine_sub
-
-# Sample occupations' matches
-fun_match_similarity(
-  df_data_rows = df_sample
-  , df_query_rows = df_sample
-  , chr_method = 'probit'
-  , chr_weights = 'speciality-root'
-  , dbl_scale_ub = 100
-  , dbl_scale_lb = 0
-  , chr_id_col = 'occupation'
-  , lgc_sort = T
-  , lgc_overqualification_sub = T
-) -> list_probit_spec_sub
-
-# [Ä WEIGHTS] ------------------------------------------------------
-# - Euclidean matching ----------------------------------------------------
+# - Ä weights ----------------------------------------------------
 # Regular matching
 # My career matches
 fun_match_similarity(
@@ -968,7 +305,7 @@ fun_match_similarity(
 
 # Sample occupations' matches
 fun_match_similarity(
-  df_data_rows = df_sample
+  df_data_rows = df_occupations
   , df_query_rows = df_sample
   , chr_method = 'euclidean'
   , chr_weights = 'attribute-eqvl'
@@ -995,7 +332,7 @@ fun_match_similarity(
 
 # Sample occupations' matches
 fun_match_similarity(
-  df_data_rows = df_sample
+  df_data_rows = df_occupations
   , df_query_rows = df_sample
   , chr_method = 'euclidean'
   , chr_weights = 'attribute-eqvl'
@@ -1006,7 +343,174 @@ fun_match_similarity(
   , lgc_overqualification_sub = T
 ) -> list_euclidean_eqvl_sub
 
-# - BVLS matching ----------------------------------------------------
+# [BVLS MATCHING] ---------------------------------------------------------
+# - Linear weights ----------------------------------------------------
+# Regular matching
+# My career matches
+fun_match_similarity(
+  df_data_rows = df_occupations
+  , df_query_rows = df_profile_adjusted
+  , chr_method = 'bvls'
+  , chr_weights = 'linear'
+  , dbl_scale_ub = 100
+  , dbl_scale_lb = 0
+  , chr_id_col = 'occupation'
+  , lgc_sort = T
+  , lgc_overqualification_sub = F
+) -> list_bvls_linear_mine
+
+# Sample occupations' matches
+fun_match_similarity(
+  df_data_rows = df_occupations
+  , df_query_rows = df_sample
+  , chr_method = 'bvls'
+  , chr_weights = 'linear'
+  , dbl_scale_ub = 100
+  , dbl_scale_lb = 0
+  , chr_id_col = 'occupation'
+  , lgc_sort = T
+  , lgc_overqualification_sub = F
+) -> list_bvls_linear
+
+# With overqualification substitution
+# My career matches
+fun_match_similarity(
+  df_data_rows = df_occupations
+  , df_query_rows = df_profile_adjusted
+  , chr_method = 'bvls'
+  , chr_weights = 'linear'
+  , dbl_scale_ub = 100
+  , dbl_scale_lb = 0
+  , chr_id_col = 'occupation'
+  , lgc_sort = T
+  , lgc_overqualification_sub = T
+) -> list_bvls_linear_mine_sub
+
+# Sample occupations' matches
+fun_match_similarity(
+  df_data_rows = df_occupations
+  , df_query_rows = df_sample
+  , chr_method = 'bvls'
+  , chr_weights = 'linear'
+  , dbl_scale_ub = 100
+  , dbl_scale_lb = 0
+  , chr_id_col = 'occupation'
+  , lgc_sort = T
+  , lgc_overqualification_sub = T
+) -> list_bvls_linear_sub
+
+
+# - Quadratic weights ----------------------------------------------------
+# Regular matching
+# My career matches
+fun_match_similarity(
+  df_data_rows = df_occupations
+  , df_query_rows = df_profile_adjusted
+  , chr_method = 'bvls'
+  , chr_weights = 'quadratic'
+  , dbl_scale_ub = 100
+  , dbl_scale_lb = 0
+  , chr_id_col = 'occupation'
+  , lgc_sort = T
+  , lgc_overqualification_sub = F
+) -> list_bvls_quadratic_mine
+
+# Sample occupations' matches
+fun_match_similarity(
+  df_data_rows = df_occupations
+  , df_query_rows = df_sample
+  , chr_method = 'bvls'
+  , chr_weights = 'quadratic'
+  , dbl_scale_ub = 100
+  , dbl_scale_lb = 0
+  , chr_id_col = 'occupation'
+  , lgc_sort = T
+  , lgc_overqualification_sub = F
+) -> list_bvls_quadratic
+
+# With overqualification substitution
+# My career matches
+fun_match_similarity(
+  df_data_rows = df_occupations
+  , df_query_rows = df_profile_adjusted
+  , chr_method = 'bvls'
+  , chr_weights = 'quadratic'
+  , dbl_scale_ub = 100
+  , dbl_scale_lb = 0
+  , chr_id_col = 'occupation'
+  , lgc_sort = T
+  , lgc_overqualification_sub = T
+) -> list_bvls_quadratic_mine_sub
+
+# Sample occupations' matches
+fun_match_similarity(
+  df_data_rows = df_occupations
+  , df_query_rows = df_sample
+  , chr_method = 'bvls'
+  , chr_weights = 'quadratic'
+  , dbl_scale_ub = 100
+  , dbl_scale_lb = 0
+  , chr_id_col = 'occupation'
+  , lgc_sort = T
+  , lgc_overqualification_sub = T
+) -> list_bvls_quadratic_sub
+
+# - Spec-root weights ----------------------------------------------------
+# Regular matching
+# My career matches
+fun_match_similarity(
+  df_data_rows = df_occupations
+  , df_query_rows = df_profile_adjusted
+  , chr_method = 'bvls'
+  , chr_weights = 'speciality-root'
+  , dbl_scale_ub = 100
+  , dbl_scale_lb = 0
+  , chr_id_col = 'occupation'
+  , lgc_sort = T
+  , lgc_overqualification_sub = F
+) -> list_bvls_spec_mine
+
+# Sample occupations' matches
+fun_match_similarity(
+  df_data_rows = df_occupations
+  , df_query_rows = df_sample
+  , chr_method = 'bvls'
+  , chr_weights = 'speciality-root'
+  , dbl_scale_ub = 100
+  , dbl_scale_lb = 0
+  , chr_id_col = 'occupation'
+  , lgc_sort = T
+  , lgc_overqualification_sub = F
+) -> list_bvls_spec
+
+# With overqualification substitution
+# My career matches
+fun_match_similarity(
+  df_data_rows = df_occupations
+  , df_query_rows = df_profile_adjusted
+  , chr_method = 'bvls'
+  , chr_weights = 'speciality-root'
+  , dbl_scale_ub = 100
+  , dbl_scale_lb = 0
+  , chr_id_col = 'occupation'
+  , lgc_sort = T
+  , lgc_overqualification_sub = T
+) -> list_bvls_spec_mine_sub
+
+# Sample occupations' matches
+fun_match_similarity(
+  df_data_rows = df_occupations
+  , df_query_rows = df_sample
+  , chr_method = 'bvls'
+  , chr_weights = 'speciality-root'
+  , dbl_scale_ub = 100
+  , dbl_scale_lb = 0
+  , chr_id_col = 'occupation'
+  , lgc_sort = T
+  , lgc_overqualification_sub = T
+) -> list_bvls_spec_sub
+
+# - Ä weights ----------------------------------------------------
 # Regular matching
 # My career matches
 fun_match_similarity(
@@ -1023,7 +527,7 @@ fun_match_similarity(
 
 # Sample occupations' matches
 fun_match_similarity(
-  df_data_rows = df_sample
+  df_data_rows = df_occupations
   , df_query_rows = df_sample
   , chr_method = 'bvls'
   , chr_weights = 'attribute-eqvl'
@@ -1050,7 +554,7 @@ fun_match_similarity(
 
 # Sample occupations' matches
 fun_match_similarity(
-  df_data_rows = df_sample
+  df_data_rows = df_occupations
   , df_query_rows = df_sample
   , chr_method = 'bvls'
   , chr_weights = 'attribute-eqvl'
@@ -1061,7 +565,175 @@ fun_match_similarity(
   , lgc_overqualification_sub = T
 ) -> list_bvls_eqvl_sub
 
-# - Pearson matching ----------------------------------------------------
+# [PEARSON MATCHING] ------------------------------------------------------
+# - Linear weights ----------------------------------------------------
+# Regular matching
+# My career matches
+fun_match_similarity(
+  df_data_rows = df_occupations
+  , df_query_rows = df_profile_adjusted
+  , chr_method = 'pearson'
+  , chr_weights = 'linear'
+  , dbl_scale_ub = 100
+  , dbl_scale_lb = 0
+  , chr_id_col = 'occupation'
+  , lgc_sort = T
+  , lgc_overqualification_sub = F
+) -> list_pearson_linear_mine
+
+# Sample occupations' matches
+fun_match_similarity(
+  df_data_rows = df_occupations
+  , df_query_rows = df_sample
+  , chr_method = 'pearson'
+  , chr_weights = 'linear'
+  , dbl_scale_ub = 100
+  , dbl_scale_lb = 0
+  , chr_id_col = 'occupation'
+  , lgc_sort = T
+  , lgc_overqualification_sub = F
+) -> list_pearson_linear
+
+# With overqualification substitution
+# My career matches
+fun_match_similarity(
+  df_data_rows = df_occupations
+  , df_query_rows = df_profile_adjusted
+  , chr_method = 'pearson'
+  , chr_weights = 'linear'
+  , dbl_scale_ub = 100
+  , dbl_scale_lb = 0
+  , chr_id_col = 'occupation'
+  , lgc_sort = T
+  , lgc_overqualification_sub = T
+) -> list_pearson_linear_mine_sub
+
+# Sample occupations' matches
+fun_match_similarity(
+  df_data_rows = df_occupations
+  , df_query_rows = df_sample
+  , chr_method = 'pearson'
+  , chr_weights = 'linear'
+  , dbl_scale_ub = 100
+  , dbl_scale_lb = 0
+  , chr_id_col = 'occupation'
+  , lgc_sort = T
+  , lgc_overqualification_sub = T
+) -> list_pearson_linear_sub
+
+
+# - Quadratic weights ----------------------------------------------------
+# Regular matching
+# My career matches
+fun_match_similarity(
+  df_data_rows = df_occupations
+  , df_query_rows = df_profile_adjusted
+  , chr_method = 'pearson'
+  , chr_weights = 'quadratic'
+  , dbl_scale_ub = 100
+  , dbl_scale_lb = 0
+  , chr_id_col = 'occupation'
+  , lgc_sort = T
+  , lgc_overqualification_sub = F
+) -> list_pearson_quadratic_mine
+
+# Sample occupations' matches
+fun_match_similarity(
+  df_data_rows = df_occupations
+  , df_query_rows = df_sample
+  , chr_method = 'pearson'
+  , chr_weights = 'quadratic'
+  , dbl_scale_ub = 100
+  , dbl_scale_lb = 0
+  , chr_id_col = 'occupation'
+  , lgc_sort = T
+  , lgc_overqualification_sub = F
+) -> list_pearson_quadratic
+
+# With overqualification substitution
+# My career matches
+fun_match_similarity(
+  df_data_rows = df_occupations
+  , df_query_rows = df_profile_adjusted
+  , chr_method = 'pearson'
+  , chr_weights = 'quadratic'
+  , dbl_scale_ub = 100
+  , dbl_scale_lb = 0
+  , chr_id_col = 'occupation'
+  , lgc_sort = T
+  , lgc_overqualification_sub = T
+) -> list_pearson_quadratic_mine_sub
+
+# Sample occupations' matches
+fun_match_similarity(
+  df_data_rows = df_occupations
+  , df_query_rows = df_sample
+  , chr_method = 'pearson'
+  , chr_weights = 'quadratic'
+  , dbl_scale_ub = 100
+  , dbl_scale_lb = 0
+  , chr_id_col = 'occupation'
+  , lgc_sort = T
+  , lgc_overqualification_sub = T
+) -> list_pearson_quadratic_sub
+
+# - Spec-root weights ----------------------------------------------------
+# Regular matching
+# My career matches
+fun_match_similarity(
+  df_data_rows = df_occupations
+  , df_query_rows = df_profile_adjusted
+  , chr_method = 'pearson'
+  , chr_weights = 'speciality-root'
+  , dbl_scale_ub = 100
+  , dbl_scale_lb = 0
+  , chr_id_col = 'occupation'
+  , lgc_sort = T
+  , lgc_overqualification_sub = F
+) -> list_pearson_spec_mine
+
+# Sample occupations' matches
+fun_match_similarity(
+  df_data_rows = df_occupations
+  , df_query_rows = df_sample
+  , chr_method = 'pearson'
+  , chr_weights = 'speciality-root'
+  , dbl_scale_ub = 100
+  , dbl_scale_lb = 0
+  , chr_id_col = 'occupation'
+  , lgc_sort = T
+  , lgc_overqualification_sub = F
+) -> list_pearson_spec
+
+# With overqualification substitution
+# My career matches
+fun_match_similarity(
+  df_data_rows = df_occupations
+  , df_query_rows = df_profile_adjusted
+  , chr_method = 'pearson'
+  , chr_weights = 'speciality-root'
+  , dbl_scale_ub = 100
+  , dbl_scale_lb = 0
+  , chr_id_col = 'occupation'
+  , lgc_sort = T
+  , lgc_overqualification_sub = T
+) -> list_pearson_spec_mine_sub
+
+# Sample occupations' matches
+fun_match_similarity(
+  df_data_rows = df_occupations
+  , df_query_rows = df_sample
+  , chr_method = 'pearson'
+  , chr_weights = 'speciality-root'
+  , dbl_scale_ub = 100
+  , dbl_scale_lb = 0
+  , chr_id_col = 'occupation'
+  , lgc_sort = T
+  , lgc_overqualification_sub = T
+) -> list_pearson_spec_sub
+
+
+# - Ä weights ----------------------------------------------------
 # Regular matching
 # My career matches
 fun_match_similarity(
@@ -1078,7 +750,7 @@ fun_match_similarity(
 
 # Sample occupations' matches
 fun_match_similarity(
-  df_data_rows = df_sample
+  df_data_rows = df_occupations
   , df_query_rows = df_sample
   , chr_method = 'pearson'
   , chr_weights = 'attribute-eqvl'
@@ -1105,7 +777,7 @@ fun_match_similarity(
 
 # Sample occupations' matches
 fun_match_similarity(
-  df_data_rows = df_sample
+  df_data_rows = df_occupations
   , df_query_rows = df_sample
   , chr_method = 'pearson'
   , chr_weights = 'attribute-eqvl'
@@ -1116,7 +788,173 @@ fun_match_similarity(
   , lgc_overqualification_sub = T
 ) -> list_pearson_eqvl_sub
 
-# - Logit matching ----------------------------------------------------
+# [LOGIT MATCHING] --------------------------------------------------------
+# - Linear weights ----------------------------------------------------
+# Regular matching
+# My career matches
+fun_match_similarity(
+  df_data_rows = df_occupations
+  , df_query_rows = df_profile_adjusted
+  , chr_method = 'logit'
+  , chr_weights = 'linear'
+  , dbl_scale_ub = 100
+  , dbl_scale_lb = 0
+  , chr_id_col = 'occupation'
+  , lgc_sort = T
+  , lgc_overqualification_sub = F
+) -> list_logit_linear_mine
+
+# Sample occupations' matches
+fun_match_similarity(
+  df_data_rows = df_occupations
+  , df_query_rows = df_sample
+  , chr_method = 'logit'
+  , chr_weights = 'linear'
+  , dbl_scale_ub = 100
+  , dbl_scale_lb = 0
+  , chr_id_col = 'occupation'
+  , lgc_sort = T
+  , lgc_overqualification_sub = F
+) -> list_logit_linear
+
+# With overqualification substitution
+# My career matches
+fun_match_similarity(
+  df_data_rows = df_occupations
+  , df_query_rows = df_profile_adjusted
+  , chr_method = 'logit'
+  , chr_weights = 'linear'
+  , dbl_scale_ub = 100
+  , dbl_scale_lb = 0
+  , chr_id_col = 'occupation'
+  , lgc_sort = T
+  , lgc_overqualification_sub = T
+) -> list_logit_linear_mine_sub
+
+# Sample occupations' matches
+fun_match_similarity(
+  df_data_rows = df_occupations
+  , df_query_rows = df_sample
+  , chr_method = 'logit'
+  , chr_weights = 'linear'
+  , dbl_scale_ub = 100
+  , dbl_scale_lb = 0
+  , chr_id_col = 'occupation'
+  , lgc_sort = T
+  , lgc_overqualification_sub = T
+) -> list_logit_linear_sub
+
+# - Quadratic weights ----------------------------------------------------
+# Regular matching
+# My career matches
+fun_match_similarity(
+  df_data_rows = df_occupations
+  , df_query_rows = df_profile_adjusted
+  , chr_method = 'logit'
+  , chr_weights = 'quadratic'
+  , dbl_scale_ub = 100
+  , dbl_scale_lb = 0
+  , chr_id_col = 'occupation'
+  , lgc_sort = T
+  , lgc_overqualification_sub = F
+) -> list_logit_quadratic_mine
+
+# Sample occupations' matches
+fun_match_similarity(
+  df_data_rows = df_occupations
+  , df_query_rows = df_sample
+  , chr_method = 'logit'
+  , chr_weights = 'quadratic'
+  , dbl_scale_ub = 100
+  , dbl_scale_lb = 0
+  , chr_id_col = 'occupation'
+  , lgc_sort = T
+  , lgc_overqualification_sub = F
+) -> list_logit_quadratic
+
+# With overqualification substitution
+# My career matches
+fun_match_similarity(
+  df_data_rows = df_occupations
+  , df_query_rows = df_profile_adjusted
+  , chr_method = 'logit'
+  , chr_weights = 'quadratic'
+  , dbl_scale_ub = 100
+  , dbl_scale_lb = 0
+  , chr_id_col = 'occupation'
+  , lgc_sort = T
+  , lgc_overqualification_sub = T
+) -> list_logit_quadratic_mine_sub
+
+# Sample occupations' matches
+fun_match_similarity(
+  df_data_rows = df_occupations
+  , df_query_rows = df_sample
+  , chr_method = 'logit'
+  , chr_weights = 'quadratic'
+  , dbl_scale_ub = 100
+  , dbl_scale_lb = 0
+  , chr_id_col = 'occupation'
+  , lgc_sort = T
+  , lgc_overqualification_sub = T
+) -> list_logit_quadratic_sub
+
+# - Spec-root weights ----------------------------------------------------
+# Regular matching
+# My career matches
+fun_match_similarity(
+  df_data_rows = df_occupations
+  , df_query_rows = df_profile_adjusted
+  , chr_method = 'logit'
+  , chr_weights = 'speciality-root'
+  , dbl_scale_ub = 100
+  , dbl_scale_lb = 0
+  , chr_id_col = 'occupation'
+  , lgc_sort = T
+  , lgc_overqualification_sub = F
+) -> list_logit_spec_mine
+
+# Sample occupations' matches
+fun_match_similarity(
+  df_data_rows = df_occupations
+  , df_query_rows = df_sample
+  , chr_method = 'logit'
+  , chr_weights = 'speciality-root'
+  , dbl_scale_ub = 100
+  , dbl_scale_lb = 0
+  , chr_id_col = 'occupation'
+  , lgc_sort = T
+  , lgc_overqualification_sub = F
+) -> list_logit_spec
+
+# With overqualification substitution
+# My career matches
+fun_match_similarity(
+  df_data_rows = df_occupations
+  , df_query_rows = df_profile_adjusted
+  , chr_method = 'logit'
+  , chr_weights = 'speciality-root'
+  , dbl_scale_ub = 100
+  , dbl_scale_lb = 0
+  , chr_id_col = 'occupation'
+  , lgc_sort = T
+  , lgc_overqualification_sub = T
+) -> list_logit_spec_mine_sub
+
+# Sample occupations' matches
+fun_match_similarity(
+  df_data_rows = df_occupations
+  , df_query_rows = df_sample
+  , chr_method = 'logit'
+  , chr_weights = 'speciality-root'
+  , dbl_scale_ub = 100
+  , dbl_scale_lb = 0
+  , chr_id_col = 'occupation'
+  , lgc_sort = T
+  , lgc_overqualification_sub = T
+) -> list_logit_spec_sub
+
+# - Ä weights ----------------------------------------------------
 # Regular matching
 # My career matches
 fun_match_similarity(
@@ -1133,7 +971,7 @@ fun_match_similarity(
 
 # Sample occupations' matches
 fun_match_similarity(
-  df_data_rows = df_sample
+  df_data_rows = df_occupations
   , df_query_rows = df_sample
   , chr_method = 'logit'
   , chr_weights = 'attribute-eqvl'
@@ -1160,7 +998,7 @@ fun_match_similarity(
 
 # Sample occupations' matches
 fun_match_similarity(
-  df_data_rows = df_sample
+  df_data_rows = df_occupations
   , df_query_rows = df_sample
   , chr_method = 'logit'
   , chr_weights = 'attribute-eqvl'
@@ -1171,7 +1009,173 @@ fun_match_similarity(
   , lgc_overqualification_sub = T
 ) -> list_logit_eqvl_sub
 
-# - Probit matching ----------------------------------------------------
+# [PROBIT MATCHING] -------------------------------------------------------
+# - Linear weights ----------------------------------------------------
+# Regular matching
+# My career matches
+fun_match_similarity(
+  df_data_rows = df_occupations
+  , df_query_rows = df_profile_adjusted
+  , chr_method = 'probit'
+  , chr_weights = 'linear'
+  , dbl_scale_ub = 100
+  , dbl_scale_lb = 0
+  , chr_id_col = 'occupation'
+  , lgc_sort = T
+  , lgc_overqualification_sub = F
+) -> list_probit_linear_mine
+
+# Sample occupations' matches
+fun_match_similarity(
+  df_data_rows = df_occupations
+  , df_query_rows = df_sample
+  , chr_method = 'probit'
+  , chr_weights = 'linear'
+  , dbl_scale_ub = 100
+  , dbl_scale_lb = 0
+  , chr_id_col = 'occupation'
+  , lgc_sort = T
+  , lgc_overqualification_sub = F
+) -> list_probit_linear
+
+# With overqualification substitution
+# My career matches
+fun_match_similarity(
+  df_data_rows = df_occupations
+  , df_query_rows = df_profile_adjusted
+  , chr_method = 'probit'
+  , chr_weights = 'linear'
+  , dbl_scale_ub = 100
+  , dbl_scale_lb = 0
+  , chr_id_col = 'occupation'
+  , lgc_sort = T
+  , lgc_overqualification_sub = T
+) -> list_probit_linear_mine_sub
+
+# Sample occupations' matches
+fun_match_similarity(
+  df_data_rows = df_occupations
+  , df_query_rows = df_sample
+  , chr_method = 'probit'
+  , chr_weights = 'linear'
+  , dbl_scale_ub = 100
+  , dbl_scale_lb = 0
+  , chr_id_col = 'occupation'
+  , lgc_sort = T
+  , lgc_overqualification_sub = T
+) -> list_probit_linear_sub
+
+# - Quadratic weights ----------------------------------------------------
+# Regular matching
+# My career matches
+fun_match_similarity(
+  df_data_rows = df_occupations
+  , df_query_rows = df_profile_adjusted
+  , chr_method = 'probit'
+  , chr_weights = 'quadratic'
+  , dbl_scale_ub = 100
+  , dbl_scale_lb = 0
+  , chr_id_col = 'occupation'
+  , lgc_sort = T
+  , lgc_overqualification_sub = F
+) -> list_probit_quadratic_mine
+
+# Sample occupations' matches
+fun_match_similarity(
+  df_data_rows = df_occupations
+  , df_query_rows = df_sample
+  , chr_method = 'probit'
+  , chr_weights = 'quadratic'
+  , dbl_scale_ub = 100
+  , dbl_scale_lb = 0
+  , chr_id_col = 'occupation'
+  , lgc_sort = T
+  , lgc_overqualification_sub = F
+) -> list_probit_quadratic
+
+# With overqualification substitution
+# My career matches
+fun_match_similarity(
+  df_data_rows = df_occupations
+  , df_query_rows = df_profile_adjusted
+  , chr_method = 'probit'
+  , chr_weights = 'quadratic'
+  , dbl_scale_ub = 100
+  , dbl_scale_lb = 0
+  , chr_id_col = 'occupation'
+  , lgc_sort = T
+  , lgc_overqualification_sub = T
+) -> list_probit_quadratic_mine_sub
+
+# Sample occupations' matches
+fun_match_similarity(
+  df_data_rows = df_occupations
+  , df_query_rows = df_sample
+  , chr_method = 'probit'
+  , chr_weights = 'quadratic'
+  , dbl_scale_ub = 100
+  , dbl_scale_lb = 0
+  , chr_id_col = 'occupation'
+  , lgc_sort = T
+  , lgc_overqualification_sub = T
+) -> list_probit_quadratic_sub
+
+# - Spec-root weights ----------------------------------------------------
+# Regular matching
+# My career matches
+fun_match_similarity(
+  df_data_rows = df_occupations
+  , df_query_rows = df_profile_adjusted
+  , chr_method = 'probit'
+  , chr_weights = 'speciality-root'
+  , dbl_scale_ub = 100
+  , dbl_scale_lb = 0
+  , chr_id_col = 'occupation'
+  , lgc_sort = T
+  , lgc_overqualification_sub = F
+) -> list_probit_spec_mine
+
+# Sample occupations' matches
+fun_match_similarity(
+  df_data_rows = df_occupations
+  , df_query_rows = df_sample
+  , chr_method = 'probit'
+  , chr_weights = 'speciality-root'
+  , dbl_scale_ub = 100
+  , dbl_scale_lb = 0
+  , chr_id_col = 'occupation'
+  , lgc_sort = T
+  , lgc_overqualification_sub = F
+) -> list_probit_spec
+
+# With overqualification substitution
+# My career matches
+fun_match_similarity(
+  df_data_rows = df_occupations
+  , df_query_rows = df_profile_adjusted
+  , chr_method = 'probit'
+  , chr_weights = 'speciality-root'
+  , dbl_scale_ub = 100
+  , dbl_scale_lb = 0
+  , chr_id_col = 'occupation'
+  , lgc_sort = T
+  , lgc_overqualification_sub = T
+) -> list_probit_spec_mine_sub
+
+# Sample occupations' matches
+fun_match_similarity(
+  df_data_rows = df_occupations
+  , df_query_rows = df_sample
+  , chr_method = 'probit'
+  , chr_weights = 'speciality-root'
+  , dbl_scale_ub = 100
+  , dbl_scale_lb = 0
+  , chr_id_col = 'occupation'
+  , lgc_sort = T
+  , lgc_overqualification_sub = T
+) -> list_probit_spec_sub
+
+# - Ä weights ----------------------------------------------------
 # Regular matching
 # My career matches
 fun_match_similarity(
@@ -1188,7 +1192,7 @@ fun_match_similarity(
 
 # Sample occupations' matches
 fun_match_similarity(
-  df_data_rows = df_sample
+  df_data_rows = df_occupations
   , df_query_rows = df_sample
   , chr_method = 'probit'
   , chr_weights = 'attribute-eqvl'
@@ -1215,7 +1219,7 @@ fun_match_similarity(
 
 # Sample occupations' matches
 fun_match_similarity(
-  df_data_rows = df_sample
+  df_data_rows = df_occupations
   , df_query_rows = df_sample
   , chr_method = 'probit'
   , chr_weights = 'attribute-eqvl'
@@ -1381,10 +1385,7 @@ df_matches_mine %>%
     range
   )) -> df_models_mine
 
-# df_models_mine %>%
-#   print(
-#     n = Inf
-#   )
+# df_models_mine %>% print(n = Inf)
 
 df_models_mine %>% filter(!str_detect(model, 'bvls')) %>% print(n = Inf)
 
@@ -1457,12 +1458,57 @@ df_matches %>%
     range
   )) -> df_models
 
-df_models %>%
-  print(
-    n = Inf
-  )
+df_models %>% print(n = Inf)
 
-df_models %>% filter(!str_detect(model, 'bvls')) %>% print(n = Inf)
+# df_models %>% filter(!str_detect(model, 'bvls')) %>% print(n = Inf)
+
+# - Sample occupations' top 10 matches ------------------------------------
+# Sample occupations' 10 (11) matches
+df_matches %>%
+  group_by(
+    model,
+    occupation
+  ) %>%
+  slice(1:11) %>%
+  ungroup() ->
+  df_matches_top10
+
+# - Sample occupation' similarity matrix ----------------------------------
+# Sample occupations vs sample occupations
+df_matches %>%
+  filter(if_all(
+    .cols = c(
+      occupation
+      , comparison_occupation
+    )
+    ,.fns = ~ .x %in%
+      chr_sample
+  )) %>%
+  mutate(
+    comparison_occupation =
+      factor(
+        comparison_occupation
+        , levels = chr_sample
+      )
+  ) %>%
+  arrange(
+    comparison_occupation
+  ) %>%
+  split(.$model) %>%
+  map(
+    ~ .x %>%
+      select(-model) %>%
+      mutate(
+        similarity = round(
+          similarity
+          , 2
+        )
+      ) %>%
+      pivot_wider(
+        names_from = 'occupation'
+        , values_from = 'similarity'
+      )
+  ) -> list_mtx_similarity
 
 # [PLOTTING] --------------------------------------------------------------
 # - My models' plots ------------------------------------------------------
@@ -1533,7 +1579,7 @@ plt_dumbbell_mine
 # - Career matching (s, ß) -------------------------------------------------------
 # My career matches
 fun_match_similarity(
-  df_data_rows = df_sample
+  df_data_rows = df_occupations
   , df_query_rows =
     df_profile_adjusted
   # df_sample %>%
