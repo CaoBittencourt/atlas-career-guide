@@ -1223,7 +1223,7 @@ fun_match_similarity(
   , lgc_overqualification_sub = T
 ) -> list_probit_eqvl_sub
 
-# [DATA WRANGLING] --------------------------------------------------------
+# [RESULTS] --------------------------------------------------------
 # - Lists' names -------------------------------------------------------------
 # Get names of lists in environment
 str_split(
@@ -1271,7 +1271,8 @@ ls()[
     )
 ] -> chr_matches
 
-# Euclidean matching
+# - My models' summary --------------------------------------------------------
+# My matches
 chr_matches_mine %>%
   syms() %>%
   set_names(
@@ -1367,26 +1368,88 @@ df_matches_mine %>%
     range
   )) -> df_models_mine
 
-df_models_mine %>%
+# df_models_mine %>%
+#   print(
+#     n = Inf
+#   )
+
+df_models_mine %>% filter(!str_detect(model, 'bvls')) %>% print(n = Inf)
+
+# - Sample occupations models' summary --------------------------------------------------------
+# Sample occupations matches
+chr_matches %>%
+  syms() %>%
+  set_names(
+    chr_matches
+  ) %>%
+  map(eval) %>%
+  map(
+    ~ .x$mtx_similarity %>%
+      as_tibble(
+        rownames =
+          'comparison_occupation'
+      ) %>%
+      pivot_longer(
+        cols = -1
+        , names_to = 'occupation'
+        , values_to = 'similarity'
+      )
+  ) %>%
+  bind_rows(
+    .id = 'model'
+  ) %>%
+  mutate(
+    model =
+      str_split(
+        model
+        , '_'
+        , simplify = T
+      )[,c(2:3,4)]
+    , model =
+      paste0(
+        model[,1],
+        '_',
+        model[,2],
+        '_',
+        model[,3]
+      )
+    , model =
+      str_remove_all(
+        model
+        , '^*_$'
+      )
+  ) %>%
+  group_by(
+    model
+  ) %>%
+  arrange(desc(
+    similarity
+  ), .by_group = T
+  ) %>%
+  ungroup() ->
+  df_matches
+
+df_matches %>%
+  group_by(
+    model
+  ) %>%
+  reframe(
+    max = max(similarity),
+    min = min(similarity),
+    range = max - min,
+    mean = mean(similarity),
+    sd = sd(similarity)
+  ) %>%
+  arrange(desc(
+    range
+  )) -> df_models
+
+df_models %>%
   print(
     n = Inf
   )
 
-# - Euclidean matching ----------------------------------------------------
-# My career matches
-
-
-
-list(
-  list_euclidean_eqvl_mine,
-  list_euclidean_eqvl_mine_sub
-) %>%
-  map(
-    ~ .x$mtx_similarity
-  )
-
-
-# Sample occupations' matches
+df_models %>% filter(!str_detect(model, 'bvls')) %>% print(n = Inf)
 
 # - Career matching (s, ß) -------------------------------------------------------
 # My career matches
