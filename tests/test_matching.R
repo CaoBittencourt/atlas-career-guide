@@ -14,6 +14,7 @@ chr_git <- c(
   'CaoBittencourt' = 'atlas.gene',
   'CaoBittencourt' = 'atlas.aeq',
   'CaoBittencourt' = 'atlas.intc',
+  'CaoBittencourt' = 'atlas.plot',
   # 'CaoBittencourt' = 'atlas.notiq',
   'CaoBittencourt' = 'atlas.class'
 )
@@ -68,6 +69,8 @@ c(
   'Mechanical Engineers',
   'Physicists',
   'Credit Analysts',
+  'Registered Nurses',
+  'Hospitalists',
   'Dishwashers'
 ) -> chr_sample
 
@@ -1334,6 +1337,16 @@ df_matches_mine %>%
     mean = mean(similarity),
     sd = sd(similarity)
   ) %>%
+  mutate(
+    range_vs_baseline =
+      filter(
+        ., model ==
+          'euclidean_linear'
+      ) %>% pull(range)
+    , range_vs_baseline =
+      range /
+      range_vs_baseline
+  ) %>%
   left_join(
     df_matches_mine %>%
       select(
@@ -1451,6 +1464,72 @@ df_models %>%
 
 df_models %>% filter(!str_detect(model, 'bvls')) %>% print(n = Inf)
 
+# [PLOTTING] --------------------------------------------------------------
+# - My models' plots ------------------------------------------------------
+# Similarity density plot
+df_matches_mine %>%
+  mutate(
+    sub = str_detect(
+      model, '_sub'
+    )
+    , model =
+      str_remove_all(
+        model
+        , '_sub'
+      )
+  ) %>%
+  fun_plot.ridges(aes(
+    x = similarity,
+    y = model,
+    fill = sub
+  )
+  , .list_axis.x.args = list(
+    limits = c(-0, 1)
+    , breaks = seq(0, 1, .25)
+  )
+  , .fun_format.x = percent
+  , .list_labs = list(
+    title = 'Matching Models Comparison',
+    subtitle = "For Cao Bittencourt's Career Profile",
+    fill = 'Overqualification Substitution'
+  )) -> plt_density_mine
+
+# Ranges dumbbell plot
+df_models_mine %>%
+  pivot_longer(
+    cols = c(max, min)
+    # cols = c(max, mean, min)
+    , names_to = 'match'
+    , values_to = 'similarity'
+  ) %>%
+  fun_plot.dumbbell(aes(
+    x = similarity,
+    y = fct_reorder(
+      model,
+      range
+    ),
+    color = match
+  )
+  , .list_axis.x.args = list(
+    limits = c(-0, 1)
+    , breaks = seq(0, 1, .25)
+  )
+  , .chr_manual.pal = c('blue', 'red')
+  # , .chr_manual.pal = c('blue', 'yellow', 'red')
+  , .reorder_fct = F
+  , .fun_format.x = percent
+  , .list_labs = list(
+    title = 'Matching Models Comparison',
+    subtitle = "For Cao Bittencourt's Career Profile",
+    x = 'Similarity',
+    color = NULL
+  )) -> plt_dumbbell_mine
+
+plt_density_mine
+
+plt_dumbbell_mine
+
+# - Sample occupations models' plots --------------------------------------
 # - Career matching (s, ß) -------------------------------------------------------
 # My career matches
 fun_match_similarity(
@@ -1662,3 +1741,4 @@ df_match %>%
 
 
 
+~
