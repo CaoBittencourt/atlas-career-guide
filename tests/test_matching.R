@@ -66,19 +66,19 @@ df_profile_adjusted <- read_csv('/home/Cao/Storage/github/atlas-research/data/qu
 
 # - Sample occupations ----------------------------------------------------
 # # Define sample occupations
-c(
-  'Mechanical Engineers',
-  'Physicists',
-  'Credit Analysts',
-  'Dishwashers',
-  'Registered Nurses',
-  'Hospitalists',
-  'Philosophy and Religion Teachers, Postsecondary'
-) -> chr_sample
+# c(
+#   'Mechanical Engineers',
+#   'Physicists',
+#   'Credit Analysts',
+#   'Dishwashers',
+#   'Registered Nurses',
+#   'Hospitalists',
+#   'Philosophy and Religion Teachers, Postsecondary'
+# ) -> chr_sample
 
-# df_occupations$
-#   occupation ->
-#   chr_sample
+df_occupations$
+  occupation ->
+  chr_sample
 
 # Sample occupations data frame
 df_occupations %>%
@@ -144,26 +144,26 @@ df_midpoint %>%
 # - Matching methods ------------------------------------------------------
 # Matching methods to apply
 c(
-  'bvls',
-  'logit',
-  'probit',
-  'pearson',
+  # 'bvls',
+  # 'logit',
+  # 'probit',
+  # 'pearson',
   'euclidean'
 ) -> chr_methods
 
 # - Weighting methods ------------------------------------------------------
 # Weighting methods to apply
 c(
-  'linear',
-  'quadratic',
-  'speciality-root',
+  # 'linear',
+  # 'quadratic',
+  # 'speciality-root',
   'attribute-eqvl'
 ) -> chr_weights
 
 # - Overqualification substitution ----------------------------------------
 # Whether or not to apply overqualification substitution
-c(T, F) -> lgc_over_sub
-
+# c(T, F) -> lgc_over_sub
+c(F) -> lgc_over_sub
 
 # - Matching-weights-sub combinations -----------------------------------------
 # Generate all model matching-weights-sub combinations
