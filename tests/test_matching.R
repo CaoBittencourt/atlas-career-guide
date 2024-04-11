@@ -65,7 +65,7 @@ df_occupations <- read_csv('/home/Cao/Storage/github/atlas-research/data/occupat
 df_profile_adjusted <- read_csv('/home/Cao/Storage/github/atlas-research/data/questionnaires/questionnaire_Cao.csv')
 
 # - Sample occupations ----------------------------------------------------
-# Define sample occupations
+# # Define sample occupations
 c(
   'Mechanical Engineers',
   'Physicists',
@@ -75,6 +75,10 @@ c(
   'Hospitalists',
   'Philosophy and Religion Teachers, Postsecondary'
 ) -> chr_sample
+
+# df_occupations$
+#   occupation ->
+#   chr_sample
 
 # Sample occupations data frame
 df_occupations %>%
@@ -141,8 +145,8 @@ df_midpoint %>%
 # Matching methods to apply
 c(
   'bvls',
-  # 'logit',
-  # 'probit',
+  'logit',
+  'probit',
   'pearson',
   'euclidean'
 ) -> chr_methods
