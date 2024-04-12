@@ -339,13 +339,16 @@ list_matches_sample$
   ) -> mtx_taxa
 
 # - Classify without fun_class_classifier ---------------------------
+# Taxonomic categories data frame
 tibble(
-  taxon = factor(c('Reino', 'Filo', 'Classe', 'Ordem', 'Família', 'Gênero', 'Espécie'))
-  , belong = seq(0, 1, length.out = 7)
+  # taxon = factor(c('Reino', 'Filo', 'Classe', 'Ordem', 'Família', 'Gênero', 'Espécie'))
+  taxon = factor(c('kingdom', 'phylum', 'class', 'order', 'family', 'genus', 'species'))
+  , belong = seq(0, 1, length.out = 7) #cutoffs to belong to each category
 ) -> df_categories
 
-df_occupations$
-  occupation %>%
+# Taxonomic classification
+mtx_taxa %>%
+  colnames() %>%
   set_names(.) %>%
   map(~ df_categories) %>%
   bind_rows(
@@ -372,15 +375,299 @@ df_occupations$
     !names(df_categories)
   ) -> df_taxa
 
+# df_taxa %>%
+#   pivot_wider(
+#     names_from = taxon,
+#     values_from = belong
+#   ) -> dsds
+
+# Unique taxonomic groups
 df_taxa %>%
+  filter(
+    belong
+  ) %>%
   pivot_wider(
-    names_from = taxon,
-    values_from = belong
-  ) -> dsds
+    id_cols = occupation
+    # id_cols = c(occupation, similarity)
+    , names_from = taxon
+    , values_from =
+      comparison_occupation
+  ) %>%
+  pivot_longer(
+    cols = -1
+    , names_to = 'taxon'
+    , values_to = 'set'
+  ) %>%
+  group_by(
+    taxon
+  ) %>%
+  reframe(
+    set =
+      unique(
+        set
+      )
+  ) -> dsdsds
 
-dsds
+# df_taxa %>%
+#   filter(
+#     belong
+#   ) %>%
+#   pivot_wider(
+#     id_cols = occupation
+#     , names_from = taxon
+#     , values_from =
+#       comparison_occupation
+#   ) %>%
+#   pivot_longer(
+#     cols = -1
+#     , names_to = 'taxon'
+#     , values_to = 'set'
+#   ) %>%
+#   group_by(
+#     taxon
+#   ) %>%
+#   reframe(
+#     set =
+#       unique(
+#         set
+#       )
+#   ) -> dsdsds
 
-# - Classify matrix --------------------------------------------
+dsdsds %>% filter(taxon == 'kingdom')
+dsdsds %>% filter(taxon == 'phylum')
+dsdsds %>% filter(taxon == 'class')
+dsdsds %>% filter(taxon == 'order')
+dsdsds %>% filter(taxon == 'family')
+dsdsds %>% filter(taxon == 'genus')
+dsdsds %>% filter(taxon == 'species')
+
+dsdsds %>%
+  filter(
+    taxon == 'genus'
+  ) %>%
+  arrange(-map_dbl(
+    set,
+    length
+  )) %>%
+  slice(1:3) -> dsds
+
+setdiff(
+  list_c(dsds[1,]$set),
+  list_c(dsds[2,]$set)
+)
+
+setdiff(
+  list_c(dsds[2,]$set),
+  list_c(dsds[1,]$set)
+)
+
+intersect(
+  list_c(dsds[2,]$set),
+  list_c(dsds[1,]$set)
+)
+
+setdiff(
+  list_c(dsds[3,]$set),
+  intersect(
+    list_c(dsds[2,]$set),
+    list_c(dsds[1,]$set)
+  )
+)
+
+for(k in 2:nrow(dsds)){
+
+  unique(
+    dsds$set[[k - 1]],
+    dsds$set[[k]]
+  )
+
+}
+
+# dsds %>%
+dsdsds %>%
+  filter(
+    taxon == 'genus'
+  ) %>%
+  arrange(map_dbl(
+  # arrange(-map_dbl(
+    set,
+    length
+  )) %>%
+  mutate(
+    cum_set =
+      map2(
+        .x = set,
+        .y = lag(set)
+        , ~ unique(c(.x, .y))
+      )
+    , set_diff =
+      map2(
+        .x = set,
+        .y = cum_set
+        , ~ setdiff(.y, .x)
+      )
+    # set_diff =
+    #   map2(
+    #     .x = set,
+    #     .y = lead(set),
+    #     .f = ~ setdiff(.x, .y)
+    #   )
+  )
+
+dsds$set %>% length()
+dsds$set %>% map(length)
+dsds$set[[1]]
+dsds$set[[2]]
+dsds$set[[3]]
+
+
+unique(
+  c(
+    lag(dsds$set),
+    dsds$set
+  )
+) %>% map(length)
+
+
+dsds %>%
+  mutate(
+    checkmark = list(
+      unique(list_c(c(
+        lag(set)
+        , set
+        # dsds[3,]$set,
+        # dsds[2,]$set,
+        # dsds[1,]$set
+      )))
+    )
+  )
+
+unique(list_c(c(
+  dsds[3,]$set,
+  dsds[2,]$set,
+  dsds[1,]$set
+)))
+
+union(
+
+)
+
+intersect(
+  list_c(dsds[2,]$set),
+  list_c(dsds[1,]$set)
+)
+
+
+# dsdsds %>%
+#   filter(
+#     taxon == 'class'
+#   ) %>%
+#   arrange(map_dbl(
+#     set,
+#     length
+#   )) %>%
+#   slice(1:2) -> dsds
+
+fun_taxa_filter <- function(df_taxa){
+
+  # arguments validation
+
+  # data wrangling
+  # unique taxonomic groups
+  df_taxa %>%
+    filter(
+      belong
+    ) %>%
+    pivot_wider(
+      id_cols = occupation
+      , names_from = taxon
+      , values_from =
+        comparison_occupation
+    ) %>%
+    pivot_longer(
+      cols = -1
+      , names_to = 'taxon'
+      , values_to = 'set'
+    ) %>%
+    group_by(
+      taxon
+    ) %>%
+    reframe(
+      set = unique(set)
+    ) -> df_taxa
+
+  # lag-filter function
+  fun_help_filter <- function(x, y){
+
+    # output
+    return(x[!(x %in% y)])
+
+  }
+
+  # dplyr::setdiff()
+
+}
+
+df_taxa %>%
+  split(.$taxon) ->
+  list_taxa
+
+list_taxa$species %>% reframe(set_length = map_dbl(set, length))
+
+list_taxa$
+  genus %>%
+  arrange(-desc(
+    map_dbl(
+      set,
+      length
+    )
+  )) -> df_genus
+
+df_taxa %>%
+  group_by(
+    taxon
+  ) %>%
+  reframe(
+    max(
+    map_dbl(
+      set,
+      length
+    ))
+  )
+
+
+
+for(k in 2:nrow(df_genus)){
+
+  list(setdiff(
+    list_c(df_genus[k,]$set),
+    list_c(df_genus[k - 1,]$set)
+  )) -> df_genus[k,]$set
+
+}
+
+df_class %>%
+  arrange(-desc(
+    map_dbl(
+      set,
+      length
+    )
+  ))
+
+dsds %>%
+  slice(2) %>%
+  unnest(set) %>%
+  filter(!(
+    set %in% (
+      dsds %>%
+        slice(1) %>%
+        pull(set) %>%
+        list_c()
+    )
+  ))
+
+
+# - Classify with fun_class_classifier --------------------------------------------
 mtx_taxa %>%
   fun_class_classifier(
     dbl_scale_lb = 0,
@@ -399,7 +686,6 @@ mtx_taxa %>%
 
 # - Taxonomy data frame ---------------------------------------------------
 # mtx_taxa -> dsds
-
 mtx_taxa[
   upper.tri(
     mtx_taxa,
