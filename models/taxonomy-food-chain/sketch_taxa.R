@@ -16,6 +16,7 @@ chr_git <- c(
   'CaoBittencourt' = 'atlas.aeq',
   'CaoBittencourt' = 'atlas.intc',
   'CaoBittencourt' = 'atlas.plot',
+  'CaoBittencourt' = 'atlas.taxa',
   # 'CaoBittencourt' = 'atlas.notiq',
   'CaoBittencourt' = 'atlas.class'
 )
@@ -63,6 +64,9 @@ df_occupations <- read_csv('/home/Cao/Storage/github/atlas-research/data/occupat
 
 # My preference-adjusted career profile
 df_profile_adjusted <- read_csv('/home/Cao/Storage/github/atlas-research/data/questionnaires/questionnaire_Cao.csv')
+
+# Similarity matrix
+mtx_similarity <- read_rds('/home/Cao/Storage/github/atlas-research/data/mtx_similarity.rds')
 
 # - Sample occupations ----------------------------------------------------
 # # Define sample occupations
@@ -246,8 +250,44 @@ Map(
 ) -> list_matches_sample
 
 # [TAXONOMY] --------------------------------------------------------------
+# - Hierarchical clustering of ß matrix --------------------
+mtx_similarity %>%
+  fun_taxa_hclust(
+    int_levels = 1
+    # dbl_height =
+    # c(0, 0.5, 1)
+    # seq(0, 1, length.out = 7) %>%
+    # atlas.eqvl::fun_eqvl_equivalence(dbl_scaling = 0.5)
+  ) %>%
+  fun_taxa_desc()
+
+dsds %>% as.matrix() %>% View()
+
+
+list_taxa %>%
+  map(
+    ~ .x %>%
+      filter(
+        map_lgl(
+          occupation,
+          # ~ 'Mathematicians' %in% .x
+          # ~ 'Statisticians' %in% .x
+          ~ 'Chief Executives' %in% .x
+          # ~ 'Economists' %in% .x
+          # ~ 'Mechanical Engineers' %in% .x
+          # ~ 'Physicists' %in% .x
+          # ~ 'Credit Analysts' %in% .x
+          # ~ 'Dishwashers' %in% .x
+          # ~ 'Registered Nurses' %in% .x
+          # ~ 'Hospitalists' %in% .x
+          # ~ 'Philosophy and Religion Teachers, Postsecondary' %in% .x
+        )
+      ) %>%
+      unnest(occupation)
+  )
+
 # - Enforce symmetry function ---------------------------------------------
-fun_taxa_symmetric <- function(
+fun_misc_symmetric <- function(
     mtx_square,
     chr_transform = c('min', 'mean', 'max')
 ){
@@ -489,7 +529,7 @@ dsdsds %>%
     taxon == 'genus'
   ) %>%
   arrange(map_dbl(
-  # arrange(-map_dbl(
+    # arrange(-map_dbl(
     set,
     length
   )) %>%
@@ -629,10 +669,10 @@ df_taxa %>%
   ) %>%
   reframe(
     max(
-    map_dbl(
-      set,
-      length
-    ))
+      map_dbl(
+        set,
+        length
+      ))
   )
 
 
