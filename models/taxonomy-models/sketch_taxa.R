@@ -173,6 +173,7 @@ mtx_similarity <- read_rds('/home/Cao/Storage/github/atlas-research/data/mtx_sim
 #
 # [TAXONOMY] --------------------------------------------------------------
 # - Hierarchical clustering of ß matrix --------------------
+# taxonomy data frame
 mtx_similarity %>%
   fun_taxa_hclust(
     int_levels = 7,
@@ -189,11 +190,22 @@ mtx_similarity %>%
     # c(0, 0.5, 1)
     # seq(0, 1, length.out = 7) %>%
     # atlas.eqvl::fun_eqvl_equivalence(dbl_scaling = 0.5)
-  ) %>%
+  ) -> df_taxonomy
+
+# taxonomy descriptive statistics
+df_taxonomy %>%
   fun_taxa_desc()
 
-dsds %>% as.matrix() %>% View()
+# taxonomy list
+df_taxonomy %>%
+  fun_taxa_list() ->
+  list_taxonomy
 
+# taxonomy list (unnested)
+df_taxonomy %>%
+  fun_taxa_list(
+    lgc_unnest = T
+  ) -> list_taxonomy_unnested
 
 list_taxa %>%
   map(
