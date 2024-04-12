@@ -192,6 +192,10 @@ mtx_similarity %>%
     # atlas.eqvl::fun_eqvl_equivalence(dbl_scaling = 0.5)
   ) -> df_taxonomy
 
+# taxonomy
+df_taxonomy %>%
+  fun_taxa_unnest()
+
 # taxonomy descriptive statistics
 df_taxonomy %>%
   fun_taxa_desc()
@@ -207,15 +211,18 @@ df_taxonomy %>%
     lgc_unnest = T
   ) -> list_taxonomy_unnested
 
-list_taxa %>%
+list_taxonomy[1]
+list_taxonomy_unnested[1]
+
+list_taxonomy %>%
   map(
     ~ .x %>%
       filter(
         map_lgl(
-          occupation,
-          # ~ 'Mathematicians' %in% .x
+          set,
+          ~ 'Mathematicians' %in% .x
           # ~ 'Statisticians' %in% .x
-          ~ 'Chief Executives' %in% .x
+          # ~ 'Chief Executives' %in% .x
           # ~ 'Economists' %in% .x
           # ~ 'Mechanical Engineers' %in% .x
           # ~ 'Physicists' %in% .x
@@ -226,8 +233,11 @@ list_taxa %>%
           # ~ 'Philosophy and Religion Teachers, Postsecondary' %in% .x
         )
       ) %>%
-      unnest(occupation)
-  )
+      unnest(set)
+  ) -> dsds
+
+dsds$class %>% print(n = Inf)
+dsds$order
 
 # - Enforce symmetry function ---------------------------------------------
 fun_misc_symmetric <- function(
