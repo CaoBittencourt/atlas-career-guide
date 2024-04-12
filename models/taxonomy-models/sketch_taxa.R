@@ -174,10 +174,12 @@ mtx_similarity <- read_rds('/home/Cao/Storage/github/atlas-research/data/mtx_sim
 # [TAXONOMY] --------------------------------------------------------------
 # - Hierarchical clustering of ß matrix --------------------
 # taxonomy data frame
+rm(df_taxonomy)
+
 mtx_similarity %>%
   fun_taxa_hclust(
-    int_levels = 7,
-    chr_levels = c(
+    int_levels = 7
+    , chr_levels = c(
       'kingdom',
       'phylum',
       'class',
@@ -186,19 +188,32 @@ mtx_similarity %>%
       'genus',
       'species'
     )
+    , chr_method =
+      'complete'
+      # 'ward.D2'
+
+      # 'mcquitty'
+      # 'centroid' #cutree bug
+      # 'single'
+      # 'average'
+      # 'median' #cutree bug
+      # 'ward.D'
+
     # dbl_height =
     # c(0, 0.5, 1)
     # seq(0, 1, length.out = 7) %>%
     # atlas.eqvl::fun_eqvl_equivalence(dbl_scaling = 0.5)
   ) -> df_taxonomy
 
-# taxonomy
-df_taxonomy %>%
-  fun_taxa_unnest()
+df_taxonomy
 
 # taxonomy descriptive statistics
 df_taxonomy %>%
   fun_taxa_desc()
+
+# taxonomy data frame (unnested)
+df_taxonomy %>%
+  fun_taxa_unnest()
 
 # taxonomy list
 df_taxonomy %>%
@@ -234,10 +249,7 @@ list_taxonomy %>%
         )
       ) %>%
       unnest(set)
-  ) -> dsds
-
-dsds$class %>% print(n = Inf)
-dsds$order
+  )
 
 # - Enforce symmetry function ---------------------------------------------
 fun_misc_symmetric <- function(
