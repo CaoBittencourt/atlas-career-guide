@@ -162,8 +162,7 @@ c(
 
 # - Overqualification substitution ----------------------------------------
 # Whether or not to apply overqualification substitution
-# c(T, F) -> lgc_over_sub
-c(F) -> lgc_over_sub
+c(T, F) -> lgc_over_sub
 
 # - Matching-weights-sub combinations -----------------------------------------
 # Generate all model matching-weights-sub combinations

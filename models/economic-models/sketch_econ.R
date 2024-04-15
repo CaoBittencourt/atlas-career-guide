@@ -63,125 +63,15 @@ df_profile_adjusted <- read_csv('/home/Cao/Storage/github/atlas-research/data/qu
 # Similarity matrix
 mtx_similarity <- read_rds('/home/Cao/Storage/github/atlas-research/data/mtx_similarity.rds')
 
-# # [MODELS] ----------------------------------------------------------------
-# # - Midpoints ----------------------------------------------
-# # Use skill set generality as midpoint for attribute equivalence
-# # Use skill set competence as midpoint for interchangeability
-# df_sample %>%
-#   pivot_longer(
-#     cols = -1
-#     , names_to = 'item'
-#     , values_to = 'item_score'
-#   ) %>%
-#   group_by(
-#     occupation
-#   ) %>%
-#   reframe(
-#     generality =
-#       fun_gene_generality(
-#         item_score
-#       ),
-#     competence =
-#       fun_comp_competence(
-#         dbl_profile = item_score,
-#         dbl_scale_ub = 100,
-#         dbl_scale_lb = 0,
-#         dbl_generality = generality
-#       )
-#   ) -> df_midpoint
-#
-# df_midpoint %>%
-#   arrange(desc(
-#     competence
-#   )) %>%
-#   print(
-#     n = Inf
-#   )
-#
-# # - Matching methods ------------------------------------------------------
-# # Matching methods to apply
-# c(
-#   # 'bvls',
-#   # 'logit',
-#   # 'probit',
-#   # 'pearson',
-#   'euclidean'
-# ) -> chr_methods
-#
-# # - Weighting methods ------------------------------------------------------
-# # Weighting methods to apply
-# c(
-#   # 'linear',
-#   # 'quadratic',
-#   # 'speciality-root',
-#   'attribute-eqvl'
-# ) -> chr_weights
-#
-# # - Overqualification substitution ----------------------------------------
-# # Whether or not to apply overqualification substitution
-# # c(T, F) -> lgc_over_sub
-# c(F) -> lgc_over_sub
-#
-# # - Matching-weights-sub combinations -----------------------------------------
-# # Generate all model matching-weights-sub combinations
-# crossing(
-#   method = chr_methods,
-#   weight = chr_weights,
-#   sub = lgc_over_sub
-# ) -> df_methods
-#
-# df_methods %>%
-#   mutate(
-#     .before = 1
-#     , model = paste0(
-#       method, '_', weight, if_else(
-#         sub, '_sub', ''
-#       )
-#     )
-#     , model = str_replace_all(
-#       model, '-', '_'
-#     )
-#   ) -> df_methods
-#
-# # [MATCHING] --------------------------------------------------------------
-# # - Similarity matrix ------------------------------------------------------------
-# # My career matches
-# Map(
-#   function(model, method, weight, over_sub){
-#
-#     # Apply matching function
-#     return(
-#       fun_match_similarity(
-#         df_data_rows = df_occupations
-#         , df_query_rows = df_sample
-#         , chr_method = method
-#         , chr_weights = weight
-#         , dbl_scale_ub = 100
-#         , dbl_scale_lb = 0
-#         , chr_id_col = 'occupation'
-#         , lgc_sort = T
-#         , lgc_overqualification_sub = over_sub
-#       )
-#     )
-#
-#   }
-#   , model = df_methods$model
-#   , method = df_methods$method
-#   , weight = df_methods$weight
-#   , over_sub = df_methods$sub
-# ) -> list_matches_sample
-#
 # [TAXONOMY] --------------------------------------------------------------
 # - Hierarchical clustering of ß matrix --------------------
 # taxonomy data frame
-rm(df_taxonomy)
-
 mtx_similarity %>%
   fun_taxa_hclust(
     # dbl_height = 0
-      # c(0, 0.5, 1)
-      # seq(0, 1, length.out = 7) %>%
-      # atlas.eqvl::fun_eqvl_equivalence(dbl_scaling = 0.5)
+    # c(0, 0.5, 1)
+    # seq(0, 1, length.out = 7) %>%
+    # atlas.eqvl::fun_eqvl_equivalence(dbl_scaling = 0.5)
     int_levels = 7
     # int_levels = 10
     , chr_levels = c(
@@ -195,14 +85,14 @@ mtx_similarity %>%
     )
     , chr_method =
       'complete'
-      # 'ward.D2'
+    # 'ward.D2'
 
-      # 'mcquitty'
-      # 'centroid' #cutree bug
-      # 'single'
-      # 'average'
-      # 'median' #cutree bug
-      # 'ward.D'
+    # 'mcquitty'
+    # 'centroid' #cutree bug
+    # 'single'
+    # 'average'
+    # 'median' #cutree bug
+    # 'ward.D'
   ) -> df_taxonomy
 
 # taxonomy descriptive statistics
@@ -224,120 +114,196 @@ df_taxonomy %>%
     lgc_unnest = T
   ) -> list_taxonomy_unnested
 
-list_taxonomy[1]
-list_taxonomy_unnested[1]
+# - Taxonomic-based economic model ----------------------------------------
+fun_econ_taxa <- function(
+    mtx_hireability,
+    df_taxonomy
+){
 
-list_taxonomy %>%
-  map(
-    ~ .x %>%
-      filter(
-        map_lgl(
-          set,
-          # ~ 'Mathematicians' %in% .x
-          ~ 'Statisticians' %in% .x
-          # ~ 'Chief Executives' %in% .x
-          # ~ 'Economists' %in% .x
-          # ~ 'Mechanical Engineers' %in% .x
-          # ~ 'Physicists' %in% .x
-          # ~ 'Credit Analysts' %in% .x
-          # ~ 'Dishwashers' %in% .x
-          # ~ 'Registered Nurses' %in% .x
-          # ~ 'Hospitalists' %in% .x
-          # ~ 'Philosophy and Religion Teachers, Postsecondary' %in% .x
-        )
-      ) %>%
-      unnest(set)
+  # arguments validation
+  stopifnot(
+    "'mtx_hireability' must be a square matrix of hireability scores between 0 and 1." =
+      all(
+        is.matrix(mtx_hireability),
+        is.numeric(mtx_hireability),
+        all(diag(mtx_hireability) == 1),
+        all(mtx_hireability >= 0),
+        all(mtx_hireability <= 1)
+      )
   )
 
-# # - Hierarchical clustering of ß matrix --------------------
-# # taxonomy data frame
-# rm(df_taxonomy)
-#
-# mtx_similarity %>%
-#   fun_taxa_hclust(
-#     int_levels = 7
-#     , chr_levels = c(
-#       'kingdom',
-#       'phylum',
-#       'class',
-#       'order',
-#       'family',
-#       'genus',
-#       'species'
-#     )
-#     , chr_method =
-#       # 'complete'
-#       # 'ward.D2'
-#
-#       # 'mcquitty'
-#       'centroid' #cutree bug
-#       # 'single'
-#       # 'average'
-#       # 'median' #cutree bug
-#       # 'ward.D'
-#
-#     # dbl_height =
-#     # c(0, 0.5, 1)
-#     # seq(0, 1, length.out = 7) %>%
-#     # atlas.eqvl::fun_eqvl_equivalence(dbl_scaling = 0.5)
-#   ) -> df_taxonomy
-#
-# df_taxonomy$height
-#
-# max(df_taxonomy$tree$height) - min(df_taxonomy$tree$height)
-# df_taxonomy$breaks
-#
-# df_taxonomy$tree$height
-#
-# cutree(
-#   tree = as.hclust(df_taxonomy$tree),
-#   h = df_taxonomy$breaks
-# )
-#
-#
-# # taxonomy descriptive statistics
-# df_taxonomy %>%
-#   fun_taxa_desc()
-#
-# # taxonomy data frame (unnested)
-# df_taxonomy %>%
-#   fun_taxa_unnest()
-#
-# # taxonomy list
-# df_taxonomy %>%
-#   fun_taxa_list() ->
-#   list_taxonomy
-#
-# # taxonomy list (unnested)
-# df_taxonomy %>%
-#   fun_taxa_list(
-#     lgc_unnest = T
-#   ) -> list_taxonomy_unnested
-#
-# list_taxonomy[1]
-# list_taxonomy_unnested[1]
-#
-# list_taxonomy %>%
-#   map(
-#     ~ .x %>%
-#       filter(
-#         map_lgl(
-#           set,
-#           ~ 'Mathematicians' %in% .x
-#           # ~ 'Statisticians' %in% .x
-#           # ~ 'Chief Executives' %in% .x
-#           # ~ 'Economists' %in% .x
-#           # ~ 'Mechanical Engineers' %in% .x
-#           # ~ 'Physicists' %in% .x
-#           # ~ 'Credit Analysts' %in% .x
-#           # ~ 'Dishwashers' %in% .x
-#           # ~ 'Registered Nurses' %in% .x
-#           # ~ 'Hospitalists' %in% .x
-#           # ~ 'Philosophy and Religion Teachers, Postsecondary' %in% .x
-#         )
-#       ) %>%
-#       unnest(set)
-#   )
+  stopifnot(
+    "'df_taxa' must be a data frame with the 'df_taxa' subclass." =
+      all(
+        is.data.frame(df_taxa)
+        , any(class(df_taxa) == 'df_taxa')
+      )
+  )
+
+  # data wrangling
+  mtx_similarity %>%
+    as_tibble(
+      rownames =
+        'comparison_set'
+    ) -> df_hireability
+
+  rm(mtx_similarity)
+
+  # hireability data frame
+  # filter by hireability to reduce join
+  df_hireability %>%
+    pivot_longer(
+      cols = -1
+      , names_to = 'competing_set'
+      , values_to = 'hireability'
+    ) %>%
+    filter(
+      hireability > 0
+    ) -> df_hireability
+
+  # taxo-economic competition data frame
+  df_taxonomy %>%
+    unnest(set) %>%
+    rename(
+      comparison_set = set
+    ) %>%
+    left_join(
+      df_hireability
+      , multiple = 'all'
+      , relationship = 'many-to-many'
+    ) %>%
+    relocate(any_of(
+      names(df_taxonomy)
+    )) %>%
+    group_by(
+      taxon,
+      taxon_id
+    ) %>%
+    mutate(
+      .after = n
+      , ncomp =
+        unique(competing_set) %>%
+        length()
+    ) -> df_econ
+
+  rm(df_hireability)
+  rm(df_taxonomy)
+
+  # data frame subclass
+  new_data_frame(
+    df_econ
+    , class = c(
+      class(df_econ)
+      , 'df_econ'
+    )
+  ) -> df_econ
+
+  # output
+  return(df_econ)
+
+}
+
+
+list_taxonomy_unnested
+list_taxonomy$kingdom
+
+df_taxonomy %>%
+  unnest(set) %>%
+  rename(
+    comparison_occupation = set
+  ) %>%
+  left_join(
+    df_similarity
+    , multiple = 'all'
+    , relationship = 'many-to-many'
+  ) %>%
+  relocate(any_of(
+    names(df_taxonomy)
+  )) %>%
+  mutate(
+    ß =
+      fun_intc_ss(
+        similarity
+        , rep(0.5, n())
+      )
+  ) %>%
+  filter(
+    ß >= 0.5
+  ) %>%
+  group_by(
+    taxon,
+    taxon_id
+  ) %>%
+  mutate(
+    .after = n
+    , ncomp =
+      unique(competing_occupation) %>%
+      length()
+  ) %>%
+  ungroup() ->
+  dsds
+
+
+dsds %>%
+  filter(
+    comparison_occupation ==
+      'Statisticians'
+  ) %>%
+  group_by(
+    taxon
+  ) %>%
+  slice(1)
+arrange(desc(ß))
+# arrange(ß)
+
+dsds %>%
+  filter(
+    ncomp < 873
+  ) %>%
+  arrange(desc(
+    -ncomp
+  ))
+
+
+df_similarity %>%
+  right_join(
+    list_taxonomy_unnested$
+      # kingdom %>%
+      species %>%
+      bind_rows(
+        # .id = 'taxon_name'
+      )
+    , by = c(
+      'comparison_occupation' =
+        'set'
+    )
+  ) %>%
+  relocate(
+    starts_with('taxon')
+  ) %>%
+  filter(
+    comparison_occupation == 'Mathematicians'
+  ) %>%
+  arrange(desc(
+    -similarity
+  )) %>%
+  filter(
+    similarity >= 0.75
+  ) %>%
+  group_by(
+    taxon,
+    taxon_id
+  ) %>%
+  mutate(
+    competing = n()
+  )
+
+fun_intc_ss()
+
+
+
+
+
 
 # - Enforce symmetry function ---------------------------------------------
 fun_misc_symmetric <- function(
