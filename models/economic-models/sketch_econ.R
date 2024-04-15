@@ -69,33 +69,17 @@ mtx_similarity <- read_rds('/home/Cao/Storage/github/atlas-research/data/mtx_sim
 # taxonomy
 fun_taxa_hclust(
   mtx_similarity
-  , int_levels = 4
-  # , chr_levels = c(
-  #   'sector',
-  #   'subsector',
-  #   'industry',
-  #   'subindustry',
-  #   'market',
-  #   'segment',
-  #   'occupation'
-  # )
+  , int_levels = 7
+  , chr_levels = c(
+    'sector',
+    'subsector',
+    'industry',
+    'subindustry',
+    'market',
+    'segment',
+    'occupation'
+  )
 ) -> df_taxonomy
-
-df_taxonomy %>% fun_taxa_desc()
-
-# fun_taxa_hclust(
-#   mtx_similarity
-#   , int_levels = 7
-#   , chr_levels = c(
-#     'sector',
-#     'subsector',
-#     'industry',
-#     'subindustry',
-#     'market',
-#     'segment',
-#     'occupation'
-#   )
-# ) -> df_taxonomy
 
 # fun_taxa_hclust(
 #   mtx_similarity
@@ -116,14 +100,10 @@ df_taxonomy %>%
   fun_taxa_desc()
 
 df_taxonomy %>%
-  fun_taxa_list(
-    lgc_unnest = T
-  ) -> dsds
-
-df_taxonomy %>%
   unnest(set) %>%
   filter(
-    set == 'Mechanical Engineers'
+    # set == 'Mechanical Engineers'
+    set == 'Physicists'
     # set == 'Dishwashers'
     # set == 'Credit Analysts'
     # set == 'Actuaries'
@@ -147,24 +127,6 @@ df_taxonomy %>%
   map(print, n = Inf) %>%
   invisible()
 
-df_taxonomy %>%
-  fun_taxa_list(
-    lgc_unnest = T
-  ) -> list_taxa_unnest
-
-list_taxa_unnest$
-  segment$
-  segment59
-
-list_taxa_unnest$
-  market$
-  market1
-
-list_taxa_unnest$
-  industry$
-  industry1 %>%
-  print(n = Inf)
-
 # economic model
 atlas.econ::fun_econ_taxa(
   mtx_similarity
@@ -176,3 +138,24 @@ df_econ %>%
     taxon == 'market',
     taxon_id == 1
   )
+
+df_econ %>%
+  filter(
+    taxon == 'market'
+  ) %>%
+  filter(
+    hireability > 0.75
+  ) %>%
+  filter(
+    # comparison_set ==
+    competing_set ==
+      'Physicists'
+  ) %>%
+  arrange(
+    -hireability
+  ) %>%
+  group_by(
+    taxon,
+    taxon_id
+  ) %>%
+  tally()
