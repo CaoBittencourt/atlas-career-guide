@@ -67,19 +67,38 @@ mtx_similarity <- read_rds('/home/Cao/Storage/github/atlas-research/data/mtx_sim
 # [TAXONOMY] --------------------------------------------------------------
 # - Taxonomic-based economic model ----------------------------------------
 # taxonomy
+# division, subdivision?
 fun_taxa_hclust(
   mtx_similarity
-  , int_levels = 7
+  , int_levels = 10
   , chr_levels = c(
     'sector',
     'subsector',
     'industry',
     'subindustry',
+    'field',
+    'branch',
     'market',
     'segment',
-    'occupation'
+    'role',
+    'job'
   )
 ) -> df_taxonomy
+
+# # taxonomy
+# fun_taxa_hclust(
+#   mtx_similarity
+#   , int_levels = 7
+#   , chr_levels = c(
+#     'sector',
+#     'subsector',
+#     'industry',
+#     'subindustry',
+#     'market',
+#     'segment',
+#     'occupation'
+#   )
+# ) -> df_taxonomy
 
 # fun_taxa_hclust(
 #   mtx_similarity
@@ -103,11 +122,10 @@ df_taxonomy %>%
   unnest(set) %>%
   filter(
     # set == 'Mechanical Engineers'
-    set == 'Physicists'
+    # set == 'Physicists'
     # set == 'Dishwashers'
     # set == 'Credit Analysts'
-    # set == 'Actuaries'
-    # set == 'Actuaries'
+    set == 'Actuaries'
     # set == 'Chief Executives'
     # set == 'Economists'
     # set == 'Mathematicians'
@@ -128,10 +146,18 @@ df_taxonomy %>%
   invisible()
 
 # economic model
-atlas.econ::fun_econ_taxa(
+fun_econ_taxa(
   mtx_similarity
   , df_taxonomy
+  , dbl_employment =
+    df_occupations$
+    employment_variants
+  , dbl_wages =
+    df_occupations$
+    wage
 ) -> df_econ
+
+df_econ
 
 df_econ %>%
   filter(
@@ -159,3 +185,56 @@ df_econ %>%
     taxon_id
   ) %>%
   tally()
+
+# - Employability ---------------------------------------------------
+# occupations' employability at each level
+fun_econ_employability(df_econ) -> df_employability
+
+# taxa employability
+fun_econ_employability(df_econ, lgc_taxon = T) -> df_employability_taxa
+
+df_employability %>% head()
+
+
+df_taxonomy %>%
+  fun_taxa_unnest() %>%
+  filter(
+    set == 'Statisticians'
+  ) %>%
+  pivot_longer(
+    cols = -1
+    , names_to = 'taxon'
+    , values_to = 'taxon_id'
+  )
+
+df_employability %>%
+  filter(
+    taxon == 'job',
+    taxon_id == 115
+  )
+
+df_employability %>%
+  filter(
+    competing_set == 'Statisticians',
+    taxon == 'job'
+  ) %>%
+  reframe(
+    employability =
+      weighted.mean(
+        employability
+        , employment
+      )
+  )
+
+df_employability_taxa %>%
+  filter(
+    taxon == 'job',
+    taxon_id == 115
+  )
+
+# - Competitiveness -------------------------------------------------
+# - Value -----------------------------------------------------------
+
+
+
+
