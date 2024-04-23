@@ -432,32 +432,60 @@ df_attribute_eqvl %>%
     n = Inf
   )
 # - Overqualification -----------------------------------------------------
-atlas.qua::fun_qua_oqa(
+fun_qua_oqa(
   df_query_rows = df_profile_adjusted,
   df_data_rows = df_occupations,
   dbl_scale_ub = 100,
   chr_id_col = 'occupation'
 ) -> list_oqa
 
-list_oqa$Cao
+list_oqa$Cao %>%
+  as_tibble(
+    rownames = 'occupation'
+  ) %>%
+  rename(
+    oqa = 2
+  ) %>%
+  arrange(desc(
+    oqa
+  ))
 
 # - Underqualification -----------------------------------------------------
-atlas.qua::fun_qua_uqa(
+fun_qua_uqa(
   df_query_rows = df_profile_adjusted,
   df_data_rows = df_occupations,
   dbl_scale_lb = 0,
   chr_id_col = 'occupation'
 ) -> list_uqa
 
-list_uqa$Cao
+list_uqa$Cao %>%
+  as_tibble(
+    rownames = 'occupation'
+  ) %>%
+  rename(
+    uqa = 2
+  ) %>%
+  arrange(desc(
+    uqa
+  ))
 
 # - Sufficient Qualification ----------------------------------------------
-atlas.qua::fun_qua_sqa(
+fun_qua_sqa(
   df_query_rows = df_profile_adjusted,
   df_data_rows = df_occupations,
   dbl_scale_lb = 0,
   chr_id_col = 'occupation'
 ) -> list_sqa
 
-list_sqa$Cao
+list_sqa$Cao %>%
+  as_tibble(
+    rownames = 'occupation'
+  ) %>%
+  rename(
+    sqa = 2
+  ) %>%
+  arrange(desc(
+    sqa
+  ))
+
 
