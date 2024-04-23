@@ -11,6 +11,8 @@ end
 
 dsds = SkillSet([100, 0, 50], 100, 0)
 
+typeof(dsds)
+
 dsds.a
 dsds.lb
 dsds.ub
@@ -19,7 +21,6 @@ normsb(aₖ::SkillSet) = (aₖ.a .- aₖ.lb) / (aₖ.ub - aₖ.lb)
 
 # define competence for a skill set vector
 comp(aₖ::SkillSet) = mean(normsb(aₖ))
-
 comp(dsds)
 
 # define competence for a skill set matrix
