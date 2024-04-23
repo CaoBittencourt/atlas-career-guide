@@ -14,6 +14,7 @@ chr_git <- c(
   'CaoBittencourt' = 'atlas.gene',
   'CaoBittencourt' = 'atlas.aeq',
   'CaoBittencourt' = 'atlas.intc',
+  'CaoBittencourt' = 'atlas.qua',
   # 'CaoBittencourt' = 'atlas.notiq',
   'CaoBittencourt' = 'atlas.class'
 )
@@ -430,3 +431,33 @@ df_attribute_eqvl %>%
   print(
     n = Inf
   )
+# - Overqualification -----------------------------------------------------
+atlas.qua::fun_qua_oqa(
+  df_query_rows = df_profile_adjusted,
+  df_data_rows = df_occupations,
+  dbl_scale_ub = 100,
+  chr_id_col = 'occupation'
+) -> list_oqa
+
+list_oqa$Cao
+
+# - Underqualification -----------------------------------------------------
+atlas.qua::fun_qua_uqa(
+  df_query_rows = df_profile_adjusted,
+  df_data_rows = df_occupations,
+  dbl_scale_lb = 0,
+  chr_id_col = 'occupation'
+) -> list_uqa
+
+list_uqa$Cao
+
+# - Sufficient Qualification ----------------------------------------------
+atlas.qua::fun_qua_sqa(
+  df_query_rows = df_profile_adjusted,
+  df_data_rows = df_occupations,
+  dbl_scale_lb = 0,
+  chr_id_col = 'occupation'
+) -> list_sqa
+
+list_sqa$Cao
+
