@@ -1,7 +1,7 @@
 # Fdb version 4
-["pdflatex"] 1713994453.67132 "/home/Cao/Storage/github/atlas-research/papers/0. mathematical-notation/dev/paper-template/dev_notation.tex" "dev_notation.pdf" "dev_notation" 1713994454.16117 0
+["pdflatex"] 1713997050.93355 "/home/Cao/Storage/github/atlas-research/papers/0. mathematical-notation/dev/paper-template/dev_notation.tex" "dev_notation.pdf" "dev_notation" 1713997051.42229 0
   "/etc/texmf/web2c/texmf.cnf" 1710926363 42612 09b3c6dec2a078bd30d80981dc2f43a3 ""
-  "/home/Cao/Storage/github/atlas-research/papers/0. mathematical-notation/dev/paper-template/dev_notation.tex" 1713994453.47156 35452 0df96bab77ca6544a6c845534826ddf2 ""
+  "/home/Cao/Storage/github/atlas-research/papers/0. mathematical-notation/dev/paper-template/dev_notation.tex" 1713997050.14809 35456 b7bc5604f11c14a6f092afb34760594f ""
   "/usr/share/texmf/fonts/map/fontname/texfonts.map" 1710926363 3524 cb3e574dea2d1052e39280babc910dc8 ""
   "/usr/share/texmf/fonts/tfm/public/amsfonts/cmextra/cmbsy5.tfm" 1710926363 1120 1e8878807317373affa7f7bba4cf2f6a ""
   "/usr/share/texmf/fonts/tfm/public/amsfonts/cmextra/cmbsy7.tfm" 1710926363 1120 7f9f170e8aa57527ad6c49feafd45d54 ""
@@ -78,10 +78,10 @@
   "/usr/share/texmf/web2c/texmf.cnf" 1710926363 42612 09b3c6dec2a078bd30d80981dc2f43a3 ""
   "/var/lib/texmf/fonts/map/pdftex/updmap/pdftex.map" 1713850284.88918 5467510 16a1904b92333a18bce9de9cf0eae437 ""
   "/var/lib/texmf/web2c/pdftex/pdflatex.fmt" 1713850078 8221232 e980735b6a03ab76c7949f60a39c3468 ""
-  "dev_notation.aux" 1713994454.11156 8833 28b3a835e8064305c72a8e3877887af2 "pdflatex"
-  "dev_notation.spl" 1713994453.9249 0 d41d8cd98f00b204e9800998ecf8427e "pdflatex"
-  "dev_notation.tex" 1713994453.47156 35452 0df96bab77ca6544a6c845534826ddf2 ""
-  "dev_notation.toc" 1713994454.11156 5930 2c779fec2492a6fec23e8a1d9f34a7a0 "pdflatex"
+  "dev_notation.aux" 1713997051.35142 8833 28b3a835e8064305c72a8e3877887af2 "pdflatex"
+  "dev_notation.spl" 1713997051.13809 0 d41d8cd98f00b204e9800998ecf8427e "pdflatex"
+  "dev_notation.tex" 1713997050.14809 35456 b7bc5604f11c14a6f092afb34760594f ""
+  "dev_notation.toc" 1713997051.35475 5930 2c779fec2492a6fec23e8a1d9f34a7a0 "pdflatex"
   (generated)
   "dev_notation.aux"
   "dev_notation.log"
