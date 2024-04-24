@@ -41,7 +41,7 @@
 
 % endregion
 
-% region: display breaks
+% region: display breaks 
 \allowdisplaybreaks
 
 % endregion
@@ -49,22 +49,19 @@
 %SECTION: PAPER
 \begin{document}
 
+% \maketitle
+
+% region: abstract 
+\begin{abstract}
+    \noindent
+    This is a brief document to define statistical methods for data-drive career choice and development. It deals with topics such as: career matching (i.e. vocational choice); estimation of competence, or overall skill level; estimation of skill set generality; versatility; skill set profitability; employability; labor market competitiveness; labor market taxonomy; optimal human resources acquistion and allocation; and so on and so forth. Each concept shall be explained at length in separate articles.
+
+    \noindent
+    \\ \textbf{Keywords:} Career choice; Career development; Matching algorithms; Competence; Similarity.
+\end{abstract}
+% endregion
+
 \maketitle
-
-% % region: abstract 
-% \newpage
-% \begin{abstract}
-%     \noindent
-%     lalala dsds.
-
-%     \noindent
-%     \\ \textbf{Keywords:} lalala; lalala; lalala; lalala; lalala.
-% \end{abstract}
-% % endregion
-
-% % table of contents
-% \newpage
-% \tableofcontents
 
 % region: basic definitions
 \section{Basic Definitions}
@@ -72,7 +69,7 @@
 The $i$-th professional attribute, or competency, of a person $k$ is defined
 as:
 \begin{gather}
-    a_{i}^{k} 
+    a_{i}^{k}
     \in [0, 100]
     ,
 \end{gather}
@@ -101,38 +98,115 @@ A skill set matrix, or career profile matrix, is the collection of all $n$ skill
 Normalization by the scale bounds is defined by the tilde operator:
 \begin{gather}
     \tilde{a}_{i}^{k} =
-    \frac{a_{i}^{k} - 0}{100 - 0} = 
+    \frac{a_{i}^{k} - 0}{100 - 0} =
     \frac{a_{i}^{k}}{100}
     \in [0,1]
     ;\\
-    \boldsymbol{\tilde{a}_{k}} = 
+    \boldsymbol{\tilde{a}_{k}} =
     (\tilde{a}_{1}^{k}, \dots, \tilde{a}_{m}^{k})
     ;\\
     \textbf{Ã} =
     \begin{bmatrix}
         \tilde{a}_{1}^{1} & \hdots & \tilde{a}_{m}^{1} \\
-        \vdots    & \ddots & \vdots    \\
+        \vdots            & \ddots & \vdots            \\
         \tilde{a}_{1}^{n} & \hdots & \tilde{a}_{m}^{n} \\
     \end{bmatrix}
     .
 \end{gather}
 Normalization by a skill set's highest attribute is defined by the hat operator:
 \begin{gather}
-    \hat{a}_{i}^{k} = 
+    \hat{a}_{i}^{k} =
     \frac{a_{i}^{k}}{\max{a_{j}^{k}}}
     \in [0,1]
     ;\\
-    \boldsymbol{\hat{a}_{k}} = 
+    \boldsymbol{\hat{a}_{k}} =
     (\hat{a}_{1}^{k}, \dots, \hat{a}_{m}^{k})
     ;\\
     \textbf{Â} =
     \begin{bmatrix}
         \hat{a}_{1}^{1} & \hdots & \hat{a}_{m}^{1} \\
-        \vdots    & \ddots & \vdots    \\
+        \vdots          & \ddots & \vdots          \\
         \hat{a}_{1}^{n} & \hdots & \hat{a}_{m}^{n} \\
     \end{bmatrix}
     .
 \end{gather}
+
+% endregion
+
+% region: basic skill set functions
+\section{Basic Skill Set Functions}
+The generality of a skill set is the mean of its maxima-normalized attributes:
+\begin{gather}
+    \gamma_{k} = \left(\frac{1}{m}\right)\sum_{i=1}^{m}{\hat{a}_{i}^{k}}
+    .
+\end{gather}
+Generalists have high $\gamma_{k}$ scores. Specialists have low $\gamma_{k}$ scores.
+The generality vector of all $n$ skill sets in the economy is:
+\begin{gather}
+    \boldsymbol{\gamma} = (\gamma_{1}, \dots, \gamma_{n})
+    .
+\end{gather}
+
+The attribute equivalence of a particular attribute in a skill set measures the
+importance of that attribute relative to the skill set's highest attribute,
+using the skill set's generality as a midpoint and scaling parameter. The
+attribute equivalence of an attribute is denoted by the umlaut operator:
+\begin{gather}
+    \ddot{a}_{i}^{k} = 
+        \text{aeq}(\hat{a}_{i}^{k}, \gamma_{k}) =
+        \hat{a}_{i}^{k} 
+        \left[
+            1 + \gamma_{k} (1 - \hat{a}_{i}^{k})
+                \exp\bigg( 
+                    % -\frac{\hat{a}_{i}^{k} - \gamma_{k}}{1 - \gamma_{k}}
+                    \frac{\hat{a}_{i}^{k} - \gamma_{k}}{\gamma_{k} - 1}
+                    % \frac{\gamma_{k} - \hat{a}_{i}^{k}}{1 - \gamma_{k}}
+                \bigg)
+        \right] ^ {
+            -\frac{\gamma_{k}}{\hat{a}_{i}^{k}}
+            % -{\gamma_{k} / \hat{a}_{i}^{k}}
+        }
+        .
+\end{gather}
+Attributes with high levels of attribute equivalence $\ddot{a}_{i}^{k}$ are said to be equivalent to the skill set's most importante attribute. These attributes are called \textit{core} attributes.
+The attribute equivalence vector of a skill set is given by the collection of their $m$ umlauted attributes:
+\begin{gather}
+    \boldsymbol{\ddot{a}_{k}} = (\ddot{a}_{1}^{k}, ..., \ddot{a}_{m}^{k})
+    .
+\end{gather}
+The attribute equivalence matrix is the collection of all attribute equivalence vectors in the economy:
+\begin{gather}
+    \textbf{Ä} =
+    \begin{bmatrix}
+        \ddot{a}_{1}^{1} & \hdots & \ddot{a}_{m}^{1} \\
+        \vdots            & \ddots & \vdots            \\
+        \ddot{a}_{1}^{n} & \hdots & \ddot{a}_{m}^{n} \\
+    \end{bmatrix}
+    .
+\end{gather}
+
+The overall competence of a skill set is the mean of its scale-normalized attributes, weighted by each attribute's importance (i.e. its attribute equivalence):
+\begin{gather}
+    c_k = 
+    \frac{
+        \sum_{i=1}^{m}{
+            \ddot{a}_{i}^{k}
+            \tilde{a}_{i}^{k}
+        }
+    }{
+        \sum_{i=1}^{m}{
+            \ddot{a}_{i}^{k}
+        }
+    }
+    .
+\end{gather}
+
+The competence vector of all $n$ skill sets in the economy is:
+\begin{gather}
+    \boldsymbol{c} = (c_1, \dots, c_n)
+    .
+\end{gather}
+
 
 % endregion
 
