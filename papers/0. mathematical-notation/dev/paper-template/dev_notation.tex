@@ -1,0 +1,139 @@
+%SECTION: SETUP
+% region: document class 
+% \documentclass{article}
+\documentclass{elsarticle} %elsevier
+% \documentclass[twocolumn]{elsarticle} %elsevier
+% \documentclass{apa7} %american psychological association
+% \documentclass[doc]{apa7} %american psychological association
+% \documentclass{aomart} %annals of mathematics
+% \documentclass{imsproc} %institute of mathematics and statistics
+% \documentclass{nwejmart} %north-western european journal of mathematics
+% \documentclass{paper} 
+% \documentclass{sr-vorl} %springer book
+% \documentclass{ecca} %economica
+% \documentclass{ecta} %econometrica
+% \documentclass{apecon} %applied economics
+
+% endregion
+
+% region: packages 
+\usepackage{xr}
+\usepackage{physics}
+\usepackage{float}
+
+% endregion
+
+% region: title 
+% Title
+\title{
+    % The Career Atlas: Mathematical Notation
+    The Career Atlas:\\
+    Mathematical Notation
+}
+\author{Cao Bittencourt}
+% \affiliation{
+%     {B. Sc. in Economics from EPGE (FGV), RJ, Brazil.}\\
+%     {Statistician at Atlas Career Guide Inc., FL, USA.}
+% }
+\affiliation{{B. Sc. in Economics from EPGE (FGV), RJ, Brazil.}}
+\affiliation{{Statistician at Atlas Career Guide Inc., FL, USA.}}
+\date{\today}
+
+% endregion
+
+% region: display breaks
+\allowdisplaybreaks
+
+% endregion
+
+%SECTION: PAPER
+\begin{document}
+
+\maketitle
+
+% % region: abstract 
+% \newpage
+% \begin{abstract}
+%     \noindent
+%     lalala dsds.
+
+%     \noindent
+%     \\ \textbf{Keywords:} lalala; lalala; lalala; lalala; lalala.
+% \end{abstract}
+% % endregion
+
+% % table of contents
+% \newpage
+% \tableofcontents
+
+% region: basic definitions
+\section{Basic Definitions}
+\subsection{Skill Sets}
+The $i$-th professional attribute, or competency, of a person $k$ is defined
+as:
+\begin{gather}
+    a_{i}^{k} 
+    \in [0, 100]
+    ,
+\end{gather}
+where the interval $[0,100]$ determines the bounds for every competency.\footnote[1]{
+    More generally, these could be defined as $a_\text{lb}$ (the lower bound) and $a_\text{ub}$ (the upper bound). Here, the interval $[0,100]$ is used because of its ease of interpretation.
+}
+
+The skill set, or career profile, of a person $k$ is defined as the vector of
+their $m$ attributes:
+\begin{gather}
+    \boldsymbol{a_k} = (a_{1}^{k}, \dots, a_{m}^{k})
+    .
+\end{gather}
+A skill set matrix, or career profile matrix, is the collection of all $n$ skill sets in the economy:
+\begin{gather}
+    \textbf{A} =
+    \begin{bmatrix}
+        a_{1}^{1} & \hdots & a_{m}^{1} \\
+        \vdots    & \ddots & \vdots    \\
+        a_{1}^{n} & \hdots & a_{m}^{n} \\
+    \end{bmatrix}
+    .
+\end{gather}
+
+\subsection{Skill Set Normalization}
+Normalization by the scale bounds is defined by the tilde operator:
+\begin{gather}
+    \tilde{a}_{i}^{k} =
+    \frac{a_{i}^{k} - 0}{100 - 0} = 
+    \frac{a_{i}^{k}}{100}
+    \in [0,1]
+    ;\\
+    \boldsymbol{\tilde{a}_{k}} = 
+    (\tilde{a}_{1}^{k}, \dots, \tilde{a}_{m}^{k})
+    ;\\
+    \textbf{Ã} =
+    \begin{bmatrix}
+        \tilde{a}_{1}^{1} & \hdots & \tilde{a}_{m}^{1} \\
+        \vdots    & \ddots & \vdots    \\
+        \tilde{a}_{1}^{n} & \hdots & \tilde{a}_{m}^{n} \\
+    \end{bmatrix}
+    .
+\end{gather}
+Normalization by a skill set's highest attribute is defined by the hat operator:
+\begin{gather}
+    \hat{a}_{i}^{k} = 
+    \frac{a_{i}^{k}}{\max{a_{j}^{k}}}
+    \in [0,1]
+    ;\\
+    \boldsymbol{\hat{a}_{k}} = 
+    (\hat{a}_{1}^{k}, \dots, \hat{a}_{m}^{k})
+    ;\\
+    \textbf{Â} =
+    \begin{bmatrix}
+        \hat{a}_{1}^{1} & \hdots & \hat{a}_{m}^{1} \\
+        \vdots    & \ddots & \vdots    \\
+        \hat{a}_{1}^{n} & \hdots & \hat{a}_{m}^{n} \\
+    \end{bmatrix}
+    .
+\end{gather}
+
+% endregion
+
+\end{document}
