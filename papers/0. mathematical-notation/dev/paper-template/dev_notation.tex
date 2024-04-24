@@ -133,8 +133,8 @@ Normalization by a skill set's highest attribute is defined by the hat operator:
 
 % endregion
 
-% region: basic skill set functions
-\section{Basic Skill Set Functions}
+% region: basic skill set models 
+\section{Basic Skill Set Models}
 The generality of a skill set is the mean of its maxima-normalized attributes:
 \begin{gather}
     \gamma_{k} = \left(\frac{1}{m}\right)\sum_{i=1}^{m}{\hat{a}_{i}^{k}}
@@ -152,21 +152,21 @@ importance of that attribute relative to the skill set's highest attribute,
 using the skill set's generality as a midpoint and scaling parameter. The
 attribute equivalence of an attribute is denoted by the umlaut operator:
 \begin{gather}
-    \ddot{a}_{i}^{k} = 
-        \text{aeq}(\hat{a}_{i}^{k}, \gamma_{k}) =
-        \hat{a}_{i}^{k} 
-        \left[
-            1 + \gamma_{k} (1 - \hat{a}_{i}^{k})
-                \exp\bigg( 
-                    % -\frac{\hat{a}_{i}^{k} - \gamma_{k}}{1 - \gamma_{k}}
-                    \frac{\hat{a}_{i}^{k} - \gamma_{k}}{\gamma_{k} - 1}
-                    % \frac{\gamma_{k} - \hat{a}_{i}^{k}}{1 - \gamma_{k}}
-                \bigg)
+    \ddot{a}_{i}^{k} =
+    \text{aeq}(\hat{a}_{i}^{k}, \gamma_{k}) =
+    \hat{a}_{i}^{k}
+    \left[
+        1 + \gamma_{k} (1 - \hat{a}_{i}^{k})
+        \exp\bigg(
+        % -\frac{\hat{a}_{i}^{k} - \gamma_{k}}{1 - \gamma_{k}}
+        \frac{\hat{a}_{i}^{k} - \gamma_{k}}{\gamma_{k} - 1}
+        % \frac{\gamma_{k} - \hat{a}_{i}^{k}}{1 - \gamma_{k}}
+        \bigg)
         \right] ^ {
-            -\frac{\gamma_{k}}{\hat{a}_{i}^{k}}
-            % -{\gamma_{k} / \hat{a}_{i}^{k}}
-        }
-        .
+    -\frac{\gamma_{k}}{\hat{a}_{i}^{k}}
+    % -{\gamma_{k} / \hat{a}_{i}^{k}}
+    }
+    .
 \end{gather}
 Attributes with high levels of attribute equivalence $\ddot{a}_{i}^{k}$ are said to be equivalent to the skill set's most importante attribute. These attributes are called \textit{core} attributes.
 The attribute equivalence vector of a skill set is given by the collection of their $m$ umlauted attributes:
@@ -179,24 +179,26 @@ The attribute equivalence matrix is the collection of all attribute equivalence 
     \textbf{Ä} =
     \begin{bmatrix}
         \ddot{a}_{1}^{1} & \hdots & \ddot{a}_{m}^{1} \\
-        \vdots            & \ddots & \vdots            \\
+        \vdots           & \ddots & \vdots           \\
         \ddot{a}_{1}^{n} & \hdots & \ddot{a}_{m}^{n} \\
     \end{bmatrix}
     .
 \end{gather}
 
-The overall competence of a skill set is the mean of its scale-normalized attributes, weighted by each attribute's importance (i.e. its attribute equivalence):
+The overall competence of a skill set is the mean of its scale-normalized
+attributes, weighted by each attribute's importance (i.e. its attribute
+equivalence):
 \begin{gather}
-    c_k = 
+    c_k =
     \frac{
-        \sum_{i=1}^{m}{
-            \ddot{a}_{i}^{k}
-            \tilde{a}_{i}^{k}
-        }
+    \sum_{i=1}^{m}{
+    \ddot{a}_{i}^{k}
+    \tilde{a}_{i}^{k}
+    }
     }{
-        \sum_{i=1}^{m}{
-            \ddot{a}_{i}^{k}
-        }
+    \sum_{i=1}^{m}{
+    \ddot{a}_{i}^{k}
+    }
     }
     .
 \end{gather}
@@ -204,6 +206,265 @@ The overall competence of a skill set is the mean of its scale-normalized attrib
 The competence vector of all $n$ skill sets in the economy is:
 \begin{gather}
     \boldsymbol{c} = (c_1, \dots, c_n)
+    .
+\end{gather}
+
+% endregion
+
+% region: comparative models 
+\section{Comparative Models}
+\subsection{Matching Models}
+The most basic comparative model is that of Euclidean matching with linear
+weights:
+\begin{gather}
+    s_{k,q} =
+    s(\boldsymbol{a_k}, \boldsymbol{a_q}) =
+    1 - \tilde{d}(\boldsymbol{a_k}, \boldsymbol{a_q})
+    \in [0,1]
+    ,
+\end{gather}
+where
+\begin{gather}
+    \tilde{d}_{k,q} =
+    \tilde{d}(\boldsymbol{a_k}, \boldsymbol{a_q}) =
+    \sqrt{
+    \frac{
+    \sum_{i = 1}^{m}{
+    a_{i}^{q} (a_{i}^{k} - a_{i}^{q})^2
+    }
+    }{
+    \sum_{i = 1}^{m}{
+    a_{i}^{q} \max(100 - a_{i}^{q}, a_{i}^{q})^2
+    }
+    }
+    }
+    \in [0,1]
+    .
+\end{gather}
+In this model, we compare a skill set $\boldsymbol{a_k}$ to a skill set $\boldsymbol{a_q}$ by calculating the weighted Euclidean distance from $\boldsymbol{a_k}$ to $\boldsymbol{a_q}$ normalized by the maximum theoretical distance to $\boldsymbol{a_q}$.
+
+Other weighting systems can be employed in this type of matching model. We could, for instance, substitute the linear weights with either quadratic weights,
+\begin{gather}
+    {a_{i}^{q}} ^ 2
+    \in [0,1]
+    ,
+\end{gather}
+or speciality-root weights,
+\begin{gather}
+    {a_{i}^{q}} ^ {
+        \frac{1}{1 - \gamma_k}
+    }
+    \in [0,1]
+    .
+\end{gather}
+But the best and most interpretable results are obtained using attribute equivalence as the weighting function:
+\begin{gather}
+    \tilde{d}_{k,q} =
+    \tilde{d}(\boldsymbol{a_k}, \boldsymbol{a_q}) =
+    \sqrt{
+    \frac{
+    \sum_{i = 1}^{m}{
+    \ddot{a}_{i}^{q} (a_{i}^{k} - a_{i}^{q})^2
+    }
+    }{
+    \sum_{i = 1}^{m}{
+    \ddot{a}_{i}^{q} \max(100 - a_{i}^{q}, a_{i}^{q})^2
+    }
+    }
+    }
+    \in [0,1]
+    .
+\end{gather}
+
+We could also employ other matching models instead of the ``baseline" weighted Euclidean method. [detail each method later]:
+\begin{enumerate}
+    \item logit regression matching
+    \item probit regression matching
+    \item bvls regression matching
+    \item tobit regression matching
+    \item pearson correlation matching
+    \item kendal nonparametric correlation matching
+    \item spearman nonparametric correlation matching
+\end{enumerate}
+
+At last, similarity and normalized distance metrics determine the respective vectors and matrices, as follows:
+\begin{gather}
+    \boldsymbol{s_k} = (s_{k,1}, \dots, s_{k,n})
+    ;\\
+    \boldsymbol{\tilde{d}_k} = (\tilde{d}_{k,1}, \dots, \tilde{d}_{k,n})
+    ;\\
+    \textbf{S} =
+    \begin{bmatrix}
+        s_{1,1} & \hdots & s_{n,1}\\
+        \vdots & \ddots & \vdots\\
+        s_{1,n} & \hdots & s_{n,n}\\
+    \end{bmatrix} = 
+    \begin{bmatrix}
+        1 & \hdots & s_{k,1} & \hdots & s_{n,1}\\
+        \vdots & \ddots & \vdots & \ddots & \vdots\\
+        s_{1,k} & \hdots & 1 & \hdots & s_{n,k}\\
+        \vdots & \ddots & \vdots & \ddots & \vdots\\
+        s_{1,n} & \hdots & s_{k,n} & \hdots & 1\\
+    \end{bmatrix}
+    ;\\
+    \textbf{D} =
+    \begin{bmatrix}
+        \tilde{d}_{1,1} & \hdots & \tilde{d}_{n,1}\\
+        \vdots & \ddots & \vdots\\
+        \tilde{d}_{1,n} & \hdots & \tilde{d}_{n,n}\\
+    \end{bmatrix} = 
+    \begin{bmatrix}
+        0 & \hdots & \tilde{d}_{k,1} & \hdots & \tilde{d}_{n,1}\\
+        \vdots & \ddots & \vdots & \ddots & \vdots\\
+        \tilde{d}_{1,k} & \hdots & 0 & \hdots & \tilde{d}_{n,k}\\
+        \vdots & \ddots & \vdots & \ddots & \vdots\\
+        \tilde{d}_{1,n} & \hdots & \tilde{d}_{k,n} & \hdots & 0\\
+    \end{bmatrix}
+    .
+\end{gather}
+
+\subsection{Qualification Models}
+A closely related concept to matching is the qualification comparative model. In this family of functions, however, Euclidean matching is mandatory, as other matching methods do not make sense for this specific type of calculation. The reason for this is at that, here, we are not only interested in matching (i.e. a typical classification problem), but rather in the actual distances between comparison skill sets.
+
+To define these models, we first have to define the gap function, which measures only positive competency gaps:
+\begin{gather}
+    \delta_{k,q}^{i} =
+    \delta(a_{i}^{k}, a_{i}^{q}) = 
+    \max(
+        a_{i}^{k} - a_{i}^{q}
+        , 0
+    )
+    \in [0, 100]
+    .
+\end{gather}
+Now that we have defined the gap function, we write the underqualification model:
+\begin{gather}
+    \tilde{\delta}_{k,q}^{<} = 
+    \text{uqa}(\boldsymbol{a_k}, \boldsymbol{a_q}) =
+    \sqrt{
+        \frac{
+            \sum_{i=1}^{m}{
+                \ddot{a}_{i}^{q} {\delta(a_{i}^{q}, a_{i}^{k})} ^ 2
+            }
+        }{
+            \sum_{i=1}^{m}{
+                \ddot{a}_{i}^{q} {\delta(a_{i}^{q}, 0)} ^ 2
+            }
+        }
+    } =
+    \sqrt{
+        \frac{
+            \sum_{i=1}^{m}{
+                \ddot{a}_{i}^{q} {\delta(a_{i}^{q}, a_{i}^{k})} ^ 2
+            }
+        }{
+            \sum_{i=1}^{m}{
+                \ddot{a}_{i}^{q} {a_{i}^{q}} ^ 2
+            }
+        }
+    }
+    .
+\end{gather}
+Analogously, the overqualification model is given by:
+\begin{gather}
+    \tilde{\delta}_{k,q}^{\geq} = 
+    \text{oqa}(\boldsymbol{a_k}, \boldsymbol{a_q}) =
+    \sqrt{
+        \frac{
+            \sum_{i=1}^{m}{
+                \ddot{a}_{i}^{q} {\delta(a_{i}^{k}, a_{i}^{q})} ^ 2
+            }
+        }{
+            \sum_{i=1}^{m}{
+                \ddot{a}_{i}^{q} {\delta(a_{i}^{q}, 100)} ^ 2
+            }
+        }
+    } =
+    \sqrt{
+        \frac{
+            \sum_{i=1}^{m}{
+                \ddot{a}_{i}^{q} {\delta(a_{i}^{k}, a_{i}^{q})} ^ 2
+            }
+        }{
+            \sum_{i=1}^{m}{
+                \ddot{a}_{i}^{q} {(100 - a_{i}^{q})} ^ 2
+            }
+        }
+    }
+    .
+\end{gather}
+Finally, it is evident that ``sufficient qualification" is the complement of the underqualification model:
+\begin{gather}
+    s_{k,q}^{\geq} =
+    \text{sqa}(\boldsymbol{a_k}, \boldsymbol{a_q}) =
+    1 - 
+    \sqrt{
+        \frac{
+            \sum_{i=1}^{m}{
+                \ddot{a}_{i}^{q} {\delta(a_{i}^{q}, a_{i}^{k})} ^ 2
+            }
+        }{
+            \sum_{i=1}^{m}{
+                \ddot{a}_{i}^{q} {\delta(a_{i}^{q}, 0)} ^ 2
+            }
+        }
+    } =
+    1 - \text{uqa}(\boldsymbol{a_k}, \boldsymbol{a_q})
+    .
+\end{gather}
+
+As with the similarity and normalized distance statistics described above, all these three qualification models are bounded to the $[0,1]$ interval. They also determine the following vectors:
+\begin{gather}
+    \boldsymbol{\tilde{\delta}_{k}^{<}} = (\tilde{\delta}_{k,1}^{<}, \dots, \tilde{\delta}_{k,n}^{<})
+    ;\\
+    \boldsymbol{\tilde{\delta}_{k}^{\geq}} = (\tilde{\delta}_{k,1}^{\geq}, \dots, \tilde{\delta}_{k,n}^{\geq})
+    ;\\
+    \boldsymbol{s_{k}^{\geq}} = (s_{k,1}^{\geq}, \dots, s_{k,n}^{\geq})
+    ;
+\end{gather}
+and matrices
+\begin{gather}
+    \textbf{$\tilde{\Delta}$}_{\boldsymbol{<}} =
+    \begin{bmatrix}
+        \tilde{\delta}_{1,1}^{<} & \hdots & \tilde{\delta}_{n,1}^{<}\\
+        \vdots & \ddots & \vdots\\
+        \tilde{\delta}_{1,n}^{<} & \hdots & \tilde{\delta}_{n,n}^{<}\\
+    \end{bmatrix} = 
+    \begin{bmatrix}
+        0 & \hdots & \tilde{\delta}_{k,1}^{<} & \hdots & \tilde{\delta}_{n,1}^{<}\\
+        \vdots & \ddots & \vdots & \ddots & \vdots\\
+        \tilde{\delta}_{1,k}^{<} & \hdots & 0 & \hdots & \tilde{\delta}_{n,k}^{<}\\
+        \vdots & \ddots & \vdots & \ddots & \vdots\\
+        \tilde{\delta}_{1,n}^{<} & \hdots & \tilde{\delta}_{k,n}^{<} & \hdots & 0\\
+    \end{bmatrix}
+    ;\\
+    \textbf{$\tilde{\Delta}$}_{\boldsymbol{\geq}} =
+    \begin{bmatrix}
+        \tilde{\delta}_{1,1}^{\geq} & \hdots & \tilde{\delta}_{n,1}^{\geq}\\
+        \vdots & \ddots & \vdots\\
+        \tilde{\delta}_{1,n}^{\geq} & \hdots & \tilde{\delta}_{n,n}^{\geq}\\
+    \end{bmatrix} = 
+    \begin{bmatrix}
+        0 & \hdots & \tilde{\delta}_{k,1}^{\geq} & \hdots & \tilde{\delta}_{n,1}^{\geq}\\
+        \vdots & \ddots & \vdots & \ddots & \vdots\\
+        \tilde{\delta}_{1,k}^{\geq} & \hdots & 0 & \hdots & \tilde{\delta}_{n,k}^{\geq}\\
+        \vdots & \ddots & \vdots & \ddots & \vdots\\
+        \tilde{\delta}_{1,n}^{\geq} & \hdots & \tilde{\delta}_{k,n}^{\geq} & \hdots & 0\\
+    \end{bmatrix}
+    ;\\
+    \textbf{S}_{\boldsymbol{\geq}} =
+    \begin{bmatrix}
+        s_{1,1} & \hdots & s_{n,1}\\
+        \vdots & \ddots & \vdots\\
+        s_{1,n} & \hdots & s_{n,n}\\
+    \end{bmatrix} = 
+    \begin{bmatrix}
+        1 & \hdots & s_{k,1} & \hdots & s_{n,1}\\
+        \vdots & \ddots & \vdots & \ddots & \vdots\\
+        s_{1,k}^{\geq} & \hdots & 1 & \hdots & s_{n,k}^{\geq}\\
+        \vdots & \ddots & \vdots & \ddots & \vdots\\
+        s_{1,n}^{\geq} & \hdots & s_{k,n}^{\geq} & \hdots & 1\\
+    \end{bmatrix}
     .
 \end{gather}
 

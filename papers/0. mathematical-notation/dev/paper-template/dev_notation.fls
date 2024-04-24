@@ -97,6 +97,7 @@ INPUT /usr/share/texmf/fonts/tfm/public/amsfonts/cmextra/cmbsy5.tfm
 OUTPUT dev_notation.pdf
 INPUT /var/lib/texmf/fonts/map/pdftex/updmap/pdftex.map
 INPUT dev_notation.aux
+INPUT /usr/share/texmf/fonts/type1/public/amsfonts/cmextra/cmbsy7.pfb
 INPUT /usr/share/texmf/fonts/type1/public/amsfonts/cm/cmbx10.pfb
 INPUT /usr/share/texmf/fonts/type1/public/amsfonts/cm/cmex10.pfb
 INPUT /usr/share/texmf/fonts/type1/public/amsfonts/cm/cmmi10.pfb
@@ -112,6 +113,7 @@ INPUT /usr/share/texmf/fonts/type1/public/amsfonts/cm/cmr6.pfb
 INPUT /usr/share/texmf/fonts/type1/public/amsfonts/cm/cmr7.pfb
 INPUT /usr/share/texmf/fonts/type1/public/amsfonts/cm/cmr8.pfb
 INPUT /usr/share/texmf/fonts/type1/public/amsfonts/cm/cmsy10.pfb
+INPUT /usr/share/texmf/fonts/type1/public/amsfonts/cm/cmsy5.pfb
 INPUT /usr/share/texmf/fonts/type1/public/amsfonts/cm/cmsy7.pfb
 INPUT /usr/share/texmf/fonts/type1/public/amsfonts/cm/cmti10.pfb
 INPUT /usr/share/texmf/fonts/type1/public/amsfonts/cm/cmti7.pfb

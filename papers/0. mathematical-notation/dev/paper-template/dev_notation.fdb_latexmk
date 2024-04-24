@@ -1,7 +1,7 @@
 # Fdb version 4
-["pdflatex"] 1713922113.41688 "/home/Cao/Storage/github/atlas-research/papers/0. mathematical-notation/dev/paper-template/dev_notation.tex" "dev_notation.pdf" "dev_notation" 1713922113.79021 0
+["pdflatex"] 1713967396.58956 "/home/Cao/Storage/github/atlas-research/papers/0. mathematical-notation/dev/paper-template/dev_notation.tex" "dev_notation.pdf" "dev_notation" 1713967397.03973 0
   "/etc/texmf/web2c/texmf.cnf" 1710926363 42612 09b3c6dec2a078bd30d80981dc2f43a3 ""
-  "/home/Cao/Storage/github/atlas-research/papers/0. mathematical-notation/dev/paper-template/dev_notation.tex" 1713922112.45532 6855 646980e3da076929c9090f19824ab73e ""
+  "/home/Cao/Storage/github/atlas-research/papers/0. mathematical-notation/dev/paper-template/dev_notation.tex" 1713967395.9913 15328 84d8b855c512b35d6875079fd8b4ffc2 ""
   "/usr/share/texmf/fonts/map/fontname/texfonts.map" 1710926363 3524 cb3e574dea2d1052e39280babc910dc8 ""
   "/usr/share/texmf/fonts/tfm/public/amsfonts/cmextra/cmbsy5.tfm" 1710926363 1120 1e8878807317373affa7f7bba4cf2f6a ""
   "/usr/share/texmf/fonts/tfm/public/amsfonts/cmextra/cmbsy7.tfm" 1710926363 1120 7f9f170e8aa57527ad6c49feafd45d54 ""
@@ -38,10 +38,12 @@
   "/usr/share/texmf/fonts/type1/public/amsfonts/cm/cmr7.pfb" 1710926363 32762 224316ccc9ad3ca0423a14971cfa7fc1 ""
   "/usr/share/texmf/fonts/type1/public/amsfonts/cm/cmr8.pfb" 1710926363 32726 0a1aea6fcd6468ee2cf64d891f5c43c8 ""
   "/usr/share/texmf/fonts/type1/public/amsfonts/cm/cmsy10.pfb" 1710926363 32569 5e5ddc8df908dea60932f3c484a54c0d ""
+  "/usr/share/texmf/fonts/type1/public/amsfonts/cm/cmsy5.pfb" 1710926363 32915 7bf7720c61a5b3a7ff25b0964421c9b6 ""
   "/usr/share/texmf/fonts/type1/public/amsfonts/cm/cmsy7.pfb" 1710926363 32716 08e384dc442464e7285e891af9f45947 ""
   "/usr/share/texmf/fonts/type1/public/amsfonts/cm/cmti10.pfb" 1710926363 37944 359e864bd06cde3b1cf57bb20757fb06 ""
   "/usr/share/texmf/fonts/type1/public/amsfonts/cm/cmti7.pfb" 1710926363 36607 d654cb3f2bc54f57509240071db3bffa ""
   "/usr/share/texmf/fonts/type1/public/amsfonts/cm/cmti8.pfb" 1710926363 35660 fb24af7afbadb71801619f1415838111 ""
+  "/usr/share/texmf/fonts/type1/public/amsfonts/cmextra/cmbsy7.pfb" 1710926363 30068 eae4ba75635647d82fb0b7d7bccc4748 ""
   "/usr/share/texmf/fonts/type1/public/amsfonts/cmextra/cmmib7.pfb" 1710926363 39386 0bb525d495ceab21fe797301a586e0d7 ""
   "/usr/share/texmf/tex/context/base/mkii/supp-pdf.mkii" 1710926363 71627 94eb9990bed73c364d7f53f960cc8c5b ""
   "/usr/share/texmf/tex/latex/amsmath/amsbsy.sty" 1710926363 2222 499d61426192c39efd8f410ee1a52b9c ""
@@ -71,9 +73,9 @@
   "/usr/share/texmf/web2c/texmf.cnf" 1710926363 42612 09b3c6dec2a078bd30d80981dc2f43a3 ""
   "/var/lib/texmf/fonts/map/pdftex/updmap/pdftex.map" 1713850284.88918 5467510 16a1904b92333a18bce9de9cf0eae437 ""
   "/var/lib/texmf/web2c/pdftex/pdflatex.fmt" 1713850078 8221232 e980735b6a03ab76c7949f60a39c3468 ""
-  "dev_notation.aux" 1713922113.74199 469 3cf0ea6d001347ede019cd70b82a0148 "pdflatex"
-  "dev_notation.spl" 1713922113.61199 0 d41d8cd98f00b204e9800998ecf8427e "pdflatex"
-  "dev_notation.tex" 1713922112.45532 6855 646980e3da076929c9090f19824ab73e ""
+  "dev_notation.aux" 1713967396.94798 793 3c312ef032d91deb4f6f3b5ece32f690 "pdflatex"
+  "dev_notation.spl" 1713967396.76798 0 d41d8cd98f00b204e9800998ecf8427e "pdflatex"
+  "dev_notation.tex" 1713967395.9913 15328 84d8b855c512b35d6875079fd8b4ffc2 ""
   (generated)
   "dev_notation.aux"
   "dev_notation.log"
