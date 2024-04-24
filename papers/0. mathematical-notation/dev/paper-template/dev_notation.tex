@@ -705,8 +705,7 @@ and matrices
     \item !affects ETA
     \item define a geometric progression learning model?
     \item attribute micro-flexibility vector $\boldsymbol{\phi_{i}}$
-    \item attribute micro-flexibility matrix $\boldsymbol{\Phi}$
-    \item p.s.: define another notation, for this conflicts with macro-flexibility
+    \item attribute micro-flexibility matrix $\boldsymbol{\phi}$
 \end{enumerate}
 
 \subsection{Aggregate Human Capital Models}
@@ -721,9 +720,9 @@ and matrices
 
 \subsubsection{Macro-Flexibility}
 \begin{enumerate}
-    \item p.s.: define another notation, for this conflicts with micro-flexibility
     \item attribute macro-flexibility $\Phi_i = \left( \frac{1}{W} \right)
               \sum_{k=1}^{n}{\tilde{a}_{i}^{k} w_k}$
+    \item attribute macro-flexibility vector $\boldsymbol{\Phi}$
 \end{enumerate}
 
 % endregion
@@ -757,24 +756,23 @@ and matrices
 \subsection{Versatility}
 \begin{enumerate}
     \item the versatility of a skill set is the weighted sum of its macro-flexibility
-    \item ? = $\frac{
-              \sum_{i=1}^{m}{\ddot{a}_{i}^{k} \Phi_i}
-              }{
-              \sum_{i=1}^{m}{\ddot{a}_{i}^{k}}
-              }
-          $
-    \item alternatively, ? = $\frac{ \sum_{i=1}^{m}{a_{i}^{k} \Phi_i} }{
-              \sum_{i=1}^{m}{a_{i}^{k}} } $
-    \item probably just use versatility as an additional name to refer to
-          macro-flexibility, thus avoiding conflicting mathematical notation
-    \item macro-flexibility $\Phi_i \rightarrow ?$ (versatility)
-    
+    % \item  $\Phi_k = \frac{
+    %           \sum_{i=1}^{m}{\ddot{a}_{i}^{k} \Phi_i}
+    %           }{
+    %           \sum_{i=1}^{m}{\ddot{a}_{i}^{k}}
+    %           }
+    %       $
+    \item $\Phi_k = \frac{ \sum_{i=1}^{m}{a_{i}^{k} \Phi_i} }{
+              \sum_{i=1}^{m}{a_{i}^{k}} }$
+    \item probably move all the $i,j$ attribute iterators from subscripts to superscripts (this avoids ambiguity and seems to make sense with the vectorized notation)
 \end{enumerate}
 
 \subsection{Leverage? [aggregate micro-flexibility]}
 \begin{enumerate}
     \item define a name for aggregate micro-flexibility (leverage?)
     \item same procedure as above
+    % \item $\phi_k = \frac{ \sum_{i=1}^{m}{a_{i}^{k} \phi_i} }{
+    %     \sum_{i=1}^{m}{a_{i}^{k}} }$
 \end{enumerate}
 
 % endregion
