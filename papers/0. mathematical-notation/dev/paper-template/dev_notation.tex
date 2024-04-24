@@ -61,7 +61,15 @@
 \end{abstract}
 % endregion
 
+% region: title 
 \maketitle
+
+% endregion
+
+% region: table of contents
+\tableofcontents
+\newpage
+% endregion
 
 % region: basic definitions
 \section{Basic Definitions}
@@ -134,6 +142,15 @@ operator:
     \end{bmatrix}
     .
 \end{gather}
+
+\subsection{Preferences}
+\begin{enumerate}
+    \item individual attribute preference $\upsilon_{i}^{k}$
+    \item attribute preference vector $\boldsymbol{\upsilon_k}$
+    \item attribute preference matrix $\boldsymbol{\Upsilon}$
+    \item most attribute operations apply to preferences
+    \item preference-adjusted skill sets
+\end{enumerate}
 
 % endregion
 
@@ -254,7 +271,8 @@ The competence vector of all $n$ skill sets in the economy is:
 
 % region: comparative models 
 \section{Comparative Models}
-\subsection{Matching Models}
+\subsection{Pairwise Comparative Models}
+\subsubsection{Similarity}
 The most basic comparative model is that of Euclidean matching with linear
 weights:
 \begin{gather}
@@ -374,7 +392,7 @@ vectors and matrices, as follows:
     .
 \end{gather}
 
-\subsection{Qualification Models}
+\subsubsection{Qualification}
 A closely related concept to matching is the qualification comparative model.
 In this family of functions, however, Euclidean matching is mandatory, as other
 matching methods do not make sense for this specific type of calculation. The
@@ -435,7 +453,7 @@ And, analogously, the overqualification model is given by:
     }
     }{
     \sum_{i=1}^{m}{
-    \ddot{a}_{i}^{q} {\delta(a_{i}^{q}, 100)} ^ 2
+    \ddot{a}_{i}^{q} {\delta(100, a_{i}^{q})} ^ 2
     }
     }
     } =
@@ -531,6 +549,412 @@ and matrices
     .
 \end{gather}
 
+\subsubsection{Interchangeability}
+\begin{enumerate}
+    \item sufficient similarity
+    \item scaled similarity
+    \item similarity in the strong sense
+    \item s.s. $\rightarrow$ $\textit{\ss}_{k,q}$
+    \item alternatively, $\textit{\ss}_{k,q} = \text{seq(...)} = \ddot{s}_{k,q}$
+    \item interchangeability vector $\boldsymbol{\textbf{\textit{\ss}}_k}$
+    \item interchangeability matrix $\boldsymbol{\textbf{\ss}}$
+\end{enumerate}
+
+\subsubsection{Education and Experience Equivalence}
+\begin{enumerate}
+    \item years of education $\tau_k$, $\tau_q$
+    \item years of education vector $\boldsymbol{\tau}$
+    \item $\ddot{\tau}_{k,q} = \text{eeq}(...) = \text{teq}(\tau_k, \tau_q, ...)$
+    \item $\ddot{\tau}_{k,q}^{\theta} = \text{eeq}(...) = \text{teq}(\tau_k, \tau_q, ...) \times s_{k,q}^{\theta}$
+    \item field similarity (direction): $s_{k,q}^{\theta} = \cos\theta_{k,q} = \frac{
+                  \boldsymbol{\ddot{a}_{k} \ \dotproduct\ \boldsymbol{\ddot{a}_{q}}} }{
+                  \norm{\boldsymbol{\ddot{a}_{k}}} \norm{\boldsymbol{\ddot{a}_{q}}} } $
+    \item $s_{k,q}^{\theta} \in [0,1]$, because cosine cannot be negative, as attributes are truncated
+    \item interpretation: equivalent education and experience in the same field
+    \item vector: $\boldsymbol{s_{k}^{\theta}}$
+    \item matrix: $\textbf{S}_{\mathbf{\Theta}}$
+    \item eeq vector: $\boldsymbol{\ddot{\tau}_{k}^{\theta}}$
+    \item eeq matrix: $\boldsymbol{\ddot{\textbf{T}}_{\mathbf{\Theta}}}$
+\end{enumerate}
+
+\subsubsection{Hireability}
+\begin{enumerate}
+    \item to be hireable is to be:
+    \item sq: sufficiently qualified (basic skill level)
+    \item se: sufficiently educated / experienced (in the field)
+    \item ss: sufficiently similar (good fit, same shape)
+    \item $
+              h_{k,q} =
+              \text{sq}(\boldsymbol{a_k},\boldsymbol{a_q}) \times
+              \text{se}(\boldsymbol{a_k},\boldsymbol{a_q}) \times
+              \text{ss}(\boldsymbol{a_k},\boldsymbol{a_q}) = \\
+              \text{sqa}(\boldsymbol{a_k},\boldsymbol{a_q}) \times
+              \text{eeq}(\boldsymbol{a_k},\boldsymbol{a_q}) \times
+              \text{seq}(\boldsymbol{a_k},\boldsymbol{a_q}) = \\
+              s_{k,q}^{\geq} \times
+              \ddot{\tau}_{k,q}^{\theta} \times
+              \textit{\ss}_{k,q} = \\
+              s_{k,q}^{\geq} \times
+              \ddot{\tau}_{k,q} \times
+              s_{k,q}^{\theta} \times
+              \ddot{s}_{k,q}
+          $
+    \item candidate is hireable if $_{0}^{1}[h_{k,q}]$
+    \item candidate is hireable for $_{0}^{1}[h_{k,q}] \times h_{k,q}$ percent of jobs
+    \item hireability vector: $\boldsymbol{h_{k}}$
+    \item hireability matrix: $\textbf{H}$
+    \item evaluated hireability vector: $_{0}^{1}[\boldsymbol{h_{k}}]$
+    \item evaluated hireability matrix: $_{0}^{1}[\textbf{H}]$
+    \item ?percent of hireable jobs vector: $_{0}^{1}[\boldsymbol{h_{k}}]\boldsymbol{h_{k}}$
+    \item ?percent of hireable jobs matrix: $_{0}^{1}[\textbf{H}]^{\top}\textbf{H}$
+\end{enumerate}
+
+\subsubsection{Utility Equivalence}
+\begin{enumerate}
+    \item normalized wages $\hat{y}_k = y_k / \max y_q$
+    \item normalized wages vector $\boldsymbol{\hat{y}}$
+    \item wage utility function $u(\hat{y}_k)$
+    \item utility equivalence function $\ddot{u}_{k,q} = \text{ueq}(u(\hat{y}_k), u(\hat{y}_q), ...)$
+    \item static utility $u_k$ vs comparative utility $u_{k,q}$
+    \item incorporate preferences in the utility function like in the eeq function? (def = 1 for O*NET career
+          profiles)
+    \item e.g. $\ddot{u}_{k,q} = \text{ueq}(u(\hat{y}_k), u(\hat{y}_q), ...) \times s_{k,q}^{\upsilon}$
+\end{enumerate}
+
+\subsection{Aggregate Comparative Models}
+\subsubsection{Employability}
+\begin{enumerate}
+    \item employment levels $w_k, w_q$
+    \item total workforce $W = \sum_{q=1}^{n}{w_q}$
+    \item $\Lambda_k = \left(\frac{1}{W}\right) \sum_{q=1}^{n}{_{0}^{1}[h_{k,q}] h_{k,q} w_q}$
+    \item alternatively, $\Lambda_k = \left(\frac{1}{W}\right) \sum_{q=1}^{n}{_{0}^{1}[h_{k,q}] s_{k,q}^{\geq} w_q}$
+    \item employability = percentage of jobs in the economy on which a candidate could be
+          hired
+    \item employability can also be defined at specific aggregation levels of the economy
+          (see Labor Economic Models)
+    \item $\Lambda_{k}^{?} = \left(\frac{1}{W}\right) \sum_{?}{_{0}^{1}[h_{k,q}] h_{k,q} w_q}$
+    \item ? is the economic aggregation level (e.g. sector, industry, market, role)
+    \item employability vector $\boldsymbol{\Lambda}$
+\end{enumerate}
+
+\subsubsection{Competitiveness}
+\begin{enumerate}
+    \item employment levels $w_k, w_q$
+    \item total workforce $W = \sum_{q=1}^{n}{w_q}$
+    \item $\text{vs}_k = \left(\frac{1}{W}\right) \sum_{q=1}^{n}{_{0}^{1}[\ddot{u}_{q,k}] _{0}^{1}[h_{q,k}] h_{q,k} w_q}$
+    \item alternatively, $\text{vs}_k = \left(\frac{1}{W}\right) \sum_{q=1}^{n}{_{0}^{1}[\ddot{u}_{q,k}] _{0}^{1}[h_{q,k}] s_{q,k}^{\geq} w_q}$
+    \item competitiveness (versus) = percentage of workers in the economy that could (and
+          would like to) be hired for a particular job
+    \item competitiveness can also be defined at specific aggregation levels of the
+          economy (see Labor Economic Models)
+    \item $\text{vs}_{k}^{?} = \left(\frac{1}{W}\right) \sum_{?}{_{0}^{1}[\ddot{u}_{q,k}] _{0}^{1}[h_{q,k}] h_{q,k} w_q}$
+    \item ? is the economic aggregation level (e.g. sector, industry, market, role)
+    \item competitiveness vector $\textbf{vs}$
+\end{enumerate}
+
+\subsection{Labor Economic Models}
+\subsubsection{Economic Taxonomy}
+\begin{enumerate}
+    \item hierarchical clustering of hireability coefficients
+    \item number of levels = 1 (i.e. trivial, economy) + L levels, where L is the number
+          for which the levels L and L - 1 (i.e. the previous aggregation) are identical
+    \item alternatively, use optimization methods to choose number of aggregation levels
+    \item alternatively, use the same number of aggregation levels as popular economic
+          taxonomies (e.g. ISIC, NAICS, SIC, NACE, OKVED)
+\end{enumerate}
+\subsubsection{Competition in Labor Markets}
+\begin{enumerate}
+    \item every hireable skill set competes at every level / market on which it is
+          hireable
+    \item market value, industry value, etc = percent of money in an aggregation level
+    \item market value, industry employability, etc = weighted employability of workers
+          at that level
+    \item market value, industry competitiveness, etc = weighted competitiveness of
+          workers at that level
+    \item etc etc (define every variable for labor market aggregations)
+\end{enumerate}
+
 % endregion
 
-\end{document}
+% region: microeconomic models 
+\section{Microeconomic Models}
+\subsection{Marginal Human Capital Models}
+\subsubsection{Marginal Compensation or Market Prices}
+\begin{enumerate}
+    \item wages $y_k$
+    \item NNLS attributes vs wages $\rightarrow p_i$
+    \item $p_i$ is the marginal compensation (i.e. market price) of a point in an attribute
+    \item market prices vector $\textbf{p}$
+\end{enumerate}
+
+\subsubsection{Marginal Time Investment}
+\begin{enumerate}
+    \item years of education and experience $\tau_k$
+    \item NNLS attributes vs years of education and experience $\rightarrow \eta_i$
+    \item $\eta_i$ is the marginal time investment (expected time of arrival) to gain a point in an attribute
+    \item marginal time investment (ETA) vector $\boldsymbol{\eta}$
+\end{enumerate}
+
+\subsubsection{Micro-Flexibility}
+\begin{enumerate}
+    \item NNLS attributes vs attributes $\rightarrow \phi_{i,j}$
+    \item micro-flexibility = expected gain on other attributes for an additional point
+          in an attribute
+    \item !requires additional statistical pressupositions for regression coefficients to be interpretable as $\phi_{i,j}$
+    \item !potential for recursion
+    \item !affects ETA
+    \item define a geometric progression learning model?
+    \item attribute micro-flexibility vector $\boldsymbol{\phi_{i}}$
+    \item attribute micro-flexibility matrix $\boldsymbol{\Phi}$
+    \item p.s.: define another notation, for this conflicts with macro-flexibility
+\end{enumerate}
+
+\subsection{Aggregate Human Capital Models}
+\subsubsection{Skill Set Value}
+\begin{enumerate}
+    \item expected compensation based on market prices $\textbf{p}$ and skill set
+          $\boldsymbol{a_k}$
+    \item $? = \text{E}[y_k | \boldsymbol{a_k}, \textbf{p}] = \sum_{i=1}^{m}{a_{i}^{k} p_i}$
+          % \item $\text{E}[ \ y_k \ | \ \textbf{p}, \boldsymbol{a_k}\ ]$
+          % \item $\text{E}(y_k | \textbf{p}, \boldsymbol{a_k})$
+\end{enumerate}
+
+\subsubsection{Macro-Flexibility}
+\begin{enumerate}
+    \item p.s.: define another notation, for this conflicts with micro-flexibility
+    \item attribute macro-flexibility $\Phi_i = \left( \frac{1}{W} \right)
+              \sum_{k=1}^{n}{\tilde{a}_{i}^{k} w_k}$
+\end{enumerate}
+
+% endregion
+
+% region: additional comparative models 
+\section{Additional Comparative Models}
+\subsection{Total Time Investment (ETA)}
+\begin{enumerate}
+    \item aggregate expected time investment to fill competency gaps
+    \item uppercase eta $\eta$
+    \item $\text{H}_{k,q} = \sum_{i=1}^{m}{
+              \delta(a_{i}^{k}, a_{i}^{q})
+              \eta_i
+              }$
+    \item vector $\textbf{H}\boldsymbol{_k}$
+    \item matrix $\textbf{H}$
+    \item p.s.: notation conflicts with hireability matrix (probably change hireability
+          notation)
+\end{enumerate}
+
+\subsection{Letter-Shaped Skill Sets}
+\begin{enumerate}
+    \item a generalization of ``T-Shaped Skills''
+    \item refer to the atlas.letters R package
+\end{enumerate}
+
+% endregion
+
+% region: additional skill set models 
+\section{Additional Skill Set Models}
+\subsection{Versatility}
+\begin{enumerate}
+    \item the versatility of a skill set is the weighted sum of its macro-flexibility
+    \item ? = $\frac{
+              \sum_{i=1}^{m}{\ddot{a}_{i}^{k} \Phi_i}
+              }{
+              \sum_{i=1}^{m}{\ddot{a}_{i}^{k}}
+              }
+          $
+    \item alternatively, ? = $\frac{ \sum_{i=1}^{m}{a_{i}^{k} \Phi_i} }{
+              \sum_{i=1}^{m}{a_{i}^{k}} } $
+    \item probably just use versatility as an additional name to refer to
+          macro-flexibility, thus avoiding conflicting mathematical notation
+    \item macro-flexibility $\Phi_i \rightarrow ?$ (versatility)
+    
+\end{enumerate}
+
+\subsection{Leverage? [aggregate micro-flexibility]}
+\begin{enumerate}
+    \item define a name for aggregate micro-flexibility (leverage?)
+    \item same procedure as above
+\end{enumerate}
+
+% endregion
+
+% region: roadmap models 
+\section{Roadmap Models}
+\subsection{Career Recommendation}
+\begin{enumerate}
+    \item this theory needs to be further developed, as I never got the chance to write
+          it down completely
+    \item see quantitative roadmap sketch for an idea of what this should be
+\end{enumerate}
+
+\subsubsection{Macro-Strategies}
+\subsubsection{Preference-Adjusted Strategic Matching}
+
+\subsection{Competency Training Recommendation}
+\subsubsection{Micro-Strategies}
+\subsubsection{Preference-Adjusted Strategic Training}
+
+% endregion
+
+% region: factor-analytic models 
+
+\section{Factor-Analytic Models}
+\subsection{Exploratory Factor Analysis of the O*NET Database}
+\begin{enumerate}
+    \item use standard factor-analytic notation (I already reserved many latin and greek characters for this reason)
+\end{enumerate}
+
+\subsection{Psychometric Questionnaire Optimization}
+\subsubsection{Minimal Factor Representation}
+\subsubsection{Retained Variance}
+\subsubsection{Retained Matching Accuracy and Precision}
+
+\subsection{Factor-Analytic Intelligence Quotient (IQ) Approximation}
+\begin{enumerate}
+    \item in psychometrics, general intelligence (IQ) is denoted as $g$
+    \item define a expected value notation (also solves the expected compensation, or skill set value, problem above)
+    \item $?g_k = \left( 
+        \frac{1}{m_\psi?}
+        \right)
+        \sum_{\psi?}{
+            \tilde{a}_{i}^{k}
+        }
+    $
+    \item $\psi?$ are the subset of items which are proxies for intelligence
+    \item alternatively, write this coefficient as factor scores (if there is a notation for factor scores)
+\end{enumerate}
+
+\subsection{Factor-Analytic Comparative Statics}
+\begin{enumerate}
+    \item there isn't a mathematical notation for this method yet
+    \item but most or all of its variables and functions have already been defined above
+    \item refer to the atlas.fstatics R package to understand how this model works
+\end{enumerate}
+\subsubsection{Unbounded Exogenous Impacts}
+\subsubsection{Truncated Exogenous Impacts}
+\subsection{Career Type}
+\begin{enumerate}
+    \item refer to the atlas.acti R package
+\end{enumerate}
+% endregion
+
+% region: writing plan 
+\section{Writing Plan}
+\subsection{Introduction to Quantitative Career Matching: How to Statistically Pick the Right Occupation}
+\begin{enumerate}
+    \item introduce the much neglected topic of data-driven career choice and development
+    \item estimate the baseline Euclidean matching model
+        \item for simplicity's sake
+        \item to benchmark matching methods
+\end{enumerate}
+
+\subsection{Equivalence Estimators for Quantitative Career Matching}
+\begin{enumerate}
+    \item aeq, seq functions
+    \item eeq function?
+    \item take $\gamma_k$ and $c_k$ parameters as given
+        \item explain how to calculate generality and competence on the next paper
+    \item recalculate the Euclidean matching model from paper 1 with these new methods
+\end{enumerate}
+
+\subsection{Generalists vs Specialists: Who Are the Most Competent Workers?}
+\begin{enumerate}
+    \item explain how to calculate generality and competence
+    \item weighted correlation between generality and competence
+\end{enumerate}
+
+\subsection{Alternative/Advanced Career Matching Methods}
+\begin{enumerate}
+    \item explain all career matching methods besides the baseline Euclidean model
+    \item compare all models against one another
+    \item benchmark models against the baseline Euclidean model
+    \item select one matching method
+\end{enumerate}
+
+\subsection{Employability and Competitiveness}
+\begin{enumerate}
+    \item having defined all the statistical pressupositions for these models in the previous papers, calculate employability and competitiveness coefficients
+    \item choose another name for this paper?
+\end{enumerate}
+
+\subsection{A Hierarchical Clustering Labor Market Taxonomy}
+\begin{enumerate}
+    \item define the hireability taxonomic model
+    \item choose another name for this paper?
+\end{enumerate}
+
+\subsection{Competition in Labor Markets}
+\begin{enumerate}
+    \item continue from where the taxonomy paper left off
+    \item choose another name for this paper
+\end{enumerate}
+
+\subsection{Human Capital Flexibility}
+\begin{enumerate}
+    \item calculate macro-flexibility
+    \item calculate micro-flexibility
+    \item aggregate macro-flexibility for each skill set (versatility)
+    \item aggregate micro-flexibility for each skill set (?)
+\end{enumerate}
+
+\subsection{Time Investment and Expected Returns of Human Capital}
+\begin{enumerate}
+    \item choose another name for this paper?
+    \item calculate marginal compensation of human capital
+    \item calculate marginal time investment of human capital
+    \item aggregate marginal compensation of human capital (skill set value)
+    \item aggregate marginal time investment of human capital (ETA)
+    \item calculate which careers are most efficient to aim for in the short run (starting from the average skill set)
+    \item calculate which careers are most effective to aim for in the long run (starting from the average skill set)
+\end{enumerate}
+
+\subsection{The Career Roadmap: A Mathematical Map to Career Choice and Career Development}
+\begin{enumerate}
+    \item choose another name for this paper?
+    \item The Career Roadmap: Statistical Methods for Optimal Career Choice and Career Development?
+    \item define the concept of macro-strategies
+    \item combine all statistical metrics so far as the career recommendation coefficient
+    \item define the concept of micro-strategies
+    \item combine all statistical metrics so far as the training recommendation coefficient
+    \item calculate which careers are most efficient to aim for in the short run (starting from the average skill set)
+    \item calculate which careers are most effective to aim for in the long run (starting from the average skill set)
+\end{enumerate}
+
+\subsection{Letter-Shaped Career Profiles: A Generalization of ``T-Shaped Skills''}
+\begin{enumerate}
+    \item define the methodology for converting hersheys fonts to career profiles
+    \item match career profiles against the latin, greek, and cyrillic alphabets
+    \item find a way to include ``from A-to-Z'' in this paper's name
+    \item or from ``A-to-$\Omega$"
+\end{enumerate}
+
+\subsection{Factor-Analyzing the Occupational Information Network Database}
+\begin{enumerate}
+    \item EFA on O*NET db
+\end{enumerate}
+
+\subsection{Career Types for the Occupational Information Network Database}
+\begin{enumerate}
+    \item calculate career types based on the factor model from the EFA paper and the statistics already defined in the previous papers
+    \item career type molecules
+\end{enumerate}
+
+\subsection{Factor-Analytic Comparative Statics: Estimating Exogenous Impacts on the Labor Market}
+\begin{enumerate}
+    \item ai impact analysis
+    \item some other impact analysis
+    \item aggregate on the attribute level
+    \item aggregate on the occupation level
+    \item aggregate on each taxonomic level defined in the economic taxonomy paper (including the entire economy)
+\end{enumerate}
+
+\subsection{Factor-Analytic Intelligence Quotient Approximation}
+\begin{enumerate}
+    \item based on the factor model from the EFA paper, choose a proxy
+    \item calculate factor-analytic approximation of IQ
+    \item compare against data
+\end{enumerate}
+% endregion
+
+\end{document}\text{vs}
