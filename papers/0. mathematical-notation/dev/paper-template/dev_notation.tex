@@ -77,13 +77,15 @@ where the interval $[0,100]$ determines the bounds for every competency.\footnot
     More generally, these could be defined as $a_\text{lb}$ (the lower bound) and $a_\text{ub}$ (the upper bound). Here, the interval $[0,100]$ is used because of its ease of interpretation.
 }
 
-The skill set, or career profile, of a person $k$ is defined as the vector of
-their $m$ attributes:
+The skill set, or career profile, of a person $k$ is the vector of their $m$
+attributes:
 \begin{gather}
     \boldsymbol{a_k} = (a_{1}^{k}, \dots, a_{m}^{k})
     .
 \end{gather}
-A skill set matrix, or career profile matrix, is the collection of all $n$ skill sets in the economy:
+
+The skill set matrix, or career profile matrix, is the collection of all $n$
+skill sets in the economy:
 \begin{gather}
     \textbf{A} =
     \begin{bmatrix}
@@ -113,7 +115,9 @@ Normalization by the scale bounds is defined by the tilde operator:
     \end{bmatrix}
     .
 \end{gather}
-Normalization by a skill set's highest attribute is defined by the hat operator:
+
+Normalization by a skill set's highest attribute is defined by the hat
+operator:
 \begin{gather}
     \hat{a}_{i}^{k} =
     \frac{a_{i}^{k}}{\max{a_{j}^{k}}}
@@ -135,24 +139,31 @@ Normalization by a skill set's highest attribute is defined by the hat operator:
 
 % region: basic skill set models 
 \section{Basic Skill Set Models}
+\subsection{Skill Set Generality}
 The generality of a skill set is the mean of its maxima-normalized attributes:
 \begin{gather}
     \gamma_{k} = \left(\frac{1}{m}\right)\sum_{i=1}^{m}{\hat{a}_{i}^{k}}
+    \in [0,1]
     .
 \end{gather}
-Generalists have high $\gamma_{k}$ scores. Specialists have low $\gamma_{k}$ scores.
+
+People with high $\gamma_{k}$ scores are called \textit{generalists}.
+Conversely, those with low $\gamma_{k}$ scores are called \textit{specialists}.
+Career profiles that are neither broad nor specialized are said to be
+\textit{balanced}.
+
 The generality vector of all $n$ skill sets in the economy is:
 \begin{gather}
     \boldsymbol{\gamma} = (\gamma_{1}, \dots, \gamma_{n})
     .
 \end{gather}
 
+\subsection{Attribute Equivalence}
 The attribute equivalence of a particular attribute in a skill set measures the
-importance of that attribute relative to the skill set's highest attribute,
-using the skill set's generality as a midpoint and scaling parameter. The
-attribute equivalence of an attribute is denoted by the umlaut operator:
+importance of that attribute relative to the skill set's highest attribute. It
+is calculated using skill set generality as both a midpoint and scaling
+parameter in the following linear-logistic classification function:
 \begin{gather}
-    \ddot{a}_{i}^{k} =
     \text{aeq}(\hat{a}_{i}^{k}, \gamma_{k}) =
     \hat{a}_{i}^{k}
     \left[
@@ -166,15 +177,36 @@ attribute equivalence of an attribute is denoted by the umlaut operator:
     -\frac{\gamma_{k}}{\hat{a}_{i}^{k}}
     % -{\gamma_{k} / \hat{a}_{i}^{k}}
     }
+    \in [0,1]
     .
 \end{gather}
-Attributes with high levels of attribute equivalence $\ddot{a}_{i}^{k}$ are said to be equivalent to the skill set's most importante attribute. These attributes are called \textit{core} attributes.
-The attribute equivalence vector of a skill set is given by the collection of their $m$ umlauted attributes:
+
+For a short-hand notation, the attribute equivalence can be denoted by the
+umlaut operator:
+\begin{gather}
+    \ddot{a}_{i}^{k} = \text{aeq}(\hat{a}_{i}^{k}, \gamma_{k})
+    .
+\end{gather}
+
+This is not to be confused with the Netwonian dot notation for partial
+derivatives, which we do employ, instead preferring the more explicit
+$\partialderivative{x}{y}$ derivative operator of Leibniz.
+
+At any rate, attributes with high levels of $\ddot{a}_{i}^{k}$ are said to be
+equivalent to the skill set's most importante attribute. These are a career
+profile's \textit{core} competencies. The remaining competencies are classified
+as either \textit{important}, \textit{auxiliary}, \textit{minor}, or
+\textit{unimportant}.
+
+The attribute equivalence vector of a skill set is given by the collection of
+their $m$ umlauted attributes:
 \begin{gather}
     \boldsymbol{\ddot{a}_{k}} = (\ddot{a}_{1}^{k}, ..., \ddot{a}_{m}^{k})
     .
 \end{gather}
-The attribute equivalence matrix is the collection of all attribute equivalence vectors in the economy:
+
+Finally, the attribute equivalence matrix is the collection of all attribute
+equivalence vectors in the economy:
 \begin{gather}
     \textbf{Ä} =
     \begin{bmatrix}
@@ -185,6 +217,7 @@ The attribute equivalence matrix is the collection of all attribute equivalence 
     .
 \end{gather}
 
+\subsection{Skill Set Competence}
 The overall competence of a skill set is the mean of its scale-normalized
 attributes, weighted by each attribute's importance (i.e. its attribute
 equivalence):
@@ -200,8 +233,16 @@ equivalence):
     \ddot{a}_{i}^{k}
     }
     }
+    \in [0,1]
     .
 \end{gather}
+
+Career profiles with high $c_k$ are said to be competent. However, this
+adjective can be seen as offensive to some people; and, most importantly, it
+could also be misleading, because competence is often defined relative to the
+specific requirements of a particular job. Therefore, we opt for the more
+generic competence classification of \textit{high level}, \textit{mid level},
+and \textit{low level}, which is somewhat less ambiguous.
 
 The competence vector of all $n$ skill sets in the economy is:
 \begin{gather}
@@ -241,9 +282,15 @@ where
     \in [0,1]
     .
 \end{gather}
-In this model, we compare a skill set $\boldsymbol{a_k}$ to a skill set $\boldsymbol{a_q}$ by calculating the weighted Euclidean distance from $\boldsymbol{a_k}$ to $\boldsymbol{a_q}$ normalized by the maximum theoretical distance to $\boldsymbol{a_q}$.
 
-Other weighting systems can be employed in this type of matching model. We could, for instance, substitute the linear weights with either quadratic weights,
+In this model, we compare a skill set $\boldsymbol{a_k}$ to a skill set
+$\boldsymbol{a_q}$ by calculating the weighted Euclidean distance from
+$\boldsymbol{a_k}$ to $\boldsymbol{a_q}$ normalized by the maximum theoretical
+distance to $\boldsymbol{a_q}$.
+
+Other weighting systems can be employed in this type of matching model. We
+could, for instance, substitute the linear weights with either quadratic
+weights,
 \begin{gather}
     {a_{i}^{q}} ^ 2
     \in [0,1]
@@ -257,7 +304,9 @@ or speciality-root weights,
     \in [0,1]
     .
 \end{gather}
-But the best and most interpretable results are obtained using attribute equivalence as the weighting function:
+
+But the best and most interpretable results are obtained using attribute
+equivalence as the weighting function:
 \begin{gather}
     \tilde{d}_{k,q} =
     \tilde{d}(\boldsymbol{a_k}, \boldsymbol{a_q}) =
@@ -276,7 +325,8 @@ But the best and most interpretable results are obtained using attribute equival
     .
 \end{gather}
 
-We could also employ other matching models instead of the ``baseline" weighted Euclidean method. [detail each method later]:
+We could also employ other matching methods instead of the ``baseline" weighted
+Euclidean model. [detail each method later]:
 \begin{enumerate}
     \item logit regression matching
     \item probit regression matching
@@ -287,7 +337,8 @@ We could also employ other matching models instead of the ``baseline" weighted E
     \item spearman nonparametric correlation matching
 \end{enumerate}
 
-At last, similarity and normalized distance metrics determine the respective vectors and matrices, as follows:
+At last, similarity and normalized distance metrics determine the respective
+vectors and matrices, as follows:
 \begin{gather}
     \boldsymbol{s_k} = (s_{k,1}, \dots, s_{k,n})
     ;\\
@@ -295,125 +346,137 @@ At last, similarity and normalized distance metrics determine the respective vec
     ;\\
     \textbf{S} =
     \begin{bmatrix}
-        s_{1,1} & \hdots & s_{n,1}\\
-        \vdots & \ddots & \vdots\\
-        s_{1,n} & \hdots & s_{n,n}\\
-    \end{bmatrix} = 
+        s_{1,1} & \hdots & s_{n,1} \\
+        \vdots  & \ddots & \vdots  \\
+        s_{1,n} & \hdots & s_{n,n} \\
+    \end{bmatrix} =
     \begin{bmatrix}
-        1 & \hdots & s_{k,1} & \hdots & s_{n,1}\\
-        \vdots & \ddots & \vdots & \ddots & \vdots\\
-        s_{1,k} & \hdots & 1 & \hdots & s_{n,k}\\
-        \vdots & \ddots & \vdots & \ddots & \vdots\\
-        s_{1,n} & \hdots & s_{k,n} & \hdots & 1\\
+        1       & \hdots & s_{k,1} & \hdots & s_{n,1} \\
+        \vdots  & \ddots & \vdots  & \ddots & \vdots  \\
+        s_{1,k} & \hdots & 1       & \hdots & s_{n,k} \\
+        \vdots  & \ddots & \vdots  & \ddots & \vdots  \\
+        s_{1,n} & \hdots & s_{k,n} & \hdots & 1       \\
     \end{bmatrix}
     ;\\
     \textbf{D} =
     \begin{bmatrix}
-        \tilde{d}_{1,1} & \hdots & \tilde{d}_{n,1}\\
-        \vdots & \ddots & \vdots\\
-        \tilde{d}_{1,n} & \hdots & \tilde{d}_{n,n}\\
-    \end{bmatrix} = 
+        \tilde{d}_{1,1} & \hdots & \tilde{d}_{n,1} \\
+        \vdots          & \ddots & \vdots          \\
+        \tilde{d}_{1,n} & \hdots & \tilde{d}_{n,n} \\
+    \end{bmatrix} =
     \begin{bmatrix}
-        0 & \hdots & \tilde{d}_{k,1} & \hdots & \tilde{d}_{n,1}\\
-        \vdots & \ddots & \vdots & \ddots & \vdots\\
-        \tilde{d}_{1,k} & \hdots & 0 & \hdots & \tilde{d}_{n,k}\\
-        \vdots & \ddots & \vdots & \ddots & \vdots\\
-        \tilde{d}_{1,n} & \hdots & \tilde{d}_{k,n} & \hdots & 0\\
+        0               & \hdots & \tilde{d}_{k,1} & \hdots & \tilde{d}_{n,1} \\
+        \vdots          & \ddots & \vdots          & \ddots & \vdots          \\
+        \tilde{d}_{1,k} & \hdots & 0               & \hdots & \tilde{d}_{n,k} \\
+        \vdots          & \ddots & \vdots          & \ddots & \vdots          \\
+        \tilde{d}_{1,n} & \hdots & \tilde{d}_{k,n} & \hdots & 0               \\
     \end{bmatrix}
     .
 \end{gather}
 
 \subsection{Qualification Models}
-A closely related concept to matching is the qualification comparative model. In this family of functions, however, Euclidean matching is mandatory, as other matching methods do not make sense for this specific type of calculation. The reason for this is at that, here, we are not only interested in matching (i.e. a typical classification problem), but rather in the actual distances between comparison skill sets.
+A closely related concept to matching is the qualification comparative model.
+In this family of functions, however, Euclidean matching is mandatory, as other
+matching methods do not make sense for this specific type of calculation. The
+reason for this is at that, here, we are not particularly interested in
+matching (i.e. a typical classification problem), but rather in the actual
+distances between comparison skill sets.
 
-To define these models, we first have to define the gap function, which measures only positive competency gaps:
+To define these models, we first have to define the gap function, which
+measures only positive competency gaps:
 \begin{gather}
     \delta_{k,q}^{i} =
-    \delta(a_{i}^{k}, a_{i}^{q}) = 
+    \delta(a_{i}^{k}, a_{i}^{q}) =
     \max(
-        a_{i}^{k} - a_{i}^{q}
-        , 0
+    a_{i}^{k} - a_{i}^{q}
+    , 0
     )
     \in [0, 100]
     .
 \end{gather}
-Now that we have defined the gap function, we write the underqualification model:
+
+Having defined the gap function, we can write the underqualification model:
 \begin{gather}
-    \tilde{\delta}_{k,q}^{<} = 
+    \tilde{\delta}_{k,q}^{<} =
     \text{uqa}(\boldsymbol{a_k}, \boldsymbol{a_q}) =
     \sqrt{
-        \frac{
-            \sum_{i=1}^{m}{
-                \ddot{a}_{i}^{q} {\delta(a_{i}^{q}, a_{i}^{k})} ^ 2
-            }
-        }{
-            \sum_{i=1}^{m}{
-                \ddot{a}_{i}^{q} {\delta(a_{i}^{q}, 0)} ^ 2
-            }
-        }
+    \frac{
+    \sum_{i=1}^{m}{
+    \ddot{a}_{i}^{q} {\delta(a_{i}^{q}, a_{i}^{k})} ^ 2
+    }
+    }{
+    \sum_{i=1}^{m}{
+    \ddot{a}_{i}^{q} {\delta(a_{i}^{q}, 0)} ^ 2
+    }
+    }
     } =
     \sqrt{
-        \frac{
-            \sum_{i=1}^{m}{
-                \ddot{a}_{i}^{q} {\delta(a_{i}^{q}, a_{i}^{k})} ^ 2
-            }
-        }{
-            \sum_{i=1}^{m}{
-                \ddot{a}_{i}^{q} {a_{i}^{q}} ^ 2
-            }
-        }
+    \frac{
+    \sum_{i=1}^{m}{
+    \ddot{a}_{i}^{q} {\delta(a_{i}^{q}, a_{i}^{k})} ^ 2
+    }
+    }{
+    \sum_{i=1}^{m}{
+    \ddot{a}_{i}^{q} {a_{i}^{q}} ^ 2
+    }
+    }
     }
     .
 \end{gather}
-Analogously, the overqualification model is given by:
+
+And, analogously, the overqualification model is given by:
 \begin{gather}
-    \tilde{\delta}_{k,q}^{\geq} = 
+    \tilde{\delta}_{k,q}^{\geq} =
     \text{oqa}(\boldsymbol{a_k}, \boldsymbol{a_q}) =
     \sqrt{
-        \frac{
-            \sum_{i=1}^{m}{
-                \ddot{a}_{i}^{q} {\delta(a_{i}^{k}, a_{i}^{q})} ^ 2
-            }
-        }{
-            \sum_{i=1}^{m}{
-                \ddot{a}_{i}^{q} {\delta(a_{i}^{q}, 100)} ^ 2
-            }
-        }
+    \frac{
+    \sum_{i=1}^{m}{
+    \ddot{a}_{i}^{q} {\delta(a_{i}^{k}, a_{i}^{q})} ^ 2
+    }
+    }{
+    \sum_{i=1}^{m}{
+    \ddot{a}_{i}^{q} {\delta(a_{i}^{q}, 100)} ^ 2
+    }
+    }
     } =
     \sqrt{
-        \frac{
-            \sum_{i=1}^{m}{
-                \ddot{a}_{i}^{q} {\delta(a_{i}^{k}, a_{i}^{q})} ^ 2
-            }
-        }{
-            \sum_{i=1}^{m}{
-                \ddot{a}_{i}^{q} {(100 - a_{i}^{q})} ^ 2
-            }
-        }
+    \frac{
+    \sum_{i=1}^{m}{
+    \ddot{a}_{i}^{q} {\delta(a_{i}^{k}, a_{i}^{q})} ^ 2
+    }
+    }{
+    \sum_{i=1}^{m}{
+    \ddot{a}_{i}^{q} {(100 - a_{i}^{q})} ^ 2
+    }
+    }
     }
     .
 \end{gather}
-Finally, it is evident that ``sufficient qualification" is the complement of the underqualification model:
+
+The final set of ``sufficient qualification" is, evidently, the complement of
+the underqualification model:
 \begin{gather}
     s_{k,q}^{\geq} =
     \text{sqa}(\boldsymbol{a_k}, \boldsymbol{a_q}) =
-    1 - 
+    1 -
     \sqrt{
-        \frac{
-            \sum_{i=1}^{m}{
-                \ddot{a}_{i}^{q} {\delta(a_{i}^{q}, a_{i}^{k})} ^ 2
-            }
-        }{
-            \sum_{i=1}^{m}{
-                \ddot{a}_{i}^{q} {\delta(a_{i}^{q}, 0)} ^ 2
-            }
-        }
+    \frac{
+    \sum_{i=1}^{m}{
+    \ddot{a}_{i}^{q} {\delta(a_{i}^{q}, a_{i}^{k})} ^ 2
+    }
+    }{
+    \sum_{i=1}^{m}{
+    \ddot{a}_{i}^{q} {\delta(a_{i}^{q}, 0)} ^ 2
+    }
+    }
     } =
     1 - \text{uqa}(\boldsymbol{a_k}, \boldsymbol{a_q})
     .
 \end{gather}
 
-As with the similarity and normalized distance statistics described above, all these three qualification models are bounded to the $[0,1]$ interval. They also determine the following vectors:
+As with the similarity and normalized distance statistics described above,
+these three qualification models are bounded to the $[0,1]$ interval. Likewise,
+they also determine qualification vectors:
 \begin{gather}
     \boldsymbol{\tilde{\delta}_{k}^{<}} = (\tilde{\delta}_{k,1}^{<}, \dots, \tilde{\delta}_{k,n}^{<})
     ;\\
@@ -426,48 +489,47 @@ and matrices
 \begin{gather}
     \textbf{$\tilde{\Delta}$}_{\boldsymbol{<}} =
     \begin{bmatrix}
-        \tilde{\delta}_{1,1}^{<} & \hdots & \tilde{\delta}_{n,1}^{<}\\
-        \vdots & \ddots & \vdots\\
-        \tilde{\delta}_{1,n}^{<} & \hdots & \tilde{\delta}_{n,n}^{<}\\
-    \end{bmatrix} = 
+        \tilde{\delta}_{1,1}^{<} & \hdots & \tilde{\delta}_{n,1}^{<} \\
+        \vdots                   & \ddots & \vdots                   \\
+        \tilde{\delta}_{1,n}^{<} & \hdots & \tilde{\delta}_{n,n}^{<} \\
+    \end{bmatrix} =
     \begin{bmatrix}
-        0 & \hdots & \tilde{\delta}_{k,1}^{<} & \hdots & \tilde{\delta}_{n,1}^{<}\\
-        \vdots & \ddots & \vdots & \ddots & \vdots\\
-        \tilde{\delta}_{1,k}^{<} & \hdots & 0 & \hdots & \tilde{\delta}_{n,k}^{<}\\
-        \vdots & \ddots & \vdots & \ddots & \vdots\\
-        \tilde{\delta}_{1,n}^{<} & \hdots & \tilde{\delta}_{k,n}^{<} & \hdots & 0\\
+        0                        & \hdots & \tilde{\delta}_{k,1}^{<} & \hdots & \tilde{\delta}_{n,1}^{<} \\
+        \vdots                   & \ddots & \vdots                   & \ddots & \vdots                   \\
+        \tilde{\delta}_{1,k}^{<} & \hdots & 0                        & \hdots & \tilde{\delta}_{n,k}^{<} \\
+        \vdots                   & \ddots & \vdots                   & \ddots & \vdots                   \\
+        \tilde{\delta}_{1,n}^{<} & \hdots & \tilde{\delta}_{k,n}^{<} & \hdots & 0                        \\
     \end{bmatrix}
     ;\\
     \textbf{$\tilde{\Delta}$}_{\boldsymbol{\geq}} =
     \begin{bmatrix}
-        \tilde{\delta}_{1,1}^{\geq} & \hdots & \tilde{\delta}_{n,1}^{\geq}\\
-        \vdots & \ddots & \vdots\\
-        \tilde{\delta}_{1,n}^{\geq} & \hdots & \tilde{\delta}_{n,n}^{\geq}\\
-    \end{bmatrix} = 
+        \tilde{\delta}_{1,1}^{\geq} & \hdots & \tilde{\delta}_{n,1}^{\geq} \\
+        \vdots                      & \ddots & \vdots                      \\
+        \tilde{\delta}_{1,n}^{\geq} & \hdots & \tilde{\delta}_{n,n}^{\geq} \\
+    \end{bmatrix} =
     \begin{bmatrix}
-        0 & \hdots & \tilde{\delta}_{k,1}^{\geq} & \hdots & \tilde{\delta}_{n,1}^{\geq}\\
-        \vdots & \ddots & \vdots & \ddots & \vdots\\
-        \tilde{\delta}_{1,k}^{\geq} & \hdots & 0 & \hdots & \tilde{\delta}_{n,k}^{\geq}\\
-        \vdots & \ddots & \vdots & \ddots & \vdots\\
-        \tilde{\delta}_{1,n}^{\geq} & \hdots & \tilde{\delta}_{k,n}^{\geq} & \hdots & 0\\
+        0                           & \hdots & \tilde{\delta}_{k,1}^{\geq} & \hdots & \tilde{\delta}_{n,1}^{\geq} \\
+        \vdots                      & \ddots & \vdots                      & \ddots & \vdots                      \\
+        \tilde{\delta}_{1,k}^{\geq} & \hdots & 0                           & \hdots & \tilde{\delta}_{n,k}^{\geq} \\
+        \vdots                      & \ddots & \vdots                      & \ddots & \vdots                      \\
+        \tilde{\delta}_{1,n}^{\geq} & \hdots & \tilde{\delta}_{k,n}^{\geq} & \hdots & 0                           \\
     \end{bmatrix}
     ;\\
     \textbf{S}_{\boldsymbol{\geq}} =
     \begin{bmatrix}
-        s_{1,1} & \hdots & s_{n,1}\\
-        \vdots & \ddots & \vdots\\
-        s_{1,n} & \hdots & s_{n,n}\\
-    \end{bmatrix} = 
+        s_{1,1}^{\geq} & \hdots & s_{n,1}^{\geq} \\
+        \vdots         & \ddots & \vdots         \\
+        s_{1,n}^{\geq} & \hdots & s_{n,n}^{\geq} \\
+    \end{bmatrix} =
     \begin{bmatrix}
-        1 & \hdots & s_{k,1} & \hdots & s_{n,1}\\
-        \vdots & \ddots & \vdots & \ddots & \vdots\\
-        s_{1,k}^{\geq} & \hdots & 1 & \hdots & s_{n,k}^{\geq}\\
-        \vdots & \ddots & \vdots & \ddots & \vdots\\
-        s_{1,n}^{\geq} & \hdots & s_{k,n}^{\geq} & \hdots & 1\\
+        1              & \hdots & s_{k,1}^{\geq} & \hdots & s_{n,1}^{\geq} \\
+        \vdots         & \ddots & \vdots         & \ddots & \vdots         \\
+        s_{1,k}^{\geq} & \hdots & 1              & \hdots & s_{n,k}^{\geq} \\
+        \vdots         & \ddots & \vdots         & \ddots & \vdots         \\
+        s_{1,n}^{\geq} & \hdots & s_{k,n}^{\geq} & \hdots & 1              \\
     \end{bmatrix}
     .
 \end{gather}
-
 
 % endregion
 
