@@ -19,6 +19,7 @@
 % region: packages 
 \usepackage{xr}
 \usepackage{physics}
+\usepackage{amsmath}
 \usepackage{float}
 
 % endregion
@@ -549,6 +550,138 @@ and matrices
     .
 \end{gather}
 
+P.S.: should qualification be unweighted?
+\begin{gather}
+    \tilde{\delta}_{k,q}^{<} =
+    \text{uqa}(\boldsymbol{a_k}, \boldsymbol{a_q}) =
+    \sqrt{
+    \frac{
+    \sum_{i=1}^{m}{
+    {\delta(a_{i}^{q}, a_{i}^{k})} ^ 2
+    }
+    }{
+    \sum_{i=1}^{m}{
+    {\delta(a_{i}^{q}, 0)} ^ 2
+    }
+    }
+    } =
+    \sqrt{
+    \frac{
+    \sum_{i=1}^{m}{
+    {\delta(a_{i}^{q}, a_{i}^{k})} ^ 2
+    }
+    }{
+    \sum_{i=1}^{m}{
+    {a_{i}^{q}} ^ 2
+    }
+    }
+    }
+    ;\\
+    \tilde{\delta}_{k,q}^{\geq} =
+    \text{oqa}(\boldsymbol{a_k}, \boldsymbol{a_q}) =
+    \sqrt{
+    \frac{
+    \sum_{i=1}^{m}{
+    {\delta(a_{i}^{k}, a_{i}^{q})} ^ 2
+    }
+    }{
+    \sum_{i=1}^{m}{
+    {\delta(100, a_{i}^{q})} ^ 2
+    }
+    }
+    } =
+    \sqrt{
+    \frac{
+    \sum_{i=1}^{m}{
+    {\delta(a_{i}^{k}, a_{i}^{q})} ^ 2
+    }
+    }{
+    \sum_{i=1}^{m}{
+    {(100 - a_{i}^{q})} ^ 2
+    }
+    }
+    }
+    ;\\
+    s_{k,q}^{\geq} =
+    \text{sqa}(\boldsymbol{a_k}, \boldsymbol{a_q}) =
+    1 -
+    \sqrt{
+    \frac{
+    \sum_{i=1}^{m}{
+    {\delta(a_{i}^{q}, a_{i}^{k})} ^ 2
+    }
+    }{
+    \sum_{i=1}^{m}{
+    {\delta(a_{i}^{q}, 0)} ^ 2
+    }
+    }
+    } =
+    1 - \text{uqa}(\boldsymbol{a_k}, \boldsymbol{a_q})
+    .
+\end{gather}
+
+Or even
+
+\begin{gather}
+    \tilde{\delta}_{k,q}^{<} =
+    \text{uqa}(\boldsymbol{a_k}, \boldsymbol{a_q}) =
+    \frac{
+    \sum_{i=1}^{m}{
+    {\delta(a_{i}^{q}, a_{i}^{k})}
+    }
+    }{
+    \sum_{i=1}^{m}{
+    {\delta(a_{i}^{q}, 0)}
+    }
+    } =
+    \frac{
+    \sum_{i=1}^{m}{
+    {\delta(a_{i}^{q}, a_{i}^{k})}
+    }
+    }{
+    \sum_{i=1}^{m}{
+    {a_{i}^{q}}
+    }
+    }
+    ;\\
+    \tilde{\delta}_{k,q}^{\geq} =
+    \text{oqa}(\boldsymbol{a_k}, \boldsymbol{a_q}) =
+    \frac{
+    \sum_{i=1}^{m}{
+    {\delta(a_{i}^{k}, a_{i}^{q})}
+    }
+    }{
+    \sum_{i=1}^{m}{
+    {\delta(100, a_{i}^{q})}
+    }
+    } =
+    \frac{
+    \sum_{i=1}^{m}{
+    {\delta(a_{i}^{k}, a_{i}^{q})}
+    }
+    }{
+    \sum_{i=1}^{m}{
+    {(100 - a_{i}^{q})}
+    }
+    }
+    ;\\
+    s_{k,q}^{\geq} =
+    \text{sqa}(\boldsymbol{a_k}, \boldsymbol{a_q}) =
+    1 -
+    \frac{
+    \sum_{i=1}^{m}{
+    {\delta(a_{i}^{q}, a_{i}^{k})}
+    }
+    }{
+    \sum_{i=1}^{m}{
+    {\delta(a_{i}^{q}, 0)}
+    }
+    } =
+    1 - \text{uqa}(\boldsymbol{a_k}, \boldsymbol{a_q})
+    ?
+\end{gather}
+
+
 \subsubsection{Interchangeability}
 \begin{enumerate}
     \item sufficient similarity
@@ -559,6 +692,152 @@ and matrices
     \item interchangeability vector $\boldsymbol{\textbf{\textit{\ss}}_k}$
     \item interchangeability matrix $\boldsymbol{\textbf{\ss}}$
 \end{enumerate}
+alternatively,
+\begin{align*}
+    \textit{\ss}_{k,q} &= 
+    \text{seq}(\boldsymbol{a_k}, \boldsymbol{a_q}) = 
+    s_{k,q} \left\{
+        1 + c_q \tilde{d}_{k,q} \exp\left[
+            -\frac{
+                d_{\max}^{q}
+                (\tilde{d}_{k,q} - c_q)
+                % - (\tilde{d}_{k,q} - c_q)
+                % d_{\max}^{q}
+            }{
+                1 - c_q
+            }
+        \right]
+    \right\} ^ {-\frac{c_q}{\tilde{d}_{k,q}}}\\
+    &=
+    s_{k,q} \left\{
+        1 + c_q (1 - s_{k,q}) \exp\left[
+            \frac{
+                c_q d_{\max}^{q} - d_{k,q}
+            % c_q d_{\text{ub}}^{q} - d_{k,q}
+            % c_q \bar{d}_{q} - d_{k,q}
+            }{
+                1 - c_q
+            }
+        \right]
+    \right\} ^ {
+        - c_q / \tilde{d}_{k,q}
+    }\\
+    &=
+    (1 - \tilde{d}_{k,q})
+    \times
+    \left[
+        1 + c_q \tilde{d}_{k,q} \exp\left(
+            \frac{
+                % c_q d_{\max}^{q} - d_{k,q}
+            % c_q d_{\text{ub}}^{q} - d_{k,q}
+            c_q \bar{d}_{q} - d_{k,q}
+            }{
+                1 - c_q
+            }
+        \right)
+    \right] ^ {
+        - c_q / \tilde{d}_{k,q}
+    }\\
+    &=
+    (1 - \tilde{d}_{k,q})
+    \left[
+        1 + c_q \tilde{d}_{k,q} \exp\left(
+            \frac{
+                % c_q d_{\max}^{q} - d_{k,q}
+            % c_q d_{\text{ub}}^{q} - d_{k,q}
+            c_q \bar{d}_{q} - d_{k,q}
+            }{
+                1 - c_q
+            }
+        \right)
+    \right] ^ {
+        - c_q / \tilde{d}_{k,q}
+    }\\
+    &=
+    s_{k,q}
+    \left[
+        1 + c_q \tilde{d}_{k,q} \exp\left(
+            \frac{
+                % c_q d_{\max}^{q} - d_{k,q}
+            % c_q d_{\text{ub}}^{q} - d_{k,q}
+            c_q \bar{d}_{q} - d_{k,q}
+            }{
+                1 - c_q
+            }
+        \right)
+    \right] ^ {
+        - c_q / \tilde{d}_{k,q}
+    }\\
+    &=
+    s_{k,q}
+    \left[
+        1 + c_q \tilde{d}_{k,q} \exp\left(
+            \frac{
+                % c_q d_{\max}^{q} - d_{k,q}
+            c_q d_{\text{ub}}^{q} - d_{k,q}
+            % c_q d_{q}^{\text{ub}} - d_{k,q}
+            % c_q d_{q}^{ub} - d_{k,q}
+            % c_q d_{ub}^{q} - d_{k,q}
+            % c_q \bar{d}_{q} - d_{k,q}
+            }{
+                1 - c_q
+            }
+        \right)
+    \right] ^ {
+        - c_q / \tilde{d}_{k,q}
+    }\\
+    &=
+    s_{k,q} \left\{
+        1 + c_q \tilde{d}_{k,q} \exp\left[
+            -\frac{
+                \bar{d}_{q}
+                (\tilde{d}_{k,q} - c_q)
+                % - (\tilde{d}_{k,q} - c_q)
+                % d_{\max}^{q}
+            }{
+                1 - c_q
+            }
+        \right]
+    \right\} ^ {-\frac{c_q}{\tilde{d}_{k,q}}}\\
+    &=
+    s_{k,q} \left\{
+        1 + c_q \tilde{d}_{k,q} \exp\left[
+            \frac{
+                \bar{d}_{q}
+                (c_q - \tilde{d}_{k,q})
+                % - (\tilde{d}_{k,q} - c_q)
+                % d_{\max}^{q}
+            }{
+                1 - c_q
+            }
+        \right]
+    \right\} ^ {-\frac{c_q}{\tilde{d}_{k,q}}}\\
+    &=
+    s_{k,q} \left\{
+        1 + c_q \tilde{d}_{k,q} \exp\left[
+            \frac{
+                \bar{d}_{q}
+                (c_q - \tilde{d}_{k,q})
+                % - (\tilde{d}_{k,q} - c_q)
+                % d_{\max}^{q}
+            }{
+                1 - c_q
+            }
+        \right]
+    \right\} ^ {- c_q / \tilde{d}_{k,q}}\\
+    &=
+    s_{k,q} \left\{
+        1 + c_q (1 - s_{k,q}) \exp\left[
+            (
+                % c_q d_{\max}^{q} - d_{k,q}
+            % c_q d_{\text{ub}}^{q} - d_{k,q}
+            c_q \bar{d}_{q} - d_{k,q}
+            ) / (1 - c_q)
+        \right]
+    \right\} ^ {
+        - c_q / \tilde{d}_{k,q}
+    }
+\end{align*}
 
 \subsubsection{Education and Experience Equivalence}
 \begin{enumerate}
