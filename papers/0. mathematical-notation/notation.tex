@@ -855,6 +855,48 @@ alternatively,
     \item eeq vector: $\boldsymbol{\ddot{\tau}_{k}^{\theta}}$
     \item eeq matrix: $\boldsymbol{\ddot{\textbf{T}}_{\mathbf{\Theta}}}$
 \end{enumerate}
+\begin{gather}
+    \ddot{\tau}_{k,q} =
+    \text{teq}(\tau_k,\tau_q,c_q) =
+    \big\{
+        1 + c_q \tau_q 
+        \exp\big[
+            -\tau_q (
+                    \tau_k - \tau_q + 1 - c_q
+                )
+        \big]
+    \big\} ^ {-c_q}
+\end{gather}
+
+\begin{gather}
+    s_{k,q}^{\theta} = 
+    \cos\theta_{k,q} = 
+    \frac{
+        \boldsymbol{\ddot{a}_k}
+        \dotproduct
+        \boldsymbol{\ddot{a}_q}
+    }{
+        \norm{\boldsymbol{\ddot{a}_k}}
+        \norm{\boldsymbol{\ddot{a}_k}}
+    } =
+    \frac{
+        \sum_{i=1}^{m}{
+            \ddot{a}_{i}^{k}
+            \ddot{a}_{i}^{q}
+        }
+    }{
+        \sqrt{
+            \sum_{i=1}^{m}{
+                \ddot{a}_{i}^{{k} ^ 2}
+            }
+        }
+        \sqrt{
+            \sum_{i=1}^{m}{
+                \ddot{a}_{i}^{{q} ^ 2}
+            }
+        }
+    }
+\end{gather}
 
 \subsubsection{Hireability}
 \begin{enumerate}
