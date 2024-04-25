@@ -1,7 +1,7 @@
 # Fdb version 4
-["pdflatex"] 1714079600.96974 "/home/Cao/Storage/github/atlas-research/papers/0. mathematical-notation/notation.tex" "notation.pdf" "notation" 1714079601.52542 0
+["pdflatex"] 1714080322.85044 "/home/Cao/Storage/github/atlas-research/papers/0. mathematical-notation/notation.tex" "notation.pdf" "notation" 1714080323.35863 0
   "/etc/texmf/web2c/texmf.cnf" 1710926363 42612 09b3c6dec2a078bd30d80981dc2f43a3 ""
-  "/home/Cao/Storage/github/atlas-research/papers/0. mathematical-notation/notation.tex" 1714079600.79324 43196 9df3c04fded961b75c328e7b7ad80ed9 ""
+  "/home/Cao/Storage/github/atlas-research/papers/0. mathematical-notation/notation.tex" 1714080320.87622 43196 9df3c04fded961b75c328e7b7ad80ed9 ""
   "/usr/share/texmf/fonts/map/fontname/texfonts.map" 1710926363 3524 cb3e574dea2d1052e39280babc910dc8 ""
   "/usr/share/texmf/fonts/tfm/public/amsfonts/cmextra/cmbsy5.tfm" 1710926363 1120 1e8878807317373affa7f7bba4cf2f6a ""
   "/usr/share/texmf/fonts/tfm/public/amsfonts/cmextra/cmbsy7.tfm" 1710926363 1120 7f9f170e8aa57527ad6c49feafd45d54 ""
@@ -79,10 +79,10 @@
   "/usr/share/texmf/web2c/texmf.cnf" 1710926363 42612 09b3c6dec2a078bd30d80981dc2f43a3 ""
   "/var/lib/texmf/fonts/map/pdftex/updmap/pdftex.map" 1713850284.88918 5467510 16a1904b92333a18bce9de9cf0eae437 ""
   "/var/lib/texmf/web2c/pdftex/pdflatex.fmt" 1713850078 8221232 e980735b6a03ab76c7949f60a39c3468 ""
-  "notation.aux" 1714079601.44991 8835 f839d31c7c7878f195a09dc496880f7c "pdflatex"
-  "notation.spl" 1714079601.19658 0 d41d8cd98f00b204e9800998ecf8427e "pdflatex"
-  "notation.tex" 1714079600.79324 43196 9df3c04fded961b75c328e7b7ad80ed9 ""
-  "notation.toc" 1714079601.44991 5932 83e02b69723e58dbd81caddeb47e0943 "pdflatex"
+  "notation.aux" 1714080323.29623 8835 f839d31c7c7878f195a09dc496880f7c "pdflatex"
+  "notation.spl" 1714080323.04956 0 d41d8cd98f00b204e9800998ecf8427e "pdflatex"
+  "notation.tex" 1714080320.87622 43196 9df3c04fded961b75c328e7b7ad80ed9 ""
+  "notation.toc" 1714080323.29957 5932 83e02b69723e58dbd81caddeb47e0943 "pdflatex"
   (generated)
   "notation.aux"
   "notation.log"
