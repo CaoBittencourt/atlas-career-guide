@@ -681,6 +681,69 @@ Or even
     ?
 \end{gather}
 
+P.S.: unweighted qualification metrics can be overly strict. probably use umlauted weights when calculating qualification for the hireability coefficient. however, absolute qualification metrics (i.e. unweighted) can be useful, specially in career development. the strictness of unweighted qualification only becomes a probably in assessing hireability. therefore, it seems appropriate to make a weighted / unweighted qualification metric distinction. for example:
+\begin{gather}
+    \ddot{s}_{k,q}^{\geq} =
+    1 - 
+    \sqrt{
+    \frac{
+    \sum_{i=1}^{m}{
+    \ddot{a}_{i}^{q} {\delta(a_{i}^{q}, a_{i}^{k})} ^ 2
+    }
+    }{
+    \sum_{i=1}^{m}{
+    \ddot{a}_{i}^{q} {a_{i}^{q}} ^ 2
+    }
+    }
+    } = 
+    1 - \ddot{\delta}_{k,q}^{<}
+    \\
+    s_{k,q}^{\geq} =
+    \text{sqa}(\boldsymbol{a_k}, \boldsymbol{a_q}) =
+    1 -
+    \frac{
+    \sum_{i=1}^{m}{
+    {\delta(a_{i}^{q}, a_{i}^{k})}
+    }
+    }{
+    \sum_{i=1}^{m}{
+    a_{i}^{q}
+    }
+    } =
+    1 - \tilde{\delta}_{k,q}^{<}
+\end{gather}
+or, instead, define the weighted model as the default, and the unweighted as the ``scale-normalized'' model (as it is normalized by the actual theoretical limit, not the weighted theoretical limit):
+\begin{gather}
+    s_{k,q}^{\geq} =
+    \text{sqa}(\boldsymbol{a_k}, \boldsymbol{a_q}, \boldsymbol{\ddot{a}_k}, \boldsymbol{\ddot{a}_q}) =
+    1 - 
+    \sqrt{
+    \frac{
+    \sum_{i=1}^{m}{
+    \ddot{a}_{i}^{q} {\delta(a_{i}^{q}, a_{i}^{k})} ^ 2
+    }
+    }{
+    \sum_{i=1}^{m}{
+    \ddot{a}_{i}^{q} {a_{i}^{q}} ^ 2
+    }
+    }
+    } = 
+    1 - \delta_{k,q}^{<}
+    \\
+    \tilde{s}_{k,q}^{\geq} =
+    \text{sqa}(\boldsymbol{a_k}, \boldsymbol{a_q}) =
+    1 -
+    \frac{
+    \sum_{i=1}^{m}{
+    {\delta(a_{i}^{q}, a_{i}^{k})}
+    }
+    }{
+    \sum_{i=1}^{m}{
+    a_{i}^{q}
+    }
+    } =
+    1 - \tilde{\delta}_{k,q}^{<}
+\end{gather}
 
 \subsubsection{Interchangeability}
 \begin{enumerate}
@@ -839,6 +902,12 @@ alternatively,
     }
 \end{align*}
 
+\begin{gather}
+    \textit{\ss}_{k,q} = 
+    \text{seq}(s_{k,q}, c_q) = 
+    s_{k,q} ^ {\frac{1}{1 - c_q}}
+\end{gather}
+
 \subsubsection{Education and Experience Equivalence}
 \begin{enumerate}
     \item years of education $\tau_k$, $\tau_q$
@@ -927,6 +996,7 @@ alternatively,
               s_{k,q}^{\theta} \times
               \ddot{s}_{k,q}
           $
+    \item p.s.: this metric is too strict. suppose a candidate scored a 0.9 on every metric: $0.9 ^ 4 = 0.6561$
     \item candidate is hireable if $_{0}^{1}[s_{k,q}^{h}]$
     \item candidate is hireable for $_{0}^{1}[s_{k,q}^{h}] \times s_{k,q}^{h}$ percent of jobs (requires an axiom)
     \item hireability vector: $\boldsymbol{s_{k}^{h}}$
