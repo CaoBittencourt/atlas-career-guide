@@ -1,7 +1,7 @@
 # Fdb version 4
-["pdflatex"] 1714162458.46238 "/home/Cao/Storage/github/atlas-research/papers/0. mathematical-notation/notation.tex" "notation.pdf" "notation" 1714162459.02083 0
+["pdflatex"] 1714162999.26633 "/home/Cao/Storage/github/atlas-research/papers/0. mathematical-notation/notation.tex" "notation.pdf" "notation" 1714162999.88337 0
   "/etc/texmf/web2c/texmf.cnf" 1710926363 42612 09b3c6dec2a078bd30d80981dc2f43a3 ""
-  "/home/Cao/Storage/github/atlas-research/papers/0. mathematical-notation/notation.tex" 1714162456.58311 51789 14c69ee59e10815e89933a52099c4a3e ""
+  "/home/Cao/Storage/github/atlas-research/papers/0. mathematical-notation/notation.tex" 1714162998.71562 51723 f4f25117995d54e5ccee15983e32c6ea ""
   "/usr/share/texmf/fonts/map/fontname/texfonts.map" 1710926363 3524 cb3e574dea2d1052e39280babc910dc8 ""
   "/usr/share/texmf/fonts/tfm/public/amsfonts/cmextra/cmbsy5.tfm" 1710926363 1120 1e8878807317373affa7f7bba4cf2f6a ""
   "/usr/share/texmf/fonts/tfm/public/amsfonts/cmextra/cmbsy7.tfm" 1710926363 1120 7f9f170e8aa57527ad6c49feafd45d54 ""
@@ -80,10 +80,10 @@
   "/usr/share/texmf/web2c/texmf.cnf" 1710926363 42612 09b3c6dec2a078bd30d80981dc2f43a3 ""
   "/var/lib/texmf/fonts/map/pdftex/updmap/pdftex.map" 1713850284.88918 5467510 16a1904b92333a18bce9de9cf0eae437 ""
   "/var/lib/texmf/web2c/pdftex/pdflatex.fmt" 1713850078 8221232 e980735b6a03ab76c7949f60a39c3468 ""
-  "notation.aux" 1714162458.94649 9399 531435646cc1695cf74e2c8995ea7c4b "pdflatex"
-  "notation.spl" 1714162458.68315 0 d41d8cd98f00b204e9800998ecf8427e "pdflatex"
-  "notation.tex" 1714162456.58311 51789 14c69ee59e10815e89933a52099c4a3e ""
-  "notation.toc" 1714162458.94649 6291 fd75585535799a4bb3e73d3552edba3f "pdflatex"
+  "notation.aux" 1714162999.79233 9399 531435646cc1695cf74e2c8995ea7c4b "pdflatex"
+  "notation.spl" 1714162999.48232 0 d41d8cd98f00b204e9800998ecf8427e "pdflatex"
+  "notation.tex" 1714162998.71562 51723 f4f25117995d54e5ccee15983e32c6ea ""
+  "notation.toc" 1714162999.79233 6291 fd75585535799a4bb3e73d3552edba3f "pdflatex"
   (generated)
   "notation.aux"
   "notation.log"
