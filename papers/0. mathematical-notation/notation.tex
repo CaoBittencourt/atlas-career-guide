@@ -1052,10 +1052,9 @@ The Skill Set Sufficiency Axiom (SSSA) defines that the activities a person is c
 
 The most intuitive way to understand and mathematically guarantee the Skill Set Sufficiency Axiom is by conceptualizing human capital as a sum of successes on binary outcome variables representing tasks of progressive difficulty:
 \begin{gather}
-    % a_{i}^{k} = \sum_{\ell=0}^{a_{\text{ub}}}T_{\ell}
-    a_{i}^{k} = \sum_{\ell=0}^{\ell_i}T_{\ell}
+    a_{i}^{k} = \sum_{\ell=0}^{\ell_i}T_{\ell}^{k}
     ,\\
-    T_{\ell} = \begin{cases}
+    T_{\ell}^{k} = \begin{cases}
         1, \text{if $k$ succedes at difficulty level $\ell$;}\\
         0, \text{otherwise.}
     \end{cases}
