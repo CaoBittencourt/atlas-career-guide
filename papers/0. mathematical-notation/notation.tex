@@ -358,9 +358,7 @@ in this particular sense, the whole is the sum of its parts.
 
 \subsection{Occupational Axioms}
 \subsubsection{Occupational Reducibility Axiom}
-an occupation is nothing more than a series of job activities
-
-an occupation = its job activities $\implies$ an occupation = its skill set
+an occupation is nothing more than a series of job activities. corollary: an occupation = its job activities $\implies$ an occupation = its skill set
 
 \subsubsection{Occupational Divisibility Axiom}
 since act follows virtue, and even composite activities follow from a sufficiently qualified skill set, and since an occupation is nothing more than a series of activities, then:
@@ -371,17 +369,67 @@ if person $k$ has a sufficient qualification of $s_{k,q}^{\geq} < 1$ with occupa
 
 if person $k$ has a sufficient qualification of $s_{k,q}^{\geq} = 1$ with occupation $q$, then they can completely perform occupation $q$'s job activities
 
-now, as an occupation is nothing but its skill set, then even its composite activities can be ``broken down'' into skill \textit{subsets}. that is, an occupation is ``divisible'' into ``suboccupations'': a (uppercase) ``Job" is a series of (lowercase) ``jobs''.
+now, the Occupational Divisibility Axiom (ODA) states that as an occupation is nothing but its skill set, then both its simple and composite activities can be ``broken down'' into skill \textit{subsets}. that is, an occupation is ``divisible'' into ``suboccupations'': a (uppercase) ``Job" is a series of (lowercase) ``jobs''.
 
-\subsubsection{Occupational Outsourcing Axiom}
-and because an occupation is divisible into ``suboccupations'', and any skilled person can perform a task, even a composite (cross-functional) task, if they are sufficiently qualified, then any portion of an occupation (i.e. its ``suboccupations''), or skill set (i.e. its skill ``subsets''), can be partially or completely outsourced to any sufficiently skilled person.
+\subsubsection{Occupational [Outsourcing] Axiom}
+and because an occupation is divisible into ``suboccupations'', and any skilled person can perform a task, even a composite (cross-functional) task, if they are sufficiently qualified, then any portion of an occupation (i.e. its ``suboccupations''), or skill set (i.e. its skill ``subsets''), can be partially or completely outsourced to any sufficiently qualified person.
 
-provided a skill set is sufficiently similar, etc etc, hireable, as an occupation, then a proportional set of that occupation's job activities can be outsourced to the alternative skill set (weak version)
+Weak Version of the Occupational Outsourcing Axiom (WOOA): provided a skill set is sufficiently similar, etc etc, hireable, as an occupation, then a proportional set of that occupation's job activities can be outsourced to the alternative skill set
 
-or with the strong version of the skill set composition axiom, any subset of an occupation's activities can be outsourced to an alternative skill set to the exact measure of the alternative skill set's qualification relative to that occupation (e.g. if they have sqa of 0\%, then they cannot be hired to perform not even the most basic task of that occupation; if they have sqa of 1\%, then they can be hired to perform the bottom 1\% of that occupation's tasks; if they have sqa of 50\%, then they can be hired to perform the easiest half of that occupation's tasks; and so on and so forth).
+Strong Version of the Occupational Outsourcing Axiom (SOOA): any subset of an occupation's activities can be outsourced to an alternative skill set to the exact measure of the alternative skill set's qualification relative to that occupation (e.g. if they have sqa of 0\%, then they cannot be hired to perform not even the most basic task of that occupation; if they have sqa of 1\%, then they can be hired to perform the bottom 1\% of that occupation's tasks; if they have sqa of 50\%, then they can be hired to perform the easiest half of that occupation's tasks; and so on and so forth).
 
-A corollary of both these axioms is that having the sufficient mastery of an occupation' skill set automatically means one is able to perform the job activities of that occupation. 
-As the first axiom's name implies, skills are sufficient.
+The strong version of this axiom is not very realistic, for it removes all occupational distinctions, and therefore ``liquifies'' all jobs in labor market into one big ``Job'', of which every occupation, with its respective activities, is a part of. In other words, if SOOA were true, it would, then, follow that every worker, and every action of every worker, on every job, in every field, is interchangeable with any other action of any other worker, on any other job, in any other field, provided they refer to the same skill at the same difficulty level. In a way, this would defeat the purpose of the Skill Set Composition Axiom, for every skill subset would, itself, be a subset of the all-encompassing ``skill set" of ``The economy''. But, of course, this absurd. So we do not employ the strong version of the Outsourcing Axiom, thus allowing for qualitative distinctions between occupations.
+
+The weak version of the Occupational Outsourcing Axiom, however, is quite reasonable and, indeed, useful. [explain why it makes sense]. Furthermore, some version of the Outsourcing Axiom is required for us to write any theoretically coherent aggregate comparative metrics, so as to allow us to go, for instance, from ``person $k$ is $x$ compatible with occupation $q$" to ``person $k$ is hireable at $x$ percent of occupation $q$'s job posts''; and, likewise, to further aggregate such metrics on the labor market level and, even, to perform simulations of competition in the labor market.
+
+Mathematically,
+
+\begin{gather}
+    _{0}^{1}[\text{hr}_{k,q} \ |\ \bar{\text{hr}}_{k,q}] = 
+    \begin{cases}
+        1, \text{$\text{hr}_{k,q} \geq \bar{\text{hr}}_{k,q}$}; \\
+        0, \text{otherwise}.
+    \end{cases}
+    ,
+\end{gather}
+and 
+\begin{gather}
+    _{0}^{1}[\text{hr}_{k,q}] = 
+    \begin{cases}
+        1, \text{$\text{hr}_{k,q} \geq 0.5$}; \\
+        0, \text{otherwise}.
+    \end{cases}
+\end{gather}
+are the binary indicators of the $\text{hr}_{k,q} \in [0,1]$ hireability statistic. This metric tells us \textit{whether} a person $k$ can be hired to perform at least a portion of occupation $q$'s job activities (in accordance with the Divisibility Axiom).
+
+Additionally, we define the hireability similarity metric $s_{k,q}^{\text{hr}}$, which determines the \textit{percentage} of a job's activities one could be hired to perform.
+
+When multiplied, these two coefficients quantify if, and to what extent, a skill set can be hired to perform the job activities of another skill set:
+\begin{gather}
+    _{0}^{1}[\text{hr}_{k,q} \ |\ \bar{\text{hr}}_{k,q}] \times s_{k,q}^{\text{hr}}
+    \in [0,1]
+    .
+\end{gather}
+
+The ``radical'' SOOA defines these metrics as:
+\begin{gather}
+    _{0}^{1}[\text{hr}_{k,q} \ |\ \bar{\text{hr}}_{k,q}] = 1 \ \forall \ \bar{\text{hr}}_{k,q};\\
+    s_{k,q}^{\text{hr}} = s_{k,q}^{\geq}
+    \in [0,1]
+    .
+\end{gather}
+
+However, the more reasonable WOOA does not make any strong assumptions about these coefficients, but only that they should be weaker than the SOOA's pressupositions:
+\begin{gather}
+    _{0}^{1}[\text{hr}_{k,q} \ |\ \bar{\text{hr}}_{k,q}] = h(\bar{\text{hr}}_{k,q});\\
+    s_{k,q}^{\text{hr}} \leq s_{k,q}^{\geq}
+    \in [0,1]
+    ,
+\end{gather}
+where $h(.)$ is any monotonic [hireability function], a much weaker pressuposition than the SOOA's hireability \textit{constant} $_{0}^{1}[\text{hr}_{k,q} \ |\ \bar{\text{hr}}_{k,q}] = 1$. In addition, the second assumption is that a skill set can be hired to perform \textit{up to} $s_{k,q}^{\geq}$ of another skill set's job activities, but not necessarily $s_{k,q}^{\geq}$ percent of them.
+
+\subsubsection{Occupational Aggregation Axiom}
+``person $k$ is $s_{k,q}$ compatible with occupation $q$" to ``person $k$ is hireable at $s_{k,q}^{h}$ percent of occupation $q$'s job posts''
 
 % endregion
 
