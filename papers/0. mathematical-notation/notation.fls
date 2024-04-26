@@ -58,6 +58,8 @@ INPUT /usr/share/texmf/tex/latex/amsmath/amsbsy.sty
 INPUT /usr/share/texmf/tex/latex/amsmath/amsopn.sty
 INPUT /usr/share/texmf/tex/latex/float/float.sty
 INPUT /usr/share/texmf/tex/latex/float/float.sty
+INPUT /usr/share/texmf/tex/latex/enumitem/enumitem.sty
+INPUT /usr/share/texmf/tex/latex/enumitem/enumitem.sty
 INPUT ./notation.aux
 INPUT ./notation.aux
 INPUT notation.aux
