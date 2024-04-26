@@ -23,6 +23,7 @@
 \usepackage{float}
 \usepackage{enumitem}
 \setlist[enumerate]{label*=\arabic*.}
+\usepackage[hidelinks]{hyperref}
 
 % endregion
 
@@ -270,6 +271,117 @@ The competence vector of all $n$ skill sets in the economy is:
     \boldsymbol{c} = (c_1, \dots, c_n)
     .
 \end{gather}
+
+% endregion
+
+% region: additional defintions 
+\section{Additional Definitions}
+\subsection{Fundamental Axioms}
+In order for derive quantitative career choice and career development methods, we need some basic assumptions.
+% \begin{enumerate}
+%     \item the difficulty of a task is \textit{measureable} in terms of the other tasks associated with a particular skill (i.e. tasks that require a skill level of $a_i \geq \bar{a}_1$ are objectively more difficult than tasks that require a skill level $\bar{a}_2 < \bar{a}_1$)
+%     \item the skill scale is uniform
+%     \begin{enumerate}
+%         \item each competency has both easy and difficult levels
+%         \item the difficulty of each scale is the same as the difficulty of the other scales
+%         \item i.e. performing the tasks associated with attribute $a_i$ at the level $a_i = \bar{a}$ is, objectively, just as difficult as performing the tasks of attribute $a_j$ at the same $a_i = a_j = \bar{a}$ level
+%         \item this has nothing to do with the distribution of task difficulty for each attribute: it only means that tasks at the same difficulty level are just as hard; it does not mean that some attributes are not more \textit{frequently} harder than other attributes
+%     \end{enumerate}
+%     \item the skill scale is truncated
+%     \begin{enumerate}
+%         \item 
+%     \end{enumerate}
+% \end{enumerate}
+
+\subsubsection{Skill Set Sufficiency Axiom}
+\begin{enumerate}
+    \item SSSA (weak): skill $\implies$ activities
+    \item SSSA (strong): skill $\iff$ activities
+\end{enumerate}
+
+The Skill Set Sufficiency Axiom (SSSA) defines that the activities a person is capable of performing follow directly from their skill set. That is to say, activities are essentially the application of an underlying capacity, so that having a certain skill level in a competency necessarily translates into being able to perform every task associated with that competency at that level (and, of course, at the previous levels).
+
+The most intuitive way to understand and mathematically guarantee the Skill Set Sufficiency Axiom is by conceptualizing human capital as a sum of successes on binary outcome variables representing tasks of progressive difficulty:
+\begin{gather}
+    a_{i}^{k} = \sum_{\ell=0}^{\ell_i}T_{\ell}^{k}
+    ,\\
+    T_{\ell}^{k} = \begin{cases}
+        1, \text{if $k$ succedes at difficulty level $\ell$;}\\
+        0, \text{otherwise.}
+    \end{cases}
+\end{gather}
+
+This, in turn, pressuposes the following:
+\begin{enumerate}
+    \item task difficulty is objectively measureable (see Fundamental Axioms)
+    \item the skill scale is uniform (see Fundamental Axioms)
+    \begin{enumerate}
+        \item each competency has both easy and difficult levels
+        \item the difficulty of each scale is the same as the difficulty of the other scales
+        \item i.e. performing the tasks associated with attribute $a_i$ at the level $a_i = \bar{a}_{\ell}$ is, objectively, just as difficult as performing the tasks of attribute $a_j$ at the same $a_i = a_j = \bar{a}_{\ell}$ level
+        \item this has nothing to do with the distribution of task difficulty for each attribute: it only means that tasks at the same difficulty level are just as hard; it does not mean that some attributes are not more \textit{frequently} harder than other attributes
+    \end{enumerate}
+    \item the skill scale is truncated (see Fundamental Axioms)
+    \item anyone who can perform a task of difficulty $\bar{a}_{\ell_1}$ can also perform a task of difficulty $\bar{a}_{\ell_2} \leq \bar{a}_{\ell_1}$ (see Fundamental Axioms)
+    \item a person $k$ can only perform a task of difficulty $\bar{a}_{\ell}$ if they have a skill level of $a_{i}^{k} \geq \bar{a}_{\ell}$
+\end{enumerate}
+
+Thus, we can define a person's skill level as the sum of their successful trials on tasks of increasing difficulty. And assuming the scales are truncated, we can also interpret these metrics as the portion of tasks one is able to perform out of all difficulty levels for that skill.
+
+\begin{enumerate}
+    \item e.g. skill level = 0: cannot perform even the most basic of tasks associated with that skill
+    \item e.g. skill level = 1: can perform only the bottom 1\% of tasks associated with that skill (in order of difficulty)
+    \item e.g. skill level = 10: can perform the bottom 10\% of tasks associated with that skill (in order of difficulty)
+    \item e.g. skill level = 50: can perform the (easiest) half of the tasks associated with that skill
+    \item e.g. skill level = 100: can perform all the tasks associated with that skill
+\end{enumerate}
+
+Additionally, we can interpret skill levels as the normalization of task difficulty by the most objectively difficult task for each skill.
+\begin{enumerate}
+    \item e.g. skill level = 0: cannot perform even the most basic of tasks associated with that skill
+    \item e.g. skill level = 1: can only perform tasks of up to 1\% the difficulty of that skill's most difficult task
+    \item e.g. skill level = 10: can only perform tasks of up to 10\% the difficulty of that skill's most difficult task
+    \item e.g. skill level = 50: can perform tasks of up to half of the difficulty of that skill's most difficult task
+    \item e.g. skill level = 100: can perform all the tasks associated with that skill
+\end{enumerate}
+
+Now, because we assume the scales are truncated, this latter interpretation implies, and is implied, by the former. For if a task is of the same difficulty as another, then they are proportionately just as difficult in relation to that skill's most difficult task (i.e. they require the same percentage of the scale's upper limit), and, likewise, are also included in the same difficulty ``bracket" (i.e. they are equivalent to the same skill test in the previous aggregate binary outcome interpretation).
+
+So, however one decides to interpret skill levels, the conclusion remains the same: to be skilled in an attribute is to be able to perform the activities associated with that attribute. Put simply, the capacity to act follows virtue, for virtue is, itself, the capacity to act.
+
+\subsubsection{Skill Set Composition Axiom}
+combination of skills into composite activities
+
+if an activity is associated with more than one skill (i.e. it is a cross-functional, or composite activity), then any rational person with the required skill set can naturally ``piece the skills together'' in order to perform the composite activity
+
+in this particular sense, the whole is the sum of its parts.
+
+\subsection{Occupational Axioms}
+\subsubsection{Occupational Reducibility Axiom}
+an occupation is nothing more than a series of job activities
+
+an occupation = its job activities $\implies$ an occupation = its skill set
+
+\subsubsection{Occupational Divisibility Axiom}
+since act follows virtue, and even composite activities follow from a sufficiently qualified skill set, and since an occupation is nothing more than a series of activities, then:
+
+to have an overlap, or sufficient qualification, of $s_{k,q}^{\geq}$ with an occupation's skill set is to be able to perform $s_{k,q}^{\geq}$ \% of that occupation's job activities
+
+if person $k$ has a sufficient qualification of $s_{k,q}^{\geq} < 1$ with occupation $q$, then they can partially perform occupation $q$'s job activities
+
+if person $k$ has a sufficient qualification of $s_{k,q}^{\geq} = 1$ with occupation $q$, then they can completely perform occupation $q$'s job activities
+
+now, as an occupation is nothing but its skill set, then even its composite activities can be ``broken down'' into skill \textit{subsets}. that is, an occupation is ``divisible'' into ``suboccupations'': a (uppercase) ``Job" is a series of (lowercase) ``jobs''.
+
+\subsubsection{Occupational Outsourcing Axiom}
+and because an occupation is divisible into ``suboccupations'', and any skilled person can perform a task, even a composite (cross-functional) task, if they are sufficiently qualified, then any portion of an occupation (i.e. its ``suboccupations''), or skill set (i.e. its skill ``subsets''), can be partially or completely outsourced to any sufficiently skilled person.
+
+provided a skill set is sufficiently similar, etc etc, hireable, as an occupation, then a proportional set of that occupation's job activities can be outsourced to the alternative skill set (weak version)
+
+or with the strong version of the skill set composition axiom, any subset of an occupation's activities can be outsourced to an alternative skill set to the exact measure of the alternative skill set's qualification relative to that occupation (e.g. if they have sqa of 0\%, then they cannot be hired to perform not even the most basic task of that occupation; if they have sqa of 1\%, then they can be hired to perform the bottom 1\% of that occupation's tasks; if they have sqa of 50\%, then they can be hired to perform the easiest half of that occupation's tasks; and so on and so forth).
+
+A corollary of both these axioms is that having the sufficient mastery of an occupation' skill set automatically means one is able to perform the job activities of that occupation. 
+As the first axiom's name implies, skills are sufficient.
 
 % endregion
 
@@ -1023,89 +1135,6 @@ alternatively,
     \item e.g. $\ddot{u}_{k,q} = \text{ueq}(u(\hat{y}_k), u(\hat{y}_q), ...) \times
               s_{k,q}^{\upsilon}$
 \end{enumerate}
-
-\subsection{Axioms}
-\subsection{Fundamental Axioms}
-In order for derive quantitative career choice and career development methods, we need some basic assumptions.
-% \begin{enumerate}
-%     \item the difficulty of a task is \textit{measureable} in terms of the other tasks associated with a particular skill (i.e. tasks that require a skill level of $a_i \geq \bar{a}_1$ are objectively more difficult than tasks that require a skill level $\bar{a}_2 < \bar{a}_1$)
-%     \item the skill scale is uniform
-%     \begin{enumerate}
-%         \item each competency has both easy and difficult levels
-%         \item the difficulty of each scale is the same as the difficulty of the other scales
-%         \item i.e. performing the tasks associated with attribute $a_i$ at the level $a_i = \bar{a}$ is, objectively, just as difficult as performing the tasks of attribute $a_j$ at the same $a_i = a_j = \bar{a}$ level
-%         \item this has nothing to do with the distribution of task difficulty for each attribute: it only means that tasks at the same difficulty level are just as hard; it does not mean that some attributes are not more \textit{frequently} harder than other attributes
-%     \end{enumerate}
-%     \item the skill scale is truncated
-%     \begin{enumerate}
-%         \item 
-%     \end{enumerate}
-% \end{enumerate}
-
-\subsubsection{Skill Set Sufficiency Axiom}
-\begin{enumerate}
-    \item SSSA (weak): skill $\implies$ activities
-    \item SSSA (strong): skill $\iff$ activities
-\end{enumerate}
-
-The Skill Set Sufficiency Axiom (SSSA) defines that the activities a person is capable of performing follow directly from their skill set. That is to say, activities are essentially the application of an underlying capacity, so that having a certain skill level in a competency necessarily translates into being able to perform every task associated with that competency at that level (and, of course, at the previous levels).
-
-The most intuitive way to understand and mathematically guarantee the Skill Set Sufficiency Axiom is by conceptualizing human capital as a sum of successes on binary outcome variables representing tasks of progressive difficulty:
-\begin{gather}
-    a_{i}^{k} = \sum_{\ell=0}^{\ell_i}T_{\ell}^{k}
-    ,\\
-    T_{\ell}^{k} = \begin{cases}
-        1, \text{if $k$ succedes at difficulty level $\ell$;}\\
-        0, \text{otherwise.}
-    \end{cases}
-\end{gather}
-
-This, in turn, pressuposes the following:
-\begin{enumerate}
-    \item task difficulty is objectively measureable (see Fundamental Axioms)
-    \item the skill scale is uniform (see Fundamental Axioms)
-    \begin{enumerate}
-        \item each competency has both easy and difficult levels
-        \item the difficulty of each scale is the same as the difficulty of the other scales
-        \item i.e. performing the tasks associated with attribute $a_i$ at the level $a_i = \bar{a}_{\ell}$ is, objectively, just as difficult as performing the tasks of attribute $a_j$ at the same $a_i = a_j = \bar{a}_{\ell}$ level
-        \item this has nothing to do with the distribution of task difficulty for each attribute: it only means that tasks at the same difficulty level are just as hard; it does not mean that some attributes are not more \textit{frequently} harder than other attributes
-    \end{enumerate}
-    \item the skill scale is truncated (see Fundamental Axioms)
-    \item anyone who can perform a task of difficulty $\bar{a}_{\ell_1}$ can also perform a task of difficulty $\bar{a}_{\ell_2} \leq \bar{a}_{\ell_1}$ (see Fundamental Axioms)
-    \item a person $k$ can only perform a task of difficulty $\bar{a}_{\ell}$ if they have a skill level of $a_{i}^{k} \geq \bar{a}_{\ell}$
-\end{enumerate}
-
-Thus, we can define a person's skill level as the sum of their successful trials on tasks of increasing difficulty. And assuming the scales are truncated, we can also interpret these metrics as the portion of tasks one is able to perform out of all difficulty levels for that skill.
-
-\begin{enumerate}
-    \item e.g. skill level = 0: cannot perform even the most basic of tasks associated with that skill
-    \item e.g. skill level = 1: can perform only the bottom 1\% of tasks associated with that skill (in order of difficulty)
-    \item e.g. skill level = 10: can perform the bottom 10\% of tasks associated with that skill (in order of difficulty)
-    \item e.g. skill level = 50: can perform the (easiest) half of the tasks associated with that skill
-    \item e.g. skill level = 100: can perform all the tasks associated with that skill
-\end{enumerate}
-
-Additionally, we can interpret skill levels as the normalization of task difficulty by the most objectively difficult task for each skill.
-\begin{enumerate}
-    \item e.g. skill level = 0: cannot perform even the most basic of tasks associated with that skill
-    \item e.g. skill level = 1: can only perform tasks of up to 1\% the difficulty of that skill's most difficult task
-    \item e.g. skill level = 10: can only perform tasks of up to 10\% the difficulty of that skill's most difficult task
-    \item e.g. skill level = 50: can perform tasks of up to half of the difficulty of that skill's most difficult task
-    \item e.g. skill level = 100: can perform all the tasks associated with that skill
-\end{enumerate}
-
-Now, because we assume the scales are truncated, this latter interpretation implies, and is implied, by the former. For if a task is of the same difficulty as another, then they are proportionately just as difficult in relation to that skill's most difficult task (i.e. they require the same percentage of the scale's upper limit), and, likewise, are also included in the same difficulty ``bracket" (i.e. they are equivalent to the same skill test in the previous aggregate binary outcome interpretation).
-
-So, however one decides to interpret skill levels, the conclusion remains the same: to be skilled in an attribute is to be able to perform the activities associated with that attribute. Put simply, the capacity to act follows virtue, for virtue is, itself, the capacity to act.
-
-\subsubsection{Skill Set Composition Axiom}
-
-
-A corollary of both these axioms is that having the sufficient mastery of an occupation' skill set automatically means one is able to perform the job activities of that occupation. 
-As the first axiom's name implies, skills are sufficient.
-
-
-\subsubsection{}
 
 \subsection{Aggregate Comparative Models}
 \subsubsection{Employability}
