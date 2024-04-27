@@ -1,7 +1,7 @@
 # Fdb version 4
-["pdflatex"] 1714174797.55074 "/home/Cao/Storage/github/atlas-research/papers/0. mathematical-notation/notation.tex" "notation.pdf" "notation" 1714174798.28665 0
+["pdflatex"] 1714180690.96277 "/home/Cao/Storage/github/atlas-research/papers/0. mathematical-notation/notation.tex" "notation.pdf" "notation" 1714180691.74916 0
   "/etc/texmf/web2c/texmf.cnf" 1710926363 42612 09b3c6dec2a078bd30d80981dc2f43a3 ""
-  "/home/Cao/Storage/github/atlas-research/papers/0. mathematical-notation/notation.tex" 1714174797.82485 58687 f35015496f733c565a376293c7e21835 ""
+  "/home/Cao/Storage/github/atlas-research/papers/0. mathematical-notation/notation.tex" 1714180688.41876 61177 3aebd8674604472b0477ad4224491159 ""
   "/usr/share/texmf/fonts/map/fontname/texfonts.map" 1710926363 3524 cb3e574dea2d1052e39280babc910dc8 ""
   "/usr/share/texmf/fonts/tfm/public/amsfonts/cmextra/cmbsy5.tfm" 1710926363 1120 1e8878807317373affa7f7bba4cf2f6a ""
   "/usr/share/texmf/fonts/tfm/public/amsfonts/cmextra/cmbsy7.tfm" 1710926363 1120 7f9f170e8aa57527ad6c49feafd45d54 ""
@@ -107,11 +107,11 @@
   "/usr/share/texmf/web2c/texmf.cnf" 1710926363 42612 09b3c6dec2a078bd30d80981dc2f43a3 ""
   "/var/lib/texmf/fonts/map/pdftex/updmap/pdftex.map" 1713850284.88918 5467510 16a1904b92333a18bce9de9cf0eae437 ""
   "/var/lib/texmf/web2c/pdftex/pdflatex.fmt" 1713850078 8221232 e980735b6a03ab76c7949f60a39c3468 ""
-  "notation.aux" 1714174798.18151 11312 899c4c1bb71b8b3468e2c970987e1c2b "pdflatex"
-  "notation.out" 1714174798.18485 17312 4cebd11efdb2032e72f37cf9efa1d555 "pdflatex"
-  "notation.spl" 1714174797.74151 0 d41d8cd98f00b204e9800998ecf8427e "pdflatex"
-  "notation.tex" 1714174797.82485 58687 f35015496f733c565a376293c7e21835 ""
-  "notation.toc" 1714174798.18485 7910 5527bf3684039fc5fd81f05f776dcafe "pdflatex"
+  "notation.aux" 1714180691.66877 11479 f2d7e055f329cc067735001e9bb02bbf "pdflatex"
+  "notation.out" 1714180691.6721 17637 8944ab5456eed0007957b542640dfe3e "pdflatex"
+  "notation.spl" 1714180691.17877 0 d41d8cd98f00b204e9800998ecf8427e "pdflatex"
+  "notation.tex" 1714180688.41876 61177 3aebd8674604472b0477ad4224491159 ""
+  "notation.toc" 1714180691.6721 8036 909ff6d18952ac269fc8606d68f13bd2 "pdflatex"
   (generated)
   "notation.aux"
   "notation.log"
