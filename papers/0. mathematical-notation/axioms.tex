@@ -1,0 +1,182 @@
+%SECTION: SETUP
+% region: document class 
+% \documentclass{article}
+\documentclass{elsarticle} %elsevier
+% \documentclass[twocolumn]{elsarticle} %elsevier
+% \documentclass{apa7} %american psychological association
+% \documentclass[doc]{apa7} %american psychological association
+% \documentclass{aomart} %annals of mathematics
+% \documentclass{imsproc} %institute of mathematics and statistics
+% \documentclass{nwejmart} %north-western european journal of mathematics
+% \documentclass{paper} 
+% \documentclass{sr-vorl} %springer book
+% \documentclass{ecca} %economica
+% \documentclass{ecta} %econometrica
+% \documentclass{apecon} %applied economics
+
+% endregion
+
+% region: packages 
+\usepackage{xr}
+\usepackage{physics}
+\usepackage{amsmath}
+\usepackage{float}
+\usepackage{enumitem}
+\setlist[enumerate]{label*=\arabic*.}
+\usepackage[hidelinks]{hyperref}
+
+% endregion
+
+% region: title 
+% Title
+\title{
+    Derivation of the Employability Theorem
+}
+\author{Cao Bittencourt}
+\affiliation{{B. Sc. in Economics from EPGE (FGV), RJ, Brazil.}}
+\affiliation{{Statistician at Atlas Career Guide Inc., FL, USA.}}
+\date{\today}
+
+% endregion
+
+% region: display breaks 
+\allowdisplaybreaks
+
+% endregion
+
+%SECTION: PAPER
+\begin{document}
+
+% \maketitle
+
+% region: abstract 
+\begin{abstract}
+    \noindent
+    This is document demonstrates the employability theorem from a set of fairly tautological axioms, which are pressuposed in quantitative career choice and career development methods.
+\end{abstract}
+% endregion
+
+% region: title 
+\maketitle
+
+% endregion
+
+% region: table of contents
+\tableofcontents
+\newpage
+% endregion
+
+% region: premises 
+\section{Premises of the Employability Theorem}
+\subsection{Skill Set Sufficiency Axiom}
+\begin{enumerate}
+    \item having the required skill level of an attribute is sufficient to perform its
+          activities at that level
+    \item skills are sufficient to perform activities
+    \item $x \implies T_x$
+    \item $x \iff T_x$
+\end{enumerate}
+\subsection{Skill Set Composition Axiom}
+\begin{enumerate}
+    \item rational economic agents can naturally compose multiple skills to accomplish
+          complex tasks (i.e. tasks that require multiple skills)
+    \item skills are composable to perform complex activities
+    \item $x,y \iff T_{xy}$
+    \item p.s.: it does not matter \textit{how} skills are composed to perform a complex
+          activity. the point of the axiom is that any rational person which is also
+          sufficiently qualified can ``figure out'' how to ``piece together'', that is
+          compose, the required skills to perform a complex activity:
+          \begin{gather*}
+              (x,y \iff T_{xy}) \iff (\ x,y \iff T_{yx})
+              .
+          \end{gather*}
+\end{enumerate}
+\subsection{Occupational Reducibility Axiom}
+\begin{enumerate}
+    \item from a practical standpoint, occupations are just a collection of job
+          activities
+    \item occupations can be reduced to their job activities
+    \item $\boldsymbol{q} \iff \boldsymbol{T_q}$
+\end{enumerate}
+\subsection{Occupational Skill-Sufficiency Corollary}
+\begin{enumerate}
+    \item from axioms: Reducibility, Sufficiency
+    \item as occupations are just a collection of job activities and skills are
+          sufficient to perform activities, therefore occupations are just a collection
+          of skills
+    \item occupations can be reduced to their skill set
+    \item $\boldsymbol{q} \iff \boldsymbol{T_q} \iff \boldsymbol{a_q}$
+\end{enumerate}
+
+% endregion
+
+% region: demonstration 
+\section{Demonstration of the Employability Theorem}
+
+% endregion
+
+% region: additional corollaries 
+\section{Additional Corollaries}
+\subsection{Occupational Divisibility Corollary 1 (Suboccupations)}
+\begin{enumerate}
+    \item from axioms: Reducibility, Sufficiency, Composition
+    \item as occupations are just a collection of simple and complex job activities, and
+          skills are sufficient to perform activities, and rational agents can naturally
+          compose skills to accomplish complex activities, therefore occupations can be
+          ``broken down'' into ``suboccupations'', each with their own subset of the
+          ``main'' occupation's activities and respective skill ``subsets''
+    \item occupations can be divided into suboccupations, each with its own skill subset
+    \item $
+              \boldsymbol{q} \iff \boldsymbol{T_q}
+              \text{ and }
+              \boldsymbol{T_q} = \{T_x, T_y, T_z, ..., T_{xy}, T_{yx}, T_{xz}, T_{xzy}\}
+              \implies \\
+              \boldsymbol{T_{q_{xyz}}} = \{T_x, T_y, T_z, ..., T_{xy}, T_{yx}, T_{xz}, T_{xzy}\},\\
+              \boldsymbol{T_{q_{xy}}} = \{T_x, T_y, ..., T_{xy}, T_{yx}\},\\
+              \boldsymbol{T_{q_{xz}}} = \{T_x, T_z, ..., T_{xz}\},\\
+              \boldsymbol{T_{q_{yz}}} = \{T_y, T_z, ...\},\\
+              \boldsymbol{T_{q_x}} = T_x,\\
+              \boldsymbol{T_{q_y}} = T_y,\\
+              \boldsymbol{T_{q_z}} = T_z
+              .
+          $
+    \item notice: we are not saying \textit{how} an occupation's complex activities are
+          composed. what the corollary states is only that an occupation, which is just a
+          collection of activities, can \textit{potentially} be divided into
+          suboccupations, based on how their job activities are composed.
+\end{enumerate}
+\subsection{Occupational Divisibility Corollary 2 (Skill Subsets)}
+\begin{enumerate}
+    \item from corollary: Divisibility 1
+    \item from axioms: Reducibility, Sufficiency, Composition
+    \item to the extent to which an occupation is divisible, a sufficiently qualified
+          skill set does not need to be a perfect match with an occupation's entire skill
+          set in order to perform at least a portion of their job activities
+    \item partial matching: people can perform isolated subsets of an occupation's job
+          activities
+    \item $
+              \boldsymbol{q} \iff \boldsymbol{T_q}
+              \text{ and }
+              \boldsymbol{T_q} = \{T_x, T_y, T_z, ..., T_{xy}, T_{yx}, T_{xz}, T_{xzy}\}
+              \implies \\
+              \boldsymbol{T_{q_{xyz}}} = \{T_x, T_y, T_z, ..., T_{xy}, T_{yx}, T_{xz}, T_{xzy}\} \implies (x,y,z \implies \boldsymbol{T_{q_{xyz}}}),\\
+              \boldsymbol{T_{q_{xy}}} = \{T_x, T_y, ..., T_{xy}, T_{yx}\} \implies (x,y \implies \boldsymbol{T_{q_{xy}}}),\\
+              \boldsymbol{T_{q_{xz}}} = \{T_x, T_z, ..., T_{xz}\} \implies (x,z \implies \boldsymbol{T_{q_{xz}}}),\\
+              \boldsymbol{T_{q_{yz}}} = \{T_y, T_z, ...\} \implies (y,z \implies \boldsymbol{T_{q_{yz}}}),\\
+              \boldsymbol{T_{q_x}} = T_x \implies (x \implies \boldsymbol{T_{q_{x}}}),\\
+              \boldsymbol{T_{q_y}} = T_y \implies (y \implies \boldsymbol{T_{q_{y}}}),\\
+              \boldsymbol{T_{q_z}} = T_z \implies (z \implies \boldsymbol{T_{q_{z}}})
+              .
+          $
+    \item again, we are not stating \textit{how} an occupation is divided, only that,
+          because of skill set sufficiency, composition, and occupational reducibility,
+          occupations are, therefore, potentially divisible into suboccupations (with
+          skill subsets), and to the extent to which they are divisible, therefore, any
+          sufficiently qualified person can perform the skill subset for which they are
+          qualified
+\end{enumerate}
+\subsection{Occupational Divisibility Corollary 3 (Partial Employment)}
+
+% endregion
+
+\end{document}
