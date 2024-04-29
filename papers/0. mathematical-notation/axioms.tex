@@ -52,7 +52,7 @@
 % region: abstract 
 \begin{abstract}
     \noindent
-    This is document demonstrates the employability theorem from a set of fairly tautological axioms, which are pressuposed in quantitative career choice and career development methods.
+    This is document demonstrates the employability theorem from a set of fairly tautological axioms, which are presupposed in quantitative career choice and career development methods.
 \end{abstract}
 % endregion
 
@@ -61,7 +61,7 @@
 
 % endregion
 
-% region: table of contents
+% region: table of contents 
 \tableofcontents
 \newpage
 % endregion
@@ -73,9 +73,30 @@
     \item having the required skill level of an attribute is sufficient to perform its
           activities at that level
     \item skills are sufficient to perform activities
-    \item $x \implies T_x$
-    \item $x \iff T_x$
 \end{enumerate}
+
+Idea:
+\begin{gather*}
+    x \iff T_x
+\end{gather*}
+
+Weak Version:
+\begin{gather*}
+    x \geq \bar{x} \iff 1 \times T_{\bar{x}}
+\end{gather*}
+
+Moderate Version:
+\begin{gather*}
+    x \geq \bar{x} \iff 1 \times T_{\bar{x}};\\
+    x < \bar{x} \iff f_{x}(x, \bar{x}) \times T_{\bar{x}}
+\end{gather*}
+
+Strong Version:
+\begin{gather*}
+    x \geq \bar{x} \iff 1 \times T_{\bar{x}};\\
+    x < \bar{x} \iff (x / \bar{x}) \times T_{\bar{x}}
+\end{gather*}
+
 \subsection{Skill Set Composition Axiom}
 \begin{enumerate}
     \item rational economic agents can naturally compose multiple skills to accomplish
