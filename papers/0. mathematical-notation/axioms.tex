@@ -108,10 +108,236 @@ Strong Version:
           sufficiently qualified can ``figure out'' how to ``piece together'', that is
           compose, the required skills to perform a complex activity:
           \begin{gather*}
-              (x,y \iff T_{xy}) \iff (\ x,y \iff T_{yx})
+              (x,y \iff T_{xy}) \iff (x,y \iff T_{yx})
               .
           \end{gather*}
 \end{enumerate}
+
+\begin{gather*}
+    \sigma_{i}^{k} = 
+    \frac{
+        a_{i}^{k}
+        }{
+            \sum_{i=1}^{m}{
+                a_{i}^{k}
+            }
+        }
+        \in [0,1]
+        ;\\
+    \boldsymbol{\sigma_{k}} = 
+    (\sigma_{1}^{k}, \dots, \sigma_{m}^{k})
+    ;\\
+    \boldsymbol{\sigma} =
+    \begin{bmatrix}
+        \sigma_{1}^{1} & \hdots & \sigma_{m}^{1} \\
+        \vdots    & \ddots & \vdots    \\
+        \sigma_{1}^{n} & \hdots & \sigma_{m}^{n} \\
+    \end{bmatrix}
+    .
+\end{gather*}
+
+Strong Composition Axiom (Maximum Complementarity, Leontiev production function?):
+\begin{gather*}
+    s_{k,q}^{h} = 
+    {\min_{i}\left(
+        % {\boldsymbol{a_{k}}} ^ {\boldsymbol{\sigma_{q}}}
+        {\boldsymbol{a_{k}^ {\boldsymbol{\sigma_{q}}}}}
+    % )} ^ \frac{1}{\sigma_{m}^{q}}
+    \right)} ^ {1 / \sigma_{i}^{q}}
+    % s_{k,q}^{h} = 
+    % {\min_{i}\left(
+    %     % {\boldsymbol{a_{k}}} ^ {\boldsymbol{\hat{a}_{q}}}
+    %     {\boldsymbol{a_{k}^ {\boldsymbol{\hat{a}_{q}}}}}
+    % % )} ^ \frac{1}{\hat{a}_{m}^{q}}
+    % \right)} ^ {1 / \hat{a}_{i}^{q}}
+    % =
+    % {\min_{i}(
+    %     {a_{1}^{k}} ^ {\sigma_{1}^{q}}
+    %     , \dots, 
+    %     {a_{m}^{k}} ^ {\sigma_{m}^{q}}
+    % % )} ^ \frac{1}{\sigma_{m}^{q}}
+    % )} ^ {1 / \sigma_{i}^{q}}
+\end{gather*}
+
+Moderate Composition Axiom (Moderate Complementarity, Weak Substitution, Cobb-Douglas production function):
+\begin{gather*}
+    s_{k,q}^{h} = 
+    \frac{
+        \prod_{i=1}^{m}{
+            {\min\left(
+                {a_{i}^{k}},
+                {a_{i}^{q}}
+            \right)} ^ {
+            \sigma_{i}^{q}
+        }
+    }
+    }{
+        \prod_{i=1}^{m}{
+        {a_{i}^{q}} ^ {
+            \sigma_{i}^{q}
+        }
+    }
+    }
+    =
+    \prod_{i=1}^{m}{
+            % {\min\left(
+            {\min(
+                {a_{i}^{k}},
+                {a_{i}^{q}}
+            % \right)} ^ {
+            )} ^ {
+            \sigma_{i}^{q}
+        }
+    }{\left(
+        \prod_{i=1}^{m}{
+        {a_{i}^{q}} ^ {
+            \sigma_{i}^{q}
+        }
+    }\right)} ^ {-1}
+    \in [0,1]
+    ,\\
+    \sum_{i=1}^{m}{
+        \sigma_{i}^{q}
+    } = 1
+    .
+\end{gather*}
+
+Moderate-Low Composition Axiom (Weak Complementarity, Moderate Substitution, Cobb-Douglas production function):
+\begin{gather*}
+    s_{k,q}^{h} = 
+    \min\left(
+        \frac{
+        \prod_{i=1}^{m}{
+        {a_{i}^{k}} ^ {
+            \sigma_{i}^{q}
+        }
+    }
+    }{
+        \prod_{i=1}^{m}{
+        {a_{i}^{q}} ^ {
+            \sigma_{i}^{q}
+        }
+    }
+    }
+    , 1
+    \right)
+    \in [0,1]
+    ,\\
+    \sum_{i=1}^{m}{
+        \sigma_{i}^{q}
+    } = 1
+    .
+\end{gather*}
+
+Weak Composition Axiom (Strong Substitution, Linear production function):
+\begin{gather*}
+    s_{k,q}^{h} = 
+        \frac{
+        \sum_{i=1}^{m}{
+            a_{i}^{q}
+            \min(
+                {a_{i}^{k}},           
+                {a_{i}^{q}}
+            )
+    }
+    }{
+        \sum_{i=1}^{m}{
+        {a_{i}^{q}} ^ 2
+    }
+    } = 
+    {\sum_{i=1}^{m}{
+            a_{i}^{q}
+            \min(
+                {a_{i}^{k}},           
+                {a_{i}^{q}}
+            )
+    }}{\left(
+        \sum_{i=1}^{m}{
+        {a_{i}^{q}} ^ 2
+        }
+    \right)
+    } ^ {-1}
+    \in [0,1]
+    ,\\
+    \sum_{i=1}^{m}{
+        \sigma_{i}^{q}
+    } = 1
+    .
+\end{gather*}
+
+Weakest Composition Axiom (Strong Substitution, Linear production function):
+\begin{gather*}
+    s_{k,q}^{h} = 
+    \min\left(
+        \frac{
+        \sum_{i=1}^{m}{
+        {a_{i}^{q}}
+        {a_{i}^{k}}
+    }
+    }{
+        \sum_{i=1}^{m}{
+        {a_{i}^{q}} ^ 2
+    }
+    }
+    , 1
+    \right)
+    \in [0,1]
+    ,\\
+    \sum_{i=1}^{m}{
+        \sigma_{i}^{q}
+    } = 1
+    .
+\end{gather*}
+
+Probably define production and normalization separately for looks.
+
+\begin{gather*}
+    \Lambda_{k,q} = 
+        \prod_{i=1}^{m}{
+        {a_{i}^{k}} ^ {
+            \sigma_{i}^{q}
+        }
+    }
+    ,\\
+    \sum_{i=1}^{m}{
+        \sigma_{i}^{q}
+    } = 1
+    .
+\end{gather*}
+
+\begin{gather*}
+    s_{k,q}^{h} = 
+    \tilde{\Lambda}_{k,q} = 
+    \min\left(
+        \frac{\Lambda_{k,q}}{\Lambda_{q,q}},
+        1
+    \right)
+    \in [0,1]
+\end{gather*}
+
+Change employability notation?
+e.g.
+\begin{enumerate}
+    \item output $h_{k,q}$
+    \item output vector $\boldsymbol{h_{k,q}}$
+    \item output matrix $\boldsymbol{h}$ or $\vb{h}$
+    \item h would stand for human-capital output
+    \begin{enumerate}
+        \item and/or hours of equivalent labor produced
+        \item i.e. percentage of the output a perfectly qualified q worker produces in a time period
+    \end{enumerate}
+    \item it would then make more sense to call ``production similarity'' $s_{k,q}^{h} = \tilde{h}_{k,q} = h_{k,q} / h_{q,q} = 
+    \frac{h_{k,q}}{h_{q,q}}$
+    \item and it would be even more pedantic to call H not H, but uppercase ETA
+\end{enumerate}
+
+or e.g.
+\begin{enumerate}
+    \item output $Y_{k,q}$
+    \item output vector $\boldsymbol{Y_{k}}$
+    \item output matrix $\vb{Y}$
+\end{enumerate}
+
 \subsection{Occupational Reducibility Axiom}
 \begin{enumerate}
     \item from a practical standpoint, occupations are just a collection of job
@@ -119,6 +345,7 @@ Strong Version:
     \item occupations can be reduced to their job activities
     \item $\boldsymbol{q} \iff \boldsymbol{T_q}$
 \end{enumerate}
+
 \subsection{Occupational Skill-Sufficiency Corollary}
 \begin{enumerate}
     \item from axioms: Reducibility, Sufficiency
