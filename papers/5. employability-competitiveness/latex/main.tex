@@ -1,24 +1,33 @@
 %SECTION: SETUP
 % region: document class 
-\documentclass{article}
+\documentclass{elsarticle}
 
 % endregion
 
 % region: packages 
 \usepackage{xr}
 \usepackage{physics}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{amsthm}
 \usepackage{float}
-\usepackage{tabularray}
-\UseTblrLibrary{booktabs}
+\usepackage{enumitem}
+\setlist[enumerate]{label*=\arabic*.}
+\usepackage[hidelinks]{hyperref}
 \usepackage[
     backend=biber,
     style=apa
 ]{biblatex}
-% \usepackage[title,titletoc]{appendix}
+% \usepackage{tabularray}
+% \UseTblrLibrary{booktabs}
+% % \usepackage[title,titletoc]{appendix}
 
 % endregion
 
 % region: source files 
+% % theorems
+% \input{theorems.tex}
+
 % equations
 \input{equations.tex}
 
@@ -40,19 +49,19 @@
     lalala
 }
 \author{Cao Bittencourt}
+\affiliation{{B. Sc. in Economics from EPGE (FGV), RJ, Brazil.}}
+\affiliation{{Statistician at Atlas Career Guide Inc., FL, USA.}}
 \date{\today}
 
 % endregion
 
-% region: display breaks
+% region: display breaks 
 \allowdisplaybreaks
 
 % endregion
 
 %SECTION: PAPER
 \begin{document}
-
-\maketitle
 
 % region: abstract 
 \newpage
@@ -65,21 +74,33 @@
 \end{abstract}
 % endregion
 
-% table of contents
-\newpage
+% region: title 
+\maketitle
+
+% endregion
+
+% region: table of contents 
 \tableofcontents
-
-% list of tables
 \newpage
-\listoftables
+% endregion
 
-% list of figures
-\newpage
-\listoffigures
+% % region: list of figures 
+% \listoffigures
+% \newpage
+% % endregion
+
+% % region: list of tables 
+% \listoffigures
+% \newpage
+% % endregion
 
 % region: introduction 
 \newpage
 \section{Introduction}
+\begin{axiom}[]
+    \label{}
+\end{axiom}
+
 lalala \parencite[]{lalala}.
 % endregion
 
@@ -99,7 +120,7 @@ dsdsds \parencite[]{dsdsds}
 
 % endregion
 
-% region: conclusion
+% region: conclusion 
 \section{Conclusion} 
 
 % endregion
