@@ -1,37 +1,70 @@
-% region: environments
+% region: environments 
+% definition
+\theoremstyle{definition}
+\newtheorem{definition}{Definition}
+
 % axiom
-\newtheorem{axiom}[theorem]{Axiom}[section]
+\theoremstyle{definition}
+\newtheorem{axiom}{Axiom}
 
 % lemma
-\newtheorem{lemma}[theorem]{Lemma}[section]
+\newtheorem{lemma}{Lemma}
 
 % theorem
-\newtheorem{theorem}{Theorem}[section]
+\newtheorem{theorem}{Theorem}
+
+% potential employability theorem
+\newtheorem*{petheorem}{Potential Employability Theorem}
+
+% corollary
+\newtheorem{corollary}{Corollary}
+% \newtheorem{corollary}{Corollary}[theorem]
 
 % endregion
+
+% region: skill sufficiency axiom (ssa) 
+% skills are sufficient to accomplish tasks
 \newcommand{\SSA}{
     \label{ssa}
-
-
+    
+    % statement
+    \begin{axiom}[Skill Sufficiency Axiom]
+        Skills are necessary and sufficient to accomplish tasks.
+    \end{axiom}
 
 }
 
-% region: environments 
-% skill sufficiency axiom (ssa)
-% skills are sufficient to accomplish tasks
-\begin{axiom}
-\end{axiom}
-\newtheorem{axiom}{Skill Sufficiency Axiom}
+% endregion
 
-% skill composition axiom (sca)
+% region: skill composition axiom (sca) 
 % skills are composable to accomplish complex tasks
-\newtheorem{axiom}{Skill Composition Axiom}
+\newcommand{\SCA}{
+    \label{sca}
+    
+    % statement
+    \begin{axiom}[Skill Composition Axiom]
+        Skills are composable to accomplish complex tasks.
+    \end{axiom}
 
-% occupational reducibility axiom (ora)
+}
+
+% endregion
+
+% region: occupational reducibility axiom (ora) 
 % occupations can be reduced to their tasks
-\newtheorem{axiom}{Occupational Reducibility Axiom}
+\newcommand{\ORA}{
+    \label{ora}
+    
+    % statement
+    \begin{axiom}[Occupational Reducibility Axiom]
+        Occupations can be reduced to their tasks.
+    \end{axiom}
 
-% occupational complexity axiom (oca)
+}
+
+% endregion
+
+% region: occupational complexity axiom (oca) 
 % all of an occupation's tasks can be thought of as only
 % one, indivisible, holistic task, requiring their entire skill set
 % we call this an occupation's "operation"
@@ -40,13 +73,201 @@
 % operation production: evaluated aggregation function
 % max production: occupation's evaluated aggregation function
 % productivity: production truncated and normalized by max production
-\newtheorem{axiom}{Occupational Complexity Axiom}
+\newcommand{\OCA}{
+    \label{oca}
+    
+    % statement
+    \begin{axiom}[Occupational Complexity Axiom]
+        All of an occupation's tasks can be thought of as one indivisible task, which mobilizes their entire skill set. We call this ``holistic task'' an occupation's \textit{operation}.
+    \end{axiom}
 
-% occupational composition corollary (occ)
-% sca, ora, oca => occ
+}
+
+% endregion
+
+% region: occupational composition lemma (ocl) 
+% sca, ora, oca => ocl
 % skill sets are composable to accomplish occupations' "operations"
-\newtheorem{corollary}{Occupational Composition Corollary}
+\newcommand{\OCL}{
+    \label{ocl}
+    
+    % statement
+    \begin{lemma}[Occupational Composition Lemma]
+        Skill sets are composable to accomplish occupations' operations.
+    \end{lemma}
 
+    % proof
+    \begin{proof}
+        
+    \end{proof}
+
+}
+
+% endregion
+
+% region: rationality axiom (ra) 
+% employers are rational
+% employers will only pay for employees to work on tasks they can accomplish
+% if required, employers will outsource parts of an occupation's operation
+\newcommand{\RA}{
+    \label{ra}
+    
+    % statement
+    \begin{axiom}[Rationality Axiom]
+        Employers are rational and will only pay for employees to work on tasks they can accomplish. Additionaly, employers will outsource parts of an occupation's operation if their employees cannot accomplish the entire operation.
+    \end{axiom}
+
+}
+
+% endregion
+
+% region: hireability axiom (ha) 
+% hiring is done by evaluating a hireability statistic
+\newcommand{\HA}{
+    \label{ha}
+    
+    % statement
+    \begin{axiom}[Hireability Axiom]
+        Any rational employer hires employees by evaluating a hireability statistic, which quantifies potential employees' skill set similarity with an occupation, their educational attainment, and years of experience.
+    \end{axiom}
+
+}
+
+% endregion
+
+% region: occupational essence lemma (oel) 
+% ra, ha => oel
+% all of an occupation's job posts are essentially the same
+% because all job posts require sufficient similarity,
+% and because employers will not hire anyone who is not hireable,
+% in accordance with the hireability statistic,
+% therefore, all of an occupation's job posts, despite their accidents,
+% are sufficiently recognized as a true instance of that occupation
+\newcommand{\OEL}{
+    \label{oel}
+    
+    % statement
+    \begin{lemma}[Occupational Essence Lemma]
+        All of an occupation's job posts are essentially the same.
+    \end{lemma}
+
+    % proof
+    \begin{proof}
+        
+    \end{proof}
+
+}
+
+% endregion
+
+% region: labor market completeness axiom (lmca) 
+% there is sufficient talent in the labor market to outsource difficult tasks
+% this is tautological, because the labor market is already producing its current output
+\newcommand{\LMCA}{
+    \label{lmca}
+    
+    % statement
+    \begin{axiom}[Labor Market Completeness Axiom]
+        There is sufficient talent in the labor market to outsource difficult tasks.
+    \end{axiom}
+
+}
+
+% endregion
+
+% region: task duration axiom (tda) 
+% define a time to completion function: task difficulty => task duration
+\newcommand{\TDA}{
+    \label{tda}
+    
+    % statement
+    \begin{axiom}[Task Duration Axiom]
+        More difficult tasks and operations require more time to complete than easier tasks and operations.
+    \end{axiom}
+
+}
+
+% endregion
+
+% region: potential employability theorem (pet) 
+% the potential employability of a person in a particular occupation
+% is the percentage of that occupation's operation total time duration
+% that their skill set allows them to accomplish
+\newcommand{\PET}{
+    \label{pet}
+
+    % statement
+    \begin{petheorem}
+        The potential employability of a person in a particular occupation is the percentage of that occupation's operation total time duration that their skill set allows them to accomplish.
+    \end{petheorem}
+
+    % proof
+    \begin{proof}
+        
+    \end{proof}
+
+}
+
+% endregion
+
+% region: aggregate employability corollary (aec) 
+% a person's employability in a certain subset of the labor market
+% is calculated by their average employability on that subset of the labor market,
+% weighted by each occupation's employment levels
+\newcommand{\AEC}{
+    \label{aec}
+
+    % statement
+    \begin{corollary}[Aggregate Employability Corollary]
+        A person's employability in a certain subset of the labor market is calculated by their average employability on that subset of the labor market, weighted by each occupation's employment levels.
+    \end{corollary}
+
+    % proof
+    \begin{proof}
+        
+    \end{proof}
+
+}
+
+% endregion
+
+% region: occupational competitiveness corollary (occ) 
+\newcommand{\OCC}{
+    \label{occ}
+
+    % statement
+    \begin{corollary}[Occupational Competitiveness Corollary]
+        
+    \end{corollary}
+
+    % proof
+    \begin{proof}
+        
+    \end{proof}
+
+}
+
+% endregion
+
+% region: aggregate competitiveness corollary (acc) 
+\newcommand{\ACC}{
+    \label{acc}
+
+    % statement
+    \begin{corollary}[Aggregate Competitiveness Corollary]
+        
+    \end{corollary}
+
+    % proof
+    \begin{proof}
+        
+    \end{proof}
+
+}
+
+% endregion
+
+% region: dsds 
 % occupational divisibility remark 1 (odr 1) on occ
 % one can only accomplish the part of an occupation's operation
 % that one is sufficiently qualified for
@@ -56,43 +277,5 @@
 % if one cannot accomplish parts of an occupation's operation,
 % then these harder levels of the operation can be outsourced
 % though a holistic operation is not divisible, difficulty levels are
-
-% rationality axiom (ra)
-% employers are rational
-% employers will only pay for employees to work on tasks they can accomplish
-% if required, employers will outsource parts of an occupation's operation
-\newtheorem{axiom}{Rationality Axiom}
-
-% hireability axiom (ha)
-% hiring is done by evaluating a hireability statistic
-\newtheorem{axiom}{Hireability Axiom}
-
-% occupational essence corollary (oec)
-% all of an occupation's job posts are essentially the same
-% because all job posts require sufficient similarity,
-% and because employers will not hire anyone who is not hireable,
-% in accordance with the hireability statistic,
-% therefore, all of an occupation's job posts, despite their accidents,
-% are sufficiently recognized as a true instance of that occupation
-\newtheorem{axiom}{Occupational Essence Corollary}
-
-% labor market completeness axiom (lmca)
-% there is sufficient talent in the labor market to outsource difficult tasks
-% this is tautological, because the labor market is already producing its current output
-\newtheorem{axiom}{Labor Market Completeness Axiom}
-
-% task duration axiom (tda)
-% define a time to completion function: task difficulty => task duration
-\newtheorem{axiom}{Task Duration Axiom}
-
-% potential employability theorem (pet)
-% the potential employability of a person in a particular occupation
-% is the percentage of that occupation's operation total time duration
-% that their skill set allows them to accomplish
-\newtheorem{theorem}{Potential Employability Theorem}
-
-% endregion
-
-% region: definitions 
 
 % endregion
