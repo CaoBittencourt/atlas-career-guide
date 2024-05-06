@@ -20,6 +20,7 @@
 \usepackage{xr}
 \usepackage{physics}
 \usepackage{amsmath}
+\usepackage{amssymb}
 \usepackage{float}
 \usepackage{enumitem}
 \setlist[enumerate]{label*=\arabic*.}
@@ -361,6 +362,314 @@ or e.g.
 
 % region: demonstration 
 \section{Demonstration of the Employability Theorem}
+Worker Time Allocation Problem: maximize worker output subject to time and productivity constraints.
+
+For workers of type $k$, the optimization problem is: 
+\begin{gather*}
+    \max_{
+        T_{\text{Jr}}^{k},
+        T_{\text{Sr}}^{k}
+    }{% production function
+        \left[
+            \frac{
+                Y_{\text{Jr}}^{k}
+                T_{\text{Jr}}^{k}
+            }{
+                \text{ttc}(T_{\text{Jr}})
+            } + 
+            \frac{
+                Y_{\text{Sr}}^{k}
+                T_{\text{Sr}}^{k}
+            }{
+                \text{ttc}(T_{\text{Sr}})
+            }
+        \right]
+    }\\
+    % subject to
+    \begin{align*}
+        \text{s.t.} \quad
+        % k's time constraint
+        & T_{\text{Jr}}^{k} \times \text{ttc}(T_{\text{Jr}}) +
+        T_{\text{Sr}}^{k} \times \text{ttc}(T_{\text{Sr}}) 
+        \leq 1
+        \\
+        & T_{\text{Jr}}^{k} + T_{\text{Sr}}^{k} \leq 1
+        \\
+        % k's productivity on jr-level tasks
+        & Y_{\text{Jr}}^{k} = 1
+        \\
+        % k's productivity on sr-level tasks
+        & Y_{\text{Sr}}^{k} = 0
+    \end{align*}
+\end{gather*}
+
+The solution of this problem is trivial:
+\begin{gather*}
+    T_{\text{Jr}}^{k} = 1
+    ;\\
+    T_{\text{Sr}}^{k} = 0
+    ,
+\end{gather*}
+and yields the output
+\begin{gather*}
+    T_{\text{Jr}} = 
+    \frac{1}{\text{ttc}(T_{\text{Jr}})}
+    % {1}/{\text{ttc}(T_{\text{Jr}})}
+    ;\\
+    T_{\text{Sr}} = 0
+\end{gather*}
+for each worker of type $k$.
+
+The intuition behind this result is just as trivial as the result itself. If workers of type $k$ cannot output any units whatsoever of senior, or advanced, tasks, they will specialize on the only tasks they can perform (viz. junior, or simpler, tasks), allocating all of their time to them.
+
+Now, if we were to build an entire economy with only these less skilled workers, the total product would be:
+\begin{gather*}
+    T_{\text{Jr}} = 
+    \frac{w_{q}^{k}}{\text{ttc}(T_{\text{Jr}})}
+    % {w_{q}^{k}}/{\text{ttc}(T_{\text{Jr}})}
+    ;\\
+    T_{\text{Sr}} = 0
+    ,
+\end{gather*}
+where $w_{q}^{k}$ is the number of workers of type $k$ employed on a job $q$, for which they are not perfectly qualified.
+
+And, of course, if we wanted to produce the same output as a comparable economy of perfectly skilled workers, we would have to hire at least some of these to cover the gap left by workers of type $k$, that is, to perform the senior activities juniors cannot perform:
+
+\begin{gather*}
+    \max_{
+        T_{\text{Jr}}^{q},
+        T_{\text{Sr}}^{q}
+    }{% production function
+        \left\{
+            % \frac{w_{q}^{k}}{\text{ttc}(T_{\text{Jr}})} + 
+            % w_{q}^{k} \times
+            w_{q}^{k}
+            \left[
+                \frac{1}{\text{ttc}(T_{\text{Jr}})}
+            \right]
+             + 
+            % w_{q}^{q} \times
+            w_{q}^{q}
+            \left[
+                \frac{
+                    Y_{\text{Jr}}^{q}
+                    T_{\text{Jr}}^{q}
+                }{
+                    \text{ttc}(T_{\text{Jr}})
+                } + 
+                \frac{
+                    Y_{\text{Sr}}^{q}
+                    T_{\text{Sr}}^{q}
+                }{
+                    \text{ttc}(T_{\text{Sr}})
+                }
+            \right]
+        \right\}
+    }\\
+    % subject to
+    \begin{align*}
+        \text{s.t.} \quad
+        % constant production constraint
+        & T_{\text{Sr}} = 
+        T_{\text{Jr}} = 
+        w_{q}^{k}
+        \left[
+            \frac{1}{\text{ttc}(T_{\text{Jr}})}
+        \right]
+        \\
+        % k's time constraint
+        & T_{\text{Jr}}^{q} \times \text{ttc}(T_{\text{Jr}}) +
+        T_{\text{Sr}}^{q} \times \text{ttc}(T_{\text{Sr}}) 
+        \leq 1
+        \\
+        & T_{\text{Jr}}^{q} + T_{\text{Sr}}^{q} \leq 1
+        \\
+        % k's productivity on jr-level tasks
+        & Y_{\text{Jr}}^{q} = 1
+        \\
+        % k's productivity on sr-level tasks
+        & Y_{\text{Sr}}^{q} = 1
+    \end{align*}
+\end{gather*}
+
+Again, the solution of this problem is trivial. The time allocation of senior workers will be:
+\begin{gather*}
+    T_{\text{Jr}}^{q} = 0
+    ;\\
+    T_{\text{Sr}}^{q} = 1
+    ,
+\end{gather*}
+yielding
+\begin{gather*}
+    T_{\text{Jr}} = 0
+    ;\\
+    T_{\text{Sr}} = 
+    \frac{1}{\text{ttc}(T_{\text{Sr}})}
+\end{gather*}
+for every worker of type $q$.
+The amount of workers needed, however, will depend on the time required to perform senior and junior tasks. That is, because one unit of ``job $q$'' is only produced when both junior and senior tasks are accomplished, the production function for any ``job $q$'' is of the Leontiev functional form (i.e. junior and senior tasks are perfect complements to produce one unit of occupation $q$'s ``operation''):
+\begin{align*}
+    T_q = \min(T_{\text{Jr}}, T_{\text{Sr}})
+    .
+\end{align*}
+
+Thus, one cannot produce more output by overdoing junior tasks, just as one cannot neglect these tasks completely, for the product which is an occupation's ``operation'' is holistic, and it can only be divided insofar as all of its parts are produced in exact quantities and combined. In other words, it does not matter if one person is not solely responsible for producing one entire unit of an occupation's ``operation''. What matters is that, however tasks are divided among juniors and seniors, the entire unit be produced. But, doing more of ``senior work'' or ``junior work'' won't help produce more units of ``$q$'s operation'', just as doing \textit{only} ``senior work'' or \textit{only} ``junior work'' won't help either. That is, the division between ``junior tasks'' and ``senior tasks'' is artificial, and only useful mathematically to understand how an occupation's indivisible, holistic, activity can be accomplished.  
+
+Therefore, if we keep production constant at the ``junior activity'' output level, we can determine the number of ``seniors'' that need to be hired for efficient production  with the Leontiev function:
+\begin{gather*}
+    T_q = T_{\text{Jr}}^{k} = T_{\text{Sr}}^{q}
+    \ \therefore \\
+    \frac{w_{q}^{k}}{\text{ttc}(T_{\text{Jr}})} = 
+    \frac{w_{q}^{q}}{\text{ttc}(T_{\text{Sr}})}
+    \ \iff
+    w_{q}^{q} = 
+    w_{q}^{k}
+    \left[
+        \frac{
+            \text{ttc}(T_{\text{Sr}})
+        }{
+            \text{ttc}(T_{\text{Jr}})
+        }
+    \right]
+\end{gather*}
+
+Finally, in order to calculate ``junior'' employability in a real economy, we define:
+\begin{gather*}
+    w_{q} = 
+    w_{q}^{k} +
+    w_{q}^{q} 
+    ,
+\end{gather*}
+where $w_{q}$ is the number of people employed in occupation $q$. Thus, the maximum employability of workers of type $k$ in this economy is given by
+\begin{align*}
+    \frac{
+        w_{q}^{k}
+    }{
+        w_{q}
+    }
+    & =
+    \frac{
+        w_{q}^{k}
+    }{
+        w_{q}^{k} + w_{q}^{q}
+    }
+    \\
+    & =
+    \frac{
+        w_{q}^{k}
+    }{
+        w_{q}^{k} + 
+        w_{q}^{k}
+    \left[
+        \frac{
+            \text{ttc}(T_{\text{Sr}})
+        }{
+            \text{ttc}(T_{\text{Jr}})
+        }
+    \right]
+    }
+    \\
+    & =
+    \frac{
+        1
+    }{
+        1 + 
+        \frac{
+            \text{ttc}(T_{\text{Sr}})
+        }{
+            \text{ttc}(T_{\text{Jr}})
+        }
+    }
+    \\
+    & =
+    \frac{
+        \text{ttc}(T_{\text{Jr}})
+    }{
+        \text{ttc}(T_{\text{Jr}}) + 
+        \text{ttc}(T_{\text{Sr}})
+    }
+\end{align*}
+
+Maximization problem:
+\begin{gather*}
+    % maximize production
+    \min_{
+        w_{q}^{k}, %number of ks hired (junior qs)
+        w_{q}^{q} %number of qs hired (senior qs)
+    }{% production function
+        \left[
+        y_{k} w_{q}^{k} + 
+        y_{q} w_{q}^{q}
+        \right]
+    }, \text{ s.t. }\\ % subject to
+    \begin{cases}
+        % time constraint (k)
+        T_{\text{Jr}}^{k} \times \text{ttc}(T_{\text{Jr}}) + 
+        (1 - T_{\text{Jr}}^{k}) \times \text{ttc}(T_{\text{Sr}}) 
+        \leq 1
+        ;\\
+        % time constraint (q)
+        T_{\text{Jr}}^{q} \times \text{ttc}(T_{\text{Jr}}) + 
+        (1 - T_{\text{Jr}}^{q}) \times \text{ttc}(T_{\text{Sr}}) 
+        \leq 1
+        ;\\
+        % worker productivity (k)
+        Y_{\text{Jr}}^k(T_{\text{Jr}}^{k}) = 1 \times T_{\text{Jr}}^{k} = T_{\text{Jr}}^{k}
+        ;\\
+        Y_{\text{Sr}}^k(T_{\text{Jr}}^{k}) = 0 \times (1 - T_{\text{Jr}}^{k}) = 0
+        ;\\
+        % worker productivity (q)
+        Y_{\text{Jr}}^q(T_{\text{Jr}}^{q}) = 1 \times T_{\text{Jr}}^{q} = T_{\text{Jr}}^{q}
+        ;\\
+        Y_{\text{Sr}}^q(T_{\text{Jr}}^{q}) = 1 \times (1 - T_{\text{Jr}}^{q}) = 1 - T_{\text{Jr}}^{q}
+        ;\\
+        % constant production
+        w_{q}^{k} \times Y_{\text{Jr}}^k + 
+        w_{q}^{k} \times Y_{\text{Jr}}^k + 
+        % % worker productivity (k)
+        % Y_{k}(T_{\text{Jr}}^{k}) = 
+        % 1 \times T_{\text{Jr}}^{k} + 
+        % 0 \times (1 - T_{\text{Jr}}^{k})
+        % =
+        % T_{\text{Jr}}^{k}
+        % ;\\
+        % % worker productivity (k)
+        % Y_{q}(T_{\text{Jr}}^{q}) = 
+        % 1 \times T_{\text{Jr}}^{q} + 
+        % 1 \times (1 - T_{\text{Jr}}^{q})
+        % =
+        % 1
+        % ;\\
+    \end{cases}
+\end{gather*}
+
+% \begin{gather*}
+%     % \min_{k^*, q^*}{\left[ y_{k} k + y_{q} q \right]}, \text{ s.t. }\\
+%     % \min_{{w_{q}^{k}}^*, {w_{q}^{q}}^*}{\left[ y_{k} \times w_{q}^{k} + y_{q} \times w_{q}^{q} \right]}, \text{ s.t. }\\
+%     \min_{{w_{q}^{k}}, {w_{q}^{q}}}{\left[ y_{k} \times w_{q}^{k} + y_{q} \times w_{q}^{q} \right]}, \text{ s.t. }\\
+%     % \min_{{w_{k,q}^*}, {w_{q,q}^*}}{\left[ y_{k} \times w_{k,q} + y_{q} \times w_{q,q} \right]}, \text{ s.t. }\\
+%     \begin{cases}
+%         \int_{0}^{1} \text{tm}(T_{l}^q) dl = 1 \\
+%         \int_{0}^{\tilde{Y}_{k,q}} \text{tm}(T_{l}^q) dl = \tilde{Y}_{k,q} \\
+%         \int_{0}^{\tilde{Y}_{k,q}} p_{l}^{q} \times \text{tm}(T_{l}^q)  dl \leq y_k \\
+%         \int_{\tilde{Y}_{k,q}}^{1} p_{l}^{q} \times \text{tm}(T_{l}^q)  dl \leq y_q \\
+%         \int_{0}^{1} p_{l}^{q} \times \text{tm}(T_{l}^q) dl = \bar{y}_q \\
+%         % \text{tm}(T_{l}^q, c_q) = \frac{\text{ttc}(T_{l}^q, c_q)}{\int_{0}^{1} \text{ttc}(T_{l}^q) dl} \\
+%         \text{tm}_{l}^{q} = \text{tm}(T_{l}^q, c_q) = {\text{ttc}(T_{l}^q, c_q) / \int_{0}^{1} \text{ttc}(T_{l}^q, c_q) dl} \\
+%         \text{ttc}(T_{l}^q, c_q) = l ^ {\frac{1}{1 - c_q}} \\
+%         % w_{k,q} \int_{0}^{\tilde{Y}_{k,q}} {T_{l}^q} dl + 
+%         w_{q}^{k} \int_{0}^{\tilde{Y}_{k,q}} {T_{l}^q} dl + 
+%         % w_{q,q} \int_{\tilde{Y}_{k,q}}^{1} {T_{l}^q} dl =
+%         w_{q}^{q} \int_{\tilde{Y}_{k,q}}^{1} {T_{l}^q} dl =
+%         w_{q} \int_{0}^{1} {T_{l}^q} dl \\
+%         \tilde{Y}_{k,q} = \min(1, Y_{k,q} / Y_{q,q}) \\
+%         % \tilde{Y}_{k,q} = \min\left(1, \frac{Y_{k,q}}{Y_{q,q}}\right) \\
+%         Y_{k,q} = \prod_{i=1}^{m}{a_{i}^{k}} ^ {\sigma_{i}^{q}} \\
+%         \sigma_{i}^{q} = \frac{a_{i}^{q}}{\sum_{i=1}^{m}{a_{i}^{q}}} \\
+%         \text{employability of k as a q: } \tilde{\Lambda}_{q}^{k} = w_{q}^{k} / w_q
+%     \end{cases}
+% \end{gather*}
+
 
 % endregion
 

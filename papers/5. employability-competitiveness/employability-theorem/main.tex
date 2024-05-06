@@ -1,0 +1,127 @@
+%SECTION: SETUP
+% region: document class 
+\documentclass{article}
+
+% endregion
+
+% region: packages 
+\usepackage{xr}
+\usepackage{physics}
+\usepackage{float}
+\usepackage{tabularray}
+\UseTblrLibrary{booktabs}
+\usepackage[
+    backend=biber,
+    style=apa
+]{biblatex}
+% \usepackage[title,titletoc]{appendix}
+
+% endregion
+
+% region: source files 
+% equations
+\input{equations.tex}
+
+% tables
+\input{tables.tex}
+
+% figures
+\input{figures.tex}
+
+% references
+\addbibresource{references.bib}
+
+% endregion
+
+% region: title 
+% Title
+\title{
+    dsds:\\
+    lalala
+}
+\author{Cao Bittencourt}
+\date{\today}
+
+% endregion
+
+% region: display breaks
+\allowdisplaybreaks
+
+% endregion
+
+%SECTION: PAPER
+\begin{document}
+
+\maketitle
+
+% region: abstract 
+\newpage
+\begin{abstract}
+    \noindent
+    lalala dsds.
+
+    \noindent
+    \\ \textbf{Keywords:} lalala; lalala; lalala; lalala; lalala.
+\end{abstract}
+% endregion
+
+% table of contents
+\newpage
+\tableofcontents
+
+% list of tables
+\newpage
+\listoftables
+
+% list of figures
+\newpage
+\listoffigures
+
+% region: introduction 
+\newpage
+\section{Introduction}
+lalala \parencite[]{lalala}.
+% endregion
+
+% region: methods 
+\section{Methods}
+dsds \parencite{dsds}
+% endregion
+
+% region: results 
+\section{Results}
+
+% endregion
+
+% region: discussion 
+\section{Discussion}
+dsdsds \parencite[]{dsdsds}
+
+% endregion
+
+% region: conclusion
+\section{Conclusion} 
+
+% endregion
+
+% region: references 
+\newpage
+\printbibliography[
+    heading=bibintoc,
+    title={References}
+]
+
+% endregion
+
+% region: appendices 
+\newpage
+\section*{Appendix}
+\addcontentsline{toc}{section}{Appendix}
+
+% \begin{appendices}
+
+% \end{appendices}
+
+% endregion
+
+\end{document}
