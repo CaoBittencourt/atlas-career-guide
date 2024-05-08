@@ -22,16 +22,222 @@
 
 % endregion
 
-% region: skill sufficiency axiom (ssa) 
-% skills are sufficient to accomplish tasks
-\newcommand{\SSA}{
-    \label{ssa}
-    
-    % statement
-    \begin{axiom}[Skill Sufficiency Axiom]
-        Skills are necessary and sufficient to accomplish tasks.
-    \end{axiom}
+% region: attribute definition 1 
+\newcommand{\SklTasks}{
+    \label{skl_tasks}
 
+    % statement
+    \begin{definition}
+        A professional attribute, competency, or skill, of a person $k$ can be conceptualized as a cummulative sum of successes on
+        binary outcome variables representing tasks of progressive difficulty which require only that skill:
+        \begin{gather}
+            a_{i}^{k} = \sum_{l=0}^{l_i}
+            T_{i_{l}}^{k}
+            ,
+        \end{gather}
+        where
+        \begin{gather}
+            T_{i_{l}}^{k} =
+            \begin{cases}
+                1, \ \text{if $k$ succedes in a task $T_{i}^{l}$ of difficulty level $l$;} \\
+                0, \ \text{otherwise.}
+            \end{cases}
+        \end{gather}
+        
+        Or, more rigorously,
+        \begin{gather}
+            a_{i}^{k} = \sum_{l=0}^{l_i}
+            T(l, l_{i}^{k})
+            ,
+        \end{gather}
+        where
+        \begin{gather}
+            T(l, l_{i}^{k}) =
+            T_{i_{l}}^{k} =
+            \begin{cases}
+                1, \ l \leq l_{i}^{k}; \\
+                0, \ \text{otherwise.}
+            \end{cases}
+        \end{gather}
+        and $l_{i}^{k} \in [0, l_i]$ is the maximum difficulty level on which $k$ still succeedes. Thus, we can define a person $k$'s skill level in an attribute $i$ as the sum
+        of their $T_{i_l}^{k}$ successful trials on a $T_{i} = \{T_{i}^{0}, \dots, T_{i}^{l_i}\}$ set of tasks of increasing
+        difficulty.
+
+        Furthermore, as we assume scales are truncated (i.e. there is a maximum
+        difficulty level $l_i$, and a trivial difficulty level, which has to be zero),
+        we can also interpret $a_{i}^{k}$ as the \textit{portion} of tasks one is able
+        to accomplish out of all difficulty levels for that skill. By normalizing $l_i$
+        to $100$, for example, we have:
+        \begin{enumerate}
+            \item $a_{i}^{k} = 0 \iff k$ cannot perform even the most basic of attribute $i$'s tasks;
+            \item $a_{i}^{k} = 10 \iff k$ can perform only the bottom 10\% of attribute $i$'s tasks, but nothing more;
+            \item $a_{i}^{k} = 50 \iff k$ can perform the easiest half of attribute $i$'s tasks, but not the most difficult half;
+            \item $a_{i}^{k} = 100 \iff k$ can perform all of attribute $i$'s tasks.
+        \end{enumerate}
+
+        Finally, we can define $a_{i}^{k}$ for a continuum of task difficulty $l \in [0,1]$:
+        \begin{gather}
+            a_{i}^{k} =
+            \int_{0}^{1}{
+            T(l, l_{i}^{k})
+            dl
+            }
+            ,
+        \end{gather}
+        where $T(l, l_{i}^{k})$ is defined as before.
+    \end{definition}
+}
+
+% endregion
+
+% region: attribute definition 2 
+\newcommand{\SklDifficulty}{
+    \label{skl_difficulty}
+
+    % statement
+    \begin{definition}
+        Alternatively, we can think of a person $k$'s professional attribute, competency, or skill, as the difficulty of the most difficult task they can accomplish, normalized by the most objectively difficult task of that particular skill:
+        \begin{gather}
+            a_{i}^{k} =
+            \frac{
+                l_{i}^{k}
+            }{
+                l_{i}
+            }
+            ,
+        \end{gather}
+        which we normalize by setting $l_{i} = 1$, so that
+        \begin{gather}
+            a_{i}^{k} =
+            \frac{
+                l_{i}^{k}
+            }{
+                1
+            }
+            =
+            l_{i}^{k}
+            ,
+        \end{gather}
+        and $l_{i}^{k} \in [0,1]$. With this normalization, example interpretations of $a_{i}^{k}$ are:
+        \begin{enumerate}
+            \item $a_{i}^{k} = 0 \iff k$ cannot perform even the most basic of attribute $i$'s tasks;
+            \item $a_{i}^{k} = 0.10 \iff k$ can only perform tasks of up to 10\% the difficulty of attribute $i$'s most difficult task, but nothing more;
+            \item $a_{i}^{k} = 0.50 \iff k$ can perform tasks of up to half the difficulty of attribute $i$'s most difficult task, but nothing more;
+            \item $a_{i}^{k} = 1 \iff k$ can perform all of attribute $i$'s tasks.
+        \end{enumerate}
+
+        This is, perhaps, the most natural conceptual model for understanding
+        competencies, as, generally, it is more intuitive to think of skill as the
+        maximum of one's capacity, rather than the portion of tasks one could
+        potentially accomplish.
+
+        But, again, because we assume scales to be truncated, this latter interpretation
+        actually implies and is implied by the former. For if a task is of the same
+        difficulty as another, then they are just as difficult in relation to that
+        skill's most difficult task (i.e. they require the same percentage of the
+        scale's upper limit to be performed), and, likewise, are also included in the
+        same difficulty ``bracket" (i.e. they are equivalent to the same skill test in
+        the aggregate binary outcome interpretation), and, therefore, pressupose the
+        same $a_{i}^{k}$ skill level.
+
+        Of course, this equivalence is quite trivial, given that
+        \begin{gather}
+            \int_{0}^{1}{
+            T(l, l_{i}^{k})
+            dl
+            }
+            =
+            1 \times \int_{0}^{l_{i}^{k}}{dl} +
+            0 \times \int_{l_{i}^{k}}^{1}{dl}
+            =
+            l_{i}^{k} - 0
+            =
+            \frac{l_{i}^{k}}{1}
+            =
+            a_{i}^{k}
+            .
+        \end{gather}
+
+        This means the percentage of a skill's tasks one can accomplish is also
+        the difficulty of the most difficult task one can accomplish relative to that
+        skill's most difficult task.
+
+        So, however one decides to interpret skill levels, the conclusion remains the
+        same: to be skilled in an attribute is to be able to perform the activities
+        associated with that attribute. Put simply, the capacity to act follows virtue,
+        for virtue is, itself, the capacity to act.
+    \end{definition}
+}
+
+% endregion
+
+% region: skill sufficiency lemma (ssl) 
+% skills are sufficient to accomplish tasks
+\newcommand{\SSL}{
+    \label{ssl}
+
+    % preamble
+    Now, even though these results are tautological, they are important to guide
+    our intuition. In fact, our first insight towards the Employability Theorem
+    follows directly from the definitions above:
+    % statement
+    \begin{lemma}[Skill Sufficiency Lemma]
+        Skills are necessary and sufficient to accomplish tasks.
+        In particular, to have a skill level of $a_{i}^{k}$ in attribute $i$ is a necessary and sufficient condition for one to be capable of accomplishing $a_{i}^{k}$ percent of that attribute's tasks.
+    \end{lemma}
+
+    % proof
+    \begin{proof}
+        By definition,
+        \begin{gather*}
+            T(l, l_{i}^{k}) =
+            \begin{cases}
+                1, \ l \leq l_{i}^{k}; \\
+                0, \ \text{otherwise.}
+            \end{cases}
+        \end{gather*}
+        is a binary indicator of person $k$'s ability to accomplish a task of difficulty $l \in [0,1]$ which requires only attribute $i$.
+        
+        With this,
+        \begin{gather*}
+            \tilde{T}_{i}^{k}
+            =
+            \int_{0}^{1}{
+            T(l, l_{i}^{k})
+            dl
+            }
+        \end{gather*}
+        is the percentage of tasks requiring only attribute $i$, that $k$ can accomplish.
+
+        But both equivalent definitions of $k$'s skill level in attribute $i$, are
+        \begin{gather*}
+            a_{i}^{k} = 
+            \int_{0}^{1}{
+            T(l, l_{i}^{k})
+            dl
+            }
+            =
+            l_{i}^{k}
+            ,
+        \end{gather*}
+        which is precisely the $\tilde{T}_{i}^{k}$ aggregation of $T(l, l_{i}^{k})$ in the $[0,1]$ interval.
+
+        Therefore, having a skill level of $a_{i}^{k}$ is a necessary and sufficient condition to be capable of accomplishing $a_{i}^{k}$ percent of attribute $i$'s tasks:
+        \begin{gather*}
+            a_{i}^{k} =
+            \tilde{T}_{i}^{k}
+            \iff
+            \int_{0}^{1}{
+            T(l, l_{i}^{k})
+            dl
+            } =
+            \int_{0}^{1}{
+            T(l, l_{i}^{k})
+            dl
+            }
+            .
+        \end{gather*}
+    \end{proof}
 }
 
 % endregion
@@ -40,7 +246,7 @@
 % skills are composable to accomplish complex tasks
 \newcommand{\SCA}{
     \label{sca}
-    
+
     % statement
     \begin{axiom}[Skill Composition Axiom]
         Skills are composable to accomplish complex tasks.
@@ -54,7 +260,7 @@
 % occupations can be reduced to their tasks
 \newcommand{\ORA}{
     \label{ora}
-    
+
     % statement
     \begin{axiom}[Occupational Reducibility Axiom]
         Occupations can be reduced to their tasks.
@@ -75,7 +281,7 @@
 % productivity: production truncated and normalized by max production
 \newcommand{\OCA}{
     \label{oca}
-    
+
     % statement
     \begin{axiom}[Occupational Complexity Axiom]
         All of an occupation's tasks can be thought of as one indivisible task, which mobilizes their entire skill set. We call this ``holistic task'' an occupation's \textit{operation}.
@@ -90,7 +296,7 @@
 % skill sets are composable to accomplish occupations' "operations"
 \newcommand{\OCL}{
     \label{ocl}
-    
+
     % statement
     \begin{lemma}[Occupational Composition Lemma]
         Skill sets are composable to accomplish occupations' operations.
@@ -98,7 +304,7 @@
 
     % proof
     \begin{proof}
-        
+
     \end{proof}
 
 }
@@ -111,7 +317,7 @@
 % if required, employers will outsource parts of an occupation's operation
 \newcommand{\RA}{
     \label{ra}
-    
+
     % statement
     \begin{axiom}[Rationality Axiom]
         Employers are rational and will only pay for employees to work on tasks they can accomplish. Additionaly, employers will outsource parts of an occupation's operation if their employees cannot accomplish the entire operation.
@@ -125,7 +331,7 @@
 % hiring is done by evaluating a hireability statistic
 \newcommand{\HA}{
     \label{ha}
-    
+
     % statement
     \begin{axiom}[Hireability Axiom]
         Any rational employer hires employees by evaluating a hireability statistic, which quantifies potential employees' skill set similarity with an occupation, their educational attainment, and years of experience.
@@ -145,7 +351,7 @@
 % are sufficiently recognized as a true instance of that occupation
 \newcommand{\OEL}{
     \label{oel}
-    
+
     % statement
     \begin{lemma}[Occupational Essence Lemma]
         All of an occupation's job posts are essentially the same.
@@ -153,7 +359,7 @@
 
     % proof
     \begin{proof}
-        
+
     \end{proof}
 
 }
@@ -165,7 +371,7 @@
 % this is tautological, because the labor market is already producing its current output
 \newcommand{\LMCA}{
     \label{lmca}
-    
+
     % statement
     \begin{axiom}[Labor Market Completeness Axiom]
         There is sufficient talent in the labor market to outsource difficult tasks.
@@ -179,7 +385,7 @@
 % define a time to completion function: task difficulty => task duration
 \newcommand{\TDA}{
     \label{tda}
-    
+
     % statement
     \begin{axiom}[Task Duration Axiom]
         More difficult tasks and operations require more time to complete than easier tasks and operations.
@@ -203,7 +409,7 @@
 
     % proof
     \begin{proof}
-        
+
     \end{proof}
 
 }
@@ -224,7 +430,7 @@
 
     % proof
     \begin{proof}
-        
+
     \end{proof}
 
 }
@@ -237,12 +443,12 @@
 
     % statement
     \begin{corollary}[Occupational Competitiveness Corollary]
-        
+
     \end{corollary}
 
     % proof
     \begin{proof}
-        
+
     \end{proof}
 
 }
@@ -255,12 +461,12 @@
 
     % statement
     \begin{corollary}[Aggregate Competitiveness Corollary]
-        
+
     \end{corollary}
 
     % proof
     \begin{proof}
-        
+
     \end{proof}
 
 }
