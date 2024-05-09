@@ -27,7 +27,7 @@
     \label{skl_tasks}
 
     % statement
-    \begin{definition}
+    \begin{definition}[Skill]
         A professional attribute, competency, or skill, of a person $k$ can be conceptualized as a cummulative sum of successes on
         binary outcome variables representing tasks of progressive difficulty which require only that skill:
         \begin{gather}
@@ -95,8 +95,8 @@
     \label{skl_difficulty}
 
     % statement
-    \begin{definition}
-        Alternatively, we can think of a person $k$'s professional attribute, competency, or skill, as the difficulty of the most difficult task they can accomplish, normalized by the most objectively difficult task of that particular skill:
+    \begin{definition}[Skill]
+        Alternatively, we can think of a person $k$'s professional attribute, competency, or skill, as the difficulty of the most difficult task they can accomplish, normalized by the difficulty of most objectively difficult task of that particular skill:
         \begin{gather}
             a_{i}^{k} =
             \frac{
@@ -171,46 +171,56 @@
 
 % endregion
 
+% region: complex task definition 
+\newcommand{\ComplexTask}{
+    \label{complex_task}
+
+    % statement
+    \begin{definition}[Complex Task]
+        dsds.
+    \end{definition}
+}
+
+% endregion
+
 % region: skill sufficiency lemma (ssl) 
 % skills are sufficient to accomplish tasks
 \newcommand{\SSL}{
     \label{ssl}
 
     % preamble
-    Now, even though these results are tautological, they are important to guide
-    our intuition. In fact, our first insight towards the Employability Theorem
-    follows directly from the definitions above:
+    Now, even though these results are basically tautological, they are still important to guide our intuition. In fact, our first insight towards the Employability Theorem, namely the Skill Sufficiency Lemma (SSL), follows directly from the definitions above.
     % statement
     \begin{lemma}[Skill Sufficiency Lemma]
-        Skills are necessary and sufficient to accomplish tasks.
+        According to the SSL, skills are necessary and sufficient to accomplish tasks.
         In particular, to have a skill level of $a_{i}^{k}$ in attribute $i$ is a necessary and sufficient condition for one to be capable of accomplishing $a_{i}^{k}$ percent of that attribute's tasks.
     \end{lemma}
 
     % proof
     \begin{proof}
         By definition,
-        \begin{gather*}
+        \begin{gather}
             T(l, l_{i}^{k}) =
             \begin{cases}
                 1, \ l \leq l_{i}^{k}; \\
                 0, \ \text{otherwise.}
             \end{cases}
-        \end{gather*}
+        \end{gather}
         is a binary indicator of person $k$'s ability to accomplish a task of difficulty $l \in [0,1]$ which requires only attribute $i$.
         
         With this,
-        \begin{gather*}
+        \begin{gather}
             \tilde{T}_{i}^{k}
             =
             \int_{0}^{1}{
             T(l, l_{i}^{k})
             dl
             }
-        \end{gather*}
-        is the percentage of tasks requiring only attribute $i$, that $k$ can accomplish.
+        \end{gather}
+        is the percentage of tasks requiring only attribute $i$ that $k$ can accomplish.
 
         But both equivalent definitions of $k$'s skill level in attribute $i$, are
-        \begin{gather*}
+        \begin{gather}
             a_{i}^{k} = 
             \int_{0}^{1}{
             T(l, l_{i}^{k})
@@ -219,11 +229,11 @@
             =
             l_{i}^{k}
             ,
-        \end{gather*}
+        \end{gather}
         which is precisely the $\tilde{T}_{i}^{k}$ aggregation of $T(l, l_{i}^{k})$ in the $[0,1]$ interval.
 
         Therefore, having a skill level of $a_{i}^{k}$ is a necessary and sufficient condition to be capable of accomplishing $a_{i}^{k}$ percent of attribute $i$'s tasks:
-        \begin{gather*}
+        \begin{gather}
             a_{i}^{k} =
             \tilde{T}_{i}^{k}
             \iff
@@ -236,7 +246,7 @@
             dl
             }
             .
-        \end{gather*}
+        \end{gather}
     \end{proof}
 }
 
@@ -249,7 +259,62 @@
 
     % statement
     \begin{axiom}[Skill Composition Axiom]
-        Skills are composable to accomplish complex tasks.
+        The Skill Composition Axiom (SCA) states that skills are composable to accomplish complex tasks. More precisely, let $T_{ij}^{l}$ be an activity of difficulty level $l$ that requires both attributes $i$ and $j$ (i.e. $T_{ij}^{l}$ is a complex task). With this, we define that any rational and sufficiently qualified economic agent can naturally ``piece together'', that is \textit{compose}, attributes $i$ and $j$ to accomplish the $T_{ij}^{l}$ complex task. Or, mathematically,
+        \begin{gather}
+            \tilde{T}_{i,,j}^{k} = 
+            \int_{0}^{1}{
+                T(l, l_{ij}^{k})
+                dl
+            }
+            ,
+        \end{gather}
+        where
+        \begin{gather}
+            T(l, l_{ij}^{k}) =
+            \begin{cases}
+                1, \ l \leq l_{ij}^{k}; \\
+                0, \ \text{otherwise.}
+            \end{cases}
+        \end{gather}
+        and
+        \begin{gather}
+            l_{ij}^{k} = 
+            f(
+                a_{i}^{k},
+                a_{j}^{k}
+            )
+            \\
+            [f(
+                a_{i}^{k},
+                a_{j}^{k}
+            ) \in [0,1]]
+            ,
+        \end{gather}
+        with
+        \begin{gather}
+            \frac{
+                \partial
+                f(
+                a_{i}^{k},
+                a_{j}^{k}
+            )
+            }{
+                \partial 
+                a_{i}^{k}
+            } \geq 0
+            ,\\
+            \frac{
+                \partial
+                f(
+                a_{i}^{k},
+                a_{j}^{k}
+            )
+            }{
+                \partial 
+                a_{j}^{k}
+            } \geq 0
+            .
+        \end{gather}
     \end{axiom}
 
 }

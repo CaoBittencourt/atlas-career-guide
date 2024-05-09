@@ -46,8 +46,8 @@
             \frac{1}{W}
         \right)
         \sum_{q=1}^{n}{
-            h_{k,q}
-            \textit{\ss}_{k,q}
+            h_{kq}
+            \textit{\ss}_{kq}
             w_q
             % \textit{\ss}(s(\boldsymbol{a_k},\boldsymbol{a_q}), \tau_k, \tau_q, c_q)
         },\\
@@ -59,20 +59,20 @@
     \right)
     % \right)
         \sum_{q=1}^{n}{
-            h_{k,q}
-            \textit{\ss}_{q,k}
+            h_{kq}
+            \textit{\ss}_{qk}
             w_q
             u(y_q,y_k)
         }
         ,\\
-    \textit{\ss}_{k,q} = 
+    \textit{\ss}_{kq} = 
         \text{eq}(s(\boldsymbol{a_k},\boldsymbol{a_q}), c_q)\\
     u(y_q,y_k) =
     \begin{cases}
         1, \text{if } y_k \geq y_q.\\
         0, \text{otherwise.}
     \end{cases}\\
-    % \textit{\ss}_{k,q} = 
+    % \textit{\ss}_{kq} = 
     %     \text{eq}(s(\boldsymbol{a_k},\boldsymbol{a_q}), c_q)
     %     \times
     %     \text{eq}(\tau_k, \tau_q, c_q)\\
@@ -160,7 +160,7 @@
         \vdots & \ddots & \vdots\\
         {\"a}_{1}^{n} & \hdots & {\"a}_{m}^{n}\\
     \end{bmatrix}\\
-    \ddot{\tau}_{k,q} = 
+    \ddot{\tau}_{kq} = 
     \text{edq}(\tau_{k}, \tau_{q}, c_{q}) = 
     \left\{
         1 + \exp[-
@@ -172,32 +172,32 @@
         }
         ]
     \right\} ^ {-1}\\
-    \textit{\ss}_{k,q} = 
-    \ddot{s}_{k,q}
+    \textit{\ss}_{kq} = 
+    \ddot{s}_{kq}
     \times
-    \ddot{\tau}_{k,q} = 
+    \ddot{\tau}_{kq} = 
     \text{eq}(s(\boldsymbol{a_k},\boldsymbol{a_q}), c_q)
     \times
     \text{edq}(\tau_{k}, \tau_{q}, c_{q})\\
     \text{notation for a binary indicator (bin) operator?}\\
-    % ?x?_{k,q} = 
-    % h_{k,q} = 
-    % {_{0}^{1}}\overset{0.5}{[{\textit{\ss}_{k,q}}]}
+    % ?x?_{kq} = 
+    % h_{kq} = 
+    % {_{0}^{1}}\overset{0.5}{[{\textit{\ss}_{kq}}]}
     % \times
-    % {_{0}^{1}}\overset{0.5}{[{\textit{s}_{k,q}}]} = \\
-    % {_{0}^{1}}\overset{0.5}{[{\textit{\ss}_{k,q}}]}
+    % {_{0}^{1}}\overset{0.5}{[{\textit{s}_{kq}}]} = \\
+    % {_{0}^{1}}\overset{0.5}{[{\textit{\ss}_{kq}}]}
     % \times
-    % {_{0}^{1}}\overset{0.5}{[{\textit{s}_{k,q}}]}\\
-    % h_{k,q} =\\
-    %     {_{0}^{1}\rvert s_{k,q}^{*}} \times
-    %     {_{0}^{1}\rvert \textit{\ss}_{k,q}} =\\
-    %     \text{bin}(s_{k,q}^{*}) \times
-    %     \text{bin}(\textit{\ss}_{k,q}) =\\
+    % {_{0}^{1}}\overset{0.5}{[{\textit{s}_{kq}}]}\\
+    % h_{kq} =\\
+    %     {_{0}^{1}\rvert s_{kq}^{*}} \times
+    %     {_{0}^{1}\rvert \textit{\ss}_{kq}} =\\
+    %     \text{bin}(s_{kq}^{*}) \times
+    %     \text{bin}(\textit{\ss}_{kq}) =\\
     %     \text{bin}(\text{sq}(\boldsymbol{a_k},\boldsymbol{a_q})) \times
     %     \text{bin}(\text{seq}(\boldsymbol{a_k},\boldsymbol{a_q}))
-    \text{bin}(x_{k,q}) = 
+    \text{bin}(x_{kq}) = 
     \begin{cases}
-        1, \text{if } x_{k,q} \geq 0.5.\\
+        1, \text{if } x_{kq} \geq 0.5.\\
         0, \text{otherwise.}
     \end{cases}\\
     \text{hireability--interchangeability distinction:}\\
@@ -226,18 +226,18 @@
     },\\
     \delta({a}_{i}^{k}, {a}_{i}^{q}) = 
     \max({a}_{i}^{q} - {a}_{i}^{k}, 0)\\
-    h_{k,q}
-    = h(\text{sq}_{k,q},c_{q})
+    h_{kq}
+    = h(\text{sq}_{kq},c_{q})
     = h(\text{sq}(\boldsymbol{a_k},\boldsymbol{a_q}),c_{q}) 
-    = \ddot{\text{sq}}_{k,q}
+    = \ddot{\text{sq}}_{kq}
     = \text{eq}\left(
-        \text{sq}_{k,q},
+        \text{sq}_{kq},
         c_{q}
     \right)\\
     \text{to be hireable is: }
-    \text{bin}(h_{k,q}, c_{q}) = 
+    \text{bin}(h_{kq}, c_{q}) = 
     \begin{cases}
-        1, \text{if } h_{k,q} \geq 0.5 ^ {1 - c_{q}}.\\
+        1, \text{if } h_{kq} \geq 0.5 ^ {1 - c_{q}}.\\
         0, \text{otherwise}.
     \end{cases}\\
     \text{Attribute macro-flexibility:}\\

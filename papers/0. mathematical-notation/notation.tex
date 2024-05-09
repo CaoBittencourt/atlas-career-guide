@@ -592,7 +592,7 @@ in other words, to be able to do ``barber stuff'', it is not sufficient to have
 ``barber skills'': one has to be interchangeable with a barber (i.e.
 sufficiently similar)
 
-from this follows that $s_{k,q}^{\text{hr}} = f(\textit{\ss}_{k,q})$
+from this follows that $s_{kq}^{\text{hr}} = f(\textit{\ss}_{kq})$
 
 in this particular sense, the whole is greater than the sum of its parts.
 
@@ -610,14 +610,14 @@ since act follows virtue, and even composite activities follow from a
 sufficiently qualified skill set, and since an occupation is nothing more than
 a series of activities, then:
 
-to have an overlap, or sufficient qualification, of $s_{k,q}^{\geq}$ with an
-occupation's skill set is to be able to perform $s_{k,q}^{\geq}$ \% of that
+to have an overlap, or sufficient qualification, of $s_{kq}^{\geq}$ with an
+occupation's skill set is to be able to perform $s_{kq}^{\geq}$ \% of that
 occupation's job activities
 
-if person $k$ has a sufficient qualification of $s_{k,q}^{\geq} < 1$ with
+if person $k$ has a sufficient qualification of $s_{kq}^{\geq} < 1$ with
 occupation $q$, then they can partially perform occupation $q$'s job activities
 
-if person $k$ has a sufficient qualification of $s_{k,q}^{\geq} = 1$ with
+if person $k$ has a sufficient qualification of $s_{kq}^{\geq} = 1$ with
 occupation $q$, then they can completely perform occupation $q$'s job
 activities
 
@@ -675,39 +675,39 @@ the labor market.
 Mathematically,
 
 \begin{gather}
-    _{0}^{1}[\text{hr}_{k,q} \ |\ \bar{\text{hr}}_{k,q}] =
+    _{0}^{1}[\text{hr}_{kq} \ |\ \bar{\text{hr}}_{kq}] =
     \begin{cases}
-        1, \text{$\text{hr}_{k,q} \geq \bar{\text{hr}}_{k,q}$}; \\
+        1, \text{$\text{hr}_{kq} \geq \bar{\text{hr}}_{kq}$}; \\
         0, \text{otherwise}.
     \end{cases}
     ,
 \end{gather}
 and
 \begin{gather}
-    _{0}^{1}[\text{hr}_{k,q}] =
+    _{0}^{1}[\text{hr}_{kq}] =
     \begin{cases}
-        1, \text{$\text{hr}_{k,q} \geq 0.5$}; \\
+        1, \text{$\text{hr}_{kq} \geq 0.5$}; \\
         0, \text{otherwise}.
     \end{cases}
 \end{gather}
-are the binary indicators of the $\text{hr}_{k,q} \in [0,1]$ hireability statistic. This metric tells us \textit{whether} a person $k$ can be hired to perform at least a portion of occupation $q$'s job activities (in accordance with the Divisibility Axiom).
+are the binary indicators of the $\text{hr}_{kq} \in [0,1]$ hireability statistic. This metric tells us \textit{whether} a person $k$ can be hired to perform at least a portion of occupation $q$'s job activities (in accordance with the Divisibility Axiom).
 
-Additionally, we define the hireability similarity metric $s_{k,q}^{\text{hr}}
+Additionally, we define the hireability similarity metric $s_{kq}^{\text{hr}}
     \in [0,1]$, which determines the \textit{percentage} of a job's activities one
 could be hired to perform.
 
 When multiplied, these two coefficients quantify if, and to what extent, a
 skill set can be hired to perform the job activities of another skill set:
 \begin{gather}
-    _{0}^{1}[\text{hr}_{k,q} \ |\ \bar{\text{hr}}_{k,q}] \times s_{k,q}^{\text{hr}}
+    _{0}^{1}[\text{hr}_{kq} \ |\ \bar{\text{hr}}_{kq}] \times s_{kq}^{\text{hr}}
     \in [0,1]
     .
 \end{gather}
 
 The ``radical'' SOHA defines these metrics as:
 \begin{gather}
-    \text{hr}_{k,q} = 1 \ \forall \ k,q;\\
-    s_{k,q}^{\text{hr}} = s_{k,q}^{\geq}
+    \text{hr}_{kq} = 1 \ \forall \ kq;\\
+    s_{kq}^{\text{hr}} = s_{kq}^{\geq}
     \in [0,1]
     .
 \end{gather}
@@ -716,23 +716,23 @@ However, the more reasonable WOHA does not make any strong assumptions about
 these coefficients, but only that they should be weaker than the SOHA's
 pressupositions:
 \begin{gather}
-    \text{hr}_{k,q} = h(\boldsymbol{a_{k}}, \boldsymbol{a_{q}}, ...);\\
-    s_{k,q}^{\text{hr}} \leq s_{k,q}^{\geq}
+    \text{hr}_{kq} = h(\boldsymbol{a_{k}}, \boldsymbol{a_{q}}, ...);\\
+    s_{kq}^{\text{hr}} \leq s_{kq}^{\geq}
     \in [0,1]
     ,
 \end{gather}
-where $h(.)$ is any monotonic hireability function, a much weaker pressuposition than the SOHA's hireability \textit{constant} $\text{hr}_{k,q} = 1$. In addition, the second assumption is that a skill set can be hired to perform \textit{up to} $s_{k,q}^{\geq}$ of another skill set's job activities, but not necessarily all $s_{k,q}^{\geq}$ percent of them. That is, they cannot be hired to perform more activities than they are capable of performing. Furthermore, additional assumptions can be made about the hireability threshold $\bar{\text{hr}}_{k,q}$.
+where $h(.)$ is any monotonic hireability function, a much weaker pressuposition than the SOHA's hireability \textit{constant} $\text{hr}_{kq} = 1$. In addition, the second assumption is that a skill set can be hired to perform \textit{up to} $s_{kq}^{\geq}$ of another skill set's job activities, but not necessarily all $s_{kq}^{\geq}$ percent of them. That is, they cannot be hired to perform more activities than they are capable of performing. Furthermore, additional assumptions can be made about the hireability threshold $\bar{\text{hr}}_{kq}$.
 
 Example metrics that satisfy the Weak Hireability Axiom are:
 \begin{gather}
-    \text{hr}_{k,q} =
-    s_{k,q}^{\geq} \times
-    \ddot{\tau}_{k,q}^{\theta};\\
-    s_{k,q}^{\text{hr}} = \textit{\ss}_{k,q}
+    \text{hr}_{kq} =
+    s_{kq}^{\geq} \times
+    \ddot{\tau}_{kq}^{\theta};\\
+    s_{kq}^{\text{hr}} = \textit{\ss}_{kq}
 \end{gather}
 
 \subsubsection{Occupational Aggregation Axiom}
-``person $k$ is $s_{k,q}$ compatible with occupation $q$" to ``person $k$ is hireable at $s_{k,q}^{h}$ percent of occupation $q$'s job posts''
+``person $k$ is $s_{kq}$ compatible with occupation $q$" to ``person $k$ is hireable at $s_{kq}^{h}$ percent of occupation $q$'s job posts''
 
 % endregion
 
@@ -743,7 +743,7 @@ Example metrics that satisfy the Weak Hireability Axiom are:
 The most basic comparative model is that of Euclidean matching with linear
 weights:
 \begin{gather}
-    s_{k,q} =
+    s_{kq} =
     s(\boldsymbol{a_k}, \boldsymbol{a_q}) =
     1 - \tilde{d}(\boldsymbol{a_k}, \boldsymbol{a_q})
     \in [0,1]
@@ -751,7 +751,7 @@ weights:
 \end{gather}
 where
 \begin{gather}
-    \tilde{d}_{k,q} =
+    \tilde{d}_{kq} =
     \tilde{d}(\boldsymbol{a_k}, \boldsymbol{a_q}) =
     \sqrt{
     \frac{
@@ -793,7 +793,7 @@ or speciality-root weights,
 But the best and most interpretable results are obtained using attribute
 equivalence as the weighting function:
 \begin{gather}
-    \tilde{d}_{k,q} =
+    \tilde{d}_{kq} =
     \tilde{d}(\boldsymbol{a_k}, \boldsymbol{a_q}) =
     \sqrt{
     \frac{
@@ -870,7 +870,7 @@ distances between comparison skill sets.
 To define these models, we first have to define the gap function, which
 measures only positive competency gaps:
 \begin{gather}
-    \delta_{k,q}^{i} =
+    \delta_{kq}^{i} =
     \delta(a_{i}^{k}, a_{i}^{q}) =
     \max(
     a_{i}^{k} - a_{i}^{q}
@@ -882,7 +882,7 @@ measures only positive competency gaps:
 
 Having defined the gap function, we can write the underqualification model:
 \begin{gather}
-    \tilde{\delta}_{k,q}^{<} =
+    \tilde{\delta}_{kq}^{<} =
     \text{uqa}(\boldsymbol{a_k}, \boldsymbol{a_q}) =
     \sqrt{
     \frac{
@@ -911,7 +911,7 @@ Having defined the gap function, we can write the underqualification model:
 
 And, analogously, the overqualification model is given by:
 \begin{gather}
-    \tilde{\delta}_{k,q}^{\geq} =
+    \tilde{\delta}_{kq}^{\geq} =
     \text{oqa}(\boldsymbol{a_k}, \boldsymbol{a_q}) =
     \sqrt{
     \frac{
@@ -941,7 +941,7 @@ And, analogously, the overqualification model is given by:
 The final set of ``sufficient qualification" is, evidently, the complement of
 the underqualification model:
 \begin{gather}
-    s_{k,q}^{\geq} =
+    s_{kq}^{\geq} =
     \text{sqa}(\boldsymbol{a_k}, \boldsymbol{a_q}) =
     1 -
     \sqrt{
@@ -1018,7 +1018,7 @@ and matrices
 
 P.S.: should qualification be unweighted?
 \begin{gather}
-    \tilde{\delta}_{k,q}^{<} =
+    \tilde{\delta}_{kq}^{<} =
     \text{uqa}(\boldsymbol{a_k}, \boldsymbol{a_q}) =
     \sqrt{
     \frac{
@@ -1043,7 +1043,7 @@ P.S.: should qualification be unweighted?
     }
     }
     ;\\
-    \tilde{\delta}_{k,q}^{\geq} =
+    \tilde{\delta}_{kq}^{\geq} =
     \text{oqa}(\boldsymbol{a_k}, \boldsymbol{a_q}) =
     \sqrt{
     \frac{
@@ -1068,7 +1068,7 @@ P.S.: should qualification be unweighted?
     }
     }
     ;\\
-    s_{k,q}^{\geq} =
+    s_{kq}^{\geq} =
     \text{sqa}(\boldsymbol{a_k}, \boldsymbol{a_q}) =
     1 -
     \sqrt{
@@ -1089,7 +1089,7 @@ P.S.: should qualification be unweighted?
 Or even
 
 \begin{gather}
-    \tilde{\delta}_{k,q}^{<} =
+    \tilde{\delta}_{kq}^{<} =
     \text{uqa}(\boldsymbol{a_k}, \boldsymbol{a_q}) =
     \frac{
     \sum_{i=1}^{m}{
@@ -1110,7 +1110,7 @@ Or even
     }
     }
     ;\\
-    \tilde{\delta}_{k,q}^{\geq} =
+    \tilde{\delta}_{kq}^{\geq} =
     \text{oqa}(\boldsymbol{a_k}, \boldsymbol{a_q}) =
     \frac{
     \sum_{i=1}^{m}{
@@ -1131,7 +1131,7 @@ Or even
     }
     }
     ;\\
-    s_{k,q}^{\geq} =
+    s_{kq}^{\geq} =
     \text{sqa}(\boldsymbol{a_k}, \boldsymbol{a_q}) =
     1 -
     \frac{
@@ -1155,7 +1155,7 @@ qualification only becomes a probably in assessing hireability. therefore, it
 seems appropriate to make a weighted / unweighted qualification metric
 distinction. for example:
 \begin{gather}
-    \ddot{s}_{k,q}^{\geq} =
+    \ddot{s}_{kq}^{\geq} =
     1 -
     \sqrt{
     \frac{
@@ -1168,9 +1168,9 @@ distinction. for example:
     }
     }
     } =
-    1 - \ddot{\delta}_{k,q}^{<}
+    1 - \ddot{\delta}_{kq}^{<}
     \\
-    s_{k,q}^{\geq} =
+    s_{kq}^{\geq} =
     \text{sqa}(\boldsymbol{a_k}, \boldsymbol{a_q}) =
     1 -
     \frac{
@@ -1182,11 +1182,11 @@ distinction. for example:
     a_{i}^{q}
     }
     } =
-    1 - \tilde{\delta}_{k,q}^{<}
+    1 - \tilde{\delta}_{kq}^{<}
 \end{gather}
 or, instead, define the weighted model as the default, and the unweighted as the ``scale-normalized'' model (as it is normalized by the actual theoretical limit, not the weighted theoretical limit):
 \begin{gather}
-    s_{k,q}^{\geq} =
+    s_{kq}^{\geq} =
     \text{sqa}(\boldsymbol{a_k}, \boldsymbol{a_q}, \boldsymbol{\ddot{a}_k}, \boldsymbol{\ddot{a}_q}) =
     1 -
     \sqrt{
@@ -1200,9 +1200,9 @@ or, instead, define the weighted model as the default, and the unweighted as the
     }
     }
     } =
-    1 - \delta_{k,q}^{<}
+    1 - \delta_{kq}^{<}
     \\
-    \tilde{s}_{k,q}^{\geq} =
+    \tilde{s}_{kq}^{\geq} =
     \text{sqa}(\boldsymbol{a_k}, \boldsymbol{a_q}) =
     1 -
     \frac{
@@ -1214,7 +1214,7 @@ or, instead, define the weighted model as the default, and the unweighted as the
     a_{i}^{q}
     }
     } =
-    1 - \tilde{\delta}_{k,q}^{<}
+    1 - \tilde{\delta}_{kq}^{<}
 \end{gather}
 
 \subsubsection{Interchangeability}
@@ -1222,140 +1222,140 @@ or, instead, define the weighted model as the default, and the unweighted as the
     \item sufficient similarity
     \item scaled similarity
     \item similarity in the strong sense
-    \item s.s. $\rightarrow$ $\textit{\ss}_{k,q}$
-    \item alternatively, $\textit{\ss}_{k,q} = \text{seq(...)} = \ddot{s}_{k,q}$
+    \item s.s. $\rightarrow$ $\textit{\ss}_{kq}$
+    \item alternatively, $\textit{\ss}_{kq} = \text{seq(...)} = \ddot{s}_{kq}$
     \item interchangeability vector $\boldsymbol{\textbf{\textit{\ss}}_k}$
     \item interchangeability matrix $\boldsymbol{\textbf{\ss}}$
 \end{enumerate}
 alternatively,
 \begin{align*}
-    \textit{\ss}_{k,q} & =
+    \textit{\ss}_{kq} & =
     \text{seq}(\boldsymbol{a_k}, \boldsymbol{a_q}) =
-    s_{k,q} \left\{
-    1 + c_q \tilde{d}_{k,q} \exp\left[
+    s_{kq} \left\{
+    1 + c_q \tilde{d}_{kq} \exp\left[
         -\frac{
             d_{\max}^{q}
-            (\tilde{d}_{k,q} - c_q)
-            % - (\tilde{d}_{k,q} - c_q)
+            (\tilde{d}_{kq} - c_q)
+            % - (\tilde{d}_{kq} - c_q)
             % d_{\max}^{q}
         }{
             1 - c_q
         }
         \right]
-    \right\} ^ {-\frac{c_q}{\tilde{d}_{k,q}}} \\
+    \right\} ^ {-\frac{c_q}{\tilde{d}_{kq}}} \\
                        & =
-    s_{k,q} \left\{
-    1 + c_q (1 - s_{k,q}) \exp\left[
+    s_{kq} \left\{
+    1 + c_q (1 - s_{kq}) \exp\left[
         \frac{
-            c_q d_{\max}^{q} - d_{k,q}
-            % c_q d_{\text{ub}}^{q} - d_{k,q}
-            % c_q \bar{d}_{q} - d_{k,q}
+            c_q d_{\max}^{q} - d_{kq}
+            % c_q d_{\text{ub}}^{q} - d_{kq}
+            % c_q \bar{d}_{q} - d_{kq}
         }{
             1 - c_q
         }
         \right]
     \right\} ^ {
-    - c_q / \tilde{d}_{k,q}
+    - c_q / \tilde{d}_{kq}
     }                                         \\
                        & =
-    (1 - \tilde{d}_{k,q})
+    (1 - \tilde{d}_{kq})
     \times
     \left[
-        1 + c_q \tilde{d}_{k,q} \exp\left(
+        1 + c_q \tilde{d}_{kq} \exp\left(
         \frac{
-            % c_q d_{\max}^{q} - d_{k,q}
-            % c_q d_{\text{ub}}^{q} - d_{k,q}
-            c_q \bar{d}_{q} - d_{k,q} }{ 1 - c_q } \right) \right] ^ { - c_q /
-    \tilde{d}_{k,q} }                         \\  & = (1 - \tilde{d}_{k,q}) \left[ 1 + c_q \tilde{d}_{k,q}
+            % c_q d_{\max}^{q} - d_{kq}
+            % c_q d_{\text{ub}}^{q} - d_{kq}
+            c_q \bar{d}_{q} - d_{kq} }{ 1 - c_q } \right) \right] ^ { - c_q /
+    \tilde{d}_{kq} }                         \\  & = (1 - \tilde{d}_{kq}) \left[ 1 + c_q \tilde{d}_{kq}
         \exp\left( \frac{
-               % c_q d_{\max}^{q} - d_{k,q}
-               % c_q d_{\text{ub}}^{q} - d_{k,q}
-               c_q \bar{d}_{q} - d_{k,q} }{ 1 - c_q } \right) \right] ^ { - c_q /
-    \tilde{d}_{k,q} }                         \\  & = s_{k,q} \left[ 1 + c_q \tilde{d}_{k,q} \exp\left(
+               % c_q d_{\max}^{q} - d_{kq}
+               % c_q d_{\text{ub}}^{q} - d_{kq}
+               c_q \bar{d}_{q} - d_{kq} }{ 1 - c_q } \right) \right] ^ { - c_q /
+    \tilde{d}_{kq} }                         \\  & = s_{kq} \left[ 1 + c_q \tilde{d}_{kq} \exp\left(
            \frac{
-               % c_q d_{\max}^{q} - d_{k,q}
-               % c_q d_{\text{ub}}^{q} - d_{k,q}
-               c_q \bar{d}_{q} - d_{k,q} }{ 1 - c_q } \right) \right] ^ { - c_q /
-    \tilde{d}_{k,q} }                         \\  & = s_{k,q} \left[ 1 + c_q \tilde{d}_{k,q} \exp\left(
+               % c_q d_{\max}^{q} - d_{kq}
+               % c_q d_{\text{ub}}^{q} - d_{kq}
+               c_q \bar{d}_{q} - d_{kq} }{ 1 - c_q } \right) \right] ^ { - c_q /
+    \tilde{d}_{kq} }                         \\  & = s_{kq} \left[ 1 + c_q \tilde{d}_{kq} \exp\left(
            \frac{
-               % c_q d_{\max}^{q} - d_{k,q}
-               c_q d_{\text{ub}}^{q} - d_{k,q}
-               % c_q d_{q}^{\text{ub}} - d_{k,q}
-               % c_q d_{q}^{ub} - d_{k,q}
-               % c_q d_{ub}^{q} - d_{k,q}
-               % c_q \bar{d}_{q} - d_{k,q}
+               % c_q d_{\max}^{q} - d_{kq}
+               c_q d_{\text{ub}}^{q} - d_{kq}
+               % c_q d_{q}^{\text{ub}} - d_{kq}
+               % c_q d_{q}^{ub} - d_{kq}
+               % c_q d_{ub}^{q} - d_{kq}
+               % c_q \bar{d}_{q} - d_{kq}
                }{
                1 - c_q
                }
            \right)
         \right] ^ {
-           - c_q / \tilde{d}_{k,q}
+           - c_q / \tilde{d}_{kq}
     }                                         \\
                        & =
-    s_{k,q} \left\{
-    1 + c_q \tilde{d}_{k,q} \exp\left[
+    s_{kq} \left\{
+    1 + c_q \tilde{d}_{kq} \exp\left[
         -\frac{
             \bar{d}_{q}
-            (\tilde{d}_{k,q} - c_q)
-            % - (\tilde{d}_{k,q} - c_q)
+            (\tilde{d}_{kq} - c_q)
+            % - (\tilde{d}_{kq} - c_q)
             % d_{\max}^{q}
         }{
             1 - c_q
         }
         \right]
-    \right\} ^ {-\frac{c_q}{\tilde{d}_{k,q}}} \\
+    \right\} ^ {-\frac{c_q}{\tilde{d}_{kq}}} \\
                        & =
-    s_{k,q} \left\{
-    1 + c_q \tilde{d}_{k,q} \exp\left[
+    s_{kq} \left\{
+    1 + c_q \tilde{d}_{kq} \exp\left[
         \frac{
             \bar{d}_{q}
-            (c_q - \tilde{d}_{k,q})
-            % - (\tilde{d}_{k,q} - c_q)
+            (c_q - \tilde{d}_{kq})
+            % - (\tilde{d}_{kq} - c_q)
             % d_{\max}^{q}
         }{
             1 - c_q
         }
         \right]
-    \right\} ^ {-\frac{c_q}{\tilde{d}_{k,q}}} \\
+    \right\} ^ {-\frac{c_q}{\tilde{d}_{kq}}} \\
                        & =
-    s_{k,q} \left\{
-    1 + c_q \tilde{d}_{k,q} \exp\left[
+    s_{kq} \left\{
+    1 + c_q \tilde{d}_{kq} \exp\left[
         \frac{
             \bar{d}_{q}
-            (c_q - \tilde{d}_{k,q})
-            % - (\tilde{d}_{k,q} - c_q)
+            (c_q - \tilde{d}_{kq})
+            % - (\tilde{d}_{kq} - c_q)
             % d_{\max}^{q}
         }{
             1 - c_q
         }
         \right]
-    \right\} ^ {- c_q / \tilde{d}_{k,q}}      \\
+    \right\} ^ {- c_q / \tilde{d}_{kq}}      \\
                        & =
-    s_{k,q} \left\{
-    1 + c_q (1 - s_{k,q}) \exp\left[
+    s_{kq} \left\{
+    1 + c_q (1 - s_{kq}) \exp\left[
         (
-        % c_q d_{\max}^{q} - d_{k,q}
-        % c_q d_{\text{ub}}^{q} - d_{k,q}
-        c_q \bar{d}_{q} - d_{k,q} ) / (1 - c_q) \right] \right\} ^ { - c_q /
-    \tilde{d}_{k,q} }
+        % c_q d_{\max}^{q} - d_{kq}
+        % c_q d_{\text{ub}}^{q} - d_{kq}
+        c_q \bar{d}_{q} - d_{kq} ) / (1 - c_q) \right] \right\} ^ { - c_q /
+    \tilde{d}_{kq} }
 \end{align*}
 
 \begin{gather}
-    \textit{\ss}_{k,q} =
-    \text{seq}(s_{k,q}, c_q) =
-    s_{k,q} ^ {\frac{1}{1 - c_q}}
+    \textit{\ss}_{kq} =
+    \text{seq}(s_{kq}, c_q) =
+    s_{kq} ^ {\frac{1}{1 - c_q}}
 \end{gather}
 
 \subsubsection{Education and Experience Equivalence}
 \begin{enumerate}
     \item years of education $\tau_k$, $\tau_q$
     \item years of education vector $\boldsymbol{\tau}$
-    \item $\ddot{\tau}_{k,q} = \text{eeq}(...) = \text{teq}(\tau_k, \tau_q, ...)$
-    \item $\ddot{\tau}_{k,q}^{\theta} = \text{eeq}(...) = \text{teq}(\tau_k, \tau_q, ...) \times s_{k,q}^{\theta}$
-    \item field similarity (direction): $s_{k,q}^{\theta} = \cos\theta_{k,q} = \frac{
+    \item $\ddot{\tau}_{kq} = \text{eeq}(...) = \text{teq}(\tau_k, \tau_q, ...)$
+    \item $\ddot{\tau}_{kq}^{\theta} = \text{eeq}(...) = \text{teq}(\tau_k, \tau_q, ...) \times s_{kq}^{\theta}$
+    \item field similarity (direction): $s_{kq}^{\theta} = \cos\theta_{kq} = \frac{
                   \boldsymbol{\ddot{a}_{k} \ \dotproduct\ \boldsymbol{\ddot{a}_{q}}} }{
                   \norm{\boldsymbol{\ddot{a}_{k}}} \norm{\boldsymbol{\ddot{a}_{q}}} } $
-    \item $s_{k,q}^{\theta} \in [0,1]$, because cosine cannot be negative, as attributes are truncated
+    \item $s_{kq}^{\theta} \in [0,1]$, because cosine cannot be negative, as attributes are truncated
     \item interpretation: equivalent education and experience in the same field
     \item vector: $\boldsymbol{s_{k}^{\theta}}$
     \item matrix: $\textbf{S}_{\mathbf{\Theta}}$
@@ -1363,7 +1363,7 @@ alternatively,
     \item eeq matrix: $\boldsymbol{\ddot{\textbf{T}}_{\mathbf{\Theta}}}$
 \end{enumerate}
 \begin{gather}
-    \ddot{\tau}_{k,q} =
+    \ddot{\tau}_{kq} =
     \text{teq}(\tau_k,\tau_q,c_q) =
     \big\{
     1 + c_q \tau_q
@@ -1376,8 +1376,8 @@ alternatively,
 \end{gather}
 
 \begin{gather}
-    s_{k,q}^{\theta} =
-    \cos\theta_{k,q} =
+    s_{kq}^{\theta} =
+    \cos\theta_{kq} =
     \frac{
         \boldsymbol{\ddot{a}_k}
         \dotproduct
@@ -1406,7 +1406,7 @@ alternatively,
 \end{gather}
 
 \begin{gather}
-    \ddot{\tau}_{k,q}^{\theta} = \ddot{\tau}_{k,q} \times s_{k,q}^{\theta}
+    \ddot{\tau}_{kq}^{\theta} = \ddot{\tau}_{kq} \times s_{kq}^{\theta}
 \end{gather}
 
 \subsubsection{Hireability}
@@ -1420,25 +1420,25 @@ alternatively,
           similarity in the ``strongest sense", as it even pressuposes interchangeability
           ($\textit{\ss}$)
     \item $
-              s_{k,q}^{h} =
+              s_{kq}^{h} =
               \text{sq}(\boldsymbol{a_k},\boldsymbol{a_q}) \times
               \text{se}(\boldsymbol{a_k},\boldsymbol{a_q}) \times
               \text{ss}(\boldsymbol{a_k},\boldsymbol{a_q}) = \\
               \text{sqa}(\boldsymbol{a_k},\boldsymbol{a_q}) \times
               \text{eeq}(\boldsymbol{a_k},\boldsymbol{a_q}) \times
               \text{seq}(\boldsymbol{a_k},\boldsymbol{a_q}) = \\
-              s_{k,q}^{\geq} \times
-              \ddot{\tau}_{k,q}^{\theta} \times
-              \textit{\ss}_{k,q} = \\
-              s_{k,q}^{\geq} \times
-              \ddot{\tau}_{k,q} \times
-              s_{k,q}^{\theta} \times
-              \ddot{s}_{k,q}
+              s_{kq}^{\geq} \times
+              \ddot{\tau}_{kq}^{\theta} \times
+              \textit{\ss}_{kq} = \\
+              s_{kq}^{\geq} \times
+              \ddot{\tau}_{kq} \times
+              s_{kq}^{\theta} \times
+              \ddot{s}_{kq}
           $
     \item p.s.: this metric is too strict. suppose a candidate scored a 0.9 on every
           metric: $0.9 ^ 4 = 0.6561$
-    \item candidate is hireable if $_{0}^{1}[s_{k,q}^{h}]$
-    \item candidate is hireable for $_{0}^{1}[s_{k,q}^{h}] \times s_{k,q}^{h}$ percent of
+    \item candidate is hireable if $_{0}^{1}[s_{kq}^{h}]$
+    \item candidate is hireable for $_{0}^{1}[s_{kq}^{h}] \times s_{kq}^{h}$ percent of
           jobs (requires an axiom)
     \item hireability vector: $\boldsymbol{s_{k}^{h}}$
     \item hireability matrix: $\boldsymbol{\textbf{S}_{h}}$
@@ -1453,13 +1453,13 @@ alternatively,
     \item normalized wages $\hat{y}_k = y_k / \max y_q$
     \item normalized wages vector $\boldsymbol{\hat{y}}$
     \item wage utility function $u(\hat{y}_k)$
-    \item utility equivalence function $\ddot{u}_{k,q} = \text{ueq}(u(\hat{y}_k),
+    \item utility equivalence function $\ddot{u}_{kq} = \text{ueq}(u(\hat{y}_k),
               u(\hat{y}_q), ...)$
-    \item static utility $u_k$ vs comparative utility $u_{k,q}$
+    \item static utility $u_k$ vs comparative utility $u_{kq}$
     \item incorporate preferences in the utility function like in the eeq function? (def
           = 1 for O*NET career profiles)
-    \item e.g. $\ddot{u}_{k,q} = \text{ueq}(u(\hat{y}_k), u(\hat{y}_q), ...) \times
-              s_{k,q}^{\upsilon}$
+    \item e.g. $\ddot{u}_{kq} = \text{ueq}(u(\hat{y}_k), u(\hat{y}_q), ...) \times
+              s_{kq}^{\upsilon}$
 \end{enumerate}
 
 \subsection{Aggregate Comparative Models}
@@ -1467,14 +1467,14 @@ alternatively,
 \begin{enumerate}
     \item employment levels $w_k, w_q$
     \item total workforce $W = \sum_{q=1}^{n}{w_q}$
-    \item $\Lambda_k = \left(\frac{1}{W}\right) \sum_{q=1}^{n}{_{0}^{1}[s_{k,q}^{h}] s_{k,q}^{h} w_q}$
+    \item $\Lambda_k = \left(\frac{1}{W}\right) \sum_{q=1}^{n}{_{0}^{1}[s_{kq}^{h}] s_{kq}^{h} w_q}$
     \item alternatively, $\Lambda_k = \left(\frac{1}{W}\right)
-              \sum_{q=1}^{n}{_{0}^{1}[s_{k,q}^{h}] s_{k,q}^{\geq} w_q}$
+              \sum_{q=1}^{n}{_{0}^{1}[s_{kq}^{h}] s_{kq}^{\geq} w_q}$
     \item employability = percentage of jobs in the economy on which a candidate could be
           hired
     \item employability can also be defined at specific aggregation levels of the economy
           (see Labor Economic Models)
-    \item $\Lambda_{k}^{?} = \left(\frac{1}{W}\right) \sum_{?}{_{0}^{1}[s_{k,q}^{h}] s_{k,q}^{h} w_q}$
+    \item $\Lambda_{k}^{?} = \left(\frac{1}{W}\right) \sum_{?}{_{0}^{1}[s_{kq}^{h}] s_{kq}^{h} w_q}$
     \item ? is the economic aggregation level (e.g. sector, industry, market, role)
     \item employability vector $\boldsymbol{\Lambda}$
     \item need to define an axiom to go from x percent of hireability in one job of a
@@ -1485,15 +1485,15 @@ alternatively,
 \begin{enumerate}
     \item employment levels $w_k, w_q$
     \item total workforce $W = \sum_{q=1}^{n}{w_q}$
-    \item $\text{vs}_k = \left(\frac{1}{W}\right) \sum_{q=1}^{n}{_{0}^{1}[\ddot{u}_{q,k}] _{0}^{1}[s_{k,q}^{h}] s_{k,q}^{h} w_q}$
+    \item $\text{vs}_k = \left(\frac{1}{W}\right) \sum_{q=1}^{n}{_{0}^{1}[\ddot{u}_{qk}] _{0}^{1}[s_{kq}^{h}] s_{kq}^{h} w_q}$
     \item alternatively, $\text{vs}_k = \left(\frac{1}{W}\right)
-              \sum_{q=1}^{n}{_{0}^{1}[\ddot{u}_{q,k}] _{0}^{1}[s_{k,q}^{h}] s_{q,k}^{\geq}
+              \sum_{q=1}^{n}{_{0}^{1}[\ddot{u}_{qk}] _{0}^{1}[s_{kq}^{h}] s_{qk}^{\geq}
               w_q}$
     \item competitiveness (versus) = percentage of workers in the economy that could (and
           would like to) be hired for a particular job
     \item competitiveness can also be defined at specific aggregation levels of the
           economy (see Labor Economic Models)
-    \item $\text{vs}_{k}^{?} = \left(\frac{1}{W}\right) \sum_{?}{_{0}^{1}[\ddot{u}_{q,k}] _{0}^{1}[s_{k,q}^{h}] s_{k,q}^{h} w_q}$
+    \item $\text{vs}_{k}^{?} = \left(\frac{1}{W}\right) \sum_{?}{_{0}^{1}[\ddot{u}_{qk}] _{0}^{1}[s_{kq}^{h}] s_{kq}^{h} w_q}$
     \item ? is the economic aggregation level (e.g. sector, industry, market, role)
     \item competitiveness vector $\textbf{vs}$
 \end{enumerate}
@@ -1543,10 +1543,10 @@ alternatively,
 
 \subsubsection{Micro-Flexibility}
 \begin{enumerate}
-    \item NNLS attributes vs attributes $\rightarrow \phi_{i,j}$
+    \item NNLS attributes vs attributes $\rightarrow \phi_{ij}$
     \item micro-flexibility = expected gain on other attributes for an additional point
           in an attribute
-    \item !requires additional statistical pressupositions for regression coefficients to be interpretable as $\phi_{i,j}$
+    \item !requires additional statistical pressupositions for regression coefficients to be interpretable as $\phi_{ij}$
     \item !potential for recursion
     \item !affects ETA
     \item define a geometric progression learning model?
@@ -1581,7 +1581,7 @@ alternatively,
 \begin{enumerate}
     \item aggregate expected time investment to fill competency gaps
     \item uppercase eta $\eta$
-    \item $\text{H}_{k,q} = \sum_{i=1}^{m}{
+    \item $\text{H}_{kq} = \sum_{i=1}^{m}{
               \delta(a_{i}^{k}, a_{i}^{q})
               \eta_i
               }$

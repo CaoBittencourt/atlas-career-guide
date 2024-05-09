@@ -342,7 +342,7 @@ This is done by prioritizing training in attributes with the highest values of m
 Mathematically, we can write down a coefficient of recommendation similar to the one above, now aiming to optimize competency development, instead of career choice. In order to do so, we quantify the desired properties described using a functional form such as
 
 $$
-\rho_i(\delta_i^q,k_f^i,t_i,p_i) = 
+\rho_i(\delta_i^qk_f^i,t_i,p_i) = 
 \frac{\delta_i^q}{100}
 \left[
 k_f^i \left( 1- \frac{t_i}{\max t_i } \right) 
@@ -353,7 +353,7 @@ $$
 or even
 
 $$
-\rho_i(\delta_i^q,k_f^i,t_i,p_i) = 
+\rho_i(\delta_i^qk_f^i,t_i,p_i) = 
 \frac{\delta_i^q}{100}
 \left[
 \frac{1}{2} \left( 1- \frac{t_i}{\max t_i } \right) 
@@ -382,7 +382,7 @@ where $p_i \delta_i^q$ is the added value of closing skill gap $\delta_i^q$ at m
 
 $$
 \begin{gathered}
-\rho_i(\delta_i^q,p_i) = p_i \delta_i^q \\ \rho_i(\delta_i^q,k_f^i,t_i,p_i) = \frac{k_f^i p_i \delta_i^q}{t_i} 
+\rho_i(\delta_i^q,p_i) = p_i \delta_i^q \\ \rho_i(\delta_i^qk_f^i,t_i,p_i) = \frac{k_f^i p_i \delta_i^q}{t_i} 
 \end{gathered}
 $$
 
