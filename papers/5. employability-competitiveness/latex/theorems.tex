@@ -3,6 +3,10 @@
 \theoremstyle{definition}
 \newtheorem{definition}{Definition}
 
+% subdefinition
+\theoremstyle{definition}
+\newtheorem{subdefinition}{Definition}[definition]
+
 % axiom
 \theoremstyle{definition}
 \newtheorem{axiom}{Axiom}
@@ -96,7 +100,7 @@
 
     % statement
     \begin{definition}[Skill]
-        Alternatively, we can think of a person $k$'s professional attribute, competency, or skill, as the difficulty of the most difficult task they can accomplish, normalized by the difficulty of most objectively difficult task of that particular skill:
+        Alternatively, we can think of a person $k$'s professional attribute, competency, or skill, as the difficulty of the most difficult task they can accomplish, normalized by the difficulty of the most objectively difficult task of that particular skill:
         \begin{gather}
             a_{i}^{k} =
             \frac{
@@ -171,18 +175,6 @@
 
 % endregion
 
-% region: complex task definition 
-\newcommand{\ComplexTask}{
-    \label{complex_task}
-
-    % statement
-    \begin{definition}[Complex Task]
-        dsds.
-    \end{definition}
-}
-
-% endregion
-
 % region: skill sufficiency lemma (ssl) 
 % skills are sufficient to accomplish tasks
 \newcommand{\SSL}{
@@ -193,7 +185,7 @@
     % statement
     \begin{lemma}[Skill Sufficiency Lemma]
         According to the SSL, skills are necessary and sufficient to accomplish tasks.
-        In particular, to have a skill level of $a_{i}^{k}$ in attribute $i$ is a necessary and sufficient condition for one to be capable of accomplishing $a_{i}^{k}$ percent of that attribute's tasks.
+        In particular, to have a skill level of $a_{i}^{k} \in [0,1]$ in attribute $i$ is a necessary and sufficient condition for one to be capable of accomplishing the easier $a_{i}^{k}$ portion of that attribute's tasks.
     \end{lemma}
 
     % proof
@@ -232,7 +224,7 @@
         \end{gather}
         which is precisely the $\tilde{T}_{i}^{k}$ aggregation of $T(l, l_{i}^{k})$ in the $[0,1]$ interval.
 
-        Therefore, having a skill level of $a_{i}^{k}$ is a necessary and sufficient condition to be capable of accomplishing $a_{i}^{k}$ percent of attribute $i$'s tasks:
+        Therefore, having a skill level of $a_{i}^{k}$ is a necessary and sufficient condition to be capable of accomplishing the easier $a_{i}^{k}$ portion of that attribute's tasks:
         \begin{gather}
             a_{i}^{k} =
             \tilde{T}_{i}^{k}
@@ -252,23 +244,179 @@
 
 % endregion
 
-% region: skill composition axiom (sca) 
+% region: complex task definition 
+\newcommand{\ComplexTask}{
+    \label{complex_task}
+
+    % statement
+    \begin{definition}[Complex Task]
+        A task is said to be complex if it requires more than one attribute to be accomplished. More precisely, $T_{ij}^{l}$ is a complex task of attributes $i$ and $j$, if its binary outcome indicator is of the form
+        \begin{gather}
+            T(l, l_{ij}^{k}) =
+            \begin{cases}
+                1, \ l \leq l_{ij}^{k}; \\
+                0, \ \text{otherwise.}
+            \end{cases}
+        \end{gather}
+
+        \begin{subdefinition}[Weak Complexity]
+            dsds
+        \end{subdefinition}
+        
+        \begin{subdefinition}[Moderate Complexity]
+            dsds
+        \end{subdefinition}
+
+        \begin{subdefinition}[Strong Complexity]
+            dsds
+        \end{subdefinition}
+
+        and
+        \begin{gather}
+            l_{ij}^{k} = f(l_{i}^{k}, l_{j}^{k})
+        \end{gather}
+        meets the following criteria:
+        \begin{gather}
+            \frac{
+                \partial
+                f(l_{i}^{k}, l_{j}^{k})
+            }{
+                \partial 
+                l_{i}^{k}
+            } \geq 0
+            ;\\
+            \frac{
+                \partial
+                f(l_{i}^{k}, l_{j}^{k})
+            }{
+                \partial 
+                l_{j}^{k}
+            } \geq 0
+            ;\\
+            \lim_{
+                l_{i}^{k} \rightarrow 0
+            }{
+                f(l_{i}^{k}, l_{j}^{k})
+            } = 0
+            ;\\
+            \lim_{
+                l_{j}^{k} \rightarrow 0
+            }{
+                f(l_{i}^{k}, l_{j}^{k})
+            } = 0
+            .
+        \end{gather}
+        
+        Thus, a person $k$'s capacity to perform a complex task is weakly increasing on their capacity to perform the simple tasks of its required attributes, and goes to zero when they are unskilled in at least one of these attributes.
+
+        Additionaly, this definition can be generalized for any complex task $T_{q}^{l}$ of $m$ attributes, requiring an entire skill set $\boldsymbol{a_q} = (a_{1}^{q}, \dots, a_{m}^{q})$ to be accomplished:
+        \begin{gather}
+            T(l, l_{q}^{k}) =
+            \begin{cases}
+                1, \ l \leq l_{q}^{k}; \\
+                0, \ \text{otherwise.}
+            \end{cases}
+        \end{gather}
+        where
+        \begin{gather}
+            l_{q}^{k} = f(l_{1}^{k}, \dots, l_{m}^{k})
+        \end{gather}
+        and 
+        \begin{gather}
+            \frac{
+                \partial
+                f(l_{1}^{k}, \dots, l_{m}^{k})
+            }{
+                \partial 
+                l_{i}^{k}
+            } \geq 0
+            \
+            \forall 
+            \
+            i \in \{1, \dots, m\}
+            ;\\
+            \lim_{
+                l_{i}^{k} \rightarrow 0
+            }{
+                f(l_{1}^{k}, \dots, l_{m}^{k})
+            } = 0
+            \
+            \forall 
+            \
+            i \in \{1, \dots, m\}
+            .
+        \end{gather}
+
+        This means a task is only strictly \textit{complex} if it cannot be reduced to any proper subset of the attributes that it requires. For example, a task of the form
+        \begin{gather}
+            T(l, l_{ij}^{k}) =
+            \begin{cases}
+                1, \ l \leq l_{i}^{k} + l_{j}^{k}; \\
+                0, \ \text{otherwise.}
+            \end{cases}
+        \end{gather}
+        is not, strictly speaking, a complex task, because if person $k$ is only skilled in either attribute $i$ or $j$, they can still accomplish the task. In particular, if $k$ has precisely zero capacity in either attribute, then $T_{ij}^{l}$ collapses to unidimensional, or simple, tasks $T_{i}^{l}$ when
+        \begin{gather}
+            T(l, l_{ij}^{k}) =
+            \begin{cases}
+                1, \ l \leq l_{i}^{k} + 0; \\
+                0, \ \text{otherwise.}
+            \end{cases}
+            = T(l, l_{i}^{k})
+            ,\\
+        \end{gather}
+        or $T_{j}^{l}$ when
+        \begin{gather}
+            T(l, l_{ij}^{k}) =
+            \begin{cases}
+                1, \ l \leq 0 + l_{j}^{k}; \\
+                0, \ \text{otherwise.}
+            \end{cases}
+            = T(l, l_{j}^{k})
+            ,
+        \end{gather}
+        in which case $T_{ij}^{l}$ is not \textit{really} complex, but rather a convolution of simple tasks. Notice this has nothing to do with whether $l_{ij}^{k} \in [0,1]$. In fact, if $l_{ij}^{k}$ is given by, say, $l_{ij}^{k} = \sigma_{i} l_{i}^{k} + (1 - \sigma_{i})l_{j}^{k}$, with $\sigma_{i}, l_{i}^{k}, l_{j}^{k} \in [0,1]$, and $k$ has zero capacity in either attribute,
+        \begin{gather}
+            T(l, l_{ij}^{k}) =
+            \begin{cases}
+                1, \ l \leq \sigma_{i} l_{i}^{k} + 0; \\
+                0, \ \text{otherwise.}
+            \end{cases}
+            = T(l, \sigma_{i} l_{i}^{k})
+        \end{gather}
+        and 
+        \begin{gather}
+            T(l, l_{ij}^{k}) =
+            \begin{cases}
+                1, \ l \leq 0 + (1 - \sigma_{i}) l_{j}^{k}; \\
+                0, \ \text{otherwise.}
+            \end{cases}
+            = T(l, (1 - \sigma_{i}) l_{j}^{k})
+        \end{gather}
+        are still simple, not complex tasks, even if they are ``harder versions'' of $T_{i}^{l}$ and $T_{j}^{l}$, respectively, as the maximum difficulty level $k$ can accomplish of task $T_{ij}^{l}$ is only limited by both attributes, not necessarily determined by them -- hence why this formulation is better thought of as two separate tasks.
+        
+        Of course, this does not mean a degree of substitution between attributes completely invalidates a task's complexity. It only means a complex task must require all of its attributes at \textit{some} level, even if its functional form allows for substitution. However, if it does not require all of its attributes, then it should be broken down into other simple and/or complex tasks. In Economic terms, this is equivalent to saying that competencies, when used to perform complex tasks, are at least weakly complementary.
+    \end{definition}
+}
+
+% endregion
+
+% region: skill composition axiom / lemma (sca) 
 % skills are composable to accomplish complex tasks
 \newcommand{\SCA}{
     \label{sca}
 
     % statement
     \begin{axiom}[Skill Composition Axiom]
-        The Skill Composition Axiom (SCA) states that skills are composable to accomplish complex tasks. More precisely, let $T_{ij}^{l}$ be an activity of difficulty level $l$ that requires both attributes $i$ and $j$ (i.e. $T_{ij}^{l}$ is a complex task). With this, we define that any rational and sufficiently qualified economic agent can naturally ``piece together'', that is \textit{compose}, attributes $i$ and $j$ to accomplish the $T_{ij}^{l}$ complex task. Or, mathematically,
+        The Skill Composition Axiom (SCA) states that skills are weakly composable to accomplish complex tasks. More precisely, let $T_{ij}^{l}$ be an activity of difficulty level $l$ that requires both attributes $i$ and $j$ (i.e. $T_{ij}^{l}$ is a weakly complex task). With this, we define that any rational and sufficiently qualified economic agent can naturally ``piece together'', that is \textit{compose}, attributes $i$ and $j$ to accomplish the $T_{ij}^{l}$ complex task. Or, mathematically,
         \begin{gather}
-            \tilde{T}_{i,,j}^{k} = 
+            \tilde{T}_{ij}^{k} = 
             \int_{0}^{1}{
                 T(l, l_{ij}^{k})
                 dl
             }
-            ,
         \end{gather}
-        where
+        is the easier portion $k$ can accomplish in a $l \in [0,1]$ continuum of difficulty levels of complex tasks requiring attributes $i$ and $j$, given
         \begin{gather}
             T(l, l_{ij}^{k}) =
             \begin{cases}
@@ -279,6 +427,11 @@
         and
         \begin{gather}
             l_{ij}^{k} = 
+            f(
+                l_{i}^{k},
+                l_{j}^{k}
+            )
+            =
             f(
                 a_{i}^{k},
                 a_{j}^{k}
@@ -315,6 +468,57 @@
             } \geq 0
             .
         \end{gather}
+
+        In addition, let us assume that attributes are not perfect complements when performing a complex task, thus allowing for some substitution.
+        actually 
+        \begin{gather}
+            Y_{kq} = 
+            \prod_{i=1}^{m}{
+                \min(
+                    (1 + a_{i}^{k}),
+                    (1 + a_{i}^{q})
+                ) ^ {\sigma_{i}^{q}}
+            }
+        \end{gather}
+        violates the definition of complex task aggregation function.
+        perhaps define task complexity with 
+        \begin{gather}
+            \frac{
+                \partial ^ 2 {f(\boldsymbol{l^{k}})}
+            }{
+                \partial 
+                l_{i}^{k}
+                \partial
+                l_{j}^{k}
+            } \geq 0
+        \end{gather}
+
+        task complexity (weak definition): 
+        \begin{gather}
+            \frac{
+                \partial ^ 2 {f(\boldsymbol{l^{k}})}
+            }{
+                \partial 
+                l_{i}^{k}
+                \partial
+                l_{j}^{k}
+            } \geq 0
+        \end{gather}
+        
+        task complexity (moderate definition): 
+        \begin{gather}
+            \lim_{
+                l_{i}^{k} \rightarrow 0
+            }{
+                f(l_{1}^{k}, \dots, l_{m}^{k})
+            } = 0
+            \
+            \forall 
+            \
+            i \in \{1, \dots, m\}
+        \end{gather}
+
+        task complexity (strong definition): $l_{q}^{k} = \min(l_{1}^{k}, \dots, l_{m}^{k})$
     \end{axiom}
 
 }
@@ -335,7 +539,7 @@
 
 % endregion
 
-% region: occupational complexity axiom (oca) 
+% region: occupational weak complexity axiom (oca) 
 % all of an occupation's tasks can be thought of as only
 % one, indivisible, holistic task, requiring their entire skill set
 % we call this an occupation's "operation"
