@@ -1,0 +1,178 @@
+%SECTION: SETUP 
+% region: document class 
+\documentclass[hidelinks, nonatbib]{elsarticle}
+\makeatletter
+\let\c@author\relax
+\makeatother
+
+% endregion
+
+% region: packages 
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{amsthm}
+\usepackage{float}
+\usepackage{tabularray}
+\usepackage{enumitem}
+\setlist[enumerate]{label*=\arabic*.}
+\usepackage[backend=biber, style=apa]{biblatex}
+\usepackage{hyperref}
+
+% endregion
+
+% region: source files 
+% equations
+\input{equations.tex}
+
+% figures
+\input{figures.tex}
+
+% tables
+\input{tables.tex}
+
+% references
+\addbibresource{references.bib}
+
+% endregion
+
+% region: display breaks 
+\allowdisplaybreaks
+
+% endregion
+
+% region: title 
+\title{
+    The Employability Theorem
+}
+\author{Cao Bittencourt}
+\affiliation{{B. Sc. in Economics from EPGE (FGV), RJ, Brazil.}}
+\affiliation{{Statistician at Atlas Career Guide Inc., FL, USA.}}
+\date{\today}
+
+% endregion
+
+%SECTION: PAPER 
+\begin{document}
+
+% region: abstract 
+\begin{abstract}
+    In this document, the Potential Employability Theorem is demonstrated from a set of fairly tautological axioms, which are presupposed in quantitative career choice and career development methods.
+\end{abstract}
+
+\begin{keyword}
+    Employability theorem; 
+    Career choice; 
+    Career development; 
+    Vocational choice; 
+    Occupational Information Network; 
+    O*NET.
+\end{keyword}
+
+% endregion
+
+% region: title 
+\maketitle
+
+% endregion
+
+% region: introduction 
+\section{Proof Plan}
+% \begin{enumerate}
+%     \item Skill Atomicity Axiom
+%     \begin{enumerate}
+%         \item It is necessary to define some level of attribute atomicity. Otherwise, we are left with having to quantify only the most fundamental levels of human capacity on ``raw'', or basic, organismic functions on a microscopical, even cellular level, which is obviously not practical, nor useful.
+%         \item ACTUALLY, THESE ``ATOMICITY LEVELS'' ARE NOT NECESSARY: THESE ARE MORE ARGUMENTS FOR ATOMICITY, RATHER THAN AXIOMS THEMSELVES. WE ONLY NEED TO DEFINE ``SKILL ATOMICITY''. THE ``ATOMICITY LEVELS'' ARE HERE JUST TO ARGUE FOR ATOMICITY.
+%         \item Weak Attribute Atomicity: a number of subattributes per attribute, each with its own truncated difficulty distribution, which may or may not be uniform, that can still be satisfactorily grouped under a single attribute, with a uniform difficulty scale and considerable subattribute overlap.
+%         \begin{enumerate}
+%             \item Questionnaire respondents intuitively and accurately know how to rate themselves on uniform difficulty scales by ``averaging out'' the implicit subscales which are not part of the questionnaire
+%         \end{enumerate}
+%         \item Moderate Attribute Atomicity (or Symmetric Subattributes): a number of subattributes per attribute, each with a uniform difficulty distribution, that can still be satisfactorily grouped under a single attribute, with a uniform difficulty scale and considerable subattribute overlap.
+%         \item Strong Attribute Atomicity: only attributes, and no subattributes. Each attributes measures only one thing and, therefore, has a uniform difficulty scale as a result.
+%     \end{enumerate}
+%     \item Skill Truncation Axiom
+%     \begin{enumerate}
+%         \item There is a maximum difficulty level for each skill at each time and, retrospectively, when $\lim_{t \rightarrow \infty}{l_{i}^{t}} = l_i$, an objective, timeless, maximum difficulty level
+%     \end{enumerate}
+%     \item Skill Definition (by Task Difficulty)
+%     \item Skill Sufficiency Lemma (from SAA, STA and Skill Definition)
+%     \begin{enumerate}
+%         \item ``Skills are sufficient to perform activities''
+%         \item $a_{i}^{k} = l_{i}^{k} / l_i$
+%         \item $\tilde{T}_{i}^{k} = \int_{0}^{l_i}{T(l, l_{i}^{k}) dl} / \int_{0}^{l_i}{T(l, l_{i}) dl}$
+%         \item Therefore, $a_{i}^{k} = \tilde{T}_{i}^{k}$
+%     \end{enumerate}
+%     \item Complex Task Definitions
+%     \item Skill Composition Lemma (from SSL and Complex Tax Definition)
+%     \begin{enumerate}
+%         \item ``Skills are sufficient to perform complex activities''
+%     \end{enumerate}
+%     \item Occupational Reducibility Axiom
+% \end{enumerate}
+
+% endregion
+
+Time allocation by difficulty level:
+\begin{gather}
+    \text{ta}(\bar{l}) = 
+    \frac{
+        \text{ttc}(\bar{l})
+    }{
+        \int_{0}^{1}{
+            \text{ttc}(l)
+            dl
+        }
+    }
+\end{gather}
+
+Employment by difficulty level:
+\begin{gather}
+    w_q(\bar{l}) = 
+    w_q 
+    \times
+    \text{ta}(\bar{l})
+\end{gather}
+
+Potential employability:
+\begin{align}
+    \tilde{w}_{q}^{k} =
+    \tilde{w}_q(l_{q}^{k}) &=
+    w_q
+    \int_{0}^{1}
+    T(l, l_{q}^{k})
+    \text{ta}(l)
+    dl
+    \\
+    &=
+    w_q
+    \left[
+        \int_{0}^{l_{q}^{k}}
+            1 \times
+            \text{ta}(l)
+            dl
+        + 
+        \int_{l_{q}^{k}}^{1}
+            0 \times
+            \text{ta}(l)
+            dl
+    \right]
+    \\
+    &=
+    w_q
+    \int_{0}^{l_{q}^{k}}
+    \text{ta}(l)
+    dl
+\end{align}
+
+And with $
+l_{q}^{k}
+= \tilde{Y}_{q}^{k}
+= \tilde{Y}(\boldsymbol{a_k}, \boldsymbol{a_q})
+= Y(\boldsymbol{a_k}, \boldsymbol{a_q}) / Y(\boldsymbol{a_q}, \boldsymbol{a_q})$,
+\begin{gather}
+    \tilde{w}_{q}^{k} =
+    w_q
+    \int_{0}^{\tilde{Y}_{q}^{k}}
+    \text{ta}(l)
+    dl
+\end{gather}
+\end{document}
