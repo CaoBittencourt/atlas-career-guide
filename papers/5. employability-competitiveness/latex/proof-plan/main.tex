@@ -56,7 +56,7 @@
 
 % region: abstract 
 \begin{abstract}
-    In this document, the Potential Employability Theorem is demonstrated from a set of fairly tautological axioms, which are presupposed in quantitative career choice and career development methods.
+    In this document, the Employability Theorem is demonstrated from a set of fairly tautological axioms, which are presupposed in quantitative career choice and career development methods.
 \end{abstract}
 
 \begin{keyword}
@@ -143,14 +143,16 @@ Employability per occupation:
     \\
     &=
     \int_{0}^{1}
-    T(l, l_{q}^{k})
+    % T(l, l_{q}^{k})
+    [l_{q}^{k} \geq l]
+    % [l \leq l_{q}^{k}]
     w_q 
     \text{ta}_q(l)
     dl
     \\
     &=
     w_q
-    \left[
+    \left(
         \int_{0}^{l_{q}^{k}}
             1 \times
             \text{ta}_q(l)
@@ -160,7 +162,7 @@ Employability per occupation:
             0 \times
             \text{ta}_q(l)
             dl
-    \right]
+    \right)
     \\
     &=
     w_q
@@ -367,7 +369,7 @@ Aggregate employability (particular subset of the economy):
         }
 \end{gather}
 
-Notation for operation output ($\mho$ from IPA's definition of the ``double-o'' sound, e.g. as in the word ``boot''):
+Notation for operation output ($\mho$ is IPA's symbol for the ``double-o'' sound, e.g. as in the word ``boot''):
 \begin{gather}
     \mho_{q}^{k} = 
     \left\lfloor 
