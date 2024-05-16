@@ -113,7 +113,7 @@
 
 Time allocation by difficulty level:
 \begin{gather}
-    \text{ta}(\bar{l}) = 
+    \text{ta}_q(\bar{l}) = 
     \frac{
         \text{ttc}(\bar{l})
     }{
@@ -129,17 +129,23 @@ Employment by difficulty level:
     w_q(\bar{l}) = 
     w_q 
     \times
-    \text{ta}(\bar{l})
+    \text{ta}_q(\bar{l})
 \end{gather}
 
-Potential employability:
+Employability per occupation:
 \begin{align}
     \tilde{w}_{q}^{k} =
     \tilde{w}_q(l_{q}^{k}) &=
-    w_q
     \int_{0}^{1}
     T(l, l_{q}^{k})
-    \text{ta}(l)
+    w_q(l)
+    dl
+    \\
+    &=
+    \int_{0}^{1}
+    T(l, l_{q}^{k})
+    w_q 
+    \text{ta}_q(l)
     dl
     \\
     &=
@@ -147,19 +153,19 @@ Potential employability:
     \left[
         \int_{0}^{l_{q}^{k}}
             1 \times
-            \text{ta}(l)
+            \text{ta}_q(l)
             dl
         + 
         \int_{l_{q}^{k}}^{1}
             0 \times
-            \text{ta}(l)
+            \text{ta}_q(l)
             dl
     \right]
     \\
     &=
     w_q
     \int_{0}^{l_{q}^{k}}
-    \text{ta}(l)
+    \text{ta}_q(l)
     dl
 \end{align}
 
@@ -172,7 +178,200 @@ l_{q}^{k}
     \tilde{w}_{q}^{k} =
     w_q
     \int_{0}^{\tilde{Y}_{q}^{k}}
-    \text{ta}(l)
+    \text{ta}_q(l)
     dl
+\end{gather}
+
+Aggregate employability (entire economy):
+\begin{gather}
+    \begin{align}
+        \tilde{w}_{k} =
+        \tilde{w}_{11}^{k} =
+        \tilde{w}_{k}(1, 1)
+        % &=
+        % \sum_{q=1}^{n}{
+        %     [
+        %         \tilde{Y}_{q}^{k}
+        %         \ddot{\tau}_{q}^{k}
+        %         s_{kq}^{\theta}
+        %         \geq 0.5
+        %     ]
+        %     \tilde{w}_{q}^{k}
+        % }
+        % \\
+        &=
+        \sum_{q=1}^{n}{
+            [
+                % \tilde{Y}_{q}^{k}
+                % \ddot{\tau}_{q}^{k}
+                % s_{kq}^{\theta}
+                % \geq 0.5
+                \tilde{Y}_{q}^{k}
+                \ddot{\tau}_{kq}^{\theta}
+                \geq 0.5
+            ]
+            \tilde{w}_{q}^{k}
+        }
+        \\
+        &=
+        \sum_{q=1}^{n}{
+            \left(
+                [
+                % \tilde{Y}_{q}^{k}
+                % \ddot{\tau}_{q}^{k}
+                % s_{kq}^{\theta}
+                % \geq 0.5
+                \tilde{Y}_{q}^{k}
+                \ddot{\tau}_{kq}^{\theta}
+                \geq 0.5
+                ]
+                \int_{0}^{\tilde{Y}_{q}^{k}}{
+                    w_q
+                    \text{ta}_q(l)
+                    dl
+                }
+            \right)
+        }
+        ,
+    \end{align}
+    \\
+    \tilde{Y}_{q}^{k} = 
+    \tilde{Y}(
+        \boldsymbol{a_k},
+        \boldsymbol{a_q}
+        ) =
+        \frac{
+            \prod_{i=1}^{m}{
+                {
+                    \max(
+                        1 + a_{i}^{k},
+                        1 + a_{i}^{q}
+                    )
+                } ^ {
+                    \sigma_{i}^{q}
+                }
+            }
+        }{
+            \prod_{i=1}^{m}{
+                {
+                    (
+                        1 + a_{i}^{q}
+                    )
+                } ^ {
+                    \sigma_{i}^{q}
+                }
+            }
+        }
+        ,\\
+        \sigma_{i}^{q} = 
+        \frac{
+            a_{i}^{q}
+        }{
+            \sum_{i=1}^{m}{
+                a_{i}^{q}
+            }
+        }
+\end{gather}
+
+P.S.: think of a notation for economic taxa / aggregation levels.
+
+Aggregate employability (particular subset of the economy):
+\begin{gather}
+    \begin{align}
+        \tilde{w}_{?!}^{k} =
+        \tilde{w}_{k}(?, !)
+        % &=
+        % \sum_{q=1}^{n}{
+        %     [
+        %         \tilde{Y}_{q}^{k}
+        %         \ddot{\tau}_{q}^{k}
+        %         s_{kq}^{\theta}
+        %         \geq 0.5
+        %     ]
+        %     \tilde{w}_{q}^{k}
+        % }
+        % \\
+        &=
+        \sum_{q=1}^{n}{
+            [q \in ?!]
+            [
+                % \tilde{Y}_{q}^{k}
+                % \ddot{\tau}_{q}^{k}
+                % s_{kq}^{\theta}
+                % \geq 0.5
+                \tilde{Y}_{q}^{k}
+                \ddot{\tau}_{kq}^{\theta}
+                \geq 0.5
+            ]
+            \tilde{w}_{q}^{k}
+        }
+        \\
+        &=
+        \sum_{q=1}^{n}{
+            \left(
+                [q \in ?!]
+                [
+                % \tilde{Y}_{q}^{k}
+                % \ddot{\tau}_{q}^{k}
+                % s_{kq}^{\theta}
+                % \geq 0.5
+                \tilde{Y}_{q}^{k}
+                \ddot{\tau}_{kq}^{\theta}
+                \geq 0.5
+                ]
+                \int_{0}^{\tilde{Y}_{q}^{k}}{
+                    w_q
+                    \text{ta}_q(l)
+                    dl
+                }
+            \right)
+        }
+        ,
+    \end{align}
+    \\
+    \tilde{Y}_{q}^{k} = 
+    \tilde{Y}(
+        \boldsymbol{a_k},
+        \boldsymbol{a_q}
+        ) =
+        \frac{
+            \prod_{i=1}^{m}{
+                {
+                    \max(
+                        1 + a_{i}^{k},
+                        1 + a_{i}^{q}
+                    )
+                } ^ {
+                    \sigma_{i}^{q}
+                }
+            }
+        }{
+            \prod_{i=1}^{m}{
+                {
+                    (
+                        1 + a_{i}^{q}
+                    )
+                } ^ {
+                    \sigma_{i}^{q}
+                }
+            }
+        }
+        ,\\
+        \sigma_{i}^{q} = 
+        \frac{
+            a_{i}^{q}
+        }{
+            \sum_{i=1}^{m}{
+                a_{i}^{q}
+            }
+        }
+\end{gather}
+
+Notation for operation output ($\mho$ from IPA's definition of the ``double-o'' sound, e.g. as in the word ``boot''):
+\begin{gather}
+    \mho_{q}^{k} = 
+    \left\lfloor 
+        {Y}_{q}^{k}
+    \right\rfloor
 \end{gather}
 \end{document}
