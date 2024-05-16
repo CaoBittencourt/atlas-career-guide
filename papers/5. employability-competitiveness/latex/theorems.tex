@@ -64,9 +64,11 @@
         \begin{gather}
             T(l, l_{i}^{k}) =
             T_{i_{l}}^{k} =
+            [l \leq l_{i}^{k}] =
             \begin{cases}
                 1, \ l \leq l_{i}^{k}; \\
-                0, \ \text{otherwise.}
+                % 0, \ \text{otherwise.}
+                0, \ l > l_{i}^{k}.
             \end{cases}
         \end{gather}
         and $l_{i}^{k} \in [0, l_i]$ is the maximum difficulty level on which $k$ still succeedes. Thus, we can define a person $k$'s skill level in an attribute $i$ as the sum
@@ -259,10 +261,11 @@
         A task is said to be complex if it relies on more than one attribute to be accomplished. More precisely, $T_{ij}^{l}$ is a complex task of attributes $i$ and $j$, if its binary outcome indicator is of the form
         \begin{gather}
             T(l, l_{ij}^{k}) =
-            \begin{cases}
-                1, \ l \leq l_{ij}^{k}; \\
-                0, \ \text{otherwise.}
-            \end{cases}
+            [l \leq l_{ij}^{k}],
+            % \begin{cases}
+            %     1, \ l \leq l_{ij}^{k}; \\
+            %     0, \ \text{otherwise.}
+            % \end{cases}
         \end{gather}
         where
         \begin{gather}
@@ -271,10 +274,11 @@
         is a strictly increasing aggregation function that returns the maximum difficulty level of the complex task $T_{ij}^{l}$ a person $k$ can accomplish based on each attribute $T_{ij}^{l}$ requires. Or, generalizing for any complex task $T_{q}^{l}$ of $m$ attributes, requiring an entire skill set $\boldsymbol{a_q} = (a_{1}^{q}, \dots, a_{m}^{q})$ to be accomplished, 
         \begin{gather}
             T(l, l_{q}^{k}) =
-            \begin{cases}
-                1, \ l \leq l_{q}^{k}; \\
-                0, \ \text{otherwise.}
-            \end{cases}
+            [l \leq l_{q}^{k}],
+            % \begin{cases}
+            %     1, \ l \leq l_{q}^{k}; \\
+            %     0, \ \text{otherwise.}
+            % \end{cases}
         \end{gather}
         where
         \begin{gather}
@@ -341,7 +345,7 @@
         None of these are complex tasks, for they do not coherently mobilize multiple attributes towards a unified goal.
         
         \begin{subdefinition}[Weak Complexity]
-            Now, besides this most basic rule, we can define stricter versions of ``task complexity'' with additional assumptions. The first version, of weak complexity, requires:
+            Now, besides this most basic rule, we can define stricter versions of ``task complexity'' with additional assumptions. The first version, of weak complexity, requires that
             \begin{gather}
                 \frac{
                     \partial ^ 2 {f(\boldsymbol{l_{q}^{k}})}
@@ -351,7 +355,7 @@
                     \partial
                     l_{j}^{k}
                 }
-                \geq 0
+                > 0
                 \
                 \forall
                 \
@@ -375,8 +379,37 @@
                 \forall 
                 \
                 i \in \{1, \dots, m\}
-                .
+                ,
             \end{gather}
+            so that a person $k$'s capacity to perform the complex task is weakly increasing on their capacity to perform the simple tasks of its required attributes, and goes to zero when they are unskilled in at least one of these. Thus, a moderately complex task is not reducible to any proper subset of its attributes.
+            
+            For instance, a task of the form
+        \begin{gather}
+            T(l, l_{ij}^{k})
+            = [l \leq (1 + l_{i}^{k}) \times (1 + l_{j}^{k}) - 1]
+        \end{gather}
+        is not moderately complex, because if person $k$ is only skilled in either attribute $i$ or $j$, they can still accomplish the task. In particular, if $k$ has precisely zero capacity in either attribute, then $T_{ij}^{l}$ collapses to unidimensional, or simple, tasks $T_{i}^{l}$ when
+        \begin{align}
+            T(l, l_{ij}^{k})
+            &= [l \leq (1 + l_{i}^{k}) \times (1 + 0) - 1]
+            \\
+            &= [l \leq l_{i}^{k}]
+            \\
+            &= T(l, l_{i}^{k})
+            ,
+        \end{align}
+        or $T_{j}^{l}$ when
+        \begin{align}
+            T(l, l_{ij}^{k})
+            &= [l \leq (1 + 0) \times (1 + l_{j}^{k}) - 1]
+            \\
+            &= [l \leq l_{j}^{k}]
+            \\
+            &= T(l, l_{j}^{k})
+            ,
+        \end{align}
+        in which case $T_{ij}^{l}$ is not \textit{really} (moderately) complex, but rather a convolution of simple tasks. Notice, however, this does not imply there cannot be a degree of substitution between attributes. That is, moderate task complexity only means a task must require all of its attributes in \textit{some} level, even if its functional form allows for substitution.
+        
         \end{subdefinition}
         
         \begin{subdefinition}[Strong Complexity]
@@ -389,57 +422,6 @@
 
         \end{subdefinition}
 
-        Thus, a person $k$'s capacity to perform a complex task is weakly increasing on their capacity to perform the simple tasks of its required attributes, and goes to zero when they are unskilled in at least one of these attributes.
-
-        This means a task is only strictly \textit{complex} if it cannot be reduced to any proper subset of the attributes that it requires. For example, a task of the form
-        \begin{gather}
-            T(l, l_{ij}^{k}) =
-            \begin{cases}
-                1, \ l \leq l_{i}^{k} + l_{j}^{k}; \\
-                0, \ \text{otherwise.}
-            \end{cases}
-        \end{gather}
-        is not, strictly speaking, a complex task, because if person $k$ is only skilled in either attribute $i$ or $j$, they can still accomplish the task. In particular, if $k$ has precisely zero capacity in either attribute, then $T_{ij}^{l}$ collapses to unidimensional, or simple, tasks $T_{i}^{l}$ when
-        \begin{gather}
-            T(l, l_{ij}^{k}) =
-            \begin{cases}
-                1, \ l \leq l_{i}^{k} + 0; \\
-                0, \ \text{otherwise.}
-            \end{cases}
-            = T(l, l_{i}^{k})
-            ,\\
-        \end{gather}
-        or $T_{j}^{l}$ when
-        \begin{gather}
-            T(l, l_{ij}^{k}) =
-            \begin{cases}
-                1, \ l \leq 0 + l_{j}^{k}; \\
-                0, \ \text{otherwise.}
-            \end{cases}
-            = T(l, l_{j}^{k})
-            ,
-        \end{gather}
-        in which case $T_{ij}^{l}$ is not \textit{really} complex, but rather a convolution of simple tasks. Notice this has nothing to do with whether $l_{ij}^{k} \in [0,1]$. In fact, if $l_{ij}^{k}$ is given by, say, $l_{ij}^{k} = \sigma_{i} l_{i}^{k} + (1 - \sigma_{i})l_{j}^{k}$, with $\sigma_{i}, l_{i}^{k}, l_{j}^{k} \in [0,1]$, and $k$ has zero capacity in either attribute,
-        \begin{gather}
-            T(l, l_{ij}^{k}) =
-            \begin{cases}
-                1, \ l \leq \sigma_{i} l_{i}^{k} + 0; \\
-                0, \ \text{otherwise.}
-            \end{cases}
-            = T(l, \sigma_{i} l_{i}^{k})
-        \end{gather}
-        and 
-        \begin{gather}
-            T(l, l_{ij}^{k}) =
-            \begin{cases}
-                1, \ l \leq 0 + (1 - \sigma_{i}) l_{j}^{k}; \\
-                0, \ \text{otherwise.}
-            \end{cases}
-            = T(l, (1 - \sigma_{i}) l_{j}^{k})
-        \end{gather}
-        are still simple, not complex tasks, even if they are ``harder versions'' of $T_{i}^{l}$ and $T_{j}^{l}$, respectively, as the maximum difficulty level $k$ can accomplish of task $T_{ij}^{l}$ is only limited by both attributes, not necessarily determined by them -- hence why this formulation is better thought of as two separate tasks.
-        
-        Of course, this does not mean a degree of substitution between attributes completely invalidates a task's complexity. It only means a complex task must require all of its attributes at \textit{some} level, even if its functional form allows for substitution. However, if it does not require all of its attributes, then it should be broken down into other simple and/or complex tasks. In Economic terms, this is equivalent to saying that competencies, when used to perform complex tasks, are at least weakly complementary.
     \end{definition}
 }
 

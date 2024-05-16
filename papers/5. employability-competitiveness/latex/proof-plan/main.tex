@@ -187,9 +187,9 @@ l_{q}^{k}
 Aggregate employability (entire economy):
 \begin{gather}
     \begin{align}
-        \tilde{w}_{k} =
-        \tilde{w}_{11}^{k} =
-        \tilde{w}_{k}(1, 1)
+        \tilde{w}_{k} 
+        % = \tilde{w}_{11}^{k}
+        % = \tilde{w}_{k}(1, 1)
         % &=
         % \sum_{q=1}^{n}{
         %     [
@@ -204,13 +204,13 @@ Aggregate employability (entire economy):
         &=
         \sum_{q=1}^{n}{
             [
-                % \tilde{Y}_{q}^{k}
-                % \ddot{\tau}_{q}^{k}
-                % s_{kq}^{\theta}
-                % \geq 0.5
                 \tilde{Y}_{q}^{k}
-                \ddot{\tau}_{kq}^{\theta}
+                \ddot{\tau}_{q}^{k}
+                s_{kq}^{\theta}
                 \geq 0.5
+                % \tilde{Y}_{q}^{k}
+                % \ddot{\tau}_{kq}^{\theta}
+                % \geq 0.5
             ]
             \tilde{w}_{q}^{k}
         }
@@ -219,13 +219,13 @@ Aggregate employability (entire economy):
         \sum_{q=1}^{n}{
             \left(
                 [
-                % \tilde{Y}_{q}^{k}
-                % \ddot{\tau}_{q}^{k}
-                % s_{kq}^{\theta}
-                % \geq 0.5
                 \tilde{Y}_{q}^{k}
-                \ddot{\tau}_{kq}^{\theta}
+                \ddot{\tau}_{q}^{k}
+                s_{kq}^{\theta}
                 \geq 0.5
+                % \tilde{Y}_{q}^{k}
+                % \ddot{\tau}_{kq}^{\theta}
+                % \geq 0.5
                 ]
                 \int_{0}^{\tilde{Y}_{q}^{k}}{
                     w_q
@@ -376,4 +376,69 @@ Notation for operation output ($\mho$ is IPA's symbol for the ``double-o'' sound
         {Y}_{q}^{k}
     \right\rfloor
 \end{gather}
+
+Aggregate occupational operation output:
+\begin{align}
+    \mho_{q} 
+    &= 
+    \left\lfloor
+    \sum_{k=1}^{n}
+        [k \in {\Lambda}^{-1}(q)]
+        ?
+        % \tilde{Y}_{q}^{k}
+    \right\rfloor
+    % \\
+    % &= 
+    % \left\lfloor
+    % \sum_{k=1}^{n}
+    % \left(
+    %     [k \in {\Lambda}^{-1}(q)]
+    %     \times
+    %     \left(
+    %         \frac{
+    %         \prod_{i=1}^{m}{
+    %             {
+    %                 \max(
+    %                     1 + a_{i}^{k},
+    %                     1 + a_{i}^{q}
+    %                 )
+    %             } ^ {
+    %                 \sigma_{i}^{q}
+    %             }
+    %         }
+    %     }{
+    %         \prod_{i=1}^{m}{
+    %             {
+    %                 (
+    %                     1 + a_{i}^{q}
+    %                 )
+    %             } ^ {
+    %                 \sigma_{i}^{q}
+    %             }
+    %         }
+    %     }
+    %     \right)
+    % \right)
+    % \right\rfloor
+\end{align}
+
+Labor market taxa ($\Lambda$):
+\begin{gather}
+    \Lambda_{1}^{1}
+    = \Lambda(1,1)
+    = \{
+        1, \dots, n
+        \}
+    \iff k, q \in 
+    \Lambda_{1}^{1}
+    \\
+    \Lambda = \{
+        \Lambda_{1}^{1},
+        \dots,
+        \Lambda_{n}^{\bar{L}}
+        \}
+    \\
+    \Lambda^{-1}(k) = \Lambda_{k}^{\bar{L}}
+\end{gather}
+
 \end{document}
