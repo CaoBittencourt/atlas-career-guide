@@ -11,6 +11,10 @@
 \theoremstyle{definition}
 \newtheorem{axiom}{Axiom}
 
+% subaxiom
+\theoremstyle{axiom}
+\newtheorem{subaxiom}{Axiom}[axiom]
+
 % lemma
 \newtheorem{lemma}{Lemma}
 
@@ -420,7 +424,7 @@
                 .
             \end{gather}
 
-            Here, attributes are assumed to be perfect complements, having to be combined in the very same quantities to be effective. In other words, having additional skills does not help accomplish the task, but being unskilled in an attribute can undermine the whole effort. Hence, productivity is limited by the lowest attribute.
+            Here, attributes are assumed to be perfect complements, which need to be combined in exactly the same quantities for maximum efficacy. In other words, having additional skills does not help to accomplish the task, but being unskilled in even a single attribute can undermine the whole effort. Hence, productivity is limited by the lowest competency.
         \end{subdefinition}
 
     \end{definition}
@@ -483,13 +487,29 @@
     \begin{axiom}[Occupational Complexity Axiom]
         All of an occupation's tasks can be thought of as one indivisible task, which mobilizes their entire skill set. We call this ``holistic task'' an occupation's \textit{operation}.
 
-        Notation for operation output ($\mho$ is IPA's symbol for the ``double-o'' sound, e.g. as in the word ``boot''):
+        Mathematically, an occupational operation, is just a complex task that has a continuum of difficulty levels in the unit interval, all of which are indispensable for the task to be accomplished. We denote ``operational output'' (OO) with the standard IPA symbol for the near-close near-back rounded vowel (i.e. the ``double o'' sound in words such as ``boot''):
         \begin{gather}
             \mho_{q}^{k} = 
-            \left\lfloor 
-                {Y}_{q}^{k}
+            \left\lfloor
+                \int_{0}^{1}{
+                    T(l,l_{q}^{k})
+                    dl
+                }
             \right\rfloor
+            .
         \end{gather}
+
+        By this formulation, the amount of an occupations's operation a person $k$ can output is the floor of what they accomplish of the operation's complex tasks. Of course, this value is zero if they are not perfectly qualified, which at first can seem too strong of a pressuposition, but is, in fact, an effective strategy to ``side-step'' the issue of occupational complexity and is, also, quite reasonable, as we shall demonstrate below.
+
+        [intuition for operational output formulation]
+        
+        [clarify the indivisibility of the ``holistic task'' does not imply tasks cannot be outsourced, but that the whole operation has to be accomplished in its entirety]
+
+        [examples in defense of operational output formulation]
+        
+        [how this operational output helps to side-step the issue of occupational complexity]
+
+        So, in a way, a ``holistic task'', or operation, is a ``doubly complex'' task, as, in addition to being complex as already defined, it is also strictly complex in its difficulty levels, for failing to accomplish even the most basic of difficulty levels nullifies the entire operation. It is, in other words, a strongly complex task itself made up of various complex tasks that perfectly complement one another.
 
         Aggregate occupational operation output:
         \begin{align}
@@ -609,6 +629,46 @@
     \begin{axiom}[Hireability Axiom]
         % Any rational employer hires employees by evaluating a hireability statistic, which quantifies potential employees' skill set similarity with an occupation, their educational attainment, and years of experience.
         Any rational employer hires employees by evaluating a hireability statistic, which quantifies potential employees' expected productivity, their educational attainment, and years of experience.
+
+        \begin{subaxiom}[Weak Hireability Axiom]
+            \begin{gather}
+                \mathbb{E}
+                    \left| 
+                        h_{q}^{k} - 
+                        % \mathbb{E}h_{q}^{k}
+                        \mathbb{E}(h_{q}^{k})
+                    \right| 
+                \in [0,1]
+            \end{gather}
+        \end{subaxiom}
+        
+        \begin{subaxiom}[Moderate Hireability Axiom]
+            \begin{gather}
+                % \text{E}(
+                %     \left| 
+                %         h_{q}^{k} - 
+                %         \text{E}(h_{q}^{k}) 
+                %     \right| 
+                % ) = 0
+                \mathbb{E}
+                    \left| 
+                        h_{q}^{k} - 
+                        % \mathbb{E}h_{q}^{k}
+                        \mathbb{E}(h_{q}^{k})
+                    \right| 
+                = 0
+            \end{gather}
+        \end{subaxiom}
+        
+        \begin{subaxiom}[Strong Hireability Axiom]
+            \begin{gather}
+                % E(h_{q}^{k}) = h_{q}^{k}
+                % \\
+                % \mathbb{E}h_{q}^{k} = h_{q}^{k}
+                % \\
+                \mathbb{E}(h_{q}^{k}) = h_{q}^{k}
+            \end{gather}
+        \end{subaxiom}
     \end{axiom}
 
 }
