@@ -345,7 +345,7 @@
         None of these are complex tasks, for they do not coherently mobilize multiple attributes towards a unified goal.
         
         \begin{subdefinition}[Weak Complexity]
-            Now, besides this most basic rule, we can define stricter versions of ``task complexity'' with additional assumptions. The first version, of weak complexity, requires that
+            Now, beyond these most basic rules, we can define stricter versions of ``task complexity'' with additional assumptions. The first version, of weak complexity, requires that
             \begin{gather}
                 \frac{
                     \partial ^ 2 {f(\boldsymbol{l_{q}^{k}})}
@@ -388,7 +388,7 @@
             T(l, l_{ij}^{k})
             = [l \leq (1 + l_{i}^{k}) \times (1 + l_{j}^{k}) - 1]
         \end{gather}
-        is not moderately complex, because if person $k$ is only skilled in either attribute $i$ or $j$, they can still accomplish the task. In particular, if $k$ has precisely zero capacity in either attribute, then $T_{ij}^{l}$ collapses to unidimensional, or simple, tasks $T_{i}^{l}$ when
+        is not moderately complex, as person $k$ does not need every attribute to accomplish the task. Indeed, if $k$ has precisely zero capacity in either skill $i$ or $j$, then $T_{ij}^{l}$ collapses to unidimensional, or simple, tasks $T_{i}^{l}$ when
         \begin{align}
             T(l, l_{ij}^{k})
             &= [l \leq (1 + l_{i}^{k}) \times (1 + 0) - 1]
@@ -413,13 +413,14 @@
         \end{subdefinition}
         
         \begin{subdefinition}[Strong Complexity]
-            The strictest definition of task complexity adds the constraint that attributes are aggregated by the Leontiev function:
+            The strictest definition of task complexity adds the constraint that skills are aggregated by the Leontiev function:
             \begin{gather}
                 f(\boldsymbol{l_{q}^{k}}) = 
                 \min(\boldsymbol{l_{q}^{k}})
                 .
             \end{gather}
 
+            Here, attributes are assumed to be perfect complements, having to be combined in the very same quantities to be effective. In other words, having additional skills does not help accomplish the task, but being unskilled in an attribute can undermine the whole effort. Hence, productivity is limited by the lowest attribute.
         \end{subdefinition}
 
     \end{definition}
