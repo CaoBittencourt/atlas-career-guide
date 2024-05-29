@@ -88,7 +88,128 @@
         \item more difficult tasks presuppose the easier tasks have been accomplished
         \item i.e. $l \in [0,1]$ is a ``progress bar'' of an occupation's operation
         \item strongly holistic: each task $l \geq \bar{l}$ requires all the previous $l \in [0, \bar{l}], \bar{l} \in [0,1]$ difficulty levels to be accomplished. in addition, if all $l \in [0,1]$ levels are not all accomplished, the whole effort is vain and the operation is not completed (i.e. round down $\mho_q$ when calculating operational output). furthermore, each and every $l \in [0,1]$ difficulty level cannot be outsourced (i.e. only a perfectly qualified worker can output a unit of the occupation's operation).
+        \begin{enumerate}
+            \item individual's time constraint is spent entirely on trying to accomplish the complex holistic task by themselves. therefore, there is no optimization to be done.
+            \item 
+            \begin{align*}
+                \mho_q 
+                = 
+                \sum_{k=1}^{n}{
+                    \left\lfloor
+                        [k \in \Lambda_q]
+                        \times
+                        \mho_{q}^{k}
+                    \right\rfloor
+                }
+                = 
+                \sum_{k=1}^{n}{
+                    \left\lfloor
+                        [k \in \Lambda_q]
+                        \times
+                        \int_{0}^{1}{
+                            T_{q}(l,l_{q}^{k})
+                            dl
+                        }
+                    \right\rfloor
+                }
+            \end{align*}
+        \end{enumerate} 
         \item moderately holistic: each task $l \geq \bar{l}$ requires all the previous $l \in [0, \bar{l}], \bar{l} \in [0,1]$ difficulty levels to be accomplished. in addition, if all $l \in [0,1]$ levels are not all accomplished, the whole effort is vain and the operation is not completed (i.e. round down $\mho_q$ when calculating operational output). however, each and every $l \in [0,1]$ difficulty level can be outsourced (i.e. workers can output partial units of the occupation's operation, which contribute to the operation's completion).
+        \begin{enumerate}
+            \item because of outsourcing, individual's time constraint is spent working from where another worker ``left off'', so that even if a worker cannot accomplish the entire operation by themselves, they can still contribute to the operation's completion by reducing the time highly skilled workers will have to spend on relatively more trivial tasks.
+            
+            The first worker spends their entire unitary time allowance trying their hardest to accomplish the highest amount of tasks they can. When they hit their skill cap, they restart their efforts, so as to spend their entire time allowance helping out the next worker:
+            \begin{gather*}
+                \int_{0}^{\tilde{T}_{q}^{k}}{
+                    T_{q}(l,l_{q}^{k})
+                    \times
+                    \text{ta}_{q}(l)
+                    dl
+                }
+                +
+                \int_{0}^{\bar{l}}{
+                    T_{q}(l,l_{q}^{k})
+                    \times
+                    \text{ta}_{q}(l)
+                    dl
+                }
+                = 1
+                \\
+                \int_{0}^{\bar{l}}{
+                    1
+                    \times
+                    \text{ta}_{q}(l)
+                    dl
+                }
+                = 1 -
+                \int_{0}^{\tilde{T}_{q}^{k}}{
+                    1
+                    \times
+                    \text{ta}_{q}(l)
+                    dl
+                }
+                \\
+                \int_{0}^{\bar{l}}{
+                    \text{ta}_{q}(l)
+                    dl
+                }
+                = 
+                \int_{\tilde{T}_{q}^{k}}^{1}{
+                    \text{ta}_{q}(l)
+                    dl
+                }
+                \\
+                \text{TA}_{q}(\bar{l}) -
+                \text{TA}_{q}(0)
+                = 
+                \text{TA}_{q}(1) -
+                \text{TA}_{q}(\tilde{T}_{q}^{k})
+                \\
+                \text{TA}_{q}(\bar{l})
+                = 
+                \text{TA}_{q}(1) -
+                \text{TA}_{q}(\tilde{T}_{q}^{k})
+                \\
+                \bar{l}
+                = 
+                \text{TA}_{q}^{-1}
+                \left(
+                    \text{TA}_{q}(1) -
+                    \text{TA}_{q}(\tilde{T}_{q}^{k})
+                \right)
+                ,
+            \end{gather*}
+            so that $k$ accomplishes tasks of difficulty levels $0$ through $\tilde{T}_{q}^{k}$ on their ``first run'', and restarts their effort to provide additional $l \in \left[0,\text{TA}_{q}^{-1}
+            \left(
+                \text{TA}_{q}(1) -
+                \text{TA}_{q}(\tilde{T}_{q}^{k})
+            \right)
+            \right]$ levels worth of complex tasks. Thus, the next worker does not need to start from zero, but rather from where $k$ ``left off'': either $\tilde{T}_{q}^{k}$, $\bar{l}$, or some $l \in [0, \tilde{T}_{q}^{k}]$.
+            \item 
+            \begin{align*}
+                \mho_q 
+                &= 
+                \left\lfloor
+                \sum_{k=1}^{n}{
+                    [k \in \Lambda_q]
+                    \times
+                    \mho_{q}^{k}
+                }
+                \right\rfloor
+                \\
+                &= 
+                \left\lfloor
+                \sum_{k=1}^{n}{
+                    [k \in \Lambda_q]
+                    \times
+                    \int_{0}^{1}{
+                        T_{q}(l,l_{q}^{k})
+                        dl
+                    }
+                }
+                \right\rfloor
+            \end{align*}
+        \end{enumerate}
         \item weakly holistic: each task $l \geq \bar{l}$ requires all the previous $l \in [0, \bar{l}], \bar{l} \in [0,1]$ difficulty levels to be accomplished. however, if not all $l \in [0,1]$ levels are accomplished, the whole effort is not vain and the operation is partially completed (i.e. do not round $\mho_q$ when calculating operational output). furthermore, each and every $l \in [0,1]$ difficulty level can be outsourced (i.e. workers can output partial units of the occupation's operation, which contribute to the operation's completion).
     \end{enumerate}
     \item assume weak occupational complexity axiom (the other versions are too strict)
