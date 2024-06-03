@@ -451,6 +451,100 @@
     \end{align}
 
     thus, the employability of a partially qualified worker, that is a ``junior'', is precisely the percentage of an operation's total time duration their skill set allows them to accomplish.
+    \item generalizing for multiple job types, in accordance with rational employers' production stratification strategy, we have:
+    \begin{gather}
+        \tilde{w}_{q}^{k} = 
+        \sum_{\ell=1}^{w_q}
+        \left[
+            \tilde{Y}_{q}^{k}
+            \geq
+            \frac{\ell - 1}{w_q}
+        \right]
+        \int_{
+            \frac{\ell - 1}{w_q}
+        }^{
+            \frac{\ell}{w_q}
+        }
+        \text{ta}_q(l)
+        dl
+        .
+    \end{gather}
+    \item thus, an individual's employability in the entire labor market is:
+    \begin{gather}
+        \tilde{w}_{k} = 
+        \left(
+            \frac{1}{W}
+        \right)
+        \sum_{q=1}^{n}
+        \left[
+            \tilde{Y}_{q}^{k}
+            \ddot{\tau}_{q}^{k}
+            \geq 0.5
+        \right]
+        \sum_{\ell=1}^{w_q}
+        \left[
+            \tilde{Y}_{q}^{k}
+            \geq
+            \frac{\ell - 1}{w_q}
+        \right]
+        \int_{
+            \frac{\ell - 1}{w_q}
+        }^{
+            \frac{\ell}{w_q}
+        }
+        \text{ta}_q(l)
+        dl
+        ;
+    \end{gather}
+    and, for a particular $\Lambda_?$ subset of the labor market,
+    \begin{gather}
+        \tilde{w}_{k} = 
+        \left(
+            \sum_{q=1}^{n}
+                \left[
+                    q \in \Lambda_?
+                \right]
+                w_q
+        \right) ^ {-1}
+        \sum_{q=1}^{n}
+        \left[
+            \tilde{Y}_{q}^{k}
+            \ddot{\tau}_{q}^{k}
+            \geq 0.5
+        \right]
+        \left[
+            q \in \Lambda_?
+        \right]
+        % \left(
+        %     \frac{
+        %         \left[
+        %             \tilde{Y}_{q}^{k}
+        %             \overset{¨}{\tau_{q}^{k}}
+        %         \right]
+        %         \left[
+        %             q \in \Lambda_?
+        %         \right]
+        %     }{
+        %         \sum_{q=1}^{n}
+        %         \left[q \in \Lambda_? \right]
+        %         w_q
+        %     }
+        % \right)
+        \sum_{\ell=1}^{w_q}
+        \left[
+            \tilde{Y}_{q}^{k}
+            \geq
+            \frac{\ell - 1}{w_q}
+        \right]
+        \int_{
+            \frac{\ell - 1}{w_q}
+        }^{
+            \frac{\ell}{w_q}
+        }
+        \text{ta}_q(l)
+        dl
+        .
+    \end{gather}
 \end{enumerate}
 
 % endregion
