@@ -213,6 +213,244 @@
         \item weakly holistic: each task $l \geq \bar{l}$ requires all the previous $l \in [0, \bar{l}], \bar{l} \in [0,1]$ difficulty levels to be accomplished. however, if not all $l \in [0,1]$ levels are accomplished, the whole effort is not vain and the operation is partially completed (i.e. do not round $\mho_q$ when calculating operational output). furthermore, each and every $l \in [0,1]$ difficulty level can be outsourced (i.e. workers can output partial units of the occupation's operation, which contribute to the operation's completion).
     \end{enumerate}
     \item assume weak occupational complexity axiom (the other versions are too strict)
+    \item perhaps posit an even weaker version of occupational complexity:
+    \begin{enumerate}
+        \item
+        \begin{gather}
+            \frac{
+                \partial \mho_{q}
+            }{
+                \partial l
+            } > 0
+            ,\\
+            \frac{
+                \partial^2 \mho_{q}
+            }{
+                \partial l^2
+            } < 0
+            ,
+        \end{gather}
+        so that even though tasks of a particular level are not required for the operation to ``count'' (i.e. partial delivery), it is still detrimental to focus too much on one subset of tasks, that is, employers are incentivised to produce the entire spectrum of difficulty levels, because marginal productivity increases when a tasks of a particular difficulty level have not been accomplished yet.
+
+        (actually, we need a indicator variable for the amount of tasks accomplished for a difficulty level, something analogous to $T_q(l)$)
+    \end{enumerate}
+    \item now, because of weak occupational complexity, employers will maximize operational output by attempting to produce the entire spectrum of difficulty levels for the complex tasks of an occupation.
+    \item this can be done either by having only perfectly qualified employees work on the operation individually from beginning to end, or by splitting responsabilities into two, or more, types of jobs, thus allowing for less qualified, ``junior'' employees, to work alongside more qualified and perfectly qualified, ``senior'' employees towards the common goal of accomplishing the entire occupational operation.
+    \item additionally, because there are skill differences among workers in the labor market, any rational employer will always, and rightly, expect their employees to be of varying skill levels, rather than all perfectly qualified, so that splitting responsabilities into separate positions will not only be an alternative mode of hiring and producing, but in fact the optimal one.
+    \item therefore, given expected and actual skill differences among workers, employers will split job posts based on the required skill level. thus, there will be ``junior'' job posts and ``senior'' job posts, each dedicated to accomplishing a particular subset of complex tasks with difficulty levels appropriate for employees' respective capacity.
+    \item notice this does not mean all people working on ``junior'' positions will, necessarily, be ``junior'' employees themselves, that is, less qualified. indeed, if talent is abundant in the labor market, these ``junior'' positions will have to be filled by more qualified, or even perfectly qualified, ``senior'' employees. for if there were only one type of job, spanning the entire difficulty level spectrum, highly qualified workers would already have to accomplish these ``junior'' tasks themselves, in order to maximize operational output. however, by having two, or more, types of jobs, split by minimum required competence, highly qualified workers may specialize to the measure that there are less qualified workers available to accomplish the easier tasks. but, if there are none, they will, again, have to work on these themselves.
+    \item analogously, from the employers' perspective, it does not matter who accomplishes ``junior'' tasks, so long as they are accomplished. thus, if highly qualified workers are abundant in a particular time period of a labor market, production is not hindered when allocating ``seniors'' to ``junior'' positions, for in these circumstances talent is not wasted. that is, because only highly qualified workers can accomplish highly demanding tasks, rational employers will generally not hire them to work on ``junior'' tasks, thus ``saving'' their talent for more difficult tasks, which a ``junior'' would not be able to accomplish. but, if there is enough talent to output the optimal quantity of ``senior'' tasks, it can actually be more productive to employ the remaining ``seniors'' to ``junior'' positions.
+    \item furthermore, in a continuous setting, rational employers will maximize their hiring pool by offering more than only two types of jobs. thus, there will not only be ``senior'' and ``junior'' positions, but several levels in a production hierarchy, each responsible for a particular subinterval of task difficulty, which will approximate a continuum of ``seniority'' as the number of workers becomes large enough.
+    \item now, as for employees' work routine, rational employers will have them work over their responsability spectrum in a proportional and optimal matter, thus avoiding wasting production (i.e. uncompleted ``loops'' over the responsability spectrum). this means each employee will spend their entire time allowance producing a partial operational output, that is a multiple of the difficulty subinterval they were hired to accomplish, which will, in turn, contribute, alonside the partial outputs of other employees, to accomplish the entire occupational operation.
+    \item the reason this avoids wasting production is because [...].
+    \item thus, in the binary case, ``junior'' productive output will be given by:
+    \begin{gather}
+        \mho_{q}^{\text{Jr}} =
+        \frac{
+            1
+        }{
+            \int_{0}^{\tilde{Y}_{q}^{k}}
+            \text{ta}_q(l)
+            dl
+        } = 
+        \left(
+            \int_{0}^{\tilde{Y}_{q}^{k}}
+                \text{ta}_q(l)
+                dl
+        \right) ^ {-1}
+        ,
+    \end{gather}
+    where $\text{ta}_q(l)$ is the time allocation function of occupation $q$'s complex tasks, and time allowance (the numerator) is set to one.
+    \item analogously, ``senior'' productive output is:
+    \begin{gather}
+        \mho_{q}^{\text{Sr}} =
+        \frac{
+            1
+        }{
+            \int_{\tilde{Y}_{q}^{k}}^{1}
+            \text{ta}_q(l)
+            dl
+        } = 
+        \left(
+            \int_{\tilde{Y}_{q}^{k}}^{1}
+                \text{ta}_q(l)
+                dl
+        \right) ^ {-1}
+        .
+    \end{gather}
+    % \item finally, as a mismatch in productive output due to time allocation differences between ``junior'' and ``senior'' tasks would result in wasted production, a rational employer will optimally ``orchestrate'' the productive effort by offering just enough ``senior'' job posts in the labor market to meet ``junior'' productivity. thus, they will ``level'' production like so:
+    % \begin{gather}
+    %     \mho_q =
+    %     \mho_{q}^{\text{Jr}} =
+    %     \left(
+    %         \int_{0}^{\tilde{Y}_{q}^{k}}
+    %             \text{ta}_q(l)
+    %             dl
+    %     \right) ^ {-1}
+    %     .
+    % \end{gather}
+    \item finally, as a mismatch in productive output due to time allocation differences between ``junior'' and ``senior'' tasks would result in wasted production, a rational employer will optimally ``orchestrate'' the productive effort by offering just enough ``senior'' job posts in the labor market to meet ``junior'' productivity. thus, by setting ``junior'' job posts to $w_{q}^{\text{Jr}} = 1$ and ``senior'' job posts to $w_{q}^{\text{Sr}} > 0$, we get the ratio between ``junior'' and ``senior'' positions required to output any level of occupation $q$'s operation:
+    \begin{gather}
+        w_{q}^{\text{Sr}} \times 
+        \mho_{q}^{\text{Sr}} = 
+        w_{q}^{\text{Jr}} \times 
+        \mho_{q}^{\text{Jr}}
+        \therefore
+        \\
+        w_{q}^{\text{Sr}} \times 
+        \left(
+            \int_{\tilde{Y}_{q}^{k}}^{1}
+                \text{ta}_q(l)
+                dl
+        \right) ^ {-1}
+        = 
+        1 \times 
+        \left(
+            \int_{0}^{\tilde{Y}_{q}^{k}}
+                \text{ta}_q(l)
+                dl
+        \right) ^ {-1}
+        \therefore
+        \\
+        w_{q}^{\text{Sr}}
+        = 
+        \frac{
+            \int_{\tilde{Y}_{q}^{k}}^{1}
+                \text{ta}_q(l)
+                dl
+        }{
+            \int_{0}^{\tilde{Y}_{q}^{k}}
+                \text{ta}_q(l)
+                dl
+        }
+        .
+    \end{gather}
+
+    with this, ``senior'' employability (the percentage of job posts for which they could be hired) is
+    \begin{gather}
+        \tilde{w}_{q}^{\text{Sr}} =
+        \frac{
+            w_{q}^{\text{Jr}} + 
+            w_{q}^{\text{Sr}}
+        }{
+            w_{q}^{\text{Jr}} + 
+            w_{q}^{\text{Sr}}
+        }
+        = 1
+    \end{gather}
+    and ``junior'' employability is
+    \begin{align}
+        \tilde{w}_{q}^{\text{Jr}} 
+        &=
+        \frac{
+            w_{q}^{\text{Jr}}
+        }{
+            w_{q}^{\text{Jr}} + 
+            w_{q}^{\text{Sr}}
+        }
+        \\&=
+        \frac{
+            1
+        }{
+            1 + 
+            w_{q}^{\text{Sr}}
+        }
+        \\&=
+        \left(
+            1 + 
+            \frac{
+                \int_{\tilde{Y}_{q}^{k}}^{1}
+                    \text{ta}_q(l)
+                    dl
+            }{
+                \int_{0}^{\tilde{Y}_{q}^{k}}
+                    \text{ta}_q(l)
+                    dl
+            }
+        \right) ^ {-1}
+        \\&=
+        \left(
+            1 + 
+            \frac{
+                \int_{0}^{1}
+                    \text{ta}_q(l)
+                    dl    
+                    -
+                \int_{0}^{\tilde{Y}_{q}^{k}}
+                    \text{ta}_q(l)
+                    dl
+            }{
+                \int_{0}^{\tilde{Y}_{q}^{k}}
+                    \text{ta}_q(l)
+                    dl
+            }
+        \right) ^ {-1}
+        \\&=
+        \left(
+            1 + 
+            \frac{
+                1 -
+                \int_{0}^{\tilde{Y}_{q}^{k}}
+                    \text{ta}_q(l)
+                    dl
+            }{
+                \int_{0}^{\tilde{Y}_{q}^{k}}
+                    \text{ta}_q(l)
+                    dl
+            }
+        \right) ^ {-1}
+        \\&=
+        \left(
+            1 + 
+            \frac{
+                1
+            }{
+                \int_{0}^{\tilde{Y}_{q}^{k}}
+                    \text{ta}_q(l)
+                    dl
+            }
+            -
+            \frac{
+                \int_{0}^{\tilde{Y}_{q}^{k}}
+                    \text{ta}_q(l)
+                    dl
+            }{
+                \int_{0}^{\tilde{Y}_{q}^{k}}
+                    \text{ta}_q(l)
+                    dl
+            }
+        \right) ^ {-1}
+        \\&=
+        \left(
+            1 + 
+            \frac{
+                1
+            }{
+                \int_{0}^{\tilde{Y}_{q}^{k}}
+                    \text{ta}_q(l)
+                    dl
+            }
+            -
+            1
+        \right) ^ {-1}
+        \\&=
+        \left(
+            \frac{
+                1
+            }{
+                \int_{0}^{\tilde{Y}_{q}^{k}}
+                    \text{ta}_q(l)
+                    dl
+            }
+        \right) ^ {-1}
+        \\&=
+        \int_{0}^{\tilde{Y}_{q}^{k}}
+            \text{ta}_q(l)
+            dl
+        .
+    \end{align}
+
+    thus, the employability of a partially qualified worker, that is a ``junior'', is precisely the percentage of an operation's total time duration their skill set allows them to accomplish.
 \end{enumerate}
 
 % endregion
