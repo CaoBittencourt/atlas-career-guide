@@ -243,18 +243,18 @@
     \item furthermore, in a continuous setting, rational employers will maximize their hiring pool by offering more than only two types of jobs. thus, there will not only be ``senior'' and ``junior'' positions, but several levels in a production hierarchy, each responsible for a particular subinterval of task difficulty, which will approximate a continuum of ``seniority'' as the number of workers becomes large enough.
     \item now, as for employees' work routine, rational employers will have them work over their responsability spectrum in a proportional and optimal matter, thus avoiding wasting production (i.e. uncompleted ``loops'' over the responsability spectrum). this means each employee will spend their entire time allowance producing a partial operational output, that is a multiple of the difficulty subinterval they were hired to accomplish, which will, in turn, contribute, alonside the partial outputs of other employees, to accomplish the entire occupational operation.
     \item the reason this avoids wasting production is because [...].
-    \item thus, in the binary case, ``junior'' productive output will be given by:
+    \item (Junior Employability Lemma) thus, in the binary case, ``junior'' productive output will be given by:
     \begin{gather}
         \mho_{q}^{\text{Jr}} =
         \frac{
             1
         }{
-            \int_{0}^{\tilde{Y}_{q}^{k}}
+            \int_{0}^{\tilde{Y}_{q}^{\text{Jr}}}
             \text{ta}_q(l)
             dl
         } = 
         \left(
-            \int_{0}^{\tilde{Y}_{q}^{k}}
+            \int_{0}^{\tilde{Y}_{q}^{\text{Jr}}}
                 \text{ta}_q(l)
                 dl
         \right) ^ {-1}
@@ -267,12 +267,12 @@
         \frac{
             1
         }{
-            \int_{\tilde{Y}_{q}^{k}}^{1}
+            \int_{\tilde{Y}_{q}^{\text{Jr}}}^{1}
             \text{ta}_q(l)
             dl
         } = 
         \left(
-            \int_{\tilde{Y}_{q}^{k}}^{1}
+            \int_{\tilde{Y}_{q}^{\text{Jr}}}^{1}
                 \text{ta}_q(l)
                 dl
         \right) ^ {-1}
@@ -289,7 +289,7 @@
     %     \right) ^ {-1}
     %     .
     % \end{gather}
-    \item finally, as a mismatch in productive output due to time allocation differences between ``junior'' and ``senior'' tasks would result in wasted production, a rational employer will optimally ``orchestrate'' the productive effort by offering just enough ``senior'' job posts in the labor market to meet ``junior'' productivity. thus, by setting ``junior'' job posts to $w_{q}^{\text{Jr}} = 1$ and ``senior'' job posts to $w_{q}^{\text{Sr}} > 0$, we get the ratio between ``junior'' and ``senior'' positions required to output any level of occupation $q$'s operation:
+    \item finally, as a mismatch in productive output due to time allocation differences between ``junior'' and ``senior'' tasks would result in wasted production, a rational employer will optimally ``orchestrate'' the productive effort by offering just enough ``senior'' job posts in the labor market to meet ``junior'' productivity. thus, by setting ``junior'' job posts to $w_{q}^{\text{Jr}} > 0$ and ``senior'' job posts to $w_{q}^{\text{Sr}} > 0$, we get the ratio between ``junior'' and ``senior'' positions required to output any level of occupation $q$'s operation:
     \begin{gather}
         w_{q}^{\text{Sr}} \times 
         \mho_{q}^{\text{Sr}} = 
@@ -299,14 +299,14 @@
         \\
         w_{q}^{\text{Sr}} \times 
         \left(
-            \int_{\tilde{Y}_{q}^{k}}^{1}
+            \int_{\tilde{Y}_{q}^{\text{Jr}}}^{1}
                 \text{ta}_q(l)
                 dl
         \right) ^ {-1}
         = 
-        1 \times 
+        w_{q}^{\text{Jr}} \times 
         \left(
-            \int_{0}^{\tilde{Y}_{q}^{k}}
+            \int_{0}^{\tilde{Y}_{q}^{\text{Jr}}}
                 \text{ta}_q(l)
                 dl
         \right) ^ {-1}
@@ -314,15 +314,19 @@
         \\
         w_{q}^{\text{Sr}}
         = 
-        \frac{
-            \int_{\tilde{Y}_{q}^{k}}^{1}
-                \text{ta}_q(l)
-                dl
-        }{
-            \int_{0}^{\tilde{Y}_{q}^{k}}
-                \text{ta}_q(l)
-                dl
-        }
+        w_{q}^{\text{Jr}}
+        \times
+        \left(
+            \frac{
+                \int_{\tilde{Y}_{q}^{\text{Jr}}}^{1}
+                    \text{ta}_q(l)
+                    dl
+            }{
+                \int_{0}^{\tilde{Y}_{q}^{\text{Jr}}}
+                    \text{ta}_q(l)
+                    dl
+            }
+        \right)
         .
     \end{gather}
 
@@ -350,20 +354,31 @@
         }
         \\&=
         \frac{
-            1
+            w_{q}^{\text{Jr}}
         }{
-            1 + 
-            w_{q}^{\text{Sr}}
+            w_{q}^{\text{Jr}} + 
+            w_{q}^{\text{Jr}} \times
+            \left(
+                \frac{
+                    \int_{\tilde{Y}_{q}^{\text{Jr}}}^{1}
+                        \text{ta}_q(l)
+                        dl
+                }{
+                    \int_{0}^{\tilde{Y}_{q}^{\text{Jr}}}
+                        \text{ta}_q(l)
+                        dl
+                }
+            \right)
         }
         \\&=
         \left(
             1 + 
             \frac{
-                \int_{\tilde{Y}_{q}^{k}}^{1}
+                \int_{\tilde{Y}_{q}^{\text{Jr}}}^{1}
                     \text{ta}_q(l)
                     dl
             }{
-                \int_{0}^{\tilde{Y}_{q}^{k}}
+                \int_{0}^{\tilde{Y}_{q}^{\text{Jr}}}
                     \text{ta}_q(l)
                     dl
             }
@@ -376,11 +391,11 @@
                     \text{ta}_q(l)
                     dl    
                     -
-                \int_{0}^{\tilde{Y}_{q}^{k}}
+                \int_{0}^{\tilde{Y}_{q}^{\text{Jr}}}
                     \text{ta}_q(l)
                     dl
             }{
-                \int_{0}^{\tilde{Y}_{q}^{k}}
+                \int_{0}^{\tilde{Y}_{q}^{\text{Jr}}}
                     \text{ta}_q(l)
                     dl
             }
@@ -390,11 +405,11 @@
             1 + 
             \frac{
                 1 -
-                \int_{0}^{\tilde{Y}_{q}^{k}}
+                \int_{0}^{\tilde{Y}_{q}^{\text{Jr}}}
                     \text{ta}_q(l)
                     dl
             }{
-                \int_{0}^{\tilde{Y}_{q}^{k}}
+                \int_{0}^{\tilde{Y}_{q}^{\text{Jr}}}
                     \text{ta}_q(l)
                     dl
             }
@@ -405,17 +420,17 @@
             \frac{
                 1
             }{
-                \int_{0}^{\tilde{Y}_{q}^{k}}
+                \int_{0}^{\tilde{Y}_{q}^{\text{Jr}}}
                     \text{ta}_q(l)
                     dl
             }
             -
             \frac{
-                \int_{0}^{\tilde{Y}_{q}^{k}}
+                \int_{0}^{\tilde{Y}_{q}^{\text{Jr}}}
                     \text{ta}_q(l)
                     dl
             }{
-                \int_{0}^{\tilde{Y}_{q}^{k}}
+                \int_{0}^{\tilde{Y}_{q}^{\text{Jr}}}
                     \text{ta}_q(l)
                     dl
             }
@@ -426,7 +441,7 @@
             \frac{
                 1
             }{
-                \int_{0}^{\tilde{Y}_{q}^{k}}
+                \int_{0}^{\tilde{Y}_{q}^{\text{Jr}}}
                     \text{ta}_q(l)
                     dl
             }
@@ -438,107 +453,455 @@
             \frac{
                 1
             }{
-                \int_{0}^{\tilde{Y}_{q}^{k}}
+                \int_{0}^{\tilde{Y}_{q}^{\text{Jr}}}
                     \text{ta}_q(l)
                     dl
             }
         \right) ^ {-1}
         \\&=
-        \int_{0}^{\tilde{Y}_{q}^{k}}
+        \int_{0}^{\tilde{Y}_{q}^{\text{Jr}}}
             \text{ta}_q(l)
             dl
         .
     \end{align}
 
-    thus, the employability of a partially qualified worker, that is a ``junior'', is precisely the percentage of an operation's total time duration their skill set allows them to accomplish.
-    \item generalizing for multiple job types, in accordance with rational employers' production stratification strategy, we have:
+    thus, the employability of a partially qualified worker, that is a ``junior'', is precisely the percentage of an operation's total time duration their skill set allows them to accomplish (i.e. the inverse of their operational output).
+    \item (Multiple Employability Lemma) Let us now work towards a generalized employability theorem by considering an occupation $q$ whose operation can be broken down into multiple types of jobs in a hierarchy: one requiring perfect qualification (a senior position); one requiring moderate skill levels (a mid-junior / mid-senior position); the other requiring somewhat less skill (a junior position); and the last one requiring very little skill (an intern position).
+    
+    Each of these job types contributes to occupation $q$'s operation, so that operational output is given by:
+    \begin{gather}
+        \mho_{q} = 
+        w_{q}^{\text{Ir}} \mho_{q}^{\text{Ir}} +
+        w_{q}^{\text{Jr}} \mho_{q}^{\text{Jr}} +
+        w_{q}^{\text{Mr}} \mho_{q}^{\text{Mr}} +
+        w_{q}^{\text{Sr}} \mho_{q}^{\text{Sr}}
+        .
+    \end{gather}
+
+    With this, a rational employer will avoid wasting production by setting:
+    \begin{gather}
+        w_{q}^{\text{Ir}} \mho_{q}^{\text{Ir}} =
+        w_{q}^{\text{Jr}} \mho_{q}^{\text{Jr}} =
+        w_{q}^{\text{Mr}} \mho_{q}^{\text{Mr}} =
+        w_{q}^{\text{Sr}} \mho_{q}^{\text{Sr}}
+        , 
+    \end{gather}
+    which yields
+    \begin{align}
+        w_{q}^{\text{Jr}} &= 
+        w_{q}^{\text{Ir}} 
+        (
+            \mho_{q}^{\text{Ir}} / 
+            \mho_{q}^{\text{Jr}}
+        )
+        ;\\
+        w_{q}^{\text{Mr}} &=
+        w_{q}^{\text{Ir}} 
+        (
+            \mho_{q}^{\text{Ir}} / 
+            \mho_{q}^{\text{Mr}}
+        )
+        ;\\
+        w_{q}^{\text{Sr}} &=
+        w_{q}^{\text{Ir}} 
+        (
+            \mho_{q}^{\text{Ir}} / 
+            \mho_{q}^{\text{Sr}}
+        )
+        .
+    \end{align}
+
+    Finally, employability will be calculated by the job types a person is qualified for based on their productivity. For instance, a person with senior-level productivity (i.e. a perfectly qualified worker) will be employable on every role:
+    \begin{gather}
+        \tilde{w}_{q}^{\text{Sr}} = 
+        \frac{
+            w_{q}^{\text{Ir}} +
+            w_{q}^{\text{Jr}} +
+            w_{q}^{\text{Mr}} +
+            w_{q}^{\text{Sr}}
+        }{
+            w_{q}^{\text{Ir}} +
+            w_{q}^{\text{Jr}} +
+            w_{q}^{\text{Mr}} +
+            w_{q}^{\text{Sr}}
+        } 
+        = 1.
+    \end{gather}
+
+    However, a person less qualified than a senior, say with moderate productivity, will be eligible for every position but senior-level ones:
+    \begin{align}
+        \tilde{w}_{q}^{\text{Mr}} 
+        &= 
+        \frac{
+            w_{q}^{\text{Ir}} +
+            w_{q}^{\text{Jr}} +
+            w_{q}^{\text{Mr}}
+        }{
+            w_{q}^{\text{Ir}} +
+            w_{q}^{\text{Jr}} +
+            w_{q}^{\text{Mr}} +
+            w_{q}^{\text{Sr}}
+        }
+        \\
+        &= 
+        \frac{
+            w_{q}^{\text{Ir}} +
+            w_{q}^{\text{Ir}} 
+             (
+                \mho_{q}^{\text{Ir}} / 
+                \mho_{q}^{\text{Jr}}
+            ) +
+            w_{q}^{\text{Ir}} 
+             (
+                \mho_{q}^{\text{Ir}} / 
+                \mho_{q}^{\text{Mr}}
+            )
+        }{
+            w_{q}^{\text{Ir}} +
+            w_{q}^{\text{Ir}} 
+             (
+                \mho_{q}^{\text{Ir}} / 
+                \mho_{q}^{\text{Jr}}
+            ) +
+            w_{q}^{\text{Ir}} 
+             (
+                \mho_{q}^{\text{Ir}} / 
+                \mho_{q}^{\text{Mr}}
+            ) +
+            w_{q}^{\text{Ir}} 
+             (
+                \mho_{q}^{\text{Ir}} / 
+                \mho_{q}^{\text{Sr}}
+            )
+        }
+        \\
+        &= 
+        \frac{
+            1 +
+            (
+                \mho_{q}^{\text{Ir}} / 
+                \mho_{q}^{\text{Jr}}
+            ) +
+            (
+                \mho_{q}^{\text{Ir}} / 
+                \mho_{q}^{\text{Mr}}
+            )
+        }{
+            1 +
+            (
+                \mho_{q}^{\text{Ir}} / 
+                \mho_{q}^{\text{Jr}}
+            ) +
+            (
+                \mho_{q}^{\text{Ir}} / 
+                \mho_{q}^{\text{Mr}}
+            ) +
+            (
+                \mho_{q}^{\text{Ir}} / 
+                \mho_{q}^{\text{Sr}}
+            )
+        }
+        .
+    \end{align}
+    
+    Likewise, juniors and interns will be employable on an even smaller portion of jobs, respectively:
+    \begin{align}
+        \tilde{w}_{q}^{\text{Jr}} 
+        &= 
+        \frac{
+            w_{q}^{\text{Ir}} +
+            w_{q}^{\text{Jr}}
+        }{
+            w_{q}^{\text{Ir}} +
+            w_{q}^{\text{Jr}} +
+            w_{q}^{\text{Mr}} +
+            w_{q}^{\text{Sr}}
+        }
+        \\
+        &= 
+        \frac{
+            w_{q}^{\text{Ir}} +
+            w_{q}^{\text{Ir}} 
+             (
+                \mho_{q}^{\text{Ir}} / 
+                \mho_{q}^{\text{Jr}}
+            )
+        }{
+            w_{q}^{\text{Ir}} +
+            w_{q}^{\text{Ir}} 
+             (
+                \mho_{q}^{\text{Ir}} / 
+                \mho_{q}^{\text{Jr}}
+            ) +
+            w_{q}^{\text{Ir}} 
+             (
+                \mho_{q}^{\text{Ir}} / 
+                \mho_{q}^{\text{Mr}}
+            ) +
+            w_{q}^{\text{Ir}} 
+             (
+                \mho_{q}^{\text{Ir}} / 
+                \mho_{q}^{\text{Sr}}
+            )
+        }
+        \\
+        &= 
+        \frac{
+            1 +
+            (
+                \mho_{q}^{\text{Ir}} / 
+                \mho_{q}^{\text{Jr}}
+            )
+        }{
+            1 +
+            (
+                \mho_{q}^{\text{Ir}} / 
+                \mho_{q}^{\text{Jr}}
+            ) +
+            (
+                \mho_{q}^{\text{Ir}} / 
+                \mho_{q}^{\text{Mr}}
+            ) +
+            (
+                \mho_{q}^{\text{Ir}} / 
+                \mho_{q}^{\text{Sr}}
+            )
+        }
+    \end{align}
+    and
+    \begin{align}
+        \tilde{w}_{q}^{\text{Ir}} 
+        &= 
+        \frac{
+            w_{q}^{\text{Ir}}
+        }{
+            w_{q}^{\text{Ir}} +
+            w_{q}^{\text{Jr}} +
+            w_{q}^{\text{Mr}} +
+            w_{q}^{\text{Sr}}
+        }
+        \\
+        &= 
+        \frac{
+            w_{q}^{\text{Ir}}
+        }{
+            w_{q}^{\text{Ir}} +
+            w_{q}^{\text{Ir}} 
+             (
+                \mho_{q}^{\text{Ir}} / 
+                \mho_{q}^{\text{Jr}}
+            ) +
+            w_{q}^{\text{Ir}} 
+             (
+                \mho_{q}^{\text{Ir}} / 
+                \mho_{q}^{\text{Mr}}
+            ) +
+            w_{q}^{\text{Ir}} 
+             (
+                \mho_{q}^{\text{Ir}} / 
+                \mho_{q}^{\text{Sr}}
+            )
+        }
+        \\
+        &= 
+        \left(
+            1 +
+            (
+                \mho_{q}^{\text{Ir}} / 
+                \mho_{q}^{\text{Jr}}
+            ) +
+            (
+                \mho_{q}^{\text{Ir}} / 
+                \mho_{q}^{\text{Mr}}
+            ) +
+            (
+                \mho_{q}^{\text{Ir}} / 
+                \mho_{q}^{\text{Sr}}
+            )
+        \right) ^ {-1}
+        .
+    \end{align}
+
+    And, generalizing for any $w_q$ number of job subtypes, in accordance with rational employers' hiring and production stratification strategy,
     \begin{gather}
         \tilde{w}_{q}^{k} = 
-        \sum_{\ell=1}^{w_q}
-        \left[
-            \tilde{Y}_{q}^{k}
-            \geq
-            \frac{\ell}{w_q}
-            % \frac{\ell - 1}{w_q}
-        \right]
-        \int_{
-            \frac{\ell - 1}{w_q}
-        }^{
-            \frac{\ell}{w_q}
-        }
-        \text{ta}_q(l)
-        dl
-        .
-    \end{gather}
-    \item thus, an individual's employability in the entire labor market is:
-    \begin{gather}
-        \tilde{w}_{k} = 
-        \left(
-            \frac{1}{W}
-        \right)
-        \sum_{q=1}^{n}
-        \left[
-            \tilde{Y}_{q}^{k}
-            \ddot{\tau}_{q}^{k}
-            \geq 0.5
-        \right]
-        \sum_{\ell=1}^{w_q}
-        \left[
-            \tilde{Y}_{q}^{k}
-            \geq
-            \frac{\ell}{w_q}
-            % \frac{\ell - 1}{w_q}
-        \right]
-        \int_{
-            \frac{\ell - 1}{w_q}
-        }^{
-            \frac{\ell}{w_q}
-        }
-        \text{ta}_q(l)
-        dl
-        ;
-    \end{gather}
-    and, for a particular $\Lambda_?$ subset of the labor market,
-    \begin{gather}
-        \tilde{w}_{k} = 
-        \left(
-            \sum_{q=1}^{n}
+        \frac{
+            \sum_{\ell = 1}^{w_q}{
                 \left[
-                    q \in \Lambda_?
+                    \tilde{Y}_{q}^{k} 
+                    \geq 
+                    \frac{\ell}{w_q}
                 \right]
-                w_q
+                % \frac{
+                %     \mho_{q}^{\ell}
+                % }{
+                %     \mho_{q}^{1}
+                % }
+                \left(
+                    \mho_{q}^{1}
+                    /
+                    \mho_{q}^{\ell}
+                \right)
+                % \mho_{q}^{\ell}
+                % /
+                % \mho_{q}^{1}
+            }
+        }{
+            \sum_{\ell = 1}^{w_q}{
+                % \frac{
+                %     \mho_{q}^{\ell}
+                % }{
+                %     \mho_{q}^{1}
+                % }
+                \left(
+                    \mho_{q}^{1}
+                    /
+                    \mho_{q}^{\ell}
+                \right)
+                % \mho_{q}^{\ell}
+                % /
+                % \mho_{q}^{1}
+            }
+        }
+        .
+    \end{gather}
+
+    As partial operational output is given by
+    \begin{gather}
+        \mho_{q}^{\ell} = 
+        \left(
+            \int_{
+                \frac{\ell - 1}{w_q}
+            }^{
+                \frac{\ell}{w_q}
+            }
+            \text{ta}_q(l)
+            dl
         \right) ^ {-1}
-        \sum_{q=1}^{n}
-        \left[
-            \tilde{Y}_{q}^{k}
-            \ddot{\tau}_{q}^{k}
-            \geq 0.5
-        \right]
-        \left[
-            q \in \Lambda_?
-        \right]
-        % \left(
-        %     \frac{
-        %         \left[
-        %             \tilde{Y}_{q}^{k}
-        %             \overset{¨}{\tau_{q}^{k}}
-        %         \right]
-        %         \left[
-        %             q \in \Lambda_?
-        %         \right]
-        %     }{
-        %         \sum_{q=1}^{n}
-        %         \left[q \in \Lambda_? \right]
-        %         w_q
-        %     }
-        % \right)
-        \sum_{\ell=1}^{w_q}
-        \left[
-            \tilde{Y}_{q}^{k}
-            \geq
-            \frac{\ell}{w_q}
-            % \frac{\ell - 1}{w_q}
-        \right]
+        ,
+    \end{gather}
+    the employability of person $k$ at occupation $q$'s $w_q$ positions is:
+    \begin{align}
+        \tilde{w}_{q}^{k}
+        &= 
+        \frac{
+            \sum_{\ell = 1}^{w_q}{
+                \left[
+                    \tilde{Y}_{q}^{k} 
+                    \geq 
+                    \frac{\ell}{w_q}
+                \right]
+                \frac{
+                    \left(
+                        \int_{
+                            \frac{1 - 1}{w_q}
+                        }^{
+                            \frac{1}{w_q}
+                        }
+                        \text{ta}_q(l)
+                        dl
+                    \right) ^ {-1}
+                }{
+                    \left(
+                        \int_{
+                            \frac{\ell - 1}{w_q}
+                        }^{
+                            \frac{\ell}{w_q}
+                        }
+                        \text{ta}_q(l)
+                        dl
+                    \right) ^ {-1}
+                }
+            }
+        }{
+            \sum_{\ell = 1}^{w_q}{
+                \frac{
+                    \left(
+                        \int_{
+                            \frac{1 - 1}{w_q}
+                        }^{
+                            \frac{1}{w_q}
+                        }
+                        \text{ta}_q(l)
+                        dl
+                    \right) ^ {-1}
+                }{
+                    \left(
+                        \int_{
+                            \frac{\ell - 1}{w_q}
+                        }^{
+                            \frac{\ell}{w_q}
+                        }
+                        \text{ta}_q(l)
+                        dl
+                    \right) ^ {-1}
+                }
+            }
+        }
+        \\
+        &=
+        \frac{
+            \sum_{\ell = 1}^{w_q}{
+                \left[
+                    \tilde{Y}_{q}^{k} 
+                    \geq 
+                    \frac{\ell}{w_q}
+                \right]
+                \left(
+                    \frac{
+                        \int_{
+                            \frac{\ell - 1}{w_q}
+                        }^{
+                            \frac{\ell}{w_q}
+                        }
+                        \text{ta}_q(l)
+                        dl
+                    }{
+                        \int_{0}^{\frac{1}{w_q}}
+                            \text{ta}_q(l)
+                            dl
+                    }
+                \right)
+            }
+        }{
+            \sum_{\ell = 1}^{w_q}{
+            \left(
+                \frac{
+                    \int_{
+                        \frac{\ell - 1}{w_q}
+                    }^{
+                        \frac{\ell}{w_q}
+                    }
+                    \text{ta}_q(l)
+                    dl
+                }{
+                    \int_{0}^{\frac{1}{w_q}}
+                        \text{ta}_q(l)
+                        dl
+                }
+            \right)
+            }
+        } 
+        .
+    \end{align}
+
+    Or, to keep notation concise,
+    \begin{gather}
+        \tilde{w}_{q}^{k} =
+        \sum_{\ell = 1}^{w_q}{
+            \left[
+                \tilde{Y}_{q}^{k} 
+                \geq 
+                \frac{\ell}{w_q}
+            \right]
+            \tilde{\Omega}_{q}^{\ell 1}
+        }
+        ,
+    \end{gather}
+    where
+    \begin{gather}
+        \Omega_{q}^{\ell} = 
+        \frac{1}{\mho_{q}^{\ell}} =
         \int_{
             \frac{\ell - 1}{w_q}
         }^{
@@ -546,8 +909,220 @@
         }
         \text{ta}_q(l)
         dl
+    \end{gather}
+    is the inverse of operational output $\mho_{q}^{\ell}$, or the percentage of an operation's total time duration accounted by position $\ell$'s tasks,
+    and
+    \begin{align}
+        \tilde{\Omega}_{q}^{\ell 1}
+        &= 
+        \left(
+            \frac{\mho_{q}^{1}}{\mho_{q}^{\ell}}
+        \right)
+        \times
+        \left(
+            \sum_{\ell=1}^{w_q}{
+                \frac{\mho_{q}^{1}}{\mho_{q}^{\ell}}
+            }
+        \right) ^ {-1}
+        \\
+        &= 
+        \left(
+            \frac{\Omega_{q}^{\ell}}{\Omega_{q}^{1}}
+        \right)
+        \times
+        \left(
+            \sum_{\ell=1}^{w_q}{
+                \frac{\Omega_{q}^{\ell}}{\Omega_{q}^{1}}
+            }
+        \right) ^ {-1}
+    \end{align}
+    is normalized inverse operational output.
+
+    \item (Aggregate Employability Theorem) With this, the aggregate employability of a person $k$ on the labor market is:
+    % \begin{gather}
+    %     \tilde{w}_{k} =
+    %     \sum_{q=1}^{n}{
+    %         \left[
+    %             h_{q}^{k}
+    %             % \tilde{Y}_{q}^{k}
+    %             % \ddot{\tau}_{q}^{k}
+    %             \geq 
+    %             \frac{1}{2}
+    %         \right]
+    %         \sum_{\ell = 1}^{w_q}{
+    %             \left[
+    %                 \tilde{Y}_{q}^{k} 
+    %                 \geq 
+    %                 \frac{\ell}{w_q}
+    %             \right]
+    %             \tilde{\Omega}_{q}^{\ell 1}
+    %         }
+    %     }
+    %     ,
+    % \end{gather}
+    \begin{gather}
+        \tilde{w}_{k} =
+        \sum_{q=1}^{n}{
+            \left[
+                h_{q}^{k}
+                % \tilde{Y}_{q}^{k}
+                % \ddot{\tau}_{q}^{k}
+                \geq 
+                \frac{1}{2}
+            \right]
+            \sum_{\ell = 1}^{w_q}{
+                \left[
+                    \tilde{Y}_{q}^{k} 
+                    \geq 
+                    \frac{\ell}{w_q}
+                \right]
+                \left(
+                    \tilde{\Omega}_{q}^{\ell}
+                /
+                    \tilde{\Omega}_{q}^{1}
+                \right)
+            }
+        }
+        ,
+    \end{gather}
+    where $h_{q}^{k}$ is the hireability statistic and the other variables are defined as above. And, for a particular $\Lambda_L$ subset of the labor market,
+    \begin{gather}
+        \tilde{w}_{\Lambda_L}^{k} =
+        \sum_{q=1}^{n}{
+            \left[
+                q
+                \in
+                \Lambda_L
+            \right]
+            \left[
+                h_{q}^{k}
+                \geq 
+                \frac{1}{2}
+            \right]
+            \sum_{\ell = 1}^{w_q}{
+                \left[
+                    \tilde{Y}_{q}^{k} 
+                    \geq 
+                    \frac{\ell}{w_q}
+                \right]
+                \tilde{\Omega}_{q}^{\ell 1}
+            }
+        }
         .
     \end{gather}
+
+    % \item generalizing for multiple job types, in accordance with rational employers' production stratification strategy, we have:
+    % \begin{gather}
+    %     \tilde{w}_{q}^{k} = 
+    %     \sum_{\ell=1}^{w_q}
+    %     \left[
+    %         \tilde{Y}_{q}^{k}
+    %         \geq
+    %         \frac{\ell}{w_q}
+    %         % \frac{\ell - 1}{w_q}
+    %     \right]
+    %     \int_{
+    %         \frac{\ell - 1}{w_q}
+    %     }^{
+    %         \frac{\ell}{w_q}
+    %     }
+    %     \text{ta}_q(l)
+    %     dl
+    %     ,
+    % \end{gather}
+    % which converges to 
+    % \begin{gather}
+    %     \tilde{w}_{q}^{k} = 
+    %     \int_{
+    %         0
+    %     }^{
+    %         \tilde{Y}_{q}^{k}
+    %     }
+    %     \text{ta}_q(l)
+    %     dl
+    % \end{gather}
+    % when $w_q$ is large enough.
+    
+    % \item thus, an individual's employability in the entire labor market is:
+    % \begin{gather}
+    %     \tilde{w}_{k} = 
+    %     \left(
+    %         \frac{1}{W}
+    %     \right)
+    %     \sum_{q=1}^{n}
+    %     \left[
+    %         \tilde{Y}_{q}^{k}
+    %         \ddot{\tau}_{q}^{k}
+    %         % \geq 0.5
+    %         \geq \frac{1}{2}
+    %     \right]
+    %     \sum_{\ell=1}^{w_q}
+    %     \left[
+    %         \tilde{Y}_{q}^{k}
+    %         \geq
+    %         \frac{\ell}{w_q}
+    %         % \frac{\ell - 1}{w_q}
+    %     \right]
+    %     \int_{
+    %         \frac{\ell - 1}{w_q}
+    %     }^{
+    %         \frac{\ell}{w_q}
+    %     }
+    %     \text{ta}_q(l)
+    %     dl
+    %     ;
+    % \end{gather}
+    % and, for a particular $\Lambda_?$ subset of the labor market,
+    % \begin{gather}
+    %     \tilde{w}_{k} = 
+    %     \left(
+    %         \sum_{q=1}^{n}
+    %             \left[
+    %                 q \in \Lambda_?
+    %             \right]
+    %             w_q
+    %     \right) ^ {-1}
+    %     \sum_{q=1}^{n}
+    %     \left[
+    %         \tilde{Y}_{q}^{k}
+    %         \ddot{\tau}_{q}^{k}
+    %         % \geq 0.5
+    %         \geq \frac{1}{2}
+    %     \right]
+    %     \left[
+    %         q \in \Lambda_?
+    %     \right]
+    %     % \left(
+    %     %     \frac{
+    %     %         \left[
+    %     %             \tilde{Y}_{q}^{k}
+    %     %             \overset{¨}{\tau_{q}^{k}}
+    %     %         \right]
+    %     %         \left[
+    %     %             q \in \Lambda_?
+    %     %         \right]
+    %     %     }{
+    %     %         \sum_{q=1}^{n}
+    %     %         \left[q \in \Lambda_? \right]
+    %     %         w_q
+    %     %     }
+    %     % \right)
+    %     \sum_{\ell=1}^{w_q}
+    %     \left[
+    %         \tilde{Y}_{q}^{k}
+    %         \geq
+    %         \frac{\ell}{w_q}
+    %         % \frac{\ell - 1}{w_q}
+    %     \right]
+    %     \int_{
+    %         \frac{\ell - 1}{w_q}
+    %     }^{
+    %         \frac{\ell}{w_q}
+    %     }
+    %     \text{ta}_q(l)
+    %     dl
+    %     .
+    % \end{gather}
 \end{enumerate}
 
 % endregion
