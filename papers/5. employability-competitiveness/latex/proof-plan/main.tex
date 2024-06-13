@@ -243,7 +243,7 @@
     \item furthermore, in a continuous setting, rational employers will maximize their hiring pool by offering more than only two types of jobs. thus, there will not only be ``senior'' and ``junior'' positions, but several levels in a production hierarchy, each responsible for a particular subinterval of task difficulty, which will approximate a continuum of ``seniority'' as the number of workers becomes large enough.
     \item now, as for employees' work routine, rational employers will have them work over their responsability spectrum in a proportional and optimal matter, thus avoiding wasting production (i.e. uncompleted ``loops'' over the responsability spectrum). this means each employee will spend their entire time allowance producing a partial operational output, that is a multiple of the difficulty subinterval they were hired to accomplish, which will, in turn, contribute, alonside the partial outputs of other employees, to accomplish the entire occupational operation.
     \item the reason this avoids wasting production is because [...].
-    \item (Junior Employability Lemma) thus, in the binary case, ``junior'' productive output will be given by:
+    \item (Binary Employability Theorem) thus, in the binary case, ``junior'' productive output will be given by:
     \begin{gather}
         \mho_{q}^{\text{Jr}} =
         \frac{
@@ -466,15 +466,18 @@
     \end{align}
 
     thus, the employability of a partially qualified worker, that is a ``junior'', is precisely the percentage of an operation's total time duration their skill set allows them to accomplish (i.e. the inverse of their operational output).
-    \item (Multiple Employability Lemma) Let us now work towards a generalized employability theorem by considering an occupation $q$ whose operation can be broken down into multiple types of jobs in a hierarchy: one requiring perfect qualification (a senior position); one requiring moderate skill levels (a mid-junior / mid-senior position); the other requiring somewhat less skill (a junior position); and the last one requiring very little skill (an intern position).
+    \item (Multiple Employability Theorem) Let us now work towards a generalized employability theorem by considering an occupation $q$ whose operation can be broken down into multiple types of jobs in a hierarchy: one requiring perfect qualification (a senior position); one requiring moderate skill levels (a mid-junior / mid-senior position); the other requiring somewhat less skill (a junior position); and the last one requiring very little skill (an intern position).
     
-    Each of these job types contributes to occupation $q$'s operation, so that operational output is given by:
+    Each of these job types is indispensable and equally contributes to occupation $q$'s operation, so that operational output is given by the Leontiev function:
     \begin{gather}
         \mho_{q} = 
-        w_{q}^{\text{Ir}} \mho_{q}^{\text{Ir}} +
-        w_{q}^{\text{Jr}} \mho_{q}^{\text{Jr}} +
-        w_{q}^{\text{Mr}} \mho_{q}^{\text{Mr}} +
-        w_{q}^{\text{Sr}} \mho_{q}^{\text{Sr}}
+        \min
+        \left(
+            w_{q}^{\text{Ir}} \mho_{q}^{\text{Ir}},
+            w_{q}^{\text{Jr}} \mho_{q}^{\text{Jr}},
+            w_{q}^{\text{Mr}} \mho_{q}^{\text{Mr}},
+            w_{q}^{\text{Sr}} \mho_{q}^{\text{Sr}}    
+        \right)
         .
     \end{gather}
 
@@ -722,7 +725,7 @@
         .
     \end{align}
 
-    And, generalizing for any $w_q$ number of job subtypes, in accordance with rational employers' hiring and production stratification strategy,
+    \item (Generalized Employability Theorem) And, generalizing for any $w_q$ number of job subtypes, in accordance with rational employers' hiring and production stratification strategy,
     \begin{gather}
         \tilde{w}_{q}^{k} = 
         \frac{
@@ -1123,6 +1126,76 @@
     %     dl
     %     .
     % \end{gather}
+
+    actually, aggregate employability is:
+    \begin{align}
+        \tilde{W}_{k}
+        &= 
+        \sum_{q=1}^{n}
+        \sum_{\ell=1}^{w_q}
+        \left[
+            h_{q}^{k}
+            \geq
+            \frac{1}{2}
+        \right]
+        \left[
+            \tilde{T}_{q}^{k}
+            \geq
+            \frac{\ell}{w_q}
+        \right]
+        \tilde{w}_{q}^{\ell}
+        \\&= 
+        \sum_{q=1}^{n}
+        \sum_{\ell=1}^{w_q}
+        \left[
+            h_{q}^{k}
+            \geq
+            \frac{1}{2}
+        \right]
+        \left[
+            \tilde{T}_{q}^{k}
+            \geq
+            \frac{\ell}{w_q}
+        \right]
+        \frac{
+            w_{q}^{\ell}
+        }{
+            w_q
+        }
+        \\&= 
+        \sum_{q=1}^{n}
+        \sum_{\ell=1}^{w_q}
+        \left[
+            h_{q}^{k}
+            \geq
+            \frac{1}{2}
+        \right]
+        \left[
+            \tilde{T}_{q}^{k}
+            \geq
+            \frac{\ell}{w_q}
+        \right]
+        \Omega_{q}^{\ell}
+        \\&= 
+        \sum_{q=1}^{n}
+        \sum_{\ell=1}^{w_q}
+        \left[
+            h_{q}^{k}
+            \geq
+            \frac{1}{2}
+        \right]
+        \left[
+            \tilde{T}_{q}^{k}
+            \geq
+            \frac{\ell}{w_q}
+        \right]
+        \int_{
+            \frac{\ell - 1}{w_q}
+        }^{
+            \frac{\ell}{w_q}
+        }
+        \text{ta}(l)dl
+    \end{align}
 \end{enumerate}
 
 % endregion
