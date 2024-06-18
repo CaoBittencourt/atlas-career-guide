@@ -1197,7 +1197,7 @@
         \text{ta}(l)dl
     \end{align}
 
-    \item weakly holistic operation:
+    \item under which assumptions is it optimal to output the entire responsability spectrum? Leontief functional form? Weakly holistic operation:
     \begin{gather}
         \frac{
             \partial
@@ -1214,11 +1214,145 @@
             \mho_q
         }{
             \partial
-            w_{q}^{\ell}
-            \mho_{q}^{\ell}
+            \left(
+                w_{q}^{\ell}
+                \mho_{q}^{\ell}
+            \right) ^ 2
         }
         < 0
+        \\
+        \frac{
+            \partial ^ 2
+            \mho_q
+        }{
+            \partial
+            \left(
+                w_{q}^{\ell}
+                \mho_{q}^{\ell}
+            \right)
+            \partial
+            \left(
+                w_{q}^{r}
+                \mho_{q}^{r}
+            \right)
+        }
+        > 0
     \end{gather}
+    \item Independent Operational Output Lemma (IOOL)
+    \begin{enumerate}
+        \item From Weak Occupational Complexity Axiom (WOCA)
+        \item The optimal operational output of a perfectly qualified employee working independently is:
+        \begin{gather}
+            w_{q}^{\ell}
+            \mho_{q}^{\ell}
+            =
+            1
+            \iff
+            w_{q}^{\ell}
+            =
+            \Omega_{q}^{\ell}
+            \in [0,1]
+            ,
+        \end{gather}
+        as even the weakest version of occupational complexity implies all difficulty levels are complementary and have to be accomplished for optimal operational output.
+        In this formulation, though, employment $w_{q}^{\ell} \in [0,1]$ is partial, that is: the same worker is hired to accomplish every responsability spectrum. This is because such an independent labor market is not stratified at all.
+
+        Furthermore, as Weak Occupational Complexity requires operational output to be homothetic, the aggregate production of $w_q$ perfectly qualified employees working independently is:
+        \begin{gather}
+            w_{q}^{\ell}
+            \mho_{q}^{\ell}
+            \times
+            w_q
+            =
+            1
+            \times
+            w_q
+            =
+            w_q
+            .
+        \end{gather}
+    \end{enumerate}
+    \item Equivalent Operational Output Lemma (EOOL)
+    \begin{enumerate}
+        \item Now, as WOCA states there are no gains nor losses in production due to partial operational outsourcing, the following must hold, in any labor market, even in a maximally stratified one:
+        \begin{gather}
+            w_{q}^{\ell}
+            \mho_{q}^{\ell}
+            =
+            w_q
+            ,
+        \end{gather}
+        where $w_q$ is the aggregate operational output of 
+        \begin{gather}
+            l \in \left[
+            \frac{\ell - 1}{w_q}
+            ,
+            \frac{\ell}{w_q}
+        \right]
+        \end{gather}
+        difficulty levels of $q$'s complex tasks when $w_q$ perfectly qualified employees work independently; and $w_{q}^{\ell}\mho_{q}^{\ell}$ is the production of $w_{q}^{\ell}$ employees with at least minimum qualification working in a maximally stratified labor market, so that
+        \begin{gather}
+            \sum_{\ell=1}^{w_q}
+            w_{q}^{\ell}
+            =
+            w_q
+            .
+        \end{gather}
+        Or, in other words, operational output is equivalent in any production strategy provided the talent employed is sufficiently qualified.
+
+        Finally, we derive the Proportional Employment Condition (PEC):
+        \begin{gather}
+            w_{q}^{\ell}
+            \mho_{q}^{\ell}
+            =
+            w_q
+            \iff
+            \frac{
+                w_{q}^{\ell}
+            }{
+                w_q
+            }
+            =
+            \Omega_{q}^{\ell}
+            \in [0,1]
+            ,
+        \end{gather}
+        which determines the ratio, or proportion, of a particular job subtype in a stratified labor market is exactly the percentage of an operation's total time duration accounted by it. Thus, activities that require more time also require more dedicated employees working on them full-time, and vice-versa.
+    \end{enumerate}
+    \item Weak Skill Differences Axiom (WSDA)
+    \begin{enumerate}
+        \item There could be, or it is expected to be, skill differences among people in the workforce (i.e. workers are not all ``clones'' of one another or equally competent).
+    \end{enumerate}
+    \item Monotonic/Maximal Labor Stratification Lemma (MLSL)
+    \begin{enumerate}
+        \item From Employer Rationality Axiom, Weak Skill Difference Axiom, and Weak Occupational Complexity Axiom.
+        \begin{enumerate}
+            \item A perfectly rational employer (ERA), which expects there could be skill differences in the workforce (WSDA), and can split operational output without either gain or loss to production (WOCA), will, therefore, strategically stratify their job offers monotonically, and even maximally, so that, if indeed there happens to be skill differences in the labor market, they can, then, allocate less competent workers to easier roles, and avoid wasting talent on relatively trivial difficulty levels, thus ``saving their best'' for the most demanding tasks.
+            
+            Mathematically,
+            \begin{gather}
+                l \in \left[
+                \frac{\ell - 1}{w_q}
+                ,
+                \frac{\ell}{w_q}
+                \right]
+                ,
+                \ell \in 
+                \left\{
+                    1, \dots, w_q
+                \right\}
+            \end{gather}
+            is a responsability spectrum in a maximally stratified labor market, in which any available position is its own job subtype and convers only a restrictive range of task difficulty.
+
+            This is advantageous because the expected value of operational output -- and, therefore, of producers' revenue -- is higher and constant when applying a stratified production strategy when compared to an independent production strategy, that is one where employees work independently on the entire operation from beginning to end; for in such a strategy, production is more immediately limited by skill differences, and so the expected value of operational output is lower. In other words, given the same $w_q$ workforce, operational output in a maximally stratified labor market is always greater or equal to the output of any other economic configuration. Thus, it is always optimal to monotonically and maximally stratify responsabilities across $w_q$ unique positions, each focused on increasingly demanding tasks.
+        \end{enumerate}
+        \item Monotonic labor stratification is required and follows logically from employers' perfect rationality axiom.
+        \item Maximal labor stratification is optional, but also follows logically from employers' perfect rationality axiom.
+        \begin{enumerate}
+            \item Because the General Employability Theorem (GET) holds true for imperfectly stratified labor markets as well, for less than maximal labor stratification is mathematically equivalent to just a variable change. This said, imperfect labor market stratification leads to inefficiencies in hiring, as the base requirements for each stratum are higher than they would be if labor was maximally stratified.
+        \end{enumerate}
+    \end{enumerate}
+    \item 
 \end{enumerate}
 
 % endregion
