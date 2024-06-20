@@ -1282,7 +1282,7 @@
             w_q
             ,
         \end{gather}
-        where $w_q$ is the aggregate operational output of 
+        where $w_q$ is the aggregate operational output of the
         \begin{gather}
             l \in \left[
             \frac{\ell - 1}{w_q}
@@ -1290,7 +1290,7 @@
             \frac{\ell}{w_q}
         \right]
         \end{gather}
-        difficulty levels of $q$'s complex tasks when $w_q$ perfectly qualified employees work independently; and $w_{q}^{\ell}\mho_{q}^{\ell}$ is the production of $w_{q}^{\ell}$ employees with at least minimum qualification working in a maximally stratified labor market, so that
+        responsability spectrum of $q$'s complex tasks when $w_q$ perfectly qualified employees work independently; and $w_{q}^{\ell}\mho_{q}^{\ell}$ is the production of $w_{q}^{\ell}$ employees with at least minimum qualification working in a maximally stratified labor market, so that
         \begin{gather}
             \sum_{\ell=1}^{w_q}
             w_{q}^{\ell}
@@ -1321,13 +1321,32 @@
     \end{enumerate}
     \item Weak Skill Differences Axiom (WSDA)
     \begin{enumerate}
-        \item There could be, or it is expected to be, skill differences among people in the workforce (i.e. workers are not all ``clones'' of one another or equally competent).
+        \item There are, or there could be, skill differences among people in the workforce (i.e. workers are not all ``clones'' of one another or equally competent). Thus, the expected value of productivity is:
+        \begin{gather}
+            \mathbb{E}[
+                \tilde{T}_{q}^{k}
+            ]
+            \in
+            [0,1)
+            ,
+        \end{gather}
+        instead of 
+        \begin{gather}
+            \mathbb{E}[
+                \tilde{T}_{q}^{k}
+            ]
+            =
+            \tilde{T}_{q}^{k}
+            = 1
+            ,
+        \end{gather}
+        for all $k \in \{1, \dots, n\}$. This means employers do not expected every worker to be perfectly qualified and will adjust their hiring and production strategies accordingly.
     \end{enumerate}
     \item Monotonic/Maximal Labor Stratification Lemma (MLSL)
     \begin{enumerate}
         \item From Employer Rationality Axiom, Weak Skill Difference Axiom, and Weak Occupational Complexity Axiom.
         \begin{enumerate}
-            \item A perfectly rational employer (ERA), which expects there could be skill differences in the workforce (WSDA), and can split operational output without either gain or loss to production (WOCA), will, therefore, strategically stratify their job offers monotonically, and even maximally, so that, if indeed there happens to be skill differences in the labor market, they can, then, allocate less competent workers to easier roles, and avoid wasting talent on relatively trivial difficulty levels, thus ``saving their best'' for the most demanding tasks.
+            \item The Monotonic/Maximal Labor Stratification Lemma (MLSL) states that a perfectly rational employer (ERA), which expects there could be skill differences in the workforce (WSDA), and can split operational output without either gain or loss to production (WOCA), will, therefore, strategically stratify their job offers monotonically, and even maximally, so that, if indeed there happens to be skill differences in the labor market, they can, then, allocate less competent workers to easier roles, and avoid wasting talent, thus ``saving their best'' for the most demanding tasks.
             
             Mathematically,
             \begin{gather}
@@ -1342,9 +1361,80 @@
                     1, \dots, w_q
                 \right\}
             \end{gather}
-            is a responsability spectrum in a maximally stratified labor market, in which any available position is its own job subtype and convers only a restrictive range of task difficulty.
+            is a responsability spectrum in a maximally stratified labor market, in which employment is given by
+            \begin{gather}
+                \sum_{\ell=1}^{w_q}
+                w_{q}^{\ell}
+                =
+                w_q
+                ,
+            \end{gather}
+            so that any available position is its own job subtype and convers only a restrictive range of task difficulty.
+            
+            This is advantageous because the expected value of operational output -- and, therefore, of producers' revenue -- is higher and constant when applying a stratified production strategy when compared to an independent production strategy, that is one where employees work independently on the entire operation from beginning to end; for in such a strategy, production is more easily limited by skill differences, and so the expected value of operational output is potentially lower, but never higher:
+            % This is advantageous because the expected value of operational output -- and, therefore, of producers' revenue -- is higher and constant when applying a stratified production strategy when compared to an independent production strategy, that is one where employees work independently on the entire operation from beginning to end; for in such a strategy, production is more immediately limited by skill differences, and so the expected value of operational output is potentially lower, but never higher:
+            \begin{align}
+                \mathbb{E}[
+                    \tilde{T}_{q}^{k}
+                ]
+                \in [0,1)
+                &\implies
+                \int_{0}^{1}{
+                    T(l,\tilde{T}_{q}^{k})
+                    \text{ta}(l)
+                    dl
+                } 
+                \\
+                % &\leq
+                % \int_{0}^{\tilde{T}_{q}^{k}}{
+                %     T(l,\tilde{T}_{q}^{k})
+                %     \text{ta}(l)
+                %     dl
+                % } + 
+                % \int_{0}^{?}{
+                %     T(l,\tilde{T}_{q}^{k})
+                %     \text{ta}(l)
+                %     dl
+                % }
+                % \\
+                &\leq
+                \int_{0}^{\tilde{T}_{q}^{k}}{
+                    T(l,\tilde{T}_{q}^{k})
+                    \text{ta}(l)
+                    dl
+                } + 
+                \int_{\tilde{T}_{q}^{k}}^{1}{
+                    T(l,1)
+                    \text{ta}(l)
+                    dl
+                }
+                \\
+                &=
+                \int_{0}^{1}{
+                    T(l,1)
+                    \text{ta}(l)
+                    dl
+                }
+                \\
+                &=
+                \int_{0}^{1}{
+                    1 \times
+                    \text{ta}(l)
+                    dl
+                }
+                \\
+                &=
+                1
+                .
+            \end{align}
 
-            This is advantageous because the expected value of operational output -- and, therefore, of producers' revenue -- is higher and constant when applying a stratified production strategy when compared to an independent production strategy, that is one where employees work independently on the entire operation from beginning to end; for in such a strategy, production is more immediately limited by skill differences, and so the expected value of operational output is lower. In other words, given the same $w_q$ workforce, operational output in a maximally stratified labor market is always greater or equal to the output of any other economic configuration. Thus, it is always optimal to monotonically and maximally stratify responsabilities across $w_q$ unique positions, each focused on increasingly demanding tasks.
+            In other words, splitting responsabilities in accordance with competence is always as productive as the maximum operational output (that which is obtained when employing perfectly qualified workers independently), provided employees are sufficiently qualified for their responsabilities. But, again, this is, by definition, guaranteed by employers' rationality, as well as the simple fact the economy is already producing its current operational output (Operational Equilibrium Lemma, OEL). 
+            
+            Therefore, employing potentially underqualified workers to output the entire responsability spectrum $l \in [0,1]$ independently can only be as productive as the labor stratification strategy, but never more than it. Indepedent production, then, is a suboptimal strategy when employers expect there to be skill differences in the workforce.
+            
+            Thus, maximum-monotonic labor stratification follows as an insurance policy against worker's potential underqualification; for if talent is lacking in the labor market, there is nothing to gain by employing individuals which are not sufficiently qualified for a difficult job, whereas if talent is abundant, there is nothing to lose when employing overqualified individuals to a job below their skill level.
+
+            Hence, given the same $w_q$ workforce, operational output in a maximally stratified labor market is always greater or equal to the output of any other economic configuration. It is, therefore, always optimal to monotonically and maximally stratify responsabilities across $w_q$ unique positions, each focused on increasingly demanding tasks.
         \end{enumerate}
         \item Monotonic labor stratification is required and follows logically from employers' perfect rationality axiom.
         \item Maximal labor stratification is optional, but also follows logically from employers' perfect rationality axiom.
