@@ -1257,7 +1257,7 @@
         as even the weakest version of occupational complexity implies all difficulty levels are complementary and have to be accomplished for optimal operational output.
         In this formulation, though, employment $w_{q}^{\ell} \in [0,1]$ is partial, that is: the same worker is hired to accomplish every responsability spectrum. This is because such an independent labor market is not stratified at all.
 
-        Furthermore, as Weak Occupational Complexity requires operational output to be homothetic, the aggregate production of $w_q$ perfectly qualified employees working independently is:
+        Furthermore, as Weak Occupational Complexity implies operational output is homothetic, the aggregate production of $w_q$ perfectly qualified employees working independently is:
         \begin{gather}
             w_{q}^{\ell}
             \mho_{q}^{\ell}
@@ -1369,9 +1369,10 @@
                 w_q
                 ,
             \end{gather}
-            so that any available position is its own job subtype and convers only a restrictive range of task difficulty, accounting for
+            so that any available position is its own job subtype and covers only a restrictive range of task difficulty, accounting for
             \begin{gather}
                 \Omega_{q}^{\ell} = 
+                \frac{1}{\mho_{q}^{\ell}} = 
                 \int_{
                     \frac{\ell - 1}{w_q}
                 }^{
@@ -1379,7 +1380,7 @@
                 }
                 \text{ta}(l)dl
             \end{gather}
-            of an operation's total time duration, that is
+            of an operation's total time duration
             \begin{gather}
                 \sum_{\ell=1}^{w_q}
                 \Omega_{q}^{\ell} 
@@ -1398,7 +1399,7 @@
                 1
                 .
             \end{gather}
-            This is advantageous because the expected value of operational output -- and, therefore, of producers' revenue -- is higher and constant when applying a stratified production strategy when compared to an independent production strategy (i.e. one where employees work independently on the entire operation from beginning to end); for in such a strategy, production is more easily limited by skill differences, and so the expected value of operational output is potentially lower, but never higher. That is, 
+            With this, maximum-monotonic labor stratification is the optimal production strategy, as the expected value of operational output -- and, therefore, of producers' revenue -- is higher and constant when applying a stratified production strategy when compared to an independent production strategy (i.e. one where employees work independently on the entire operation from beginning to end); for in such a strategy, production is more easily limited by skill differences, and so the expected value of operational output is potentially lower, but never higher. That is, 
             \begin{gather}
                 \mathbb{E}[
                     \tilde{T}_{q}^{k}
@@ -1484,13 +1485,77 @@
                 1
                 ,
             \end{align}
-            where $\tilde{v}_{q}^{k} > \tilde{w}_{q}^{k}$, with $\tilde{v}_{q}^{k}, \tilde{w}_{q}^{k} \in [0,1]$, is an inefficient allocation of workers above the optimal employability coefficient $\tilde{w}_{q}^{k}$ in a semi-stratified labor market; and the double sum in equation (66) is the output of a maximally stratified labor market, in which every $\ell \in \{1, \dots, w_q\}$ job subtype is but a fraction of available positions, with a partial workforce of $w_q \times \tilde{w}_{q}^{\ell}$ individuals, all exclusively dedicated to their own responsability spectrum, and identified by $[k \in \Lambda_{q}^{\ell}]$ employment statuses that are evaluated to 1 if they are employed in a particular $\Lambda_{q}^{\ell}$ strata of the labor market, and to 0 for all other job subtypes; while the remaining equations are the maximal operational output of a labor market with $w_q$ perfectly qualified employees working independently on the entire responsability spectrum of occupation $q$'s operation.
+            where $\tilde{v}_{q}^{k} > \tilde{w}_{q}^{k}$, with $\tilde{v}_{q}^{k}, \tilde{w}_{q}^{k} \in [0,1]$, is an inefficient allocation of workers above the optimal employability coefficient $\tilde{w}_{q}^{k}$ in a semi-stratified labor market; and the double sum in equation (66) is the output of a maximally stratified labor market, in which every $\ell \in \{1, \dots, w_q\}$ job subtype is but a fraction of available positions, with a partial workforce of $w_q \times \tilde{w}_{q}^{\ell}$ individuals, all exclusively dedicated to their own responsability spectrum, and identified by $[k \in \Lambda_{q}^{\ell}]$ employment statuses that are evaluated to 1 if they are employed in a particular $\Lambda_{q}^{\ell}$ strata of the labor market, and to 0 for all other job subtypes; while the remaining equations are the maximal operational output of a labor market with $w_q$ perfectly qualified employees working independently on the entire responsability spectrum of occupation $q$'s operation. Or, more succinctly,
+            \begin{align}
+                &\mathbb{E}[
+                    \mho_{q}^{\text{IP}}
+                    \
+                    |
+                    \
+                    \mathbb{E}[
+                        \tilde{T}_{q}^{k}
+                    ]
+                    \in [0,1]
+                    \
+                    \forall
+                    \
+                    k,q \in \{1, \dots, n\}
+                ]
+                \\
+                &\leq
+                \mathbb{E}[
+                    \mho_{q}^{\text{IS}}
+                    \
+                    |
+                    \
+                    \mathbb{E}[
+                        \tilde{T}_{q}^{k}
+                    ]
+                    \in [0,1]
+                    \
+                    \forall
+                    \
+                    k,q \in \{1, \dots, n\}
+                ]
+                \\
+                &\leq
+                \mathbb{E}[
+                    \mho_{q}^{\text{MS}}
+                    \
+                    |
+                    \
+                    \mathbb{E}[
+                        \tilde{T}_{q}^{k}
+                    ]
+                    \in [0,1]
+                    \
+                    \forall
+                    \
+                    k,q \in \{1, \dots, n\}
+                ]
+                \\
+                &=
+                \mathbb{E}[
+                    \mho_{q}^{\text{IP}}
+                    \
+                    |
+                    \
+                    \tilde{T}_{q}^{k}
+                    = 1
+                    \
+                    \forall
+                    \
+                    k,q \in \{1, \dots, n\}
+                ]
+                ,
+            \end{align}
+            where each of the terms above represents the expected value of aggregate operational output given the expected productivity in the workforce, for the three production strategies: maximum-monotonic labor stratification (MS), imperfect-monotonic labor stratification (IS), and independent production (IP).
 
             In other words, splitting responsabilities in accordance with competence is always as productive as the maximum operational output (viz. that which is obtained when employing perfectly qualified workers independently), provided employees are sufficiently qualified for their responsabilities. But, again, this is, by definition, guaranteed by employers' rationality, as well as the simple fact the economy is already producing its current operational output (Operational Equilibrium Lemma, OEL). 
             
             Therefore, employing potentially underqualified workers to output the entire responsability spectrum $l \in [0,1]$ independently can only be as productive as the labor stratification strategy, but never more than it. Indepedent production, then, is a suboptimal strategy when employers expect there to be skill differences in the workforce.
             
-            Thus, maximum-monotonic labor stratification follows as an insurance policy against worker's potential underqualification; for if talent is lacking in the labor market, there is nothing to gain by employing individuals which are not sufficiently qualified for a difficult job, whereas if talent is abundant, there is nothing to lose when employing overqualified individuals to a job below their skill level.
+            Thus, maximum-monotonic labor stratification follows as an insurance policy against worker's potential underqualification: for if talent is lacking in the labor market, there is nothing to gain by employing individuals which are not sufficiently qualified for a difficult job, whereas if talent is abundant, there is nothing to lose when employing overqualified individuals to a job below their skill level.
 
             Hence, given the same $w_q$ workforce, operational output in a maximally stratified labor market is always greater or equal to the output of any other economic configuration. It is, therefore, always optimal to monotonically and maximally stratify responsabilities across $w_q$ unique positions, each focused on increasingly demanding tasks.
         \end{enumerate}
