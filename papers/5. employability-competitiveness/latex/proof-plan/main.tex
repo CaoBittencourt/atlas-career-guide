@@ -1238,6 +1238,29 @@
         }
         > 0
     \end{gather}
+    \item Weak Skill Differences Axiom (WSDA)
+    \begin{enumerate}
+        \item There are, or there could be, skill differences among people in the workforce (i.e. workers are not all ``clones'' of one another or equally competent). Thus, the expected value of productivity is:
+        \begin{gather}
+            \mathbb{E}[
+                \tilde{T}_{q}^{k}
+            ]
+            \in
+            [0,1]
+            ,
+        \end{gather}
+        instead of 
+        \begin{gather}
+            \mathbb{E}[
+                \tilde{T}_{q}^{k}
+            ]
+            =
+            \tilde{T}_{q}^{k}
+            = 1
+            ,
+        \end{gather}
+        for all $k,q \in \{1, \dots, n\}$. This means employers do not expected every worker to be perfectly qualified and will adjust their hiring and production strategies accordingly.
+    \end{enumerate}
     \item Independent Operational Output Lemma (IOOL)
     \begin{enumerate}
         \item From Weak Occupational Complexity Axiom (WOCA)
@@ -1271,76 +1294,6 @@
             w_q
             .
         \end{gather}
-    \end{enumerate}
-    \item Equivalent Operational Output Lemma (EOOL)
-    \begin{enumerate}
-        \item Now, as WOCA states there are no gains nor losses in production due to partial operational outsourcing, the following must hold, in any labor market, even in a maximally stratified one:
-        \begin{gather}
-            w_{q}^{\ell}
-            \mho_{q}^{\ell}
-            =
-            w_q
-            ,
-        \end{gather}
-        where $w_q$ is the aggregate operational output of the
-        \begin{gather}
-            l \in \left[
-            \frac{\ell - 1}{w_q}
-            ,
-            \frac{\ell}{w_q}
-        \right]
-        \end{gather}
-        responsability spectrum of $q$'s complex tasks when $w_q$ perfectly qualified employees work independently; and $w_{q}^{\ell}\mho_{q}^{\ell}$ is the production of $w_{q}^{\ell}$ employees with at least minimum qualification working in a maximally stratified labor market, so that
-        \begin{gather}
-            \sum_{\ell=1}^{w_q}
-            w_{q}^{\ell}
-            =
-            w_q
-            .
-        \end{gather}
-        Or, in other words, operational output is equivalent in any production strategy provided the talent employed is sufficiently qualified.
-
-        Finally, we derive the Proportional Employment Condition (PEC):
-        \begin{gather}
-            w_{q}^{\ell}
-            \mho_{q}^{\ell}
-            =
-            w_q
-            \iff
-            \frac{
-                w_{q}^{\ell}
-            }{
-                w_q
-            }
-            =
-            \Omega_{q}^{\ell}
-            \in [0,1]
-            ,
-        \end{gather}
-        which determines the ratio, or proportion, of a particular job subtype in a stratified labor market is exactly the percentage of an operation's total time duration accounted by it. Thus, activities that require more time also require more dedicated employees working on them full-time, and vice-versa.
-    \end{enumerate}
-    \item Weak Skill Differences Axiom (WSDA)
-    \begin{enumerate}
-        \item There are, or there could be, skill differences among people in the workforce (i.e. workers are not all ``clones'' of one another or equally competent). Thus, the expected value of productivity is:
-        \begin{gather}
-            \mathbb{E}[
-                \tilde{T}_{q}^{k}
-            ]
-            \in
-            [0,1]
-            ,
-        \end{gather}
-        instead of 
-        \begin{gather}
-            \mathbb{E}[
-                \tilde{T}_{q}^{k}
-            ]
-            =
-            \tilde{T}_{q}^{k}
-            = 1
-            ,
-        \end{gather}
-        for all $k,q \in \{1, \dots, n\}$. This means employers do not expected every worker to be perfectly qualified and will adjust their hiring and production strategies accordingly.
     \end{enumerate}
     \item Monotonic/Maximal Labor Stratification Lemma (MLSL)
     \begin{enumerate}
@@ -1565,7 +1518,53 @@
             \item Because the General Employability Theorem (GET) holds true for imperfectly stratified labor markets as well, for less than maximal labor stratification is mathematically equivalent to just a variable change. This said, imperfect labor market stratification leads to inefficiencies in hiring, as the base requirements for each stratum are higher than they would be if labor was maximally stratified.
         \end{enumerate}
     \end{enumerate}
-    \item 
+    \item Equivalent Operational Output Lemma (EOOL)
+    \begin{enumerate}
+        \item Now, as WOCA states there are no gains nor losses in production due to partial operational outsourcing, the following must hold, in any labor market, even in a maximally stratified one:
+        \begin{gather}
+            w_{q}^{\ell}
+            \mho_{q}^{\ell}
+            =
+            w_q
+            ,
+        \end{gather}
+        where $w_q$ is the aggregate operational output of the
+        \begin{gather}
+            l \in \left[
+            \frac{\ell - 1}{w_q}
+            ,
+            \frac{\ell}{w_q}
+        \right]
+        \end{gather}
+        responsability spectrum of $q$'s complex tasks when $w_q$ perfectly qualified employees work independently; and $w_{q}^{\ell}\mho_{q}^{\ell}$ is the production of $w_{q}^{\ell}$ employees with at least minimum qualification working in a maximally stratified labor market, so that
+        \begin{gather}
+            \sum_{\ell=1}^{w_q}
+            w_{q}^{\ell}
+            =
+            w_q
+            .
+        \end{gather}
+        Or, in other words, operational output is equivalent in any production strategy provided the talent employed is sufficiently qualified.
+
+        Finally, we derive the Proportional Employment Condition (PEC):
+        \begin{gather}
+            w_{q}^{\ell}
+            \mho_{q}^{\ell}
+            =
+            w_q
+            \iff
+            \frac{
+                w_{q}^{\ell}
+            }{
+                w_q
+            }
+            =
+            \Omega_{q}^{\ell}
+            \in [0,1]
+            ,
+        \end{gather}
+        which determines the ratio, or proportion, of a particular job subtype in a stratified labor market is exactly the percentage of an operation's total time duration accounted by it. Thus, activities that require more time also require more dedicated employees working on them full-time, and vice-versa.
+    \end{enumerate}
 \end{enumerate}
 
 % endregion
