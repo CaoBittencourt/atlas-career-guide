@@ -753,9 +753,213 @@
 
     % proof
     \begin{proof}
+        independent perfectly qualified worker
+        \begin{gather}
+            w_{q}^{\ell} = \Omega_{q}^{\ell}
+        \end{gather}
         
-    \end{proof}
+        output of independent perfectly qualified worker
+        \begin{gather}
+            w_{q}^{\ell} 
+            \mho_{q}^{\ell}
+            = 
+            \Omega_{q}^{\ell}
+            \mho_{q}^{\ell}
+            = 1
+        \end{gather}
+        
+        aggregate output of $w_q$ independent perfectly qualified workers
+        \begin{gather}
+            w_{q}^{\ell} 
+            \mho_{q}^{\ell}
+            w_q
+            = 
+            \Omega_{q}^{\ell}
+            \mho_{q}^{\ell}
+            w_q
+            = 1 \times w_q
+            = w_q
+        \end{gather}
 
+        [operational equilibrium lemma/tautology: demonstrate the current employed talent is sufficient to produce the current operational output]
+
+        max-monotonic labor stratification is the optimal production strategy when there could be skill differences among workers in the labor market:
+        \begin{align}
+            &
+            \mathbb{E}[
+                \mho_{q}^{\text{IP}}
+                \
+                |
+                \
+                \mathbb{E}[
+                    \tilde{T}_{q}^{k}
+                    \in
+                    [0,1]
+                    \
+                    \forall
+                    \
+                    k,q
+                    \in
+                    \{1, \dots, n\}
+                ]
+            ]
+            \\&
+            \leq
+            \mathbb{E}[
+                \mho_{q}^{\text{MS}}
+                \
+                |
+                \
+                \mathbb{E}[
+                    \tilde{T}_{q}^{k}
+                    \in
+                    [0,1]
+                    \
+                    \forall
+                    \
+                    k,q
+                    \in
+                    \{1, \dots, n\}
+                ]
+            ]
+            \\&
+            =
+            \mathbb{E}[
+                \mho_{q}^{\text{IP}}
+                \
+                |
+                \
+                \mathbb{E}[
+                    \tilde{T}_{q}^{k}
+                    = 1
+                    \
+                    \forall
+                    \
+                    k,q
+                    \in
+                    \{1, \dots, n\}
+                ]
+            ]
+        \end{align}
+
+        operational output in a maximally-monotonically stratified labor market is equivalent to independent perfectly qualified production:
+        \begin{gather}
+            w_{q}^{\ell}
+            \mho_{q}^{\ell}
+            = w_q
+            \iff
+            \frac{
+                w_{q}^{\ell}
+            }{
+                w_q
+            }
+            =
+            \Omega_{q}^{\ell}
+            \in [0,1]
+        \end{gather}
+
+        employability definition in a maximally stratified labor market:
+        \begin{align}
+            \tilde{W}_{q}^{k}
+            &= 
+            \sum_{\ell=1}^{w_q}{
+                \left[
+                    h_{q}^{k} \geq \frac{1}{2}
+                \right]
+                \left[
+                    \tilde{T}_{q}^{k} \geq \frac{\ell}{w_q}
+                \right]
+                \tilde{w}_{q}^{\ell}
+            }
+            \\
+            &=
+            \sum_{\ell=1}^{w_q}{
+                \left[
+                    h_{q}^{k} \geq \frac{1}{2}
+                \right]
+                \left[
+                    \tilde{T}_{q}^{k} \geq \frac{\ell}{w_q}
+                \right]
+                \frac{w_{q}^{\ell}}{w_q}   
+            }
+        \end{align}
+
+        therefore,
+        \begin{gather}
+            \tilde{W}_{q}^{k}
+            =
+            \sum_{\ell=1}^{w_q}{
+                \left[
+                    h_{q}^{k} \geq \frac{1}{2}
+                \right]
+                \left[
+                    \tilde{T}_{q}^{k} \geq \frac{\ell}{w_q}
+                \right]
+                \Omega_{q}^{\ell}
+            }
+        \end{gather}
+
+        aggregate employability:
+        \begin{gather}
+            \tilde{W}_{k}
+            =
+            \sum_{q=1}^{n}{
+                \tilde{W}_{q}^{k}
+            }
+        \end{gather}
+
+        therefore,
+        \begin{gather}
+            \tilde{W}_{k}
+            =
+            \sum_{q=1}^{n}
+            \sum_{\ell=1}^{w_q}{
+                \left[
+                    h_{q}^{k} \geq \frac{1}{2}
+                \right]
+                \left[
+                    \tilde{T}_{q}^{k} \geq \frac{\ell}{w_q}
+                \right]
+                \Omega_{q}^{\ell}
+            }
+        \end{gather}
+
+        aggregate competitiveness definition:
+        \begin{gather}
+            \text{vs}_{k}
+            =
+            \sum_{q=1}^{n}{
+                \left[
+                    \ddot{u}_{k}^{q}
+                    \geq
+                    \frac{1}{2}
+                \right]
+                \tilde{W}_{k}^{q}
+            }
+        \end{gather}
+
+        therefore,
+        \begin{gather}
+            \text{vs}_{k}
+            =
+            \sum_{q=1}^{n}{
+                \left[
+                    \ddot{u}_{k}^{q}
+                    \geq
+                    \frac{1}{2}
+                \right]
+                \sum_{\ell=1}^{w_k}{
+                    \left[
+                        h_{k}^{q} \geq \frac{1}{2}
+                    \right]
+                    \left[
+                        \tilde{T}_{k}^{q} \geq \frac{\ell}{w_k}
+                    \right]
+                    \Omega_{k}^{\ell}
+                }
+            }
+        \end{gather}
+    \end{proof}
 }
 
 % endregion
