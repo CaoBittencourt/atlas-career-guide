@@ -243,7 +243,7 @@
     \item notice this does not mean all people working on ``junior'' positions will, necessarily, be ``junior'' employees themselves, that is, less qualified. indeed, if talent is abundant in the labor market, these ``junior'' positions will have to be filled by more qualified, or even perfectly qualified, ``senior'' employees. for if there were only one type of job, spanning the entire difficulty level spectrum, highly qualified workers would already have to accomplish these ``junior'' tasks themselves, in order to maximize operational output. however, by having two, or more, types of jobs, split by minimum required competence, highly qualified workers may specialize to the measure that there are less qualified workers available to accomplish the easier tasks. but, if there are none, they will, again, have to work on these themselves.
     \item analogously, from the employers' perspective, it does not matter who accomplishes ``junior'' tasks, so long as they are accomplished. thus, if highly qualified workers are abundant in a particular time period of a labor market, production is not hindered when allocating ``seniors'' to ``junior'' positions, for in these circumstances talent is not wasted. that is, because only highly qualified workers can accomplish highly demanding tasks, rational employers will generally not hire them to work on ``junior'' tasks, thus ``saving'' their talent for more difficult tasks, which a ``junior'' would not be able to accomplish. but, if there is enough talent to output the optimal quantity of ``senior'' tasks, it can actually be more productive to employ the remaining ``seniors'' to ``junior'' positions.
     \item furthermore, in a continuous setting, rational employers will maximize their hiring pool by offering more than only two types of jobs. thus, there will not only be ``senior'' and ``junior'' positions, but several levels in a production hierarchy, each responsible for a particular subinterval of task difficulty, which will approximate a continuum of ``seniority'' as the number of workers becomes large enough.
-    \item now, as for employees' work routine, rational employers will have them work over their responsability spectrum in a proportional and optimal matter, thus avoiding wasting production (i.e. uncompleted ``loops'' over the responsability spectrum). this means each employee will spend their entire time allowance producing a partial operational output, that is a multiple of the difficulty subinterval they were hired to accomplish, which will, in turn, contribute, alonside the partial outputs of other employees, to accomplish the entire occupational operation.
+    \item now, as for employees' work routine, rational employers will have them work over their responsability spectrum in a proportional and optimal matter, thus avoiding wasting production (i.e. uncompleted ``loops'' over the responsability spectrum). [this means each employee will spend their entire time allowance producing a partial operational output, that is a multiple of the difficulty subinterval they were hired to accomplish, which will, in turn, contribute, alonside the partial outputs of other employees, to accomplish the entire occupational operation.]
     \item the reason this avoids wasting production is because [...].
     \item Weak Skill Differences Axiom (WSDA)
     \begin{enumerate}
@@ -542,7 +542,11 @@
                 .
             \end{gather}
 
-            Intuitively speaking, we would say production in a maximally and monotonically stratified labor market is not ``independent'', in the sense that each employee does not work on the entire operation from beginning to end. Moreover, in such a market there will not only be ``senior'' and ``junior'' positions, as previously, but rather several levels in a production hierarchy, each responsible for a particular subinterval of task difficulty, approximating a continuum of ``seniority'' as the workforce becomes large enough. Again, this does not mean employees are, actually, more or less competent, only that the available positions are [preemptively] stratified with respect to task difficulty. 
+            Intuitively speaking, we would say production in a maximally and monotonically stratified labor market is not ``independent'', in the sense that each employee does not work on the entire operation from beginning to end. This means each employee will spend their entire time allowance producing a partial operational output, that is a multiple of the difficulty subinterval they were hired to accomplish, which will, in turn, contribute, alonside the partial outputs of other employees, to accomplish the entire occupational operation.
+            
+            These partial operational outputs, however, will not be produced merely via ``senior'' and ``junior'' positions, as previously, but rather within several levels in a production hierarchy, each responsible for a particular subinterval of task difficulty, approximating a continuum of ``seniority'' as the workforce becomes large enough.
+            
+            Again, this does not mean employees are, actually, more or less competent, only that the available positions are [preemptively] stratified with respect to task difficulty. 
 
             And, indeed, regardless of workers' actual capacity, this arrangement must hold, because the expected value of operational output -- and, therefore, of producers' revenue -- is higher and constant when applying a stratified production strategy when compared to an independent production strategy; for in such a strategy, production is more easily limited by skill differences, and so the expected value of operational output is potentially lower, but never higher. That is, 
             \begin{gather}
@@ -769,7 +773,12 @@
             \frac{\ell - 1}{w_q}
             ,
             \frac{\ell}{w_q}
-        \right]
+            \right]
+            ,
+            \ell \in 
+            \left\{
+                1, \dots, w_q
+            \right\}
         \end{gather}
         responsability spectrum of $q$'s complex tasks when $w_q$ perfectly qualified employees work independently; and $w_{q}^{\ell}\mho_{q}^{\ell}$ is the production of $w_{q}^{\ell}$ employees with at least minimum qualification working in a maximally stratified labor market, so that
         \begin{gather}
@@ -781,7 +790,7 @@
         \end{gather}
         Or, in other words, operational output is equivalent in any production strategy provided the talent employed is sufficiently qualified.
 
-        Finally, we derive the Proportional Employment Condition (PEC):
+        And, with this, we derive the Proportional Employment Condition (PEC):
         \begin{gather}
             w_{q}^{\ell}
             \mho_{q}^{\ell}
@@ -799,7 +808,54 @@
             ,
         \end{gather}
         which determines the ratio, or proportion, of a particular job subtype in a stratified labor market is exactly the percentage of an operation's total time duration accounted by it. Thus, activities that require more time also require more dedicated employees working on them full-time, and vice-versa.
+        
+        Notice, too, this is the same result we had found in the binary stratification example above (of a labor market with only ``junior'' and ``senior'' employees). So, indeed, this condition must hold in any efficient labor market, irrespective of its stratification's ``granularity''.
     \end{enumerate}
+    \item 
+    Definition of aggregate employability in a maximally and monotonically stratified labor market is: 
+    \begin{gather}
+        \tilde{W}_{k}
+        =
+        \sum_{q=1}^{n}
+        \tilde{W}_{q}^{k}
+        ,
+    \end{gather}
+    where
+    \begin{align}
+        \tilde{W}_{q}^{k}
+        &=
+        \sum_{\ell=1}^{w_q}
+        \left[
+            h_{q}^{k}
+            \geq
+            \frac{1}{2}
+        \right]
+        \left[
+            \tilde{T}_{q}^{k}
+            \geq 
+            \frac{\ell}{w_q}
+        \right]
+        \tilde{w}_{q}^{\ell}
+        \\
+        &=
+        \sum_{\ell=1}^{w_q}
+        \left[
+            h_{q}^{k}
+            \geq
+            \frac{1}{2}
+        \right]
+        \left[
+            \tilde{T}_{q}^{k}
+            \geq 
+            \frac{\ell}{w_q}
+        \right]
+        \frac{
+            {w}_{q}^{\ell}
+        }{
+            w_q
+        }
+    \end{align}
+    is partial employability, that is one's employability in a particular occupation $q$ in the labor market.
 \end{enumerate}
 
 % endregion
