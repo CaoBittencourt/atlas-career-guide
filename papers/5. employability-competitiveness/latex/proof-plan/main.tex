@@ -725,26 +725,52 @@
         Let us, then, first consider an independent production strategy with maximum worker productivity (i.e. the ``ceiling'' or ``benchmark'' for all other production strategies). Furthermore, because we want to compare this production strategy to that of maximum-monotonic labor stratification, we shall analyze operational output in a stratified fashion as well.
 
         In this scenario, the optimal choice of hours to allocate to a responsability spectrum is trivial:
-
-        The optimal operational output of a perfectly qualified employee working independently is:
         \begin{gather}
-            w_{q}^{\ell}
-            \mho_{q}^{\ell}
-            =
-            1
-            \iff
             w_{q}^{\ell}
             =
             \Omega_{q}^{\ell}
             \in [0,1]
-            ,
+            .
         \end{gather}
-        as even the weakest version of occupational complexity implies all difficulty levels are complementary and have to be accomplished for optimal operational output.
-        In this formulation, though, employment $w_{q}^{\ell} \in [0,1]$ is partial, that is: the same worker is hired to accomplish every responsability spectrum. This is because such an independent labor market is not stratified at all.
+        Now, by the definition of partial operational output (ref) above, one produces $\mho_{q}^{\ell}$ when devoting their entire unitary time allowance to the
+        \begin{gather}
+            l \in \left[
+            \frac{\ell - 1}{w_q}
+            ,
+            \frac{\ell}{w_q}
+            \right]
+            ,
+            \ell \in 
+            \left\{
+                1, \dots, w_q
+            \right\}
+        \end{gather}
+        responsability spectrum. Therefore, with only $\Omega_{q}^{\ell} \in [0,1]$ time units, operational output is:
+        \begin{gather}
+            \Omega_{q}^{\ell}
+            \mho_{q}^{\ell}
+            =
+            \left(
+                \frac{1}{\mho_{q}^{\ell}}
+            \right)
+            \times
+            \mho_{q}^{\ell}
+            =
+            1
+            .
+        \end{gather}
+        % as even the weakest version of occupational complexity implies all difficulty levels are complementary and have to be accomplished for optimal operational output.
+        % In this formulation, though, employment $w_{q}^{\ell} \in [0,1]$ is partial, that is: the same worker is hired to accomplish every responsability spectrum. This is because such an independent labor market is not stratified at all.
 
-        Furthermore, as Weak Occupational Complexity implies operational output is homothetic, the aggregate production of $w_q$ perfectly qualified employees working independently is:
+        And, as Weak Occupational Complexity implies operational output is homothetic, the aggregate production of $w_q$ perfectly qualified employees working independently is:
+        % Furthermore, as Weak Occupational Complexity implies operational output is homothetic, the aggregate production of $w_q$ perfectly qualified employees working independently is:
         \begin{gather}
             w_{q}^{\ell}
+            \mho_{q}^{\ell}
+            \times
+            w_q
+            =
+            \Omega_{q}^{\ell}
             \mho_{q}^{\ell}
             \times
             w_q
@@ -756,6 +782,7 @@
             w_q
             .
         \end{gather}
+        Hence, a perfectly qualified employee working full-time and independently can output one unit of an occupation's complex tasks with one unit of their time (i.e. their entire time allowance). And, likewise, a workforce with $w_q$ employees identical to this one produces $w_q$ units of operational output. Put simply, a maximally productive person acchieves maximum production.
     \end{enumerate}
     \item Equivalent Operational Output Lemma (EOOL)
     \begin{enumerate}
@@ -780,7 +807,7 @@
                 1, \dots, w_q
             \right\}
         \end{gather}
-        responsability spectrum of $q$'s complex tasks when $w_q$ perfectly qualified employees work independently; and $w_{q}^{\ell}\mho_{q}^{\ell}$ is the production of $w_{q}^{\ell}$ employees with at least minimum qualification working in a maximally stratified labor market, so that
+        responsability spectrum of $q$'s complex tasks when $w_q$ perfectly qualified employees work independently (IOOL); and $w_{q}^{\ell}\mho_{q}^{\ell}$ is the production of $w_{q}^{\ell}$ employees with at least minimum qualification working in a maximally stratified labor market, so that
         \begin{gather}
             \sum_{\ell=1}^{w_q}
             w_{q}^{\ell}
@@ -809,7 +836,31 @@
         \end{gather}
         which determines the ratio, or proportion, of a particular job subtype in a stratified labor market is exactly the percentage of an operation's total time duration accounted by it. Thus, activities that require more time also require more dedicated employees working on them full-time, and vice-versa.
         
-        Notice, too, this is the same result we had found in the binary stratification example above (of a labor market with only ``junior'' and ``senior'' employees). So, indeed, this condition must hold in any efficient labor market, irrespective of its stratification's ``granularity''.
+        Notice, too, this is the same result we had found in the binary stratification example above (of a labor market with only ``junior'' and ``senior'' employees):
+        \begin{gather}
+            \tilde{w}_{q}^{\text{Jr}} 
+            =
+            \frac{
+                w_{q}^{\text{Jr}}
+            }{
+                w_{q}^{\text{Jr}} + 
+                w_{q}^{\text{Sr}}
+            }
+            =
+            \frac{
+                w_{q}^{\text{Jr}}
+            }{
+                w_{q}
+            }
+            =
+            \int_{0}^{\tilde{T}_{q}^{\text{Jr}}}
+                \text{ta}_q(l)
+                dl
+            =
+            \Omega_{q}^{\text{Jr}}
+            .
+        \end{gather}
+        Therefore, this condition must hold in any efficient labor market, irrespective of its stratification's ``granularity''.
     \end{enumerate}
     \item 
     Definition of aggregate employability in a maximally and monotonically stratified labor market is: 
