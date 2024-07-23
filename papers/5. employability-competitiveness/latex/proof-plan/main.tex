@@ -537,84 +537,32 @@ of an operation's total time duration
     .
 \end{gather}
 
-Intuitively speaking, we would say production in a maximally and monotonically stratified labor market is not ``independent'', in the sense that employees do not work on the operation from beginning to end. This means each on them will spend all their time allowance producing a partial operational output, that is a multiple of a difficulty subinterval of complex tasks, which will, in turn, contribute, alonside the partial outputs of other employees, to accomplish the occupational operation in its entirety.
+Intuitively speaking, we would say production in a maximally and monotonically stratified labor market is not ``independent'', in the sense that employees do not work on an occupation's operation from beginning to end. This means each of them will spend all their time allowance producing a partial operational output, that is a multiple of a difficulty subinterval of complex tasks, which will, in turn, contribute, alonside the partial outputs of other employees, to accomplish the occupational operation in its entirety.
 
-However, in a maximally stratified labor market, these partial operational outputs, will not be produced merely via ``senior'' and ``junior'' positions, as previously, but rather within a myriad of levels in a production hierarchy, approximating a continuum of ``seniority'' as the workforce becomes large enough.
-% However, in a maximally stratified labor market, these partial operational outputs, will not be produced merely via ``senior'' and ``junior'' positions, as previously, but rather within a myriad of levels in a production hierarchy, each responsible for a particular subinterval of task difficulty, approximating a continuum of ``seniority'' as the workforce becomes large enough.
+However, in a maximum labor stratification setting, these partial operational outputs will not be produced merely via ``senior'' and ``junior'' positions, as previously, but rather within a myriad of levels in a production hierarchy, approximating a continuum of ``seniority'' as the workforce becomes large enough.
+% However, in a maximally stratified labor market, these partial operational outputs will not be produced merely via ``senior'' and ``junior'' positions, as previously, but rather within a myriad of levels in a production hierarchy, approximating a continuum of ``seniority'' as the workforce becomes large enough.
 
-Again, this does not mean employees are, actually, more or less competent, only that the available positions are preemptively stratified with respect to task difficulty, in order maximize employers' hiring pool and safeguard production in the case workers are not sufficiently qualified to produce the whole responsability spectrum by themselves (see ``Maximum-Monotonic Labor Stratification Lemma'' below).
+Again, this does not mean employees are, actually, more or less competent, only that the available positions are preemptively stratified with respect to task difficulty, in order to maximize employers' hiring pool and safeguard production in the case workers are not sufficiently qualified to produce the whole responsability spectrum by themselves (see ``Maximum-Monotonic Labor Stratification Lemma'' below).
 
-\item Independent Operational Output Lemma (IOOL)
-\begin{enumerate}
-    \item From Weak Occupational Complexity Axiom (WOCA)
-    % \item Now, as the Weak Occupational Complexity Axiom states there can be no gain, nor losses, to production when labor is efficiently stratified, we can derive a generalization of the conclusion (ref) above to any economic configuration besides the binary case by comparison. 
-    
-    Let us, then, first consider an independent production strategy with maximum worker productivity (i.e. the ``ceiling'' or ``benchmark'' for all other production strategies). Furthermore, because we want to compare this production strategy to that of maximum-monotonic labor stratification, we shall analyze operational output in a stratified fashion as well.
+[end definition of maximum-monotonic labor stratification]
 
-    In this scenario, the optimal choice of hours to allocate to a responsability spectrum is trivial:
-    \begin{gather}
-        w_{q}^{\ell}
-        =
-        \Omega_{q}^{\ell}
-        \in [0,1]
-        .
-    \end{gather}
-    Now, by the definition of partial operational output (ref) above, one produces $\mho_{q}^{\ell}$ when devoting their entire unitary time allowance to the
-    \begin{gather}
-        l \in \left[
-        \frac{\ell - 1}{w_q}
-        ,
-        \frac{\ell}{w_q}
-        \right]
-        ,
-        \ell \in 
-        \left\{
-            1, \dots, w_q
-        \right\}
-    \end{gather}
-    responsability spectrum. Therefore, with only $\Omega_{q}^{\ell} \in [0,1]$ time units, operational output is:
-    \begin{gather}
-        \Omega_{q}^{\ell}
-        \mho_{q}^{\ell}
-        =
-        \left(
-            \frac{1}{\mho_{q}^{\ell}}
-        \right)
-        \times
-        \mho_{q}^{\ell}
-        =
-        1
-        .
-    \end{gather}
-    % as even the weakest version of occupational complexity implies all difficulty levels are complementary and have to be accomplished for optimal operational output.
-    % In this formulation, though, employment $w_{q}^{\ell} \in [0,1]$ is partial, that is: the same worker is hired to accomplish every responsability spectrum. This is because such an independent labor market is not stratified at all.
-
-    And, as Weak Occupational Complexity implies operational output is homothetic, the aggregate production of $w_q$ perfectly qualified employees working independently is:
-    % Furthermore, as Weak Occupational Complexity implies operational output is homothetic, the aggregate production of $w_q$ perfectly qualified employees working independently is:
-    \begin{gather}
-        w_{q}^{\ell}
-        \mho_{q}^{\ell}
-        \times
-        w_q
-        =
-        \Omega_{q}^{\ell}
-        \mho_{q}^{\ell}
-        \times
-        w_q
-        =
-        1
-        \times
-        w_q
-        =
-        w_q
-        .
-    \end{gather}
-    Hence, a perfectly qualified employee working full-time and independently can output one unit of an occupation's complex tasks with one unit of their time (i.e. their entire time allowance). And, likewise, a workforce with $w_q$ employees identical to this one produces $w_q$ units of operational output. Or, to put it simply, a maximally productive person acchieves maximum production. Or, even simpler, one day is sufficient to produce a ``day's work''.
-\end{enumerate}
+Having understood what maximum-monotonic labor stratification is, we shall demonstrate that, given our axioms, such an economic configuration is, in fact, the only optimal production strategy and, so, holds in the labor market. To do so, let us first derive the maximum operational output, irrespective of productive arrangement.
 
 Maximum Operational Output Lemma (MOOL)
-    % \item Maximum Operational Output Lemma (MOOL)
-    % \begin{enumerate}
+    In any labor market, the maximum operational output is exactly the number of employees in its workforce:
+    \begin{gather}
+        \mho(
+            \boldsymbol{w_{q}^{*}},
+            \boldsymbol{\mho_q}
+        ) = 
+        \boldsymbol{1} ^ {\top}
+        \boldsymbol{w_q}
+        = w_q
+        ,
+    \end{gather}
+    where $\boldsymbol{w_{q}^{*}}$ is the vector of optimal employment levels in a labor market with $w_q$ employees; and $\boldsymbol{\mho_q}$, the vector of partial operational outputs.
+    
+    [Proof]
     As every worker in the labor market is assumed to have the same unitary time allowance, which coincides with operations' total time duration,
         % \item As every worker in the labor is assumed to have the same unitary time allowance, which coincides with operations' total time duration,
         \begin{gather}
@@ -973,12 +921,80 @@ Maximum Operational Output Lemma (MOOL)
         % \end{align}
     % \end{enumerate}
 
+\item Independent Operational Output Lemma (IOOL)
+\begin{enumerate}
+    \item From Weak Occupational Complexity Axiom (WOCA)
+    % \item Now, as the Weak Occupational Complexity Axiom states there can be no gain, nor losses, to production when labor is efficiently stratified, we can derive a generalization of the conclusion (ref) above to any economic configuration besides the binary case by comparison. 
+    
+    Let us, then, first consider an independent production strategy with maximum worker productivity (i.e. the ``ceiling'' or ``benchmark'' for all other production strategies). Furthermore, because we want to compare this production strategy to that of maximum-monotonic labor stratification, we shall analyze operational output in a stratified fashion as well.
+
+    In this scenario, the optimal choice of hours to allocate to a responsability spectrum is trivial:
+    \begin{gather}
+        w_{q}^{\ell}
+        =
+        \Omega_{q}^{\ell}
+        \in [0,1]
+        .
+    \end{gather}
+    Now, by the definition of partial operational output (ref) above, one produces $\mho_{q}^{\ell}$ when devoting their entire unitary time allowance to the
+    \begin{gather}
+        l \in \left[
+        \frac{\ell - 1}{w_q}
+        ,
+        \frac{\ell}{w_q}
+        \right]
+        ,
+        \ell \in 
+        \left\{
+            1, \dots, w_q
+        \right\}
+    \end{gather}
+    responsability spectrum. Therefore, with only $\Omega_{q}^{\ell} \in [0,1]$ time units, operational output is:
+    \begin{gather}
+        \Omega_{q}^{\ell}
+        \mho_{q}^{\ell}
+        =
+        \left(
+            \frac{1}{\mho_{q}^{\ell}}
+        \right)
+        \times
+        \mho_{q}^{\ell}
+        =
+        1
+        .
+    \end{gather}
+    % as even the weakest version of occupational complexity implies all difficulty levels are complementary and have to be accomplished for optimal operational output.
+    % In this formulation, though, employment $w_{q}^{\ell} \in [0,1]$ is partial, that is: the same worker is hired to accomplish every responsability spectrum. This is because such an independent labor market is not stratified at all.
+
+    And, as Weak Occupational Complexity implies operational output is homothetic, the aggregate production of $w_q$ perfectly qualified employees working independently is:
+    % Furthermore, as Weak Occupational Complexity implies operational output is homothetic, the aggregate production of $w_q$ perfectly qualified employees working independently is:
+    \begin{gather}
+        w_{q}^{\ell}
+        \mho_{q}^{\ell}
+        \times
+        w_q
+        =
+        \Omega_{q}^{\ell}
+        \mho_{q}^{\ell}
+        \times
+        w_q
+        =
+        1
+        \times
+        w_q
+        =
+        w_q
+        .
+    \end{gather}
+    Hence, a perfectly qualified employee working full-time and independently can output one unit of an occupation's complex tasks with one unit of their time (i.e. their entire time allowance). And, likewise, a workforce with $w_q$ employees identical to this one produces $w_q$ units of operational output. Or, to put it simply, a maximally productive person acchieves maximum production. Or, even simpler: one day is sufficient to produce a ``day's work''.
+\end{enumerate}
+
     \item Productivity Sufficiency Lemma (PSL)
     \begin{enumerate}
         \item dsds
     \end{enumerate}
 
-    \item Monotonic/maximum Labor Stratification Lemma (MLSL)
+    \item Maximum-Monotonic Labor Stratification Lemma (MLSL)
     \begin{enumerate}
         \item From Employer Rationality Axiom, Weak Skill Difference Axiom, and Weak Occupational Complexity Axiom.
         \begin{enumerate}
@@ -1212,7 +1228,8 @@ Maximum Operational Output Lemma (MOOL)
         \end{enumerate}
     \end{enumerate}
 
-    Finally, in order to identify the optimal $\tilde{w}_{q}^{\ell}$ relative employment levels in the labor market, and thus calculate a generalized employability coefficient, we compare the two production strategies that, as demonstrated, guarantee maximum operational output (viz. maximum-monotonic labor stratification and perfectly qualified independent production).
+    Finally, to identify the optimal $\tilde{w}_{q}^{\ell}$ relative employment levels in the labor market, and thus calculate a generalized employability coefficient, we compare the two production strategies that, as demonstrated, guarantee maximum operational output (viz. maximum-monotonic labor stratification and perfectly qualified independent production).
+    % Finally, in order to identify the optimal $\tilde{w}_{q}^{\ell}$ relative employment levels in the labor market, and thus calculate a generalized employability coefficient, we compare the two production strategies that, as demonstrated, guarantee maximum operational output (viz. maximum-monotonic labor stratification and perfectly qualified independent production).
 
     \item Equivalent Operational Output Lemma (EOOL)
     \begin{enumerate}
