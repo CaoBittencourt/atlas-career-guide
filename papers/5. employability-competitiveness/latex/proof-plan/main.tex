@@ -481,9 +481,142 @@
 
     thus, the employability of a partially qualified worker, that is a ``junior'', is precisely the percentage of an operation's total time duration their skill set allows them to accomplish (i.e. the inverse of their operational output).
 
-    \item Maximum Operational Output Lemma (MOOL)
-    \begin{enumerate}
-        \item As every worker in the labor is assumed to have the same unitary time allowance, which coincides with operations' total time duration,
+Maximum-Monotonic Labor Stratification Definition
+
+Now, to generalize this conclusion for other economic configurations, we shall define notation in terms of maximum labor stratification, a productive arrangement where there are several job subtypes, indeed as many as there are jobs themselves, each with a limited spectrum of responsabilities.
+
+Hence, mathematically,
+\begin{gather}
+    l \in \left[
+    \frac{\ell - 1}{w_q}
+    ,
+    \frac{\ell}{w_q}
+    \right]
+    ,
+    \ell \in 
+    \left\{
+        1, \dots, w_q
+    \right\}
+\end{gather}
+is a responsability spectrum in a maximally stratified labor market, in which employment levels are given by
+\begin{gather}
+    \sum_{\ell=1}^{w_q}
+    w_{q}^{\ell}
+    =
+    w_q
+    ,
+\end{gather}
+so that any available position is its own job subtype and covers only a restrictive range of task difficulty, accounting for
+\begin{gather}
+    \Omega_{q}^{\ell} = 
+    \frac{1}{\mho_{q}^{\ell}} = 
+    \int_{
+        \frac{\ell - 1}{w_q}
+    }^{
+        \frac{\ell}{w_q}
+    }
+    \text{ta}(l)dl
+\end{gather}
+of an operation's total time duration
+\begin{gather}
+    \sum_{\ell=1}^{w_q}
+    \Omega_{q}^{\ell} 
+    = 
+    \sum_{\ell=1}^{w_q}
+    \int_{
+        \frac{\ell - 1}{w_q}
+    }^{
+        \frac{\ell}{w_q}
+    }
+    \text{ta}(l)dl
+    =
+    \int_{0}^{1}
+    \text{ta}(l)dl
+    =
+    1
+    .
+\end{gather}
+
+Intuitively speaking, we would say production in a maximally and monotonically stratified labor market is not ``independent'', in the sense that employees do not work on the operation from beginning to end. This means each on them will spend all their time allowance producing a partial operational output, that is a multiple of a difficulty subinterval of complex tasks, which will, in turn, contribute, alonside the partial outputs of other employees, to accomplish the occupational operation in its entirety.
+
+However, in a maximally stratified labor market, these partial operational outputs, will not be produced merely via ``senior'' and ``junior'' positions, as previously, but rather within a myriad of levels in a production hierarchy, approximating a continuum of ``seniority'' as the workforce becomes large enough.
+% However, in a maximally stratified labor market, these partial operational outputs, will not be produced merely via ``senior'' and ``junior'' positions, as previously, but rather within a myriad of levels in a production hierarchy, each responsible for a particular subinterval of task difficulty, approximating a continuum of ``seniority'' as the workforce becomes large enough.
+
+Again, this does not mean employees are, actually, more or less competent, only that the available positions are preemptively stratified with respect to task difficulty, in order maximize employers' hiring pool and safeguard production in the case workers are not sufficiently qualified to produce the whole responsability spectrum by themselves (see ``Maximum-Monotonic Labor Stratification Lemma'' below).
+
+\item Independent Operational Output Lemma (IOOL)
+\begin{enumerate}
+    \item From Weak Occupational Complexity Axiom (WOCA)
+    % \item Now, as the Weak Occupational Complexity Axiom states there can be no gain, nor losses, to production when labor is efficiently stratified, we can derive a generalization of the conclusion (ref) above to any economic configuration besides the binary case by comparison. 
+    
+    Let us, then, first consider an independent production strategy with maximum worker productivity (i.e. the ``ceiling'' or ``benchmark'' for all other production strategies). Furthermore, because we want to compare this production strategy to that of maximum-monotonic labor stratification, we shall analyze operational output in a stratified fashion as well.
+
+    In this scenario, the optimal choice of hours to allocate to a responsability spectrum is trivial:
+    \begin{gather}
+        w_{q}^{\ell}
+        =
+        \Omega_{q}^{\ell}
+        \in [0,1]
+        .
+    \end{gather}
+    Now, by the definition of partial operational output (ref) above, one produces $\mho_{q}^{\ell}$ when devoting their entire unitary time allowance to the
+    \begin{gather}
+        l \in \left[
+        \frac{\ell - 1}{w_q}
+        ,
+        \frac{\ell}{w_q}
+        \right]
+        ,
+        \ell \in 
+        \left\{
+            1, \dots, w_q
+        \right\}
+    \end{gather}
+    responsability spectrum. Therefore, with only $\Omega_{q}^{\ell} \in [0,1]$ time units, operational output is:
+    \begin{gather}
+        \Omega_{q}^{\ell}
+        \mho_{q}^{\ell}
+        =
+        \left(
+            \frac{1}{\mho_{q}^{\ell}}
+        \right)
+        \times
+        \mho_{q}^{\ell}
+        =
+        1
+        .
+    \end{gather}
+    % as even the weakest version of occupational complexity implies all difficulty levels are complementary and have to be accomplished for optimal operational output.
+    % In this formulation, though, employment $w_{q}^{\ell} \in [0,1]$ is partial, that is: the same worker is hired to accomplish every responsability spectrum. This is because such an independent labor market is not stratified at all.
+
+    And, as Weak Occupational Complexity implies operational output is homothetic, the aggregate production of $w_q$ perfectly qualified employees working independently is:
+    % Furthermore, as Weak Occupational Complexity implies operational output is homothetic, the aggregate production of $w_q$ perfectly qualified employees working independently is:
+    \begin{gather}
+        w_{q}^{\ell}
+        \mho_{q}^{\ell}
+        \times
+        w_q
+        =
+        \Omega_{q}^{\ell}
+        \mho_{q}^{\ell}
+        \times
+        w_q
+        =
+        1
+        \times
+        w_q
+        =
+        w_q
+        .
+    \end{gather}
+    Hence, a perfectly qualified employee working full-time and independently can output one unit of an occupation's complex tasks with one unit of their time (i.e. their entire time allowance). And, likewise, a workforce with $w_q$ employees identical to this one produces $w_q$ units of operational output. Or, to put it simply, a maximally productive person acchieves maximum production. Or, even simpler, one day is sufficient to produce a ``day's work''.
+\end{enumerate}
+
+Maximum Operational Output Lemma (MOOL)
+    % \item Maximum Operational Output Lemma (MOOL)
+    % \begin{enumerate}
+    As every worker in the labor market is assumed to have the same unitary time allowance, which coincides with operations' total time duration,
+        % \item As every worker in the labor is assumed to have the same unitary time allowance, which coincides with operations' total time duration,
         \begin{gather}
             \int_{0}^{1}{
                 \text{ta}(l)
@@ -494,126 +627,351 @@
             ,
         \end{gather}
         there cannot be, even in theory, any productive arrangement yielding operational output higher than that obtained when perfectly qualified employees work independently. For, indeed, if employers establish other modes of production, workers' time allowances and tasks' time requirements will not change. In addition, splitting responsabilities across multiple job subtypes does not affect operational output (WOCA). Therefore, perfectly qualified independent production is the ``ceiling'' or ``benchmark'' for all production strategies.
+        
+        The mathematical proof for this is quite straighforward. Because the aggregate production function is of the Leontief functional form (for simplicity's sake, here considering only two factors of production, namely an easier responsability spectrum and a harder responsability spectrum), that is
+        \begin{gather}
+            \mho_{q}(\tilde{w}_{q}^{k})
+            = 
+            \min\left[
+                \tilde{w}_{q}^{k}
+                \left(
+                    \int_{0}^{\tilde{T}_{q}^{k}}{
+                        \text{ta}(l)dl
+                    }
+                \right) ^ {-1}
+                ,
+                (1 - \tilde{w}_{q}^{k})
+                \left(
+                    \int_{\tilde{T}_{q}^{k}}^{1}{
+                        \text{ta}(l)dl
+                    }
+                \right) ^ {-1}
+            \right]
+            ,
+        \end{gather}
+        and because time allowances are unitary and coincide with total time requirements, optimal relative employment levels are trivial and have to be
+        \begin{gather}
+            \tilde{w}_{q}^{k}
+            =
+            \int_{0}^{\tilde{T}_{q}^{k}}{
+                \text{ta}(l)dl
+            }
+            \in [0,1]
+        \end{gather}
+        and
+        \begin{align}
+            1 - \tilde{w}_{q}^{k}
+            &=
+            \int_{\tilde{T}_{q}^{k}}^{1}{
+                \text{ta}(l)dl
+            }
+            \\
+            &=
+            \int_{0}^{1}{
+                \text{ta}(l)dl
+            }
+            -
+            \int_{0}^{\tilde{T}_{q}^{k}}{
+                \text{ta}(l)dl
+            }
+            \\
+            &=
+            1
+            -
+            \int_{0}^{\tilde{T}_{q}^{k}}{
+                \text{ta}(l)dl
+            }
+            \in [0,1]
+        \end{align}
+        to avoid hindering production, so that
+        \begin{align}
+            \mho_{q}(\tilde{w}_{q}^{k})
+            &= 
+            \min\left[
+                \tilde{w}_{q}^{k}
+                \left(
+                    \int_{0}^{\tilde{T}_{q}^{k}}{
+                        \text{ta}(l)dl
+                    }
+                \right) ^ {-1}
+                ,
+                (1 - \tilde{w}_{q}^{k})
+                \left(
+                    \int_{\tilde{T}_{q}^{k}}^{1}{
+                        \text{ta}(l)dl
+                    }
+                \right) ^ {-1}
+            \right]
+            \\
+            &= 
+            \tilde{w}_{q}^{k}
+            \left(
+                \int_{0}^{\tilde{T}_{q}^{k}}{
+                    \text{ta}(l)dl
+                }
+            \right) ^ {-1}
+            \\
+            &= 
+            (1 - \tilde{w}_{q}^{k})
+            \left(
+                \int_{\tilde{T}_{q}^{k}}^{1}{
+                    \text{ta}(l)dl
+                }
+            \right) ^ {-1}
+            \\
+            &= 
+            \left(
+                \int_{0}^{\tilde{T}_{q}^{k}}{
+                    \text{ta}(l)dl
+                }
+            \right)
+            \left(
+                \int_{0}^{\tilde{T}_{q}^{k}}{
+                    \text{ta}(l)dl
+                }
+            \right) ^ {-1}
+            \\
+            &= 
+            \left(
+                \int_{\tilde{T}_{q}^{k}}^{1}{
+                    \text{ta}(l)dl
+                }
+            \right)
+            \left(
+                \int_{\tilde{T}_{q}^{k}}^{1}{
+                    \text{ta}(l)dl
+                }
+            \right) ^ {-1}
+            \\
+            &= 
+            1
+        \end{align}
+        it, then, follows that, if we set any relative employment level above the optimal one $\tilde{v}_{q}^{k} > \tilde{w}_{q}^{k}, \tilde{v}_{q}^{k}, \tilde{w}_{q}^{k} \in [0,1]$, operational output will be lower, for
+        \begin{align}
+            \mho_{q}(\tilde{v}_{q}^{k})
+            = 
+            \min\left[
+                \tilde{v}_{q}^{k}
+                \left(
+                    \int_{0}^{\tilde{T}_{q}^{k}}{
+                        \text{ta}(l)dl
+                    }
+                \right) ^ {-1}
+                ,
+                (1 - \tilde{v}_{q}^{k})
+                \left(
+                    \int_{\tilde{T}_{q}^{k}}^{1}{
+                        \text{ta}(l)dl
+                    }
+                \right) ^ {-1}
+            \right]
+            \\
+            = 
+            \min\left[
+                \frac{
+                    \tilde{v}_{q}^{k}
+                }{
+                    \int_{0}^{\tilde{T}_{q}^{k}}{
+                        \text{ta}(l)dl
+                    }
+                }
+                ,
+                \frac{
+                    1 - \tilde{v}_{q}^{k}
+                }{
+                    \int_{\tilde{T}_{q}^{k}}^{1}{
+                        \text{ta}(l)dl
+                    }
+                }
+            \right]
+            \\
+            = 
+            \min\left[
+                \frac{
+                    \tilde{v}_{q}^{k}
+                }{
+                    \int_{0}^{\tilde{T}_{q}^{k}}{
+                        \text{ta}(l)dl
+                    }
+                }
+                ,
+                \frac{
+                    1 - \tilde{v}_{q}^{k}
+                }{
+                    1 - 
+                    \int_{0}^{\tilde{T}_{q}^{k}}{
+                        \text{ta}(l)dl
+                    }
+                }
+            \right]
+            \\
+            = 
+            \min\left[
+                \frac{
+                    \tilde{v}_{q}^{k}
+                }{
+                    \tilde{w}_{q}^{k}
+                }
+                ,
+                \frac{
+                    1 - \tilde{v}_{q}^{k}
+                }{
+                    1 - 
+                    \tilde{w}_{q}^{k}
+                }
+            \right]
+            \therefore
+            \\
+            \tilde{v}_{q}^{k} > 
+            \tilde{w}_{q}^{k} 
+            \land
+            \tilde{v}_{q}^{k}, 
+            \tilde{w}_{q}^{k} 
+            \in [0,1]
+            \implies
+            \frac{
+                \tilde{v}_{q}^{k}
+            }{
+                \tilde{w}_{q}^{k}
+            } 
+            > 
+            \frac{
+                1 - \tilde{v}_{q}^{k}
+            }{
+                1 - \tilde{w}_{q}^{k}
+            }
+            \therefore
+            \\
+            \min\left[
+                \frac{
+                    \tilde{v}_{q}^{k}
+                }{
+                    \tilde{w}_{q}^{k}
+                }
+                ,
+                \frac{
+                    1 - \tilde{v}_{q}^{k}
+                }{
+                    1 - 
+                    \tilde{w}_{q}^{k}
+                }
+            \right]
+            =
+            \frac{
+                1 - \tilde{v}_{q}^{k}
+            }{
+                1 - \tilde{w}_{q}^{k}
+            }
+            \\
+            =
+            \frac{
+                1 - \tilde{v}_{q}^{k}
+            }{
+                \int_{\tilde{T}_{q}^{k}}^{1}{
+                    \text{ta}(l)dl
+                }
+            }
+            \therefore
+            \\
+            \frac{
+                1 - \tilde{v}_{q}^{k}
+            }{
+                \int_{\tilde{T}_{q}^{k}}^{1}{
+                    \text{ta}(l)dl
+                }
+            } 
+            < 
+            \frac{
+                1 - \tilde{w}_{q}^{k}
+            }{
+                \int_{\tilde{T}_{q}^{k}}^{1}{
+                    \text{ta}(l)dl
+                }
+            }
+            \\
+            =
+            \frac{
+                \tilde{w}_{q}^{k}
+            }{
+                \int_{0}^{\tilde{T}_{q}^{k}}{
+                    \text{ta}(l)dl
+                }
+            }
+            \\
+            = 1
+        \end{align}
         % \begin{align}
-        %     \left(
-        %         \int_{0}^{\tilde{T}_{q}^{k}}{
-        %             T(l, \tilde{T}_{q}^{k})
-        %             \text{ta}(l)
-        %             dl
-        %         }
-        %     \right) ^ {-1}
-        %     +
-        %     \left(
-        %         \int_{\tilde{T}_{q}^{k}}^{1}{
-        %             T(l, 1)
-        %             \text{ta}(l)
-        %             dl
-        %         }
-        %     \right) ^ {-1}
-        %     \\
-        %     =
-        %     \left(
-        %         \int_{0}^{\tilde{T}_{q}^{k}}{
-        %             1 \times
-        %             \text{ta}(l)
-        %             dl
-        %         }
-        %     \right) ^ {-1}
-        %     +
-        %     \left(
-        %         \int_{\tilde{T}_{q}^{k}}^{1}{
-        %             1 \times
-        %             \text{ta}(l)
-        %             dl
-        %         }
-        %     \right) ^ {-1}
-        %     \\
-        %     =
-        %     \frac{1}{
-        %         \int_{0}^{\tilde{T}_{q}^{k}}{
-        %             \text{ta}(l)
-        %             dl
-        %         }
-        %     }
-        %     +
-        %     \frac{1}{
-        %         \int_{\tilde{T}_{q}^{k}}^{1}{
-        %             \text{ta}(l)
-        %             dl
-        %         }
-        %     }
-        %     \\
-        %     =
-        %     \frac{
-        %         \int_{\tilde{T}_{q}^{k}}^{1}{
-        %             \text{ta}(l)
-        %             dl
-        %         }
-        %         +
-        %         \int_{0}^{\tilde{T}_{q}^{k}}{
-        %             \text{ta}(l)
-        %             dl
-        %         }
-        %     }{
-        %         \int_{0}^{\tilde{T}_{q}^{k}}{
-        %             \text{ta}(l)
-        %             dl
-        %         }
-        %         \int_{\tilde{T}_{q}^{k}}^{1}{
-        %             \text{ta}(l)
-        %             dl
-        %         }
-        %     }
-        %     \\
-        %     =
-        %     \frac{1}{
-        %         \int_{0}^{\tilde{T}_{q}^{k}}{
-        %             \text{ta}(l)
-        %             dl
-        %         }
-        %         \int_{\tilde{T}_{q}^{k}}^{1}{
-        %             \text{ta}(l)
-        %             dl
-        %         }
-        %     }
-        %     \\
-        %     =
-        %     \frac{1}{
-        %         \int_{0}^{\tilde{T}_{q}^{k}}{
-        %             \text{ta}(l)
-        %             dl
-        %         }
+        %     \mho_{q}(\tilde{v}_{q}^{k})
+        %     &= 
+        %     \min\left[
+        %         \tilde{v}_{q}^{k}
         %         \left(
-        %             \int_{0}^{1}{
-        %                 \text{ta}(l)
-        %                 dl
-        %             }
-        %             -
         %             \int_{0}^{\tilde{T}_{q}^{k}}{
-        %                 \text{ta}(l)
-        %                 dl
+        %                 \text{ta}(l)dl
         %             }
-        %         \right)
-        %     }
-        %     \\
-        %     =
-        %     \frac{1}{
-        %         \int_{0}^{\tilde{T}_{q}^{k}}{
-        %             \text{ta}(l)
-        %             dl
-        %         }
+        %         \right) ^ {-1}
+        %         ,
+        %         (1 - \tilde{v}_{q}^{k})
         %         \left(
-        %             1
-        %             -
-        %             \int_{0}^{\tilde{T}_{q}^{k}}{
-        %                 \text{ta}(l)
-        %                 dl
+        %             \int_{\tilde{T}_{q}^{k}}^{1}{
+        %                 \text{ta}(l)dl
         %             }
-        %         \right)
-        %     }
+        %         \right) ^ {-1}
+        %     \right]
+        %     \\
+        %     &= 
+        %     (1 - \tilde{v}_{q}^{k})
+        %     \left(
+        %         \int_{\tilde{T}_{q}^{k}}^{1}{
+        %             \text{ta}(l)dl
+        %         }
+        %     \right) ^ {-1}
+        %     \therefore
+        %     \\
+        %     \mho_{q}(\tilde{w}_{q}^{k})
+        %     &= 
+        %     \min\left[
+        %         \tilde{w}_{q}^{k}
+        %         \left(
+        %             \int_{0}^{\tilde{T}_{q}^{k}}{
+        %                 \text{ta}(l)dl
+        %             }
+        %         \right) ^ {-1}
+        %         ,
+        %         (1 - \tilde{w}_{q}^{k})
+        %         \left(
+        %             \int_{\tilde{T}_{q}^{k}}^{1}{
+        %                 \text{ta}(l)dl
+        %             }
+        %         \right) ^ {-1}
+        %     \right]
+        %     \\
+        %     &= 
+        %     \tilde{w}_{q}^{k}
+        %     \left(
+        %         \int_{0}^{\tilde{T}_{q}^{k}}{
+        %             \text{ta}(l)dl
+        %         }
+        %     \right) ^ {-1}
+        %     \\
+        %     &= 
+        %     (1 - \tilde{w}_{q}^{k})
+        %     \left(
+        %         \int_{\tilde{T}_{q}^{k}}^{1}{
+        %             \text{ta}(l)dl
+        %         }
+        %     \right) ^ {-1}
+        %     \\
+        %     &>
+        %     (1 - \tilde{v}_{q}^{k})
+        %     \left(
+        %         \int_{\tilde{T}_{q}^{k}}^{1}{
+        %             \text{ta}(l)dl
+        %         }
+        %     \right) ^ {-1}
         %     ,
         % \end{align}
-    \end{enumerate}
+    % \end{enumerate}
 
     \item Productivity Sufficiency Lemma (PSL)
     \begin{enumerate}
@@ -773,7 +1131,7 @@
                 1
                 ,
             \end{align}
-            where $\tilde{v}_{q}^{k} > \tilde{w}_{q}^{k}$, with $\tilde{v}_{q}^{k}, \tilde{w}_{q}^{k} \in [0,1]$, is an inefficient allocation of workers above the optimal employability coefficient $\tilde{w}_{q}^{k}$ in a semi-stratified labor market; and the double sum in equation (ref) is the output of a maximally stratified labor market, in which every $\ell \in \{1, \dots, w_q\}$ job subtype is but a fraction of available positions, with a partial workforce of $w_q \times \tilde{w}_{q}^{\ell}$ individuals, all exclusively dedicated to their own responsability spectrum, and identified by $[k \in \Lambda_{q}^{\ell}]$ employment statuses that are evaluated to 1 if they are employed in a particular $\Lambda_{q}^{\ell}$ strata of the labor market, and to 0 for all other job subtypes; while the remaining equations are the maximum operational output of a labor market with $w_q$ perfectly qualified employees working independently on the entire responsability spectrum of occupation $q$'s operation. Or, more succinctly,
+            where $\tilde{v}_{q}^{k} > \tilde{w}_{q}^{k}$, with $\tilde{v}_{q}^{k}, \tilde{w}_{q}^{k} \in [0,1]$, is an inefficient allocation of workers above the optimal relative employment level $\tilde{w}_{q}^{k}$ in a semi-stratified labor market; and the double sum in equation (ref) is the output of a maximally stratified labor market, in which every $\ell \in \{1, \dots, w_q\}$ job subtype is but a fraction of available positions, with a partial workforce of $w_q \times \tilde{w}_{q}^{\ell}$ individuals, all exclusively dedicated to their own responsability spectrum, and identified by $[k \in \Lambda_{q}^{\ell}]$ employment statuses that are evaluated to 1 if they are employed in a particular $\Lambda_{q}^{\ell}$ strata of the labor market, and to 0 for all other job subtypes; while the remaining equations are the maximum operational output of a labor market with $w_q$ perfectly qualified employees working independently on the entire responsability spectrum of occupation $q$'s operation. Or, more succinctly,
             \begin{align}
                 &\mathbb{E}[
                     \mho_{q}^{\text{IP}}
@@ -856,73 +1214,6 @@
 
     Finally, in order to identify the optimal $\tilde{w}_{q}^{\ell}$ relative employment levels in the labor market, and thus calculate a generalized employability coefficient, we compare the two production strategies that, as demonstrated, guarantee maximum operational output (viz. maximum-monotonic labor stratification and perfectly qualified independent production).
 
-    \item Independent Operational Output Lemma (IOOL)
-    \begin{enumerate}
-        \item From Weak Occupational Complexity Axiom (WOCA)
-        % \item Now, as the Weak Occupational Complexity Axiom states there can be no gain, nor losses, to production when labor is efficiently stratified, we can derive a generalization of the conclusion (ref) above to any economic configuration besides the binary case by comparison. 
-        
-        Let us, then, first consider an independent production strategy with maximum worker productivity (i.e. the ``ceiling'' or ``benchmark'' for all other production strategies). Furthermore, because we want to compare this production strategy to that of maximum-monotonic labor stratification, we shall analyze operational output in a stratified fashion as well.
-
-        In this scenario, the optimal choice of hours to allocate to a responsability spectrum is trivial:
-        \begin{gather}
-            w_{q}^{\ell}
-            =
-            \Omega_{q}^{\ell}
-            \in [0,1]
-            .
-        \end{gather}
-        Now, by the definition of partial operational output (ref) above, one produces $\mho_{q}^{\ell}$ when devoting their entire unitary time allowance to the
-        \begin{gather}
-            l \in \left[
-            \frac{\ell - 1}{w_q}
-            ,
-            \frac{\ell}{w_q}
-            \right]
-            ,
-            \ell \in 
-            \left\{
-                1, \dots, w_q
-            \right\}
-        \end{gather}
-        responsability spectrum. Therefore, with only $\Omega_{q}^{\ell} \in [0,1]$ time units, operational output is:
-        \begin{gather}
-            \Omega_{q}^{\ell}
-            \mho_{q}^{\ell}
-            =
-            \left(
-                \frac{1}{\mho_{q}^{\ell}}
-            \right)
-            \times
-            \mho_{q}^{\ell}
-            =
-            1
-            .
-        \end{gather}
-        % as even the weakest version of occupational complexity implies all difficulty levels are complementary and have to be accomplished for optimal operational output.
-        % In this formulation, though, employment $w_{q}^{\ell} \in [0,1]$ is partial, that is: the same worker is hired to accomplish every responsability spectrum. This is because such an independent labor market is not stratified at all.
-
-        And, as Weak Occupational Complexity implies operational output is homothetic, the aggregate production of $w_q$ perfectly qualified employees working independently is:
-        % Furthermore, as Weak Occupational Complexity implies operational output is homothetic, the aggregate production of $w_q$ perfectly qualified employees working independently is:
-        \begin{gather}
-            w_{q}^{\ell}
-            \mho_{q}^{\ell}
-            \times
-            w_q
-            =
-            \Omega_{q}^{\ell}
-            \mho_{q}^{\ell}
-            \times
-            w_q
-            =
-            1
-            \times
-            w_q
-            =
-            w_q
-            .
-        \end{gather}
-        Hence, a perfectly qualified employee working full-time and independently can output one unit of an occupation's complex tasks with one unit of their time (i.e. their entire time allowance). And, likewise, a workforce with $w_q$ employees identical to this one produces $w_q$ units of operational output. Put simply, a maximally productive person acchieves maximum production.
-    \end{enumerate}
     \item Equivalent Operational Output Lemma (EOOL)
     \begin{enumerate}
         \item Now, as WOCA states there are no gains nor losses in production due to partial operational outsourcing, the following must hold, in any labor market, even in a maximally stratified one:
@@ -1046,6 +1337,17 @@
         }
     \end{align}
     is partial employability, that is one's employability in a particular occupation $q$ in the labor market.
+
+    \item Demonstrate maximum-monotonic labor stratification is the most efficient form of labor stratification.
+    \begin{enumerate}
+        \item For there are ``clumpier'' forms of labor stratification (.e.g. juniors and seniors; interns, juniors, mid-juniors, seniors; etc)
+        \item And there are ``more granular'' forms of maximum labor stratification, where task subtintervals are not equally spaced, so that some subintervals are more restrictive than others
+        \begin{enumerate}
+            \item Explain why this is inefficient
+            \item Explain why this is unreasonable
+            \item Explain that, even if this arrangement temporarily holds, it can only be so if talent is abundant in one way or another, and that employability will approximate that of maximum-monotonic labor stratification
+        \end{enumerate}
+    \end{enumerate}
 \end{enumerate}
 
 % endregion
