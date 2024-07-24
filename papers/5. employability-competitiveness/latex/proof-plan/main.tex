@@ -588,25 +588,13 @@ Maximum Operational Output Lemma (MOOL)
     accounted by it.
     
     [Proof]
+    [Let us begin with a binary setting.]
     \begin{align}
-        \mho(\tilde{v}_{q}^{k}) < 
-        \mho(\Omega_{q}^{k}) 
-        = 1
-        \
-        \forall
-        \
-        \tilde{v}_{q}^{k}
-        \neq
-        \Omega_{q}^{k}
-        \in [0,1]
-    \end{align}
-    
-    \begin{align}
-        \mho(\tilde{v}_{q}^{k})
+        \mho(\tilde{w}_{q}^{k})
         &=
         \min\left(
             \frac{
-                \tilde{v}_{q}^{k}
+                \tilde{w}_{q}^{k}
             }{
                 \int_{0}^{
                     \tilde{T}_{q}^{k}
@@ -617,7 +605,7 @@ Maximum Operational Output Lemma (MOOL)
             }
             ,
             \frac{
-                1 - \tilde{v}_{q}^{k}
+                1 - \tilde{w}_{q}^{k}
             }{
                 \int_{
                     \tilde{T}_{q}^{k}
@@ -631,7 +619,7 @@ Maximum Operational Output Lemma (MOOL)
         &=
         \min\left(
             \frac{
-                \tilde{v}_{q}^{k}
+                \tilde{w}_{q}^{k}
             }{
                 \int_{0}^{
                     \tilde{T}_{q}^{k}
@@ -642,7 +630,7 @@ Maximum Operational Output Lemma (MOOL)
             }
             ,
             \frac{
-                1 - \tilde{v}_{q}^{k}
+                1 - \tilde{w}_{q}^{k}
             }{
                 \int_{0}^{1}{
                     \text{ta}(l)
@@ -661,13 +649,13 @@ Maximum Operational Output Lemma (MOOL)
         &=
         \min\left(
             \frac{
-                \tilde{v}_{q}^{k}
+                \tilde{w}_{q}^{k}
             }{
                 \Omega_{q}^{k}
             }
             ,
             \frac{
-                1 - \tilde{v}_{q}^{k}
+                1 - \tilde{w}_{q}^{k}
             }{
                 1 - \Omega_{q}^{k}
             }
@@ -708,15 +696,16 @@ Maximum Operational Output Lemma (MOOL)
         .
     \end{align}
 
-    With this, if $\tilde{v}_{q}^{k} \in [0,1]$ is set to $\tilde{v}_{q}^{k} > \Omega_{q}^{k}$, then
+    With this, if $\tilde{w}_{q}^{k} \in [0,1]$ is set to $\tilde{w}_{q}^{k} > \Omega_{q}^{k}$, then
     \begin{align}
-        1 - \tilde{v}_{q}^{k}
+        &
+        1 - \tilde{w}_{q}^{k}
         <
         1 - \Omega_{q}^{k}
         \\
-        \therefore
+        &\therefore
         \frac{
-            \tilde{v}_{q}^{k}
+            \tilde{w}_{q}^{k}
         }{
             \Omega_{q}^{k}
         }
@@ -724,64 +713,52 @@ Maximum Operational Output Lemma (MOOL)
         1
         >
         \frac{
-            1 - \tilde{v}_{q}^{k}
+            1 - \tilde{w}_{q}^{k}
         }{
             1 - \Omega_{q}^{k}
         }
         \\
-        \therefore
-        \mho(\tilde{v}_{q}^{k}) 
+        &\therefore
+        \mho(\tilde{w}_{q}^{k}) 
         =
         \min\left(
             \frac{
-                \tilde{v}_{q}^{k}
+                \tilde{w}_{q}^{k}
             }{
                 \Omega_{q}^{k}
             }
             ,
             \frac{
-                1 - \tilde{v}_{q}^{k}
+                1 - \tilde{w}_{q}^{k}
             }{
                 1 - \Omega_{q}^{k}
             }
         \right)
         =
         \frac{
-            1 - \tilde{v}_{q}^{k}
+            1 - \tilde{w}_{q}^{k}
         }{
             1 - \Omega_{q}^{k}
         }
         <
         1
         \\
-        \implies
-        \frac{
-            1 - \tilde{v}_{q}^{k}
-        }{
-            1 - \Omega_{q}^{k}
-        }
-        <
-        \frac{
-            1 - \Omega_{q}^{k}
-        }{
-            1 - \Omega_{q}^{k}
-        }
-        \\
-        \iff
-        \mho(\tilde{v}_{q}^{k})
+        &\implies
+        \mho(\tilde{w}_{q}^{k})
         <
         \mho(\Omega_{q}^{k})
         ;
     \end{align}
-    and, likewise, if $\tilde{v}_{q}^{k} < \Omega_{q}^{k}$,
+    and, likewise, if $\tilde{w}_{q}^{k} < \Omega_{q}^{k}$,
     \begin{align}
-        1 - \tilde{v}_{q}^{k}
+        &
+        1 - \tilde{w}_{q}^{k}
         >
         1 - \Omega_{q}^{k}
         \\
-        \therefore
+        &\therefore
         \frac{
-            \tilde{v}_{q}^{k}
+            \tilde{w}_{q}^{k}
         }{
             \Omega_{q}^{k}
         }
@@ -789,58 +766,60 @@ Maximum Operational Output Lemma (MOOL)
         1
         <
         \frac{
-            1 - \tilde{v}_{q}^{k}
+            1 - \tilde{w}_{q}^{k}
         }{
             1 - \Omega_{q}^{k}
         }
         \\
-        \therefore
-        \mho(\tilde{v}_{q}^{k}) 
+        &\therefore
+        \mho(\tilde{w}_{q}^{k}) 
         =
         \min\left(
             \frac{
-                \tilde{v}_{q}^{k}
+                \tilde{w}_{q}^{k}
             }{
                 \Omega_{q}^{k}
             }
             ,
             \frac{
-                1 - \tilde{v}_{q}^{k}
+                1 - \tilde{w}_{q}^{k}
             }{
                 1 - \Omega_{q}^{k}
             }
         \right)
         =
         \frac{
-            \tilde{v}_{q}^{k}
+            \tilde{w}_{q}^{k}
         }{
             \Omega_{q}^{k}
         }
         <
         1
         \\
-        \implies
-        \frac{
-            \tilde{v}_{q}^{k}
-        }{
-            \Omega_{q}^{k}
-        }
-        <
-        \frac{
-            \Omega_{q}^{k}
-        }{
-            \Omega_{q}^{k}
-        }
-        \\
-        \iff
-        \mho(\tilde{v}_{q}^{k})
+        &\implies
+        \mho(\tilde{w}_{q}^{k})
         <
         \mho(\Omega_{q}^{k})
         .
     \end{align}
 
+    Therefore, 
+    \begin{gather}
+        \mho(\tilde{w}_{q}^{k}) < 
+        \mho(\Omega_{q}^{k}) 
+        = 1
+        \
+        \forall
+        \
+        \tilde{w}_{q}^{k}
+        \neq
+        \Omega_{q}^{k}
+        \in [0,1]
+        .
+    \end{gather}
+
     Analogously, in a setting with multiple job subtypes, optimal operational output is also trivial:
-    \begin{align}
+    \begin{gather}
         \mho(\boldsymbol{\Omega_q})
         = 
         \min(
@@ -854,15 +833,9 @@ Maximum Operational Output Lemma (MOOL)
             \Omega_{q}^{\ell}
         }
         =
-        \frac{
-            \Omega_{q}^{r}
-        }{
-            \Omega_{q}^{r}
-        }
-        =
         1
         .
-    \end{align}
+    \end{gather}
 
     And, again, since
     \begin{gather}
@@ -878,9 +851,10 @@ Maximum Operational Output Lemma (MOOL)
     \end{gather}
     choosing any $\tilde{w}_{q}^{\ell} \neq \Omega_{q}^{\ell} \in [0,1]$ implies the proportion of at least one position, say $\tilde{w}_{q}^{r}$, is impacted, and thus aggregate output along with it, either because
     \begin{align}
+        &
         \tilde{w}_{q}^{\ell} > \Omega_{q}^{\ell}
         \\
-        \therefore
+        &\therefore
         \frac{
             \tilde{w}_{q}^{\ell}
         }{
@@ -895,6 +869,7 @@ Maximum Operational Output Lemma (MOOL)
             \Omega_{q}^{r}
         }
         \\
+        &\therefore
         \mho(\boldsymbol{w_q})
         = 
         \min(
@@ -910,20 +885,7 @@ Maximum Operational Output Lemma (MOOL)
         < 
         1
         \\
-        \implies
-        \frac{
-            \tilde{w}_{q}^{r}
-        }{
-            \Omega_{q}^{r}
-        }
-        <
-        \frac{
-            \Omega_{q}^{r}
-        }{
-            \Omega_{q}^{r}
-        }
-        \\
-        \iff
+        &\implies
         \mho(\boldsymbol{w_q})
         <
         \mho(\boldsymbol{\Omega_q})
@@ -931,9 +893,10 @@ Maximum Operational Output Lemma (MOOL)
     \end{align}
     or, alternatively, because
     \begin{align}
+        &
         \tilde{w}_{q}^{\ell} < \Omega_{q}^{\ell}
         \\
-        \therefore
+        &\therefore
         \frac{
             \tilde{w}_{q}^{\ell}
         }{
@@ -948,6 +911,7 @@ Maximum Operational Output Lemma (MOOL)
             \Omega_{q}^{r}
         }
         \\
+        &\therefore
         \mho(\boldsymbol{w_q})
         = 
         \min(
@@ -963,24 +927,64 @@ Maximum Operational Output Lemma (MOOL)
         < 
         1
         \\
-        \implies
-        \frac{
-            \tilde{w}_{q}^{\ell}
-        }{
-            \Omega_{q}^{\ell}
-        }
-        <
-        \frac{
-            \Omega_{q}^{\ell}
-        }{
-            \Omega_{q}^{\ell}
-        }
-        \\
-        \iff
+        &\implies
         \mho(\boldsymbol{w_q})
         <
         \mho(\boldsymbol{\Omega_q})
         .
+    \end{align}
+
+    Thus, 
+    \begin{align}
+        &
+        \mho(
+            \boldsymbol{\tilde{w}_{q}},
+            \boldsymbol{\mho_q}
+        ) < 
+        \mho(
+            \boldsymbol{\Omega_{q}},
+            \boldsymbol{\mho_q}
+        ) 
+        = 1
+        \\
+        &\iff
+        \mho(
+            \boldsymbol{w_{q}},
+            \boldsymbol{\mho_q}
+        ) < 
+        \mho(
+            w_{q}
+            \boldsymbol{\Omega_{q}},
+            \boldsymbol{\mho_q}
+        ) 
+        = w_q
+        \\
+        &
+        \forall
+        \
+        \boldsymbol{\tilde{w}_{q}}
+        \neq
+        \boldsymbol{\Omega_{q}}
+        % ,
+        % \\
+        % &
+        % \boldsymbol{\tilde{w}_{q}}
+        % ,
+        % \boldsymbol{\Omega_{q}}
+        % > 
+        % \boldsymbol{0}
+        % ,
+        % \\
+        % &
+        % \boldsymbol{1} ^ {\top}
+        % \cdot
+        % \boldsymbol{\tilde{w}_{q}}
+        % =
+        % \boldsymbol{1} ^ {\top}
+        % \cdot
+        % \boldsymbol{\Omega_{q}}
+        % = 1
+        % .
     \end{align}
 
     As every worker in the labor market is assumed to have the same unitary time allowance, which coincides with operations' total time duration,
