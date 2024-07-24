@@ -309,8 +309,8 @@
         \mho_{q}^{\text{Sr}} = 
         w_{q}^{\text{Jr}} \times 
         \mho_{q}^{\text{Jr}}
-        \therefore
         \\
+        \therefore
         w_{q}^{\text{Sr}} \times 
         \left(
             \int_{\tilde{T}_{q}^{\text{Jr}}}^{1}
@@ -324,8 +324,8 @@
                 \text{ta}_q(l)
                 dl
         \right) ^ {-1}
-        \therefore
         \\
+        \therefore
         w_{q}^{\text{Sr}}
         = 
         w_{q}^{\text{Jr}}
@@ -549,6 +549,7 @@ Again, this does not mean employees are, actually, more or less competent, only 
 Having understood what maximum-monotonic labor stratification is, we shall demonstrate that, given our axioms, such an economic configuration is, in fact, the only optimal production strategy and, so, holds in the labor market. To do so, let us first derive the maximum operational output, irrespective of productive arrangement.
 
 Maximum Operational Output Lemma (MOOL)
+
     In any labor market, the maximum operational output is exactly the number of employees in its workforce:
     \begin{gather}
         \mho(
@@ -561,9 +562,392 @@ Maximum Operational Output Lemma (MOOL)
         = w_q
         ,
     \end{gather}
-    where $\boldsymbol{w_{q}^{*}}$ is the vector of optimal employment levels in a labor market with $w_q$ employees; and $\boldsymbol{\mho_q}$, the vector of partial operational outputs.
+    where $\boldsymbol{w_{q}^{*}}$ is the vector of optimal employment levels in a labor market with $w_q$ employees; and $\boldsymbol{\mho_q}$, the vector of partial operational outputs. 
     
     [Proof]
+    \begin{align}
+        \mho(\tilde{v}_{q}^{k}) < 
+        \mho(\Omega_{q}^{k}) 
+        = 1
+        \
+        \forall
+        \
+        \tilde{v}_{q}^{k}
+        \neq
+        \Omega_{q}^{k}
+        \in [0,1]
+    \end{align}
+    
+    \begin{align}
+        \mho(\tilde{v}_{q}^{k})
+        &=
+        \min\left(
+            \frac{
+                \tilde{v}_{q}^{k}
+            }{
+                \int_{0}^{
+                    \tilde{T}_{q}^{k}
+                }{
+                    \text{ta}(l)
+                    dl
+                }
+            }
+            ,
+            \frac{
+                1 - \tilde{v}_{q}^{k}
+            }{
+                \int_{
+                    \tilde{T}_{q}^{k}
+                }^{1}{
+                    \text{ta}(l)
+                    dl
+                }
+            }
+        \right)
+        \\
+        &=
+        \min\left(
+            \frac{
+                \tilde{v}_{q}^{k}
+            }{
+                \int_{0}^{
+                    \tilde{T}_{q}^{k}
+                }{
+                    \text{ta}(l)
+                    dl
+                }
+            }
+            ,
+            \frac{
+                1 - \tilde{v}_{q}^{k}
+            }{
+                \int_{0}^{1}{
+                    \text{ta}(l)
+                    dl
+                }
+                -
+                \int_{0}^{
+                    \tilde{T}_{q}^{k}
+                }{
+                    \text{ta}(l)
+                    dl
+                }
+            }
+        \right)
+        \\
+        &=
+        \min\left(
+            \frac{
+                \tilde{v}_{q}^{k}
+            }{
+                \Omega_{q}^{k}
+            }
+            ,
+            \frac{
+                1 - \tilde{v}_{q}^{k}
+            }{
+                1 - \Omega_{q}^{k}
+            }
+        \right)
+        ,
+    \end{align}
+    whereas the operational output of $\Omega_{q}^{k} \in [0,1]$ is
+    \begin{align}
+        \mho(\Omega_{q}^{k}) 
+        =
+        \min\left(
+            \frac{
+                \Omega_{q}^{k}
+            }{
+                \Omega_{q}^{k}
+            }
+            ,
+            \frac{
+                1 - \Omega_{q}^{k}
+            }{
+                1 - \Omega_{q}^{k}
+            }
+        \right)
+        =
+        \frac{
+            \Omega_{q}^{k}
+        }{
+            \Omega_{q}^{k}
+        }
+        =
+        \frac{
+            1 - \Omega_{q}^{k}
+        }{
+            1 - \Omega_{q}^{k}
+        }
+        =
+        1
+        .
+    \end{align}
+
+    With this, if $\tilde{v}_{q}^{k} \in [0,1]$ is set to $\tilde{v}_{q}^{k} > \Omega_{q}^{k}$, then
+    \begin{align}
+        1 - \tilde{v}_{q}^{k}
+        <
+        1 - \Omega_{q}^{k}
+        \\
+        \therefore
+        \frac{
+            \tilde{v}_{q}^{k}
+        }{
+            \Omega_{q}^{k}
+        }
+        >
+        1
+        >
+        \frac{
+            1 - \tilde{v}_{q}^{k}
+        }{
+            1 - \Omega_{q}^{k}
+        }
+        \\
+        \therefore
+        \mho(\tilde{v}_{q}^{k}) 
+        =
+        \min\left(
+            \frac{
+                \tilde{v}_{q}^{k}
+            }{
+                \Omega_{q}^{k}
+            }
+            ,
+            \frac{
+                1 - \tilde{v}_{q}^{k}
+            }{
+                1 - \Omega_{q}^{k}
+            }
+        \right)
+        =
+        \frac{
+            1 - \tilde{v}_{q}^{k}
+        }{
+            1 - \Omega_{q}^{k}
+        }
+        <
+        1
+        \\
+        \implies
+        \frac{
+            1 - \tilde{v}_{q}^{k}
+        }{
+            1 - \Omega_{q}^{k}
+        }
+        <
+        \frac{
+            1 - \Omega_{q}^{k}
+        }{
+            1 - \Omega_{q}^{k}
+        }
+        \\
+        \iff
+        \mho(\tilde{v}_{q}^{k})
+        <
+        \mho(\Omega_{q}^{k})
+        ;
+    \end{align}
+    and, likewise, if $\tilde{v}_{q}^{k} < \Omega_{q}^{k}$,
+    \begin{align}
+        1 - \tilde{v}_{q}^{k}
+        >
+        1 - \Omega_{q}^{k}
+        \\
+        \therefore
+        \frac{
+            \tilde{v}_{q}^{k}
+        }{
+            \Omega_{q}^{k}
+        }
+        <
+        1
+        <
+        \frac{
+            1 - \tilde{v}_{q}^{k}
+        }{
+            1 - \Omega_{q}^{k}
+        }
+        \\
+        \therefore
+        \mho(\tilde{v}_{q}^{k}) 
+        =
+        \min\left(
+            \frac{
+                \tilde{v}_{q}^{k}
+            }{
+                \Omega_{q}^{k}
+            }
+            ,
+            \frac{
+                1 - \tilde{v}_{q}^{k}
+            }{
+                1 - \Omega_{q}^{k}
+            }
+        \right)
+        =
+        \frac{
+            \tilde{v}_{q}^{k}
+        }{
+            \Omega_{q}^{k}
+        }
+        <
+        1
+        \\
+        \implies
+        \frac{
+            \tilde{v}_{q}^{k}
+        }{
+            \Omega_{q}^{k}
+        }
+        <
+        \frac{
+            \Omega_{q}^{k}
+        }{
+            \Omega_{q}^{k}
+        }
+        \\
+        \iff
+        \mho(\tilde{v}_{q}^{k})
+        <
+        \mho(\Omega_{q}^{k})
+        .
+    \end{align}
+
+    Analogously, in a setting with multiple job subtypes, optimal operational output is also trivial:
+    \begin{align}
+        \mho(\boldsymbol{\Omega_q})
+        = 
+        \min(
+            \boldsymbol{\Omega_q}
+            \boldsymbol{\mho_q}
+        )
+        =
+        \frac{
+            \Omega_{q}^{\ell}
+        }{
+            \Omega_{q}^{\ell}
+        }
+        =
+        \frac{
+            \Omega_{q}^{r}
+        }{
+            \Omega_{q}^{r}
+        }
+        =
+        1
+        .
+    \end{align}
+
+    And, here too, choosing any $\tilde{w}_{q}^{\ell} \neq \Omega_{q}^{\ell} \in [0,1]$ implies the output of at least one position, say $\tilde{w}_{q}^{r}$, is impacted, thus hindering aggregate production, either because
+    \begin{align}
+        \tilde{w}_{q}^{\ell} > \Omega_{q}^{\ell}
+        \\
+        \therefore
+        \frac{
+            \tilde{w}_{q}^{\ell}
+        }{
+            \Omega_{q}^{\ell}
+        }
+        > 
+        1
+        > 
+        \frac{
+            \tilde{w}_{q}^{r}
+        }{
+            \Omega_{q}^{r}
+        }
+        \\
+        \mho(\boldsymbol{w_q})
+        = 
+        \min(
+            \boldsymbol{w_q}
+            \boldsymbol{\mho_q}
+        )
+        =
+        \frac{
+            \tilde{w}_{q}^{r}
+        }{
+            \Omega_{q}^{r}
+        }
+        < 
+        1
+        \\
+        \implies
+        \frac{
+            \tilde{w}_{q}^{r}
+        }{
+            \Omega_{q}^{r}
+        }
+        <
+        \frac{
+            \Omega_{q}^{r}
+        }{
+            \Omega_{q}^{r}
+        }
+        \\
+        \iff
+        \mho(\boldsymbol{w_q})
+        <
+        \mho(\boldsymbol{\Omega_q})
+        ;
+    \end{align}
+    or, alternatively, because
+    \begin{align}
+        \tilde{w}_{q}^{\ell} < \Omega_{q}^{\ell}
+        \\
+        \therefore
+        \frac{
+            \tilde{w}_{q}^{\ell}
+        }{
+            \Omega_{q}^{\ell}
+        }
+        < 
+        1
+        < 
+        \frac{
+            \tilde{w}_{q}^{r}
+        }{
+            \Omega_{q}^{r}
+        }
+        \\
+        \mho(\boldsymbol{w_q})
+        = 
+        \min(
+            \boldsymbol{w_q}
+            \boldsymbol{\mho_q}
+        )
+        =
+        \frac{
+            \tilde{w}_{q}^{\ell}
+        }{
+            \Omega_{q}^{\ell}
+        }
+        < 
+        1
+        \\
+        \implies
+        \frac{
+            \tilde{w}_{q}^{\ell}
+        }{
+            \Omega_{q}^{\ell}
+        }
+        <
+        \frac{
+            \Omega_{q}^{\ell}
+        }{
+            \Omega_{q}^{\ell}
+        }
+        \\
+        \iff
+        \mho(\boldsymbol{w_q})
+        <
+        \mho(\boldsymbol{\Omega_q})
+        .
+    \end{align}
+
     As every worker in the labor market is assumed to have the same unitary time allowance, which coincides with operations' total time duration,
         % \item As every worker in the labor is assumed to have the same unitary time allowance, which coincides with operations' total time duration,
         \begin{gather}
@@ -789,8 +1173,8 @@ Maximum Operational Output Lemma (MOOL)
             }{
                 1 - \tilde{w}_{q}^{k}
             }
-            \therefore
             \\
+            \therefore
             \min\left[
                 \frac{
                     \tilde{v}_{q}^{k}
@@ -820,8 +1204,8 @@ Maximum Operational Output Lemma (MOOL)
                     \text{ta}(l)dl
                 }
             }
-            \therefore
             \\
+            \therefore
             \frac{
                 1 - \tilde{v}_{q}^{k}
             }{
@@ -849,6 +1233,8 @@ Maximum Operational Output Lemma (MOOL)
             \\
             = 1
         \end{align}
+
+        In other words, one day is sufficient to produce a ``day's work''. Or, put another way, the most one can produce in a day is a ``day's work''.
         % \begin{align}
         %     \mho_{q}(\tilde{v}_{q}^{k})
         %     &= 
@@ -875,8 +1261,8 @@ Maximum Operational Output Lemma (MOOL)
         %             \text{ta}(l)dl
         %         }
         %     \right) ^ {-1}
-        %     \therefore
         %     \\
+        %     \therefore
         %     \mho_{q}(\tilde{w}_{q}^{k})
         %     &= 
         %     \min\left[
@@ -987,7 +1373,8 @@ Maximum Operational Output Lemma (MOOL)
         w_q
         .
     \end{gather}
-    Hence, a perfectly qualified employee working full-time and independently can output one unit of an occupation's complex tasks with one unit of their time (i.e. their entire time allowance). And, likewise, a workforce with $w_q$ employees identical to this one produces $w_q$ units of operational output. Or, to put it simply, a maximally productive person acchieves maximum production. Or, even simpler: one day is sufficient to produce a ``day's work''.
+    Hence, a perfectly qualified employee working full-time and independently can output one unit of an occupation's complex tasks with one unit of their time (i.e. their entire time allowance). And, likewise, a workforce with $w_q$ employees identical to this one produces $w_q$ units of operational output. Or, to put it simply, a maximally productive person acchieves maximum production.
+    % Hence, a perfectly qualified employee working full-time and independently can output one unit of an occupation's complex tasks with one unit of their time (i.e. their entire time allowance). And, likewise, a workforce with $w_q$ employees identical to this one produces $w_q$ units of operational output. Or, to put it simply, a maximally productive person acchieves maximum production. Or, even simpler: one day is sufficient to produce a ``day's work''.
 \end{enumerate}
 
     \item Productivity Sufficiency Lemma (PSL)
