@@ -564,6 +564,29 @@ Maximum Operational Output Lemma (MOOL)
     \end{gather}
     where $\boldsymbol{w_{q}^{*}}$ is the vector of optimal employment levels in a labor market with $w_q$ employees; and $\boldsymbol{\mho_q}$, the vector of partial operational outputs. 
     
+    Moreover, this maximum production can only be attained when the percentage of each position relative to the entire workforce respects the Proportional Employment Condition (PEC):
+    \begin{gather}
+        \boldsymbol{\tilde{w}_{q}^{*}}
+        =
+        \frac{
+            \boldsymbol{w_{q}^{*}}
+        }{
+            w_q
+        }
+        =
+        \boldsymbol{\Omega_{q}}
+        ,
+    \end{gather}
+    which determines the ratio, or proportion, of a particular job subtype in a stratified labor market is the percentage of an operation's total time duration,
+    \begin{gather}
+        \boldsymbol{1} ^ {\top}
+        \cdot
+        \boldsymbol{\Omega_{q}}
+        = 1
+        ,
+    \end{gather}
+    accounted by it.
+    
     [Proof]
     \begin{align}
         \mho(\tilde{v}_{q}^{k}) < 
@@ -841,7 +864,19 @@ Maximum Operational Output Lemma (MOOL)
         .
     \end{align}
 
-    And, here too, choosing any $\tilde{w}_{q}^{\ell} \neq \Omega_{q}^{\ell} \in [0,1]$ implies the output of at least one position, say $\tilde{w}_{q}^{r}$, is impacted, thus hindering aggregate production, either because
+    And, again, since
+    \begin{gather}
+        \boldsymbol{1} ^ {\top}
+        \cdot
+        \boldsymbol{\tilde{w}_{q}}
+        =
+        \boldsymbol{1} ^ {\top}
+        \cdot
+        \boldsymbol{\Omega_{q}}
+        = 1
+        ,
+    \end{gather}
+    choosing any $\tilde{w}_{q}^{\ell} \neq \Omega_{q}^{\ell} \in [0,1]$ implies the proportion of at least one position, say $\tilde{w}_{q}^{r}$, is impacted, and thus aggregate output along with it, either because
     \begin{align}
         \tilde{w}_{q}^{\ell} > \Omega_{q}^{\ell}
         \\
