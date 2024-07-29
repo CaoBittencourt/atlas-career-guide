@@ -1782,17 +1782,185 @@ Maximum Operational Output Lemma (MOOL)
     \end{align}
     is partial employability, that is one's employability in a particular occupation $q$ in the labor market.
 
-    \item Demonstrate maximum-monotonic labor stratification is the most efficient form of labor stratification.
-    \begin{enumerate}
-        \item For there are ``clumpier'' forms of labor stratification (.e.g. juniors and seniors; interns, juniors, mid-juniors, seniors; etc)
-        \item And there are ``more granular'' forms of maximum labor stratification, where task subtintervals are not equally spaced, so that some subintervals are more restrictive than others
-        \begin{enumerate}
-            \item Explain why this is inefficient
-            \item Explain why this is unreasonable
-            \item Explain that, even if this arrangement temporarily holds, it can only be so if talent is abundant in one way or another, and that employability will approximate that of maximum-monotonic labor stratification
-        \end{enumerate}
-    \end{enumerate}
+    \item Employability in a maximally-monotonically stratified labor market with irregular responsability ranges (i.e. without partial hiring):
+    \begin{align}
+        \tilde{W}_k 
+        &=
+        \left(
+            \frac{1}{W}
+        \right)
+        \sum_{q=1}^{n}
+        % \left[
+        %     h_{q}^{k}
+        %     \geq
+        %     \frac{1}{2}
+        % \right]
+        \sum_{v=1}^{w_q}
+        \left[
+            h_{q}^{k}
+            \geq
+            \frac{1}{2}
+        \right]
+        \left[
+            \tilde{T}_{q}^{k}
+            \geq
+            \ell_v
+        \right]
+        \\
+        &=
+        \left(
+            \frac{1}{W}
+        \right)
+        \sum_{q=1}^{n}
+        % \left[
+        %     h_{q}^{k}
+        %     \geq
+        %     \frac{1}{2}
+        % \right]
+        \sum_{v=1}^{w_q}
+        \left[
+            h_{q}^{k}
+            \geq
+            \frac{1}{2}
+        \right]
+        \left[
+            \tilde{T}_{q}^{k}
+            \geq
+            \text{TA}_{q}^{-1}
+            \left(
+                \frac{v}{w_q}
+                +
+                \text{TA}_{q}(0)
+            \right)
+        \right]
+    \end{align}
+    
+    \item Competitiveness in a maximally-monotonically stratified labor market with irregular responsability ranges (i.e. without partial hiring):
+    \begin{align}
+        \tilde{\text{vs}}_k 
+        &=
+        \left(
+            \frac{1}{W}
+        \right)
+        \sum_{q=1}^{n}
+        \left[
+            \ddot{u}_{k}^{q}
+            \geq
+            \frac{1}{2}
+        \right]
+        % \left[
+        %     h_{k}^{q}
+        %     \geq
+        %     \frac{1}{2}
+        % \right]
+        \sum_{v=1}^{w_k}
+        \left[
+            h_{k}^{q}
+            \geq
+            \frac{1}{2}
+        \right]
+        \left[
+            \tilde{T}_{k}^{q}
+            \geq
+            \ell_v
+        \right]
+        \\
+        &=
+        \left(
+            \frac{1}{W}
+        \right)
+        \sum_{q=1}^{n}
+        \left[
+            \ddot{u}_{k}^{q}
+            \geq
+            \frac{1}{2}
+        \right]
+        % \left[
+        %     h_{k}^{q}
+        %     \geq
+        %     \frac{1}{2}
+        % \right]
+        \sum_{v=1}^{w_k}
+        \left[
+            h_{k}^{q}
+            \geq
+            \frac{1}{2}
+        \right]
+        \left[
+            \tilde{T}_{k}^{q}
+            \geq
+            \text{TA}_{k}^{-1}
+            \left(
+                \frac{v}{w_k}
+                +
+                \text{TA}_{k}(0)
+            \right)
+        \right]
+    \end{align}
 \end{enumerate}
+
+Competitiveness in a maximally-monotonically stratified labor market with irregular responsability ranges (i.e. without partial hiring):
+    \begin{align}
+        \tilde{\text{vs}}_k 
+        &=
+        \left(
+            \frac{1}{W}
+        \right)
+        \sum_{q=1}^{n}
+        \left[
+            \ddot{u}_{k}^{q}
+            \geq
+            \frac{1}{2}
+        \right]
+        % \left[
+        %     h_{k}^{q}
+        %     \geq
+        %     \frac{1}{2}
+        % \right]
+        \sum_{v=1}^{w_k}
+        \left[
+            h_{k}^{q}
+            \geq
+            \frac{1}{2}
+        \right]
+        \left[
+            \tilde{T}_{k}^{q}
+            \geq
+            \ell_v
+        \right]
+        \\
+        &=
+        \left(
+            \frac{1}{W}
+        \right)
+        \sum_{q=1}^{n}
+        \left[
+            \ddot{u}_{k}^{q}
+            \geq
+            \frac{1}{2}
+        \right]
+        % \left[
+        %     h_{k}^{q}
+        %     \geq
+        %     \frac{1}{2}
+        % \right]
+        \sum_{v=1}^{w_k}
+        \left[
+            h_{k}^{q}
+            \geq
+            \frac{1}{2}
+        \right]
+        \left[
+            \tilde{T}_{k}^{q}
+            \geq
+            \text{TA}_{k}^{-1}
+            \left(
+                \frac{v}{w_k}
+                +
+                \text{TA}_{k}(0)
+            \right)
+        \right]
+    \end{align}
 
 % endregion
 
