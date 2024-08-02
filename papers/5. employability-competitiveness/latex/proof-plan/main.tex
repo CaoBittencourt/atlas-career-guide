@@ -488,45 +488,63 @@ Now, to generalize this conclusion for other economic configurations, we shall d
 Hence, mathematically,
 \begin{gather}
     l \in \left[
-    \frac{\ell - 1}{w_q}
+    \ell_{v-1}
     ,
-    \frac{\ell}{w_q}
+    \ell_{v}
     \right]
     ,
-    \ell \in 
+\end{gather}
+with
+\begin{gather}
+    \ell_{v} \in [0,1]
+    \
+    \forall
+    \
+    v \in 
     \left\{
         1, \dots, w_q
     \right\}
+    ,
+    \\
+    l_0 = 0
+    ,
+    \\
+    l_{w_q} = 1
 \end{gather}
-is a responsability spectrum in a maximally stratified labor market, in which employment levels are given by
+and
 \begin{gather}
-    \sum_{\ell=1}^{w_q}
-    w_{q}^{\ell}
+    \sum_{v=1}^{w_q}\ell_{v} = 1
+\end{gather}
+is one of $w_q$ responsability spectra in a maximally stratified labor market, in which employment levels are unitary, or given by
+\begin{gather}
+    \sum_{v=1}^{w_q}
+    1
     =
     w_q
     ,
 \end{gather}
 so that any available position is its own job subtype and covers only a restrictive range of task difficulty, accounting for
 \begin{gather}
-    \Omega_{q}^{\ell} = 
-    \frac{1}{\mho_{q}^{\ell}} = 
+    \Omega_{q}^{v} = 
+    \frac{1}{\mho_{q}^{v}} = 
     \int_{
-        \frac{\ell - 1}{w_q}
+        \ell_{v-1}
     }^{
-        \frac{\ell}{w_q}
+        \ell_{v}
     }
     \text{ta}(l)dl
+    \in [0,1]
 \end{gather}
-of an operation's total time duration
+of an operation's total time duration,
 \begin{gather}
-    \sum_{\ell=1}^{w_q}
-    \Omega_{q}^{\ell} 
+    \sum_{v=1}^{w_q}
+    \Omega_{q}^{v} 
     = 
-    \sum_{\ell=1}^{w_q}
+    \sum_{v=1}^{w_q}
     \int_{
-        \frac{\ell - 1}{w_q}
+        \ell_{v-1}
     }^{
-        \frac{\ell}{w_q}
+        \ell_{v}
     }
     \text{ta}(l)dl
     =
@@ -545,6 +563,67 @@ However, in a maximum labor stratification setting, these partial operational ou
 Again, this does not mean employees are, actually, more or less competent, only that the available positions are preemptively stratified with respect to task difficulty, in order to maximize employers' hiring pool and safeguard production in the case workers are not sufficiently qualified to produce the whole responsability spectrum by themselves (see ``Maximum-Monotonic Labor Stratification Lemma'' below).
 
 [end definition of maximum-monotonic labor stratification]
+
+% Hence, mathematically,
+% \begin{gather}
+%     l \in \left[
+%     \frac{\ell - 1}{w_q}
+%     ,
+%     \frac{\ell}{w_q}
+%     \right]
+%     ,
+%     \ell \in 
+%     \left\{
+%         1, \dots, w_q
+%     \right\}
+% \end{gather}
+% is a responsability spectrum in a maximally stratified labor market, in which employment levels are given by
+% \begin{gather}
+%     \sum_{\ell=1}^{w_q}
+%     w_{q}^{\ell}
+%     =
+%     w_q
+%     ,
+% \end{gather}
+% so that any available position is its own job subtype and covers only a restrictive range of task difficulty, accounting for
+% \begin{gather}
+%     \Omega_{q}^{\ell} = 
+%     \frac{1}{\mho_{q}^{\ell}} = 
+%     \int_{
+%         \frac{\ell - 1}{w_q}
+%     }^{
+%         \frac{\ell}{w_q}
+%     }
+%     \text{ta}(l)dl
+% \end{gather}
+% of an operation's total time duration
+% \begin{gather}
+%     \sum_{\ell=1}^{w_q}
+%     \Omega_{q}^{\ell} 
+%     = 
+%     \sum_{\ell=1}^{w_q}
+%     \int_{
+%         \frac{\ell - 1}{w_q}
+%     }^{
+%         \frac{\ell}{w_q}
+%     }
+%     \text{ta}(l)dl
+%     =
+%     \int_{0}^{1}
+%     \text{ta}(l)dl
+%     =
+%     1
+%     .
+% \end{gather}
+
+% Intuitively speaking, we would say production in a maximally and monotonically stratified labor market is not ``independent'', in the sense that employees do not work on an occupation's operation from beginning to end. This means each of them will spend all their time allowance producing a partial operational output, that is a multiple of a difficulty subinterval of complex tasks, which will, in turn, contribute, alonside the partial outputs of other employees, to accomplish the occupational operation in its entirety.
+
+% However, in a maximum labor stratification setting, these partial operational outputs will not be produced merely via ``senior'' and ``junior'' positions, as previously, but rather within a myriad of levels in a production hierarchy, approximating a continuum of ``seniority'' as the workforce becomes large enough.
+% % However, in a maximally stratified labor market, these partial operational outputs will not be produced merely via ``senior'' and ``junior'' positions, as previously, but rather within a myriad of levels in a production hierarchy, approximating a continuum of ``seniority'' as the workforce becomes large enough.
+
+% Again, this does not mean employees are, actually, more or less competent, only that the available positions are preemptively stratified with respect to task difficulty, in order to maximize employers' hiring pool and safeguard production in the case workers are not sufficiently qualified to produce the whole responsability spectrum by themselves (see ``Maximum-Monotonic Labor Stratification Lemma'' below).
+
+% [end definition of maximum-monotonic labor stratification]
 
 Having understood what maximum-monotonic labor stratification is, we shall demonstrate that, given our axioms, such an economic configuration is, in fact, the only optimal production strategy and, so, holds in the labor market. To do so, let us first derive the maximum operational output, irrespective of productive arrangement.
 
@@ -1000,6 +1079,50 @@ Maximum Operational Output Lemma (MOOL)
         \end{gather}
         there cannot be, even in theory, any productive arrangement yielding operational output higher than that obtained when perfectly qualified employees work independently. For, indeed, if employers establish other modes of production, workers' time allowances and tasks' time requirements will not change. In addition, splitting responsabilities across multiple job subtypes does not affect operational output (WOCA). Therefore, perfectly qualified independent production is the ``ceiling'' or ``benchmark'' for all production strategies.
         
+        \begin{align}
+            \int_{0}^{1}{
+                \text{ta}(l)dl
+            }
+            =
+            1
+            \\
+            \therefore
+            \mho_{q}^{*}
+            =
+            1 \times \left(
+                \int_{0}^{1}{
+                    \text{ta}(l)dl
+                }
+            \right) ^ {-1}
+            =
+            1
+            \\
+            \therefore
+            w_q \times
+            \mho_{q}^{*}
+            =
+            w_q \times \left(
+                \int_{0}^{1}{
+                    \text{ta}(l)dl
+                }
+            \right) ^ {-1}
+            =
+            w_q
+            \\
+            \because
+            \sum_{v=1}^{w_q}
+            \int_{0}^{1}{
+                    \text{ta}(l)dl
+                }
+            =
+            \sum_{v=1}^{w_q}
+            1
+            = 
+            w_q \times 1
+            = 
+            w_q
+        \end{align}
+
         The mathematical proof for this is quite straighforward. Because the aggregate production function is of the Leontief functional form (for simplicity's sake, here considering only two factors of production, namely an easier responsability spectrum and a harder responsability spectrum), that is
         \begin{gather}
             \mho_{q}(\tilde{w}_{q}^{k})
@@ -1782,7 +1905,6 @@ Maximum Operational Output Lemma (MOOL)
     \end{align}
     is partial employability, that is one's employability in a particular occupation $q$ in the labor market.
 
-    \item Employability in a maximally-monotonically stratified labor market with irregular responsability ranges (i.e. without partial hiring):
     \begin{align}
         \tilde{W}_k 
         &=
@@ -1962,6 +2084,152 @@ Competitiveness in a maximally-monotonically stratified labor market with irregu
         \right]
     \end{align}
 
+    P.S.: SSL
+    \begin{align}
+        a_{i}^{k} := \frac{l_{i}^{k}}{l_{i}} \in [0,1]
+        \\
+        \tilde{T}_{i}^{k} 
+        &= 
+        \int_{0}^{l_i}{
+            T(l,l_{i}^{k})
+            dl
+        }
+        \left(
+            \int_{0}^{l_i}{
+                T(l,l_{i})
+                dl
+            }
+        \right) ^ {-1}
+        \\
+        &= 
+        \left(
+            \int_{0}^{l_{i}^{k}}{
+                1
+                \times
+                dl
+            }
+            +
+            \int_{l_{i}^{k}}^{l_i}{
+                0
+                \times
+                dl
+            }
+        \right)
+        \times
+        \left(
+            \int_{0}^{l_i}{
+                1
+                \times
+                dl
+            }
+        \right) ^ {-1}
+        \\
+        &= 
+        \frac{l_{i}^{k} - 0}{l_{i} - 0}
+        \\
+        &= 
+        \frac{l_{i}^{k}}{l_{i}}
+        \\
+        &\therefore
+        a_{i}^{k} = \tilde{T}_{i}^{k}
+    \end{align}
+
+    P.S.: SCL
+    \begin{align}
+        \boldsymbol{a_k}
+        &:= (a_{1}^{k}, \dots, a_{m}^{k})
+        ,
+        \boldsymbol{a_q}
+        := (a_{1}^{q}, \dots, a_{m}^{q})
+        \in [0,1]^{m}
+        \
+        \forall
+        \
+        k,q \in \{1, \dots, n\}
+        \\
+        l_{q}^{k}
+        &\leq 
+        l_{q}^{q}
+        \
+        \forall
+        \
+        k,q \in \{1, \dots, n\}
+        \\
+        \tilde{T}_{q}^{k}
+        &= 
+        \int_{0}^{l_{q}^{q}}{
+            T(l,l_{q}^{k})
+            dl
+        }
+        \left(
+            \int_{0}^{l_{q}^{q}}{
+                T(l,l_{q}^{q})
+                dl
+            }
+        \right) ^ {-1}
+        \\
+        &= 
+        \left(
+            \int_{0}^{l_{q}^{k}}{
+                1
+                \times
+                dl
+            }
+            +
+            \int_{l_{q}^{k}}^{l_{q}^{q}}{
+                0
+                \times
+                dl
+            }
+        \right)
+        \times
+        \left(
+            \int_{0}^{l_{q}^{q}}{
+                1
+                \times
+                dl
+            }
+        \right) ^ {-1}
+        \\
+        &= 
+        \frac{l_{q}^{k} - 0}{l_{q}^{q} - 0}
+        \\
+        &= 
+        \frac{l_{q}^{k}}{l_{q}^{q}}
+        \in [0,1]
+        \\
+        &\because
+        \neg
+        \
+        l_{q}^{k}
+        >
+        l_{q}^{q}
+        \\
+        &\because
+        l_{q}^{k} = 
+        f(
+            \boldsymbol{l_k},
+            \boldsymbol{l_q}
+        ) 
+        =
+        f(
+            \boldsymbol{a_k},
+            \boldsymbol{a_q}
+        )?
+        \in [0,1]
+        \
+        \forall
+        \
+        k,q \in \{1, \dots, n\}
+        \\
+        &\therefore
+        \tilde{T}_{q}^{k}
+        =
+        f(
+            \boldsymbol{a_k},
+            \boldsymbol{a_q}
+        )
+    \end{align}
 % endregion
 
 \end{document}
