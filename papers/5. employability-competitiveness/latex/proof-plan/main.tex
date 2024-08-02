@@ -564,6 +564,234 @@ Again, this does not mean employees are, actually, more or less competent, only 
 
 [end definition of maximum-monotonic labor stratification]
 
+Maximally Stratified Production Lemma (MSPL)
+
+Because in a maximally and monotonically stratified labor market every position is its own job subtype (for, again, employment levels are unitary), optimal production is, then, obtained not by choosing how many workers to allocate to tasks of varying difficulty levels, but instead by setting appropriate responsability ranges for each position (i.e. which tasks to allocate \textit{to} workers).
+
+Furthermore, we have just demonstrated that the maximum operational output in any labor market is exactly the number of employees in its workforce, or $w_q$.
+
+[Thus, optimal responsability ranges can be estimated by equating partial operational outputs in a stratified setting with maximum production. So, for the first job subtype,]
+\begin{gather}
+    1 \times \left(
+        \int_{\ell_0}^{\ell_1}
+        \text{ta}(l)
+        dl
+    \right) ^ {-1}
+    =
+    1 \times \left(
+        \int_{0}^{\ell_1}
+        \text{ta}(l)
+        dl
+    \right) ^ {-1}
+    =
+    w_q
+    ,
+\end{gather}
+which means the partial operational output of the first worker, whose tasks range from $\ell_0 = 0$ to $\ell_1 \in [0,1]$ exclusively, should produce the same amount of the $l \in [0,\ell_1]$ responsability spectrum as would be produced in an economic configuration with maximum operational output (e.g. with $w_q$ perfectly qualified employees working independently).
+
+Thus, solving for $l_1$, we get:
+\begin{align}
+    1 
+    &\times 
+    \left(
+        \int_{0}^{\ell_1}
+        \text{ta}(l)
+        dl
+    \right) ^ {-1}
+    =
+    w_q
+    \\
+    &\therefore
+    \int_{0}^{\ell_1}
+    \text{ta}(l)
+    dl
+    =
+    \frac{1}{w_q}
+    \\
+    &\therefore
+    \text{TA}(l)
+    \big|_{0}^{\ell_1}
+    =
+    \frac{1}{w_q}
+    \\
+    &\therefore
+    \text{TA}(\ell_1)
+    -
+    \text{TA}(0)
+    =
+    \frac{1}{w_q}
+    \\
+    &\therefore
+    \text{TA}^{-1}(
+        \text{TA}(\ell_1)
+    )
+    =
+    \text{TA}^{-1}\left(
+        \frac{1}{w_q}
+        +
+        \text{TA}(0)
+    \right)
+    \\
+    &\therefore
+    \ell_1
+    =
+    \text{TA}^{-1}\left(
+        \frac{1}{w_q}
+        +
+        \text{TA}(0)
+    \right)
+    .
+\end{align}
+
+Likewise, for the second worker,
+\begin{align}
+    1 
+    &\times 
+    \left(
+        \int_{\ell_1}^{\ell_2}
+        \text{ta}(l)
+        dl
+    \right) ^ {-1}
+    =
+    w_q
+    \\
+    &\therefore
+    \int_{\ell_1}^{\ell_2}
+    \text{ta}(l)
+    dl
+    =
+    \frac{1}{w_q}
+    \\
+    &\therefore
+    \text{TA}(l)
+    \big|_{\ell_1}^{\ell_2}
+    =
+    \frac{1}{w_q}
+    \\
+    &\therefore
+    \text{TA}(\ell_2)
+    -
+    \text{TA}(\ell_1)
+    =
+    \frac{1}{w_q}
+    \\
+    &\therefore
+    \text{TA}^{-1}(
+        \text{TA}(\ell_2)
+    )
+    =
+    \text{TA}^{-1}\left(
+        \frac{1}{w_q}
+        +
+        \text{TA}(\ell_1)
+    \right)
+    \\
+    &\therefore
+    \text{TA}^{-1}(
+        \text{TA}(\ell_2)
+    )
+    =
+    \text{TA}^{-1}\left(
+        \frac{1}{w_q}
+        +
+        \frac{1}{w_q}
+        +
+        \text{TA}(0)
+    \right)
+    \\
+    &\therefore
+    \ell_2
+    =
+    \text{TA}^{-1}\left(
+        \frac{2}{w_q}
+        +
+        \text{TA}(0)
+    \right)
+    .
+\end{align}
+
+For the third worker,
+\begin{align}
+    1 
+    &\times 
+    \left(
+        \int_{\ell_2}^{\ell_3}
+        \text{ta}(l)
+        dl
+    \right) ^ {-1}
+    =
+    w_q
+    \\
+    &\therefore
+    \int_{\ell_2}^{\ell_3}
+    \text{ta}(l)
+    dl
+    =
+    \frac{1}{w_q}
+    \\
+    &\therefore
+    \text{TA}(l)
+    \big|_{\ell_2}^{\ell_3}
+    =
+    \frac{1}{w_q}
+    \\
+    &\therefore
+    \text{TA}(\ell_3)
+    -
+    \text{TA}(\ell_2)
+    =
+    \frac{1}{w_q}
+    \\
+    &\therefore
+    \text{TA}^{-1}(
+        \text{TA}(\ell_3)
+    )
+    =
+    \text{TA}^{-1}\left(
+        \frac{1}{w_q}
+        +
+        \text{TA}(\ell_2)
+    \right)
+    \\
+    &\therefore
+    \text{TA}^{-1}(
+        \text{TA}(\ell_3)
+    )
+    =
+    \text{TA}^{-1}\left(
+        \frac{1}{w_q}
+        +
+        \frac{1}{w_q}
+        +
+        \frac{1}{w_q}
+        +
+        \text{TA}(0)
+    \right)
+    \\
+    &\therefore
+    \ell_3
+    =
+    \text{TA}^{-1}\left(
+        \frac{3}{w_q}
+        +
+        \text{TA}(0)
+    \right)
+    .
+\end{align}
+
+And so on and so forth, for every worker in the stratified labor market:
+\begin{gather}
+    \ell_v
+    =
+    \text{TA}^{-1}\left(
+        \frac{v}{w_q}
+        +
+        \text{TA}(0)
+    \right)
+    .
+\end{gather}
+
+
 % Hence, mathematically,
 % \begin{gather}
 %     l \in \left[
