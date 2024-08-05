@@ -511,10 +511,6 @@ with
     \\
     l_0 = 0
 \end{gather}
-and
-\begin{gather}
-    \sum_{v=1}^{w_q}\ell_{v} = 1
-\end{gather}
 is one of $w_q$ responsability spectra in a maximally stratified labor market, in which employment levels are unitary, or given by
 \begin{gather}
     \sum_{v=1}^{w_q}
@@ -525,7 +521,7 @@ is one of $w_q$ responsability spectra in a maximally stratified labor market, i
 \end{gather}
 so that any available position is its own job subtype and covers only a restrictive range of task difficulty, accounting for
 \begin{gather}
-    \Omega_{q}^{v} = 
+    \Omega_{q}^{v} := 
     \frac{1}{\mho_{q}^{v}} = 
     \int_{
         \ell_{v-1}
@@ -612,9 +608,6 @@ Thus, solving for $l_1$, we get:
     \text{TA}(l)
     \big|_{0}^{\ell_1}
     =
-    \frac{1}{w_q}
-    \\
-    &\therefore
     \text{TA}(\ell_1)
     -
     \text{TA}(0)
@@ -666,9 +659,6 @@ Likewise, for the second worker,
     \text{TA}(l)
     \big|_{\ell_1}^{\ell_2}
     =
-    \frac{1}{w_q}
-    \\
-    &\therefore
     \text{TA}(\ell_2)
     -
     \text{TA}(\ell_1)
@@ -733,9 +723,6 @@ For the third worker,
     \text{TA}(l)
     \big|_{\ell_2}^{\ell_3}
     =
-    \frac{1}{w_q}
-    \\
-    &\therefore
     \text{TA}(\ell_3)
     -
     \text{TA}(\ell_2)
@@ -779,7 +766,146 @@ For the third worker,
     .
 \end{align}
 
-And so on and so forth, for every worker in the stratified labor market:
+And so on and so forth, up to the very last worker:
+\begin{align}
+    1 
+    &\times 
+    \left(
+        \int_{\ell_{w_q - 1}}^{\ell_{w_q}}
+        \text{ta}(l)
+        dl
+    \right) ^ {-1}
+    =
+    w_q
+    \\
+    &\therefore
+    \int_{\ell_{w_q - 1}}^{\ell_{w_q}}
+    \text{ta}(l)
+    dl
+    =
+    \frac{1}{w_q}
+    \\
+    &\therefore
+    \text{TA}(l)
+    \big|_{\ell_{w_q - 1}}^{\ell_{w_q}}
+    =
+    \text{TA}(\ell_{w_q})
+    -
+    \text{TA}(\ell_{w_q - 1})
+    =
+    \frac{1}{w_q}
+    \\
+    &\therefore
+    \text{TA}^{-1}(
+        \text{TA}(\ell_{w_q})
+    )
+    =
+    \text{TA}^{-1}\left(
+        \frac{1}{w_q}
+        +
+        \text{TA}(\ell_{w_q - 1})
+    \right)
+    \\
+    &\therefore
+    \text{TA}^{-1}(
+        \text{TA}(\ell_{w_q})
+    )
+    =
+    \text{TA}^{-1}\left(
+        \frac{1}{w_q}
+        +
+        \dots
+        +
+        \frac{1}{w_q}
+        +
+        \text{TA}(0)
+    \right)
+    \\
+    &\therefore
+    \ell_{w_q}
+    =
+    \text{TA}^{-1}\left(
+        \frac{w_q}{w_q}
+        +
+        \text{TA}(0)
+    \right)
+    := 1
+    \\
+    &\iff
+    \text{TA}^{-1}\left(
+        \frac{w_q}{w_q}
+        +
+        \text{TA}(0)
+    \right)
+    =
+    \text{TA}^{-1}\left(
+        1
+        +
+        \text{TA}(0)
+    \right)
+    =
+    1
+    \\
+    &\iff
+    \text{TA}\left(
+        \text{TA}^{-1}\left(
+        1
+        +
+        \text{TA}(0)
+    \right)
+    \right)
+    =
+    \text{TA}(1)
+    \\
+    &\iff
+    \text{TA}(1)
+    -
+    \text{TA}(0)
+    =
+    \int_{0}^{1}{
+        \text{ta}(l)
+        dl
+    }
+    =
+    1
+    ,
+\end{align}
+which is true, by definition,
+\begin{align}
+    &\because
+    \text{ta}(l) 
+    :=
+    \text{ttc}(l)
+    \times
+    \left(
+        \int_{0}^{1}{
+            \text{ttc}(l)
+            dl
+        }
+    \right) ^ {-1}
+    \\
+    &\therefore
+    \int_{0}^{1}{
+        \text{ta}(l)
+        dl
+    }
+    =
+    \left(
+        \int_{0}^{1}
+        \text{ttc}(l)
+        dl
+    \right) ^ {-1}
+    \times
+    \int_{0}^{1}{
+        \text{ttc}(l)
+        dl
+    }
+    =
+    1
+    .
+\end{align}
+
+And, with this condition met, we can finally arrive, by the induction above, to a general form of optimal responsability ranges:
 \begin{gather}
     \ell_v
     =
@@ -788,9 +914,15 @@ And so on and so forth, for every worker in the stratified labor market:
         +
         \text{TA}(0)
     \right)
+    \
+    \forall
+    \
+    v \in 
+    \left\{
+        1, \dots, w_q
+    \right\}
     .
 \end{gather}
-
 
 % Hence, mathematically,
 % \begin{gather}
@@ -2458,6 +2590,289 @@ Competitiveness in a maximally-monotonically stratified labor market with irregu
             \boldsymbol{a_q}
         )
     \end{align}
+    P.S.: Simplified Employability Theorem/Corollary (SET/SEC)
+
+    We want to show that, as with the Binary Employability Theorem (BET), so too in a maximally and monotonically stratified labor market, employability is the percentage of an operation's total time duration one's productivity allows them to accomplish. Or, mathematically,
+    \begin{gather}
+        \tilde{W}_{q}^{k}
+        =
+        \int_{0}^{\tilde{T}_{q}^{k}}
+        \text{ta}(l)
+        dl
+        :=
+        \Omega_{q}^{k}
+        \in 
+        [0,1]
+        \
+        \forall
+        \
+        k,q \in \{1, \dots, n\}
+        .
+    \end{gather}
+
+    To prove this result, let us, then, first consider what would be the employability of person $k$ if they had exactly the minimum required productivity for every job subtype. So, for instance, when $v = 1$,
+    \begin{align}
+        \tilde{T}_{q}^{k}
+        =
+        \ell_1
+        =
+        \text{TA}^{-1}
+        \left(
+            \frac{1}{w_q}
+            +
+            \text{TA}(0)
+        \right)
+        \implies
+        \tilde{W}_{q}^{k}
+        =
+        \frac{1}{w_q}
+        ,
+    \end{align}
+    as a productivity coefficient of $\tilde{T}_{q}^{k} = \ell_1$ is just enough to be hireable on the easiest job in occupation $q$'s labor market, but not on the second, much less on the remaining, more difficult, positions.
+    
+    Likewise, for other values of $v$, we have
+    \begin{gather}
+        \tilde{T}_{q}^{k}
+        =
+        \ell_2
+        =
+        \text{TA}^{-1}
+        \left(
+            \frac{2}{w_q}
+            +
+            \text{TA}(0)
+        \right)
+        \implies
+        \tilde{W}_{q}^{k}
+        =
+        \frac{2}{w_q}
+        ,
+        \\
+        \tilde{T}_{q}^{k}
+        =
+        \ell_3
+        =
+        \text{TA}^{-1}
+        \left(
+            \frac{3}{w_q}
+            +
+            \text{TA}(0)
+        \right)
+        \implies
+        \tilde{W}_{q}^{k}
+        =
+        \frac{3}{w_q}
+        ,
+        \\
+        \vdots
+        \\
+        \tilde{T}_{q}^{k}
+        =
+        \ell_{v}
+        =
+        \text{TA}^{-1}
+        \left(
+            \frac{v}{w_q}
+            +
+            \text{TA}(0)
+        \right)
+        \implies
+        \tilde{W}_{q}^{k}
+        =
+        \frac{v}{w_q}
+        ,
+    \end{gather}
+    so that we may derive the following pattern for any $v \in \{1, \dots, w_q\}$:
+    \begin{align}
+        &\tilde{T}_{q}^{k}
+        % =
+        % \text{TA}^{-1}
+        % \left(
+        %     \frac{v}{w_q}
+        %     +
+        %     \text{TA}(0)
+        % \right)
+        % \implies
+        % \tilde{W}_{q}^{k}
+        % =
+        % \frac{v}{w_q}
+        % \\
+        % &\therefore
+        % \tilde{T}_{q}^{k}
+        =
+        \text{TA}^{-1}
+        \left(
+            \tilde{W}_{q}^{k}
+            +
+            \text{TA}(0)
+        \right)
+        \\
+        &
+        \therefore
+        \text{TA}
+        (
+        % \left(
+            \tilde{T}_{q}^{k}
+        )
+        % \right)
+        =
+        \text{TA}
+        \left(
+            \text{TA}^{-1}
+            \left(
+                \tilde{W}_{q}^{k}
+                +
+                \text{TA}(0)
+            \right)
+        \right)
+        \\
+        &
+        \therefore
+        \text{TA}
+        (
+        % \left(
+            \tilde{T}_{q}^{k}
+        )
+        % \right)
+        =
+        \tilde{W}_{q}^{k}
+        +
+        \text{TA}(0)
+        \\
+        &
+        \therefore
+        \tilde{W}_{q}^{k}
+        =
+        \text{TA}
+        (
+        % \left(
+            \tilde{T}_{q}^{k}
+        )
+        % \right)
+        -
+        \text{TA}(0)
+        =
+        \int_{0}^{\tilde{T}_{q}^{k}}
+        \text{ta}(l)
+        dl
+        :=
+        \Omega_{q}^{k}
+        \in 
+        [0,1]
+        ,
+    \end{align}
+    as we wanted to show.
+    
+    However, because $\tilde{T}_{q}^{k} \in [0,1]$ is not discretized as responsability ranges $l \in [l_{v-1},l_{v}], v \in \{1, \dots, w_q\}$ are, and because rational employers do not hire insufficiently qualified employees, we must approximate $\tilde{T}_{q}^{k}$ with the closest 
+    \begin{gather}
+        \tilde{T}_{q}^{\kappa}
+        =
+        \left(
+            \frac{1}{w_q}
+        \right)
+        \sum_{v=1}^{w_q}
+        \left[
+            \tilde{T}_{q}^{k}
+            \geq
+            l_v
+        \right]
+    \end{gather}
+    productivity estimate, such that $\tilde{T}_{q}^{k} \geq \tilde{T}_{q}^{\kappa}$ and $\tilde{T}_{q}^{k} \approx \tilde{T}_{q}^{\kappa}$, where $
+    \tilde{T}_{q}^{\kappa} = \ell_{\kappa} \in \{\ell_0, \dots, \ell_{w_q}\}$ determines the most demanding task for which $k$ is still productive. Therefore, the adjusted coefficient is:
+    \begin{gather}
+        \tilde{W}_{q}^{k}
+        =
+        \int_{0}^{\tilde{T}_{q}^{\kappa}}
+        \text{ta}(l)
+        dl
+        :=
+        \Omega_{q}^{\kappa}
+        \approx
+        \int_{0}^{\tilde{T}_{q}^{k}}
+        \text{ta}(l)
+        dl
+        \in 
+        [0,1]
+        ,
+    \end{gather}
+    when $w_q$ is large enough.
+
+    Of course, this assumes candidate $k$ is evaluated as ``employable'' in accordance with the hireability statistic
+    \begin{gather}
+        \left[
+            h_{q}^{k}
+            \geq
+            \frac{1}{2}
+        \right]
+        ,
+    \end{gather}
+    which accounts for selection criteria besides minimum required productivity. Thus, a more complete formulation would be:
+    \begin{gather}
+        \tilde{W}_{q}^{k}
+        =
+        \left[
+            h_{q}^{k}
+            \geq
+            \frac{1}{2}
+        \right]
+        \int_{0}^{\tilde{T}_{q}^{\kappa}}
+        \text{ta}(l)
+        dl
+        % \in 
+        % [0,1]
+        ;
+    \end{gather}
+    or, in the aggregate form,
+    \begin{gather}
+        \tilde{W}_k 
+        = 
+        \left(
+            \frac{1}{W}
+        \right)
+        \sum_{q=1}^{n}
+        \left[
+            h_{q}^{k}
+            \geq
+            \frac{1}{2}
+        \right]
+        \int_{0}^{\tilde{T}_{q}^{\kappa}}
+        \text{ta}(l)
+        dl
+        % \\
+        :=
+        \left(
+            \frac{1}{W}
+        \right)
+        \sum_{q=1}^{n}
+        \left[
+            h_{q}^{k}
+            \geq
+            \frac{1}{2}
+        \right]
+        \Omega_{q}^{\kappa}
+        \\
+        % &
+        \
+        \forall
+        \
+        \tilde{T}_{q}^{\kappa} \in \{
+            \ell_{0}, 
+            \dots, 
+            \ell_{w_q}
+            % 
+            % \ell_{q}^{0}, 
+            % \dots, 
+            % \ell_{q}^{w_q}
+            % 
+            % \ell_{0}^{q}, 
+            % \dots, 
+            % \ell_{w_q}^{q}
+        \}
+        % ,
+        ;
+        k,q \in \{1, \dots, n\}
+        .
+    \end{gather}
 % endregion
 
 \end{document}
