@@ -693,7 +693,7 @@ Maximum Operational Output Lemma (MOOL)
         .
     \end{gather}
     
-    With this, we note that, as each worker's time allowance is the same as operations' total time requirements, failing to output any single task by overemphasizing another one would nullify the whole operation, when production is independent. Hence, the optimal choice of hours to allocate to any task has to be:
+    With this, we note that, as each worker's time allowance is the same as operations' total time requirements, failing to output any single task by overemphasizing another one would nullify the whole operation, when production is independent. Hence, the optimal choice of hours to allocate to any task has to be
     \begin{gather}
         \Omega_{q}^{\ell} 
         \in
@@ -701,7 +701,9 @@ Maximum Operational Output Lemma (MOOL)
         .
     \end{gather}
 
-    Furthermore, by the definition of partial operational output (ref) above, one outputs $\mho_{q}^{\ell}$ when spending their unitary time allowance to produce some responsability spectrum. Therefore, with only $\Omega_{q}^{\ell}$ time units,  operational output is:
+    Furthermore, by the definition of partial operational output (ref) above, one outputs $\mho_{q}^{\ell}$ when spending their unitary time allowance to produce some responsability spectrum. So, the output of only $\Omega_{q}^{\ell}$ time units is:
+    % Furthermore, by the definition of partial operational output (ref) above, one outputs $\mho_{q}^{\ell}$ when spending their unitary time allowance to produce some responsability spectrum. So, operational output, with only $\Omega_{q}^{\ell}$ time units, is:
+    % Furthermore, by the definition of partial operational output (ref) above, one outputs $\mho_{q}^{\ell}$ when spending their unitary time allowance to produce some responsability spectrum. Therefore, with only $\Omega_{q}^{\ell}$ time units,  operational output is:
     \begin{gather}
         \Omega_{q}^{\ell}
         \mho_{q}^{\ell}
@@ -718,6 +720,16 @@ Maximum Operational Output Lemma (MOOL)
     
     And, as Weak Occupational Complexity implies the production function is homothetic, the aggregate operational output of $w_q$ perfectly qualified employees working independently is:
     \begin{gather}
+        \mho_{q}^{*}
+        =
+        \min(
+            \boldsymbol{\Omega_q}
+            \times
+            \boldsymbol{\mho_q}
+        )
+        \times
+        w_q
+        =
         \Omega_{q}^{\ell}
         \mho_{q}^{\ell}
         \times
