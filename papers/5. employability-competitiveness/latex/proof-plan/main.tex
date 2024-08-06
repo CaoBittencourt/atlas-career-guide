@@ -483,7 +483,8 @@
 
 Maximum-Monotonic Labor Stratification Definition
 
-Now, to generalize this conclusion for other economic configurations, we shall define notation in terms of maximum labor stratification, a productive arrangement where there are several job subtypes, indeed as many as there are jobs themselves, each with a limited spectrum of responsabilities.
+Now, to generalize this conclusion, we shall define notation in terms of maximum labor stratification, a productive arrangement where there are several job subtypes, indeed as many as there are jobs themselves, each with a limited spectrum of responsabilities.
+% Now, to generalize this conclusion for other economic configurations, we shall define notation in terms of maximum labor stratification, a productive arrangement where there are several job subtypes, indeed as many as there are jobs themselves, each with a limited spectrum of responsabilities.
 
 Hence, mathematically,
 \begin{gather}
@@ -556,474 +557,54 @@ Intuitively speaking, we would say production in a maximally and monotonically s
 However, in a maximum labor stratification setting, these partial operational outputs will not be produced merely via ``senior'' and ``junior'' positions, as previously, but rather within a myriad of levels in a production hierarchy, approximating a continuum of ``seniority'' as the workforce becomes large enough.
 % However, in a maximally stratified labor market, these partial operational outputs will not be produced merely via ``senior'' and ``junior'' positions, as previously, but rather within a myriad of levels in a production hierarchy, approximating a continuum of ``seniority'' as the workforce becomes large enough.
 
-Again, this does not mean employees are, actually, more or less competent, only that the available positions are preemptively stratified with respect to task difficulty, in order to maximize employers' hiring pool and safeguard production in the case workers are not sufficiently qualified to produce the whole responsability spectrum by themselves (see ``Maximum-Monotonic Labor Stratification Lemma'' below).
+Again, this does not mean employees are, themselves, more or less competent, only that available job posts are preemptively stratified with respect to task difficulty, in order to maximize employers' hiring pool and safeguard production in the case workers are not sufficiently qualified to produce the whole responsability spectrum independently (see ``Maximum-Monotonic Labor Stratification Lemma'' below).
 
 [end definition of maximum-monotonic labor stratification]
 
-Optimal Stratification Lemma (OSL)
-% Maximally Stratified Production Lemma (MSPL)
-
-Because in a maximally and monotonically stratified labor market every position is its own job subtype (for, again, employment levels are unitary), optimal production is, then, obtained not by choosing how many workers to allocate to tasks of varying difficulty levels, but instead by setting appropriate responsability ranges for each position (i.e. which tasks to allocate \textit{to} workers). The upper bounds of these ranges are calculated by:
-\begin{gather}
-    \ell_v
-    =
-    \text{TA}^{-1}\left(
-        \frac{v}{w_q}
-        +
-        \text{TA}(0)
-    \right)
-    \
-    \forall
-    \
-    v \in 
-    \left\{
-        1, \dots, w_q
-    \right\}
-    .
-\end{gather}
-
-\textit{Proof}:
-
-We have just demonstrated that the maximum operational output in any labor market is exactly the number of employees in its workforce, or $w_q$.
-
-[Thus, optimal responsability ranges can be estimated by equating partial operational outputs in a stratified setting with maximum production. So, for the first job subtype,]
-\begin{gather}
-    1 \times \left(
-        \int_{\ell_0}^{\ell_1}
-        \text{ta}(l)
-        dl
-    \right) ^ {-1}
-    =
-    1 \times \left(
-        \int_{0}^{\ell_1}
-        \text{ta}(l)
-        dl
-    \right) ^ {-1}
-    =
-    w_q
-    ,
-\end{gather}
-which means the partial operational output of the first worker, whose tasks range from $\ell_0 = 0$ to $\ell_1 \in [0,1]$ exclusively, should produce the same amount of the $l \in [0,\ell_1]$ responsability spectrum as would be produced in an economic configuration with maximum operational output (e.g. with $w_q$ perfectly qualified employees working independently).
-
-Thus, solving for $\ell_1$, we get:
-\begin{align}
-    1 
-    &\times 
-    \left(
-        \int_{0}^{\ell_1}
-        \text{ta}(l)
-        dl
-    \right) ^ {-1}
-    =
-    w_q
-    \\
-    &\therefore
-    \int_{0}^{\ell_1}
-    \text{ta}(l)
-    dl
-    =
-    \frac{1}{w_q}
-    \\
-    &\therefore
-    \text{TA}(l)
-    \big|_{0}^{\ell_1}
-    =
-    \text{TA}(\ell_1)
-    -
-    \text{TA}(0)
-    =
-    \frac{1}{w_q}
-    \\
-    &\therefore
-    \text{TA}^{-1}(
-        \text{TA}(\ell_1)
-    )
-    =
-    \text{TA}^{-1}\left(
-        \frac{1}{w_q}
-        +
-        \text{TA}(0)
-    \right)
-    \\
-    &\therefore
-    \ell_1
-    =
-    \text{TA}^{-1}\left(
-        \frac{1}{w_q}
-        +
-        \text{TA}(0)
-    \right)
-    .
-\end{align}
-
-Likewise, for the second worker,
-\begin{align}
-    1 
-    &\times 
-    \left(
-        \int_{\ell_1}^{\ell_2}
-        \text{ta}(l)
-        dl
-    \right) ^ {-1}
-    =
-    w_q
-    \\
-    &\therefore
-    \int_{\ell_1}^{\ell_2}
-    \text{ta}(l)
-    dl
-    =
-    \frac{1}{w_q}
-    \\
-    &\therefore
-    \text{TA}(l)
-    \big|_{\ell_1}^{\ell_2}
-    =
-    \text{TA}(\ell_2)
-    -
-    \text{TA}(\ell_1)
-    =
-    \frac{1}{w_q}
-    \\
-    &\therefore
-    \text{TA}^{-1}(
-        \text{TA}(\ell_2)
-    )
-    =
-    \text{TA}^{-1}\left(
-        \frac{1}{w_q}
-        +
-        \text{TA}(\ell_1)
-    \right)
-    \\
-    &\therefore
-    \text{TA}^{-1}(
-        \text{TA}(\ell_2)
-    )
-    =
-    \text{TA}^{-1}\left(
-        \frac{1}{w_q}
-        +
-        \frac{1}{w_q}
-        +
-        \text{TA}(0)
-    \right)
-    \\
-    &\therefore
-    \ell_2
-    =
-    \text{TA}^{-1}\left(
-        \frac{2}{w_q}
-        +
-        \text{TA}(0)
-    \right)
-    .
-\end{align}
-
-For the third worker,
-\begin{align}
-    1 
-    &\times 
-    \left(
-        \int_{\ell_2}^{\ell_3}
-        \text{ta}(l)
-        dl
-    \right) ^ {-1}
-    =
-    w_q
-    \\
-    &\therefore
-    \int_{\ell_2}^{\ell_3}
-    \text{ta}(l)
-    dl
-    =
-    \frac{1}{w_q}
-    \\
-    &\therefore
-    \text{TA}(l)
-    \big|_{\ell_2}^{\ell_3}
-    =
-    \text{TA}(\ell_3)
-    -
-    \text{TA}(\ell_2)
-    =
-    \frac{1}{w_q}
-    \\
-    &\therefore
-    \text{TA}^{-1}(
-        \text{TA}(\ell_3)
-    )
-    =
-    \text{TA}^{-1}\left(
-        \frac{1}{w_q}
-        +
-        \text{TA}(\ell_2)
-    \right)
-    \\
-    &\therefore
-    \text{TA}^{-1}(
-        \text{TA}(\ell_3)
-    )
-    =
-    \text{TA}^{-1}\left(
-        \frac{1}{w_q}
-        +
-        \frac{1}{w_q}
-        +
-        \frac{1}{w_q}
-        +
-        \text{TA}(0)
-    \right)
-    \\
-    &\therefore
-    \ell_3
-    =
-    \text{TA}^{-1}\left(
-        \frac{3}{w_q}
-        +
-        \text{TA}(0)
-    \right)
-    .
-\end{align}
-
-And so on and so forth, up to the very last worker:
-\begin{align}
-    1 
-    &\times 
-    \left(
-        \int_{\ell_{w_q - 1}}^{\ell_{w_q}}
-        \text{ta}(l)
-        dl
-    \right) ^ {-1}
-    =
-    w_q
-    \\
-    &\therefore
-    \int_{\ell_{w_q - 1}}^{\ell_{w_q}}
-    \text{ta}(l)
-    dl
-    =
-    \frac{1}{w_q}
-    \\
-    &\therefore
-    \text{TA}(l)
-    \big|_{\ell_{w_q - 1}}^{\ell_{w_q}}
-    =
-    \text{TA}(\ell_{w_q})
-    -
-    \text{TA}(\ell_{w_q - 1})
-    =
-    \frac{1}{w_q}
-    \\
-    &\therefore
-    \text{TA}^{-1}(
-        \text{TA}(\ell_{w_q})
-    )
-    =
-    \text{TA}^{-1}\left(
-        \frac{1}{w_q}
-        +
-        \text{TA}(\ell_{w_q - 1})
-    \right)
-    \\
-    &\therefore
-    \text{TA}^{-1}(
-        \text{TA}(\ell_{w_q})
-    )
-    =
-    \text{TA}^{-1}\left(
-        \frac{1}{w_q}
-        +
-        \dots
-        +
-        \frac{1}{w_q}
-        +
-        \text{TA}(0)
-    \right)
-    \\
-    &\therefore
-    \ell_{w_q}
-    =
-    \text{TA}^{-1}\left(
-        \frac{w_q}{w_q}
-        +
-        \text{TA}(0)
-    \right)
-    := 1
-    \\
-    &\iff
-    \text{TA}^{-1}\left(
-        \frac{w_q}{w_q}
-        +
-        \text{TA}(0)
-    \right)
-    =
-    \text{TA}^{-1}\left(
-        1
-        +
-        \text{TA}(0)
-    \right)
-    =
-    1
-    \\
-    &\iff
-    \text{TA}\left(
-        \text{TA}^{-1}\left(
-        1
-        +
-        \text{TA}(0)
-    \right)
-    \right)
-    =
-    \text{TA}(1)
-    \\
-    &\iff
-    \text{TA}(1)
-    -
-    \text{TA}(0)
-    =
-    \int_{0}^{1}{
-        \text{ta}(l)
-        dl
-    }
-    =
-    1
-    ,
-\end{align}
-which is true, by definition,
-\begin{align}
-    &\because
-    \text{ta}(l) 
-    :=
-    \text{ttc}(l)
-    \times
-    \left(
-        \int_{0}^{1}{
-            \text{ttc}(l)
-            dl
-        }
-    \right) ^ {-1}
-    \\
-    &\therefore
-    \int_{0}^{1}{
-        \text{ta}(l)
-        dl
-    }
-    =
-    \left(
-        \int_{0}^{1}
-        \text{ttc}(l)
-        dl
-    \right) ^ {-1}
-    \times
-    \int_{0}^{1}{
-        \text{ttc}(l)
-        dl
-    }
-    =
-    1
-    .
-\end{align}
-
-And, with this condition met, we can finally arrive, by the induction above, to a general form of optimal responsability ranges:
-\begin{gather}
-    \ell_v
-    =
-    \text{TA}^{-1}\left(
-        \frac{v}{w_q}
-        +
-        \text{TA}(0)
-    \right)
-    \
-    \forall
-    \
-    v \in 
-    \left\{
-        1, \dots, w_q
-    \right\}
-    .
-\end{gather}
-
-% Hence, mathematically,
-% \begin{gather}
-%     l \in \left[
-%     \frac{\ell - 1}{w_q}
-%     ,
-%     \frac{\ell}{w_q}
-%     \right]
-%     ,
-%     \ell \in 
-%     \left\{
-%         1, \dots, w_q
-%     \right\}
-% \end{gather}
-% is a responsability spectrum in a maximally stratified labor market, in which employment levels are given by
-% \begin{gather}
-%     \sum_{\ell=1}^{w_q}
-%     w_{q}^{\ell}
-%     =
-%     w_q
-%     ,
-% \end{gather}
-% so that any available position is its own job subtype and covers only a restrictive range of task difficulty, accounting for
-% \begin{gather}
-%     \Omega_{q}^{\ell} = 
-%     \frac{1}{\mho_{q}^{\ell}} = 
-%     \int_{
-%         \frac{\ell - 1}{w_q}
-%     }^{
-%         \frac{\ell}{w_q}
-%     }
-%     \text{ta}(l)dl
-% \end{gather}
-% of an operation's total time duration
-% \begin{gather}
-%     \sum_{\ell=1}^{w_q}
-%     \Omega_{q}^{\ell} 
-%     = 
-%     \sum_{\ell=1}^{w_q}
-%     \int_{
-%         \frac{\ell - 1}{w_q}
-%     }^{
-%         \frac{\ell}{w_q}
-%     }
-%     \text{ta}(l)dl
-%     =
-%     \int_{0}^{1}
-%     \text{ta}(l)dl
-%     =
-%     1
-%     .
-% \end{gather}
-
-% Intuitively speaking, we would say production in a maximally and monotonically stratified labor market is not ``independent'', in the sense that employees do not work on an occupation's operation from beginning to end. This means each of them will spend all their time allowance producing a partial operational output, that is a multiple of a difficulty subinterval of complex tasks, which will, in turn, contribute, alonside the partial outputs of other employees, to accomplish the occupational operation in its entirety.
-
-% However, in a maximum labor stratification setting, these partial operational outputs will not be produced merely via ``senior'' and ``junior'' positions, as previously, but rather within a myriad of levels in a production hierarchy, approximating a continuum of ``seniority'' as the workforce becomes large enough.
-% % However, in a maximally stratified labor market, these partial operational outputs will not be produced merely via ``senior'' and ``junior'' positions, as previously, but rather within a myriad of levels in a production hierarchy, approximating a continuum of ``seniority'' as the workforce becomes large enough.
-
-% Again, this does not mean employees are, actually, more or less competent, only that the available positions are preemptively stratified with respect to task difficulty, in order to maximize employers' hiring pool and safeguard production in the case workers are not sufficiently qualified to produce the whole responsability spectrum by themselves (see ``Maximum-Monotonic Labor Stratification Lemma'' below).
-
-% [end definition of maximum-monotonic labor stratification]
-
-Having understood what maximum-monotonic labor stratification is, we shall demonstrate that, given our axioms, such an economic configuration is, in fact, the only optimal production strategy and, so, holds in the labor market. To do so, let us first derive the maximum operational output, irrespective of productive arrangement.
+Having understood what maximum-monotonic labor stratification is, we shall demonstrate that, given our axioms, such an economic configuration is, in fact, the only optimal production strategy and, so, holds in the labor market. But, to do so, we must first derive the maximum operational output, irrespective of productive arrangement, to serve as our ``benchmark''.
 
 Maximum Operational Output Lemma (MOOL)
 
     In any labor market, the maximum operational output is exactly the number of employees in its workforce:
     \begin{gather}
+        \mho_{q}^{*}
+        =
         \mho(
             \boldsymbol{w_{q}^{*}},
             \boldsymbol{\mho_q}
         ) = 
-        \boldsymbol{1} ^ {\top}
-        \cdot
-        \boldsymbol{w_{q}^{*}}
+        \min(
+            \boldsymbol{w_{q}^{*}}
+            \times
+            \boldsymbol{\mho_q}
+        )
         = w_q
         ,
     \end{gather}
-    where $\boldsymbol{w_{q}^{*}}$ is the vector of optimal employment levels in a labor market with $w_q$ employees; and $\boldsymbol{\mho_q}$, the vector of partial operational outputs. 
+    where $\boldsymbol{w_{q}^{*}}$ is the vector of optimal employment levels in a labor market with $w_q$ employees; and $\boldsymbol{\mho_q}$, the vector of partial operational outputs. Or, assuming maximum labor stratification with unitary employment levels,
+    \begin{gather}
+        \mho_{q}^{*}
+        =
+        \mho(
+            \boldsymbol{1},
+            \boldsymbol{\mho_q}(
+                \boldsymbol{\ell_{q}^{*}}
+            )
+        )
+        =
+        \min(
+            \boldsymbol{1}
+            \times
+            \boldsymbol{\mho_q}(
+                \boldsymbol{\ell_{q}^{*}}
+            )
+        )
+        = w_q
+        ,
+    \end{gather}
+    where $\boldsymbol{\ell_{q}^{*}}$ are optimal stratification bounds for the responsability spectra of occupation $q$'s job posts (see ``Optimal Stratification Lemma'' below).
     
-    Moreover, this maximum production can only be attained when the percentage of each position relative to the entire workforce respects the Proportional Employment Condition (PEC):
+    Moreover, when optimizing employment levels, this maximum production can only be attained when the percentage of each position relative to the entire workforce respects the Proportional Employment Condition (PEC):
     \begin{gather}
         \boldsymbol{\tilde{w}_{q}^{*}}
         =
@@ -1046,17 +627,19 @@ Maximum Operational Output Lemma (MOOL)
     \end{gather}
     accounted by it.
     
-    [Proof]
-    [Let us begin with a binary setting.]
+    \textit{Proof}:
+    
+    We begin, again, with a binary example, where $\tilde{w}_{q}^{\text{Jr}} \in [0,1]$ is the percentage of less qualified workers (i.e. ``juniors''), and $
+    \tilde{w}_{q}^{\text{Sr}} = 1 - \tilde{w}_{q}^{\text{Jr}} \in [0,1]$, the percentage of perfectly qualified workers (i.e. ``seniors''):
     \begin{align}
-        \mho(\tilde{w}_{q}^{k})
+        \mho(\tilde{w}_{q}^{\text{Jr}})
         &=
         \min\left(
             \frac{
-                \tilde{w}_{q}^{k}
+                \tilde{w}_{q}^{\text{Jr}}
             }{
                 \int_{0}^{
-                    \tilde{T}_{q}^{k}
+                    \tilde{T}_{q}^{\text{Jr}}
                 }{
                     \text{ta}(l)
                     dl
@@ -1064,10 +647,10 @@ Maximum Operational Output Lemma (MOOL)
             }
             ,
             \frac{
-                1 - \tilde{w}_{q}^{k}
+                1 - \tilde{w}_{q}^{\text{Jr}}
             }{
                 \int_{
-                    \tilde{T}_{q}^{k}
+                    \tilde{T}_{q}^{\text{Jr}}
                 }^{1}{
                     \text{ta}(l)
                     dl
@@ -1078,10 +661,10 @@ Maximum Operational Output Lemma (MOOL)
         &=
         \min\left(
             \frac{
-                \tilde{w}_{q}^{k}
+                \tilde{w}_{q}^{\text{Jr}}
             }{
                 \int_{0}^{
-                    \tilde{T}_{q}^{k}
+                    \tilde{T}_{q}^{\text{Jr}}
                 }{
                     \text{ta}(l)
                     dl
@@ -1089,7 +672,7 @@ Maximum Operational Output Lemma (MOOL)
             }
             ,
             \frac{
-                1 - \tilde{w}_{q}^{k}
+                1 - \tilde{w}_{q}^{\text{Jr}}
             }{
                 \int_{0}^{1}{
                     \text{ta}(l)
@@ -1097,7 +680,7 @@ Maximum Operational Output Lemma (MOOL)
                 }
                 -
                 \int_{0}^{
-                    \tilde{T}_{q}^{k}
+                    \tilde{T}_{q}^{\text{Jr}}
                 }{
                     \text{ta}(l)
                     dl
@@ -1108,171 +691,171 @@ Maximum Operational Output Lemma (MOOL)
         &=
         \min\left(
             \frac{
-                \tilde{w}_{q}^{k}
+                \tilde{w}_{q}^{\text{Jr}}
             }{
-                \Omega_{q}^{k}
+                \Omega_{q}^{\text{Jr}}
             }
             ,
             \frac{
-                1 - \tilde{w}_{q}^{k}
+                1 - \tilde{w}_{q}^{\text{Jr}}
             }{
-                1 - \Omega_{q}^{k}
+                1 - \Omega_{q}^{\text{Jr}}
             }
         \right)
         ,
     \end{align}
-    whereas the operational output of $\Omega_{q}^{k} \in [0,1]$ is
+    whereas the operational output of $\Omega_{q}^{\text{Jr}} \in [0,1]$ is
     \begin{align}
-        \mho(\Omega_{q}^{k}) 
+        \mho(\Omega_{q}^{\text{Jr}}) 
         =
         \min\left(
             \frac{
-                \Omega_{q}^{k}
+                \Omega_{q}^{\text{Jr}}
             }{
-                \Omega_{q}^{k}
+                \Omega_{q}^{\text{Jr}}
             }
             ,
             \frac{
-                1 - \Omega_{q}^{k}
+                1 - \Omega_{q}^{\text{Jr}}
             }{
-                1 - \Omega_{q}^{k}
+                1 - \Omega_{q}^{\text{Jr}}
             }
         \right)
         =
         \frac{
-            \Omega_{q}^{k}
+            \Omega_{q}^{\text{Jr}}
         }{
-            \Omega_{q}^{k}
+            \Omega_{q}^{\text{Jr}}
         }
         =
         \frac{
-            1 - \Omega_{q}^{k}
+            1 - \Omega_{q}^{\text{Jr}}
         }{
-            1 - \Omega_{q}^{k}
+            1 - \Omega_{q}^{\text{Jr}}
         }
         =
         1
         .
     \end{align}
 
-    With this, if $\tilde{w}_{q}^{k} \in [0,1]$ is set to $\tilde{w}_{q}^{k} > \Omega_{q}^{k}$, then
+    With this, if $\tilde{w}_{q}^{\text{Jr}} \in [0,1]$ is set to $\tilde{w}_{q}^{\text{Jr}} > \Omega_{q}^{\text{Jr}}$, then
     \begin{align}
         &
-        1 - \tilde{w}_{q}^{k}
+        1 - \tilde{w}_{q}^{\text{Jr}}
         <
-        1 - \Omega_{q}^{k}
+        1 - \Omega_{q}^{\text{Jr}}
         \\
         &\therefore
         \frac{
-            \tilde{w}_{q}^{k}
+            \tilde{w}_{q}^{\text{Jr}}
         }{
-            \Omega_{q}^{k}
+            \Omega_{q}^{\text{Jr}}
         }
         >
         1
         >
         \frac{
-            1 - \tilde{w}_{q}^{k}
+            1 - \tilde{w}_{q}^{\text{Jr}}
         }{
-            1 - \Omega_{q}^{k}
+            1 - \Omega_{q}^{\text{Jr}}
         }
         \\
         &\therefore
-        \mho(\tilde{w}_{q}^{k}) 
+        \mho(\tilde{w}_{q}^{\text{Jr}}) 
         =
         \min\left(
             \frac{
-                \tilde{w}_{q}^{k}
+                \tilde{w}_{q}^{\text{Jr}}
             }{
-                \Omega_{q}^{k}
+                \Omega_{q}^{\text{Jr}}
             }
             ,
             \frac{
-                1 - \tilde{w}_{q}^{k}
+                1 - \tilde{w}_{q}^{\text{Jr}}
             }{
-                1 - \Omega_{q}^{k}
+                1 - \Omega_{q}^{\text{Jr}}
             }
         \right)
         =
         \frac{
-            1 - \tilde{w}_{q}^{k}
+            1 - \tilde{w}_{q}^{\text{Jr}}
         }{
-            1 - \Omega_{q}^{k}
+            1 - \Omega_{q}^{\text{Jr}}
         }
         <
         1
         \\
         &\implies
-        \mho(\tilde{w}_{q}^{k})
+        \mho(\tilde{w}_{q}^{\text{Jr}})
         <
-        \mho(\Omega_{q}^{k})
+        \mho(\Omega_{q}^{\text{Jr}})
         ;
     \end{align}
-    and, likewise, if $\tilde{w}_{q}^{k} < \Omega_{q}^{k}$,
+    and, likewise, if $\tilde{w}_{q}^{\text{Jr}} < \Omega_{q}^{\text{Jr}}$,
     \begin{align}
         &
-        1 - \tilde{w}_{q}^{k}
+        1 - \tilde{w}_{q}^{\text{Jr}}
         >
-        1 - \Omega_{q}^{k}
+        1 - \Omega_{q}^{\text{Jr}}
         \\
         &\therefore
         \frac{
-            \tilde{w}_{q}^{k}
+            \tilde{w}_{q}^{\text{Jr}}
         }{
-            \Omega_{q}^{k}
+            \Omega_{q}^{\text{Jr}}
         }
         <
         1
         <
         \frac{
-            1 - \tilde{w}_{q}^{k}
+            1 - \tilde{w}_{q}^{\text{Jr}}
         }{
-            1 - \Omega_{q}^{k}
+            1 - \Omega_{q}^{\text{Jr}}
         }
         \\
         &\therefore
-        \mho(\tilde{w}_{q}^{k}) 
+        \mho(\tilde{w}_{q}^{\text{Jr}}) 
         =
         \min\left(
             \frac{
-                \tilde{w}_{q}^{k}
+                \tilde{w}_{q}^{\text{Jr}}
             }{
-                \Omega_{q}^{k}
+                \Omega_{q}^{\text{Jr}}
             }
             ,
             \frac{
-                1 - \tilde{w}_{q}^{k}
+                1 - \tilde{w}_{q}^{\text{Jr}}
             }{
-                1 - \Omega_{q}^{k}
+                1 - \Omega_{q}^{\text{Jr}}
             }
         \right)
         =
         \frac{
-            \tilde{w}_{q}^{k}
+            \tilde{w}_{q}^{\text{Jr}}
         }{
-            \Omega_{q}^{k}
+            \Omega_{q}^{\text{Jr}}
         }
         <
         1
         \\
         &\implies
-        \mho(\tilde{w}_{q}^{k})
+        \mho(\tilde{w}_{q}^{\text{Jr}})
         <
-        \mho(\Omega_{q}^{k})
+        \mho(\Omega_{q}^{\text{Jr}})
         .
     \end{align}
 
     Therefore, 
     \begin{gather}
-        \mho(\tilde{w}_{q}^{k}) < 
-        \mho(\Omega_{q}^{k}) 
+        \mho(\tilde{w}_{q}^{\text{Jr}}) < 
+        \mho(\Omega_{q}^{\text{Jr}}) 
         = 1
         \
         \forall
         \
-        \tilde{w}_{q}^{k}
+        \tilde{w}_{q}^{\text{Jr}}
         \neq
-        \Omega_{q}^{k}
+        \Omega_{q}^{\text{Jr}}
         \in [0,1]
         .
     \end{gather}
@@ -1849,6 +1432,464 @@ Maximum Operational Output Lemma (MOOL)
         %     ,
         % \end{align}
     % \end{enumerate}
+
+Optimal Stratification Lemma (OSL)
+% Maximally Stratified Production Lemma (MSPL)
+
+Because in a maximally and monotonically stratified labor market every position is its own job subtype (for, again, employment levels are unitary), optimal production is, then, obtained not by choosing how many workers to allocate to tasks of varying difficulty levels, but instead by setting appropriate responsability ranges for each position (i.e. which tasks to allocate \textit{to} workers). The bounds for these ranges are:
+\begin{gather}
+    \ell_v
+    =
+    \text{TA}^{-1}\left(
+        \frac{v}{w_q}
+        +
+        \text{TA}(0)
+    \right)
+    \
+    \forall
+    \
+    v \in 
+    \left\{
+        1, \dots, w_q
+    \right\}
+    .
+\end{gather}
+
+\textit{Proof}:
+
+We have just demonstrated that the maximum operational output in any labor market is exactly 
+\begin{gather}
+    \mho_{q}^{*} =
+    \min\left(
+        \boldsymbol{w_q}
+        \boldsymbol{\mho_{q}}
+    \right)
+    =
+    w_q
+    ,
+\end{gather}
+or the number of employees in its workforce.
+
+Therefore, optimal responsability ranges can be calculated by equating partial operational outputs with maximum production, for if maximum-monotonic labor stratification is to be optimal, it must yield the same partial outputs as any efficient production strategy.
+
+So, for the first job subtype,
+\begin{gather}
+    1 \times \left(
+        \int_{\ell_0}^{\ell_1}
+        \text{ta}(l)
+        dl
+    \right) ^ {-1}
+    =
+    1 \times \left(
+        \int_{0}^{\ell_1}
+        \text{ta}(l)
+        dl
+    \right) ^ {-1}
+    =
+    w_q
+    ,
+\end{gather}
+which means the partial operational output of the first worker, whose tasks range from $\ell_0 = 0$ to $\ell_1 \in [0,1]$ exclusively, should produce the same amount of the $l \in [0,\ell_1]$ responsability spectrum as would be produced in an economic configuration with maximum operational output (e.g. with $w_q$ perfectly qualified employees working independently).
+
+Thus, solving for $\ell_1$, we get:
+\begin{align}
+    1 
+    &\times 
+    \left(
+        \int_{0}^{\ell_1}
+        \text{ta}(l)
+        dl
+    \right) ^ {-1}
+    =
+    w_q
+    \\
+    &\therefore
+    \int_{0}^{\ell_1}
+    \text{ta}(l)
+    dl
+    =
+    \frac{1}{w_q}
+    \\
+    &\therefore
+    \text{TA}(l)
+    \big|_{0}^{\ell_1}
+    =
+    \text{TA}(\ell_1)
+    -
+    \text{TA}(0)
+    =
+    \frac{1}{w_q}
+    \\
+    &\therefore
+    \text{TA}^{-1}(
+        \text{TA}(\ell_1)
+    )
+    =
+    \text{TA}^{-1}\left(
+        \frac{1}{w_q}
+        +
+        \text{TA}(0)
+    \right)
+    \\
+    &\therefore
+    \ell_1
+    =
+    \text{TA}^{-1}\left(
+        \frac{1}{w_q}
+        +
+        \text{TA}(0)
+    \right)
+    .
+\end{align}
+
+Likewise, for the second worker,
+\begin{align}
+    1 
+    &\times 
+    \left(
+        \int_{\ell_1}^{\ell_2}
+        \text{ta}(l)
+        dl
+    \right) ^ {-1}
+    =
+    w_q
+    \\
+    &\therefore
+    \int_{\ell_1}^{\ell_2}
+    \text{ta}(l)
+    dl
+    =
+    \frac{1}{w_q}
+    \\
+    &\therefore
+    \text{TA}(l)
+    \big|_{\ell_1}^{\ell_2}
+    =
+    \text{TA}(\ell_2)
+    -
+    \text{TA}(\ell_1)
+    =
+    \frac{1}{w_q}
+    \\
+    &\therefore
+    \text{TA}^{-1}(
+        \text{TA}(\ell_2)
+    )
+    =
+    \text{TA}^{-1}\left(
+        \frac{1}{w_q}
+        +
+        \text{TA}(\ell_1)
+    \right)
+    \\
+    &\therefore
+    \text{TA}^{-1}(
+        \text{TA}(\ell_2)
+    )
+    =
+    \text{TA}^{-1}\left(
+        \frac{1}{w_q}
+        +
+        \frac{1}{w_q}
+        +
+        \text{TA}(0)
+    \right)
+    \\
+    &\therefore
+    \ell_2
+    =
+    \text{TA}^{-1}\left(
+        \frac{2}{w_q}
+        +
+        \text{TA}(0)
+    \right)
+    .
+\end{align}
+
+For the third worker,
+\begin{align}
+    1 
+    &\times 
+    \left(
+        \int_{\ell_2}^{\ell_3}
+        \text{ta}(l)
+        dl
+    \right) ^ {-1}
+    =
+    w_q
+    \\
+    &\therefore
+    \int_{\ell_2}^{\ell_3}
+    \text{ta}(l)
+    dl
+    =
+    \frac{1}{w_q}
+    \\
+    &\therefore
+    \text{TA}(l)
+    \big|_{\ell_2}^{\ell_3}
+    =
+    \text{TA}(\ell_3)
+    -
+    \text{TA}(\ell_2)
+    =
+    \frac{1}{w_q}
+    \\
+    &\therefore
+    \text{TA}^{-1}(
+        \text{TA}(\ell_3)
+    )
+    =
+    \text{TA}^{-1}\left(
+        \frac{1}{w_q}
+        +
+        \text{TA}(\ell_2)
+    \right)
+    \\
+    &\therefore
+    \text{TA}^{-1}(
+        \text{TA}(\ell_3)
+    )
+    =
+    \text{TA}^{-1}\left(
+        \frac{1}{w_q}
+        +
+        \frac{1}{w_q}
+        +
+        \frac{1}{w_q}
+        +
+        \text{TA}(0)
+    \right)
+    \\
+    &\therefore
+    \ell_3
+    =
+    \text{TA}^{-1}\left(
+        \frac{3}{w_q}
+        +
+        \text{TA}(0)
+    \right)
+    .
+\end{align}
+
+And so on and so forth, up to the very last worker:
+\begin{align}
+    1 
+    &\times 
+    \left(
+        \int_{\ell_{w_q - 1}}^{\ell_{w_q}}
+        \text{ta}(l)
+        dl
+    \right) ^ {-1}
+    =
+    w_q
+    \\
+    &\therefore
+    \int_{\ell_{w_q - 1}}^{\ell_{w_q}}
+    \text{ta}(l)
+    dl
+    =
+    \frac{1}{w_q}
+    \\
+    &\therefore
+    \text{TA}(l)
+    \big|_{\ell_{w_q - 1}}^{\ell_{w_q}}
+    =
+    \text{TA}(\ell_{w_q})
+    -
+    \text{TA}(\ell_{w_q - 1})
+    =
+    \frac{1}{w_q}
+    \\
+    &\therefore
+    \text{TA}^{-1}(
+        \text{TA}(\ell_{w_q})
+    )
+    =
+    \text{TA}^{-1}\left(
+        \frac{1}{w_q}
+        +
+        \text{TA}(\ell_{w_q - 1})
+    \right)
+    \\
+    &\therefore
+    \text{TA}^{-1}(
+        \text{TA}(\ell_{w_q})
+    )
+    =
+    \text{TA}^{-1}\left(
+        \frac{1}{w_q}
+        +
+        \dots
+        +
+        \frac{1}{w_q}
+        +
+        \text{TA}(0)
+    \right)
+    \\
+    &\therefore
+    \ell_{w_q}
+    =
+    \text{TA}^{-1}\left(
+        \frac{w_q}{w_q}
+        +
+        \text{TA}(0)
+    \right)
+    := 1
+    \\
+    &\iff
+    \text{TA}^{-1}\left(
+        \frac{w_q}{w_q}
+        +
+        \text{TA}(0)
+    \right)
+    =
+    \text{TA}^{-1}\left(
+        1
+        +
+        \text{TA}(0)
+    \right)
+    =
+    1
+    \\
+    &\iff
+    \text{TA}\left(
+        \text{TA}^{-1}\left(
+        1
+        +
+        \text{TA}(0)
+    \right)
+    \right)
+    =
+    \text{TA}(1)
+    \\
+    &\iff
+    \text{TA}(1)
+    -
+    \text{TA}(0)
+    =
+    \int_{0}^{1}{
+        \text{ta}(l)
+        dl
+    }
+    =
+    1
+    ,
+\end{align}
+which is true, by definition,
+\begin{align}
+    &\because
+    \text{ta}(l) 
+    :=
+    \text{ttc}(l)
+    \times
+    \left(
+        \int_{0}^{1}{
+            \text{ttc}(l)
+            dl
+        }
+    \right) ^ {-1}
+    \\
+    &\therefore
+    \int_{0}^{1}{
+        \text{ta}(l)
+        dl
+    }
+    =
+    \left(
+        \int_{0}^{1}
+        \text{ttc}(l)
+        dl
+    \right) ^ {-1}
+    \times
+    \int_{0}^{1}{
+        \text{ttc}(l)
+        dl
+    }
+    =
+    1
+    .
+\end{align}
+
+And, with this condition met, we can finally arrive, by the induction above, to a general form of optimal responsability ranges:
+\begin{gather}
+    \ell_v
+    =
+    \text{TA}^{-1}\left(
+        \frac{v}{w_q}
+        +
+        \text{TA}(0)
+    \right)
+    \
+    \forall
+    \
+    v \in 
+    \left\{
+        1, \dots, w_q
+    \right\}
+    .
+\end{gather}
+
+% Hence, mathematically,
+% \begin{gather}
+%     l \in \left[
+%     \frac{\ell - 1}{w_q}
+%     ,
+%     \frac{\ell}{w_q}
+%     \right]
+%     ,
+%     \ell \in 
+%     \left\{
+%         1, \dots, w_q
+%     \right\}
+% \end{gather}
+% is a responsability spectrum in a maximally stratified labor market, in which employment levels are given by
+% \begin{gather}
+%     \sum_{\ell=1}^{w_q}
+%     w_{q}^{\ell}
+%     =
+%     w_q
+%     ,
+% \end{gather}
+% so that any available position is its own job subtype and covers only a restrictive range of task difficulty, accounting for
+% \begin{gather}
+%     \Omega_{q}^{\ell} = 
+%     \frac{1}{\mho_{q}^{\ell}} = 
+%     \int_{
+%         \frac{\ell - 1}{w_q}
+%     }^{
+%         \frac{\ell}{w_q}
+%     }
+%     \text{ta}(l)dl
+% \end{gather}
+% of an operation's total time duration
+% \begin{gather}
+%     \sum_{\ell=1}^{w_q}
+%     \Omega_{q}^{\ell} 
+%     = 
+%     \sum_{\ell=1}^{w_q}
+%     \int_{
+%         \frac{\ell - 1}{w_q}
+%     }^{
+%         \frac{\ell}{w_q}
+%     }
+%     \text{ta}(l)dl
+%     =
+%     \int_{0}^{1}
+%     \text{ta}(l)dl
+%     =
+%     1
+%     .
+% \end{gather}
+
+% Intuitively speaking, we would say production in a maximally and monotonically stratified labor market is not ``independent'', in the sense that employees do not work on an occupation's operation from beginning to end. This means each of them will spend all their time allowance producing a partial operational output, that is a multiple of a difficulty subinterval of complex tasks, which will, in turn, contribute, alonside the partial outputs of other employees, to accomplish the occupational operation in its entirety.
+
+% However, in a maximum labor stratification setting, these partial operational outputs will not be produced merely via ``senior'' and ``junior'' positions, as previously, but rather within a myriad of levels in a production hierarchy, approximating a continuum of ``seniority'' as the workforce becomes large enough.
+% % However, in a maximally stratified labor market, these partial operational outputs will not be produced merely via ``senior'' and ``junior'' positions, as previously, but rather within a myriad of levels in a production hierarchy, approximating a continuum of ``seniority'' as the workforce becomes large enough.
+
+% Again, this does not mean employees are, actually, more or less competent, only that the available positions are preemptively stratified with respect to task difficulty, in order to maximize employers' hiring pool and safeguard production in the case workers are not sufficiently qualified to produce the whole responsability spectrum by themselves (see ``Maximum-Monotonic Labor Stratification Lemma'' below).
+
+% [end definition of maximum-monotonic labor stratification]
 
 \item Independent Operational Output Lemma (IOOL)
 \begin{enumerate}
