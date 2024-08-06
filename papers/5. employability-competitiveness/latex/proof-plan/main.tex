@@ -629,7 +629,7 @@ Maximum Operational Output Lemma (MOOL)
     
     \textit{Proof}:
 
-    We begin with the most trivial of economic configurations, that of independent production with perfectly qualified workers. Here, each employee devotes their
+    We begin with the most trivial of economic configurations, that of independent production with perfectly qualified workers. In this scenario, each employee devotes their
     \begin{gather}
         \int_{0}^{1}{
             \text{ta}(l)dl
@@ -637,7 +637,17 @@ Maximum Operational Output Lemma (MOOL)
         =
         1
     \end{gather}
-    time allowance to output occupation $q$'s complete operation:
+    unitary time allowance, which coincides with the total time duration of occupation $q$'s entire operation,
+    \begin{gather}
+        \int_{0}^{1}{
+            \text{ta}(l)
+            dl
+        }
+        =
+        1
+        ,
+    \end{gather}
+    to output exactly one productive unit:
     \begin{gather}
         \int_{0}^{1}{
             \text{ta}(l)dl
@@ -665,6 +675,67 @@ Maximum Operational Output Lemma (MOOL)
         w_q
         .
     \end{align}
+
+    Here, we have taken occupation $q$'s responsability spectrum $l \in [0,1]$ as a whole, or as if it were a single task, so that the minimum amount produced of this ``holistic task'', covering all occupation $q$'s responsabilities, is one unit per worker, or $w_q$ aggregate units.
+
+    However, it can be easier to understand this result if we analyze responsability spectra individually, as if a perfectly qualified, independent, employee worked on a series of very small tasks, which sum to their time allowance
+    \begin{gather}
+        \sum_{\ell}^{}{
+            \Omega_{q}^{\ell}
+        }
+        = 
+        \int_{0}^{1}{
+            \text{ta}(l)
+            dl
+        }
+        =
+        1
+        .
+    \end{gather}
+    
+    With this, we note that, as each worker's time allowance is the same as operations' total time requirements, failing to output any single task by overemphasizing another one would nullify the whole operation, when production is independent. Hence, the optimal choice of hours to allocate to any task has to be:
+    \begin{gather}
+        \Omega_{q}^{\ell} 
+        \in
+        [0,1]
+        .
+    \end{gather}
+
+    Furthermore, by the definition of partial operational output (ref) above, one outputs $\mho_{q}^{\ell}$ when spending their unitary time allowance to produce some responsability spectrum. Therefore, with only $\Omega_{q}^{\ell}$ time units,  operational output is:
+    \begin{gather}
+        \Omega_{q}^{\ell}
+        \mho_{q}^{\ell}
+        =
+        \left(
+            \frac{1}{\mho_{q}^{\ell}}
+        \right)
+        \times
+        \mho_{q}^{\ell}
+        =
+        1
+        .
+    \end{gather}
+    
+    And, as Weak Occupational Complexity implies the production function is homothetic, the aggregate operational output of $w_q$ perfectly qualified employees working independently is:
+    \begin{gather}
+        w_{q}^{\ell}
+        \mho_{q}^{\ell}
+        \times
+        w_q
+        =
+        \Omega_{q}^{\ell}
+        \mho_{q}^{\ell}
+        \times
+        w_q
+        =
+        1
+        \times
+        w_q
+        =
+        w_q
+        .
+    \end{gather}
+    Hence, a perfectly qualified employee working full-time and independently can output one unit of an occupation's complex tasks with one unit of their time (i.e. their entire time allowance). And, likewise, a workforce with $w_q$ employees identical to this one produces $w_q$ units of operational output. Or, to put it simply, a maximally productive person acchieves maximum production.
     
     a binary example, where $\tilde{w}_{q}^{\text{Jr}} \in [0,1]$ is the percentage of less qualified workers (i.e. ``juniors''), and $
     % We begin, again, with a binary example, where $\tilde{w}_{q}^{\text{Jr}} \in [0,1]$ is the percentage of less qualified workers (i.e. ``juniors''), and $
