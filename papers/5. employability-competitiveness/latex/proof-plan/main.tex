@@ -1468,6 +1468,64 @@ Maximum Operational Output Lemma (MOOL)
     %         = 1
     %     \end{align}
 
+    We can derive the same conclusion for a maximally stratified labor market. But here, instead of choosing a $\boldsymbol{w_{q}^{*}}$ vector of employment levels, employers maximize production with optimal $\boldsymbol{\ell_{q}^{*}}$ responsability bounds.
+    \begin{align}
+        \mho_{q}
+        &=
+        \mho(
+            \boldsymbol{1},
+            \boldsymbol{\mho_q}(
+                \boldsymbol{\ell_{q}}
+            )
+        )
+        \\
+        &=
+        \min(
+            \boldsymbol{1}
+            \times
+            \boldsymbol{\mho_q}(
+                \boldsymbol{\ell_{q}}
+            )
+        )
+        \\
+        &=
+        \min
+        \left(
+            \frac{1}{
+                \int_{\ell_0}^{\ell_1}{
+                    \text{ta}(l)dl
+                }
+            }
+            ,
+            \dots
+            ,
+            \frac{1}{
+                \int_{\ell_{w_q-1}}^{\ell_{w_q}}{
+                    \text{ta}(l)dl
+                }
+            }
+        \right)
+        \\
+        &:=
+        \min
+        \left(
+            \frac{1}{
+                \int_{0}^{\ell_1}{
+                    \text{ta}(l)dl
+                }
+            }
+            ,
+            \dots
+            ,
+            \frac{1}{
+                \int_{\ell_{w_q-1}}^{1}{
+                    \text{ta}(l)dl
+                }
+            }
+        \right)
+        .
+    \end{align}
+
         In other words, one day is sufficient to produce a ``day's work''. Or, put another way, the most one can produce in a day is a ``day's work''.
         % \begin{align}
         %     \mho_{q}(\tilde{v}_{q}^{k})
@@ -1919,6 +1977,7 @@ which is true, by definition,
         }
     \right) ^ {-1}
     \\
+    % &\implies
     &\therefore
     \int_{0}^{1}{
         \text{ta}(l)
