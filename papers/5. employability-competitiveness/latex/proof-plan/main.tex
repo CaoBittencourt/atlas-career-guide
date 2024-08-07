@@ -629,15 +629,7 @@ Maximum Operational Output Lemma (MOOL)
     
     \textit{Proof}:
 
-    We begin with the most trivial of economic configurations, that of independent production with perfectly qualified workers. In this scenario, each employee devotes their
-    \begin{gather}
-        \int_{0}^{1}{
-            \text{ta}(l)dl
-        }
-        =
-        1
-    \end{gather}
-    unitary time allowance, which coincides with the total time duration of occupation $q$'s entire operation,
+    We begin with the most trivial of economic configurations, that of independent production with perfectly qualified workers. In this scenario, each employee devotes their unitary time allowance, which coincides with the total time duration of occupation $q$'s entire operation,
     \begin{gather}
         \int_{0}^{1}{
             \text{ta}(l)
@@ -649,10 +641,9 @@ Maximum Operational Output Lemma (MOOL)
     \end{gather}
     to output exactly one productive unit:
     \begin{gather}
-        \int_{0}^{1}{
-            \text{ta}(l)dl
-        }
-        \times \left(
+        1
+        \times
+        \left(
             \int_{0}^{1}{
                 \text{ta}(l)dl
             }
@@ -693,7 +684,7 @@ Maximum Operational Output Lemma (MOOL)
         .
     \end{gather}
     
-    With this, we note that, as each worker's time allowance is the same as operations' total time requirements, failing to output any single task by overemphasizing another one would nullify the whole operation, when production is independent. Hence, the optimal choice of hours to allocate to any task has to be
+    With this, we note that, as each worker's time allowance is the same as operations' total time requirements, failing to output any single task by overemphasizing another would nullify the whole operation, when production is independent. Hence, the optimal choice of hours to allocate to any task has to be
     \begin{gather}
         \Omega_{q}^{\ell} 
         \in
@@ -701,7 +692,7 @@ Maximum Operational Output Lemma (MOOL)
         .
     \end{gather}
 
-    Furthermore, by the definition of partial operational output (ref) above, one outputs $\mho_{q}^{\ell}$ when spending their unitary time allowance to produce some responsability spectrum. So, the output of only $\Omega_{q}^{\ell}$ time units is:
+    Furthermore, by the definition of partial operational output (ref) above, one outputs $\mho_{q}^{\ell}$ when spending their unitary time allowance to produce a responsability spectrum. So, the output, with only $\Omega_{q}^{\ell}$ time units, is:
     % Furthermore, by the definition of partial operational output (ref) above, one outputs $\mho_{q}^{\ell}$ when spending their unitary time allowance to produce some responsability spectrum. So, operational output, with only $\Omega_{q}^{\ell}$ time units, is:
     % Furthermore, by the definition of partial operational output (ref) above, one outputs $\mho_{q}^{\ell}$ when spending their unitary time allowance to produce some responsability spectrum. Therefore, with only $\Omega_{q}^{\ell}$ time units,  operational output is:
     \begin{gather}
@@ -718,7 +709,7 @@ Maximum Operational Output Lemma (MOOL)
         .
     \end{gather}
     
-    And, as Weak Occupational Complexity implies the production function is homothetic, the aggregate operational output of $w_q$ perfectly qualified employees working independently is:
+    Finally, as Weak Occupational Complexity implies the production function is homothetic, the aggregate operational output of $w_q$ perfectly qualified employees working independently is:
     \begin{gather}
         \mho_{q}^{*}
         =
@@ -980,6 +971,7 @@ Maximum Operational Output Lemma (MOOL)
         = 
         \min(
             \boldsymbol{\Omega_q}
+            \times
             \boldsymbol{\mho_q}
         )
         =
@@ -1004,7 +996,8 @@ Maximum Operational Output Lemma (MOOL)
         = 1
         ,
     \end{gather}
-    choosing any $\tilde{w}_{q}^{\ell} \neq \Omega_{q}^{\ell}$ implies the proportion of at least one position, say $\tilde{w}_{q}^{r}$, is impacted, and thus aggregate output along with it, either because
+    choosing any $\tilde{w}_{q}^{\ell} \neq \Omega_{q}^{\ell}$ implies the proportion of at least one position, say $\tilde{w}_{q}^{r}$, is impacted, and aggregate output along with it, either because
+    % choosing any $\tilde{w}_{q}^{\ell} \neq \Omega_{q}^{\ell}$ implies the proportion of at least one position, say $\tilde{w}_{q}^{r}$, is impacted, and thus aggregate output along with it, either because
     % choosing any $\tilde{w}_{q}^{\ell} \neq \Omega_{q}^{\ell} \in [0,1]$ implies the proportion of at least one position, say $\tilde{w}_{q}^{r}$, is impacted, and thus aggregate output along with it, either because
     \begin{align}
         &
@@ -1092,22 +1085,25 @@ Maximum Operational Output Lemma (MOOL)
 
     Thus, 
     \begin{align}
-        &
+        % &
         \mho(
             \boldsymbol{\tilde{w}_{q}},
             \boldsymbol{\mho_q}
-        ) < 
+        ) 
+        &< 
         \mho(
             \boldsymbol{\Omega_{q}},
             \boldsymbol{\mho_q}
         ) 
         = 1
         \\
-        &\iff
+        \therefore
+        % &\therefore
         \mho(
             \boldsymbol{w_{q}},
             \boldsymbol{\mho_q}
-        ) < 
+        )
+        &< 
         \mho(
             w_{q}
             \boldsymbol{\Omega_{q}},
@@ -1115,11 +1111,11 @@ Maximum Operational Output Lemma (MOOL)
         ) 
         = w_q
         \\
-        &
+        % &
         \forall
         \
         \boldsymbol{\tilde{w}_{q}}
-        \neq
+        &\neq
         \boldsymbol{\Omega_{q}}
         % ,
         % \\
@@ -1143,335 +1139,335 @@ Maximum Operational Output Lemma (MOOL)
         % .
     \end{align}
 
-    As every worker in the labor market is assumed to have the same unitary time allowance, which coincides with operations' total time duration,
-        % \item As every worker in the labor is assumed to have the same unitary time allowance, which coincides with operations' total time duration,
-        \begin{gather}
-            \int_{0}^{1}{
-                \text{ta}(l)
-                dl
-            }
-            =
-            1
-            ,
-        \end{gather}
-        there cannot be, even in theory, any productive arrangement yielding operational output higher than that obtained when perfectly qualified employees work independently. For, indeed, if employers establish other modes of production, workers' time allowances and tasks' time requirements will not change. In addition, splitting responsabilities across multiple job subtypes does not affect operational output (WOCA). Therefore, perfectly qualified independent production is the ``ceiling'' or ``benchmark'' for all production strategies.
+    % As every worker in the labor market is assumed to have the same unitary time allowance, which coincides with operations' total time duration,
+    %     % \item As every worker in the labor is assumed to have the same unitary time allowance, which coincides with operations' total time duration,
+    %     \begin{gather}
+    %         \int_{0}^{1}{
+    %             \text{ta}(l)
+    %             dl
+    %         }
+    %         =
+    %         1
+    %         ,
+    %     \end{gather}
+    %     there cannot be, even in theory, any productive arrangement yielding operational output higher than that obtained when perfectly qualified employees work independently. For, indeed, if employers establish other modes of production, workers' time allowances and tasks' time requirements will not change. In addition, splitting responsabilities across multiple job subtypes does not affect operational output (WOCA). Therefore, perfectly qualified independent production is the ``ceiling'' or ``benchmark'' for all production strategies.
         
-        \begin{align}
-            \int_{0}^{1}{
-                \text{ta}(l)dl
-            }
-            =
-            1
-            \\
-            \therefore
-            \mho_{q}^{*}
-            =
-            1 \times \left(
-                \int_{0}^{1}{
-                    \text{ta}(l)dl
-                }
-            \right) ^ {-1}
-            =
-            1
-            \\
-            \therefore
-            w_q \times
-            \mho_{q}^{*}
-            =
-            w_q \times \left(
-                \int_{0}^{1}{
-                    \text{ta}(l)dl
-                }
-            \right) ^ {-1}
-            =
-            w_q
-            \\
-            \because
-            \sum_{v=1}^{w_q}
-            \int_{0}^{1}{
-                    \text{ta}(l)dl
-                }
-            =
-            \sum_{v=1}^{w_q}
-            1
-            = 
-            w_q \times 1
-            = 
-            w_q
-        \end{align}
+    %     \begin{align}
+    %         \int_{0}^{1}{
+    %             \text{ta}(l)dl
+    %         }
+    %         =
+    %         1
+    %         \\
+    %         \therefore
+    %         \mho_{q}^{*}
+    %         =
+    %         1 \times \left(
+    %             \int_{0}^{1}{
+    %                 \text{ta}(l)dl
+    %             }
+    %         \right) ^ {-1}
+    %         =
+    %         1
+    %         \\
+    %         \therefore
+    %         w_q \times
+    %         \mho_{q}^{*}
+    %         =
+    %         w_q \times \left(
+    %             \int_{0}^{1}{
+    %                 \text{ta}(l)dl
+    %             }
+    %         \right) ^ {-1}
+    %         =
+    %         w_q
+    %         \\
+    %         \because
+    %         \sum_{v=1}^{w_q}
+    %         \int_{0}^{1}{
+    %                 \text{ta}(l)dl
+    %             }
+    %         =
+    %         \sum_{v=1}^{w_q}
+    %         1
+    %         = 
+    %         w_q \times 1
+    %         = 
+    %         w_q
+    %     \end{align}
 
-        The mathematical proof for this is quite straighforward. Because the aggregate production function is of the Leontief functional form (for simplicity's sake, here considering only two factors of production, namely an easier responsability spectrum and a harder responsability spectrum), that is
-        \begin{gather}
-            \mho_{q}(\tilde{w}_{q}^{k})
-            = 
-            \min\left[
-                \tilde{w}_{q}^{k}
-                \left(
-                    \int_{0}^{\tilde{T}_{q}^{k}}{
-                        \text{ta}(l)dl
-                    }
-                \right) ^ {-1}
-                ,
-                (1 - \tilde{w}_{q}^{k})
-                \left(
-                    \int_{\tilde{T}_{q}^{k}}^{1}{
-                        \text{ta}(l)dl
-                    }
-                \right) ^ {-1}
-            \right]
-            ,
-        \end{gather}
-        and because time allowances are unitary and coincide with total time requirements, optimal relative employment levels are trivial and have to be
-        \begin{gather}
-            \tilde{w}_{q}^{k}
-            =
-            \int_{0}^{\tilde{T}_{q}^{k}}{
-                \text{ta}(l)dl
-            }
-            \in [0,1]
-        \end{gather}
-        and
-        \begin{align}
-            1 - \tilde{w}_{q}^{k}
-            &=
-            \int_{\tilde{T}_{q}^{k}}^{1}{
-                \text{ta}(l)dl
-            }
-            \\
-            &=
-            \int_{0}^{1}{
-                \text{ta}(l)dl
-            }
-            -
-            \int_{0}^{\tilde{T}_{q}^{k}}{
-                \text{ta}(l)dl
-            }
-            \\
-            &=
-            1
-            -
-            \int_{0}^{\tilde{T}_{q}^{k}}{
-                \text{ta}(l)dl
-            }
-            \in [0,1]
-        \end{align}
-        to avoid hindering production, so that
-        \begin{align}
-            \mho_{q}(\tilde{w}_{q}^{k})
-            &= 
-            \min\left[
-                \tilde{w}_{q}^{k}
-                \left(
-                    \int_{0}^{\tilde{T}_{q}^{k}}{
-                        \text{ta}(l)dl
-                    }
-                \right) ^ {-1}
-                ,
-                (1 - \tilde{w}_{q}^{k})
-                \left(
-                    \int_{\tilde{T}_{q}^{k}}^{1}{
-                        \text{ta}(l)dl
-                    }
-                \right) ^ {-1}
-            \right]
-            \\
-            &= 
-            \tilde{w}_{q}^{k}
-            \left(
-                \int_{0}^{\tilde{T}_{q}^{k}}{
-                    \text{ta}(l)dl
-                }
-            \right) ^ {-1}
-            \\
-            &= 
-            (1 - \tilde{w}_{q}^{k})
-            \left(
-                \int_{\tilde{T}_{q}^{k}}^{1}{
-                    \text{ta}(l)dl
-                }
-            \right) ^ {-1}
-            \\
-            &= 
-            \left(
-                \int_{0}^{\tilde{T}_{q}^{k}}{
-                    \text{ta}(l)dl
-                }
-            \right)
-            \left(
-                \int_{0}^{\tilde{T}_{q}^{k}}{
-                    \text{ta}(l)dl
-                }
-            \right) ^ {-1}
-            \\
-            &= 
-            \left(
-                \int_{\tilde{T}_{q}^{k}}^{1}{
-                    \text{ta}(l)dl
-                }
-            \right)
-            \left(
-                \int_{\tilde{T}_{q}^{k}}^{1}{
-                    \text{ta}(l)dl
-                }
-            \right) ^ {-1}
-            \\
-            &= 
-            1
-        \end{align}
-        it, then, follows that, if we set any relative employment level above the optimal one $\tilde{v}_{q}^{k} > \tilde{w}_{q}^{k}, \tilde{v}_{q}^{k}, \tilde{w}_{q}^{k} \in [0,1]$, operational output will be lower, for
-        \begin{align}
-            \mho_{q}(\tilde{v}_{q}^{k})
-            = 
-            \min\left[
-                \tilde{v}_{q}^{k}
-                \left(
-                    \int_{0}^{\tilde{T}_{q}^{k}}{
-                        \text{ta}(l)dl
-                    }
-                \right) ^ {-1}
-                ,
-                (1 - \tilde{v}_{q}^{k})
-                \left(
-                    \int_{\tilde{T}_{q}^{k}}^{1}{
-                        \text{ta}(l)dl
-                    }
-                \right) ^ {-1}
-            \right]
-            \\
-            = 
-            \min\left[
-                \frac{
-                    \tilde{v}_{q}^{k}
-                }{
-                    \int_{0}^{\tilde{T}_{q}^{k}}{
-                        \text{ta}(l)dl
-                    }
-                }
-                ,
-                \frac{
-                    1 - \tilde{v}_{q}^{k}
-                }{
-                    \int_{\tilde{T}_{q}^{k}}^{1}{
-                        \text{ta}(l)dl
-                    }
-                }
-            \right]
-            \\
-            = 
-            \min\left[
-                \frac{
-                    \tilde{v}_{q}^{k}
-                }{
-                    \int_{0}^{\tilde{T}_{q}^{k}}{
-                        \text{ta}(l)dl
-                    }
-                }
-                ,
-                \frac{
-                    1 - \tilde{v}_{q}^{k}
-                }{
-                    1 - 
-                    \int_{0}^{\tilde{T}_{q}^{k}}{
-                        \text{ta}(l)dl
-                    }
-                }
-            \right]
-            \\
-            = 
-            \min\left[
-                \frac{
-                    \tilde{v}_{q}^{k}
-                }{
-                    \tilde{w}_{q}^{k}
-                }
-                ,
-                \frac{
-                    1 - \tilde{v}_{q}^{k}
-                }{
-                    1 - 
-                    \tilde{w}_{q}^{k}
-                }
-            \right]
-            \therefore
-            \\
-            \tilde{v}_{q}^{k} > 
-            \tilde{w}_{q}^{k} 
-            \land
-            \tilde{v}_{q}^{k}, 
-            \tilde{w}_{q}^{k} 
-            \in [0,1]
-            \implies
-            \frac{
-                \tilde{v}_{q}^{k}
-            }{
-                \tilde{w}_{q}^{k}
-            } 
-            > 
-            \frac{
-                1 - \tilde{v}_{q}^{k}
-            }{
-                1 - \tilde{w}_{q}^{k}
-            }
-            \\
-            \therefore
-            \min\left[
-                \frac{
-                    \tilde{v}_{q}^{k}
-                }{
-                    \tilde{w}_{q}^{k}
-                }
-                ,
-                \frac{
-                    1 - \tilde{v}_{q}^{k}
-                }{
-                    1 - 
-                    \tilde{w}_{q}^{k}
-                }
-            \right]
-            =
-            \frac{
-                1 - \tilde{v}_{q}^{k}
-            }{
-                1 - \tilde{w}_{q}^{k}
-            }
-            \\
-            =
-            \frac{
-                1 - \tilde{v}_{q}^{k}
-            }{
-                \int_{\tilde{T}_{q}^{k}}^{1}{
-                    \text{ta}(l)dl
-                }
-            }
-            \\
-            \therefore
-            \frac{
-                1 - \tilde{v}_{q}^{k}
-            }{
-                \int_{\tilde{T}_{q}^{k}}^{1}{
-                    \text{ta}(l)dl
-                }
-            } 
-            < 
-            \frac{
-                1 - \tilde{w}_{q}^{k}
-            }{
-                \int_{\tilde{T}_{q}^{k}}^{1}{
-                    \text{ta}(l)dl
-                }
-            }
-            \\
-            =
-            \frac{
-                \tilde{w}_{q}^{k}
-            }{
-                \int_{0}^{\tilde{T}_{q}^{k}}{
-                    \text{ta}(l)dl
-                }
-            }
-            \\
-            = 1
-        \end{align}
+    %     The mathematical proof for this is quite straighforward. Because the aggregate production function is of the Leontief functional form (for simplicity's sake, here considering only two factors of production, namely an easier responsability spectrum and a harder responsability spectrum), that is
+    %     \begin{gather}
+    %         \mho_{q}(\tilde{w}_{q}^{k})
+    %         = 
+    %         \min\left[
+    %             \tilde{w}_{q}^{k}
+    %             \left(
+    %                 \int_{0}^{\tilde{T}_{q}^{k}}{
+    %                     \text{ta}(l)dl
+    %                 }
+    %             \right) ^ {-1}
+    %             ,
+    %             (1 - \tilde{w}_{q}^{k})
+    %             \left(
+    %                 \int_{\tilde{T}_{q}^{k}}^{1}{
+    %                     \text{ta}(l)dl
+    %                 }
+    %             \right) ^ {-1}
+    %         \right]
+    %         ,
+    %     \end{gather}
+    %     and because time allowances are unitary and coincide with total time requirements, optimal relative employment levels are trivial and have to be
+    %     \begin{gather}
+    %         \tilde{w}_{q}^{k}
+    %         =
+    %         \int_{0}^{\tilde{T}_{q}^{k}}{
+    %             \text{ta}(l)dl
+    %         }
+    %         \in [0,1]
+    %     \end{gather}
+    %     and
+    %     \begin{align}
+    %         1 - \tilde{w}_{q}^{k}
+    %         &=
+    %         \int_{\tilde{T}_{q}^{k}}^{1}{
+    %             \text{ta}(l)dl
+    %         }
+    %         \\
+    %         &=
+    %         \int_{0}^{1}{
+    %             \text{ta}(l)dl
+    %         }
+    %         -
+    %         \int_{0}^{\tilde{T}_{q}^{k}}{
+    %             \text{ta}(l)dl
+    %         }
+    %         \\
+    %         &=
+    %         1
+    %         -
+    %         \int_{0}^{\tilde{T}_{q}^{k}}{
+    %             \text{ta}(l)dl
+    %         }
+    %         \in [0,1]
+    %     \end{align}
+    %     to avoid hindering production, so that
+    %     \begin{align}
+    %         \mho_{q}(\tilde{w}_{q}^{k})
+    %         &= 
+    %         \min\left[
+    %             \tilde{w}_{q}^{k}
+    %             \left(
+    %                 \int_{0}^{\tilde{T}_{q}^{k}}{
+    %                     \text{ta}(l)dl
+    %                 }
+    %             \right) ^ {-1}
+    %             ,
+    %             (1 - \tilde{w}_{q}^{k})
+    %             \left(
+    %                 \int_{\tilde{T}_{q}^{k}}^{1}{
+    %                     \text{ta}(l)dl
+    %                 }
+    %             \right) ^ {-1}
+    %         \right]
+    %         \\
+    %         &= 
+    %         \tilde{w}_{q}^{k}
+    %         \left(
+    %             \int_{0}^{\tilde{T}_{q}^{k}}{
+    %                 \text{ta}(l)dl
+    %             }
+    %         \right) ^ {-1}
+    %         \\
+    %         &= 
+    %         (1 - \tilde{w}_{q}^{k})
+    %         \left(
+    %             \int_{\tilde{T}_{q}^{k}}^{1}{
+    %                 \text{ta}(l)dl
+    %             }
+    %         \right) ^ {-1}
+    %         \\
+    %         &= 
+    %         \left(
+    %             \int_{0}^{\tilde{T}_{q}^{k}}{
+    %                 \text{ta}(l)dl
+    %             }
+    %         \right)
+    %         \left(
+    %             \int_{0}^{\tilde{T}_{q}^{k}}{
+    %                 \text{ta}(l)dl
+    %             }
+    %         \right) ^ {-1}
+    %         \\
+    %         &= 
+    %         \left(
+    %             \int_{\tilde{T}_{q}^{k}}^{1}{
+    %                 \text{ta}(l)dl
+    %             }
+    %         \right)
+    %         \left(
+    %             \int_{\tilde{T}_{q}^{k}}^{1}{
+    %                 \text{ta}(l)dl
+    %             }
+    %         \right) ^ {-1}
+    %         \\
+    %         &= 
+    %         1
+    %     \end{align}
+    %     it, then, follows that, if we set any relative employment level above the optimal one $\tilde{v}_{q}^{k} > \tilde{w}_{q}^{k}, \tilde{v}_{q}^{k}, \tilde{w}_{q}^{k} \in [0,1]$, operational output will be lower, for
+    %     \begin{align}
+    %         \mho_{q}(\tilde{v}_{q}^{k})
+    %         = 
+    %         \min\left[
+    %             \tilde{v}_{q}^{k}
+    %             \left(
+    %                 \int_{0}^{\tilde{T}_{q}^{k}}{
+    %                     \text{ta}(l)dl
+    %                 }
+    %             \right) ^ {-1}
+    %             ,
+    %             (1 - \tilde{v}_{q}^{k})
+    %             \left(
+    %                 \int_{\tilde{T}_{q}^{k}}^{1}{
+    %                     \text{ta}(l)dl
+    %                 }
+    %             \right) ^ {-1}
+    %         \right]
+    %         \\
+    %         = 
+    %         \min\left[
+    %             \frac{
+    %                 \tilde{v}_{q}^{k}
+    %             }{
+    %                 \int_{0}^{\tilde{T}_{q}^{k}}{
+    %                     \text{ta}(l)dl
+    %                 }
+    %             }
+    %             ,
+    %             \frac{
+    %                 1 - \tilde{v}_{q}^{k}
+    %             }{
+    %                 \int_{\tilde{T}_{q}^{k}}^{1}{
+    %                     \text{ta}(l)dl
+    %                 }
+    %             }
+    %         \right]
+    %         \\
+    %         = 
+    %         \min\left[
+    %             \frac{
+    %                 \tilde{v}_{q}^{k}
+    %             }{
+    %                 \int_{0}^{\tilde{T}_{q}^{k}}{
+    %                     \text{ta}(l)dl
+    %                 }
+    %             }
+    %             ,
+    %             \frac{
+    %                 1 - \tilde{v}_{q}^{k}
+    %             }{
+    %                 1 - 
+    %                 \int_{0}^{\tilde{T}_{q}^{k}}{
+    %                     \text{ta}(l)dl
+    %                 }
+    %             }
+    %         \right]
+    %         \\
+    %         = 
+    %         \min\left[
+    %             \frac{
+    %                 \tilde{v}_{q}^{k}
+    %             }{
+    %                 \tilde{w}_{q}^{k}
+    %             }
+    %             ,
+    %             \frac{
+    %                 1 - \tilde{v}_{q}^{k}
+    %             }{
+    %                 1 - 
+    %                 \tilde{w}_{q}^{k}
+    %             }
+    %         \right]
+    %         \therefore
+    %         \\
+    %         \tilde{v}_{q}^{k} > 
+    %         \tilde{w}_{q}^{k} 
+    %         \land
+    %         \tilde{v}_{q}^{k}, 
+    %         \tilde{w}_{q}^{k} 
+    %         \in [0,1]
+    %         \implies
+    %         \frac{
+    %             \tilde{v}_{q}^{k}
+    %         }{
+    %             \tilde{w}_{q}^{k}
+    %         } 
+    %         > 
+    %         \frac{
+    %             1 - \tilde{v}_{q}^{k}
+    %         }{
+    %             1 - \tilde{w}_{q}^{k}
+    %         }
+    %         \\
+    %         \therefore
+    %         \min\left[
+    %             \frac{
+    %                 \tilde{v}_{q}^{k}
+    %             }{
+    %                 \tilde{w}_{q}^{k}
+    %             }
+    %             ,
+    %             \frac{
+    %                 1 - \tilde{v}_{q}^{k}
+    %             }{
+    %                 1 - 
+    %                 \tilde{w}_{q}^{k}
+    %             }
+    %         \right]
+    %         =
+    %         \frac{
+    %             1 - \tilde{v}_{q}^{k}
+    %         }{
+    %             1 - \tilde{w}_{q}^{k}
+    %         }
+    %         \\
+    %         =
+    %         \frac{
+    %             1 - \tilde{v}_{q}^{k}
+    %         }{
+    %             \int_{\tilde{T}_{q}^{k}}^{1}{
+    %                 \text{ta}(l)dl
+    %             }
+    %         }
+    %         \\
+    %         \therefore
+    %         \frac{
+    %             1 - \tilde{v}_{q}^{k}
+    %         }{
+    %             \int_{\tilde{T}_{q}^{k}}^{1}{
+    %                 \text{ta}(l)dl
+    %             }
+    %         } 
+    %         < 
+    %         \frac{
+    %             1 - \tilde{w}_{q}^{k}
+    %         }{
+    %             \int_{\tilde{T}_{q}^{k}}^{1}{
+    %                 \text{ta}(l)dl
+    %             }
+    %         }
+    %         \\
+    %         =
+    %         \frac{
+    %             \tilde{w}_{q}^{k}
+    %         }{
+    %             \int_{0}^{\tilde{T}_{q}^{k}}{
+    %                 \text{ta}(l)dl
+    %             }
+    %         }
+    %         \\
+    %         = 1
+    %     \end{align}
 
         In other words, one day is sufficient to produce a ``day's work''. Or, put another way, the most one can produce in a day is a ``day's work''.
         % \begin{align}
