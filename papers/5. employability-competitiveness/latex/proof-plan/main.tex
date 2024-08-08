@@ -1480,6 +1480,105 @@ Maximum Operational Output Lemma (MOOL)
     %     \end{align}
 
     We can derive the same conclusion for a maximally stratified labor market. But here, instead of choosing a $\boldsymbol{w_{q}^{*}}$ vector of employment levels, employers maximize production with optimal $\boldsymbol{\ell_{q}^{*}}$ responsability bounds.
+
+    Let 
+    \begin{gather}
+        \boldsymbol{\ell_{q}^{*}}
+        =
+        (\ell_{0}^{*}, \dots, \ell_{w_q}^{*})
+        :=
+        (0, \dots, 1) 
+        \in [0,1]^{w_q}
+        ,
+    \end{gather}
+    with
+    \begin{gather}
+    \sum_{v=1}^{w_q}
+    \int_{
+        \ell_{v-1}^{*}
+    }^{
+        \ell_{v}^{*}
+    }
+    \text{ta}(l)dl
+    =
+    \int_{0}^{1}
+    \text{ta}(l)dl
+    :=
+    1
+    \end{gather}
+    be the vector of optimal responsability bounds that maximizes operational output, such that
+    \begin{gather}
+        \mho_{q}(\boldsymbol{\ell_{q}^{*}})
+        =
+        \min(
+            \boldsymbol{1}
+            \times
+            \boldsymbol{\mho_q}(
+                \boldsymbol{\ell_{q}^{*}}
+            )
+        )
+        =
+        1
+        \times
+        \left(
+            \int_{
+                \ell_{v-1}^{*}
+            }^{
+                \ell_{v}^{*}
+            }
+            \text{ta}(l)dl
+        \right) ^ {-1}
+        =
+        w_q
+        .
+    \end{gather}
+
+    If employers were to set some $\ell_v < \ell_{v}^{*}$, the production of this particular job subtype would increase, for
+    \begin{align}
+    \ell_v > \ell_{v}^{*}
+    \implies
+        \left(
+            \int_{
+                \ell_{v-1}^{*}
+            }^{
+                \ell_{v}
+            }
+            \text{ta}(l)dl
+        \right) ^ {-1}
+        >
+        \left(
+            \int_{
+                \ell_{v-1}^{*}
+            }^{
+                \ell_{v}^{*}
+            }
+            \text{ta}(l)dl
+        \right) ^ {-1}
+        =
+        w_q
+        .
+    \end{align}
+    
+    However, because every worker has the same unitary time allowance, this would also entail that either the missing subinterval of complex tasks $l \in (\ell_{v}, \ell_{v}^{*}]$ would not be produced at all, in which case
+    \begin{align}
+        \mho_{q}(\boldsymbol{\ell_{q}})
+        =
+        0
+        \times
+        \left(
+            \int_{
+                \ell_{v}
+            }^{
+                \ell_{v}^{*}
+            }
+            \text{ta}(l)dl
+        \right) ^ {-1}
+        =
+        0
+        ,
+    \end{align}
+    or that it would be produced at a lower rate
+
     \begin{align}
         \mho_{q}
         &=
