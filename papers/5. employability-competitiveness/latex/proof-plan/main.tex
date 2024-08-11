@@ -1854,24 +1854,35 @@ Maximum Operational Output Lemma (MOOL)
         )
         \\
         &\implies
-        \frac{
-            \omega_{q}^{v}
-        }{
-            \Omega_{q}^{v}(
-                \ell_{v-1}^{*}
-                ,\ell_{v}
-            )
-        }
-        < w_q
+        \omega_{q}^{v}
+        \mho_{q}^{v}(
+            \ell_{v-1}^{*}
+            ,\ell_{v}
+        )
+        % \frac{
+        %     \omega_{q}^{v}
+        % }{
+        %     \Omega_{q}^{v}(
+        %         \ell_{v-1}^{*}
+        %         ,\ell_{v}
+        %     )
+        % }
+        < 
+        w_q
         <
-        \frac{
-            1-\omega_{q}^{v}
-        }{
-            \Omega_{q}^{v}(
-                \ell_{v}
-                ,\ell_{v}^{*}
-            )
-        }
+        (1-\omega_{q}^{v})
+        \mho_{q}^{v}(
+            \ell_{v}
+            ,\ell_{v}^{*}
+        )
+        % \frac{
+        %     1-\omega_{q}^{v}
+        % }{
+        %     \Omega_{q}^{v}(
+        %         \ell_{v}
+        %         ,\ell_{v}^{*}
+        %     )
+        % }
         \\
         &\implies
         \mho_{q}^{v} = 
