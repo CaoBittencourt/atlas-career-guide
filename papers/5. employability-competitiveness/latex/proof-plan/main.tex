@@ -1484,7 +1484,7 @@ Maximum Operational Output Lemma (MOOL)
     Let 
     \begin{gather}
         \boldsymbol{\ell_{q}^{*}}
-        =
+        :=
         (\ell_{0}^{*}, \dots, \ell_{w_q}^{*})
         :=
         (0, \dots, 1) 
@@ -1678,8 +1678,7 @@ Maximum Operational Output Lemma (MOOL)
     \end{align}
 
     \begin{align}
-        &
-        \mho_{q}(
+        &\mho_{q}(
             \boldsymbol{\ell_q}
             ,\boldsymbol{\omega_q}
         ) 
@@ -1771,11 +1770,16 @@ Maximum Operational Output Lemma (MOOL)
         .
     \end{align}
 
-    If $\omega_{q}^{v} \in [0,1]$ is set to $\omega_{q}^{v} > w_q
-    \Omega_{q}^{v}(
-        \ell_{v-1}^{*}
-        ,\ell_{v}
-    )$, then
+    If any single $\omega_{q}^{v} \in [0,1], v \in \{1, \dots, w_q\}$ is set to
+    \begin{gather}
+        \omega_{q}^{v} > w_q
+        \Omega_{q}^{v}(
+            \ell_{v-1}^{*}
+            ,\ell_{v}
+        )
+        ,
+    \end{gather}
+    then, indeed,
     \begin{gather}
         \omega_{q}^{v}
         \mho_{q}^{v}(
@@ -1786,7 +1790,7 @@ Maximum Operational Output Lemma (MOOL)
         w_q
         ,
     \end{gather}
-    but
+    but also
     \begin{align}
         &
         (1-\omega_{q}^{v})
@@ -1830,7 +1834,8 @@ Maximum Operational Output Lemma (MOOL)
         <
         w_q
         \\
-        &\implies
+        &\therefore
+        % &\implies
         \mho_{q}(
             \boldsymbol{\ell_q}
             ,\boldsymbol{\omega_q}
@@ -1917,7 +1922,8 @@ Maximum Operational Output Lemma (MOOL)
         <
         w_q
         \\
-        &\implies
+        &\therefore
+        % &\implies
         \mho_{q}(
             \boldsymbol{\ell_q}
             ,\boldsymbol{\omega_q}
@@ -1962,6 +1968,28 @@ Maximum Operational Output Lemma (MOOL)
         )
         =
         w_q
+        ,
+        \\
+        \sum_{v=1}^{w_q}
+        \int_{
+            \ell_{v-1}
+        }^{
+            \ell_{v}
+        }
+        \text{ta}(l)dl
+        =
+        \sum_{v=1}^{w_q}
+        \int_{
+            \ell_{v-1}^{*}
+        }^{
+            \ell_{v}^{*}
+        }
+        \text{ta}(l)dl
+        =
+        \int_{0}^{1}
+        \text{ta}(l)dl
+        :=
+        1
         .
     \end{gather}
 
