@@ -1631,7 +1631,15 @@ Maximum Operational Output Lemma (MOOL)
         )
         =
         \left\{
-            \left(
+            \mho_{q}^{v}
+            ,
+            v \in \{1, \dots, w_q\}
+        \right\}
+        ,
+        \\
+        \mho_{q}^{v} = 
+        \min
+        \left(
                 \frac{
                     \omega_{q}^{v}
                 }{
@@ -1648,9 +1656,6 @@ Maximum Operational Output Lemma (MOOL)
                     }
                 }
             \right)
-            ,
-            v \in \{1, \dots, w_q\}
-        \right\}
         % \\
         % &=
         % \min(
@@ -1720,7 +1725,24 @@ Maximum Operational Output Lemma (MOOL)
         ,
     \end{gather}
     % \end{align}
-    it would be pointless if only a subset of employees were to increase their operational output by themselves; for an occupation's complex tasks are all complementary: they work together to acchieve its operation. Hence,
+    it would be pointless if only a subset of employees were to increase their operational output by themselves; for an occupation's complex tasks are all complementary: they work together to acchieve its operation. Hence, for $\mho_{q}(
+        \boldsymbol{\ell_q}
+        ,\boldsymbol{\omega_q}
+    )$ to be greater than $
+    \mho_{q}(
+        \boldsymbol{\ell_{q}^{*}}
+    )
+    =
+    w_q$,
+    \begin{gather}
+        \mho_{q}^{v} > w_q
+        \
+        \forall
+        \
+        v \in \{1, \dots, w_q\}
+        ,
+    \end{gather}
+    which requires partial operational outputs to surpass the following point of equilibrium:
     \begin{align}
         &\mho_{q}(
             \boldsymbol{\ell_q}
@@ -1813,7 +1835,26 @@ Maximum Operational Output Lemma (MOOL)
         }
         ,
     \end{align}
-    where $\mho_{q}^{v}(\ell_{v},\ell_{r}), \Omega_{q}^{v}(\ell_{v},\ell_{r}), v, r \in \{1, \dots, w_q\},$ are short-hand notations for partial operational output and its inverse, total time allocation.
+    where 
+    $\mho_{q}^{v}(\ell_{v},\ell_{r}), \Omega_{q}^{v}(\ell_{v},\ell_{r}), v, r \in \{1, \dots, w_q\}$, with
+    \begin{gather}
+        \mho_{q}^{v}
+        =
+        \min
+        \left[
+            \mho_{q}^{v}(
+                \ell_{v-1}^{*}
+                ,\ell_{v}
+            )
+            ,
+            \mho_{q}^{v}(
+                \ell_{v}
+                ,\ell_{v}^{*}
+            )
+        \right]
+        ,
+    \end{gather}
+    are short-hand notations for partial operational output and its inverse, total time allocation.
 
     Now, if any single $\omega_{q}^{v} \in [0,1], v \in \{1, \dots, w_q\}$ is set to
     \begin{gather}
