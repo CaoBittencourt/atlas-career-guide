@@ -1835,18 +1835,19 @@ Maximum Operational Output Lemma (MOOL)
         }
         ,
     \end{align}
-    where 
-    $\mho_{q}^{v}(\ell_{v},\ell_{r}), \Omega_{q}^{v}(\ell_{v},\ell_{r}), v, r \in \{1, \dots, w_q\}$, with
+    where $\mho_{q}^{v}(\ell_{v},\ell_{r})$, with
     \begin{gather}
         \mho_{q}^{v}
         =
         \min
         \left[
+            \omega_{q}^{v}
             \mho_{q}^{v}(
                 \ell_{v-1}^{*}
                 ,\ell_{v}
             )
             ,
+            (1 - \omega_{q}^{v})
             \mho_{q}^{v}(
                 \ell_{v}
                 ,\ell_{v}^{*}
@@ -1854,7 +1855,7 @@ Maximum Operational Output Lemma (MOOL)
         \right]
         ,
     \end{gather}
-    are short-hand notations for partial operational output and its inverse, total time allocation.
+    and $\Omega_{q}^{v}(\ell_{v},\ell_{r}), v, r \in \{1, \dots, w_q\}$, are short-hand notations for partial operational output and its inverse, total time allocation.
 
     Now, if any single $\omega_{q}^{v} \in [0,1], v \in \{1, \dots, w_q\}$ is set to
     \begin{gather}
