@@ -2451,7 +2451,7 @@ We have just demonstrated that the maximum operational output in any labor marke
 \end{gather}
 or the number of employees in its workforce.
 
-Therefore, optimal bounds for responsability spectra can be calculated by equating partial operational outputs with maximum production, for if maximum-monotonic labor stratification is to be optimal, it must yield the same partial outputs as any efficient production strategy.
+Therefore, optimal bounds for responsability spectra can be calculated by equating partial operational outputs with maximum production; for if maximum-monotonic labor stratification is to be optimal, it must yield the same partial outputs as any efficient production strategy.
 % Therefore, optimal responsability ranges can be calculated by equating partial operational outputs with maximum production, for if maximum-monotonic labor stratification is to be optimal, it must yield the same partial outputs as any efficient production strategy.
 
 So, for the first job subtype,
@@ -2943,6 +2943,231 @@ And, with this condition met, we can finally arrive, by the induction above, to 
 %     Hence, a perfectly qualified employee working full-time and independently can output one unit of an occupation's complex tasks with one unit of their time (i.e. their entire time allowance). And, likewise, a workforce with $w_q$ employees identical to this one produces $w_q$ units of operational output. Or, to put it simply, a maximally productive person acchieves maximum production.
 %     % Hence, a perfectly qualified employee working full-time and independently can output one unit of an occupation's complex tasks with one unit of their time (i.e. their entire time allowance). And, likewise, a workforce with $w_q$ employees identical to this one produces $w_q$ units of operational output. Or, to put it simply, a maximally productive person acchieves maximum production. Or, even simpler: one day is sufficient to produce a ``day's work''.
 % \end{enumerate}
+
+\item Equivalent Stratification Lemma (ESL)
+Any efficient labor market where employers choose both $\boldsymbol{w_q}$ and $\boldsymbol{\ell_q}$ with $p \in \{1, \dots, w_q\}$ types of job posts converges to maximum labor stratification with unitary employment:
+\begin{gather}
+    \boldsymbol{w_q} =
+    \boldsymbol{1}
+    ,
+    \\
+    \boldsymbol{\ell_q} = 
+    \boldsymbol{\ell_{q}^{*}}
+    :=
+    (
+        \ell_{0}^{*}
+        ,
+        \dots
+        ,
+        \ell_{p}^{*}
+    )
+    :=
+    (
+        0
+        ,
+        \dots
+        ,
+        1
+    )
+    ,
+    \\
+    \ell_{v}^{*}
+    =
+    \text{TA}^{-1}\left(
+        \frac{v}{w_q}
+        +
+        \text{TA}(0)
+    \right)
+    \
+    \forall
+    \
+    v \in 
+    \left\{
+        1, \dots, p
+    \right\}
+    ,
+    \\
+    p = w_q
+    % ,
+    % \\
+    % w_{q}^{p} 
+    % =
+    % w_{q}^{w_q}
+    % =
+    % 1
+    % ,
+\end{gather}
+so that
+
+\begin{gather}
+    \sum_{v=1}^{p}{
+        \tilde{w}_{q}^{v}
+    }
+    :=
+    \sum_{v=1}^{p}{
+        \frac{
+            w_{q}^{v}
+        }{
+            w_q
+        }
+    }
+    = 1
+    \land
+    w_{q}^{v} 
+    \geq 
+    1
+    \
+    \forall
+    \
+    v \in \{1, \dots, p\},
+    p \in \{1, \dots, w_q\}
+    \\
+    \implies
+    \tilde{w}_{q}^{v} =
+    \frac{1}{w_q}
+    \
+    \forall
+    \
+    v \in \{1, \dots, p\},
+    p \in \{1, \dots, w_q\}
+    \iff
+    \boldsymbol{w_q} =
+    \boldsymbol{1}
+    .
+\end{gather}
+
+\begin{align}
+    &
+    \tilde{w}_{q}^{v} = 
+    \Omega_{q}^{v} = 
+    \int_{
+        \ell_{v-1}
+    }^{
+        \ell_{v}
+    }{
+        \text{ta}(l)dl
+    }
+    \
+    \forall
+    \
+    v \in \{1, \dots, p\}
+    \\
+    &
+    \implies
+    \int_{
+        \ell_{p-1}
+    }^{
+        \ell_{p}
+    }{
+        \text{ta}(l)dl
+    }
+    =
+    \int_{
+        \ell_{w_q - 1}
+    }^{
+        \ell_{w_q}
+    }{
+        \text{ta}(l)dl
+    }
+    =
+    \int_{
+        \ell_{w_q - 1}
+    }^{
+        1
+    }{
+        \text{ta}(l)dl
+    }
+    =
+    \tilde{w}_{q}^{w_q}
+    % \frac{1}{w_q}
+    \\
+    &
+    \therefore
+    \text{TA}(1)
+    -
+    \text{TA}(\ell_{w_q - 1})
+    =
+    \tilde{w}_{q}^{w_q}
+    % \frac{1}{w_q}
+    \\
+    &
+    \therefore
+    \ell_{w_q - 1}
+    =
+    \text{TA}^{-1}
+    \left(
+        \text{TA}(1)
+        -
+        \tilde{w}_{q}^{w_q}
+        % \frac{1}{w_q}
+    \right)
+    ,
+\end{align}
+when $v = p = w_q$; and, so on and so forth, for every job subtype:
+\begin{align}
+    &
+    \int_{
+        \ell_{p-2}
+    }^{
+        \ell_{p}
+    }{
+        \text{ta}(l)dl
+    }
+    =
+    \int_{
+        \ell_{w_q - 2}
+    }^{
+        \ell_{w_q}
+    }{
+        \text{ta}(l)dl
+    }
+    =
+    \int_{
+        \ell_{w_q - 2}
+    }^{
+        1
+    }{
+        \text{ta}(l)dl
+    }
+    =
+    \tilde{w}_{q}^{w_q-1}
+    % \frac{1}{w_q}
+    \\
+    &
+    \therefore
+    \text{TA}(1)
+    -
+    \text{TA}(\ell_{w_q - 2})
+    =
+    \tilde{w}_{q}^{w_q-1}
+    % \frac{1}{w_q}
+    % \\
+    % &
+    % \therefore
+    % \ell_{w_q - 2}
+    % =
+    % \text{TA}^{-1}
+    % \left(
+    %     \text{TA}(1)
+    %     -
+    %     \tilde{w}_{q}^{w_q-1}
+    % % \frac{1}{w_q}
+    % \right)
+    % =
+    % \text{TA}^{-1}
+    % \left(
+    %     \text{TA}(1)
+    %     -
+    %     (
+    %         1 - 
+    %         \sum_{r=1}^{w_q - 1}{
+    % 
+    %         }
+    %     )
+    % % \frac{1}{w_q}
+    % \right)
+    % ,
+\end{align}
 
     \item Productivity Sufficiency Lemma (PSL)
     \begin{enumerate}
