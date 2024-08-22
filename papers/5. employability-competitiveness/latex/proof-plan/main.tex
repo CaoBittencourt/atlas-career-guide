@@ -580,15 +580,58 @@ Having understood what maximum-monotonic labor stratification is, one may wonder
     w_q
     ,
 \end{gather}
-where $p \in \mathbb{N^*}$ is the number of positions in a labor market, the productive arrangement we have just defined, may not, technically speaking, be ``maximally stratified''. 
+where $p \in \{1, 2, 3, \dots\}$ is the number of positions in a labor market, the productive arrangement we have just defined, may not, technically speaking, be ``maximally stratified''. 
 
 Indeed, if it were possible to stratify beyond $w_q$, rational employers would readly do so, for, again, labor stratification reduces the incertainty around production and works as an insurance policy to guarantee the available talent is sufficient to output an occupation's operation.
 
 But, because of this, if $p$ can be greater than $w_q$, then the optimal production strategy is, logically, to offer as many types of jobs as possible, even infinitely many.
 
-Hence, infinite labor stratification is defined as an economic configuration where labor markets are subdivided into infinitesimal jobs, each contributing very little to production. In fact, in such a market, ``job posts'' are so small as to be indistinguishable from tasks themselves. Therefore, employers are guaranteed maximum insurance against workers' potential underqualification; and employability is simply
+Hence, infinite labor stratification is defined as an economic configuration where labor markets are subdivided into infinitesimal jobs, each contributing very little to production. In fact, in such a market, ``job posts'' are so small as to be indistinguishable from tasks themselves:
 \begin{gather}
-    \tilde{W}_{q}^{k} = 
+    \lim_{p \rightarrow \infty}{
+        \tilde{w}_{q}^{v}
+    }
+    := 
+    \tilde{w}_{q}(l)
+    =
+    \text{ta}(l)
+    \in [0,1]
+    \
+    \forall
+    \
+    v \in \{1, \dots, p\}
+    \\
+    \therefore
+    w_{q}(l)
+    = 
+    w_q \times \tilde{w}_{q}(l)
+    =
+    w_q \times \text{ta}(l)
+    \land
+    \int_{0}^{1}{
+        w_{q}(l)
+        dl
+    }
+    =
+    w_q
+    .
+\end{gather}
+
+Therefore, employers are guaranteed maximum insurance against workers' potential underqualification; and employability is simply
+\begin{align}
+    \tilde{W}_{q}^{k} 
+    &= 
+    \left[
+        h_{q}^{k}
+        \geq
+        \frac{1}{2}
+    \right]
+    \int_{0}^{1}
+    T(l, \l_{q}^{k})
+    \tilde{w}_{q}(l)
+    dl
+    \\
+    &= 
     \left[
         h_{q}^{k}
         \geq
@@ -598,7 +641,8 @@ Hence, infinite labor stratification is defined as an economic configuration whe
     T(l, \l_{q}^{k})
     \text{ta}(l)
     dl
-    =
+    \\
+    &=
     \left[
         h_{q}^{k}
         \geq
@@ -610,8 +654,36 @@ Hence, infinite labor stratification is defined as an economic configuration whe
     \in
     [0,1]
     ,
+\end{align}
+where the hireability statistic $h_{q}^{k} \in [0,1]$ accounts for hiring requirements other than productivity; and $\tilde{w}_{q}(l)$ is the proportion of fractional positions for a particular job subtype, which coincides with its time allocation when there are infinite ``jobs'', each dedicated to a single, infinitely narrow task. We note, as well, this formula is the same as it was in binary labor stratification (with ``junior'' and ``senior'' positions). Thus, again, employability is the percentage of an operation's total duration one can accomplish.
+
+All this said, infinitely stratified markets are rather abstract, and it is not realistic to think of actual job posts as infinitesimal tasks; for, then, the very concept of a ``job'' itself disappears. Fractional positions do not make much sense in reality, where jobs usually deal with a set of multiple responsabilities. Furthermore, a maximally -- though not infinitely -- stratified labor market with sufficient positions, will, in practice, yield the same results when $w_q$ is large enough, so that we do not even need to consider  infinite labor stratification as a production strategy.
+
+Maximum Stratification Axiom (MSA)
+
+Therefore, let us assume
+\begin{gather}
+    p \in \{1, \dots, w_q\}
+    ,
+    \\
+    \sum_{v=1}^{p}
+    w_{q}^{v}
+    =
+    w_q
+    ,
 \end{gather}
-where the hireability statistic $h_{q}^{k} \in [0,1]$ accounts for hiring requirements other than productivity.
+and
+\begin{gather}
+    w_{q}^{v} 
+    \in 
+    [1, w_q]
+    \
+    \forall
+    \
+    v \in \{1, \dots, p\}
+    ,
+\end{gather}
+as it is somewhat arbitrary setting minimum employment levels to any value other than one; for then it would always be optimal to choose an even smaller value than that, in which case we would converge back to an infinitely stratified labor market. Thus, we define there has to be at least one worker per job subtype.
 
 Having understood what maximum-monotonic labor stratification is, we shall demonstrate that, given our axioms, such an economic configuration is, in fact, the only optimal production strategy and, so, holds in the labor market. But, to do so, we must first derive the maximum operational output, irrespective of productive arrangement, to serve as our ``benchmark''.
 
