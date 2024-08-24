@@ -2502,7 +2502,7 @@ The maximum operational output of any labor market is exactly the number of empl
         .
     \end{gather}
 
-    Finally, even with a $\boldsymbol{\omega_{q}^{v}}$ vector of partial time allocations for each worker, at least one difficulty subinterval would have to be neglected to emphasize another, because
+    Finally, even with an $\boldsymbol{\omega_{q}^{v}}$ vector of partial time allocations for each worker, at least one difficulty subinterval would have to be neglected to emphasize another, because
     \begin{gather}
         \boldsymbol{1} ^ \top
         \cdot
@@ -2530,9 +2530,9 @@ The maximum operational output of any labor market is exactly the number of empl
             \boldsymbol{\omega_{q}^{v}}
         )
         <
-        \boldsymbol{
-            \mho_q(\ell_{q}^{*})
-        }
+        \mho_q(
+            \boldsymbol{\ell_{q}^{*}}
+        )
         =
         w_q
         ,
@@ -3167,12 +3167,12 @@ And, with this condition met, we can finally arrive, by the induction above, to 
 
 Equivalent Stratification Lemma (ESL)
 
-Any efficient labor market where employers choose both $\boldsymbol{w_q}$ and $\boldsymbol{\ell_q}$ with $p \in \{1, \dots, w_q\}$ types of job posts converges to maximum labor stratification with unitary employment:
+Any efficient labor market where employers choose both $\boldsymbol{w_q}$ and $\boldsymbol{\ell_q}$ with $p \in \{1, \dots, w_q\}$ types of job posts converges to maximum labor stratification with
+$
+    p = w_q
+$
+unique positions;
 \begin{gather}
-    \boldsymbol{w_q} =
-    \boldsymbol{1}
-    ,
-    \\
     \boldsymbol{\ell_q} = 
     \boldsymbol{\ell_{q}^{*}}
     :=
@@ -3205,72 +3205,17 @@ Any efficient labor market where employers choose both $\boldsymbol{w_q}$ and $\
     \
     v \in 
     \left\{
-        1, \dots, p
+        1, \dots, w_q
     \right\}
-    ,
-    \\
-    p = w_q
-    % ,
-    % \\
-    % w_{q}^{p} 
-    % =
-    % w_{q}^{w_q}
-    % =
-    % 1
-    % ,
 \end{gather}
+optimal responsability bounds; and unitary employment levels,
+$
+    \boldsymbol{w_q} =
+    \boldsymbol{1}
+    .
+$
 
-\begin{gather}
-    \int_{\ell_{p-1}}^{\ell_p}{
-        \text{ta}(l)
-        dl
-    }
-    \geq
-    \int_{\ell_{w_q-1}}^{\ell_{w_q}}{
-        \text{ta}(l)
-        dl
-    }
-    \land
-    \ell_p := 1
-    \
-    \forall
-    \
-    p \in \{1, \dots, w_q\}
-    \\
-    \therefore
-    \int_{\ell_{p-1}}^{1}{
-        \text{ta}(l)
-        dl
-    }
-    \geq
-    \int_{\ell_{w_q-1}}^{1}{
-        \text{ta}(l)
-        dl
-    }
-    \\
-    \iff
-    \ell_{p-1} 
-    \geq 
-    \ell_{w_q - 1}
-    \\
-    \therefore
-    p \leq w_q 
-    \implies
-    \ell_{p-1} 
-    \geq 
-    \ell_{w_q - 1}
-\end{gather}
-
-\begin{gather}
-    p \leq w_q 
-    \implies
-    \ell_{p-1} 
-    \geq 
-    \ell_{w_q - 1}
-    ,
-\end{gather}
-in which case maximum-monotonic labor stratification is more effective at safeguarding production, as it requires less worker productivity to yield the same operational output.
-
+\textit{Proof:}
 \begin{gather}
     \sum_{v=1}^{p}{
         \tilde{w}_{q}^{v}
@@ -3283,7 +3228,7 @@ in which case maximum-monotonic labor stratification is more effective at safegu
             w_q
         }
     }
-    = 1
+    := 1
     \land
     w_{q}^{v} 
     \geq 
@@ -3305,6 +3250,26 @@ in which case maximum-monotonic labor stratification is more effective at safegu
     \iff
     \boldsymbol{w_q} =
     \boldsymbol{1}
+    .
+\end{gather}
+
+Furthermore,
+\begin{gather}
+    \sum_{v=1}^{w_q}
+    1
+    =
+    w_q
+    \land
+    \sum_{v=1}^{p}{
+        w_{q}^{v}
+    }
+    =
+    \sum_{v=1}^{p}{
+            1
+    }
+    = w_q
+    \implies
+    p = w_q
     .
 \end{gather}
 
@@ -3379,138 +3344,7 @@ Therefore, the above implies, given the PEC,
     .
 \end{align}
 
-\begin{align}
-    &
-    \tilde{w}_{q}^{v} = 
-    \Omega_{q}^{v} = 
-    \int_{
-        \ell_{v-1}
-    }^{
-        \ell_{v}
-    }{
-        \text{ta}(l)dl
-    }
-    \
-    \forall
-    \
-    v \in \{1, \dots, p\}
-    \\
-    &
-    \implies
-    \int_{
-        \ell_{p-1}
-    }^{
-        \ell_{p}
-    }{
-        \text{ta}(l)dl
-    }
-    =
-    \int_{
-        \ell_{w_q - 1}
-    }^{
-        \ell_{w_q}
-    }{
-        \text{ta}(l)dl
-    }
-    =
-    \int_{
-        \ell_{w_q - 1}
-    }^{
-        1
-    }{
-        \text{ta}(l)dl
-    }
-    =
-    \tilde{w}_{q}^{w_q}
-    % \frac{1}{w_q}
-    \\
-    &
-    \therefore
-    \text{TA}(1)
-    -
-    \text{TA}(\ell_{w_q - 1})
-    =
-    \tilde{w}_{q}^{w_q}
-    % \frac{1}{w_q}
-    \\
-    &
-    \therefore
-    \ell_{w_q - 1}
-    =
-    \text{TA}^{-1}
-    \left(
-        \text{TA}(1)
-        -
-        \tilde{w}_{q}^{w_q}
-        % \frac{1}{w_q}
-    \right)
-    ,
-\end{align}
-when $v = p = w_q$; and, so on and so forth, for every job subtype:
-\begin{align}
-    &
-    \int_{
-        \ell_{p-2}
-    }^{
-        \ell_{p}
-    }{
-        \text{ta}(l)dl
-    }
-    =
-    \int_{
-        \ell_{w_q - 2}
-    }^{
-        \ell_{w_q}
-    }{
-        \text{ta}(l)dl
-    }
-    =
-    \int_{
-        \ell_{w_q - 2}
-    }^{
-        1
-    }{
-        \text{ta}(l)dl
-    }
-    =
-    \tilde{w}_{q}^{w_q-1}
-    % \frac{1}{w_q}
-    \\
-    &
-    \therefore
-    \text{TA}(1)
-    -
-    \text{TA}(\ell_{w_q - 2})
-    =
-    \tilde{w}_{q}^{w_q-1}
-    % \frac{1}{w_q}
-    % \\
-    % &
-    % \therefore
-    % \ell_{w_q - 2}
-    % =
-    % \text{TA}^{-1}
-    % \left(
-    %     \text{TA}(1)
-    %     -
-    %     \tilde{w}_{q}^{w_q-1}
-    % % \frac{1}{w_q}
-    % \right)
-    % =
-    % \text{TA}^{-1}
-    % \left(
-    %     \text{TA}(1)
-    %     -
-    %     (
-    %         1 - 
-    %         \sum_{r=1}^{w_q - 1}{
-    % 
-    %         }
-    %     )
-    % % \frac{1}{w_q}
-    % \right)
-    % ,
-\end{align}
+[explain intution].
 
     \item Productivity Sufficiency Lemma (PSL)
     \begin{enumerate}
