@@ -268,6 +268,80 @@
         \end{gather}
         for all $k,q \in \{1, \dots, n\}$. This means employers do not expected every worker to be perfectly qualified and will adjust their hiring and production strategies accordingly.
     \end{enumerate}
+
+Definition: Employability
+
+In any labor market, employability is the percentage of available jobs in which one could be hired:
+\begin{gather}
+    \tilde{W}_{q}^{k}
+    =
+    \left[
+        h_{q}^{k}
+        \geq
+        \frac{1}{2}
+    \right]
+    \sum_{v=1}^{p}
+    \left[
+        \tilde{T}_{q}^{k}
+        \geq
+        \tilde{T}_{q}^{v}
+    \right]
+    \tilde{w}_{q}^{v}
+    \in
+    [0,1]
+    ,
+    \\
+    \sum_{v=1}^{p}
+    \tilde{w}_{q}^{v}
+    :=
+    \left(
+        \frac{1}{w_q}
+    \right)
+    \sum_{v=1}^{p}
+    w_{q}^{v}
+    % \frac{w_{q}^{v}}{w_q}
+    := 1
+    ,
+\end{gather}
+where $\tilde{T}_{q}^{v} \in [0,1]$ is the minimum productivity required to be hired in one of $p$ types of positions in a labor market with $w_q$ job posts; while $h_{q}^{k}$ is a hireability statistic accounting for other selection criteria, such as years of education, experience, etc.
+
+And we can further aggregate employability for $n$ occupations to assess how many of all $W$ jobs in the economy are suitable for one's skill set:
+\begin{gather}
+    \tilde{W}_{k}
+    =
+    \sum_{q=1}^{n}
+    \left[
+        h_{q}^{k}
+        \geq
+        \frac{1}{2}
+    \right]
+    \sum_{v=1}^{p}
+    \left[
+        \tilde{T}_{q}^{k}
+        \geq
+        \tilde{T}_{q}^{v}
+    \right]
+    \tilde{w}_{q}^{v}
+    \in
+    [0,1]
+    \\
+    \sum_{q=1}^{n}
+    \tilde{w}_{q}
+    :=
+    \left(
+        \frac{1}{W}
+    \right)
+    \sum_{q=1}^{n}
+    {w}_{q}
+    ,
+    \\
+    \sum_{q=1}^{n}
+    {w}_{q}
+    :=
+    W
+    .
+\end{gather}
+
     \item (Binary Employability Theorem) thus, in the binary case, ``junior'' productive output will be given by:
     \begin{gather}
         \mho_{q}^{\text{Jr}} =
