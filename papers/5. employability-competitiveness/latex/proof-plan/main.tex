@@ -274,7 +274,7 @@ Definition: Employability
 In any labor market, employability is the percentage of available jobs in which one could be hired:
 \begin{gather}
     \tilde{W}_{q}^{k}
-    =
+    :=
     \left[
         h_{q}^{k}
         \geq
@@ -308,7 +308,10 @@ where $\tilde{T}_{q}^{v} \in [0,1]$ is the minimum productivity required to be h
 And we can further aggregate employability for $n$ occupations to assess how many of all $W$ jobs in the economy are suitable for one's skill set:
 \begin{gather}
     \tilde{W}_{k}
-    =
+    :=
+    \sum_{q=1}^{n}
+    \tilde{W}_{q}^{k}
+    :=
     \sum_{q=1}^{n}
     \left[
         h_{q}^{k}
@@ -324,6 +327,7 @@ And we can further aggregate employability for $n$ occupations to assess how man
     \tilde{w}_{q}^{v}
     \in
     [0,1]
+    ,
     \\
     \sum_{q=1}^{n}
     \tilde{w}_{q}
@@ -335,10 +339,10 @@ And we can further aggregate employability for $n$ occupations to assess how man
     {w}_{q}
     ,
     \\
+    W
+    :=
     \sum_{q=1}^{n}
     {w}_{q}
-    :=
-    W
     .
 \end{gather}
 
@@ -1733,7 +1737,7 @@ The maximum operational output of any labor market is exactly the number of empl
             }
             \text{ta}(l)dl
         \right) ^ {-1}
-        =
+        :=
         w_q
         ,
     \end{gather}
@@ -2459,14 +2463,14 @@ The maximum operational output of any labor market is exactly the number of empl
             \boldsymbol{\ell_{q}^{*}}
         )
         =
-        \min(
-            \boldsymbol{1}
-            \times
-            \boldsymbol{\mho_q}(
-                \boldsymbol{\ell_{q}^{*}}
-            )
-        )
-        =
+        % \min(
+        %     \boldsymbol{1}
+        %     \times
+        %     \boldsymbol{\mho_q}(
+        %         \boldsymbol{\ell_{q}^{*}}
+        %     )
+        % )
+        % =
         w_q
         ,
         \\
