@@ -671,7 +671,7 @@ and
 \end{gather}
 as it is somewhat arbitrary setting minimum employment levels to any value other than one; for then it would always be optimal to choose an even smaller value than that, in which case we would converge back to an infinitely stratified labor market. Thus, we define there has to be at least one worker per job subtype.
 
-With this, we can now demonstrate that, given our axioms, maximum-monotonic labor stratification is, in fact, the only optimal production strategy and, so, holds in the labor market. But, to do so, we must first derive the maximum operational output, irrespective of productive arrangement, to serve as our ``benchmark''.
+With this, we can now demonstrate that, given our axioms, maximum-monotonic labor stratification is, in fact, the only optimal production strategy and, so, holds in the labor market. But, to do so, we must first derive an upper limit for aggregate operational output, irrespective of productive arrangement, to serve as our ``benchmark''.
 
 Maximum Operational Output Lemma (MOOL)
 
@@ -2427,6 +2427,43 @@ The maximum operational output of any labor market is exactly the number of empl
         1
         .
     \end{gather}
+
+    Finally, even with a $\boldsymbol{\omega_{q}^{v}}$ vector of partial time allocations for each worker, at least one difficulty subinterval would have to be neglected to emphasize another, because
+    \begin{gather}
+        \boldsymbol{1} ^ \top
+        \cdot
+        \boldsymbol{\omega_{q}^{v}}
+        =
+        \boldsymbol{1} ^ \top
+        \cdot
+        \boldsymbol{\Omega_{q}^{v}}
+        =
+        1
+        \implies
+        \min\left(
+            \boldsymbol{\omega_{q}^{v}}
+            \times
+            \boldsymbol{\mho_q}(
+                \boldsymbol{\ell_{q}}
+            )
+        \right)
+        <
+        w_q
+        \\
+        \therefore
+        \mho_q(
+            \boldsymbol{\ell_{q}^{v}},
+            \boldsymbol{\omega_{q}^{v}}
+        )
+        <
+        \boldsymbol{
+            \mho_q(\ell_{q}^{*})
+        }
+        =
+        w_q
+        ,
+    \end{gather}
+    as before.
 
     Thus, we have demonstrated there cannot be, in any productive arrangement, a higher aggregate operational output than $w_q$, that is the number of employees in a particular labor market, as all attempts to increase production, actually, end up hindering it. 
     
