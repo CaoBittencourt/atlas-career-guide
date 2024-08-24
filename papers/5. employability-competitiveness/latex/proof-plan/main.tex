@@ -563,7 +563,7 @@ Again, this does not mean employees are, themselves, more or less competent, onl
 
 Infinite Stratification Lemma (ISL)
 
-Having understood what maximum-monotonic labor stratification is, one may wonder whether there could be more than $w_q$ job subtypes in a labor market. For though it is intuitive to think of $w_q$, the number of jobs posts, as the upper bound for stratification, if we allow for partial hiring, with ``fractional jobs'',
+Having understood what maximum-monotonic labor stratification is, one may wonder whether there could be more than $w_q$ job subtypes in a labor market. For though it is intuitive to think of $w_q$, the workforce size, as the upper bound for stratification, if we allow for partial hiring, with ``fractional jobs'',
 \begin{gather}
     w_{q}^{v} 
     \in 
@@ -580,9 +580,9 @@ Having understood what maximum-monotonic labor stratification is, one may wonder
     w_q
     ,
 \end{gather}
-where $p \in \{1, 2, 3, \dots\}$ is the number of positions in a labor market, the productive arrangement we have just defined, may not, technically speaking, be ``maximally stratified''. 
+where $p \in \{1, 2, 3, \dots\}$ is the number of positions in a labor market, then workers can allocate fractions of their time allowance to multiple responsability spectra, and the productive arrangement we have just defined, may not, technically speaking, be ``maximally stratified''. 
 
-Indeed, if it were possible to stratify beyond $w_q$, rational employers would readly do so, for, again, labor stratification reduces the uncertainty around production and works as an insurance policy to guarantee the available talent is sufficient to output an occupation's operation.
+Indeed, if it were possible to stratify beyond $w_q$, rational employers would readly do so, for, again, labor stratification reduces the uncertainty around production and serves as an insurance policy to guarantee the available talent is sufficient to output an occupation's operation.
 
 But, because of this, if $p$ can be greater than $w_q$, then the optimal production strategy is, logically, to offer as many types of jobs as possible, even infinitely many.
 
@@ -671,7 +671,7 @@ and
 \end{gather}
 as it is somewhat arbitrary setting minimum employment levels to any value other than one; for then it would always be optimal to choose an even smaller value than that, in which case we would converge back to an infinitely stratified labor market. Thus, we define there has to be at least one worker per job subtype.
 
-Having understood what maximum-monotonic labor stratification is, we shall demonstrate that, given our axioms, such an economic configuration is, in fact, the only optimal production strategy and, so, holds in the labor market. But, to do so, we must first derive the maximum operational output, irrespective of productive arrangement, to serve as our ``benchmark''.
+With this, we can now demonstrate that, given our axioms, maximum-monotonic labor stratification is, in fact, the only optimal production strategy and, so, holds in the labor market. But, to do so, we must first derive the maximum operational output, irrespective of productive arrangement, to serve as our ``benchmark''.
 
 Maximum Operational Output Lemma (MOOL)
 
@@ -3054,7 +3054,8 @@ And, with this condition met, we can finally arrive, by the induction above, to 
 %     % Hence, a perfectly qualified employee working full-time and independently can output one unit of an occupation's complex tasks with one unit of their time (i.e. their entire time allowance). And, likewise, a workforce with $w_q$ employees identical to this one produces $w_q$ units of operational output. Or, to put it simply, a maximally productive person acchieves maximum production. Or, even simpler: one day is sufficient to produce a ``day's work''.
 % \end{enumerate}
 
-\item Equivalent Stratification Lemma (ESL) 
+Equivalent Stratification Lemma (ESL)
+
 Any efficient labor market where employers choose both $\boldsymbol{w_q}$ and $\boldsymbol{\ell_q}$ with $p \in \{1, \dots, w_q\}$ types of job posts converges to maximum labor stratification with unitary employment:
 \begin{gather}
     \boldsymbol{w_q} =
@@ -3107,7 +3108,58 @@ Any efficient labor market where employers choose both $\boldsymbol{w_q}$ and $\
     % 1
     % ,
 \end{gather}
-so that
+
+\begin{gather}
+    \int_{\ell_{p-1}}^{\ell_p}{
+        \text{ta}(l)
+        dl
+    }
+    \geq
+    \int_{\ell_{w_q-1}}^{\ell_{w_q}}{
+        \text{ta}(l)
+        dl
+    }
+    \land
+    \ell_p := 1
+    \
+    \forall
+    \
+    p \in \{1, \dots, w_q\}
+    \\
+    \therefore
+    \int_{\ell_{p-1}}^{1}{
+        \text{ta}(l)
+        dl
+    }
+    \geq
+    \int_{\ell_{w_q-1}}^{1}{
+        \text{ta}(l)
+        dl
+    }
+    \\
+    \iff
+    \ell_{p-1} 
+    \geq 
+    \ell_{w_q - 1}
+    \\
+    \therefore
+    p \leq w_q 
+    \implies
+    \ell_{p-1} 
+    \geq 
+    \ell_{w_q - 1}
+\end{gather}
+
+\begin{gather}
+    p \leq w_q 
+    \implies
+    \ell_{p-1} 
+    \geq 
+    \ell_{w_q - 1}
+    ,
+\end{gather}
+in which case maximum-monotonic labor stratification is more effective at safeguarding production, as it requires less worker productivity to yield the same operational output.
+
 \begin{gather}
     \sum_{v=1}^{p}{
         \tilde{w}_{q}^{v}
