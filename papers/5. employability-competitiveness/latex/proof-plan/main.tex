@@ -3360,15 +3360,47 @@ The available talent in a labor market with $w_q > 0$ employees is, at least, su
 \textit{Proof:}
 
 [x]
-\begin{align}
+% \begin{align}
+%     \lnot \
+%     \mho_q = 
+%     \min(
+%         \boldsymbol{w_q}
+%         \times
+%         \boldsymbol{\mho_q}
+%     )
+%     &> 0
+%     \implies
+%     \boldsymbol{w_q} =
+%     \boldsymbol{0}
+%     \\
+%     \therefore
+%     w_q > 0 
+%     \implies 
+%     \mho_q = 
+%     \min(
+%         \boldsymbol{w_q}
+%         \times
+%         \boldsymbol{\mho_q}
+%     ) 
+%     &> 0
+%     \iff
+%     \boldsymbol{w_q}
+%     \in
+%     [1,w_q] ^ {p}
+%     ,
+%     \\
+%     \boldsymbol{1} ^ \top
+%     \cdot
+%     \boldsymbol{w_q}
+%     =
+%     w_q
+%     ,
+%     &\
+%     p \in \{1,\dots, w_q\}
+% \end{align}
+\begin{gather}
     \lnot \
-    \mho_q = 
-    \min(
-        \boldsymbol{w_q}
-        \times
-        \boldsymbol{\mho_q}
-    )
-    &> 0
+    \mho_q > 0
     \implies
     \boldsymbol{w_q} =
     \boldsymbol{0}
@@ -3376,13 +3408,7 @@ The available talent in a labor market with $w_q > 0$ employees is, at least, su
     \therefore
     w_q > 0 
     \implies 
-    \mho_q = 
-    \min(
-        \boldsymbol{w_q}
-        \times
-        \boldsymbol{\mho_q}
-    ) 
-    &> 0
+    \mho_q > 0
     \iff
     \boldsymbol{w_q}
     \in
@@ -3395,9 +3421,10 @@ The available talent in a labor market with $w_q > 0$ employees is, at least, su
     =
     w_q
     ,
-    &\
     p \in \{1,\dots, w_q\}
-\end{align}
+    ,
+\end{gather}
+where $\mho_q$ is the aggregate operation output, defined by the Leontief function, as previously (see WOCA, MOOL).
 
 i.e. talent is sufficient to produce at least the entire responsability spectrum $l \in [0,1]$, otherwise employers' optimal choice would be to save their resources and entirely shutdown the productive effort
 
