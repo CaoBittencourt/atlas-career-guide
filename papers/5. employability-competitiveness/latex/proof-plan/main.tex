@@ -2639,8 +2639,9 @@ Because in a maximally and monotonically stratified labor market every position 
     \left\{
         1, \dots, w_q
     \right\}
-    .
+    ,
 \end{gather}
+where $\text{TA}(l)$ is the anti-derivative of the time allocation function $\text{ta}(l)$, and $\text{TA}^{-1}(l)$, its inverse.
 
 \textit{Proof}:
 
@@ -3350,13 +3351,32 @@ Therefore, the above implies, given the PEC and OSL,
     .
 \end{align}
 
-[explain intution].
+% [explain intution].
 
 Productivity Sufficiency Lemma (PSL)
 
 The available talent in a labor market with $w_q > 0$ employees is, at least, sufficient to allow for maximally stratified production.
 
 \textit{Proof:}
+
+[ ] $\lnot \ \mho_q = \min(...) > 0 \implies \boldsymbol{w_q} = \boldsymbol{0} \therefore w_q > 0 \implies \mho_q = \min(...) > 0 \iff \boldsymbol{w_q} \in [1,w_q] ^ {p}$
+
+i.e. talent is sufficient to produce at least the entire responsability spectrum $l \in [0,1]$, otherwise employers' optimal choice would be to save their resources and entirely shutdown the productive effort
+
+therefore, simply because occupation $q$'s labor market exists we know the talent employed is sufficient to output all its responsability spectra.
+
+[ ] furthermore, because rational employers will not overhire, for this would be a waste of resources and reduce their profit, we know for sure not a single position in the labor market violates the Proportional Employment Condition (see MOOL above).
+
+otherwise, rational employers would lay off the excess workers to reduce the workforce from a suboptimal $w_q > 0$ to some $w_{q}^{*} \leq w_q$, so that the current workforce, necessarily, has to be of the optimal $\sum_{v=1}^{p} = w_q = w_{q}^{*}$ size and respect the PEC at every level.
+
+Hence, we have to have at least $w_{q}^{v} = w_q \times \Omega_{q}^{v} \geq 1 \ \forall \ v \in \{1,\dots, p\}, p \in \{1,\dots, w_q\}$ employees in each position.
+
+[ ]
+In addition, we have ruled out infinite labor stratification (see MSA), and demonstrated any maximally stratified labor market is characterized by the very same optimal responsability spectra, with $w_q$ unique positions, and unitary employment (OSL, ESL). So, the labor market cannot be more than maximally stratified in accordance with Definition (ref). 
+
+Finally, from all valid production strategies we have considered, maximum-monotonic labor stratification is that which has the lowest barrier of entry, as [math proof], and so minimizes productivity requirements.
+
+Therefore, because occupation $q$'s labor market exists, for $w_q > 0$, the available has to be, at least, sufficient for maximally stratified production.
 
     \item Maximum-Monotonic Labor Stratification Lemma (MLSL)
     \begin{enumerate}
