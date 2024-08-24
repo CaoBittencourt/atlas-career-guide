@@ -1717,7 +1717,7 @@ The maximum operational output of any labor market is exactly the number of empl
     \end{gather}
     be the vector of optimal responsability bounds that maximizes operational output, such that
     \begin{gather}
-        \mho_{q}(\boldsymbol{\ell_{q}^{*}})
+        \mho(\boldsymbol{\ell_{q}^{*}})
         =
         \min(
             \boldsymbol{1}
@@ -1771,7 +1771,7 @@ The maximum operational output of any labor market is exactly the number of empl
     
     Nevertheless, because every worker has the same unitary time allowance, this would also entail the missing subinterval of complex tasks $l \in (\ell_{v}, \ell_{v}^{*}]$ would either not be produced at all, in which case
     \begin{align}
-        \mho_{q}(\boldsymbol{\ell_{q}})
+        \mho(\boldsymbol{\ell_{q}})
         =
         0
         \times
@@ -1789,7 +1789,7 @@ The maximum operational output of any labor market is exactly the number of empl
     \end{align}
     or that it would be produced with a $1 - \omega_{q}^{v} \in [0,1]$ fraction of a time unit, yielding some quantity
     \begin{align}
-        \mho_{q}(
+        \mho(
             \boldsymbol{\ell_{q}}
             ,\boldsymbol{\omega_{q}}
         )
@@ -1808,7 +1808,7 @@ The maximum operational output of any labor market is exactly the number of empl
     \end{align}
     where $\omega_{q}^{v} \in [0,1]$ is the percentage of worker $v$'s time allowance dedicated to the emphasized $l \in [\ell_{v-1}^{*}, \ell_{v}]$ responsability spectrum.
 
-    Furthermore, because aggregate operational output is given by the Leontief production function,
+    Furthermore, because aggregate operational output is given by the Leontief production function, [standardize this notation]
     \begin{gather}
     % \begin{align}
         \mho_{q}(
@@ -3359,7 +3359,45 @@ The available talent in a labor market with $w_q > 0$ employees is, at least, su
 
 \textit{Proof:}
 
-[ ] $\lnot \ \mho_q = \min(...) > 0 \implies \boldsymbol{w_q} = \boldsymbol{0} \therefore w_q > 0 \implies \mho_q = \min(...) > 0 \iff \boldsymbol{w_q} \in [1,w_q] ^ {p}$
+[x]
+\begin{align}
+    \lnot \
+    \mho_q = 
+    \min(
+        \boldsymbol{w_q}
+        \times
+        \boldsymbol{\mho_q}
+    )
+    &> 0
+    \implies
+    \boldsymbol{w_q} =
+    \boldsymbol{0}
+    \\
+    \therefore
+    w_q > 0 
+    \implies 
+    \mho_q = 
+    \min(
+        \boldsymbol{w_q}
+        \times
+        \boldsymbol{\mho_q}
+    ) 
+    &> 0
+    \iff
+    \boldsymbol{w_q}
+    \in
+    [1,w_q] ^ {p}
+    ,
+    \\
+    \boldsymbol{1} ^ \top
+    \cdot
+    \boldsymbol{w_q}
+    =
+    w_q
+    ,
+    &\
+    p \in \{1,\dots, w_q\}
+\end{align}
 
 i.e. talent is sufficient to produce at least the entire responsability spectrum $l \in [0,1]$, otherwise employers' optimal choice would be to save their resources and entirely shutdown the productive effort
 
