@@ -3351,53 +3351,161 @@ Therefore, the above implies, given the PEC and OSL,
     .
 \end{align}
 
+An alternative proof would be to define $p = w_q$, as this is the upper limit for labor stratification (MSA), and so that which maximally safeguards production; then, proceed by setting 
+\begin{gather}
+    \tilde{w}_{q}^{p} 
+    = 
+    \tilde{w}_{q}^{w_q} 
+    = 
+    \frac{1}{w_q}
+    ,
+\end{gather}
+as MSA implies $w_{q}^{v} \geq 1 \ \forall \ v \in \{1, \dots, p\}$. Thus, by the Proportional Employment Condition, 
+\begin{gather}
+    \int_{
+        \ell_{p-1}
+    }^{
+        \ell_{p}
+    }{
+        \text{ta}(l)dl
+    }
+    =
+    \int_{
+        \ell_{w_q-1}
+    }^{
+        \ell_{w_q}
+    }{
+        \text{ta}(l)dl
+    }
+    :=
+    \int_{
+        \ell_{w_q-1}
+    }^{1}{
+        \text{ta}(l)dl
+    }
+    =
+    \frac{1}{w_q}
+    ,
+\end{gather}
+we define $\ell_{w_q - 1}$ by minimizing the amount of perfectly qualified workers for efficient production. And, similarly, for the previous responsability spectrum, if $w_{p-1} \geq 1$ is set to 
+\begin{gather}
+    w_{p-1} = w_{w_q - 1} = 1
+    ,
+\end{gather}
+we minimize productivity requirements:
+\begin{gather}
+    \int_{
+        \ell_{p-2}
+    }^{
+        \ell_{p-1}
+    }{
+        \text{ta}(l)dl
+    }
+    =
+    \int_{
+        \ell_{w_q-2}
+    }^{
+        \ell_{w_q-1}
+    }{
+        \text{ta}(l)dl
+    }
+    =
+    \frac{1}{w_q}
+    .
+\end{gather}
+Again, $\ell_{w_q - 3}$ is derived by minimizing the number of highly productive workers:
+\begin{gather}
+    \int_{
+        \ell_{p-3}
+    }^{
+        \ell_{p-2}
+    }{
+        \text{ta}(l)dl
+    }
+    =
+    \int_{
+        \ell_{w_q-3}
+    }^{
+        \ell_{w_q-2}
+    }{
+        \text{ta}(l)dl
+    }
+    =
+    \frac{1}{w_q}
+    ;
+\end{gather}
+and, so on and so forth, always minimizing productivity requirements with $w_{q}^{v} = 1 \ \forall \ v \in \{1, \dots, w_q\}$. Notice the pattern here is the same as in the Optimal Stratification Lemma. Therefore, responsability bounds, and also employment levels, are the same as well. Hence,
+\begin{gather}
+    p = w_q,
+    \\
+    \boldsymbol{\ell_q} = 
+    \boldsymbol{\ell_{q}^{*}}
+    :=
+    (
+        \ell_{0}^{*}
+        ,
+        \dots
+        ,
+        \ell_{p}^{*}
+    )
+    :=
+    (
+        0
+        ,
+        \dots
+        ,
+        1
+    )
+    ,
+    \\
+    \ell_{v}^{*}
+    =
+    \text{TA}^{-1}\left(
+        \frac{v}{w_q}
+        +
+        \text{TA}(0)
+    \right)
+    \
+    \forall
+    \
+    v \in 
+    \left\{
+        1, \dots, w_q
+    \right\}
+    ,
+    \\
+    \boldsymbol{w_q} =
+    \boldsymbol{1}
+    .
+\end{gather}
 % [explain intution].
 
 Productivity Sufficiency Lemma (PSL)
 
-The available talent in a labor market with $w_q > 0$ employees is, at least, sufficient to allow for maximally stratified production.
+The available talent in a labor market is, at least, sufficient to allow for maximally stratified production.
 
 \textit{Proof:}
 
-[x]
-% \begin{align}
-%     \lnot \
-%     \mho_q = 
-%     \min(
-%         \boldsymbol{w_q}
-%         \times
-%         \boldsymbol{\mho_q}
-%     )
-%     &> 0
-%     \implies
-%     \boldsymbol{w_q} =
-%     \boldsymbol{0}
-%     \\
-%     \therefore
-%     w_q > 0 
-%     \implies 
-%     \mho_q = 
-%     \min(
-%         \boldsymbol{w_q}
-%         \times
-%         \boldsymbol{\mho_q}
-%     ) 
-%     &> 0
-%     \iff
-%     \boldsymbol{w_q}
-%     \in
-%     [1,w_q] ^ {p}
-%     ,
-%     \\
-%     \boldsymbol{1} ^ \top
-%     \cdot
-%     \boldsymbol{w_q}
-%     =
-%     w_q
-%     ,
-%     &\
-%     p \in \{1,\dots, w_q\}
-% \end{align}
+If talent were not sufficient to produce at least the entire responsability spectrum $l \in [0,1]$, then, as aggregate operation output is given by the Leontief function (see WOCA, MOOL),
+\begin{gather}
+    \mho_q = 
+    \mho(
+        \boldsymbol{w_q}
+        ,
+        \boldsymbol{\mho_q}(
+            \boldsymbol{\ell_q}
+        )
+    ) = 
+    \min\left(
+        \boldsymbol{w_q}
+        \times
+        \boldsymbol{\mho_q}(
+            \boldsymbol{\ell_q}
+        )
+    \right)
+    ,
+\end{gather}
+employers' optimal choice would be to save their resources and entirely shutdown the productive effort. Therefore,
 \begin{gather}
     \lnot \
     \mho_q > 0
@@ -3422,26 +3530,174 @@ The available talent in a labor market with $w_q > 0$ employees is, at least, su
     w_q
     ,
     p \in \{1,\dots, w_q\}
-    ,
+    .
 \end{gather}
-where $\mho_q$ is the aggregate operation output, defined by the Leontief function, as previously (see WOCA, MOOL).
 
-i.e. talent is sufficient to produce at least the entire responsability spectrum $l \in [0,1]$, otherwise employers' optimal choice would be to save their resources and entirely shutdown the productive effort
+In other words, simply because occupation $q$'s labor market exists we know the talent employed is sufficient to output all its responsability spectra.
 
-therefore, simply because occupation $q$'s labor market exists we know the talent employed is sufficient to output all its responsability spectra.
+Furthermore, because rational employers will not overhire (ERA), for this would reduce their profit, we know for sure not a single position in the labor market violates the Proportional Employment Condition (see MOOL).
 
-[ ] furthermore, because rational employers will not overhire, for this would be a waste of resources and reduce their profit, we know for sure not a single position in the labor market violates the Proportional Employment Condition (see MOOL above).
+Otherwise, rational employers would lay off excess workers to downscale the workforce from a suboptimal $w_q > 0$ to some $w_{q}^{*} \leq w_q$ to save resources. Thus, the current workforce, necessarily, has to be of the optimal
+\begin{gather}
+    \sum_{v=1}^{p}
+    w_{q}^{v}
+    =
+    w_q
+    =
+    w_{q}^{*}
+\end{gather}
+size and respect the PEC,
+\begin{gather}
+    \tilde{w}_{q}^{v}
+    =
+    \Omega_{q}^{v}
+    \in
+    [0,1]
+    ,
+    \\
+    \sum_{v=1}^{p}
+    \Omega_{q}^{v}
+    =
+    1
+\end{gather}
+at every level. Hence, we have to have at least $w_{q}^{v} = w_q \times \Omega_{q}^{v} \geq 1 \ \forall \ v \in \{1,\dots, p\}, p \in \{1,\dots, w_q\}$ employees in each position.
 
-otherwise, rational employers would lay off the excess workers to reduce the workforce from a suboptimal $w_q > 0$ to some $w_{q}^{*} \leq w_q$, so that the current workforce, necessarily, has to be of the optimal $\sum_{v=1}^{p} = w_q = w_{q}^{*}$ size and respect the PEC at every level.
-
-Hence, we have to have at least $w_{q}^{v} = w_q \times \Omega_{q}^{v} \geq 1 \ \forall \ v \in \{1,\dots, p\}, p \in \{1,\dots, w_q\}$ employees in each position.
-
-[ ]
 In addition, we have ruled out infinite labor stratification (see MSA), and demonstrated any maximally stratified labor market is characterized by the very same optimal responsability spectra, with $w_q$ unique positions, and unitary employment (OSL, ESL). So, the labor market cannot be more than maximally stratified in accordance with Definition (ref). 
 
-Finally, from all valid production strategies we have considered, maximum-monotonic labor stratification is that which has the lowest barrier of entry, as [math proof], and so minimizes productivity requirements.
+Finally, from all valid production strategies we have considered, maximum-monotonic labor stratification is that which has the lowest barrier of entry, and so minimizes productivity requirements. Indeed, if production is organized independently,
+\begin{gather}
+    \mho_q = w_q
+    \iff
+    \tilde{T}_{q}^{v}
+    =
+    1
+    \
+    \forall
+    \
+    v \in \{1, \dots, w_q\}
+    ,
+\end{gather}
+that is, either all $w_q$ employees are perfectly qualified, or maximum operational output is not acchieved. Moreover, in a binary setting,
+\begin{gather}
+    \mho_q = w_q
+    \iff
+    \tilde{T}_{q}^{v}
+    \geq
+    \tilde{T}_{q}^{\text{Jr}}
+    \in
+    [0,1)
+    \
+    \forall
+    \
+    v \in \{1, \dots, w_{q}^{\text{Jr}}\}
+    \land
+    \tilde{T}_{q}^{v}
+    =
+    1
+    ,
+\end{gather}
+for the rest of the workforce (i.e. all junior employess have at least junior productivity, and all senior employees are perfectly qualified), which means productivity requirements are lower in this economic configuration, with a weighted productivity of, at least,
+\begin{gather}
+    \tilde{w}_{q}^{\text{Jr}}
+    \times
+    \tilde{T}_{q}^{\text{Jr}}
+    +
+    (
+        1 - \tilde{w}_{q}^{\text{Jr}}
+    )
+    \times
+    1
+    <
+    1
+    \because
+    \tilde{T}_{q}^{\text{Jr}}
+    \in
+    [0,1)
+    \land
+    \tilde{w}_{q}^{\text{Jr}}
+    \in
+    (0,1]
+    ,
+\end{gather}
+rather than $1 \times 1 = 1,$ with independent production. And, if there were three levels of seniority, with $w_{q}^{\text{Ir}}$ interns (less qualified than juniors and seniors), productivity requirements would be even lower:
+\begin{align}
+    \tilde{w}_{q}^{\text{Ir}}
+    \times
+    \tilde{T}_{q}^{\text{Ir}}
+    +
+    \tilde{w}_{q}^{\text{Jr}}
+    \times
+    \tilde{T}_{q}^{\text{Jr}}
+    +
+    (
+        1 - \tilde{w}_{q}^{\text{Jr}} - \tilde{w}_{q}^{\text{Ir}}
+    )
+    \times
+    1
+    \\
+    <
+    \tilde{w}_{q}^{\text{Jr}}
+    \times
+    \tilde{T}_{q}^{\text{Jr}}
+    +
+    (
+        1 - \tilde{w}_{q}^{\text{Jr}}
+    )
+    \times
+    1
+    \\
+    <
+    1
+    \\
+    \because
+    \tilde{T}_{q}^{\text{Ir}}
+    <
+    \tilde{T}_{q}^{\text{Jr}}
+    \in
+    [0,1)
+    \land
+    \tilde{w}_{q}^{\text{Ir}},
+    \tilde{w}_{q}^{\text{Jr}}
+    \in
+    (0,1]
+    \land
+    \tilde{w}_{q}^{\text{Ir}}
+    +
+    \tilde{w}_{q}^{\text{Jr}}
+    \in
+    (0,1)
+    .
+\end{align}
 
-Therefore, because occupation $q$'s labor market exists, for $w_q > 0$, the available has to be, at least, sufficient for maximally stratified production.
+And the pattern continues for all levels of labor stratification, up to the limit of $w_q$ unique positions in a maximally and monotonically stratified labor market, where minimum required productivity is the lowest it can be when infinite labor stratification is ruled out (MSA):
+\begin{gather}
+    \sum_{v=1}^{w_q}{
+        \tilde{w}_{q}^{v}
+        \times
+        \tilde{T}_{q}^{v}
+    }
+    =
+    \left(
+        \frac{1}{w_q}
+    \right)
+    \sum_{v=1}^{w_q}{
+        \ell_{q}^{v}
+    }
+    =
+    \left(
+        \frac{1}{w_q}
+    \right)
+    \sum_{v=1}^{w_q}{
+        \text{TA}^{-1}\left(
+        \frac{v}{w_q}
+        +
+        \text{TA}(0)
+    \right)
+    }
+    .
+\end{gather}
+
+Therefore, if a labor market has any employees at all, the available talent in it has to be, at least, sufficient for maximally stratified production.
 
     \item Maximum-Monotonic Labor Stratification Lemma (MLSL)
     \begin{enumerate}
