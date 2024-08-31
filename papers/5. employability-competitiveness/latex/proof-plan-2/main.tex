@@ -1,0 +1,5427 @@
+%SECTION: SETUP 
+% region: document class 
+\documentclass[hidelinks, nonatbib]{elsarticle}
+\makeatletter
+\let\c@author\relax
+\makeatother
+
+% endregion
+
+% region: packages 
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{amsthm}
+\usepackage{float}
+\usepackage{tabularray}
+\usepackage{enumitem}
+\setlist[enumerate]{label*=\arabic*.}
+\usepackage[backend=biber, style=apa]{biblatex}
+\usepackage{hyperref}
+
+% endregion
+
+% region: source files 
+% theorems
+\input{theorems.tex}
+
+% equations
+\input{equations.tex}
+
+% figures
+\input{figures.tex}
+
+% tables
+\input{tables.tex}
+
+% references
+\addbibresource{references.bib}
+
+% endregion
+
+% region: display breaks 
+\allowdisplaybreaks
+
+% endregion
+
+% region: title 
+\title{
+    The Employability Theorem
+}
+\author{Cao Bittencourt}
+\affiliation{{B. Sc. in Economics from EPGE (FGV), RJ, Brazil.}}
+\affiliation{{Statistician at Atlas Career Guide Inc., FL, USA.}}
+\date{\today}
+
+% endregion
+
+%SECTION: PAPER 
+\begin{document}
+
+% region: abstract 
+\begin{abstract}
+    In this document, the Employability Theorem is demonstrated from a set of fairly tautological axioms, which are presupposed in quantitative career choice and career development methods.
+\end{abstract}
+
+\begin{keyword}
+    Employability theorem; 
+    Career choice; 
+    Career development; 
+    Vocational choice; 
+    Occupational Information Network; 
+    O*NET.
+\end{keyword}
+
+% endregion
+
+% region: title 
+\maketitle
+
+% endregion
+
+% region: contents 
+\tableofcontents
+
+% endregion
+
+% region: introduction 
+\newpage
+\section{Introduction}
+
+% endregion
+
+% region: presuppositions 
+\newpage
+\section{The Issue of Occupational Complexity}
+% region: attribute definition 1 
+\begin{definition}[Skill]
+    \label{skl_tasks}
+    % statement
+    A professional attribute, competency, or skill, of a person $k$ can be conceptualized as a cummulative sum of successes on
+    binary outcome variables representing tasks of progressive difficulty which require only that skill:
+    \begin{gather}
+        a_{i}^{k} = \sum_{l=0}^{l_i}
+        T_{i_{l}}^{k}
+        ,
+    \end{gather}
+    where
+    \begin{gather}
+        T_{i_{l}}^{k} =
+        \begin{cases}
+            1, \ \text{if $k$ succedes in a task $T_{i}^{l}$ of difficulty level $l$;} \\
+            0, \ \text{otherwise.}
+        \end{cases}
+    \end{gather}
+    
+    Or, more rigorously,
+    \begin{gather}
+        a_{i}^{k} = \sum_{l=0}^{l_i}
+        T(l, l_{i}^{k})
+        ,
+    \end{gather}
+    where
+    \begin{gather}
+        T(l, l_{i}^{k}) =
+        T_{i_{l}}^{k} =
+        [l \leq l_{i}^{k}] =
+        \begin{cases}
+            1, \ l \leq l_{i}^{k}; \\
+            % 0, \ \text{otherwise.}
+            0, \ l > l_{i}^{k}.
+        \end{cases}
+    \end{gather}
+    and $l_{i}^{k} \in [0, l_i]$ is the maximum difficulty level on which $k$ still succeedes. Thus, we can define a person $k$'s skill level in an attribute $i$ as the sum
+    of their successful trials on a $T_{i} = \{T_{i}^{0}, \dots, T_{i}^{l_i}\}$ set of tasks of increasing
+    difficulty.
+
+    Furthermore, as we assume scales are truncated (i.e. there is a maximum
+    difficulty level $l_i$, and a trivial difficulty level, which has to be zero),
+    we can also interpret $a_{i}^{k}$ as the \textit{portion} of tasks one is able
+    to accomplish out of all difficulty levels for that skill. By normalizing $l_i$
+    to $100$, for example, we have:
+    
+        $a_{i}^{k} = 0 \iff k$ cannot perform even the most basic of attribute $i$'s tasks;
+        $a_{i}^{k} = 10 \iff k$ can perform only the bottom 10\% of attribute $i$'s tasks, but nothing more;
+        $a_{i}^{k} = 50 \iff k$ can perform the easiest half of attribute $i$'s tasks, but not the most difficult half;
+        $a_{i}^{k} = 100 \iff k$ can perform all of attribute $i$'s tasks.
+    
+
+    Finally, we can define $a_{i}^{k}$ for a continuum of task difficulty $l \in [0,1]$:
+    \begin{gather}
+        a_{i}^{k} =
+        \int_{0}^{1}{
+        T(l, l_{i}^{k})
+        dl
+        }
+        ,
+    \end{gather}
+    where $T(l, l_{i}^{k})$ is defined as before.
+\end{definition}
+% endregion
+% region: attribute definition 2 
+\begin{definition}[Skill]
+\label{skl_difficulty}
+% statement
+    Alternatively, we can think of a person $k$'s professional attribute, competency, or skill, as the difficulty of the most difficult task they can accomplish, normalized by the difficulty of the most objectively difficult task of that particular skill:
+    \begin{gather}
+        a_{i}^{k} =
+        \frac{
+            l_{i}^{k}
+        }{
+            l_{i}
+        }
+        ,
+    \end{gather}
+    which we normalize by setting $l_{i} = 1$, so that
+    \begin{gather}
+        a_{i}^{k} =
+        \frac{
+            l_{i}^{k}
+        }{
+            1
+        }
+        =
+        l_{i}^{k}
+        ,
+    \end{gather}
+    and $l_{i}^{k} \in [0,1]$. With this normalization, example interpretations of $a_{i}^{k}$ are:
+    
+        $a_{i}^{k} = 0 \iff k$ cannot perform even the most basic of attribute $i$'s tasks;
+        $a_{i}^{k} = 0.10 \iff k$ can only perform tasks of up to 10\% the difficulty of attribute $i$'s most difficult task, but nothing more;
+        $a_{i}^{k} = 0.50 \iff k$ can perform tasks of up to half the difficulty of attribute $i$'s most difficult task, but nothing more;
+        $a_{i}^{k} = 1 \iff k$ can perform all of attribute $i$'s tasks.
+    
+
+    This is, perhaps, the most natural conceptual model for understanding
+    competencies, as, generally, it is more intuitive to think of skill as the
+    maximum of one's capacity, rather than the portion of tasks one could
+    ly accomplish.
+
+    But, again, [because we assume scales to be truncated], this latter interpretation
+    actually implies and is implied by the former. For if a task is of the same
+    difficulty as another, then they are just as difficult in relation to that
+    skill's most difficult task (i.e. they require the same percentage of the
+    scale's upper limit to be performed), and, likewise, are also included in the
+    same difficulty ``bracket" (i.e. they are equivalent to the same skill test in
+    the aggregate binary outcome interpretation), and, therefore, pressupose the
+    same $a_{i}^{k}$ skill level.
+
+    Of course, this equivalence is quite trivial, given that
+    \begin{gather}
+        \int_{0}^{1}{
+        T(l, l_{i}^{k})
+        dl
+        }
+        =
+        1 \times \int_{0}^{l_{i}^{k}}{dl} +
+        0 \times \int_{l_{i}^{k}}^{1}{dl}
+        =
+        l_{i}^{k} - 0
+        =
+        \frac{l_{i}^{k}}{1}
+        =
+        a_{i}^{k}
+        .
+    \end{gather}
+
+    This means the percentage of a skill's tasks one can accomplish is also
+    the difficulty of the most difficult task one can accomplish relative to that
+    skill's most difficult task.
+
+    So, however one decides to interpret skill levels, the conclusion remains the
+    same: to be skilled in an attribute is to be able to perform the activities
+    associated with that attribute. Put simply, the capacity to act follows virtue,
+    for virtue is, itself, the capacity to act.
+\end{definition}
+% endregion
+% region: skill sufficiency lemma (ssl) 
+% skills are sufficient to accomplish tasks
+% preamble
+Now, even though these results are basically tautological, they are still important to guide our intuition. In fact, our first insight towards the Employability Theorem, namely the Skill Sufficiency Lemma (SSL), follows directly from the definitions above.
+% statement
+\begin{lemma}[Skill Sufficiency Lemma]
+    \label{ssl}
+    According to the SSL, skills are necessary and sufficient to accomplish tasks.
+    In particular, to have a skill level of $a_{i}^{k} \in [0,1]$ in attribute $i$ is a necessary and sufficient condition for one to be capable of accomplishing the easier $a_{i}^{k}$ portion of that attribute's tasks.
+\end{lemma}
+
+% proof
+\begin{proof}
+    By definition,
+    \begin{gather}
+        T(l, l_{i}^{k}) =
+        \begin{cases}
+            1, \ l \leq l_{i}^{k}; \\
+            0, \ \text{otherwise.}
+        \end{cases}
+    \end{gather}
+    is a binary indicator of person $k$'s ability to accomplish a task of difficulty $l \in [0,1]$ which requires only attribute $i$.
+    
+    With this,
+    \begin{gather}
+        \tilde{T}_{i}^{k}
+        =
+        \int_{0}^{1}{
+        T(l, l_{i}^{k})
+        dl
+        }
+    \end{gather}
+    is the percentage of tasks requiring only attribute $i$ that $k$ can accomplish.
+
+    But both equivalent definitions of $k$'s skill level in attribute $i$, are
+    \begin{gather}
+        a_{i}^{k} = 
+        \int_{0}^{1}{
+        T(l, l_{i}^{k})
+        dl
+        }
+        =
+        l_{i}^{k}
+        ,
+    \end{gather}
+    which is precisely the $\tilde{T}_{i}^{k}$ aggregation of $T(l, l_{i}^{k})$ in the $[0,1]$ interval.
+
+    Therefore, having a skill level of $a_{i}^{k}$ is a necessary and sufficient condition to be capable of accomplishing the easier $a_{i}^{k}$ portion of attribute $i$'s tasks:
+    \begin{gather}
+        a_{i}^{k} =
+        \tilde{T}_{i}^{k}
+        \iff
+        \int_{0}^{1}{
+        T(l, l_{i}^{k})
+        dl
+        } =
+        \int_{0}^{1}{
+        T(l, l_{i}^{k})
+        dl
+        }
+        .
+    \end{gather}
+\end{proof}
+
+% endregion
+% region: complex task definition 
+% statement
+\begin{definition}[Complex Task]
+    \label{complex_task}
+    A task is said to be complex if it relies on more than one attribute to be accomplished. More precisely, $T_{ij}^{l}$ is a complex task of attributes $i$ and $j$, if its binary outcome indicator is of the form
+    \begin{gather}
+        T(l, l_{ij}^{k}) =
+        [l \leq l_{ij}^{k}],
+        % \begin{cases}
+        %     1, \ l \leq l_{ij}^{k}; \\
+        %     0, \ \text{otherwise.}
+        % \end{cases}
+    \end{gather}
+    where
+    \begin{gather}
+        l_{ij}^{k} = f(l_{i}^{k}, l_{j}^{k})
+    \end{gather}
+    is a strictly increasing aggregation function that returns the maximum difficulty level of the complex task $T_{ij}^{l}$ a person $k$ can accomplish based on each attribute $T_{ij}^{l}$ requires. Or, generalizing for any complex task $T_{q}^{l}$ of $m$ attributes, requiring an entire skill set $\boldsymbol{a_q} = (a_{1}^{q}, \dots, a_{m}^{q})$ to be accomplished, 
+    \begin{gather}
+        T(l, l_{q}^{k}) =
+        [l \leq l_{q}^{k}],
+        % \begin{cases}
+        %     1, \ l \leq l_{q}^{k}; \\
+        %     0, \ \text{otherwise.}
+        % \end{cases}
+    \end{gather}
+    where
+    \begin{gather}
+        l_{q}^{k} = 
+        f(\boldsymbol{l_{q}^{k}}) =
+        f(l_{1}^{k}, \dots, l_{m}^{k})
+    \end{gather}
+    and 
+    \begin{gather}
+        \frac{
+            \partial
+            f(\boldsymbol{l_{q}^{k}})
+        }{
+            \partial 
+            l_{i}^{k}
+        } > 0
+        \
+        \forall 
+        \
+        i \in \{1, \dots, m\}
+        .
+    \end{gather}
+        
+    This means none of the attributes required by the complex task are completely disposable (i.e. they are all helpful in some way). For instance, the task $T_{i}^{l}$, previously defined, with binary outcome $T(l, l_{i}^{k})$ is not complex, because
+    \begin{gather}
+        \frac{
+            \partial
+            l_{i}^{k}
+        }{
+            \partial 
+            l_{i}^{k}
+        } = 1
+        ,
+    \end{gather}
+    but
+    \begin{gather}
+        \frac{
+            \partial
+            l_{i}^{k}
+        }{
+            \partial 
+            l_{j}^{k}
+        } = 0
+        , 
+    \end{gather}
+    where $i \neq j$ and $i, j \in \{1, \dots, m\}$. Or, say the aggregation function is given by
+    \begin{gather}
+        f(l_{i}^{k}, l_{j}^{k}) = 
+        l_{i}^{k} - l_{j}^{k}
+        ,
+    \end{gather}
+    so that attribute $j$ actually hinders productivity:
+    \begin{gather}
+        \frac{
+            \partial
+            l_{i}^{k}
+        }{
+            \partial 
+            l_{j}^{k}
+        } = -1
+        .
+    \end{gather}
+        
+    None of these are complex tasks, for they do not coherently mobilize multiple attributes towards a unified goal.
+    
+    \begin{subdefinition}[Weak Complexity]
+        Now, beyond these most basic rules, we can define stricter versions of ``task complexity'' with additional assumptions. The first version, of weak complexity, requires that
+        \begin{gather}
+            \frac{
+                \partial ^ 2 {f(\boldsymbol{l_{q}^{k}})}
+            }{
+                \partial 
+                l_{i}^{k}
+                \partial
+                l_{j}^{k}
+            }
+            > 0
+            \
+            \forall
+            \
+            % i, j \in \{1, \dots, m\}
+            % ,
+            % i \neq j
+            i \neq j \in \{1, \dots, m\}
+            ,
+        \end{gather}
+        meaning attributes are complementary.
+    \end{subdefinition}
+    
+    \begin{subdefinition}[Moderate Complexity]
+        A task is of moderate complexity if its aggregation function also meets the following criteria:
+        \begin{gather}
+            \lim_{
+                l_{i}^{k} \rightarrow 0
+            }{
+                f(\boldsymbol{l_{q}^{k}})
+            } = 0
+            \
+            \forall 
+            \
+            i \in \{1, \dots, m\}
+            ,
+        \end{gather}
+        so that a person $k$'s capacity to perform the complex task is weakly increasing on their capacity to perform the simple tasks of its required attributes, and goes to zero when they are unskilled in at least one of these. Thus, a moderately complex task is not reducible to any proper subset of its attributes.
+        
+        For instance, a task of the form
+    \begin{gather}
+        T(l, l_{ij}^{k})
+        = [l \leq (1 + l_{i}^{k}) \times (1 + l_{j}^{k}) - 1]
+    \end{gather}
+    is not moderately complex, as person $k$ does not need every attribute to accomplish the task. Indeed, if $k$ has precisely zero capacity in either skill $i$ or $j$, then $T_{ij}^{l}$ collapses to unidimensional, or simple, tasks $T_{i}^{l}$ when
+    \begin{align}
+        T(l, l_{ij}^{k})
+        &= [l \leq (1 + l_{i}^{k}) \times (1 + 0) - 1]
+        \\
+        &= [l \leq l_{i}^{k}]
+        \\
+        &= T(l, l_{i}^{k})
+        ,
+    \end{align}
+    or $T_{j}^{l}$ when
+    \begin{align}
+        T(l, l_{ij}^{k})
+        &= [l \leq (1 + 0) \times (1 + l_{j}^{k}) - 1]
+        \\
+        &= [l \leq l_{j}^{k}]
+        \\
+        &= T(l, l_{j}^{k})
+        ,
+    \end{align}
+    in which case $T_{ij}^{l}$ is not \textit{really} (moderately) complex, but rather a convolution of simple tasks. Notice, however, this does not imply there cannot be a degree of substitution between attributes. That is, moderate task complexity only means a task must require all of its attributes in \textit{some} level, even if its functional form allows for substitution.
+    
+    \end{subdefinition}
+    
+    \begin{subdefinition}[Strong Complexity]
+        The strictest definition of task complexity adds the constraint that skills are aggregated by the Leontief function:
+        \begin{gather}
+            f(\boldsymbol{l_{q}^{k}}) = 
+            \min(\boldsymbol{l_{q}^{k}})
+            .
+        \end{gather}
+
+        Here, attributes are assumed to be perfect complements, which need to be combined in exactly the same quantities for maximum efficacy. In other words, having additional skills does not help to accomplish the task, but being unskilled in even a single attribute can undermine the whole effort. Hence, productivity is limited by the lowest competency.
+    \end{subdefinition}
+
+\end{definition}
+% endregion
+% region: skill composition lemma (scl) 
+% skills are composable to accomplish complex tasks
+% statement
+\begin{lemma}[Skill Composition Lemma]
+    \label{scl}
+    The Skill Composition Lemma (SCL) is a generalization of the SSL and states that skills are composable to accomplish complex tasks. More precisely, let $T_{q}^{l}$ be an activity of difficulty level $l$ that requires the $\boldsymbol{a_q} = (a_{1}^{q}, \dots, a_{m}^{q})$ skill set (i.e. $T_{q}^{l}$ is a complex task). With this, we demonstrate that any rational and sufficiently qualified economic agent can naturally ``piece together'', that is \textit{compose}, attributes $\{1, \dots, m\}$ to accomplish the $T_{q}^{l}$ complex task.
+    
+    % proof
+    \begin{proof}
+        Given 
+        \begin{gather}
+            \tilde{T}_{q}^{k} = 
+            \int_{0}^{1}{
+                T(l, l_{q}^{k})
+                dl
+            }
+        \end{gather}
+    \end{proof}
+\end{lemma}
+% endregion
+% region: occupational reducibility axiom (ora) 
+% occupations can be reduced to their tasks
+% statement
+\label{ora}
+\begin{axiom}[Occupational Reducibility Axiom]
+    Occupations can be reduced to their tasks.
+\end{axiom}
+% endregion
+% region: (weak) occupational complexity axiom (woca) 
+% all of an occupation's tasks can be thought of as only
+% one, indivisible, holistic task, requiring their entire skill set
+% we call this an occupation's "operation"
+% all an occupation does is its "operation"
+% define an aggregation function to compose skills an an "operation"
+% operation production: evaluated aggregation function
+% max production: occupation's evaluated aggregation function
+% productivity: production truncated and normalized by max production
+% statement
+\begin{axiom}[Occupational Complexity Axiom]
+    \label{woca}
+    All of an occupation's tasks can be thought of as one indivisible task, which mobilizes their entire skill set. We call this ``holistic task'' an occupation's \textit{operation}.
+
+    Mathematically, an occupational operation, is just a complex task that has a continuum of difficulty levels in the unit interval, all of which are indispensable for the task to be accomplished. We denote ``operational output'' (OO) with the standard IPA symbol for the near-close near-back rounded vowel (i.e. the ``double o'' sound in words such as ``boot''):
+    \begin{gather}
+        \mho_{q}^{k} = 
+        \left\lfloor
+            \int_{0}^{1}{
+                T(l,l_{q}^{k})
+                dl
+            }
+        \right\rfloor
+        .
+    \end{gather}
+
+    By this formulation, the amount of an occupations's operation a person $k$ can output is the floor of what they accomplish of the operation's complex tasks. Of course, this value is zero if they are not perfectly qualified, which at first can seem too strong of a pressuposition, but is, in fact, an effective strategy to ``side-step'' the issue of occupational complexity and is, also, quite reasonable, as we shall demonstrate below.
+
+    [intuition for operational output formulation]
+    
+    [clarify the indivisibility of the ``holistic task'' does not imply tasks cannot be outsourced, but that the whole operation has to be accomplished in its entirety]
+
+    [examples in defense of operational output formulation]
+    
+    [how this operational output helps to side-step the issue of occupational complexity]
+
+    So, in a way, a ``holistic task'', or operation, is a ``doubly complex'' task, as, in addition to being complex as already defined, it is also strictly complex in its difficulty levels, for failing to accomplish even the most basic of difficulty levels nullifies the entire operation. It is, in other words, a strongly complex task itself made up of various complex tasks that perfectly complement one another.
+
+    Aggregate occupational operation output:
+    \begin{align}
+        \mho_{q} 
+        &= 
+        \left\lfloor
+        \sum_{k=1}^{n}
+            % [k \in {\Lambda}^{-1}(q)]
+            [k \in {\Lambda}_q]
+            ?
+            % \tilde{Y}_{q}^{k}
+        \right\rfloor
+        % \\
+        % &= 
+        % \left\lfloor
+        % \sum_{k=1}^{n}
+        % \left(
+        %     [k \in {\Lambda}^{-1}(q)]
+        %     \times
+        %     \left(
+        %         \frac{
+        %         \prod_{i=1}^{m}{
+        %             {
+        %                 \max(
+        %                     1 + a_{i}^{k},
+        %                     1 + a_{i}^{q}
+        %                 )
+        %             } ^ {
+        %                 \sigma_{i}^{q}
+        %             }
+        %         }
+        %     }{
+        %         \prod_{i=1}^{m}{
+        %             {
+        %                 (
+        %                     1 + a_{i}^{q}
+        %                 )
+        %             } ^ {
+        %                 \sigma_{i}^{q}
+        %             }
+        %         }
+        %     }
+        %     \right)
+        % \right)
+        % \right\rfloor
+        ,
+    \end{align}
+    where ${\Lambda}_q$ is the set of people working in occupation $q$.
+
+    Labor market taxa ($\Lambda$):
+    \begin{gather}
+        \Lambda_{1}^{1}
+        = \Lambda(1,1)
+        = \{
+            1, \dots, n
+            \}
+        \iff k, q \in 
+        \Lambda_{1}^{1}
+        \\
+        \Lambda = \{
+            \Lambda_{1}^{1},
+            \dots,
+            \Lambda_{n}^{\bar{L}}
+            \}
+        \\
+        \Lambda^{-1}(k) = \Lambda_{k}^{\bar{L}}
+    \end{gather}
+
+\end{axiom}
+% endregion
+% region: occupational composition lemma (ocl) 
+% sca, ora, oca => ocl
+% skill sets are composable to accomplish occupations' "operations"
+% statement
+\label{ocl}
+\begin{lemma}[Occupational Composition Lemma]
+    Skill sets are composable to accomplish occupations' operations.
+\end{lemma}
+
+% proof
+\begin{proof}
+
+\end{proof}
+% endregion
+
+\section{Employer Behavior}
+% region: employer rationality axiom (era) 
+% employers are rational
+% employers will only pay for employees to work on tasks they can accomplish
+% if required, employers will outsource parts of an occupation's operation
+% statement
+\begin{axiom}[Rationality Axiom]
+    \label{era}
+    Employers are rational and will only pay for employees to work on tasks they can accomplish. Additionaly, employers will outsource parts of an occupation's operation if their employees cannot accomplish the entire operation.
+\end{axiom}
+% endregion
+% region: hireability axiom (ha) 
+% hiring is done by evaluating a hireability statistic
+% statement
+\begin{axiom}[Hireability Axiom]
+    \label{ha}
+    % Any rational employer hires employees by evaluating a hireability statistic, which quantifies potential employees' skill set similarity with an occupation, their educational attainment, and years of experience.
+    Any rational employer hires employees by evaluating a hireability statistic, which quantifies potential employees' expected productivity, their educational attainment, and years of experience.
+
+    \begin{subaxiom}[Weak Hireability Axiom]
+        \begin{gather}
+            \mathbb{E}
+                \left| 
+                    h_{q}^{k} - 
+                    % \mathbb{E}h_{q}^{k}
+                    \mathbb{E}(h_{q}^{k})
+                \right| 
+            \in [0,1]
+        \end{gather}
+    \end{subaxiom}
+    
+    \begin{subaxiom}[Moderate Hireability Axiom]
+        \begin{gather}
+            % \text{E}(
+            %     \left| 
+            %         h_{q}^{k} - 
+            %         \text{E}(h_{q}^{k}) 
+            %     \right| 
+            % ) = 0
+            \mathbb{E}
+                \left| 
+                    h_{q}^{k} - 
+                    % \mathbb{E}h_{q}^{k}
+                    \mathbb{E}(h_{q}^{k})
+                \right| 
+            = 0
+        \end{gather}
+    \end{subaxiom}
+    
+    \begin{subaxiom}[Strong Hireability Axiom]
+        \begin{gather}
+            % E(h_{q}^{k}) = h_{q}^{k}
+            % \\
+            % \mathbb{E}h_{q}^{k} = h_{q}^{k}
+            % \\
+            \mathbb{E}(h_{q}^{k}) = h_{q}^{k}
+        \end{gather}
+    \end{subaxiom}
+\end{axiom}
+% endregion
+
+\section{Task Difficulty and Time Allocation}
+% region: time allocation definition 
+\begin{definition}[Time Allocation]
+    \label{ta}
+    % statement
+\end{definition} 
+
+% endregion
+
+% endregion
+
+% region: demonstration 
+\section{The Employability Theorem}
+\subsection{Demonstration}
+basic presuppositions
+basic lemmas
+complex tasks
+occupations are but tasks
+occupations' tasks are complex
+occupations' tasks are holistic (operation)
+
+more difficult tasks presuppose the easier tasks have been accomplished
+i.e. $l \in [0,1]$ is a ``progress bar'' of an occupation's operation
+strongly holistic: each task $l \geq \bar{l}$ requires all the previous $l \in [0, \bar{l}], \bar{l} \in [0,1]$ difficulty levels to be accomplished. in addition, if all $l \in [0,1]$ levels are not all accomplished, the whole effort is vain and the operation is not completed (i.e. round down $\mho_q$ when calculating operational output). furthermore, each and every $l \in [0,1]$ difficulty level cannot be outsourced (i.e. only a perfectly qualified worker can output a unit of the occupation's operation).
+
+individual's time constraint is spent entirely on trying to accomplish the complex holistic task by themselves. therefore, there is no optimization to be done.
+
+\begin{align*}
+    \mho_q 
+    = 
+    \sum_{k=1}^{n}{
+        \left\lfloor
+            [k \in \Lambda_q]
+            \times
+            \mho_{q}^{k}
+        \right\rfloor
+    }
+    = 
+    \sum_{k=1}^{n}{
+        \left\lfloor
+            [k \in \Lambda_q]
+            \times
+            \int_{0}^{1}{
+                T_{q}(l,l_{q}^{k})
+                dl
+            }
+        \right\rfloor
+    }
+\end{align*}
+
+moderately holistic: each task $l \geq \bar{l}$ requires all the previous $l \in [0, \bar{l}], \bar{l} \in [0,1]$ difficulty levels to be accomplished. in addition, if all $l \in [0,1]$ levels are not all accomplished, the whole effort is vain and the operation is not completed (i.e. round down $\mho_q$ when calculating operational output). however, each and every $l \in [0,1]$ difficulty level can be outsourced (i.e. workers can output partial units of the occupation's operation, which contribute to the operation's completion).
+    
+because of outsourcing, individual's time constraint is spent working from where another worker ``left off'', so that even if a worker cannot accomplish the entire operation by themselves, they can still contribute to the operation's completion by reducing the time highly skilled workers will have to spend on relatively more trivial tasks.
+
+The first worker spends their entire unitary time allowance trying their hardest to accomplish the highest amount of tasks they can. When they hit their skill cap, they restart their efforts, so as to spend their entire time allowance helping out the next worker:
+\begin{gather*}
+    \int_{0}^{\tilde{T}_{q}^{k}}{
+        T_{q}(l,l_{q}^{k})
+        \times
+        \text{ta}_{q}(l)
+        dl
+    }
+    +
+    \int_{0}^{\bar{l}}{
+        T_{q}(l,l_{q}^{k})
+        \times
+        \text{ta}_{q}(l)
+        dl
+    }
+    = 1
+    \\
+    \int_{0}^{\bar{l}}{
+        1
+        \times
+        \text{ta}_{q}(l)
+        dl
+    }
+    = 1 -
+    \int_{0}^{\tilde{T}_{q}^{k}}{
+        1
+        \times
+        \text{ta}_{q}(l)
+        dl
+    }
+    \\
+    \int_{0}^{\bar{l}}{
+        \text{ta}_{q}(l)
+        dl
+    }
+    = 
+    \int_{\tilde{T}_{q}^{k}}^{1}{
+        \text{ta}_{q}(l)
+        dl
+    }
+    \\
+    \text{TA}_{q}(\bar{l}) -
+    \text{TA}_{q}(0)
+    = 
+    \text{TA}_{q}(1) -
+    \text{TA}_{q}(\tilde{T}_{q}^{k})
+    \\
+    \text{TA}_{q}(\bar{l})
+    = 
+    \text{TA}_{q}(1) -
+    \text{TA}_{q}(\tilde{T}_{q}^{k})
+    \\
+    \bar{l}
+    = 
+    \text{TA}_{q}^{-1}
+    \left(
+        \text{TA}_{q}(1) -
+        \text{TA}_{q}(\tilde{T}_{q}^{k})
+    \right)
+    ,
+\end{gather*}
+so that $k$ accomplishes tasks of difficulty levels $0$ through $\tilde{T}_{q}^{k}$ on their ``first run'', and restarts their effort to provide additional $l \in \left[0,\text{TA}_{q}^{-1}
+\left(
+    \text{TA}_{q}(1) -
+    \text{TA}_{q}(\tilde{T}_{q}^{k})
+\right)
+\right]$ levels worth of complex tasks. Thus, the next worker does not need to start from zero, but rather from where $k$ ``left off'': either $\tilde{T}_{q}^{k}$, $\bar{l}$, or some $l \in [0, \tilde{T}_{q}^{k}]$.
+        
+\begin{align*}
+    \mho_q 
+    &= 
+    \left\lfloor
+    \sum_{k=1}^{n}{
+        [k \in \Lambda_q]
+        \times
+        \mho_{q}^{k}
+    }
+    \right\rfloor
+    \\
+    &= 
+    \left\lfloor
+    \sum_{k=1}^{n}{
+        [k \in \Lambda_q]
+        \times
+        \int_{0}^{1}{
+            T_{q}(l,l_{q}^{k})
+            dl
+        }
+    }
+    \right\rfloor
+\end{align*}
+
+weakly holistic: each task $l \geq \bar{l}$ requires all the previous $l \in [0, \bar{l}], \bar{l} \in [0,1]$ difficulty levels to be accomplished. however, if not all $l \in [0,1]$ levels are accomplished, the whole effort is not vain and the operation is partially completed (i.e. do not round $\mho_q$ when calculating operational output). furthermore, each and every $l \in [0,1]$ difficulty level can be outsourced (i.e. workers can output partial units of the occupation's operation, which contribute to the operation's completion).
+
+assume weak occupational complexity axiom (the other versions are too strict)
+perhaps posit an even weaker version of occupational complexity:
+
+\begin{gather}
+    \frac{
+        \partial \mho_{q}
+    }{
+        \partial l
+    } > 0
+    ,\\
+    \frac{
+        \partial^2 \mho_{q}
+    }{
+        \partial l^2
+    } < 0
+    ,
+\end{gather}
+so that even though tasks of a particular level are not required for the operation to ``count'' (i.e. partial delivery), it is still detrimental to focus too much on one subset of tasks, that is, employers are incentivised to produce the entire spectrum of difficulty levels, because marginal productivity increases when a tasks of a particular difficulty level have not been accomplished yet.
+
+(actually, we need a indicator variable for the amount of tasks accomplished for a difficulty level, something analogous to $T_q(l)$)
+
+now, because of weak occupational complexity, employers will maximize operational output by attempting to produce the entire spectrum of difficulty levels for the complex tasks of an occupation.
+this can be done either by having only perfectly qualified employees work on the operation individually from beginning to end, or by splitting responsabilities into two, or more, types of jobs, thus allowing for less qualified, ``junior'' employees, to work alongside more qualified and perfectly qualified, ``senior'' employees towards the common goal of accomplishing the entire occupational operation.
+additionally, because there are skill differences among workers in the labor market, any rational employer will always, and rightly, expect their employees to be of varying skill levels, rather than all perfectly qualified, so that splitting responsabilities into separate positions will not only be an alternative mode of hiring and producing, but in fact the optimal one.
+therefore, given expected and actual skill differences among workers, employers will split job posts based on the required skill level. thus, there will be ``junior'' job posts and ``senior'' job posts, each dedicated to accomplishing a particular subset of complex tasks with difficulty levels appropriate for employees' respective capacity.
+notice this does not mean all people working on ``junior'' positions will, necessarily, be ``junior'' employees themselves, that is, less qualified. indeed, if talent is abundant in the labor market, these ``junior'' positions will have to be filled by more qualified, or even perfectly qualified, ``senior'' employees. for if there were only one type of job, spanning the entire difficulty level spectrum, highly qualified workers would already have to accomplish these ``junior'' tasks themselves, in order to maximize operational output. however, by having two, or more, types of jobs, split by minimum required competence, highly qualified workers may specialize to the measure that there are less qualified workers available to accomplish the easier tasks. but, if there are none, they will, again, have to work on these themselves.
+analogously, from the employers' perspective, it does not matter who accomplishes ``junior'' tasks, so long as they are accomplished. thus, if highly qualified workers are abundant in a particular time period of a labor market, production is not hindered when allocating ``seniors'' to ``junior'' positions, for in these circumstances talent is not wasted. that is, because only highly qualified workers can accomplish highly demanding tasks, rational employers will generally not hire them to work on ``junior'' tasks, thus ``saving'' their talent for more difficult tasks, which a ``junior'' would not be able to accomplish. but, if there is enough talent to output the optimal quantity of ``senior'' tasks, it can actually be more productive to employ the remaining ``seniors'' to ``junior'' positions.
+furthermore, in a continuous setting, rational employers will maximize their hiring pool by offering more than only two types of jobs. thus, there will not only be ``senior'' and ``junior'' positions, but several levels in a production hierarchy, each responsible for a particular subinterval of task difficulty, which will approximate a continuum of ``seniority'' as the number of workers becomes large enough.
+now, as for employees' work routine, rational employers will have them work over their responsability spectrum in a proportional and optimal matter, thus avoiding wasting production (i.e. uncompleted ``loops'' over the responsability spectrum). [this means each employee will spend their entire time allowance producing a partial operational output, that is a multiple of the difficulty subinterval they were hired to accomplish, which will, in turn, contribute, alonside the partial outputs of other employees, to accomplish the entire occupational operation.]
+the reason this avoids wasting production is because [...].
+Weak Skill Differences Axiom (WSDA)
+
+There are, or there could be, skill differences among people in the workforce (i.e. workers are not all ``clones'' of one another or equally competent). Thus, the expected value of productivity is:
+\begin{gather}
+    \mathbb{E}[
+        \tilde{T}_{q}^{k}
+    ]
+    \in
+    [0,1]
+    ,
+\end{gather}
+instead of 
+\begin{gather}
+    \mathbb{E}[
+        \tilde{T}_{q}^{k}
+    ]
+    =
+    \tilde{T}_{q}^{k}
+    = 1
+    ,
+\end{gather}
+for all $k,q \in \{1, \dots, n\}$. This means employers do not expected every worker to be perfectly qualified and will adjust their hiring and production strategies accordingly.
+
+% region: employability definition
+\begin{definition}[Employability]
+    \label{employability}
+    In any labor market, employability is the percentage of available jobs in which one could be hired:
+    \begin{gather}
+    \tilde{W}_{q}^{k}
+    :=
+    \left[
+        h_{q}^{k}
+        \geq
+        \frac{1}{2}
+    \right]
+    \sum_{v=1}^{p}
+    \left[
+        \tilde{T}_{q}^{k}
+        \geq
+        \tilde{T}_{q}^{v}
+    \right]
+    \tilde{w}_{q}^{v}
+    \in
+    [0,1]
+    ,
+    \\
+    \sum_{v=1}^{p}
+    \tilde{w}_{q}^{v}
+    :=
+    \left(
+        \frac{1}{w_q}
+    \right)
+    \sum_{v=1}^{p}
+    w_{q}^{v}
+    % \frac{w_{q}^{v}}{w_q}
+    := 1
+    ,
+    \end{gather}
+    where $\tilde{T}_{q}^{v} \in [0,1]$ is the minimum productivity required to be hired in one of $p$ types of positions in a labor market with $w_q$ job posts; while $h_{q}^{k}$ is a hireability statistic accounting for other selection criteria, such as years of education, experience, etc.
+    
+    And we can further aggregate employability for $n$ occupations to assess how many of all $W$ jobs in the economy are suitable for one's skill set:
+    \begin{gather}
+    \tilde{W}_{k}
+    :=
+    \sum_{q=1}^{n}
+    \tilde{W}_{q}^{k}
+    :=
+    \sum_{q=1}^{n}
+    \left[
+        h_{q}^{k}
+        \geq
+        \frac{1}{2}
+    \right]
+    \sum_{v=1}^{p}
+    \left[
+        \tilde{T}_{q}^{k}
+        \geq
+        \tilde{T}_{q}^{v}
+    \right]
+    \tilde{w}_{q}^{v}
+    \in
+    [0,1]
+    ,
+    \\
+    \sum_{q=1}^{n}
+    \tilde{w}_{q}
+    :=
+    \left(
+        \frac{1}{W}
+    \right)
+    \sum_{q=1}^{n}
+    {w}_{q}
+    ,
+    \\
+    W
+    :=
+    \sum_{q=1}^{n}
+    {w}_{q}
+    .
+    \end{gather}
+\end{definition} 
+
+% endregion
+% region: binary employability theorem (bet)
+\begin{theorem}[Binary Employability Theorem]
+    \label{bet}
+    In a labor market with two types of workers with varying productivity, each worker's employability is the inverse of their operational output.
+    \begin{proof}
+        In the binary case, ``junior'' productive output will be given by:
+        \begin{gather}
+            \mho_{q}^{\text{Jr}} =
+            \frac{
+                1
+            }{
+                \int_{0}^{\tilde{T}_{q}^{\text{Jr}}}
+                \text{ta}_q(l)
+                dl
+            } = 
+            \left(
+                \int_{0}^{\tilde{T}_{q}^{\text{Jr}}}
+                    \text{ta}_q(l)
+                    dl
+            \right) ^ {-1}
+            ,
+        \end{gather}
+        where $\text{ta}_q(l)$ is the time allocation function of occupation $q$'s complex tasks, and time allowance (the numerator) is set to one. Analogously, ``senior'' productive output is:
+        \begin{gather}
+            \mho_{q}^{\text{Sr}} =
+            \frac{
+                1
+            }{
+                \int_{\tilde{T}_{q}^{\text{Jr}}}^{1}
+                \text{ta}_q(l)
+                dl
+            } = 
+            \left(
+                \int_{\tilde{T}_{q}^{\text{Jr}}}^{1}
+                    \text{ta}_q(l)
+                    dl
+            \right) ^ {-1}
+            .
+        \end{gather}
+
+        Finally, as a mismatch in productive output due to time allocation differences between ``junior'' and ``senior'' tasks would result in wasted production, a rational employer will optimally ``orchestrate'' the productive effort by offering just enough ``senior'' job posts in the labor market to meet ``junior'' productivity. So, by setting ``junior'' job posts to $w_{q}^{\text{Jr}} > 0$ and ``senior'' job posts to $w_{q}^{\text{Sr}} > 0$, we get the ratio between ``junior'' and ``senior'' positions required to output any level of occupation $q$'s operation:
+        \begin{gather}
+            w_{q}^{\text{Sr}} \times 
+            \mho_{q}^{\text{Sr}} = 
+            w_{q}^{\text{Jr}} \times 
+            \mho_{q}^{\text{Jr}}
+            \\
+            \therefore
+            w_{q}^{\text{Sr}} \times 
+            \left(
+                \int_{\tilde{T}_{q}^{\text{Jr}}}^{1}
+                    \text{ta}_q(l)
+                    dl
+            \right) ^ {-1}
+            = 
+            w_{q}^{\text{Jr}} \times 
+            \left(
+                \int_{0}^{\tilde{T}_{q}^{\text{Jr}}}
+                    \text{ta}_q(l)
+                    dl
+            \right) ^ {-1}
+            \\
+            \therefore
+            w_{q}^{\text{Sr}}
+            = 
+            w_{q}^{\text{Jr}}
+            \times
+            \left(
+                \frac{
+                    \int_{\tilde{T}_{q}^{\text{Jr}}}^{1}
+                        \text{ta}_q(l)
+                        dl
+                }{
+                    \int_{0}^{\tilde{T}_{q}^{\text{Jr}}}
+                        \text{ta}_q(l)
+                        dl
+                }
+            \right)
+            .
+        \end{gather}
+        
+        With this, ``senior'' employability (i.e. the percentage of job posts for which they could be hired) is
+        \begin{gather}
+            \tilde{w}_{q}^{\text{Sr}} =
+            \frac{
+                w_{q}^{\text{Jr}} + 
+                w_{q}^{\text{Sr}}
+            }{
+                w_{q}^{\text{Jr}} + 
+                w_{q}^{\text{Sr}}
+            }
+            = 1
+        \end{gather}
+        and ``junior'' employability is
+        \begin{align}
+            \tilde{w}_{q}^{\text{Jr}} 
+            &=
+            \frac{
+                w_{q}^{\text{Jr}}
+            }{
+                w_{q}^{\text{Jr}} + 
+                w_{q}^{\text{Sr}}
+            }
+            \\&=
+            \frac{
+                w_{q}^{\text{Jr}}
+            }{
+                w_{q}^{\text{Jr}} + 
+                w_{q}^{\text{Jr}} \times
+                \left(
+                    \frac{
+                        \int_{\tilde{T}_{q}^{\text{Jr}}}^{1}
+                            \text{ta}_q(l)
+                            dl
+                    }{
+                        \int_{0}^{\tilde{T}_{q}^{\text{Jr}}}
+                            \text{ta}_q(l)
+                            dl
+                    }
+                \right)
+            }
+            \\&=
+            \left(
+                1 + 
+                \frac{
+                    \int_{\tilde{T}_{q}^{\text{Jr}}}^{1}
+                        \text{ta}_q(l)
+                        dl
+                }{
+                    \int_{0}^{\tilde{T}_{q}^{\text{Jr}}}
+                        \text{ta}_q(l)
+                        dl
+                }
+            \right) ^ {-1}
+            \\&=
+            \left(
+                1 + 
+                \frac{
+                    \int_{0}^{1}
+                        \text{ta}_q(l)
+                        dl    
+                        -
+                    \int_{0}^{\tilde{T}_{q}^{\text{Jr}}}
+                        \text{ta}_q(l)
+                        dl
+                }{
+                    \int_{0}^{\tilde{T}_{q}^{\text{Jr}}}
+                        \text{ta}_q(l)
+                        dl
+                }
+            \right) ^ {-1}
+            \\&=
+            \left(
+                1 + 
+                \frac{
+                    1 -
+                    \int_{0}^{\tilde{T}_{q}^{\text{Jr}}}
+                        \text{ta}_q(l)
+                        dl
+                }{
+                    \int_{0}^{\tilde{T}_{q}^{\text{Jr}}}
+                        \text{ta}_q(l)
+                        dl
+                }
+            \right) ^ {-1}
+            \\&=
+            \left(
+                1 + 
+                \frac{
+                    1
+                }{
+                    \int_{0}^{\tilde{T}_{q}^{\text{Jr}}}
+                        \text{ta}_q(l)
+                        dl
+                }
+                -
+                \frac{
+                    \int_{0}^{\tilde{T}_{q}^{\text{Jr}}}
+                        \text{ta}_q(l)
+                        dl
+                }{
+                    \int_{0}^{\tilde{T}_{q}^{\text{Jr}}}
+                        \text{ta}_q(l)
+                        dl
+                }
+            \right) ^ {-1}
+            \\&=
+            \left(
+                1 + 
+                \frac{
+                    1
+                }{
+                    \int_{0}^{\tilde{T}_{q}^{\text{Jr}}}
+                        \text{ta}_q(l)
+                        dl
+                }
+                -
+                1
+            \right) ^ {-1}
+            \\&=
+            \left(
+                \frac{
+                    1
+                }{
+                    \int_{0}^{\tilde{T}_{q}^{\text{Jr}}}
+                        \text{ta}_q(l)
+                        dl
+                }
+            \right) ^ {-1}
+            \\&=
+            \int_{0}^{\tilde{T}_{q}^{\text{Jr}}}
+                \text{ta}_q(l)
+                dl
+            .
+        \end{align}
+        
+        Thus, the employability of a partially qualified worker, that is a ``junior'', is precisely the percentage of an operation's total time duration their skill set allows them to accomplish (i.e. the inverse of their operational output).    
+    \end{proof}
+\end{theorem}
+% endregion
+% region: maximum-monotonic labor stratification definition 
+Now, to generalize this conclusion, we shall define notation in terms of maximum labor stratification, a productive arrangement where there are several job subtypes, indeed as many as there are jobs themselves, each with a limited spectrum of responsabilities.
+
+\begin{definition}[Maximum-Monotonic Labor Stratification Definition]
+    \label{mmls_def}
+    Hence, mathematically,
+    \begin{gather}
+    l \in \left[
+    \ell_{v-1}
+    ,
+    \ell_{v}
+    \right]
+    ,
+    \end{gather}
+    with
+    \begin{align}
+    \ell_{v} \in [0,1]
+    \
+    \forall
+    \
+    &v \in 
+    \left\{
+        1, \dots, w_q
+    \right\}
+    ,
+    \\
+    \ell_{w_q} &:= 1
+    ,
+    \\
+    \ell_0 &:= 0
+    \end{align}
+    is one of $w_q$ responsability spectra in a maximally stratified labor market, in which employment levels are unitary, or given by
+    \begin{gather}
+    \sum_{v=1}^{w_q}
+    1
+    =
+    w_q
+    ,
+    \end{gather}
+    so that any available position is its own job subtype and covers only a restrictive range of task difficulty, accounting for
+    \begin{gather}
+    \Omega_{q}^{v} := 
+    \frac{1}{\mho_{q}^{v}} = 
+    \int_{
+        \ell_{v-1}
+    }^{
+        \ell_{v}
+    }
+    \text{ta}(l)dl
+    \in [0,1]
+    \end{gather}
+    of an operation's total time duration,
+    \begin{gather}
+    \sum_{v=1}^{w_q}
+    \Omega_{q}^{v} 
+    = 
+    \sum_{v=1}^{w_q}
+    \int_{
+        \ell_{v-1}
+    }^{
+        \ell_{v}
+    }
+    \text{ta}(l)dl
+    =
+    \int_{0}^{1}
+    \text{ta}(l)dl
+    =
+    1
+    .
+    \end{gather}
+    
+    Intuitively speaking, we would say production in a maximally and monotonically stratified labor market is not ``independent'', in the sense that employees do not work on an occupation's operation from beginning to end. This means each of them will spend all their time allowance producing a partial operational output, that is a multiple of a difficulty subinterval of complex tasks, which will, in turn, contribute, alonside the partial outputs of other employees, to accomplish[ing?] the occupational operation in its entirety.
+    
+    However, in a maximum labor stratification setting, these partial operational outputs will not be produced merely via ``senior'' and ``junior'' positions, as previously, but rather within a myriad of levels in a production hierarchy, approximating a continuum of ``seniority'' as the workforce becomes large enough.
+    % However, in a maximally stratified labor market, these partial operational outputs will not be produced merely via ``senior'' and ``junior'' positions, as previously, but rather within a myriad of levels in a production hierarchy, approximating a continuum of ``seniority'' as the workforce becomes large enough.
+    
+    Again, this does not mean employees are, themselves, more or less competent, only that available job posts are preemptively stratified with respect to task difficulty, in order to maximize employers' hiring pool and safeguard production in the case workers are not sufficiently qualified to produce the whole responsability spectrum independently (see ``Maximum-Monotonic Labor Stratification Lemma'' below).    
+\end{definition}
+% endregion
+% region: infinite stratification lemma (isl) 
+\begin{lemma}[Infinite Stratification Lemma]
+    \label{isl}
+    Having understood what maximum-monotonic labor stratification is, one may wonder whether there could be more than $w_q$ job subtypes in a labor market. For though it is intuitive to think of $w_q$, the workforce size, as the upper bound for stratification, if we allow for partial hiring, with ``fractional jobs'',
+
+\end{lemma}
+% endregion
+\begin{gather}
+w_{q}^{v} 
+\in 
+[0, w_q]
+\
+\forall
+\
+v \in \{1, \dots, p\}
+,
+\\
+\sum_{v=1}^{p}
+w_{q}^{v}
+=
+w_q
+,
+\end{gather}
+where $p \in \{1, 2, 3, \dots\}$ is the number of positions in a labor market, then workers can allocate fractions of their time allowance to multiple responsability spectra, and the productive arrangement we have just defined, may not, technically speaking, be ``maximally stratified''. 
+
+Indeed, if it were possible to stratify beyond $w_q$, rational employers would readly do so, for, again, labor stratification reduces the uncertainty around production and serves as an insurance policy to guarantee the available talent is sufficient to output an occupation's operation.
+
+But, because of this, if $p$ can be greater than $w_q$, then the optimal production strategy is, logically, to offer as many types of jobs as possible, even infinitely many.
+
+Hence, infinite labor stratification is defined as an economic configuration where labor markets are subdivided into infinitesimal jobs, each contributing very little to production. In fact, in such a market, ``job posts'' are so small as to be indistinguishable from tasks themselves:
+\begin{gather}
+\lim_{p \rightarrow \infty}{
+    \tilde{w}_{q}^{v}
+}
+:= 
+\tilde{w}_{q}(l)
+=
+\text{ta}(l)
+\in [0,1]
+\
+\forall
+\
+v \in \{1, \dots, p\}
+\\
+\therefore
+w_{q}(l)
+= 
+w_q \times \tilde{w}_{q}(l)
+=
+w_q \times \text{ta}(l)
+\land
+\int_{0}^{1}{
+    w_{q}(l)
+    dl
+}
+=
+w_q
+.
+\end{gather}
+
+Therefore, employers are guaranteed maximum insurance against workers' potential underqualification; and employability is simply
+\begin{gather}
+\tilde{W}_{q}^{k} 
+= 
+\left[
+    h_{q}^{k}
+    \geq
+    \frac{1}{2}
+\right]
+\int_{0}^{1}
+T(l, \l_{q}^{k})
+\tilde{w}_{q}(l)
+dl
+= 
+\left[
+    h_{q}^{k}
+    \geq
+    \frac{1}{2}
+\right]
+\int_{0}^{\tilde{T}_{q}^{k}}
+\text{ta}(l)
+dl
+,
+\end{gather}
+where the hireability statistic $h_{q}^{k} \in [0,1]$ accounts for hiring requirements other than productivity; and $\tilde{w}_{q}(l)$ is the proportion of fractional positions for a particular job subtype, which coincides with its time allocation when there are infinite ``jobs'', each dedicated to a single, infinitely narrow task. We note, as well, this formula is the same as it was in binary labor stratification (with ``junior'' and ``senior'' positions). Thus, again, employability is the percentage of an operation's total duration one can accomplish.
+
+All this said, infinitely stratified markets are rather abstract, and it is not realistic to think of actual job posts as infinitesimal tasks; for, then, the very concept of a ``job'' itself disappears. Fractional positions do not make much sense in reality, where jobs usually deal with a set of multiple responsabilities. Furthermore, a maximally -- though not infinitely -- stratified labor market with sufficient positions, will, in practice, yield the same results when $w_q$ is large enough, so that we do not even need to consider  infinite labor stratification as a production strategy.
+
+Maximum Stratification Axiom (MSA)
+
+Therefore, let us assume
+\begin{gather}
+p \in \{1, \dots, w_q\}
+,
+\\
+\sum_{v=1}^{p}
+w_{q}^{v}
+=
+w_q
+,
+\end{gather}
+and
+\begin{gather}
+w_{q}^{v} 
+\in 
+[1, w_q]
+\
+\forall
+\
+v \in \{1, \dots, p\}
+,
+\end{gather}
+as it is somewhat arbitrary setting minimum employment levels to any value other than one; for then it would always be optimal to choose an even smaller value than that, in which case we would converge back to an infinitely stratified labor market. Thus, we define there has to be at least one worker per job subtype.
+
+With this, we can now demonstrate that, given our axioms, maximum-monotonic labor stratification is, in fact, the only optimal production strategy and, so, holds in the labor market. But, to do so, we must first derive an upper limit for aggregate operational output, irrespective of productive arrangement, to serve as our ``benchmark''.
+
+Maximum Operational Output Lemma (MOOL)
+
+The maximum operational output of any labor market is exactly the number of employees in its workforce:
+\begin{gather}
+    \mho_{q}^{*}
+    =
+    \mho(
+        \boldsymbol{w_{q}^{*}},
+        \boldsymbol{\mho_q}
+    ) = 
+    \min(
+        \boldsymbol{w_{q}^{*}}
+        \times
+        \boldsymbol{\mho_q}
+    )
+    = w_q
+    ,
+\end{gather}
+where $\boldsymbol{w_{q}^{*}}$ is the vector of optimal employment levels in a labor market with $w_q$ employees; and $\boldsymbol{\mho_q}$, the vector of partial operational outputs. Or, assuming maximum labor stratification with unitary employment levels,
+\begin{gather}
+    \mho_{q}^{*}
+    =
+    \mho(
+        \boldsymbol{1},
+        \boldsymbol{\mho_q}(
+            \boldsymbol{\ell_{q}^{*}}
+        )
+    )
+    =
+    \min(
+        \boldsymbol{1}
+        \times
+        \boldsymbol{\mho_q}(
+            \boldsymbol{\ell_{q}^{*}}
+        )
+    )
+    = w_q
+    ,
+\end{gather}
+where $\boldsymbol{\ell_{q}^{*}}$ are optimal stratification bounds for the responsability spectra of occupation $q$'s job posts (see ``Optimal Stratification Lemma'' below).
+
+Moreover, when optimizing employment levels, this maximum production can only be attained when the percentage of each position relative to the entire workforce respects the Proportional Employment Condition (PEC):
+\begin{gather}
+    \boldsymbol{\tilde{w}_{q}^{*}}
+    =
+    \frac{
+        \boldsymbol{w_{q}^{*}}
+    }{
+        w_q
+    }
+    =
+    \boldsymbol{\Omega_{q}}
+    ,
+\end{gather}
+which determines the ratio, or proportion, of a particular job subtype in a labor market is the percentage of an operation's total time duration,
+\begin{gather}
+    \boldsymbol{1} ^ {\top}
+    \cdot
+    \boldsymbol{\Omega_{q}}
+    = 1
+    ,
+\end{gather}
+accounted by it.
+
+\textit{Proof}:
+
+We begin with the most trivial of economic configurations, that of independent production with perfectly qualified workers. In this scenario, each employee devotes their unitary time allowance, which coincides with the total time duration of occupation $q$'s operation,
+\begin{gather}
+    \int_{0}^{1}{
+        \text{ta}(l)
+        dl
+    }
+    =
+    1
+    ,
+\end{gather}
+to output exactly one productive unit:
+\begin{gather}
+    1
+    \times
+    \left(
+        \int_{0}^{1}{
+            \text{ta}(l)dl
+        }
+    \right) ^ {-1}
+    =
+    1
+    ;
+    % .
+\end{gather}
+while $w_q$ of such employees working in parallel, yield an output of
+% Therefore, $w_q$ of such employees working in parallel, yield an output of
+\begin{align}
+    w_q 
+    \times 
+    \left(
+        \int_{0}^{1}{
+            \text{ta}(l)dl
+        }
+    \right) ^ {-1}
+    =
+    w_q
+    .
+\end{align}
+
+Here, we have taken occupation $q$'s responsability spectrum $l \in [0,1]$ as a whole, or as a single, ``holistic'', task, covering all its activities; and we have found the maximum amount that can be produced of it is one unit per worker, or $w_q$ aggregate units.
+
+However, it can be easier to comprehend this result if we analyze responsability spectra individually, as if a perfectly qualified, independent, employee worked on a series of tasks, which sum to their time allowance,
+\begin{gather}
+    \boldsymbol{1} ^ {\top}
+    \cdot
+    \boldsymbol{\Omega_{q}}
+    = 
+    1
+    .
+\end{gather}
+
+With this, we note that, as each worker's time allowance is the same as operations' total duration, failing to output any single task by overemphasizing another would nullify the whole productive effort. Hence, the optimal choice of hours to allocate to any responsability spectrum has to be the minimum time required to complete it, or
+% With this, we note that, as each worker's time allowance is the same as operations' total time requirements, failing to output any single task by overemphasizing another would nullify the whole operation, when production is independent. Hence, the optimal choice of hours to allocate to any responsability spectrum has to be the minimum time requirement to complete it, or
+\begin{gather}
+    \Omega_{q}^{\ell} 
+    \in
+    [0,1]
+    .
+\end{gather}
+
+Furthermore, by the definition of partial operational output (ref) above, one outputs $\mho_{q}^{\ell}$ when spending their unitary time allowance to produce a responsability spectrum. So, the output, with only $\Omega_{q}^{\ell}$ time units, is:
+% Furthermore, by the definition of partial operational output (ref) above, one outputs $\mho_{q}^{\ell}$ when spending their unitary time allowance to produce some responsability spectrum. So, operational output, with only $\Omega_{q}^{\ell}$ time units, is:
+% Furthermore, by the definition of partial operational output (ref) above, one outputs $\mho_{q}^{\ell}$ when spending their unitary time allowance to produce some responsability spectrum. Therefore, with only $\Omega_{q}^{\ell}$ time units,  operational output is:
+\begin{gather}
+    \Omega_{q}^{\ell}
+    \mho_{q}^{\ell}
+    =
+    \left(
+        \frac{1}{\mho_{q}^{\ell}}
+    \right)
+    \times
+    \mho_{q}^{\ell}
+    =
+    1
+    .
+\end{gather}
+
+Finally, as Weak Occupational Complexity implies the production function is homothetic, the aggregate operational output of $w_q$ perfectly qualified employees working independently is:
+\begin{gather}
+    \mho_{q}^{*}
+    =
+    \min(
+        \boldsymbol{\Omega_q}
+        \times
+        \boldsymbol{\mho_q}
+    )
+    \times
+    w_q
+    =
+    \Omega_{q}^{\ell}
+    \mho_{q}^{\ell}
+    \times
+    w_q
+    =
+    1
+    \times
+    w_q
+    =
+    w_q
+    .
+\end{gather}
+
+Therefore, a perfectly qualified employee working full-time and independently can output one unit of an occupation's complex tasks with one unit of their time (i.e. their entire time allowance). And, likewise, a workforce with $w_q$ employees identical to this one produces $w_q$ units of operational output. Or, to put it simply, a maximally productive person acchieves maximum production.
+
+We, now, proceed with the binary setting presented above, where employees choose a $\tilde{w}_{q}^{\text{Jr}} \in [0,1]$ percentage of less qualified (i.e. ``junior'') job posts to offer, which determine the remaining $\tilde{w}_{q}^{\text{Sr}} = 1 - \tilde{w}_{q}^{\text{Jr}} \in [0,1]$ percentage of perfectly qualified (or ``senior'') job posts.
+
+In this case,
+\begin{align}
+    \mho(\tilde{w}_{q}^{\text{Jr}})
+    &=
+    \min\left(
+        \tilde{w}_{q}^{\text{Jr}}
+        % \times
+        \mho_{q}^{\text{Jr}}
+        ,
+        \tilde{w}_{q}^{\text{Sr}}
+        % \times
+        \mho_{q}^{\text{Sr}}
+    \right)
+    \\
+    &=
+    \min\left(
+        \frac{
+            \tilde{w}_{q}^{\text{Jr}}
+        }{
+            \int_{0}^{
+                \tilde{T}_{q}^{\text{Jr}}
+            }{
+                \text{ta}(l)
+                dl
+            }
+        }
+        ,
+        \frac{
+            1 - \tilde{w}_{q}^{\text{Jr}}
+        }{
+            \int_{
+                \tilde{T}_{q}^{\text{Jr}}
+            }^{1}{
+                \text{ta}(l)
+                dl
+            }
+        }
+    \right)
+    \\
+    &=
+    \min\left(
+        \frac{
+            \tilde{w}_{q}^{\text{Jr}}
+        }{
+            \int_{0}^{
+                \tilde{T}_{q}^{\text{Jr}}
+            }{
+                \text{ta}(l)
+                dl
+            }
+        }
+        ,
+        \frac{
+            1 - \tilde{w}_{q}^{\text{Jr}}
+        }{
+            \int_{0}^{1}{
+                \text{ta}(l)
+                dl
+            }
+            -
+            \int_{0}^{
+                \tilde{T}_{q}^{\text{Jr}}
+            }{
+                \text{ta}(l)
+                dl
+            }
+        }
+    \right)
+    \\
+    &=
+    \min\left(
+        \frac{
+            \tilde{w}_{q}^{\text{Jr}}
+        }{
+            \Omega_{q}^{\text{Jr}}
+        }
+        ,
+        \frac{
+            1 - \tilde{w}_{q}^{\text{Jr}}
+        }{
+            1 - \Omega_{q}^{\text{Jr}}
+        }
+    \right)
+    ,
+\end{align}
+whereas the operational output of employing $\Omega_{q}^{\text{Jr}} \in [0,1]$ is
+% whereas the operational output of $\Omega_{q}^{\text{Jr}} \in [0,1]$ is
+\begin{align}
+    \mho(\Omega_{q}^{\text{Jr}}) 
+    =
+    \min\left(
+        \frac{
+            \Omega_{q}^{\text{Jr}}
+        }{
+            \Omega_{q}^{\text{Jr}}
+        }
+        ,
+        \frac{
+            1 - \Omega_{q}^{\text{Jr}}
+        }{
+            1 - \Omega_{q}^{\text{Jr}}
+        }
+    \right)
+    =
+    \frac{
+        \Omega_{q}^{\text{Jr}}
+    }{
+        \Omega_{q}^{\text{Jr}}
+    }
+    =
+    \frac{
+        1 - \Omega_{q}^{\text{Jr}}
+    }{
+        1 - \Omega_{q}^{\text{Jr}}
+    }
+    =
+    1
+    .
+\end{align}
+
+With this, if $\tilde{w}_{q}^{\text{Jr}}$ is set to $\tilde{w}_{q}^{\text{Jr}} > \Omega_{q}^{\text{Jr}}$, then
+\begin{align}
+    &
+    1 - \tilde{w}_{q}^{\text{Jr}}
+    <
+    1 - \Omega_{q}^{\text{Jr}}
+    \\
+    &\therefore
+    \frac{
+        \tilde{w}_{q}^{\text{Jr}}
+    }{
+        \Omega_{q}^{\text{Jr}}
+    }
+    >
+    1
+    >
+    \frac{
+        1 - \tilde{w}_{q}^{\text{Jr}}
+    }{
+        1 - \Omega_{q}^{\text{Jr}}
+    }
+    \\
+    &\therefore
+    \mho(\tilde{w}_{q}^{\text{Jr}}) 
+    =
+    \min\left(
+        \frac{
+            \tilde{w}_{q}^{\text{Jr}}
+        }{
+            \Omega_{q}^{\text{Jr}}
+        }
+        ,
+        \frac{
+            1 - \tilde{w}_{q}^{\text{Jr}}
+        }{
+            1 - \Omega_{q}^{\text{Jr}}
+        }
+    \right)
+    =
+    \frac{
+        1 - \tilde{w}_{q}^{\text{Jr}}
+    }{
+        1 - \Omega_{q}^{\text{Jr}}
+    }
+    <
+    1
+    \\
+    &\implies
+    \mho(\tilde{w}_{q}^{\text{Jr}})
+    <
+    \mho(\Omega_{q}^{\text{Jr}})
+    ;
+\end{align}
+and, if $\tilde{w}_{q}^{\text{Jr}} < \Omega_{q}^{\text{Jr}}$,
+\begin{align}
+    &
+    1 - \tilde{w}_{q}^{\text{Jr}}
+    >
+    1 - \Omega_{q}^{\text{Jr}}
+    \\
+    &\therefore
+    \frac{
+        \tilde{w}_{q}^{\text{Jr}}
+    }{
+        \Omega_{q}^{\text{Jr}}
+    }
+    <
+    1
+    <
+    \frac{
+        1 - \tilde{w}_{q}^{\text{Jr}}
+    }{
+        1 - \Omega_{q}^{\text{Jr}}
+    }
+    \\
+    &\therefore
+    \mho(\tilde{w}_{q}^{\text{Jr}}) 
+    =
+    \min\left(
+        \frac{
+            \tilde{w}_{q}^{\text{Jr}}
+        }{
+            \Omega_{q}^{\text{Jr}}
+        }
+        ,
+        \frac{
+            1 - \tilde{w}_{q}^{\text{Jr}}
+        }{
+            1 - \Omega_{q}^{\text{Jr}}
+        }
+    \right)
+    =
+    \frac{
+        \tilde{w}_{q}^{\text{Jr}}
+    }{
+        \Omega_{q}^{\text{Jr}}
+    }
+    <
+    1
+    \\
+    &\implies
+    \mho(\tilde{w}_{q}^{\text{Jr}})
+    <
+    \mho(\Omega_{q}^{\text{Jr}})
+    .
+\end{align}
+
+Hence, 
+% Therefore, 
+\begin{gather}
+    \mho(\tilde{w}_{q}^{\text{Jr}}) < 
+    \mho(\Omega_{q}^{\text{Jr}}) 
+    = 1
+    \
+    \forall
+    \
+    \tilde{w}_{q}^{\text{Jr}}
+    \neq
+    \Omega_{q}^{\text{Jr}}
+    \in [0,1]
+    .
+\end{gather}
+
+Analogously, with multiple job subtypes, optimal operational output is:
+\begin{gather}
+    \mho(\boldsymbol{\Omega_q})
+    = 
+    \min(
+        \boldsymbol{\Omega_q}
+        \times
+        \boldsymbol{\mho_q}
+    )
+    =
+    \frac{
+        \Omega_{q}^{\ell}
+    }{
+        \Omega_{q}^{\ell}
+    }
+    =
+    1
+    ,
+\end{gather}
+for, again, since
+\begin{gather}
+    \boldsymbol{1} ^ {\top}
+    \cdot
+    \boldsymbol{\tilde{w}_{q}}
+    =
+    \boldsymbol{1} ^ {\top}
+    \cdot
+    \boldsymbol{\Omega_{q}}
+    = 1
+    ,
+\end{gather}
+choosing any $\tilde{w}_{q}^{\ell} \neq \Omega_{q}^{\ell}$ implies the proportion of at least one position, say $\tilde{w}_{q}^{r}$, is impacted, and aggregate output along with it, either because
+% choosing any $\tilde{w}_{q}^{\ell} \neq \Omega_{q}^{\ell}$ implies the proportion of at least one position, say $\tilde{w}_{q}^{r}$, is impacted, and thus aggregate output along with it, either because
+% choosing any $\tilde{w}_{q}^{\ell} \neq \Omega_{q}^{\ell} \in [0,1]$ implies the proportion of at least one position, say $\tilde{w}_{q}^{r}$, is impacted, and thus aggregate output along with it, either because
+\begin{align}
+    &
+    \tilde{w}_{q}^{\ell} > \Omega_{q}^{\ell}
+    \\
+    &\therefore
+    \frac{
+        \tilde{w}_{q}^{\ell}
+    }{
+        \Omega_{q}^{\ell}
+    }
+    > 
+    1
+    > 
+    \frac{
+        \tilde{w}_{q}^{r}
+    }{
+        \Omega_{q}^{r}
+    }
+    \\
+    &\therefore
+    \mho(\boldsymbol{\tilde{w}_q})
+    = 
+    \min(
+        \boldsymbol{\tilde{w}_q}
+        \times
+        \boldsymbol{\mho_q}
+    )
+    =
+    \frac{
+        \tilde{w}_{q}^{r}
+    }{
+        \Omega_{q}^{r}
+    }
+    < 
+    1
+    \\
+    &\implies
+    \mho(\boldsymbol{\tilde{w}_q})
+    <
+    \mho(\boldsymbol{\Omega_q})
+    ;
+\end{align}
+or, alternatively, because
+\begin{align}
+    &
+    \tilde{w}_{q}^{\ell} < \Omega_{q}^{\ell}
+    \\
+    &\therefore
+    \frac{
+        \tilde{w}_{q}^{\ell}
+    }{
+        \Omega_{q}^{\ell}
+    }
+    < 
+    1
+    < 
+    \frac{
+        \tilde{w}_{q}^{r}
+    }{
+        \Omega_{q}^{r}
+    }
+    \\
+    &\therefore
+    \mho(\boldsymbol{\tilde{w}_q})
+    = 
+    \min(
+        \boldsymbol{\tilde{w}_q}
+        \times
+        \boldsymbol{\mho_q}
+    )
+    =
+    \frac{
+        \tilde{w}_{q}^{\ell}
+    }{
+        \Omega_{q}^{\ell}
+    }
+    < 
+    1
+    \\
+    &\implies
+    \mho(\boldsymbol{\tilde{w}_q})
+    <
+    \mho(\boldsymbol{\Omega_q})
+    .
+\end{align}
+
+Thus, 
+\begin{align}
+    % &
+    \mho(
+        \boldsymbol{\tilde{w}_{q}},
+        \boldsymbol{\mho_q}
+    ) 
+    &< 
+    \mho(
+        \boldsymbol{\Omega_{q}},
+        \boldsymbol{\mho_q}
+    ) 
+    = 1
+    \\
+    \therefore
+    % &\therefore
+    \mho(
+        \boldsymbol{w_{q}},
+        \boldsymbol{\mho_q}
+    )
+    &< 
+    \mho(
+        w_{q}
+        \boldsymbol{\Omega_{q}},
+        \boldsymbol{\mho_q}
+    ) 
+    = w_q
+    \\
+    % &
+    \forall
+    \
+    \boldsymbol{\tilde{w}_{q}}
+    \neq
+    \boldsymbol{\Omega_{q}}
+    \in
+    &
+    [0,1]^{p}
+    ,
+    p \in \{1, \dots, w_q\}
+    ,
+    \\
+    \boldsymbol{1} ^ {\top}
+    \cdot
+    \boldsymbol{\tilde{w}_{q}}
+    &=
+    \boldsymbol{1} ^ {\top}
+    \cdot
+    \boldsymbol{\Omega_{q}}
+    = 1
+    .
+    % ,
+    % \\
+    % &
+    % \boldsymbol{\tilde{w}_{q}}
+    % ,
+    % \boldsymbol{\Omega_{q}}
+    % > 
+    % \boldsymbol{0}
+    % ,
+    % \\
+    % &
+    % \boldsymbol{1} ^ {\top}
+    % \cdot
+    % \boldsymbol{\tilde{w}_{q}}
+    % =
+    % \boldsymbol{1} ^ {\top}
+    % \cdot
+    % \boldsymbol{\Omega_{q}}
+    % = 1
+    % .
+\end{align}
+
+% As every worker in the labor market is assumed to have the same unitary time allowance, which coincides with operations' total time duration,
+%     % As every worker in the labor is assumed to have the same unitary time allowance, which coincides with operations' total time duration,
+%     \begin{gather}
+%         \int_{0}^{1}{
+%             \text{ta}(l)
+%             dl
+%         }
+%         =
+%         1
+%         ,
+%     \end{gather}
+%     there cannot be, even in theory, any productive arrangement yielding operational output higher than that obtained when perfectly qualified employees work independently. For, indeed, if employers establish other modes of production, workers' time allowances and tasks' time requirements will not change. In addition, splitting responsabilities across multiple job subtypes does not affect operational output (WOCA). Therefore, perfectly qualified independent production is the ``ceiling'' or ``benchmark'' for all production strategies.
+    
+%     \begin{align}
+%         \int_{0}^{1}{
+%             \text{ta}(l)dl
+%         }
+%         =
+%         1
+%         \\
+%         \therefore
+%         \mho_{q}^{*}
+%         =
+%         1 \times \left(
+%             \int_{0}^{1}{
+%                 \text{ta}(l)dl
+%             }
+%         \right) ^ {-1}
+%         =
+%         1
+%         \\
+%         \therefore
+%         w_q \times
+%         \mho_{q}^{*}
+%         =
+%         w_q \times \left(
+%             \int_{0}^{1}{
+%                 \text{ta}(l)dl
+%             }
+%         \right) ^ {-1}
+%         =
+%         w_q
+%         \\
+%         \because
+%         \sum_{v=1}^{w_q}
+%         \int_{0}^{1}{
+%                 \text{ta}(l)dl
+%             }
+%         =
+%         \sum_{v=1}^{w_q}
+%         1
+%         = 
+%         w_q \times 1
+%         = 
+%         w_q
+%     \end{align}
+
+%     The mathematical proof for this is quite straighforward. Because the aggregate production function is of the Leontief functional form (for simplicity's sake, here considering only two factors of production, namely an easier responsability spectrum and a harder responsability spectrum), that is
+%     \begin{gather}
+%         \mho_{q}(\tilde{w}_{q}^{k})
+%         = 
+%         \min\left[
+%             \tilde{w}_{q}^{k}
+%             \left(
+%                 \int_{0}^{\tilde{T}_{q}^{k}}{
+%                     \text{ta}(l)dl
+%                 }
+%             \right) ^ {-1}
+%             ,
+%             (1 - \tilde{w}_{q}^{k})
+%             \left(
+%                 \int_{\tilde{T}_{q}^{k}}^{1}{
+%                     \text{ta}(l)dl
+%                 }
+%             \right) ^ {-1}
+%         \right]
+%         ,
+%     \end{gather}
+%     and because time allowances are unitary and coincide with total time requirements, optimal relative employment levels are trivial and have to be
+%     \begin{gather}
+%         \tilde{w}_{q}^{k}
+%         =
+%         \int_{0}^{\tilde{T}_{q}^{k}}{
+%             \text{ta}(l)dl
+%         }
+%         \in [0,1]
+%     \end{gather}
+%     and
+%     \begin{align}
+%         1 - \tilde{w}_{q}^{k}
+%         &=
+%         \int_{\tilde{T}_{q}^{k}}^{1}{
+%             \text{ta}(l)dl
+%         }
+%         \\
+%         &=
+%         \int_{0}^{1}{
+%             \text{ta}(l)dl
+%         }
+%         -
+%         \int_{0}^{\tilde{T}_{q}^{k}}{
+%             \text{ta}(l)dl
+%         }
+%         \\
+%         &=
+%         1
+%         -
+%         \int_{0}^{\tilde{T}_{q}^{k}}{
+%             \text{ta}(l)dl
+%         }
+%         \in [0,1]
+%     \end{align}
+%     to avoid hindering production, so that
+%     \begin{align}
+%         \mho_{q}(\tilde{w}_{q}^{k})
+%         &= 
+%         \min\left[
+%             \tilde{w}_{q}^{k}
+%             \left(
+%                 \int_{0}^{\tilde{T}_{q}^{k}}{
+%                     \text{ta}(l)dl
+%                 }
+%             \right) ^ {-1}
+%             ,
+%             (1 - \tilde{w}_{q}^{k})
+%             \left(
+%                 \int_{\tilde{T}_{q}^{k}}^{1}{
+%                     \text{ta}(l)dl
+%                 }
+%             \right) ^ {-1}
+%         \right]
+%         \\
+%         &= 
+%         \tilde{w}_{q}^{k}
+%         \left(
+%             \int_{0}^{\tilde{T}_{q}^{k}}{
+%                 \text{ta}(l)dl
+%             }
+%         \right) ^ {-1}
+%         \\
+%         &= 
+%         (1 - \tilde{w}_{q}^{k})
+%         \left(
+%             \int_{\tilde{T}_{q}^{k}}^{1}{
+%                 \text{ta}(l)dl
+%             }
+%         \right) ^ {-1}
+%         \\
+%         &= 
+%         \left(
+%             \int_{0}^{\tilde{T}_{q}^{k}}{
+%                 \text{ta}(l)dl
+%             }
+%         \right)
+%         \left(
+%             \int_{0}^{\tilde{T}_{q}^{k}}{
+%                 \text{ta}(l)dl
+%             }
+%         \right) ^ {-1}
+%         \\
+%         &= 
+%         \left(
+%             \int_{\tilde{T}_{q}^{k}}^{1}{
+%                 \text{ta}(l)dl
+%             }
+%         \right)
+%         \left(
+%             \int_{\tilde{T}_{q}^{k}}^{1}{
+%                 \text{ta}(l)dl
+%             }
+%         \right) ^ {-1}
+%         \\
+%         &= 
+%         1
+%     \end{align}
+%     it, then, follows that, if we set any relative employment level above the optimal one $\tilde{v}_{q}^{k} > \tilde{w}_{q}^{k}, \tilde{v}_{q}^{k}, \tilde{w}_{q}^{k} \in [0,1]$, operational output will be lower, for
+%     \begin{align}
+%         \mho_{q}(\tilde{v}_{q}^{k})
+%         = 
+%         \min\left[
+%             \tilde{v}_{q}^{k}
+%             \left(
+%                 \int_{0}^{\tilde{T}_{q}^{k}}{
+%                     \text{ta}(l)dl
+%                 }
+%             \right) ^ {-1}
+%             ,
+%             (1 - \tilde{v}_{q}^{k})
+%             \left(
+%                 \int_{\tilde{T}_{q}^{k}}^{1}{
+%                     \text{ta}(l)dl
+%                 }
+%             \right) ^ {-1}
+%         \right]
+%         \\
+%         = 
+%         \min\left[
+%             \frac{
+%                 \tilde{v}_{q}^{k}
+%             }{
+%                 \int_{0}^{\tilde{T}_{q}^{k}}{
+%                     \text{ta}(l)dl
+%                 }
+%             }
+%             ,
+%             \frac{
+%                 1 - \tilde{v}_{q}^{k}
+%             }{
+%                 \int_{\tilde{T}_{q}^{k}}^{1}{
+%                     \text{ta}(l)dl
+%                 }
+%             }
+%         \right]
+%         \\
+%         = 
+%         \min\left[
+%             \frac{
+%                 \tilde{v}_{q}^{k}
+%             }{
+%                 \int_{0}^{\tilde{T}_{q}^{k}}{
+%                     \text{ta}(l)dl
+%                 }
+%             }
+%             ,
+%             \frac{
+%                 1 - \tilde{v}_{q}^{k}
+%             }{
+%                 1 - 
+%                 \int_{0}^{\tilde{T}_{q}^{k}}{
+%                     \text{ta}(l)dl
+%                 }
+%             }
+%         \right]
+%         \\
+%         = 
+%         \min\left[
+%             \frac{
+%                 \tilde{v}_{q}^{k}
+%             }{
+%                 \tilde{w}_{q}^{k}
+%             }
+%             ,
+%             \frac{
+%                 1 - \tilde{v}_{q}^{k}
+%             }{
+%                 1 - 
+%                 \tilde{w}_{q}^{k}
+%             }
+%         \right]
+%         \therefore
+%         \\
+%         \tilde{v}_{q}^{k} > 
+%         \tilde{w}_{q}^{k} 
+%         \land
+%         \tilde{v}_{q}^{k}, 
+%         \tilde{w}_{q}^{k} 
+%         \in [0,1]
+%         \implies
+%         \frac{
+%             \tilde{v}_{q}^{k}
+%         }{
+%             \tilde{w}_{q}^{k}
+%         } 
+%         > 
+%         \frac{
+%             1 - \tilde{v}_{q}^{k}
+%         }{
+%             1 - \tilde{w}_{q}^{k}
+%         }
+%         \\
+%         \therefore
+%         \min\left[
+%             \frac{
+%                 \tilde{v}_{q}^{k}
+%             }{
+%                 \tilde{w}_{q}^{k}
+%             }
+%             ,
+%             \frac{
+%                 1 - \tilde{v}_{q}^{k}
+%             }{
+%                 1 - 
+%                 \tilde{w}_{q}^{k}
+%             }
+%         \right]
+%         =
+%         \frac{
+%             1 - \tilde{v}_{q}^{k}
+%         }{
+%             1 - \tilde{w}_{q}^{k}
+%         }
+%         \\
+%         =
+%         \frac{
+%             1 - \tilde{v}_{q}^{k}
+%         }{
+%             \int_{\tilde{T}_{q}^{k}}^{1}{
+%                 \text{ta}(l)dl
+%             }
+%         }
+%         \\
+%         \therefore
+%         \frac{
+%             1 - \tilde{v}_{q}^{k}
+%         }{
+%             \int_{\tilde{T}_{q}^{k}}^{1}{
+%                 \text{ta}(l)dl
+%             }
+%         } 
+%         < 
+%         \frac{
+%             1 - \tilde{w}_{q}^{k}
+%         }{
+%             \int_{\tilde{T}_{q}^{k}}^{1}{
+%                 \text{ta}(l)dl
+%             }
+%         }
+%         \\
+%         =
+%         \frac{
+%             \tilde{w}_{q}^{k}
+%         }{
+%             \int_{0}^{\tilde{T}_{q}^{k}}{
+%                 \text{ta}(l)dl
+%             }
+%         }
+%         \\
+%         = 1
+%     \end{align}
+
+We can derive the same conclusion for a maximally stratified labor market, as well. But here, instead of determining the proportion of job subtypes with a $\boldsymbol{w_{q}^{*}}$ vector of employment levels, employers maximize production selecting optimal $\boldsymbol{\ell_{q}^{*}}$ responsability bounds for $w_q$ unique job posts.
+
+So, let 
+\begin{gather}
+    \boldsymbol{\ell_{q}^{*}}
+    :=
+    (\ell_{0}^{*}, \dots, \ell_{w_q}^{*})
+    :=
+    (0, \dots, 1) 
+    \in [0,1]^{w_q}
+    ,
+\end{gather}
+with
+\begin{gather}
+\sum_{v=1}^{w_q}
+\int_{
+    \ell_{v-1}^{*}
+}^{
+    \ell_{v}^{*}
+}
+\text{ta}(l)dl
+=
+\int_{0}^{1}
+\text{ta}(l)dl
+=
+1
+\end{gather}
+be the vector of optimal responsability bounds that maximizes operational output, such that
+\begin{gather}
+    \mho(\boldsymbol{\ell_{q}^{*}})
+    =
+    \min(
+        \boldsymbol{1}
+        \times
+        \boldsymbol{\mho_q}(
+            \boldsymbol{\ell_{q}^{*}}
+        )
+    )
+    =
+    1
+    \times
+    \left(
+        \int_{
+            \ell_{v-1}^{*}
+        }^{
+            \ell_{v}^{*}
+        }
+        \text{ta}(l)dl
+    \right) ^ {-1}
+    :=
+    w_q
+    ,
+\end{gather}
+as with the previous economic configurations.
+
+Note, however, employers could, again, attempt to increase production beyond this level if they, now, reduced the responsabilities of a particular job subtype by setting
+\begin{align}
+\ell_v < \ell_{v}^{*}
+\implies
+    \left(
+        \int_{
+            \ell_{v-1}^{*}
+        }^{
+            \ell_{v}
+        }
+        \text{ta}(l)dl
+    \right) ^ {-1}
+    >
+    \left(
+        \int_{
+            \ell_{v-1}^{*}
+        }^{
+            \ell_{v}^{*}
+        }
+        \text{ta}(l)dl
+    \right) ^ {-1}
+    =
+    w_q
+    .
+\end{align}
+
+Nevertheless, because every worker has the same unitary time allowance, this would also entail the missing subinterval of complex tasks $l \in (\ell_{v}, \ell_{v}^{*}]$ would either not be produced at all, in which case
+\begin{align}
+    \mho(\boldsymbol{\ell_{q}})
+    =
+    0
+    \times
+    \left(
+        \int_{
+            \ell_{v}
+        }^{
+            \ell_{v}^{*}
+        }
+        \text{ta}(l)dl
+    \right) ^ {-1}
+    =
+    0
+    ,
+\end{align}
+or that it would be produced with a $1 - \omega_{q}^{v} \in [0,1]$ fraction of a time unit, yielding some quantity
+\begin{align}
+    \mho(
+        \boldsymbol{\ell_{q}}
+        ,\boldsymbol{\omega_{q}}
+    )
+    =
+    (1 - \omega_{q}^{v})
+    \times
+    \left(
+        \int_{
+            \ell_{v}
+        }^{
+            \ell_{v}^{*}
+        }
+        \text{ta}(l)dl
+    \right) ^ {-1}
+    ,
+\end{align}
+where $\omega_{q}^{v} \in [0,1]$ is the percentage of worker $v$'s time allowance dedicated to the emphasized $l \in [\ell_{v-1}^{*}, \ell_{v}]$ responsability spectrum.
+
+Furthermore, because aggregate operational output is given by the Leontief production function, [standardize this notation]
+\begin{gather}
+% \begin{align}
+    \mho_{q}(
+        \boldsymbol{\ell_{q}}
+        ,\boldsymbol{\omega_{q}}
+    )
+    =
+    % &=
+    \mho(
+        \boldsymbol{1},
+        \boldsymbol{\mho_q}(
+            \boldsymbol{\ell_{q}}
+            ,\boldsymbol{\omega_{q}}
+        )
+    )
+    =
+    \min(
+        \boldsymbol{1}
+        \times
+        \boldsymbol{\mho_q}(
+            \boldsymbol{\ell_{q}}
+            ,\boldsymbol{\omega_{q}}
+        )
+    )
+    ,
+    \\
+    \boldsymbol{\mho_q}(
+        \boldsymbol{\ell_{q}}
+        ,\boldsymbol{\omega_{q}}
+    )
+    =
+    (
+        \mho_{q}^{1}
+        ,
+        \dots
+        ,
+        \mho_{q}^{w_q}
+    )
+    % \left\{
+    %     \mho_{q}^{v}
+    %     ,
+    %     v \in \{1, \dots, w_q\}
+    % \right\}
+    ,
+    \\
+    \mho_{q}^{v} = 
+    \min
+    \left(
+            \frac{
+                \omega_{q}^{v}
+            }{
+                \int_{\ell_{v-1}^{*}}^{\ell_v}{
+                    \text{ta}(l)dl
+                }
+            }
+            ,
+            \frac{
+                1 - \omega_{q}^{v}
+            }{
+                \int_{\ell_v}^{\ell_{v}^{*}}{
+                    \text{ta}(l)dl
+                }
+            }
+        \right)
+    % \\
+    % &=
+    % \min(
+    %     \boldsymbol{1}
+    %     \times
+    %     \boldsymbol{\mho_q}(
+    %         \boldsymbol{\ell_{q}}
+    %         ,\boldsymbol{\omega_{q}}
+    %     )
+    % )
+    % \\
+    % &=
+    % \min
+    % \left(
+    %     \frac{
+    %         \omega_{q}^{1}
+    %     }{
+    %         \int_{\ell_{0}^{*}}^{\ell_1}{
+    %             \text{ta}(l)dl
+    %         }
+    %     }
+    %     ,
+    %     \frac{
+    %         1 - \omega_{q}^{1}
+    %     }{
+    %         \int_{\ell_1}^{\ell_{1}^{*}}{
+    %             \text{ta}(l)dl
+    %         }
+    %     }
+    %     ,
+    %     \dots
+    %     ,
+    %     \frac{
+    %         \omega_{q}^{w_q}
+    %     }{
+    %         \int_{\ell_{w_q - 1}^{*}}^{\ell_{w_q}}{
+    %             \text{ta}(l)dl
+    %         }
+    %     }
+    %     ,
+    %     \frac{
+    %         1 - \omega_{q}^{w_q}
+    %     }{
+    %         \int_{\ell_{w_q}}^{\ell_{w_q}^{*}}{
+    %             \text{ta}(l)dl
+    %         }
+    %     }
+    % \right)
+    % \\
+    % &:=
+    % \min
+    % \left(
+    %     \frac{1}{
+    %         \int_{0}^{\ell_1}{
+    %             \text{ta}(l)dl
+    %         }
+    %     }
+    %     ,
+    %     \dots
+    %     ,
+    %     \frac{1}{
+    %         \int_{\ell_{w_q-1}}^{1}{
+    %             \text{ta}(l)dl
+    %         }
+    %     }
+    % \right)
+    ,
+\end{gather}
+% \end{align}
+it would be pointless if only a subset of employees were to increase their operational output by themselves; for an occupation's complex tasks are all complementary: they work together to acchieve its operation. Hence, for $\mho_{q}(
+    \boldsymbol{\ell_q}
+    ,\boldsymbol{\omega_q}
+)$ to be greater than $
+\mho_{q}(
+    \boldsymbol{\ell_{q}^{*}}
+)
+=
+w_q$,
+\begin{gather}
+    \mho_{q}^{v} > w_q
+    \
+    \forall
+    \
+    v \in \{1, \dots, w_q\}
+    ,
+\end{gather}
+which requires all partial operational outputs to surpass the following point of equilibrium:
+\begin{align}
+    &\mho_{q}(
+        \boldsymbol{\ell_q}
+        ,\boldsymbol{\omega_q}
+    ) 
+    =
+    \mho_{q}(
+        \boldsymbol{\ell_{q}^{*}}
+    ) 
+    = 
+    \min(
+        \boldsymbol{1}
+        \times
+        \boldsymbol{\mho_q}(
+            \boldsymbol{\ell_{q}^{*}}
+        )
+    )
+    =
+    w_q
+    \\
+    &\iff
+    \frac{
+        \omega_{q}^{v}
+    }{
+        \int_{
+            \ell_{v-1}^{*}
+        }^{
+            \ell_{v}
+        }{
+            \text{ta}(l)dl
+        }
+    }
+    =
+    \frac{
+        1 - \omega_{q}^{v}
+    }{
+        \int_{
+            \ell_{v}
+        }^{
+            \ell_{v}^{*}
+        }{
+            \text{ta}(l)dl
+        }
+    }
+    =
+    w_q
+    \
+    \forall
+    \
+    v \in \{1, \dots, w_q\}
+    \\
+    &\iff
+    \omega_{q}^{v}
+    =
+    w_q
+    \int_{
+        \ell_{v-1}^{*}
+    }^{
+        \ell_{v}
+    }{
+        \text{ta}(l)
+        dl
+    }
+    \land
+    1 - \omega_{q}^{v}
+    =
+    w_q
+    \int_{
+        \ell_{v}
+    }^{
+        \ell_{v}^{*}
+    }{
+        \text{ta}(l)
+        dl
+    }
+    .
+\end{align}
+% \begin{align}
+%     &\mho_{q}(
+%         \boldsymbol{\ell_q}
+%         ,\boldsymbol{\omega_q}
+%     ) 
+%     =
+%     \mho_{q}(
+%         \boldsymbol{\ell_{q}^{*}}
+%     ) 
+%     = 
+%     \min(
+%         \boldsymbol{1}
+%         \times
+%         \boldsymbol{\mho_q}(
+%             \boldsymbol{\ell_{q}^{*}}
+%         )
+%     )
+%     =
+%     w_q
+%     \\
+%     &\iff
+%     \omega_{q}^{v}
+%     \mho_{q}^{v}(
+%         \ell_{v-1}^{*}
+%         ,\ell_{v}
+%     )
+%     =
+%     (1-\omega_{q}^{v})
+%     \mho_{q}^{v}(
+%         \ell_{v}
+%         ,\ell_{v}^{*}
+%     )
+%     =
+%     w_q
+%     \
+%     \forall
+%     \
+%     v \in \{1, \dots, w_q\}
+%     \\
+%     &\iff
+%     \omega_{q}^{v}
+%     =
+%     \frac{w_q}{
+%         \mho_{q}^{v}(
+%             \ell_{v-1}^{*}
+%             ,\ell_{v}
+%         )
+%     }
+%     :=
+%     w_q
+%     \Omega_{q}^{v}(
+%         \ell_{v-1}^{*}
+%         ,\ell_{v}
+%     )
+%     :=
+%     w_q
+%     \int_{
+%         \ell_{v-1}^{*}
+%     }^{
+%         \ell_{v}
+%     }{
+%         \text{ta}(l)
+%         dl
+%     }
+%     \\
+%     &\land
+%     1 - \omega_{q}^{v}
+%     =
+%     \frac{w_q}{
+%         \mho_{q}^{v}(
+%             \ell_{v}
+%             ,\ell_{v}^{*}
+%         )
+%     }
+%     :=
+%     w_q
+%     \Omega_{q}^{v}(
+%         \ell_{v}
+%         ,\ell_{v}^{*}
+%     )
+%     :=
+%     w_q
+%     \int_{
+%         \ell_{v}
+%     }^{
+%         \ell_{v}^{*}
+%     }{
+%         \text{ta}(l)
+%         dl
+%     }
+%     ,
+% \end{align}
+% where $\mho_{q}^{v}(\ell_{v},\ell_{r})$, with
+% \begin{gather}
+%     \mho_{q}^{v}
+%     =
+%     \min
+%     \left[
+%         \omega_{q}^{v}
+%         \mho_{q}^{v}(
+%             \ell_{v-1}^{*}
+%             ,\ell_{v}
+%         )
+%         ,
+%         (1 - \omega_{q}^{v})
+%         \mho_{q}^{v}(
+%             \ell_{v}
+%             ,\ell_{v}^{*}
+%         )
+%     \right]
+%     ,
+% \end{gather}
+% and $\Omega_{q}^{v}(\ell_{v},\ell_{r}), v, r \in \{1, \dots, w_q\}$, are short-hand notations for partial operational output and its inverse, total time allocation.
+
+Now, if any single $\omega_{q}^{v} \in [0,1]$ is set to
+\begin{gather}
+    \omega_{q}^{v} > 
+    w_q
+    \int_{
+        \ell_{v-1}^{*}
+    }^{
+        \ell_{v}
+    }{
+        \text{ta}(l)
+        dl
+    }
+    % w_q
+    % \Omega_{q}^{v}(
+    %     \ell_{v-1}^{*}
+    %     ,\ell_{v}
+    % )
+    ,
+\end{gather}
+then, indeed,
+\begin{gather}
+    \frac{
+        \omega_{q}^{v}
+    }{
+        \int_{
+            \ell_{v-1}^{*}
+        }^{
+            \ell_{v}
+        }{
+            \text{ta}(l)dl
+        }
+    }
+    % \omega_{q}^{v}
+    % \mho_{q}^{v}(
+    %     \ell_{v-1}^{*}
+    %     ,\ell_{v}
+    % )
+    >
+    w_q
+    ,
+\end{gather}
+but also
+\begin{align}
+    &
+    \frac{
+        1 - \omega_{q}^{v}
+    }{
+        \int_{
+            \ell_{v}
+        }^{
+            \ell_{v}^{*}
+        }{
+            \text{ta}(l)dl
+        }
+    }
+    % (1-\omega_{q}^{v})
+    % \mho_{q}^{v}(
+    %     \ell_{v}
+    %     ,\ell_{v}^{*}
+    % )
+    <
+    w_q
+    \\
+    &\implies
+    \mho_{q}^{v} = 
+    \min\left(
+        \frac{
+            \omega_{q}^{v}
+        }{
+            \int_{
+                \ell_{v-1}^{*}
+            }^{
+                \ell_{v}
+            }
+            \text{ta}(l)dl
+        }
+        ,
+        \frac{
+            1-\omega_{q}^{v}
+        }{
+            \int_{
+                \ell_{v}
+            }^{
+                \ell_{v}^{*}
+            }
+            \text{ta}(l)dl
+        }
+    \right)
+    =
+    \frac{
+        1 - \omega_{q}^{v}
+    }{
+        \int_{
+            \ell_{v}
+        }^{
+            \ell_{v}^{*}
+        }{
+            \text{ta}(l)dl
+        }
+    }
+    % \frac{
+    %     1-\omega_{q}^{v}
+    % }{
+    %     \Omega_{q}^{v}(
+    %         \ell_{v}
+    %         ,\ell_{v}^{*}
+    %     )
+    % }
+    <
+    w_q
+    \\
+    &\therefore
+    % &\implies
+    \mho_{q}(
+        \boldsymbol{\ell_q}
+        ,\boldsymbol{\omega_q}
+    ) 
+    <
+    \mho_{q}(
+        \boldsymbol{\ell_{q}^{*}}
+    )
+    =
+    w_q
+    ;
+\end{align}
+and, conversely, 
+\begin{align}
+    % &
+    % \omega_{q}^{v} < 
+    % w_q
+    % \Omega_{q}^{v}(
+    %     \ell_{v-1}^{*}
+    %     ,\ell_{v}
+    % )
+    % \\
+    &
+    \omega_{q}^{v} < 
+    w_q
+    \int_{
+        \ell_{v-1}^{*}
+    }^{
+        \ell_{v}
+    }{
+        \text{ta}(l)dl
+    }
+    \\
+    % &\implies
+    % \omega_{q}^{v}
+    % \mho_{q}^{v}(
+    %     \ell_{v-1}^{*}
+    %     ,\ell_{v}
+    % )
+    % % \frac{
+    % %     \omega_{q}^{v}
+    % % }{
+    % %     \Omega_{q}^{v}(
+    % %         \ell_{v-1}^{*}
+    % %         ,\ell_{v}
+    % %     )
+    % % }
+    % < 
+    % w_q
+    % <
+    % (1-\omega_{q}^{v})
+    % \mho_{q}^{v}(
+    %     \ell_{v}
+    %     ,\ell_{v}^{*}
+    % )
+    &\implies
+    \frac{
+        \omega_{q}^{v}
+    }{
+        \int_{
+            \ell_{v-1}^{*}
+        }^{
+            \ell_{v}
+        }
+        \text{ta}(l)dl
+    }
+    % \frac{
+    %     \omega_{q}^{v}
+    % }{
+    %     \Omega_{q}^{v}(
+    %         \ell_{v-1}^{*}
+    %         ,\ell_{v}
+    %     )
+    % }
+    < 
+    w_q
+    <
+    \frac{
+        1-\omega_{q}^{v}
+    }{
+        \int_{
+            \ell_{v}
+        }^{
+            \ell_{v}^{*}
+        }
+        \text{ta}(l)dl
+    }
+    % \frac{
+    %     1-\omega_{q}^{v}
+    % }{
+    %     \Omega_{q}^{v}(
+    %         \ell_{v}
+    %         ,\ell_{v}^{*}
+    %     )
+    % }
+    \\
+    &\implies
+    \mho_{q}^{v} = 
+    \min\left(
+        \frac{
+            \omega_{q}^{v}
+        }{
+            \int_{
+                \ell_{v-1}^{*}
+            }^{
+                \ell_{v}
+            }
+            \text{ta}(l)dl
+        }
+        ,
+        \frac{
+            1-\omega_{q}^{v}
+        }{
+            \int_{
+                \ell_{v}
+            }^{
+                \ell_{v}^{*}
+            }
+            \text{ta}(l)dl
+        }
+    \right)
+    % \min\left[
+    %     \frac{
+    %         \omega_{q}^{v}
+    %     }{
+    %         \Omega_{q}^{v}(
+    %             \ell_{v-1}^{*}
+    %             ,\ell_{v}
+    %         )
+    %     }
+    %     ,
+    %     \frac{
+    %         1-\omega_{q}^{v}
+    %     }{
+    %         \Omega_{q}^{v}(
+    %             \ell_{v}
+    %             ,\ell_{v}^{*}
+    %         )
+    %     }
+    % \right]
+    =
+    \frac{
+        \omega_{q}^{v}
+    }{
+        \int_{
+            \ell_{v-1}^{*}
+        }^{
+            \ell_{v}
+        }
+        \text{ta}(l)dl
+    }
+    % \frac{
+    %     \omega_{q}^{v}
+    % }{
+    %     \Omega_{q}^{v}(
+    %         \ell_{v-1}^{*}
+    %         ,\ell_{v}
+    %     )
+    % }
+    <
+    w_q
+    \\
+    &\therefore
+    % &\implies
+    \mho_{q}(
+        \boldsymbol{\ell_q}
+        ,\boldsymbol{\omega_q}
+    ) 
+    <
+    \mho_{q}(
+        \boldsymbol{\ell_{q}^{*}}
+    )
+    =
+    w_q
+    ;
+\end{align}
+so that 
+\begin{gather}
+    \nexists
+    \
+    \boldsymbol{\ell_q}
+    % \neq
+    % \boldsymbol{\ell_{q}^{*}}
+    ,
+    \boldsymbol{\omega_q}
+    \in
+    [0,1]^{w_q}
+    \
+    \big|
+    \
+    \mho_{q}(
+        \boldsymbol{\ell_q}
+        ,\boldsymbol{\omega_q}
+    ) 
+    >
+    \mho_{q}(
+        \boldsymbol{\ell_{q}^{*}}
+    )
+    =
+    % \min(
+    %     \boldsymbol{1}
+    %     \times
+    %     \boldsymbol{\mho_q}(
+    %         \boldsymbol{\ell_{q}^{*}}
+    %     )
+    % )
+    % =
+    w_q
+    ,
+    \\
+    \sum_{v=1}^{w_q}
+    \left(
+        \int_{
+            \ell_{v-1}^{*}
+        }^{
+            \ell_{v}
+        }
+        \text{ta}(l)dl
+        +
+        \int_{
+            \ell_{v}
+        }^{
+            \ell_{v}^{*}
+        }
+        \text{ta}(l)dl
+    \right)
+    =
+    % \sum_{v=1}^{w_q}
+    % \int_{
+    %     \ell_{v-1}^{*}
+    % }^{
+    %     \ell_{v}^{*}
+    % }
+    % \text{ta}(l)dl
+    % =
+    \int_{0}^{1}
+    \text{ta}(l)dl
+    =
+    1
+    .
+\end{gather}
+
+Finally, even with an $\boldsymbol{\omega_{q}^{v}}$ vector of partial time allocations for each worker, at least one difficulty subinterval would have to be neglected to emphasize another, because
+\begin{gather}
+    \boldsymbol{1} ^ \top
+    \cdot
+    \boldsymbol{\omega_{q}^{v}}
+    =
+    \boldsymbol{1} ^ \top
+    \cdot
+    \boldsymbol{\Omega_{q}^{v}}
+    =
+    1
+    \implies
+    \min\left(
+        \boldsymbol{\omega_{q}^{v}}
+        \times
+        \boldsymbol{\mho_q}(
+            \boldsymbol{\ell_{q}}
+        )
+    \right)
+    <
+    w_q
+    \\
+    \therefore
+    \mho_q(
+        \boldsymbol{\ell_{q}^{v}},
+        \boldsymbol{\omega_{q}^{v}}
+    )
+    <
+    \mho_q(
+        \boldsymbol{\ell_{q}^{*}}
+    )
+    =
+    w_q
+    ,
+\end{gather}
+as before.
+
+Thus, we have demonstrated there cannot be, in any productive arrangement, a higher aggregate operational output than $w_q$, that is the number of employees in a particular labor market, as all attempts to increase production, actually, end up hindering it. 
+
+The intuition for this is quite simple. Production strategies can merely distribute the available talent across an occupation's responsability spectrum: they are but ways of splitting and arranging tasks conveniently (via independent production, or any level of labor stratification); they do not, however, change activities' time requirements, nor the time allowances of employees, both of which are, by definition, equivalent. [] Therefore, these economic configurations only serve the purpose of ``safeguarding'' operational output, guaranteeing production in potentially adverse market conditions. The main limiting factors to production, then, are workers' capacity and time itself.
+, for the most one can produce in a day is a ``day's work''.
+    % \begin{align}
+    %     \mho_{q}(\tilde{v}_{q}^{k})
+    %     &= 
+    %     \min\left[
+    %         \tilde{v}_{q}^{k}
+    %         \left(
+    %             \int_{0}^{\tilde{T}_{q}^{k}}{
+    %                 \text{ta}(l)dl
+    %             }
+    %         \right) ^ {-1}
+    %         ,
+    %         (1 - \tilde{v}_{q}^{k})
+    %         \left(
+    %             \int_{\tilde{T}_{q}^{k}}^{1}{
+    %                 \text{ta}(l)dl
+    %             }
+    %         \right) ^ {-1}
+    %     \right]
+    %     \\
+    %     &= 
+    %     (1 - \tilde{v}_{q}^{k})
+    %     \left(
+    %         \int_{\tilde{T}_{q}^{k}}^{1}{
+    %             \text{ta}(l)dl
+    %         }
+    %     \right) ^ {-1}
+    %     \\
+    %     \therefore
+    %     \mho_{q}(\tilde{w}_{q}^{k})
+    %     &= 
+    %     \min\left[
+    %         \tilde{w}_{q}^{k}
+    %         \left(
+    %             \int_{0}^{\tilde{T}_{q}^{k}}{
+    %                 \text{ta}(l)dl
+    %             }
+    %         \right) ^ {-1}
+    %         ,
+    %         (1 - \tilde{w}_{q}^{k})
+    %         \left(
+    %             \int_{\tilde{T}_{q}^{k}}^{1}{
+    %                 \text{ta}(l)dl
+    %             }
+    %         \right) ^ {-1}
+    %     \right]
+    %     \\
+    %     &= 
+    %     \tilde{w}_{q}^{k}
+    %     \left(
+    %         \int_{0}^{\tilde{T}_{q}^{k}}{
+    %             \text{ta}(l)dl
+    %         }
+    %     \right) ^ {-1}
+    %     \\
+    %     &= 
+    %     (1 - \tilde{w}_{q}^{k})
+    %     \left(
+    %         \int_{\tilde{T}_{q}^{k}}^{1}{
+    %             \text{ta}(l)dl
+    %         }
+    %     \right) ^ {-1}
+    %     \\
+    %     &>
+    %     (1 - \tilde{v}_{q}^{k})
+    %     \left(
+    %         \int_{\tilde{T}_{q}^{k}}^{1}{
+    %             \text{ta}(l)dl
+    %         }
+    %     \right) ^ {-1}
+    %     ,
+    % \end{align}
+% 
+
+Optimal Stratification Lemma (OSL)
+% Maximally Stratified Production Lemma (MSPL)
+
+Because in a maximally and monotonically stratified labor market every position is its own job subtype (for, again, employment levels are unitary), optimal production is, then, obtained not by choosing how many workers to allocate to tasks of varying difficulty levels, but instead by setting appropriate responsability ranges for each position (i.e. which tasks to allocate \textit{to} workers). The bounds for these ranges are:
+\begin{gather}
+\ell_v
+=
+\text{TA}^{-1}\left(
+    \frac{v}{w_q}
+    +
+    \text{TA}(0)
+\right)
+\
+\forall
+\
+v \in 
+\left\{
+    1, \dots, w_q
+\right\}
+,
+\end{gather}
+where $\text{TA}(l)$ is the anti-derivative of the time allocation function $\text{ta}(l)$, and $\text{TA}^{-1}(l)$, its inverse.
+
+\textit{Proof}:
+
+We have just demonstrated that the maximum operational output in any labor market, with or without unique, unitary, positions, is exactly 
+% We have just demonstrated that the maximum operational output in any labor market is exactly 
+\begin{gather}
+\mho_{q}^{*}
+    =
+    \min(
+        \boldsymbol{w_{q}^{*}}
+        \times
+        \boldsymbol{\mho_q}
+    )
+    = 
+    \min(
+        \boldsymbol{1}
+        \times
+        \boldsymbol{\mho_q}(
+            \boldsymbol{\ell_{q}^{*}}
+        )
+    )
+    =
+    w_q
+% \mho_{q}^{*} =
+% \min\left(
+%     \boldsymbol{w_q}
+%     \times
+%     \boldsymbol{\mho_{q}}
+% \right)
+% =
+% w_q
+,
+\end{gather}
+or the number of employees in its workforce.
+
+Therefore, optimal bounds for responsability spectra can be calculated by equating partial operational outputs with maximum production; for if maximum-monotonic labor stratification is to be optimal, it must yield the same partial outputs as any efficient production strategy.
+% Therefore, optimal responsability ranges can be calculated by equating partial operational outputs with maximum production, for if maximum-monotonic labor stratification is to be optimal, it must yield the same partial outputs as any efficient production strategy.
+
+So, for the first job subtype,
+\begin{gather}
+1 \times \left(
+    \int_{\ell_0}^{\ell_1}
+    \text{ta}(l)
+    dl
+\right) ^ {-1}
+=
+1 \times \left(
+    \int_{0}^{\ell_1}
+    \text{ta}(l)
+    dl
+\right) ^ {-1}
+=
+w_q
+,
+\end{gather}
+which means the partial operational output of the first worker, whose tasks range from $\ell_0 = 0$ to $\ell_1 \in [0,1]$ exclusively, should produce the same amount of the $l \in [0,\ell_1]$ responsability spectrum as would be produced in an economic configuration with maximum operational output (e.g. with $w_q$ perfectly qualified employees working independently).
+
+Thus, solving for $\ell_1$, we get:
+\begin{align}
+1 
+&\times 
+\left(
+    \int_{0}^{\ell_1}
+    \text{ta}(l)
+    dl
+\right) ^ {-1}
+=
+w_q
+\\
+&\therefore
+\int_{0}^{\ell_1}
+\text{ta}(l)
+dl
+=
+\frac{1}{w_q}
+\\
+&\therefore
+\text{TA}(l)
+\big|_{0}^{\ell_1}
+=
+\text{TA}(\ell_1)
+-
+\text{TA}(0)
+=
+\frac{1}{w_q}
+\\
+&\therefore
+\text{TA}^{-1}(
+    \text{TA}(\ell_1)
+)
+=
+\text{TA}^{-1}\left(
+    \frac{1}{w_q}
+    +
+    \text{TA}(0)
+\right)
+\\
+&\therefore
+\ell_1
+=
+\text{TA}^{-1}\left(
+    \frac{1}{w_q}
+    +
+    \text{TA}(0)
+\right)
+.
+\end{align}
+
+Likewise, for the second worker,
+\begin{align}
+1 
+&\times 
+\left(
+    \int_{\ell_1}^{\ell_2}
+    \text{ta}(l)
+    dl
+\right) ^ {-1}
+=
+w_q
+\\
+&\therefore
+\int_{\ell_1}^{\ell_2}
+\text{ta}(l)
+dl
+=
+\frac{1}{w_q}
+\\
+&\therefore
+\text{TA}(l)
+\big|_{\ell_1}^{\ell_2}
+=
+\text{TA}(\ell_2)
+-
+\text{TA}(\ell_1)
+=
+\frac{1}{w_q}
+\\
+&\therefore
+\text{TA}^{-1}(
+    \text{TA}(\ell_2)
+)
+=
+\text{TA}^{-1}\left(
+    \frac{1}{w_q}
+    +
+    \text{TA}(\ell_1)
+\right)
+\\
+&\therefore
+\text{TA}^{-1}(
+    \text{TA}(\ell_2)
+)
+=
+\text{TA}^{-1}\left(
+    \frac{1}{w_q}
+    +
+    \frac{1}{w_q}
+    +
+    \text{TA}(0)
+\right)
+\\
+&\therefore
+\ell_2
+=
+\text{TA}^{-1}\left(
+    \frac{2}{w_q}
+    +
+    \text{TA}(0)
+\right)
+.
+\end{align}
+
+For the third worker,
+\begin{align}
+1 
+&\times 
+\left(
+    \int_{\ell_2}^{\ell_3}
+    \text{ta}(l)
+    dl
+\right) ^ {-1}
+=
+w_q
+\\
+&\therefore
+\int_{\ell_2}^{\ell_3}
+\text{ta}(l)
+dl
+=
+\frac{1}{w_q}
+\\
+&\therefore
+\text{TA}(l)
+\big|_{\ell_2}^{\ell_3}
+=
+\text{TA}(\ell_3)
+-
+\text{TA}(\ell_2)
+=
+\frac{1}{w_q}
+\\
+&\therefore
+\text{TA}^{-1}(
+    \text{TA}(\ell_3)
+)
+=
+\text{TA}^{-1}\left(
+    \frac{1}{w_q}
+    +
+    \text{TA}(\ell_2)
+\right)
+\\
+&\therefore
+\text{TA}^{-1}(
+    \text{TA}(\ell_3)
+)
+=
+\text{TA}^{-1}\left(
+    \frac{1}{w_q}
+    +
+    \frac{1}{w_q}
+    +
+    \frac{1}{w_q}
+    +
+    \text{TA}(0)
+\right)
+\\
+&\therefore
+\ell_3
+=
+\text{TA}^{-1}\left(
+    \frac{3}{w_q}
+    +
+    \text{TA}(0)
+\right)
+.
+\end{align}
+
+And so on and so forth, up to the very last worker:
+\begin{align}
+1 
+&\times 
+\left(
+    \int_{\ell_{w_q - 1}}^{\ell_{w_q}}
+    \text{ta}(l)
+    dl
+\right) ^ {-1}
+=
+w_q
+\\
+&\therefore
+\int_{\ell_{w_q - 1}}^{\ell_{w_q}}
+\text{ta}(l)
+dl
+=
+\frac{1}{w_q}
+\\
+&\therefore
+\text{TA}(l)
+\big|_{\ell_{w_q - 1}}^{\ell_{w_q}}
+=
+\text{TA}(\ell_{w_q})
+-
+\text{TA}(\ell_{w_q - 1})
+=
+\frac{1}{w_q}
+\\
+&\therefore
+\text{TA}^{-1}(
+    \text{TA}(\ell_{w_q})
+)
+=
+\text{TA}^{-1}\left(
+    \frac{1}{w_q}
+    +
+    \text{TA}(\ell_{w_q - 1})
+\right)
+\\
+&\therefore
+\text{TA}^{-1}(
+    \text{TA}(\ell_{w_q})
+)
+=
+\text{TA}^{-1}\left(
+    \frac{1}{w_q}
+    +
+    \dots
+    +
+    \frac{1}{w_q}
+    +
+    \text{TA}(0)
+\right)
+\\
+&\therefore
+\ell_{w_q}
+=
+\text{TA}^{-1}\left(
+    \frac{w_q}{w_q}
+    +
+    \text{TA}(0)
+\right)
+:= 1
+\\
+&\iff
+\text{TA}^{-1}\left(
+    \frac{w_q}{w_q}
+    +
+    \text{TA}(0)
+\right)
+=
+\text{TA}^{-1}\left(
+    1
+    +
+    \text{TA}(0)
+\right)
+=
+1
+\\
+&\iff
+\text{TA}\left(
+    \text{TA}^{-1}\left(
+    1
+    +
+    \text{TA}(0)
+\right)
+\right)
+=
+\text{TA}(1)
+\\
+&\iff
+\text{TA}(1)
+-
+\text{TA}(0)
+=
+\int_{0}^{1}{
+    \text{ta}(l)
+    dl
+}
+=
+1
+,
+\end{align}
+which is true, by definition,
+\begin{align}
+&\because
+\text{ta}(l) 
+:=
+\text{ttc}(l)
+\times
+\left(
+    \int_{0}^{1}{
+        \text{ttc}(l)
+        dl
+    }
+\right) ^ {-1}
+\\
+% &\implies
+&\therefore
+\int_{0}^{1}{
+    \text{ta}(l)
+    dl
+}
+=
+\left(
+    \int_{0}^{1}
+    \text{ttc}(l)
+    dl
+\right) ^ {-1}
+\times
+\int_{0}^{1}{
+    \text{ttc}(l)
+    dl
+}
+=
+1
+.
+\end{align}
+
+% And, with this condition met, we can finally arrive, by the induction above, to a general form of optimal responsability bounds:
+And, with this condition met, we can finally arrive, by the induction above, to a general form of optimal responsability ranges:
+\begin{gather}
+\ell_v
+=
+\text{TA}^{-1}\left(
+    \frac{v}{w_q}
+    +
+    \text{TA}(0)
+\right)
+\
+\forall
+\
+v \in 
+\left\{
+    1, \dots, w_q
+\right\}
+.
+\end{gather}
+
+% Hence, mathematically,
+% \begin{gather}
+%     l \in \left[
+%     \frac{\ell - 1}{w_q}
+%     ,
+%     \frac{\ell}{w_q}
+%     \right]
+%     ,
+%     \ell \in 
+%     \left\{
+%         1, \dots, w_q
+%     \right\}
+% \end{gather}
+% is a responsability spectrum in a maximally stratified labor market, in which employment levels are given by
+% \begin{gather}
+%     \sum_{\ell=1}^{w_q}
+%     w_{q}^{\ell}
+%     =
+%     w_q
+%     ,
+% \end{gather}
+% so that any available position is its own job subtype and covers only a restrictive range of task difficulty, accounting for
+% \begin{gather}
+%     \Omega_{q}^{\ell} = 
+%     \frac{1}{\mho_{q}^{\ell}} = 
+%     \int_{
+%         \frac{\ell - 1}{w_q}
+%     }^{
+%         \frac{\ell}{w_q}
+%     }
+%     \text{ta}(l)dl
+% \end{gather}
+% of an operation's total time duration
+% \begin{gather}
+%     \sum_{\ell=1}^{w_q}
+%     \Omega_{q}^{\ell} 
+%     = 
+%     \sum_{\ell=1}^{w_q}
+%     \int_{
+%         \frac{\ell - 1}{w_q}
+%     }^{
+%         \frac{\ell}{w_q}
+%     }
+%     \text{ta}(l)dl
+%     =
+%     \int_{0}^{1}
+%     \text{ta}(l)dl
+%     =
+%     1
+%     .
+% \end{gather}
+
+% Intuitively speaking, we would say production in a maximally and monotonically stratified labor market is not ``independent'', in the sense that employees do not work on an occupation's operation from beginning to end. This means each of them will spend all their time allowance producing a partial operational output, that is a multiple of a difficulty subinterval of complex tasks, which will, in turn, contribute, alonside the partial outputs of other employees, to accomplish the occupational operation in its entirety.
+
+% However, in a maximum labor stratification setting, these partial operational outputs will not be produced merely via ``senior'' and ``junior'' positions, as previously, but rather within a myriad of levels in a production hierarchy, approximating a continuum of ``seniority'' as the workforce becomes large enough.
+% % However, in a maximally stratified labor market, these partial operational outputs will not be produced merely via ``senior'' and ``junior'' positions, as previously, but rather within a myriad of levels in a production hierarchy, approximating a continuum of ``seniority'' as the workforce becomes large enough.
+
+% Again, this does not mean employees are, actually, more or less competent, only that the available positions are preemptively stratified with respect to task difficulty, in order to maximize employers' hiring pool and safeguard production in the case workers are not sufficiently qualified to produce the whole responsability spectrum by themselves (see ``Maximum-Monotonic Labor Stratification Lemma'' below).
+
+% [end definition of maximum-monotonic labor stratification]
+
+% Independent Operational Output Lemma (IOOL)
+% 
+%     From Weak Occupational Complexity Axiom (WOCA)
+%     % Now, as the Weak Occupational Complexity Axiom states there can be no gain, nor losses, to production when labor is efficiently stratified, we can derive a generalization of the conclusion (ref) above to any economic configuration besides the binary case by comparison. 
+
+%     Let us, then, first consider an independent production strategy with maximum worker productivity (i.e. the ``ceiling'' or ``benchmark'' for all other production strategies). Furthermore, because we want to compare this production strategy to that of maximum-monotonic labor stratification, we shall analyze operational output in a stratified fashion as well.
+
+%     In this scenario, the optimal choice of hours to allocate to a responsability spectrum is trivial:
+%     \begin{gather}
+%         w_{q}^{\ell}
+%         =
+%         \Omega_{q}^{\ell}
+%         \in [0,1]
+%         .
+%     \end{gather}
+%     Now, by the definition of partial operational output (ref) above, one produces $\mho_{q}^{\ell}$ when devoting their entire unitary time allowance to the
+%     \begin{gather}
+%         l \in \left[
+%         \frac{\ell - 1}{w_q}
+%         ,
+%         \frac{\ell}{w_q}
+%         \right]
+%         ,
+%         \ell \in 
+%         \left\{
+%             1, \dots, w_q
+%         \right\}
+%     \end{gather}
+%     responsability spectrum. Therefore, with only $\Omega_{q}^{\ell} \in [0,1]$ time units, operational output is:
+%     \begin{gather}
+%         \Omega_{q}^{\ell}
+%         \mho_{q}^{\ell}
+%         =
+%         \left(
+%             \frac{1}{\mho_{q}^{\ell}}
+%         \right)
+%         \times
+%         \mho_{q}^{\ell}
+%         =
+%         1
+%         .
+%     \end{gather}
+%     % as even the weakest version of occupational complexity implies all difficulty levels are complementary and have to be accomplished for optimal operational output.
+%     % In this formulation, though, employment $w_{q}^{\ell} \in [0,1]$ is partial, that is: the same worker is hired to accomplish every responsability spectrum. This is because such an independent labor market is not stratified at all.
+
+%     And, as Weak Occupational Complexity implies operational output is homothetic, the aggregate production of $w_q$ perfectly qualified employees working independently is:
+%     % Furthermore, as Weak Occupational Complexity implies operational output is homothetic, the aggregate production of $w_q$ perfectly qualified employees working independently is:
+%     \begin{gather}
+%         w_{q}^{\ell}
+%         \mho_{q}^{\ell}
+%         \times
+%         w_q
+%         =
+%         \Omega_{q}^{\ell}
+%         \mho_{q}^{\ell}
+%         \times
+%         w_q
+%         =
+%         1
+%         \times
+%         w_q
+%         =
+%         w_q
+%         .
+%     \end{gather}
+%     Hence, a perfectly qualified employee working full-time and independently can output one unit of an occupation's complex tasks with one unit of their time (i.e. their entire time allowance). And, likewise, a workforce with $w_q$ employees identical to this one produces $w_q$ units of operational output. Or, to put it simply, a maximally productive person acchieves maximum production.
+%     % Hence, a perfectly qualified employee working full-time and independently can output one unit of an occupation's complex tasks with one unit of their time (i.e. their entire time allowance). And, likewise, a workforce with $w_q$ employees identical to this one produces $w_q$ units of operational output. Or, to put it simply, a maximally productive person acchieves maximum production. Or, even simpler: one day is sufficient to produce a ``day's work''.
+% 
+
+Equivalent Stratification Lemma (ESL)
+
+Any efficient labor market where employers choose both $\boldsymbol{w_q}$ and $\boldsymbol{\ell_q}$ with $p \in \{1, \dots, w_q\}$ types of job posts converges to maximum labor stratification with
+$
+p = w_q
+$
+unique positions;
+\begin{gather}
+\boldsymbol{\ell_q} = 
+\boldsymbol{\ell_{q}^{*}}
+:=
+(
+    \ell_{0}^{*}
+    ,
+    \dots
+    ,
+    \ell_{p}^{*}
+)
+:=
+(
+    0
+    ,
+    \dots
+    ,
+    1
+)
+,
+\\
+\ell_{v}^{*}
+=
+\text{TA}^{-1}\left(
+    \frac{v}{w_q}
+    +
+    \text{TA}(0)
+\right)
+\
+\forall
+\
+v \in 
+\left\{
+    1, \dots, w_q
+\right\}
+\end{gather}
+optimal responsability bounds; and unitary employment levels,
+$
+\boldsymbol{w_q} =
+\boldsymbol{1}
+.
+$
+
+\textit{Proof:}
+
+By the Maximum Stratification Axiom,
+\begin{gather}
+\sum_{v=1}^{p}{
+    \tilde{w}_{q}^{v}
+}
+:=
+\sum_{v=1}^{p}{
+    \frac{
+        w_{q}^{v}
+    }{
+        w_q
+    }
+}
+:= 1
+\land
+w_{q}^{v} 
+\geq 
+1
+\
+\forall
+\
+v \in \{1, \dots, p\},
+p \in \{1, \dots, w_q\}
+\\
+\implies
+\tilde{w}_{q}^{v} =
+\frac{1}{w_q}
+\
+\forall
+\
+v \in \{1, \dots, p\},
+p \in \{1, \dots, w_q\}
+\iff
+\boldsymbol{w_q} =
+\boldsymbol{1}
+.
+\end{gather}
+
+Furthermore,
+\begin{gather}
+\sum_{v=1}^{w_q}
+1
+=
+w_q
+\land
+\sum_{v=1}^{p}{
+    w_{q}^{v}
+}
+=
+\sum_{v=1}^{p}{
+        1
+}
+= w_q
+\implies
+p = w_q
+.
+\end{gather}
+
+Therefore, the above implies, given the PEC and OSL,
+\begin{align}
+&
+\int_{\ell_{v-1}}^{\ell_{v}}{
+    \text{ta}(l)
+    dl
+}
+=
+\tilde{w}_{q}^{v} =
+\frac{1}{w_q}
+\land
+\left(
+    \int_{
+        \ell_{v-1}^{*}
+    }^{
+        \ell_{v}^{*}    
+    }{
+        \text{ta}(l)
+        dl
+    }
+\right) ^ {-1}
+:=
+w_q
+\\
+&
+\implies
+\int_{\ell_{v-1}}^{\ell_{v}}{
+    \text{ta}(l)
+    dl
+}
+=
+\frac{1}{
+    \left(
+        \int_{
+            \ell_{v-1}^{*}
+        }^{
+            \ell_{v}^{*}    
+        }{
+            \text{ta}(l)
+            dl
+        }
+    \right) ^ {-1}
+}
+=
+\int_{
+    \ell_{v-1}^{*}
+}^{
+    \ell_{v}^{*}    
+}{
+    \text{ta}(l)
+    dl
+}
+\\
+&
+\iff
+\ell_{v}
+=
+\ell_{v}^{*}
+=
+\text{TA}^{-1}\left(
+    \frac{v}{w_q}
+    +
+    \text{TA}(0)
+\right)
+\
+\forall
+\
+v \in \{1, \dots, w_q\}
+.
+\end{align}
+
+An alternative proof would be to define $p = w_q$, as this is the upper limit for labor stratification (MSA), and so that which maximally safeguards production; then, proceed by setting 
+\begin{gather}
+\tilde{w}_{q}^{p} 
+= 
+\tilde{w}_{q}^{w_q} 
+= 
+\frac{1}{w_q}
+,
+\end{gather}
+as MSA implies $w_{q}^{v} \geq 1 \ \forall \ v \in \{1, \dots, p\}$. Thus, by the Proportional Employment Condition, 
+\begin{gather}
+\int_{
+    \ell_{p-1}
+}^{
+    \ell_{p}
+}{
+    \text{ta}(l)dl
+}
+=
+\int_{
+    \ell_{w_q-1}
+}^{
+    \ell_{w_q}
+}{
+    \text{ta}(l)dl
+}
+:=
+\int_{
+    \ell_{w_q-1}
+}^{1}{
+    \text{ta}(l)dl
+}
+=
+\frac{1}{w_q}
+,
+\end{gather}
+we define $\ell_{w_q - 1}$ by minimizing the amount of perfectly qualified workers for efficient production. And, similarly, for the previous responsability spectrum, if $w_{p-1} \geq 1$ is set to 
+\begin{gather}
+w_{p-1} = w_{w_q - 1} = 1
+,
+\end{gather}
+we minimize productivity requirements:
+\begin{gather}
+\int_{
+    \ell_{p-2}
+}^{
+    \ell_{p-1}
+}{
+    \text{ta}(l)dl
+}
+=
+\int_{
+    \ell_{w_q-2}
+}^{
+    \ell_{w_q-1}
+}{
+    \text{ta}(l)dl
+}
+=
+\frac{1}{w_q}
+.
+\end{gather}
+Again, $\ell_{w_q - 3}$ is derived by minimizing the number of highly productive workers:
+\begin{gather}
+\int_{
+    \ell_{p-3}
+}^{
+    \ell_{p-2}
+}{
+    \text{ta}(l)dl
+}
+=
+\int_{
+    \ell_{w_q-3}
+}^{
+    \ell_{w_q-2}
+}{
+    \text{ta}(l)dl
+}
+=
+\frac{1}{w_q}
+;
+\end{gather}
+and, so on and so forth, always minimizing productivity requirements with $w_{q}^{v} = 1 \ \forall \ v \in \{1, \dots, w_q\}$. Notice the pattern here is the same as in the Optimal Stratification Lemma. Therefore, responsability bounds, and also employment levels, are the same as well. Hence,
+\begin{gather}
+p = w_q,
+\\
+\boldsymbol{\ell_q} = 
+\boldsymbol{\ell_{q}^{*}}
+:=
+(
+    \ell_{0}^{*}
+    ,
+    \dots
+    ,
+    \ell_{p}^{*}
+)
+:=
+(
+    0
+    ,
+    \dots
+    ,
+    1
+)
+,
+\\
+\ell_{v}^{*}
+=
+\text{TA}^{-1}\left(
+    \frac{v}{w_q}
+    +
+    \text{TA}(0)
+\right)
+\
+\forall
+\
+v \in 
+\left\{
+    1, \dots, w_q
+\right\}
+,
+\\
+\boldsymbol{w_q} =
+\boldsymbol{1}
+.
+\end{gather}
+% [explain intution].
+
+Productivity Sufficiency Lemma (PSL)
+
+The available talent in a labor market is, at least, sufficient to allow for maximally stratified production.
+
+\textit{Proof:}
+
+If talent were not sufficient to produce at least the entire responsability spectrum $l \in [0,1]$, then, as aggregate operation output is given by the Leontief function (see WOCA, MOOL),
+\begin{gather}
+\mho_q = 
+\mho(
+    \boldsymbol{w_q}
+    ,
+    \boldsymbol{\mho_q}(
+        \boldsymbol{\ell_q}
+    )
+) = 
+\min\left(
+    \boldsymbol{w_q}
+    \times
+    \boldsymbol{\mho_q}(
+        \boldsymbol{\ell_q}
+    )
+\right)
+,
+\end{gather}
+employers' optimal choice would be to save their resources and completely shutdown the productive effort. Therefore,
+\begin{gather}
+\lnot \
+\mho_q > 0
+\implies
+\boldsymbol{w_q} =
+\boldsymbol{0}
+\\
+\therefore
+w_q > 0 
+\implies 
+\mho_q > 0
+\iff
+\boldsymbol{w_q}
+\in
+[1,w_q] ^ {p}
+,
+\\
+\boldsymbol{1} ^ \top
+\cdot
+\boldsymbol{w_q}
+=
+w_q
+,
+p \in \{1,\dots, w_q\}
+.
+\end{gather}
+
+In other words, simply because occupation $q$'s labor market exists we know the talent employed is sufficient to output all its responsability spectra.
+
+Furthermore, because rational employers will not overhire (ERA), for this would reduce their profit, we know for sure not a single position in the labor market violates the Proportional Employment Condition (see MOOL).
+
+Otherwise, employers would lay off excess workers to downscale the workforce from a suboptimal $w_q > 0$ to some $w_{q}^{*} \leq w_q$, again, to save resources. Thus, the current workforce, necessarily, has to be of the optimal
+\begin{gather}
+\sum_{v=1}^{p}
+w_{q}^{v}
+=
+w_q
+=
+w_{q}^{*}
+\end{gather}
+size and respect the PEC,
+\begin{gather}
+\tilde{w}_{q}^{v}
+=
+\Omega_{q}^{v}
+\in
+[0,1]
+,
+\\
+\sum_{v=1}^{p}
+\Omega_{q}^{v}
+=
+1
+\end{gather}
+at every level. Hence, we have to have at least $w_{q}^{v} = w_q \times \Omega_{q}^{v} \geq 1 \ \forall \ v \in \{1,\dots, p\}, p \in \{1,\dots, w_q\}$ employees in each position.
+
+In addition, we have ruled out infinite labor stratification (see MSA), and demonstrated any maximally stratified labor market is characterized by the very same optimal responsability spectra, with $w_q$ unique positions, and unitary employment (OSL, ESL). So, the labor market cannot be more than maximally stratified in accordance with Definition (ref). 
+
+Finally, from all valid production strategies we have considered, maximum-monotonic labor stratification is that which has the lowest barrier of entry, and so minimizes productivity requirements. Indeed, if production is organized independently,
+\begin{gather}
+\mho_q = w_q
+\iff
+\tilde{T}_{q}^{v}
+=
+1
+\
+\forall
+\
+v \in \{1, \dots, w_q\}
+,
+\end{gather}
+that is, either all $w_q$ employees are perfectly qualified, or maximum operational output is not acchieved. Moreover, in a binary setting,
+\begin{gather}
+\mho_q = w_q
+\iff
+\tilde{T}_{q}^{v}
+\geq
+\tilde{T}_{q}^{\text{Jr}}
+\in
+[0,1)
+\
+\forall
+\
+v \in \{1, \dots, w_{q}^{\text{Jr}}\}
+\land
+\tilde{T}_{q}^{v}
+=
+1
+,
+\end{gather}
+for the rest of the workforce (i.e. all junior employess have at least junior productivity, and all senior employees are perfectly qualified), which means productivity requirements are lower in this economic configuration, with a weighted productivity of, at least,
+\begin{gather}
+\tilde{w}_{q}^{\text{Jr}}
+\times
+\tilde{T}_{q}^{\text{Jr}}
++
+(
+    1 - \tilde{w}_{q}^{\text{Jr}}
+)
+\times
+1
+<
+1
+\because
+\tilde{T}_{q}^{\text{Jr}}
+\in
+[0,1)
+\land
+\tilde{w}_{q}^{\text{Jr}}
+\in
+(0,1]
+,
+\end{gather}
+rather than $1 \times 1 = 1,$ with independent production. And, if there were three levels of seniority, with $w_{q}^{\text{Ir}}$ interns (less qualified than juniors and seniors), productivity requirements would be even lower:
+\begin{align}
+\tilde{w}_{q}^{\text{Ir}}
+\times
+\tilde{T}_{q}^{\text{Ir}}
++
+\tilde{w}_{q}^{\text{Jr}}
+\times
+\tilde{T}_{q}^{\text{Jr}}
++
+(
+    1 - \tilde{w}_{q}^{\text{Jr}} - \tilde{w}_{q}^{\text{Ir}}
+)
+\times
+1
+\\
+<
+\tilde{w}_{q}^{\text{Jr}}
+\times
+\tilde{T}_{q}^{\text{Jr}}
++
+(
+    1 - \tilde{w}_{q}^{\text{Jr}}
+)
+\times
+1
+\\
+<
+1
+\\
+\because
+\tilde{T}_{q}^{\text{Ir}}
+<
+\tilde{T}_{q}^{\text{Jr}}
+\in
+[0,1)
+\land
+\tilde{w}_{q}^{\text{Ir}},
+\tilde{w}_{q}^{\text{Jr}}
+\in
+(0,1]
+\land
+\tilde{w}_{q}^{\text{Ir}}
++
+\tilde{w}_{q}^{\text{Jr}}
+\in
+(0,1)
+.
+\end{align}
+
+And the pattern continues for all levels of labor stratification, up to the limit of $w_q$ unique positions in a maximally and monotonically stratified labor market, where minimum required productivity is the lowest it can be when infinite labor stratification is ruled out (MSA):
+\begin{gather}
+\sum_{v=1}^{w_q}{
+    \tilde{w}_{q}^{v}
+    \times
+    \tilde{T}_{q}^{v}
+}
+=
+\left(
+    \frac{1}{w_q}
+\right)
+\sum_{v=1}^{w_q}{
+    \ell_{q}^{v}
+}
+=
+\left(
+    \frac{1}{w_q}
+\right)
+\sum_{v=1}^{w_q}{
+    \text{TA}^{-1}\left(
+    \frac{v}{w_q}
+    +
+    \text{TA}(0)
+\right)
+}
+.
+\end{gather}
+
+Therefore, if a labor market has any employees at all, the available talent in it has to be, at least, sufficient for maximally stratified production.
+
+Maximum-Monotonic Labor Stratification Lemma (MLSL)
+
+    From Employer Rationality Axiom, Weak Skill Difference Axiom, and Weak Occupational Complexity Axiom.
+    
+        Now, to generalize this conclusion for other economic configurations, we shall define notation in terms of maximum labor stratification, that is a productive arrangement in which there are not one (``homogeneous'' or ``independent''), nor two (``juniors'' and ``seniors''), but rather several job subtypes, indeed as many as there are jobs themselves, each with a limited spectrum of responsabilities. Furthermore, we shall demonstrate that, given our axioms, such an economic configuration is, in fact, the only optimal production strategy and, so, holds in the labor market.
+        % Now, to work towards a generalization of this conclusion for other economic configurations, we shall define our notation in terms of maximum labor stratification, that is a productive arrangement in which there are not one (``homogeneous'' or ``independent''), nor two (``juniors'' and ``seniors''), but rather several job subtypes, indeed as many as there are jobs themselves, each with a very limited spectrum of responsabilities. Furthermore, we shall demonstrate that, given our axioms, such an economic configuration is, in fact, the only optimal production strategy and, so, holds in the labor market.
+        
+        Hence, the Maximum-Monotonic Labor Stratification Lemma (MLSL) states that a perfectly rational employer (ERA), which expects there could be skill differences in the workforce (WSDA), and can split operational output without either gain or loss to production (WOCA), will, therefore, strategically stratify their job offers monotonically, and even maximally, so that, if indeed there happens to be skill differences in the labor market, they can, then, allocate less competent workers to easier roles, and avoid wasting talent, thus ``saving their best'' for the most demanding tasks.
+        
+        Mathematically,
+        \begin{gather}
+            l \in \left[
+            \frac{\ell - 1}{w_q}
+            ,
+            \frac{\ell}{w_q}
+            \right]
+            ,
+            \ell \in 
+            \left\{
+                1, \dots, w_q
+            \right\}
+        \end{gather}
+        is a responsability spectrum in a maximally stratified labor market, in which employment levels are given by
+        \begin{gather}
+            \sum_{\ell=1}^{w_q}
+            w_{q}^{\ell}
+            =
+            w_q
+            ,
+        \end{gather}
+        so that any available position is its own job subtype and covers only a restrictive range of task difficulty, accounting for
+        \begin{gather}
+            \Omega_{q}^{\ell} = 
+            \frac{1}{\mho_{q}^{\ell}} = 
+            \int_{
+                \frac{\ell - 1}{w_q}
+            }^{
+                \frac{\ell}{w_q}
+            }
+            \text{ta}(l)dl
+        \end{gather}
+        of an operation's total time duration
+        \begin{gather}
+            \sum_{\ell=1}^{w_q}
+            \Omega_{q}^{\ell} 
+            = 
+            \sum_{\ell=1}^{w_q}
+            \int_{
+                \frac{\ell - 1}{w_q}
+            }^{
+                \frac{\ell}{w_q}
+            }
+            \text{ta}(l)dl
+            =
+            \int_{0}^{1}
+            \text{ta}(l)dl
+            =
+            1
+            .
+        \end{gather}
+
+        Intuitively speaking, we would say production in a maximally and monotonically stratified labor market is not ``independent'', [in the sense that each employee does not work on the entire operation from beginning to end. This means each employee] will spend all their time allowance producing a partial operational output, that is a multiple of the difficulty subinterval they were hired to accomplish, which will, in turn, contribute, alonside the partial outputs of other employees, to accomplish the complete occupational operation.
+        
+        However, in a maximally stratified labor market, these partial operational outputs, will not be produced merely via ``senior'' and ``junior'' positions, as previously, but rather within a myriad of levels in a production hierarchy, each responsible for a particular subinterval of task difficulty, approximating a continuum of ``seniority'' as the workforce becomes large enough.
+        
+        Again, this does not mean employees are, actually, more or less competent, only that the available positions are [preemptively] stratified with respect to task difficulty. 
+
+        And, indeed, regardless of workers' actual capacity, this arrangement must hold, because the expected value of operational output -- and, therefore, of producers' revenue -- is higher and constant when applying a stratified production strategy when compared to an independent production strategy; for in such a strategy, production is more easily limited by skill differences, and so the expected value of operational output is potentially lower, but never higher. That is, 
+        \begin{gather}
+            \mathbb{E}[
+                \tilde{T}_{q}^{k}
+            ]
+            \in [0,1]
+            \
+            \forall
+            \
+            k,q \in \{1, \dots, n\}
+        \end{gather}
+        implies that
+        \begin{align}
+            \int_{0}^{1}{
+                T(l,\tilde{T}_{q}^{k})
+                \text{ta}(l)
+                dl
+            } 
+            \\
+            \leq
+            \tilde{v}_{q}^{k}
+            \int_{0}^{1}{
+                T(l,\tilde{T}_{q}^{k})
+                \text{ta}(l)
+                dl
+            }
+            +
+            (1 - \tilde{v}_{q}^{k})
+            \int_{0}^{1}{
+                T(l,1)
+                \text{ta}(l)
+                dl
+            } 
+            \\
+            \leq
+            \tilde{w}_{q}^{k}
+            \int_{0}^{\tilde{T}_{q}^{k}}{
+                T(l,\tilde{T}_{q}^{k})
+                \text{ta}(l)
+                dl
+            } + 
+            (1 - \tilde{w}_{q}^{k})
+            \int_{\tilde{T}_{q}^{k}}^{1}{
+                T(l,1)
+                \text{ta}(l)
+                dl
+            }
+            \\
+            =
+            \sum_{k=1?}^{n?}
+            \sum_{\ell=1}^{w_q}
+            \left[
+                k \in \Lambda_{q}^{\ell}
+            \right]
+            \left[
+                \tilde{T}_{q}^{k}
+                \geq 
+                \frac{\ell}{w_q}
+            \right]
+            \tilde{w}_{q}^{\ell}
+            \int_{
+                \frac{\ell - 1}{w_q}
+            }^{
+                \frac{\ell}{w_q}
+            }{
+                \text{ta}(l)
+                dl
+            }
+            \\
+            =
+            \int_{0}^{1}{
+                T(l,1)
+                \text{ta}(l)
+                dl
+            }
+            \\
+            =
+            \int_{0}^{1}{
+                \text{ta}(l)
+                dl
+            }
+            \\
+            =
+            1
+            ,
+        \end{align}
+        where $\tilde{v}_{q}^{k} > \tilde{w}_{q}^{k}$, with $\tilde{v}_{q}^{k}, \tilde{w}_{q}^{k} \in [0,1]$, is an inefficient allocation of workers above the optimal relative employment level $\tilde{w}_{q}^{k}$ in a semi-stratified labor market; and the double sum in equation (ref) is the output of a maximally stratified labor market, in which every $\ell \in \{1, \dots, w_q\}$ job subtype is but a fraction of available positions, with a partial workforce of $w_q \times \tilde{w}_{q}^{\ell}$ individuals, all exclusively dedicated to their own responsability spectrum, and identified by $[k \in \Lambda_{q}^{\ell}]$ employment statuses that are evaluated to 1 if they are employed in a particular $\Lambda_{q}^{\ell}$ strata of the labor market, and to 0 for all other job subtypes; while the remaining equations are the maximum operational output of a labor market with $w_q$ perfectly qualified employees working independently on the entire responsability spectrum of occupation $q$'s operation. Or, more succinctly,
+        \begin{align}
+            &\mathbb{E}[
+                \mho_{q}^{\text{IP}}
+                \
+                |
+                \
+                \mathbb{E}[
+                    \tilde{T}_{q}^{k}
+                ]
+                \in [0,1]
+                \
+                \forall
+                \
+                k,q \in \{1, \dots, n\}
+            ]
+            \\
+            &\leq
+            \mathbb{E}[
+                \mho_{q}^{\text{IS}}
+                \
+                |
+                \
+                \mathbb{E}[
+                    \tilde{T}_{q}^{k}
+                ]
+                \in [0,1]
+                \
+                \forall
+                \
+                k,q \in \{1, \dots, n\}
+            ]
+            \\
+            &\leq
+            \mathbb{E}[
+                \mho_{q}^{\text{MS}}
+                \
+                |
+                \
+                \mathbb{E}[
+                    \tilde{T}_{q}^{k}
+                ]
+                \in [0,1]
+                \
+                \forall
+                \
+                k,q \in \{1, \dots, n\}
+            ]
+            \\
+            &=
+            \mathbb{E}[
+                \mho_{q}^{\text{IP}}
+                \
+                |
+                \
+                \tilde{T}_{q}^{k}
+                = 1
+                \
+                \forall
+                \
+                k,q \in \{1, \dots, n\}
+            ]
+            ,
+        \end{align}
+        where each of the terms above represents the expected value of aggregate operational output given the expected productivity in the workforce, for the three production strategies: maximum-monotonic labor stratification (MS), imperfect-monotonic labor stratification (IS), and independent production (IP).
+
+        In other words, splitting responsabilities in accordance with competence is always as productive as the maximum operational output (viz. that which is obtained when employing perfectly qualified workers independently), provided employees are sufficiently qualified for their responsabilities. But, again, this is, by definition, guaranteed by employers' rationality, as well as the simple fact the economy is already producing its current operational output (Operational Equilibrium Lemma, OEL). 
+        
+        Therefore, employing potentially underqualified workers to output the entire responsability spectrum $l \in [0,1]$ independently can only be as productive as the labor stratification strategy, but never more than it. Indepedent production, then, is a suboptimal strategy when employers expect there to be skill differences in the workforce.
+        
+        Thus, maximum-monotonic labor stratification follows as an insurance policy against worker's potential underqualification: for if talent is lacking in the labor market, there is nothing to gain by employing individuals which are not sufficiently qualified for a difficult job, whereas if talent is abundant, there is nothing to lose when employing overqualified individuals to a job below their skill level.
+
+        Hence, given the same $w_q$ workforce, operational output in a maximally stratified labor market is always greater or equal to the output of any other economic configuration. It is, therefore, always optimal to monotonically and maximally stratify responsabilities across $w_q$ unique positions, each focused on increasingly demanding tasks.
+    
+    Monotonic labor stratification is required and follows logically from employers' perfect rationality axiom.
+    maximum labor stratification is optional, but also follows logically from employers' perfect rationality axiom.
+    
+        Because the General Employability Theorem (GET) holds true for imperfectly stratified labor markets as well, for less than maximum labor stratification is mathematically equivalent to just a variable change. This said, imperfect labor market stratification leads to inefficiencies in hiring, as the base requirements for each stratum are higher than they would be if labor was maximally stratified.
+    
+
+
+Productivity Sufficiency Lemma (PSL)
+
+    dsds
+
+
+% Finally, to identify the optimal $\tilde{w}_{q}^{\ell}$ relative employment levels in the labor market, and thus calculate a generalized employability coefficient, we compare the two production strategies that, as demonstrated, guarantee maximum operational output (viz. maximum-monotonic labor stratification and perfectly qualified independent production).
+% % Finally, in order to identify the optimal $\tilde{w}_{q}^{\ell}$ relative employment levels in the labor market, and thus calculate a generalized employability coefficient, we compare the two production strategies that, as demonstrated, guarantee maximum operational output (viz. maximum-monotonic labor stratification and perfectly qualified independent production).
+
+% Equivalent Operational Output Lemma (EOOL)
+% 
+%     Now, as WOCA states there are no gains nor losses in production due to partial operational outsourcing, the following must hold, in any labor market, even in a maximally stratified one:
+%     \begin{gather}
+%         w_{q}^{\ell}
+%         \mho_{q}^{\ell}
+%         =
+%         w_q
+%         ,
+%     \end{gather}
+%     where $w_q$ is the aggregate operational output of the
+%     \begin{gather}
+%         l \in \left[
+%         \frac{\ell - 1}{w_q}
+%         ,
+%         \frac{\ell}{w_q}
+%         \right]
+%         ,
+%         \ell \in 
+%         \left\{
+%             1, \dots, w_q
+%         \right\}
+%     \end{gather}
+%     responsability spectrum of $q$'s complex tasks when $w_q$ perfectly qualified employees work independently (IOOL); and $w_{q}^{\ell}\mho_{q}^{\ell}$ is the production of $w_{q}^{\ell}$ employees with at least minimum qualification working in a maximally stratified labor market, so that
+%     \begin{gather}
+%         \sum_{\ell=1}^{w_q}
+%         w_{q}^{\ell}
+%         =
+%         w_q
+%         .
+%     \end{gather}
+%     Or, in other words, operational output is equivalent in any production strategy provided the talent employed is sufficiently qualified.
+
+%     And, with this, we derive the Proportional Employment Condition (PEC):
+%     \begin{gather}
+%         w_{q}^{\ell}
+%         \mho_{q}^{\ell}
+%         =
+%         w_q
+%         \iff
+%         \frac{
+%             w_{q}^{\ell}
+%         }{
+%             w_q
+%         }
+%         =
+%         \Omega_{q}^{\ell}
+%         \in [0,1]
+%         ,
+%     \end{gather}
+%     which determines the ratio, or proportion, of a particular job subtype in a stratified labor market is exactly the percentage of an operation's total time duration accounted by it. Thus, activities that require more time also require more dedicated employees working on them full-time, and vice-versa.
+    
+%     Notice, too, this is the same result we had found in the binary stratification example above (of a labor market with only ``junior'' and ``senior'' employees):
+%     \begin{gather}
+%         \tilde{w}_{q}^{\text{Jr}} 
+%         =
+%         \frac{
+%             w_{q}^{\text{Jr}}
+%         }{
+%             w_{q}^{\text{Jr}} + 
+%             w_{q}^{\text{Sr}}
+%         }
+%         =
+%         \frac{
+%             w_{q}^{\text{Jr}}
+%         }{
+%             w_{q}
+%         }
+%         =
+%         \int_{0}^{\tilde{T}_{q}^{\text{Jr}}}
+%             \text{ta}_q(l)
+%             dl
+%         =
+%         \Omega_{q}^{\text{Jr}}
+%         .
+%     \end{gather}
+%     Therefore, this condition must hold in any efficient labor market, irrespective of its stratification's ``granularity''.
+% 
+
+Definition of aggregate employability in a maximally and monotonically stratified labor market is: 
+\begin{gather}
+    \tilde{W}_{k}
+    =
+    \sum_{q=1}^{n}
+    \tilde{W}_{q}^{k}
+    ,
+\end{gather}
+where
+\begin{align}
+    \tilde{W}_{q}^{k}
+    &=
+    \sum_{\ell=1}^{w_q}
+    \left[
+        h_{q}^{k}
+        \geq
+        \frac{1}{2}
+    \right]
+    \left[
+        \tilde{T}_{q}^{k}
+        \geq 
+        \frac{\ell}{w_q}
+    \right]
+    \tilde{w}_{q}^{\ell}
+    \\
+    &=
+    \sum_{\ell=1}^{w_q}
+    \left[
+        h_{q}^{k}
+        \geq
+        \frac{1}{2}
+    \right]
+    \left[
+        \tilde{T}_{q}^{k}
+        \geq 
+        \frac{\ell}{w_q}
+    \right]
+    \frac{
+        {w}_{q}^{\ell}
+    }{
+        w_q
+    }
+\end{align}
+is partial employability, that is one's employability in a particular occupation $q$ in the labor market.
+
+\begin{align}
+    \tilde{W}_k 
+    &=
+    \left(
+        \frac{1}{W}
+    \right)
+    \sum_{q=1}^{n}
+    % \left[
+    %     h_{q}^{k}
+    %     \geq
+    %     \frac{1}{2}
+    % \right]
+    \sum_{v=1}^{w_q}
+    \left[
+        h_{q}^{k}
+        \geq
+        \frac{1}{2}
+    \right]
+    \left[
+        \tilde{T}_{q}^{k}
+        \geq
+        \ell_v
+    \right]
+    \\
+    &=
+    \left(
+        \frac{1}{W}
+    \right)
+    \sum_{q=1}^{n}
+    % \left[
+    %     h_{q}^{k}
+    %     \geq
+    %     \frac{1}{2}
+    % \right]
+    \sum_{v=1}^{w_q}
+    \left[
+        h_{q}^{k}
+        \geq
+        \frac{1}{2}
+    \right]
+    \left[
+        \tilde{T}_{q}^{k}
+        \geq
+        \text{TA}_{q}^{-1}
+        \left(
+            \frac{v}{w_q}
+            +
+            \text{TA}_{q}(0)
+        \right)
+    \right]
+\end{align}
+
+Competitiveness in a maximally-monotonically stratified labor market with irregular responsability ranges (i.e. without partial hiring):
+\begin{align}
+    \tilde{\text{vs}}_k 
+    &=
+    \left(
+        \frac{1}{W}
+    \right)
+    \sum_{q=1}^{n}
+    \left[
+        \ddot{u}_{k}^{q}
+        \geq
+        \frac{1}{2}
+    \right]
+    % \left[
+    %     h_{k}^{q}
+    %     \geq
+    %     \frac{1}{2}
+    % \right]
+    \sum_{v=1}^{w_k}
+    \left[
+        h_{k}^{q}
+        \geq
+        \frac{1}{2}
+    \right]
+    \left[
+        \tilde{T}_{k}^{q}
+        \geq
+        \ell_v
+    \right]
+    \\
+    &=
+    \left(
+        \frac{1}{W}
+    \right)
+    \sum_{q=1}^{n}
+    \left[
+        \ddot{u}_{k}^{q}
+        \geq
+        \frac{1}{2}
+    \right]
+    % \left[
+    %     h_{k}^{q}
+    %     \geq
+    %     \frac{1}{2}
+    % \right]
+    \sum_{v=1}^{w_k}
+    \left[
+        h_{k}^{q}
+        \geq
+        \frac{1}{2}
+    \right]
+    \left[
+        \tilde{T}_{k}^{q}
+        \geq
+        \text{TA}_{k}^{-1}
+        \left(
+            \frac{v}{w_k}
+            +
+            \text{TA}_{k}(0)
+        \right)
+    \right]
+\end{align}
+
+
+Competitiveness in a maximally-monotonically stratified labor market with irregular responsability ranges (i.e. without partial hiring):
+\begin{align}
+    \tilde{\text{vs}}_k 
+    &=
+    \left(
+        \frac{1}{W}
+    \right)
+    \sum_{q=1}^{n}
+    \left[
+        \ddot{u}_{k}^{q}
+        \geq
+        \frac{1}{2}
+    \right]
+    % \left[
+    %     h_{k}^{q}
+    %     \geq
+    %     \frac{1}{2}
+    % \right]
+    \sum_{v=1}^{w_k}
+    \left[
+        h_{k}^{q}
+        \geq
+        \frac{1}{2}
+    \right]
+    \left[
+        \tilde{T}_{k}^{q}
+        \geq
+        \ell_v
+    \right]
+    \\
+    &=
+    \left(
+        \frac{1}{W}
+    \right)
+    \sum_{q=1}^{n}
+    \left[
+        \ddot{u}_{k}^{q}
+        \geq
+        \frac{1}{2}
+    \right]
+    % \left[
+    %     h_{k}^{q}
+    %     \geq
+    %     \frac{1}{2}
+    % \right]
+    \sum_{v=1}^{w_k}
+    \left[
+        h_{k}^{q}
+        \geq
+        \frac{1}{2}
+    \right]
+    \left[
+        \tilde{T}_{k}^{q}
+        \geq
+        \text{TA}_{k}^{-1}
+        \left(
+            \frac{v}{w_k}
+            +
+            \text{TA}_{k}(0)
+        \right)
+    \right]
+\end{align}
+
+P.S.: SSL
+\begin{align}
+    a_{i}^{k} := \frac{l_{i}^{k}}{l_{i}} \in [0,1]
+    \\
+    \tilde{T}_{i}^{k} 
+    &= 
+    \int_{0}^{l_i}{
+        T(l,l_{i}^{k})
+        dl
+    }
+    \left(
+        \int_{0}^{l_i}{
+            T(l,l_{i})
+            dl
+        }
+    \right) ^ {-1}
+    \\
+    &= 
+    \left(
+        \int_{0}^{l_{i}^{k}}{
+            1
+            \times
+            dl
+        }
+        +
+        \int_{l_{i}^{k}}^{l_i}{
+            0
+            \times
+            dl
+        }
+    \right)
+    \times
+    \left(
+        \int_{0}^{l_i}{
+            1
+            \times
+            dl
+        }
+    \right) ^ {-1}
+    \\
+    &= 
+    \frac{l_{i}^{k} - 0}{l_{i} - 0}
+    \\
+    &= 
+    \frac{l_{i}^{k}}{l_{i}}
+    \\
+    &\therefore
+    a_{i}^{k} = \tilde{T}_{i}^{k}
+\end{align}
+
+P.S.: SCL
+\begin{align}
+    \boldsymbol{a_k}
+    &:= (a_{1}^{k}, \dots, a_{m}^{k})
+    ,
+    \boldsymbol{a_q}
+    := (a_{1}^{q}, \dots, a_{m}^{q})
+    \in [0,1]^{m}
+    \
+    \forall
+    \
+    k,q \in \{1, \dots, n\}
+    \\
+    l_{q}^{k}
+    &\leq 
+    l_{q}^{q}
+    \
+    \forall
+    \
+    k,q \in \{1, \dots, n\}
+    \\
+    \tilde{T}_{q}^{k}
+    &= 
+    \int_{0}^{l_{q}^{q}}{
+        T(l,l_{q}^{k})
+        dl
+    }
+    \left(
+        \int_{0}^{l_{q}^{q}}{
+            T(l,l_{q}^{q})
+            dl
+        }
+    \right) ^ {-1}
+    \\
+    &= 
+    \left(
+        \int_{0}^{l_{q}^{k}}{
+            1
+            \times
+            dl
+        }
+        +
+        \int_{l_{q}^{k}}^{l_{q}^{q}}{
+            0
+            \times
+            dl
+        }
+    \right)
+    \times
+    \left(
+        \int_{0}^{l_{q}^{q}}{
+            1
+            \times
+            dl
+        }
+    \right) ^ {-1}
+    \\
+    &= 
+    \frac{l_{q}^{k} - 0}{l_{q}^{q} - 0}
+    \\
+    &= 
+    \frac{l_{q}^{k}}{l_{q}^{q}}
+    \in [0,1]
+    \\
+    &\because
+    \neg
+    \
+    l_{q}^{k}
+    >
+    l_{q}^{q}
+    \\
+    &\because
+    l_{q}^{k} = 
+    f(
+        \boldsymbol{l_k},
+        \boldsymbol{l_q}
+    ) 
+    =
+    f(
+        \boldsymbol{a_k},
+        \boldsymbol{a_q}
+    )?
+    \in [0,1]
+    \
+    \forall
+    \
+    k,q \in \{1, \dots, n\}
+    \\
+    &\therefore
+    \tilde{T}_{q}^{k}
+    =
+    f(
+        \boldsymbol{a_k},
+        \boldsymbol{a_q}
+    )
+\end{align}
+P.S.: Simplified Employability Theorem/Corollary (SET/SEC)
+
+% We want to show that, as with the Binary Employability Theorem (BET), so too in a maximally and monotonically stratified labor market, employability is the percentage of an operation's total time duration one is capable of accomplishing. Or, mathematically,
+We want to show that, as with the Binary Employability Theorem (BET), so too in a maximally and monotonically stratified labor market, employability is the percentage of an operation's total time duration one is capable of producing. Or, mathematically,
+% We want to show that, as with the Binary Employability Theorem (BET), so too in a maximally and monotonically stratified labor market, employability is the percentage of an operation's total time duration one's productivity allows them to accomplish. Or, mathematically,
+\begin{gather}
+    \tilde{W}_{q}^{k}
+    =
+    \int_{0}^{\tilde{T}_{q}^{k}}
+    \text{ta}(l)
+    dl
+    :=
+    \Omega_{q}^{k}
+    \in 
+    [0,1]
+    \
+    \forall
+    \
+    k,q \in \{1, \dots, n\}
+    .
+\end{gather}
+
+% To prove this result, let us consider what would be the employability of person $k$ if they had exactly the minimum required productivity for every job subtype. So, for instance, when $v = 1$,
+To prove this result, let us, then, first consider what would be the employability of person $k$ if they had exactly the minimum required productivity for every job subtype. So, for instance, when $v = 1$,
+\begin{align}
+    \tilde{T}_{q}^{k}
+    =
+    \ell_1
+    =
+    \text{TA}^{-1}
+    \left(
+        \frac{1}{w_q}
+        +
+        \text{TA}(0)
+    \right)
+    \implies
+    \tilde{W}_{q}^{k}
+    =
+    \frac{1}{w_q}
+    ,
+\end{align}
+as a productivity coefficient of $\tilde{T}_{q}^{k} = \ell_1$ is just enough to be hireable on the easiest job in occupation $q$'s labor market, but not on the second, much less on the remaining, more difficult, positions.
+
+Likewise, for other values of $v$, we have
+\begin{gather}
+    \tilde{T}_{q}^{k}
+    =
+    \ell_2
+    =
+    \text{TA}^{-1}
+    \left(
+        \frac{2}{w_q}
+        +
+        \text{TA}(0)
+    \right)
+    \implies
+    \tilde{W}_{q}^{k}
+    =
+    \frac{2}{w_q}
+    ,
+    \\
+    \tilde{T}_{q}^{k}
+    =
+    \ell_3
+    =
+    \text{TA}^{-1}
+    \left(
+        \frac{3}{w_q}
+        +
+        \text{TA}(0)
+    \right)
+    \implies
+    \tilde{W}_{q}^{k}
+    =
+    \frac{3}{w_q}
+    ,
+    \\
+    \vdots
+    \\
+    \tilde{T}_{q}^{k}
+    =
+    \ell_{v}
+    =
+    \text{TA}^{-1}
+    \left(
+        \frac{v}{w_q}
+        +
+        \text{TA}(0)
+    \right)
+    \implies
+    \tilde{W}_{q}^{k}
+    =
+    \frac{v}{w_q}
+    ,
+\end{gather}
+so that we may derive the following pattern for any $v \in \{1, \dots, w_q\}$:
+% \begin{align}
+%     \tilde{T}_{q}^{k}
+%     % =
+%     % \text{TA}^{-1}
+%     % \left(
+%     %     \frac{v}{w_q}
+%     %     +
+%     %     \text{TA}(0)
+%     % \right)
+%     % \implies
+%     % \tilde{W}_{q}^{k}
+%     % =
+%     % \frac{v}{w_q}
+%     % \\
+%     % &\therefore
+%     % \tilde{T}_{q}^{k}
+%     &=
+%     \text{TA}^{-1}
+%     \left(
+%         \tilde{W}_{q}^{k}
+%         +
+%         \text{TA}(0)
+%     \right)
+%     \\
+%     \therefore
+%     \text{TA}
+%     (
+%     % \left(
+%         \tilde{T}_{q}^{k}
+%     )
+%     % \right)
+%     &=
+%     \text{TA}
+%     \left(
+%         \text{TA}^{-1}
+%         \left(
+%             \tilde{W}_{q}^{k}
+%             +
+%             \text{TA}(0)
+%         \right)
+%     \right)
+%     \\
+%     \therefore
+%     \text{TA}
+%     (
+%     % \left(
+%         \tilde{T}_{q}^{k}
+%     )
+%     % \right)
+%     &=
+%     \tilde{W}_{q}^{k}
+%     +
+%     \text{TA}(0)
+%     \\
+%     \therefore
+%     \tilde{W}_{q}^{k}
+%     &=
+%     \text{TA}
+%     (
+%     % \left(
+%         \tilde{T}_{q}^{k}
+%     )
+%     % \right)
+%     -
+%     \text{TA}(0)
+%     =
+%     \int_{0}^{\tilde{T}_{q}^{k}}
+%     \text{ta}(l)
+%     dl
+%     :=
+%     \Omega_{q}^{k}
+%     \in 
+%     [0,1]
+%     ,
+% \end{align}
+\begin{align}
+    &\tilde{T}_{q}^{k}
+    % =
+    % \text{TA}^{-1}
+    % \left(
+    %     \frac{v}{w_q}
+    %     +
+    %     \text{TA}(0)
+    % \right)
+    % \implies
+    % \tilde{W}_{q}^{k}
+    % =
+    % \frac{v}{w_q}
+    % \\
+    % &\therefore
+    % \tilde{T}_{q}^{k}
+    =
+    \text{TA}^{-1}
+    \left(
+        \tilde{W}_{q}^{k}
+        +
+        \text{TA}(0)
+    \right)
+    \\
+    &
+    \therefore
+    \text{TA}
+    (
+    % \left(
+        \tilde{T}_{q}^{k}
+    )
+    % \right)
+    =
+    \text{TA}
+    \left(
+        \text{TA}^{-1}
+        \left(
+            \tilde{W}_{q}^{k}
+            +
+            \text{TA}(0)
+        \right)
+    \right)
+    \\
+    &
+    \therefore
+    \text{TA}
+    (
+    % \left(
+        \tilde{T}_{q}^{k}
+    )
+    % \right)
+    =
+    \tilde{W}_{q}^{k}
+    +
+    \text{TA}(0)
+    \\
+    &
+    \therefore
+    \tilde{W}_{q}^{k}
+    =
+    \text{TA}
+    (
+    % \left(
+        \tilde{T}_{q}^{k}
+    )
+    % \right)
+    -
+    \text{TA}(0)
+    =
+    \int_{0}^{\tilde{T}_{q}^{k}}
+    \text{ta}(l)
+    dl
+    :=
+    \Omega_{q}^{k}
+    \in 
+    [0,1]
+    ,
+\end{align}
+as we wanted to show.
+
+However, because $\tilde{T}_{q}^{k} \in [0,1]$ is not discretized as responsability ranges $l \in [l_{v-1},l_{v}], v \in \{1, \dots, w_q\}$ are, and because rational employers do not hire insufficiently qualified employees, we must approximate $\tilde{T}_{q}^{k}$ with the closest 
+\begin{gather}
+    \tilde{T}_{q}^{\kappa}
+    =
+    \left(
+        \frac{1}{w_q}
+    \right)
+    \sum_{v=1}^{w_q}
+    \left[
+        \tilde{T}_{q}^{k}
+        \geq
+        l_v
+    \right]
+\end{gather}
+productivity estimate, such that $\tilde{T}_{q}^{k} \geq \tilde{T}_{q}^{\kappa}$ and $\tilde{T}_{q}^{k} \approx \tilde{T}_{q}^{\kappa}$, where $
+\tilde{T}_{q}^{\kappa} = \ell_{\kappa} \in \{\ell_0, \dots, \ell_{w_q}\}$ determines the most demanding task for which $k$ is still productive. Therefore, the adjusted coefficient is:
+\begin{gather}
+    \tilde{W}_{q}^{k}
+    =
+    \int_{0}^{\tilde{T}_{q}^{\kappa}}
+    \text{ta}(l)
+    dl
+    :=
+    \Omega_{q}^{\kappa}
+    \approx
+    \int_{0}^{\tilde{T}_{q}^{k}}
+    \text{ta}(l)
+    dl
+    \in 
+    [0,1]
+    ,
+\end{gather}
+when $w_q$ is large enough.
+
+Of course, this assumes candidate $k$ is evaluated as ``employable'' in accordance with the hireability statistic
+\begin{gather}
+    \left[
+        h_{q}^{k}
+        \geq
+        \frac{1}{2}
+    \right]
+    ,
+\end{gather}
+which accounts for selection criteria besides minimum required productivity. Thus, a more complete formulation would be:
+\begin{gather}
+    \tilde{W}_{q}^{k}
+    =
+    \left[
+        h_{q}^{k}
+        \geq
+        \frac{1}{2}
+    \right]
+    \int_{0}^{\tilde{T}_{q}^{\kappa}}
+    \text{ta}(l)
+    dl
+    % \in 
+    % [0,1]
+    ;
+\end{gather}
+or, in the aggregate form,
+\begin{gather}
+    \tilde{W}_k 
+    = 
+    \left(
+        \frac{1}{W}
+    \right)
+    \sum_{q=1}^{n}
+    \left[
+        h_{q}^{k}
+        \geq
+        \frac{1}{2}
+    \right]
+    \int_{0}^{\tilde{T}_{q}^{\kappa}}
+    \text{ta}(l)
+    dl
+    % \\
+    :=
+    \left(
+        \frac{1}{W}
+    \right)
+    \sum_{q=1}^{n}
+    \left[
+        h_{q}^{k}
+        \geq
+        \frac{1}{2}
+    \right]
+    \Omega_{q}^{\kappa}
+    \\
+    % &
+    \
+    \forall
+    \
+    \tilde{T}_{q}^{\kappa} \in \{
+        \ell_{0}, 
+        \dots, 
+        \ell_{w_q}
+        % 
+        % \ell_{q}^{0}, 
+        % \dots, 
+        % \ell_{q}^{w_q}
+        % 
+        % \ell_{0}^{q}, 
+        % \dots, 
+        % \ell_{w_q}^{q}
+    \}
+    % ,
+    ;
+    k,q \in \{1, \dots, n\}
+    .
+\end{gather}
+
+% endregion
+
+\subsection{Corollaries}
+
+% endregion
+
+% region: implementation 
+\section{Example Implementation}
+\subsection{Functional Specifications}
+\subsection{Occupational Information Network Data}
+\subsection{Results}
+
+% endregion
+
+% region: discussion 
+\section{Discussion}
+
+% endregion
+
+% region: conclusion 
+\section{Conclusion}
+
+% endregion
+
+% region: references 
+\newpage
+\printbibliography[
+    heading=bibintoc,
+    title={References}
+]
+
+% endregion
+
+% region: appendix 
+\newpage
+\section*{Appendix A -- Basic Definitions}
+\addcontentsline{toc}{section}{Appendix A -- Basic Definitions}
+
+\section*{Appendix B -- Employability and Competitiveness Statistics}
+\addcontentsline{toc}{section}{Appendix B -- Employability and Competitiveness Statistics}
+
+\section*{Appendix C -- Proof Layout}
+\addcontentsline{toc}{section}{Appendix C -- Proof Layout}
+
+% endregion
+
+\end{document}

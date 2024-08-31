@@ -1,0 +1,646 @@
+% definition
+\theoremstyle{definition}
+\newtheorem{definition}{Definition}
+
+% subdefinition
+\theoremstyle{definition}
+\newtheorem{subdefinition}{Definition}[definition]
+
+% axiom
+\theoremstyle{definition}
+\newtheorem{axiom}{Axiom}
+
+% subaxiom
+\theoremstyle{axiom}
+\newtheorem{subaxiom}{Axiom}[axiom]
+
+% lemma
+\newtheorem{lemma}{Lemma}
+
+% theorem
+\newtheorem{theorem}{Theorem}
+
+%  employability theorem
+\newtheorem*{etheorem}{Employability Theorem}
+
+% corollary
+\newtheorem{corollary}{Corollary}
+% \newtheorem{corollary}{Corollary}[theorem]
+
+% % region: proof layout 
+% \newcommand{\ProofLayout}{
+%     \label{proof_layout}
+
+%     % statement
+%     \begin{theorem}
+%         dsds
+%     \end{theorem}
+
+%     % proof
+%     \begin{proof}
+%         independent perfectly qualified worker
+%         \begin{gather}
+%             w_{q}^{\ell} = \Omega_{q}^{\ell}
+%         \end{gather}
+        
+%         output of independent perfectly qualified worker
+%         \begin{gather}
+%             w_{q}^{\ell} 
+%             \mho_{q}^{\ell}
+%             = 
+%             \Omega_{q}^{\ell}
+%             \mho_{q}^{\ell}
+%             = 1
+%         \end{gather}
+        
+%         aggregate output of $w_q$ independent perfectly qualified workers
+%         \begin{gather}
+%             w_{q}^{\ell} 
+%             \mho_{q}^{\ell}
+%             w_q
+%             = 
+%             \Omega_{q}^{\ell}
+%             \mho_{q}^{\ell}
+%             w_q
+%             = 1 \times w_q
+%             = w_q
+%         \end{gather}
+
+%         [operational equilibrium lemma/tautology: demonstrate the current employed talent is sufficient to produce the current operational output]
+
+%         max-monotonic labor stratification is the optimal production strategy when there could be skill differences among workers in the labor market:
+%         \begin{align}
+%             &
+%             \mathbb{E}[
+%                 \mho_{q}^{\text{IP}}
+%                 \
+%                 |
+%                 \
+%                 \mathbb{E}[
+%                     \tilde{T}_{q}^{k}
+%                     \in
+%                     [0,1]
+%                     \
+%                     \forall
+%                     \
+%                     k,q
+%                     \in
+%                     \{1, \dots, n\}
+%                 ]
+%             ]
+%             \\&
+%             \leq
+%             \mathbb{E}[
+%                 \mho_{q}^{\text{MS}}
+%                 \
+%                 |
+%                 \
+%                 \mathbb{E}[
+%                     \tilde{T}_{q}^{k}
+%                     \in
+%                     [0,1]
+%                     \
+%                     \forall
+%                     \
+%                     k,q
+%                     \in
+%                     \{1, \dots, n\}
+%                 ]
+%             ]
+%             \\&
+%             =
+%             \mathbb{E}[
+%                 \mho_{q}^{\text{IP}}
+%                 \
+%                 |
+%                 \
+%                 \mathbb{E}[
+%                     \tilde{T}_{q}^{k}
+%                     = 1
+%                     \
+%                     \forall
+%                     \
+%                     k,q
+%                     \in
+%                     \{1, \dots, n\}
+%                 ]
+%             ]
+%         \end{align}
+
+%         operational output in a maximally-monotonically stratified labor market is equivalent to independent perfectly qualified production:
+%         \begin{gather}
+%             w_{q}^{\ell}
+%             \mho_{q}^{\ell}
+%             = w_q
+%             \iff
+%             \frac{
+%                 w_{q}^{\ell}
+%             }{
+%                 w_q
+%             }
+%             =
+%             \Omega_{q}^{\ell}
+%             \in [0,1]
+%         \end{gather}
+
+%         employability definition in a maximally stratified labor market:
+%         \begin{align}
+%             \tilde{W}_{q}^{k}
+%             &= 
+%             \sum_{\ell=1}^{w_q}{
+%                 \left[
+%                     h_{q}^{k} \geq \frac{1}{2}
+%                 \right]
+%                 \left[
+%                     \tilde{T}_{q}^{k} \geq \frac{\ell}{w_q}
+%                 \right]
+%                 \tilde{w}_{q}^{\ell}
+%             }
+%             \\
+%             &=
+%             \sum_{\ell=1}^{w_q}{
+%                 \left[
+%                     h_{q}^{k} \geq \frac{1}{2}
+%                 \right]
+%                 \left[
+%                     \tilde{T}_{q}^{k} \geq \frac{\ell}{w_q}
+%                 \right]
+%                 \frac{w_{q}^{\ell}}{w_q}   
+%             }
+%         \end{align}
+
+%         therefore,
+%         \begin{gather}
+%             \tilde{W}_{q}^{k}
+%             =
+%             \sum_{\ell=1}^{w_q}{
+%                 \left[
+%                     h_{q}^{k} \geq \frac{1}{2}
+%                 \right]
+%                 \left[
+%                     \tilde{T}_{q}^{k} \geq \frac{\ell}{w_q}
+%                 \right]
+%                 \Omega_{q}^{\ell}
+%             }
+%         \end{gather}
+
+%         aggregate employability:
+%         \begin{gather}
+%             \tilde{W}_{k}
+%             =
+%             \sum_{q=1}^{n}{
+%                 \tilde{W}_{q}^{k}
+%             }
+%         \end{gather}
+
+%         therefore,
+%         \begin{gather}
+%             \tilde{W}_{k}
+%             =
+%             \sum_{q=1}^{n}
+%             \sum_{\ell=1}^{w_q}{
+%                 \left[
+%                     h_{q}^{k} \geq \frac{1}{2}
+%                 \right]
+%                 \left[
+%                     \tilde{T}_{q}^{k} \geq \frac{\ell}{w_q}
+%                 \right]
+%                 \Omega_{q}^{\ell}
+%             }
+%         \end{gather}
+
+%         aggregate competitiveness definition:
+%         \begin{gather}
+%             \text{vs}_{k}
+%             =
+%             \sum_{q=1}^{n}{
+%                 \left[
+%                     \ddot{u}_{k}^{q}
+%                     \geq
+%                     \frac{1}{2}
+%                 \right]
+%                 \tilde{W}_{k}^{q}
+%             }
+%         \end{gather}
+
+%         therefore,
+%         \begin{gather}
+%             \text{vs}_{k}
+%             =
+%             \sum_{q=1}^{n}{
+%                 \left[
+%                     \ddot{u}_{k}^{q}
+%                     \geq
+%                     \frac{1}{2}
+%                 \right]
+%                 \sum_{\ell=1}^{w_k}{
+%                     \left[
+%                         h_{k}^{q} \geq \frac{1}{2}
+%                     \right]
+%                     \left[
+%                         \tilde{T}_{k}^{q} \geq \frac{\ell}{w_k}
+%                     \right]
+%                     \Omega_{k}^{\ell}
+%                 }
+%             }
+%         \end{gather}
+%     \end{proof}
+% }
+
+% % endregion
+
+% % region: employability theorem (et) 
+% % the  employability of a person in a particular occupation
+% % is the percentage of that occupation's operation total time duration
+% % that their skill set allows them to accomplish
+% \newcommand{\ET}{
+%     \label{et}
+
+%     % statement
+%     \begin{etheorem}
+%         The  employability of a person in a particular occupation is the percentage of that occupation's operation total time duration that their skill set allows them to accomplish.
+%     \end{etheorem}
+
+%     % proof
+%     \begin{proof}
+%         Employment by difficulty level:
+%         \begin{gather}
+%             w_q(\bar{l}) = 
+%             w_q 
+%             \times
+%             \text{ta}_q(\bar{l})
+%         \end{gather}
+        
+%         Employability per occupation:
+%         \begin{align}
+%             w_{q}^{k} &=
+%             [
+%                 \tilde{Y}_{q}^{k}
+%                 \ddot{\tau}_{q}^{k}
+%                 s_{kq}^{\theta}
+%                 \geq 0.5
+%                 % \tilde{Y}_{q}^{k}
+%                 % \ddot{\tau}_{kq}^{\theta}
+%                 % \geq 0.5
+%             ]
+%             \times
+%             \int_{0}^{1}
+%             T(l, l_{q}^{k})
+%             w_q(l)
+%             dl
+%             \\
+%             &=
+%             [
+%                 \tilde{Y}_{q}^{k}
+%                 \ddot{\tau}_{q}^{k}
+%                 s_{kq}^{\theta}
+%                 \geq 0.5
+%                 % \tilde{Y}_{q}^{k}
+%                 % \ddot{\tau}_{kq}^{\theta}
+%                 % \geq 0.5
+%             ]
+%             \times
+%             \int_{0}^{1}
+%             % T(l, l_{q}^{k})
+%             [l_{q}^{k} \geq l]
+%             % [l \leq l_{q}^{k}]
+%             w_q 
+%             \text{ta}_q(l)
+%             dl
+%             \\
+%             &=
+%             [
+%                 \tilde{Y}_{q}^{k}
+%                 \ddot{\tau}_{q}^{k}
+%                 s_{kq}^{\theta}
+%                 \geq 0.5
+%                 % \tilde{Y}_{q}^{k}
+%                 % \ddot{\tau}_{kq}^{\theta}
+%                 % \geq 0.5
+%             ]
+%             \times
+%             w_q
+%             \left(
+%                 \int_{0}^{l_{q}^{k}}
+%                     1 \times
+%                     \text{ta}_q(l)
+%                     dl
+%                 + 
+%                 \int_{l_{q}^{k}}^{1}
+%                     0 \times
+%                     \text{ta}_q(l)
+%                     dl
+%             \right)
+%             \\
+%             &=
+%             [
+%                 \tilde{Y}_{q}^{k}
+%                 \ddot{\tau}_{q}^{k}
+%                 s_{kq}^{\theta}
+%                 \geq 0.5
+%                 % \tilde{Y}_{q}^{k}
+%                 % \ddot{\tau}_{kq}^{\theta}
+%                 % \geq 0.5
+%             ]
+%             \times
+%             w_q
+%             \int_{0}^{l_{q}^{k}}
+%             \text{ta}_q(l)
+%             dl
+%         \end{align}
+        
+%         And with $
+%         l_{q}^{k}
+%         = \tilde{Y}_{q}^{k}
+%         = \tilde{Y}(\boldsymbol{a_k}, \boldsymbol{a_q})
+%         = Y(\boldsymbol{a_k}, \boldsymbol{a_q}) / Y(\boldsymbol{a_q}, \boldsymbol{a_q})$,
+%         \begin{gather}
+%             w_{q}^{k} =
+%             \left\lfloor
+%                 [
+%                     \tilde{Y}_{q}^{k}
+%                     \ddot{\tau}_{q}^{k}
+%                     s_{kq}^{\theta}
+%                     \geq 0.5
+%                     % \tilde{Y}_{q}^{k}
+%                     % \ddot{\tau}_{kq}^{\theta}
+%                     % \geq 0.5
+%                 ]
+%                 \times
+%                 w_q
+%                 \int_{0}^{\tilde{Y}_{q}^{k}}
+%                 \text{ta}_q(l)
+%                 dl
+%             \right\rfloor
+%         \end{gather}
+%     \end{proof}
+
+% }
+
+% % endregion
+
+% % region: aggregate employability corollary (aec) 
+% % a person's employability in a certain subset of the labor market
+% % is calculated by their average employability on that subset of the labor market,
+% % weighted by each occupation's employment levels
+% \newcommand{\AEC}{
+%     \label{aec}
+
+%     % statement
+%     \begin{corollary}[Aggregate Employability Corollary]
+%         A person's employability in a certain subset of the labor market is calculated by their average employability on that subset of the labor market, weighted by each occupation's employment levels.
+%     \end{corollary}
+
+%     % proof
+%     \begin{proof}
+%         Aggregate employability (entire economy):
+%         \begin{gather}
+%             \begin{align}
+%                 \tilde{w}_{k} 
+%                 % = \tilde{w}_{11}^{k}
+%                 % = \tilde{w}_{k}(1, 1)
+%                 % &=
+%                 % \sum_{q=1}^{n}{
+%                 %     [
+%                 %         \tilde{Y}_{q}^{k}
+%                 %         \ddot{\tau}_{q}^{k}
+%                 %         s_{kq}^{\theta}
+%                 %         \geq 0.5
+%                 %     ]
+%                 %     w_{q}^{k}
+%                 % }
+%                 % \\
+%                 &=
+%                 \frac{1}{W}
+%                 \sum_{q=1}^{n}{
+%                     w_{q}^{k}
+%                 }
+%                 \\
+%                 &=
+%                 \frac{1}{W}
+%                 \sum_{q=1}^{n}{
+%                     \left\lfloor
+%                         [
+%                         \tilde{Y}_{q}^{k}
+%                         \ddot{\tau}_{q}^{k}
+%                         s_{kq}^{\theta}
+%                         \geq 0.5
+%                         % \tilde{Y}_{q}^{k}
+%                         % \ddot{\tau}_{kq}^{\theta}
+%                         % \geq 0.5
+%                         ]
+%                         \int_{0}^{\tilde{Y}_{q}^{k}}{
+%                             w_q
+%                             \text{ta}_q(l)
+%                             dl
+%                         }
+%                     \right\rfloor
+%                 }
+%                 ,
+%             \end{align}
+%             \\
+%             W = \sum_{k=1}^{n}{w_k}
+%             ,\\
+%             \tilde{Y}_{q}^{k} = 
+%             \tilde{Y}(
+%                 \boldsymbol{a_k},
+%                 \boldsymbol{a_q}
+%                 ) =
+%                 \frac{
+%                     \prod_{i=1}^{m}{
+%                         {
+%                             \max(
+%                                 1 + a_{i}^{k},
+%                                 1 + a_{i}^{q}
+%                             )
+%                         } ^ {
+%                             \sigma_{i}^{q}
+%                         }
+%                     }
+%                 }{
+%                     \prod_{i=1}^{m}{
+%                         {
+%                             (
+%                                 1 + a_{i}^{q}
+%                             )
+%                         } ^ {
+%                             \sigma_{i}^{q}
+%                         }
+%                     }
+%                 }
+%                 ,\\
+%                 \sigma_{i}^{q} = 
+%                 \frac{
+%                     a_{i}^{q}
+%                 }{
+%                     \sum_{i=1}^{m}{
+%                         a_{i}^{q}
+%                     }
+%                 }
+%         \end{gather}
+        
+%         P.S.: think of a notation for economic taxa / aggregation levels.
+        
+%         Aggregate employability (particular subset of the economy):
+%         \begin{gather}
+%             \begin{align}
+%                 \tilde{w}_{?!}^{k} =
+%                 \tilde{w}_{k}(?, !)
+%                 % &=
+%                 % \sum_{q=1}^{n}{
+%                 %     [
+%                 %         \tilde{Y}_{q}^{k}
+%                 %         \ddot{\tau}_{q}^{k}
+%                 %         s_{kq}^{\theta}
+%                 %         \geq 0.5
+%                 %     ]
+%                 %     w_{q}^{k}
+%                 % }
+%                 % \\
+%                 &=
+%                 \sum_{q=1}^{n}{
+%                     [q \in ?!]
+%                     [
+%                         % \tilde{Y}_{q}^{k}
+%                         % \ddot{\tau}_{q}^{k}
+%                         % s_{kq}^{\theta}
+%                         % \geq 0.5
+%                         \tilde{Y}_{q}^{k}
+%                         \ddot{\tau}_{kq}^{\theta}
+%                         \geq 0.5
+%                     ]
+%                     w_{q}^{k}
+%                 }
+%                 \\
+%                 &=
+%                 \sum_{q=1}^{n}{
+%                     \left\lfloor
+%                         [q \in ?!]
+%                         [
+%                         % \tilde{Y}_{q}^{k}
+%                         % \ddot{\tau}_{q}^{k}
+%                         % s_{kq}^{\theta}
+%                         % \geq 0.5
+%                         \tilde{Y}_{q}^{k}
+%                         \ddot{\tau}_{kq}^{\theta}
+%                         \geq 0.5
+%                         ]
+%                         \int_{0}^{\tilde{Y}_{q}^{k}}{
+%                             w_q
+%                             \text{ta}_q(l)
+%                             dl
+%                         }
+%                     \right\rfloor
+%                 }
+%                 ,
+%             \end{align}
+%             \\
+%             \tilde{Y}_{q}^{k} = 
+%             \tilde{Y}(
+%                 \boldsymbol{a_k},
+%                 \boldsymbol{a_q}
+%                 ) =
+%                 \frac{
+%                     \prod_{i=1}^{m}{
+%                         {
+%                             \max(
+%                                 1 + a_{i}^{k},
+%                                 1 + a_{i}^{q}
+%                             )
+%                         } ^ {
+%                             \sigma_{i}^{q}
+%                         }
+%                     }
+%                 }{
+%                     \prod_{i=1}^{m}{
+%                         {
+%                             (
+%                                 1 + a_{i}^{q}
+%                             )
+%                         } ^ {
+%                             \sigma_{i}^{q}
+%                         }
+%                     }
+%                 }
+%                 ,\\
+%                 \sigma_{i}^{q} = 
+%                 \frac{
+%                     a_{i}^{q}
+%                 }{
+%                     \sum_{i=1}^{m}{
+%                         a_{i}^{q}
+%                     }
+%                 }
+%         \end{gather}
+%     \end{proof}
+
+% }
+
+% % endregion
+
+% % region: occupational competitiveness corollary (occ) 
+% \newcommand{\OCC}{
+%     \label{occ}
+
+%     % statement
+%     \begin{corollary}[Occupational Competitiveness Corollary]
+
+%     \end{corollary}
+
+%     % proof
+%     \begin{proof}
+
+%     \end{proof}
+
+% }
+
+% % endregion
+
+% % region: aggregate competitiveness corollary (acc) 
+% \newcommand{\ACC}{
+%     \label{acc}
+
+%     % statement
+%     \begin{corollary}[Aggregate Competitiveness Corollary]
+
+%     \end{corollary}
+
+%     % proof
+%     \begin{proof}
+
+%     \end{proof}
+
+% }
+
+% % endregion
+
+% % region: proportionate compensation corollary (pcc) 
+% \newcommand{\PCC}{
+%     \label{pcc}
+
+%     % statement
+%     \begin{corollary}[Proportionate Compensation Corollary]
+%         Because employers are rational, employees will be payed the exact portion of the market value they generate with their work.
+%     \end{corollary}
+
+%     % proof
+%     \begin{proof}
+
+%     \end{proof}
+
+% }
+
+% % endregion
+
+% % region: dsds 
+% % occupational divisibility remark 1 (odr 1) on occ
+% % one can only accomplish the part of an occupation's operation
+% % that one is sufficiently qualified for
+% % one can accomplish parts of an operation even if productivity < 1
+
+% % occupational divisibility remark 2 (odr 2) on occ
+% % if one cannot accomplish parts of an occupation's operation,
+% % then these harder levels of the operation can be outsourced
+% % though a holistic operation is not divisible, difficulty levels are
+
+% % endregion
