@@ -4758,7 +4758,7 @@ The General Employability Theorem has a few interesting collolaries, the first, 
         \end{align}
         as we wanted to show.
         
-        However, because $\tilde{T}_{q}^{k} \in [0,1]$ is not discretized as responsability ranges $l \in [l_{v-1},l_{v}], v \in \{1, \dots, w_q\}$ are, and because rational employers do not hire insufficiently qualified employees, we must approximate $\tilde{T}_{q}^{k}$ with the closest 
+        However, because $\tilde{T}_{q}^{k} \in [0,1]$ is not as discretized as responsability ranges $l \in [\ell_{v-1},\ell_{v}], v \in \{1, \dots, w_q\}$ are, and because rational employers do not hire insufficiently qualified employees, we must approximate $\tilde{T}_{q}^{k}$ with the closest 
         \begin{gather}
             \tilde{T}_{q}^{\kappa}
             =
@@ -4769,10 +4769,10 @@ The General Employability Theorem has a few interesting collolaries, the first, 
             \left[
                 \tilde{T}_{q}^{k}
                 \geq
-                l_v
+                \ell_v
             \right]
         \end{gather}
-        productivity estimate, such that $\tilde{T}_{q}^{k} \geq \tilde{T}_{q}^{\kappa}$ and $\tilde{T}_{q}^{k} \approx \tilde{T}_{q}^{\kappa}$, where $
+        productivity estimate, such that $\tilde{T}_{q}^{k} \geq \tilde{T}_{q}^{\kappa}$, but $\tilde{T}_{q}^{k} \approx \tilde{T}_{q}^{\kappa}$, where $
         \tilde{T}_{q}^{\kappa} = \ell_{\kappa} \in \{\ell_0, \dots, \ell_{w_q}\}$ determines the most demanding task for which $k$ is still productive. Therefore, the adjusted coefficient is:
         \begin{gather}
             \tilde{W}_{q}^{k}
@@ -4801,7 +4801,7 @@ The General Employability Theorem has a few interesting collolaries, the first, 
             \right]
             ,
         \end{gather}
-        which accounts for selection criteria besides minimum required productivity. Thus, a more complete formulation would be:
+        which accounts for selection criteria besides minimum required productivity. Hence, a more complete formulation would be:
         \begin{gather}
             \tilde{W}_{q}^{k}
             =
@@ -4870,7 +4870,7 @@ In addition, the General Employability Theorem can be used to prove the General 
     \label{def_competitiveness}
     Labor market competitiveness can be defined in a variety of ways. The typical is to think of competitiveness as a ratio of job seekers to the number of available positions. Thus, we say would an occupation's labor market is ``competitive'' if there are too many incumbents per job post.
     
-    However, this definition has two main flaws: 1) it can be somewhat cumbersome, if not impossible, to gather the necessary data, for every labor market, in shifting conditions, to accurately assess competitiveness; 2) even if such data is available and trustworthy, incumbents per job posts is not that much of an interpretable, or at least complete, statistic.
+    However, this definition has two main flaws: 1) it can be somewhat cumbersome, if not impossible, to gather all necessary data, for every labor market, under shifting conditions, to accurately assess competitiveness; 2) and even if such data are available and trustworthy, incumbents per job posts, in and of itself, is not that much of an interpretable, or at least complete, statistic.
     
     So, we may propose an additional, alternative, definition of competitiveness as the percentage of the workforce which would be \textit{willing} and \textit{able} to compete for jobs in a particular labor market:
     \begin{align}
@@ -4939,6 +4939,8 @@ In addition, the General Employability Theorem can be used to prove the General 
     So, what the $\tilde{\text{vs}}_{k}$ (``versus'') competitiveness statistic tells us is that if workers of type $q$ are willing to compete for an occupation $k$'s job posts, they are evaluated in terms of their employability (cf. Definition \ref{def_employability}) and, if found sufficiently qualified, counted as viable incumbents. Or, in other words, competitiveness is the employability of willing and able workers from other labor markets (i.e. it is the complement of employability).
 \end{definition}
 % endregion
+
+And, with this, we may derive the General Competitiveness Corollary.
 % region: general competitiveness corollary (gcc)
 \begin{corollary}[General Competitiveness Corollary, GCC]
     \label{gcc}
@@ -4978,12 +4980,12 @@ In addition, the General Employability Theorem can be used to prove the General 
                 \geq
                 \ddot{u}_{q}^{q}
             \right]
-            \sum_{v=1}^{w_k}
             \left[
                 h_{k}^{q}
                 \geq
                 \frac{1}{2}
             \right]
+            \sum_{v=1}^{w_k}
             \left[
                 \tilde{T}_{k}^{q}
                 \geq
@@ -5000,12 +5002,12 @@ In addition, the General Employability Theorem can be used to prove the General 
                 \geq
                 \ddot{u}_{q}^{q}
             \right]
-            \sum_{v=1}^{w_k}
             \left[
                 h_{k}^{q}
                 \geq
                 \frac{1}{2}
             \right]
+            \sum_{v=1}^{w_k}
             \left[
                 \tilde{T}_{k}^{q}
                 \geq
@@ -5016,6 +5018,7 @@ In addition, the General Employability Theorem can be used to prove the General 
                     \text{TA}_{k}(0)
                 \right)
             \right]
+            .
         \end{align}
     \end{proof}
 \end{corollary}
