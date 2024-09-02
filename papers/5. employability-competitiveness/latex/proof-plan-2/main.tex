@@ -690,11 +690,6 @@ Now, even though these results are basically tautological, they are still import
 
 % endregion
 
-% endregion
-
-% region: demonstration 
-\section{The Employability Theorem}
-\subsection{Demonstration}
 basic presuppositions
 basic lemmas
 complex tasks
@@ -859,29 +854,37 @@ analogously, from the employers' perspective, it does not matter who accomplishe
 furthermore, in a continuous setting, rational employers will maximize their hiring pool by offering more than only two types of jobs. thus, there will not only be ``senior'' and ``junior'' positions, but several levels in a production hierarchy, each responsible for a particular subinterval of task difficulty, which will approximate a continuum of ``seniority'' as the number of workers becomes large enough.
 now, as for employees' work routine, rational employers will have them work over their responsability spectrum in a proportional and optimal matter, thus avoiding wasting production (i.e. uncompleted ``loops'' over the responsability spectrum). [this means each employee will spend their entire time allowance producing a partial operational output, that is a multiple of the difficulty subinterval they were hired to accomplish, which will, in turn, contribute, alonside the partial outputs of other employees, to accomplish the entire occupational operation.]
 the reason this avoids wasting production is because [...].
-Weak Skill Differences Axiom (WSDA)
 
-There are, or there could be, skill differences among people in the workforce (i.e. workers are not all ``clones'' of one another or equally competent). Thus, the expected value of productivity is:
-\begin{gather}
-    \mathbb{E}[
+% region: weak skill differences axiom, wsda
+\begin{axiom}[Weak Skill Differences Axiom, WSDA]
+    There are, or there could be, skill differences among people in the workforce (i.e. workers are not all ``clones'' of one another or equally competent). Thus, the expected value of productivity is:
+    \begin{gather}
+        \mathbb{E}[
+            \tilde{T}_{q}^{k}
+        ]
+        \in
+        [0,1]
+        ,
+    \end{gather}
+    instead of 
+    \begin{gather}
+        \mathbb{E}[
+            \tilde{T}_{q}^{k}
+        ]
+        =
         \tilde{T}_{q}^{k}
-    ]
-    \in
-    [0,1]
-    ,
-\end{gather}
-instead of 
-\begin{gather}
-    \mathbb{E}[
-        \tilde{T}_{q}^{k}
-    ]
-    =
-    \tilde{T}_{q}^{k}
-    = 1
-    ,
-\end{gather}
-for all $k,q \in \{1, \dots, n\}$. This means employers do not expected every worker to be perfectly qualified and will adjust their hiring and production strategies accordingly.
+        = 1
+        ,
+    \end{gather}
+    for all $k,q \in \{1, \dots, n\}$. This means employers do not expected every worker to be perfectly qualified and will adjust their hiring and production strategies accordingly.
+\end{axiom}
+% endregion
 
+% endregion
+
+% region: demonstration 
+\section{The Employability Theorem}
+\subsection{What is Employability?}
 % region: employability definition
 \begin{definition}[Employability]
     \label{def_employability}
@@ -917,7 +920,7 @@ for all $k,q \in \{1, \dots, n\}$. This means employers do not expected every wo
     := 1
     ,
     \end{gather}
-    where $\tilde{T}_{q}^{v} \in [0,1]$ is the minimum productivity required to be hired in one of $p$ types of positions in a labor market with $w_q$ job posts; while $h_{q}^{k}$ is a hireability statistic accounting for other selection criteria, such as years of education, experience, etc.
+    where $\tilde{T}_{q}^{v} \in [0,1]$ is the minimum productivity required to be hired in one of $p$ types of positions in a labor market with $w_q$ job posts; while $h_{q}^{k} \in [0,1]$ is a hireability statistic accounting for other selection criteria, such as years of education, experience, etc.
     
     And we can further aggregate employability for $n$ occupations to assess how many of all $W$ jobs in the economy are suitable for one's skill set:
     \begin{gather}
@@ -951,6 +954,8 @@ for all $k,q \in \{1, \dots, n\}$. This means employers do not expected every wo
     \right)
     \sum_{q=1}^{n}
     {w}_{q}
+    :=
+    1
     ,
     \\
     W
@@ -959,9 +964,20 @@ for all $k,q \in \{1, \dots, n\}$. This means employers do not expected every wo
     {w}_{q}
     .
     \end{gather}
-\end{definition} 
+\end{definition}
 
 % endregion
+\subsection{Introductory Example: Employability with Two Types of Workers}
+now, because of weak occupational complexity, employers will maximize operational output by attempting to produce the entire spectrum of difficulty levels for the complex tasks of an occupation.
+this can be done either by having only perfectly qualified employees work on the operation individually from beginning to end, or by splitting responsabilities into two, or more, types of jobs, thus allowing for less qualified, ``junior'' employees, to work alongside more qualified and perfectly qualified, ``senior'' employees towards the common goal of accomplishing the entire occupational operation.
+additionally, because there are skill differences among workers in the labor market, any rational employer will always, and rightly, expect their employees to be of varying skill levels, rather than all perfectly qualified, so that splitting responsabilities into separate positions will not only be an alternative mode of hiring and producing, but in fact the optimal one.
+therefore, given expected and actual skill differences among workers, employers will split job posts based on the required skill level. thus, there will be ``junior'' job posts and ``senior'' job posts, each dedicated to accomplishing a particular subset of complex tasks with difficulty levels appropriate for employees' respective capacity.
+notice this does not mean all people working on ``junior'' positions will, necessarily, be ``junior'' employees themselves, that is, less qualified. indeed, if talent is abundant in the labor market, these ``junior'' positions will have to be filled by more qualified, or even perfectly qualified, ``senior'' employees. for if there were only one type of job, spanning the entire difficulty level spectrum, highly qualified workers would already have to accomplish these ``junior'' tasks themselves, in order to maximize operational output. however, by having two, or more, types of jobs, split by minimum required competence, highly qualified workers may specialize to the measure that there are less qualified workers available to accomplish the easier tasks. but, if there are none, they will, again, have to work on these themselves.
+analogously, from the employers' perspective, it does not matter who accomplishes ``junior'' tasks, so long as they are accomplished. thus, if highly qualified workers are abundant in a particular time period of a labor market, production is not hindered when allocating ``seniors'' to ``junior'' positions, for in these circumstances talent is not wasted. that is, because only highly qualified workers can accomplish highly demanding tasks, rational employers will generally not hire them to work on ``junior'' tasks, thus ``saving'' their talent for more difficult tasks, which a ``junior'' would not be able to accomplish. but, if there is enough talent to output the optimal quantity of ``senior'' tasks, it can actually be more productive to employ the remaining ``seniors'' to ``junior'' positions.
+furthermore, in a continuous setting, rational employers will maximize their hiring pool by offering more than only two types of jobs. thus, there will not only be ``senior'' and ``junior'' positions, but several levels in a production hierarchy, each responsible for a particular subinterval of task difficulty, which will approximate a continuum of ``seniority'' as the number of workers becomes large enough.
+now, as for employees' work routine, rational employers will have them work over their responsability spectrum in a proportional and optimal matter, thus avoiding wasting production (i.e. uncompleted ``loops'' over the responsability spectrum). [this means each employee will spend their entire time allowance producing a partial operational output, that is a multiple of the difficulty subinterval they were hired to accomplish, which will, in turn, contribute, alonside the partial outputs of other employees, to accomplish the entire occupational operation.]
+the reason this avoids wasting production is because [...].
+
 % region: binary employability theorem (bet)
 \begin{theorem}[Binary Employability Theorem, BET]
     \label{bet}
@@ -1182,6 +1198,7 @@ for all $k,q \in \{1, \dots, n\}$. This means employers do not expected every wo
     \end{proof}
 \end{theorem}
 % endregion
+\subsection{General Employability Theorem}
 % region: maximum-monotonic labor stratification definition 
 Now, to generalize this conclusion, we shall define notation in terms of maximum labor stratification, a productive arrangement where there are several job subtypes, indeed as many as there are jobs themselves, each with a limited spectrum of responsabilities.
 
@@ -1237,7 +1254,7 @@ Now, to generalize this conclusion, we shall define notation in terms of maximum
     \begin{gather}
     \sum_{v=1}^{w_q}
     \Omega_{q}^{v} 
-    = 
+    := 
     \sum_{v=1}^{w_q}
     \int_{
         \ell_{v-1}
@@ -1365,7 +1382,7 @@ And we may formalize this conclusion as follows.
         w_q
         ,
         \end{gather}
-        then employers' optimal strategy is to infinitely stratify positions to infinitesimal tasks,
+        then employers' optimal strategy is to infinitely stratify positions as infinitesimal tasks,
         \begin{gather}
             \lim_{p \rightarrow \infty}{
                 \tilde{w}_{q}^{v}
@@ -3743,136 +3760,8 @@ With this, we can now demonstrate that, given the above, maximum-monotonic labor
         \end{gather}    
     \end{proof}
 \end{lemma}
-% Hence, mathematically,
-% \begin{gather}
-%     l \in \left[
-%     \frac{\ell - 1}{w_q}
-%     ,
-%     \frac{\ell}{w_q}
-%     \right]
-%     ,
-%     \ell \in 
-%     \left\{
-%         1, \dots, w_q
-%     \right\}
-% \end{gather}
-% is a responsability spectrum in a maximally stratified labor market, in which employment levels are given by
-% \begin{gather}
-%     \sum_{\ell=1}^{w_q}
-%     w_{q}^{\ell}
-%     =
-%     w_q
-%     ,
-% \end{gather}
-% so that any available position is its own job subtype and covers only a restrictive range of task difficulty, accounting for
-% \begin{gather}
-%     \Omega_{q}^{\ell} = 
-%     \frac{1}{\mho_{q}^{\ell}} = 
-%     \int_{
-%         \frac{\ell - 1}{w_q}
-%     }^{
-%         \frac{\ell}{w_q}
-%     }
-%     \text{ta}(l)dl
-% \end{gather}
-% of an operation's total time duration
-% \begin{gather}
-%     \sum_{\ell=1}^{w_q}
-%     \Omega_{q}^{\ell} 
-%     = 
-%     \sum_{\ell=1}^{w_q}
-%     \int_{
-%         \frac{\ell - 1}{w_q}
-%     }^{
-%         \frac{\ell}{w_q}
-%     }
-%     \text{ta}(l)dl
-%     =
-%     \int_{0}^{1}
-%     \text{ta}(l)dl
-%     =
-%     1
-%     .
-% \end{gather}
 
-% Intuitively speaking, we would say production in a maximally and monotonically stratified labor market is not ``independent'', in the sense that employees do not work on an occupation's operation from beginning to end. This means each of them will spend all their time allowance producing a partial operational output, that is a multiple of a difficulty subinterval of complex tasks, which will, in turn, contribute, alonside the partial outputs of other employees, to accomplish the occupational operation in its entirety.
-
-% However, in a maximum labor stratification setting, these partial operational outputs will not be produced merely via ``senior'' and ``junior'' positions, as previously, but rather within a myriad of levels in a production hierarchy, approximating a continuum of ``seniority'' as the workforce becomes large enough.
-% % However, in a maximally stratified labor market, these partial operational outputs will not be produced merely via ``senior'' and ``junior'' positions, as previously, but rather within a myriad of levels in a production hierarchy, approximating a continuum of ``seniority'' as the workforce becomes large enough.
-
-% Again, this does not mean employees are, actually, more or less competent, only that the available positions are preemptively stratified with respect to task difficulty, in order to maximize employers' hiring pool and safeguard production in the case workers are not sufficiently qualified to produce the whole responsability spectrum by themselves (see ``Maximum-Monotonic Labor Stratification Lemma'' below).
-
-% [end definition of maximum-monotonic labor stratification]
-
-% Independent Operational Output Lemma (IOOL)
-% 
-%     From Weak Occupational Complexity Axiom (WOCA)
-%     % Now, as the Weak Occupational Complexity Axiom states there can be no gain, nor losses, to production when labor is efficiently stratified, we can derive a generalization of the conclusion (ref) above to any economic configuration besides the binary case by comparison. 
-
-%     Let us, then, first consider an independent production strategy with maximum worker productivity (i.e. the ``ceiling'' or ``benchmark'' for all other production strategies). Furthermore, because we want to compare this production strategy to that of maximum-monotonic labor stratification, we shall analyze operational output in a stratified fashion as well.
-
-%     In this scenario, the optimal choice of hours to allocate to a responsability spectrum is trivial:
-%     \begin{gather}
-%         w_{q}^{\ell}
-%         =
-%         \Omega_{q}^{\ell}
-%         \in [0,1]
-%         .
-%     \end{gather}
-%     Now, by the definition of partial operational output (ref) above, one produces $\mho_{q}^{\ell}$ when devoting their entire unitary time allowance to the
-%     \begin{gather}
-%         l \in \left[
-%         \frac{\ell - 1}{w_q}
-%         ,
-%         \frac{\ell}{w_q}
-%         \right]
-%         ,
-%         \ell \in 
-%         \left\{
-%             1, \dots, w_q
-%         \right\}
-%     \end{gather}
-%     responsability spectrum. Therefore, with only $\Omega_{q}^{\ell} \in [0,1]$ time units, operational output is:
-%     \begin{gather}
-%         \Omega_{q}^{\ell}
-%         \mho_{q}^{\ell}
-%         =
-%         \left(
-%             \frac{1}{\mho_{q}^{\ell}}
-%         \right)
-%         \times
-%         \mho_{q}^{\ell}
-%         =
-%         1
-%         .
-%     \end{gather}
-%     % as even the weakest version of occupational complexity implies all difficulty levels are complementary and have to be accomplished for optimal operational output.
-%     % In this formulation, though, employment $w_{q}^{\ell} \in [0,1]$ is partial, that is: the same worker is hired to accomplish every responsability spectrum. This is because such an independent labor market is not stratified at all.
-
-%     And, as Weak Occupational Complexity implies operational output is homothetic, the aggregate production of $w_q$ perfectly qualified employees working independently is:
-%     % Furthermore, as Weak Occupational Complexity implies operational output is homothetic, the aggregate production of $w_q$ perfectly qualified employees working independently is:
-%     \begin{gather}
-%         w_{q}^{\ell}
-%         \mho_{q}^{\ell}
-%         \times
-%         w_q
-%         =
-%         \Omega_{q}^{\ell}
-%         \mho_{q}^{\ell}
-%         \times
-%         w_q
-%         =
-%         1
-%         \times
-%         w_q
-%         =
-%         w_q
-%         .
-%     \end{gather}
-%     Hence, a perfectly qualified employee working full-time and independently can output one unit of an occupation's complex tasks with one unit of their time (i.e. their entire time allowance). And, likewise, a workforce with $w_q$ employees identical to this one produces $w_q$ units of operational output. Or, to put it simply, a maximally productive person acchieves maximum production.
-%     % Hence, a perfectly qualified employee working full-time and independently can output one unit of an occupation's complex tasks with one unit of their time (i.e. their entire time allowance). And, likewise, a workforce with $w_q$ employees identical to this one produces $w_q$ units of operational output. Or, to put it simply, a maximally productive person acchieves maximum production. Or, even simpler: one day is sufficient to produce a ``day's work''.
-% 
-
+Having derived the optimal responsability ranges for a maximally stratified labor market with unitary employment levels, we shall demonstrate other types of labor stratification are not efficient and do not attain in an efficient economy.
 \begin{lemma}[Equivalent Stratification Lemma, ESL]
     Any efficient labor market where employers choose both $\boldsymbol{w_q}$ and $\boldsymbol{\ell_q}$ with $p \in \{1, \dots, w_q\}$ types of job posts converges to maximum labor stratification with
     $
@@ -4185,6 +4074,7 @@ With this, we can now demonstrate that, given the above, maximum-monotonic labor
     % [explain intution].
 \end{lemma}
 
+Finally, let us show the economy's productivity has to be capable of supporting maximum-monotonic labor stratification.
 \begin{lemma}[Productivity Sufficiency Lemma, PSL]
     The available talent in a labor market is, at least, sufficient to allow for maximally stratified production.
     
@@ -4260,14 +4150,14 @@ With this, we can now demonstrate that, given the above, maximum-monotonic labor
         \\
         \sum_{v=1}^{p}
         \Omega_{q}^{v}
-        =
+        :=
         1
         \end{gather}
         at every level. Hence, we have to have at least $w_{q}^{v} = w_q \times \Omega_{q}^{v} \geq 1 \ \forall \ v \in \{1,\dots, p\}, p \in \{1,\dots, w_q\}$ employees in each position.
         
-        In addition, we have ruled out infinite labor stratification (see MSA), and demonstrated any maximally stratified labor market is characterized by the very same optimal responsability spectra, with $w_q$ unique positions, and unitary employment (OSL, ESL). So, the labor market cannot be more than maximally stratified in accordance with Definition (\ref{def_employability}). 
+        In addition, we have ruled out infinite labor stratification (see MSA), and demonstrated any efficiently stratified labor market is characterized by the very same responsability spectra, with $w_q$ unique positions, and unitary employment (OSL, ESL). So, the labor market cannot be more than maximally stratified in accordance with Definition (\ref{def_employability}). 
         
-        Finally, from all valid production strategies we have considered, maximum-monotonic labor stratification is that which has the lowest barrier of entry, and so minimizes productivity requirements. Indeed, if production is organized independently,
+        At last, from all valid production strategies we have considered, maximum-monotonic labor stratification is that which has the lowest barrier of entry, and so minimizes productivity requirements. Indeed, if production is organized independently,
         \begin{gather}
         \mho_q = w_q
         \iff
@@ -4433,7 +4323,7 @@ From the above, it follows logically that maximum-monotonic labor stratification
             0
             ,
         \end{gather}
-        that is, if an employee cannot fully output their responsability spectrum, their contribution to production is void, limiting aggregate operational output. This means choosing any production strategy other than maximum-monotonic labor stratification is a risk with no upside, when workers may have varying productivity (WSDA). For, as we have shown, this arrangement by itself guarantees minimum productivity requirements (PSL) and maximum operational output (MOOL). So, it would be irrational of employers to organize production in another manner. Or, more succinctly,
+        that is, if an employee cannot fully output a responsability spectrum, their contribution to production is void, limiting aggregate operational output. This means choosing any production strategy other than maximum-monotonic labor stratification is a risk with no upside, when workers may have varying productivity (WSDA). For, as we have shown, this arrangement by itself guarantees minimum productivity requirements (PSL) and maximum operational output (MOOL). So, it would be irrational of employers to organize production in another manner. Or, more succinctly,
         % \begin{align}
         %     &\mathbb{E}[
         %         \mho_{q}^{\text{IP}}
@@ -4558,7 +4448,7 @@ From the above, it follows logically that maximum-monotonic labor stratification
 
         In other words, splitting responsabilities in accordance with competence is always as productive as the maximum operational output (viz. that which is obtained when employing perfectly qualified workers independently), provided employees are sufficiently qualified for their responsabilities. But, again, this is, by definition, guaranteed by employers' rationality, as well as the simple fact the economy is already producing its current operational output (see PSL). 
         
-        Therefore, employing potentially underqualified workers to output the entire responsability spectrum $l \in [0,1]$ independently can only be as productive as the labor stratification strategy, but never more than it. Indepedent production, then, is a suboptimal strategy when employers expect there to be skill differences in the workforce. And the same logic applies to less than maximally-stratified arrangements.
+        Therefore, employing potentially underqualified workers to output the entire responsability spectrum $l \in [0,1]$ independently can only be as productive as the labor stratification strategy, but never more than it. Indepedent production, then, is a suboptimal strategy when employers expect there to be skill differences in the workforce. And the same logic also applies to less than maximally-stratified arrangements.
         
         Thus, maximum-monotonic labor stratification follows as an insurance policy against worker's potential underqualification: for if talent is lacking in the labor market, there is nothing to gain by employing individuals which are not sufficiently qualified for a difficult job, whereas if talent is abundant, there is nothing to lose when employing overqualified individuals to a job below their skill level.
 
