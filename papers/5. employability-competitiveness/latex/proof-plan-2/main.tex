@@ -235,6 +235,153 @@
 % endregion
 % region: skill sufficiency lemma (ssl) 
 % skills are sufficient to accomplish tasks
+P.S.: SSL
+\begin{align}
+    a_{i}^{k} := \frac{l_{i}^{k}}{l_{i}} \in [0,1]
+    \\
+    \tilde{T}_{i}^{k} 
+    &= 
+    \int_{0}^{l_i}{
+        T(l,l_{i}^{k})
+        dl
+    }
+    \left(
+        \int_{0}^{l_i}{
+            T(l,l_{i})
+            dl
+        }
+    \right) ^ {-1}
+    \\
+    &= 
+    \left(
+        \int_{0}^{l_{i}^{k}}{
+            1
+            \times
+            dl
+        }
+        +
+        \int_{l_{i}^{k}}^{l_i}{
+            0
+            \times
+            dl
+        }
+    \right)
+    \times
+    \left(
+        \int_{0}^{l_i}{
+            1
+            \times
+            dl
+        }
+    \right) ^ {-1}
+    \\
+    &= 
+    \frac{l_{i}^{k} - 0}{l_{i} - 0}
+    \\
+    &= 
+    \frac{l_{i}^{k}}{l_{i}}
+    \\
+    &\therefore
+    a_{i}^{k} = \tilde{T}_{i}^{k}
+\end{align}
+
+P.S.: SCL
+\begin{align}
+    \boldsymbol{a_k}
+    &:= (a_{1}^{k}, \dots, a_{m}^{k})
+    ,
+    \boldsymbol{a_q}
+    := (a_{1}^{q}, \dots, a_{m}^{q})
+    \in [0,1]^{m}
+    \
+    \forall
+    \
+    k,q \in \{1, \dots, n\}
+    \\
+    l_{q}^{k}
+    &\leq 
+    l_{q}^{q}
+    \
+    \forall
+    \
+    k,q \in \{1, \dots, n\}
+    \\
+    \tilde{T}_{q}^{k}
+    &= 
+    \int_{0}^{l_{q}^{q}}{
+        T(l,l_{q}^{k})
+        dl
+    }
+    \left(
+        \int_{0}^{l_{q}^{q}}{
+            T(l,l_{q}^{q})
+            dl
+        }
+    \right) ^ {-1}
+    \\
+    &= 
+    \left(
+        \int_{0}^{l_{q}^{k}}{
+            1
+            \times
+            dl
+        }
+        +
+        \int_{l_{q}^{k}}^{l_{q}^{q}}{
+            0
+            \times
+            dl
+        }
+    \right)
+    \times
+    \left(
+        \int_{0}^{l_{q}^{q}}{
+            1
+            \times
+            dl
+        }
+    \right) ^ {-1}
+    \\
+    &= 
+    \frac{l_{q}^{k} - 0}{l_{q}^{q} - 0}
+    \\
+    &= 
+    \frac{l_{q}^{k}}{l_{q}^{q}}
+    \in [0,1]
+    \\
+    &\because
+    \neg
+    \
+    l_{q}^{k}
+    >
+    l_{q}^{q}
+    \\
+    &\because
+    l_{q}^{k} = 
+    f(
+        \boldsymbol{l_k},
+        \boldsymbol{l_q}
+    ) 
+    =
+    f(
+        \boldsymbol{a_k},
+        \boldsymbol{a_q}
+    )?
+    \in [0,1]
+    \
+    \forall
+    \
+    k,q \in \{1, \dots, n\}
+    \\
+    &\therefore
+    \tilde{T}_{q}^{k}
+    =
+    f(
+        \boldsymbol{a_k},
+        \boldsymbol{a_q}
+    )
+\end{align}
+
 % preamble
 Now, even though these results are basically tautological, they are still important to guide our intuition. In fact, our first insight towards the Employability Theorem, namely the Skill Sufficiency Lemma (SSL), follows directly from the definitions above.
 % statement
@@ -1280,7 +1427,6 @@ Now, to generalize this conclusion, we shall define notation in terms of maximum
 % endregion
 % region: infinite stratification lemma (isl) 
 Having understood what maximum-monotonic labor stratification is, one may wonder whether there could be more than $w_q$ job subtypes in a labor market. For though it is intuitive to think of $w_q$, the workforce size, as the upper bound for stratification, if we allow for partial hiring, with ``fractional jobs'',
-
 \begin{gather}
 w_{q}^{v} 
 \in 
@@ -1442,8 +1588,9 @@ And we may formalize this conclusion as follows.
 \end{lemma}
 % endregion
 
-All this said, infinitely stratified markets are rather abstract, and it is not realistic to think of actual job posts as infinitesimal tasks; for, then, the very concept of a ``job'' itself disappears. Fractional positions do not make much sense in reality, where jobs usually deal with a set of multiple responsabilities. Furthermore, a maximally -- though not infinitely -- stratified labor market with sufficient positions, will, in practice, yield the same results when $w_q$ is large enough, so that we do not even need to consider  infinite labor stratification as a production strategy.
+All this said, infinitely stratified markets are rather abstract, and it is not realistic to think of actual job posts as infinitesimal tasks; for, then, the very concept of a ``job'' itself disappears. Fractional positions do not make much sense in reality, where jobs usually deal with a set of multiple responsabilities. Furthermore, a maximally -- though not infinitely -- stratified labor market with sufficient positions, will, in practice, yield the same results when $w_q$ is large enough, so that we do not even need to consider infinite labor stratification as a production strategy.
 
+% region: maximum stratification axiom (msa) 
 \begin{axiom}[Maximum Stratification Axiom, MSA]
     Therefore, let us assume
     \begin{gather}
@@ -1469,9 +1616,11 @@ All this said, infinitely stratified markets are rather abstract, and it is not 
     \end{gather}
     as it is somewhat arbitrary setting minimum employment levels to any value other than one; for then it would always be optimal to choose an even smaller value than that, in which case we would converge back to an infinitely stratified labor market. Thus, we define there has to be at least one worker per job subtype.
 \end{axiom}
+% endregion
 
 With this, we can now demonstrate that, given the above, maximum-monotonic labor stratification is, in fact, the only optimal production strategy and, so, holds in the labor market. But, to do so, we must first derive an upper limit for aggregate operational output, irrespective of productive arrangement, to serve as our ``benchmark''.
 
+% region: maximum operational output lemma (mool) 
 \begin{lemma}[Maximum Operational Output Lemma, MOOL]
     The maximum operational output of any labor market is exactly the number of employees in its workforce:
     \begin{gather}
@@ -3268,79 +3417,10 @@ With this, we can now demonstrate that, given the above, maximum-monotonic labor
         , for the most one can produce in a day is a ``day's work''.
     \end{proof}
 \end{lemma}
-    % \begin{align}
-    %     \mho_{q}(\tilde{v}_{q}^{k})
-    %     &= 
-    %     \min\left[
-    %         \tilde{v}_{q}^{k}
-    %         \left(
-    %             \int_{0}^{\tilde{T}_{q}^{k}}{
-    %                 \text{ta}(l)dl
-    %             }
-    %         \right) ^ {-1}
-    %         ,
-    %         (1 - \tilde{v}_{q}^{k})
-    %         \left(
-    %             \int_{\tilde{T}_{q}^{k}}^{1}{
-    %                 \text{ta}(l)dl
-    %             }
-    %         \right) ^ {-1}
-    %     \right]
-    %     \\
-    %     &= 
-    %     (1 - \tilde{v}_{q}^{k})
-    %     \left(
-    %         \int_{\tilde{T}_{q}^{k}}^{1}{
-    %             \text{ta}(l)dl
-    %         }
-    %     \right) ^ {-1}
-    %     \\
-    %     \therefore
-    %     \mho_{q}(\tilde{w}_{q}^{k})
-    %     &= 
-    %     \min\left[
-    %         \tilde{w}_{q}^{k}
-    %         \left(
-    %             \int_{0}^{\tilde{T}_{q}^{k}}{
-    %                 \text{ta}(l)dl
-    %             }
-    %         \right) ^ {-1}
-    %         ,
-    %         (1 - \tilde{w}_{q}^{k})
-    %         \left(
-    %             \int_{\tilde{T}_{q}^{k}}^{1}{
-    %                 \text{ta}(l)dl
-    %             }
-    %         \right) ^ {-1}
-    %     \right]
-    %     \\
-    %     &= 
-    %     \tilde{w}_{q}^{k}
-    %     \left(
-    %         \int_{0}^{\tilde{T}_{q}^{k}}{
-    %             \text{ta}(l)dl
-    %         }
-    %     \right) ^ {-1}
-    %     \\
-    %     &= 
-    %     (1 - \tilde{w}_{q}^{k})
-    %     \left(
-    %         \int_{\tilde{T}_{q}^{k}}^{1}{
-    %             \text{ta}(l)dl
-    %         }
-    %     \right) ^ {-1}
-    %     \\
-    %     &>
-    %     (1 - \tilde{v}_{q}^{k})
-    %     \left(
-    %         \int_{\tilde{T}_{q}^{k}}^{1}{
-    %             \text{ta}(l)dl
-    %         }
-    %     \right) ^ {-1}
-    %     ,
-    % \end{align}
-% 
+% endregion
 
+In the lemma above, we have assumed there to be an optimal $\boldsymbol{\ell_{q}^{*}}$ vector of responsability bounds maximizing operational output in stratified production. We shall, now, devote out attention to describing what such a vector would have to be like and, thus, how production is optimally stratified.
+% region: optimal stratificaion lemma (osl) 
 \begin{lemma}[Optimal Stratification Lemma, OSL]
     Because in a maximally and monotonically stratified labor market every position is its own job subtype (for, again, employment levels are unitary), optimal production is, then, obtained not by choosing how many workers to allocate to tasks of varying difficulty levels, but instead by setting appropriate responsability ranges for each position (i.e. which tasks to allocate \textit{to} workers). The bounds for these ranges are:
     \begin{gather}
@@ -3397,7 +3477,6 @@ With this, we can now demonstrate that, given the above, maximum-monotonic labor
         or the number of employees in its workforce.
         
         Therefore, optimal bounds for responsability spectra can be calculated by equating partial operational outputs with maximum production; for if maximum-monotonic labor stratification is to be optimal, it must yield the same partial outputs as any efficient production strategy.
-        % Therefore, optimal responsability ranges can be calculated by equating partial operational outputs with maximum production, for if maximum-monotonic labor stratification is to be optimal, it must yield the same partial outputs as any efficient production strategy.
         
         So, for the first job subtype,
         \begin{gather}
@@ -3760,9 +3839,11 @@ With this, we can now demonstrate that, given the above, maximum-monotonic labor
         \end{gather}    
     \end{proof}
 \end{lemma}
+% endregion
 
-Having derived the optimal responsability ranges for a maximally stratified labor market with unitary employment levels, we shall demonstrate other types of labor stratification are not efficient and do not attain in an efficient economy.
-\begin{lemma}[Equivalent Stratification Lemma, ESL]
+Having derived the optimal responsability ranges for a maximally stratified labor market with unitary employment levels, we shall demonstrate other types of labor stratification cannot attain in an efficient economy.
+% region: equivalent/efficient stratification lemma (esl) 
+\begin{lemma}[Efficient Stratification Lemma, ESL]
     Any efficient labor market where employers choose both $\boldsymbol{w_q}$ and $\boldsymbol{\ell_q}$ with $p \in \{1, \dots, w_q\}$ types of job posts converges to maximum labor stratification with
     $
     p = w_q
@@ -4073,8 +4154,10 @@ Having derived the optimal responsability ranges for a maximally stratified labo
     \end{proof}
     % [explain intution].
 \end{lemma}
+% endregion
 
 Finally, let us show the economy's productivity has to be capable of supporting maximum-monotonic labor stratification.
+% region: productiviry sufficiency lemma (psl) 
 \begin{lemma}[Productivity Sufficiency Lemma, PSL]
     The available talent in a labor market is, at least, sufficient to allow for maximally stratified production.
     
@@ -4293,12 +4376,13 @@ Finally, let us show the economy's productivity has to be capable of supporting 
         Therefore, if a labor market has any employees at all, the available talent in it has to be, at least, sufficient for maximally stratified production.
     \end{proof}
 \end{lemma}
+% endregion
 
 From the above, it follows logically that maximum-monotonic labor stratification is the optimal production strategy and, so, holds in the labor market.
-
+% region: maximum-monotonic labor stratification lemma (mlsl) 
 \begin{lemma}[Maximum-Monotonic Labor Stratification Lemma, MLSL]
     \label{mlsl}
-    Hence, the Maximum-Monotonic Labor Stratification Lemma (MLSL) states that a perfectly rational employer (ERA), which expects there could be skill differences in the workforce (WSDA), and can split operational output without either gain or loss to production (WOCA), will, therefore, strategically stratify their job offers monotonically, and even maximally, so that, if indeed there happens to be skill differences in the labor market, they can, then, allocate less competent workers to easier roles, and avoid wasting talent, thus ``saving their best'' for the most demanding tasks.
+    The Maximum-Monotonic Labor Stratification Lemma (MLSL) states that a perfectly rational employer (ERA), which expects there could be skill differences in the workforce (WSDA), and can split operational output without either gain or loss to production (WOCA), will, therefore, strategically stratify their job offers monotonically, and even maximally, so that, if indeed there happens to be skill differences in the labor market, they can, then, allocate less competent workers to easier roles, and avoid wasting talent, thus ``saving their best'' for the most demanding tasks.
 
     \begin{proof}
         We have demonstrated any productive arrangement can only yield, at most, $w_q$ units of an occupation $q$'s operation, and this if the talent employed is sufficiently qualified (MOOL).
@@ -4324,69 +4408,6 @@ From the above, it follows logically that maximum-monotonic labor stratification
             ,
         \end{gather}
         that is, if an employee cannot fully output a responsability spectrum, their contribution to production is void, limiting aggregate operational output. This means choosing any production strategy other than maximum-monotonic labor stratification is a risk with no upside, when workers may have varying productivity (WSDA). For, as we have shown, this arrangement by itself guarantees minimum productivity requirements (PSL) and maximum operational output (MOOL). So, it would be irrational of employers to organize production in another manner. Or, more succinctly,
-        % \begin{align}
-        %     &\mathbb{E}[
-        %         \mho_{q}^{\text{IP}}
-        %         \
-        %         |
-        %         \
-        %         \mathbb{E}[
-        %             \tilde{T}_{q}^{k}
-        %         ]
-        %         \in [0,1]
-        %         \
-        %         \forall
-        %         \
-        %         k,q \in \{1, \dots, n\}
-        %     ]
-        %     \\
-        %     &\leq
-        %     \mathbb{E}[
-        %         \mho_{q}^{\text{SS}}
-        %         \
-        %         |
-        %         \
-        %         \mathbb{E}[
-        %             \tilde{T}_{q}^{k}
-        %         ]
-        %         \in [0,1]
-        %         \
-        %         \forall
-        %         \
-        %         k,q \in \{1, \dots, n\}
-        %     ]
-        %     \\
-        %     &\leq
-        %     \mathbb{E}[
-        %         \mho_{q}^{\text{MS}}
-        %         \
-        %         |
-        %         \
-        %         \mathbb{E}[
-        %             \tilde{T}_{q}^{k}
-        %         ]
-        %         \in [0,1]
-        %         \
-        %         \forall
-        %         \
-        %         k,q \in \{1, \dots, n\}
-        %     ]
-        %     \\
-        %     &=
-        %     \mathbb{E}[
-        %         \mho_{q}^{\text{IP}}
-        %         \
-        %         |
-        %         \
-        %         \tilde{T}_{q}^{k}
-        %         = 1
-        %         \
-        %         \forall
-        %         \
-        %         k,q \in \{1, \dots, n\}
-        %     ]
-        %     ,
-        % \end{align}
         \begin{align}
             &\mathbb{E}[
                 \mho_{q}^{\text{IP}}
@@ -4455,741 +4476,527 @@ From the above, it follows logically that maximum-monotonic labor stratification
         Hence, given the same $w_q$ workforce, operational output in a maximally stratified labor market is always greater or equal to the output of any other economic configuration. It is, therefore, always optimal to monotonically and maximally stratify responsabilities across $w_q$ unique positions, each focused on increasingly demanding tasks.
     \end{proof}
 \end{lemma}
-    
-Definition of aggregate employability in a maximally and monotonically stratified labor market is: 
-\begin{gather}
-    \tilde{W}_{k}
-    =
-    \sum_{q=1}^{n}
-    \tilde{W}_{q}^{k}
-    ,
-\end{gather}
-where
-\begin{align}
-    \tilde{W}_{q}^{k}
-    &=
-    \sum_{\ell=1}^{w_q}
-    \left[
-        h_{q}^{k}
-        \geq
-        \frac{1}{2}
-    \right]
-    \left[
-        \tilde{T}_{q}^{k}
-        \geq 
-        \frac{\ell}{w_q}
-    \right]
-    \tilde{w}_{q}^{\ell}
-    \\
-    &=
-    \sum_{\ell=1}^{w_q}
-    \left[
-        h_{q}^{k}
-        \geq
-        \frac{1}{2}
-    \right]
-    \left[
-        \tilde{T}_{q}^{k}
-        \geq 
-        \frac{\ell}{w_q}
-    \right]
-    \frac{
-        {w}_{q}^{\ell}
-    }{
-        w_q
-    }
-\end{align}
-is partial employability, that is one's employability in a particular occupation $q$ in the labor market.
+% endregion
 
-\begin{align}
-    \tilde{W}_k 
-    &=
-    \left(
-        \frac{1}{W}
-    \right)
-    \sum_{q=1}^{n}
-    % \left[
-    %     h_{q}^{k}
-    %     \geq
-    %     \frac{1}{2}
-    % \right]
-    \sum_{v=1}^{w_q}
-    \left[
-        h_{q}^{k}
-        \geq
-        \frac{1}{2}
-    \right]
-    \left[
-        \tilde{T}_{q}^{k}
-        \geq
-        \ell_v
-    \right]
-    \\
-    &=
-    \left(
-        \frac{1}{W}
-    \right)
-    \sum_{q=1}^{n}
-    % \left[
-    %     h_{q}^{k}
-    %     \geq
-    %     \frac{1}{2}
-    % \right]
-    \sum_{v=1}^{w_q}
-    \left[
-        h_{q}^{k}
-        \geq
-        \frac{1}{2}
-    \right]
-    \left[
-        \tilde{T}_{q}^{k}
-        \geq
-        \text{TA}_{q}^{-1}
+With this, we have shown maximally stratified production is the economic arrangement that holds in any efficient labor market. So, we can, finally, derive a general employability coefficient by estimating employability in such markets.
+% region: general employability theorem (get) 
+\begin{get_theorem}[GET]
+    Because maximum-monotonic labor stratification is the safest and most efficient production strategy, rational employers will always choose it in detriment of other [productive arrangements]. Therefore, an individual's employability in a maximally stratified economy,
+    \begin{align}
+        \tilde{W}_k 
+        &=
         \left(
-            \frac{v}{w_q}
-            +
-            \text{TA}_{q}(0)
+            \frac{1}{W}
         \right)
-    \right]
-\end{align}
-
-Competitiveness in a maximally-monotonically stratified labor market with irregular responsability ranges (i.e. without partial hiring):
-\begin{align}
-    \tilde{\text{vs}}_k 
-    &=
-    \left(
-        \frac{1}{W}
-    \right)
-    \sum_{q=1}^{n}
-    \left[
-        \ddot{u}_{k}^{q}
-        \geq
-        \frac{1}{2}
-    \right]
-    % \left[
-    %     h_{k}^{q}
-    %     \geq
-    %     \frac{1}{2}
-    % \right]
-    \sum_{v=1}^{w_k}
-    \left[
-        h_{k}^{q}
-        \geq
-        \frac{1}{2}
-    \right]
-    \left[
-        \tilde{T}_{k}^{q}
-        \geq
-        \ell_v
-    \right]
-    \\
-    &=
-    \left(
-        \frac{1}{W}
-    \right)
-    \sum_{q=1}^{n}
-    \left[
-        \ddot{u}_{k}^{q}
-        \geq
-        \frac{1}{2}
-    \right]
-    % \left[
-    %     h_{k}^{q}
-    %     \geq
-    %     \frac{1}{2}
-    % \right]
-    \sum_{v=1}^{w_k}
-    \left[
-        h_{k}^{q}
-        \geq
-        \frac{1}{2}
-    \right]
-    \left[
-        \tilde{T}_{k}^{q}
-        \geq
-        \text{TA}_{k}^{-1}
+        \sum_{q=1}^{n}
+        \left[
+            h_{q}^{k}
+            \geq
+            \frac{1}{2}
+        \right]
+        \sum_{v=1}^{w_q}
+        \left[
+            \tilde{T}_{q}^{k}
+            \geq
+            \ell_v
+        \right]
+        \\
+        &=
         \left(
-            \frac{v}{w_k}
-            +
-            \text{TA}_{k}(0)
+            \frac{1}{W}
         \right)
-    \right]
-\end{align}
-
-Competitiveness in a maximally-monotonically stratified labor market with irregular responsability ranges (i.e. without partial hiring):
-\begin{align}
-    \tilde{\text{vs}}_k 
-    &=
-    \left(
-        \frac{1}{W}
-    \right)
-    \sum_{q=1}^{n}
-    \left[
-        \ddot{u}_{k}^{q}
-        \geq
-        \frac{1}{2}
-    \right]
-    % \left[
-    %     h_{k}^{q}
-    %     \geq
-    %     \frac{1}{2}
-    % \right]
-    \sum_{v=1}^{w_k}
-    \left[
-        h_{k}^{q}
-        \geq
-        \frac{1}{2}
-    \right]
-    \left[
-        \tilde{T}_{k}^{q}
-        \geq
-        \ell_v
-    \right]
-    \\
-    &=
-    \left(
-        \frac{1}{W}
-    \right)
-    \sum_{q=1}^{n}
-    \left[
-        \ddot{u}_{k}^{q}
-        \geq
-        \frac{1}{2}
-    \right]
-    % \left[
-    %     h_{k}^{q}
-    %     \geq
-    %     \frac{1}{2}
-    % \right]
-    \sum_{v=1}^{w_k}
-    \left[
-        h_{k}^{q}
-        \geq
-        \frac{1}{2}
-    \right]
-    \left[
-        \tilde{T}_{k}^{q}
-        \geq
-        \text{TA}_{k}^{-1}
-        \left(
-            \frac{v}{w_k}
-            +
-            \text{TA}_{k}(0)
-        \right)
-    \right]
-\end{align}
-
-P.S.: SSL
-\begin{align}
-    a_{i}^{k} := \frac{l_{i}^{k}}{l_{i}} \in [0,1]
-    \\
-    \tilde{T}_{i}^{k} 
-    &= 
-    \int_{0}^{l_i}{
-        T(l,l_{i}^{k})
-        dl
-    }
-    \left(
-        \int_{0}^{l_i}{
-            T(l,l_{i})
-            dl
-        }
-    \right) ^ {-1}
-    \\
-    &= 
-    \left(
-        \int_{0}^{l_{i}^{k}}{
-            1
-            \times
-            dl
-        }
-        +
-        \int_{l_{i}^{k}}^{l_i}{
-            0
-            \times
-            dl
-        }
-    \right)
-    \times
-    \left(
-        \int_{0}^{l_i}{
-            1
-            \times
-            dl
-        }
-    \right) ^ {-1}
-    \\
-    &= 
-    \frac{l_{i}^{k} - 0}{l_{i} - 0}
-    \\
-    &= 
-    \frac{l_{i}^{k}}{l_{i}}
-    \\
-    &\therefore
-    a_{i}^{k} = \tilde{T}_{i}^{k}
-\end{align}
-
-P.S.: SCL
-\begin{align}
-    \boldsymbol{a_k}
-    &:= (a_{1}^{k}, \dots, a_{m}^{k})
-    ,
-    \boldsymbol{a_q}
-    := (a_{1}^{q}, \dots, a_{m}^{q})
-    \in [0,1]^{m}
-    \
-    \forall
-    \
-    k,q \in \{1, \dots, n\}
-    \\
-    l_{q}^{k}
-    &\leq 
-    l_{q}^{q}
-    \
-    \forall
-    \
-    k,q \in \{1, \dots, n\}
-    \\
-    \tilde{T}_{q}^{k}
-    &= 
-    \int_{0}^{l_{q}^{q}}{
-        T(l,l_{q}^{k})
-        dl
-    }
-    \left(
-        \int_{0}^{l_{q}^{q}}{
-            T(l,l_{q}^{q})
-            dl
-        }
-    \right) ^ {-1}
-    \\
-    &= 
-    \left(
-        \int_{0}^{l_{q}^{k}}{
-            1
-            \times
-            dl
-        }
-        +
-        \int_{l_{q}^{k}}^{l_{q}^{q}}{
-            0
-            \times
-            dl
-        }
-    \right)
-    \times
-    \left(
-        \int_{0}^{l_{q}^{q}}{
-            1
-            \times
-            dl
-        }
-    \right) ^ {-1}
-    \\
-    &= 
-    \frac{l_{q}^{k} - 0}{l_{q}^{q} - 0}
-    \\
-    &= 
-    \frac{l_{q}^{k}}{l_{q}^{q}}
-    \in [0,1]
-    \\
-    &\because
-    \neg
-    \
-    l_{q}^{k}
-    >
-    l_{q}^{q}
-    \\
-    &\because
-    l_{q}^{k} = 
-    f(
-        \boldsymbol{l_k},
-        \boldsymbol{l_q}
-    ) 
-    =
-    f(
-        \boldsymbol{a_k},
-        \boldsymbol{a_q}
-    )?
-    \in [0,1]
-    \
-    \forall
-    \
-    k,q \in \{1, \dots, n\}
-    \\
-    &\therefore
-    \tilde{T}_{q}^{k}
-    =
-    f(
-        \boldsymbol{a_k},
-        \boldsymbol{a_q}
-    )
-\end{align}
-P.S.: Simplified Employability Theorem/Corollary (SET/SEC)
-
-% We want to show that, as with the Binary Employability Theorem (BET), so too in a maximally and monotonically stratified labor market, employability is the percentage of an operation's total time duration one is capable of accomplishing. Or, mathematically,
-We want to show that, as with the Binary Employability Theorem (BET), so too in a maximally and monotonically stratified labor market, employability is the percentage of an operation's total time duration one is capable of producing. Or, mathematically,
-% We want to show that, as with the Binary Employability Theorem (BET), so too in a maximally and monotonically stratified labor market, employability is the percentage of an operation's total time duration one's productivity allows them to accomplish. Or, mathematically,
-\begin{gather}
-    \tilde{W}_{q}^{k}
-    =
-    \int_{0}^{\tilde{T}_{q}^{k}}
-    \text{ta}(l)
-    dl
-    :=
-    \Omega_{q}^{k}
-    \in 
-    [0,1]
-    \
-    \forall
-    \
-    k,q \in \{1, \dots, n\}
-    .
-\end{gather}
-
-% To prove this result, let us consider what would be the employability of person $k$ if they had exactly the minimum required productivity for every job subtype. So, for instance, when $v = 1$,
-To prove this result, let us, then, first consider what would be the employability of person $k$ if they had exactly the minimum required productivity for every job subtype. So, for instance, when $v = 1$,
-\begin{align}
-    \tilde{T}_{q}^{k}
-    =
-    \ell_1
-    =
-    \text{TA}^{-1}
-    \left(
-        \frac{1}{w_q}
-        +
-        \text{TA}(0)
-    \right)
-    \implies
-    \tilde{W}_{q}^{k}
-    =
-    \frac{1}{w_q}
-    ,
-\end{align}
-as a productivity coefficient of $\tilde{T}_{q}^{k} = \ell_1$ is just enough to be hireable on the easiest job in occupation $q$'s labor market, but not on the second, much less on the remaining, more difficult, positions.
-
-Likewise, for other values of $v$, we have
-\begin{gather}
-    \tilde{T}_{q}^{k}
-    =
-    \ell_2
-    =
-    \text{TA}^{-1}
-    \left(
-        \frac{2}{w_q}
-        +
-        \text{TA}(0)
-    \right)
-    \implies
-    \tilde{W}_{q}^{k}
-    =
-    \frac{2}{w_q}
-    ,
-    \\
-    \tilde{T}_{q}^{k}
-    =
-    \ell_3
-    =
-    \text{TA}^{-1}
-    \left(
-        \frac{3}{w_q}
-        +
-        \text{TA}(0)
-    \right)
-    \implies
-    \tilde{W}_{q}^{k}
-    =
-    \frac{3}{w_q}
-    ,
-    \\
-    \vdots
-    \\
-    \tilde{T}_{q}^{k}
-    =
-    \ell_{v}
-    =
-    \text{TA}^{-1}
-    \left(
-        \frac{v}{w_q}
-        +
-        \text{TA}(0)
-    \right)
-    \implies
-    \tilde{W}_{q}^{k}
-    =
-    \frac{v}{w_q}
-    ,
-\end{gather}
-so that we may derive the following pattern for any $v \in \{1, \dots, w_q\}$:
-% \begin{align}
-%     \tilde{T}_{q}^{k}
-%     % =
-%     % \text{TA}^{-1}
-%     % \left(
-%     %     \frac{v}{w_q}
-%     %     +
-%     %     \text{TA}(0)
-%     % \right)
-%     % \implies
-%     % \tilde{W}_{q}^{k}
-%     % =
-%     % \frac{v}{w_q}
-%     % \\
-%     % &\therefore
-%     % \tilde{T}_{q}^{k}
-%     &=
-%     \text{TA}^{-1}
-%     \left(
-%         \tilde{W}_{q}^{k}
-%         +
-%         \text{TA}(0)
-%     \right)
-%     \\
-%     \therefore
-%     \text{TA}
-%     (
-%     % \left(
-%         \tilde{T}_{q}^{k}
-%     )
-%     % \right)
-%     &=
-%     \text{TA}
-%     \left(
-%         \text{TA}^{-1}
-%         \left(
-%             \tilde{W}_{q}^{k}
-%             +
-%             \text{TA}(0)
-%         \right)
-%     \right)
-%     \\
-%     \therefore
-%     \text{TA}
-%     (
-%     % \left(
-%         \tilde{T}_{q}^{k}
-%     )
-%     % \right)
-%     &=
-%     \tilde{W}_{q}^{k}
-%     +
-%     \text{TA}(0)
-%     \\
-%     \therefore
-%     \tilde{W}_{q}^{k}
-%     &=
-%     \text{TA}
-%     (
-%     % \left(
-%         \tilde{T}_{q}^{k}
-%     )
-%     % \right)
-%     -
-%     \text{TA}(0)
-%     =
-%     \int_{0}^{\tilde{T}_{q}^{k}}
-%     \text{ta}(l)
-%     dl
-%     :=
-%     \Omega_{q}^{k}
-%     \in 
-%     [0,1]
-%     ,
-% \end{align}
-\begin{align}
-    &\tilde{T}_{q}^{k}
-    % =
-    % \text{TA}^{-1}
-    % \left(
-    %     \frac{v}{w_q}
-    %     +
-    %     \text{TA}(0)
-    % \right)
-    % \implies
-    % \tilde{W}_{q}^{k}
-    % =
-    % \frac{v}{w_q}
-    % \\
-    % &\therefore
-    % \tilde{T}_{q}^{k}
-    =
-    \text{TA}^{-1}
-    \left(
-        \tilde{W}_{q}^{k}
-        +
-        \text{TA}(0)
-    \right)
-    \\
-    &
-    \therefore
-    \text{TA}
-    (
-    % \left(
-        \tilde{T}_{q}^{k}
-    )
-    % \right)
-    =
-    \text{TA}
-    \left(
-        \text{TA}^{-1}
-        \left(
+        \sum_{q=1}^{n}
+        \left[
+            h_{q}^{k}
+            \geq
+            \frac{1}{2}
+        \right]
+        \sum_{v=1}^{w_q}
+        \left[
+            \tilde{T}_{q}^{k}
+            \geq
+            \text{TA}_{q}^{-1}
+            \left(
+                \frac{v}{w_q}
+                +
+                \text{TA}_{q}(0)
+            \right)
+        \right]
+    \end{align}
+    is their actual employability in reality.
+    \begin{proof}
+        We have just demonstrated (MLSL) that maximum-monotonic labor stratification is the only optimal production strategy and, given our assumptions, attains in reality. So, one's employability in this market is their actual employability.
+        Moreover, in accordance with Definition (\ref{def_employability}), employability is
+        \begin{gather}
+            \tilde{W}_{k}
+            :=
+            \sum_{q=1}^{n}
             \tilde{W}_{q}^{k}
-            +
-            \text{TA}(0)
-        \right)
-    \right)
-    \\
-    &
-    \therefore
-    \text{TA}
-    (
-    % \left(
-        \tilde{T}_{q}^{k}
-    )
-    % \right)
-    =
-    \tilde{W}_{q}^{k}
-    +
-    \text{TA}(0)
-    \\
-    &
-    \therefore
-    \tilde{W}_{q}^{k}
-    =
-    \text{TA}
-    (
-    % \left(
-        \tilde{T}_{q}^{k}
-    )
-    % \right)
-    -
-    \text{TA}(0)
-    =
-    \int_{0}^{\tilde{T}_{q}^{k}}
-    \text{ta}(l)
-    dl
-    :=
-    \Omega_{q}^{k}
-    \in 
-    [0,1]
-    ,
-\end{align}
-as we wanted to show.
-
-However, because $\tilde{T}_{q}^{k} \in [0,1]$ is not discretized as responsability ranges $l \in [l_{v-1},l_{v}], v \in \{1, \dots, w_q\}$ are, and because rational employers do not hire insufficiently qualified employees, we must approximate $\tilde{T}_{q}^{k}$ with the closest 
-\begin{gather}
-    \tilde{T}_{q}^{\kappa}
-    =
-    \left(
-        \frac{1}{w_q}
-    \right)
-    \sum_{v=1}^{w_q}
-    \left[
-        \tilde{T}_{q}^{k}
-        \geq
-        l_v
-    \right]
-\end{gather}
-productivity estimate, such that $\tilde{T}_{q}^{k} \geq \tilde{T}_{q}^{\kappa}$ and $\tilde{T}_{q}^{k} \approx \tilde{T}_{q}^{\kappa}$, where $
-\tilde{T}_{q}^{\kappa} = \ell_{\kappa} \in \{\ell_0, \dots, \ell_{w_q}\}$ determines the most demanding task for which $k$ is still productive. Therefore, the adjusted coefficient is:
-\begin{gather}
-    \tilde{W}_{q}^{k}
-    =
-    \int_{0}^{\tilde{T}_{q}^{\kappa}}
-    \text{ta}(l)
-    dl
-    :=
-    \Omega_{q}^{\kappa}
-    \approx
-    \int_{0}^{\tilde{T}_{q}^{k}}
-    \text{ta}(l)
-    dl
-    \in 
-    [0,1]
-    ,
-\end{gather}
-when $w_q$ is large enough.
-
-Of course, this assumes candidate $k$ is evaluated as ``employable'' in accordance with the hireability statistic
-\begin{gather}
-    \left[
-        h_{q}^{k}
-        \geq
-        \frac{1}{2}
-    \right]
-    ,
-\end{gather}
-which accounts for selection criteria besides minimum required productivity. Thus, a more complete formulation would be:
-\begin{gather}
-    \tilde{W}_{q}^{k}
-    =
-    \left[
-        h_{q}^{k}
-        \geq
-        \frac{1}{2}
-    \right]
-    \int_{0}^{\tilde{T}_{q}^{\kappa}}
-    \text{ta}(l)
-    dl
-    % \in 
-    % [0,1]
-    ;
-\end{gather}
-or, in the aggregate form,
-\begin{gather}
-    \tilde{W}_k 
-    = 
-    \left(
-        \frac{1}{W}
-    \right)
-    \sum_{q=1}^{n}
-    \left[
-        h_{q}^{k}
-        \geq
-        \frac{1}{2}
-    \right]
-    \int_{0}^{\tilde{T}_{q}^{\kappa}}
-    \text{ta}(l)
-    dl
-    % \\
-    :=
-    \left(
-        \frac{1}{W}
-    \right)
-    \sum_{q=1}^{n}
-    \left[
-        h_{q}^{k}
-        \geq
-        \frac{1}{2}
-    \right]
-    \Omega_{q}^{\kappa}
-    \\
-    % &
-    \
-    \forall
-    \
-    \tilde{T}_{q}^{\kappa} \in \{
-        \ell_{0}, 
-        \dots, 
-        \ell_{w_q}
-        % 
-        % \ell_{q}^{0}, 
-        % \dots, 
-        % \ell_{q}^{w_q}
-        % 
-        % \ell_{0}^{q}, 
-        % \dots, 
-        % \ell_{w_q}^{q}
-    \}
-    % ,
-    ;
-    k,q \in \{1, \dots, n\}
-    .
-\end{gather}
-
+            :=
+            \sum_{q=1}^{n}
+            \left[
+                h_{q}^{k}
+                \geq
+                \frac{1}{2}
+            \right]
+            \sum_{v=1}^{p}
+            \left[
+                \tilde{T}_{q}^{k}
+                \geq
+                \tilde{T}_{q}^{v}
+            \right]
+            \tilde{w}_{q}^{v}
+            ,
+        \end{gather}
+        which in a maximally and monotonically stratified labor market becomes (see OSL, ESL)
+        \begin{align}
+            \tilde{W}_{k}
+            &=
+            \sum_{q=1}^{n}
+            \left[
+                h_{q}^{k}
+                \geq
+                \frac{1}{2}
+            \right]
+            \sum_{v=1}^{w_q}
+            \left[
+                \tilde{T}_{q}^{k}
+                \geq
+                \ell_{q}^{v}
+            \right]
+            \left(
+                \frac{1}{w_q}
+            \right)
+            \\
+            &=
+            \left(
+                \frac{1}{W}
+            \right)
+            \sum_{q=1}^{n}
+            \left[
+                h_{q}^{k}
+                \geq
+                \frac{1}{2}
+            \right]
+            \sum_{v=1}^{w_q}
+            \left[
+                \tilde{T}_{q}^{k}
+                \geq
+                \text{TA}_{q}^{-1}
+                \left(
+                    \frac{v}{w_q}
+                    +
+                    \text{TA}_{q}(0)
+                \right)
+            \right]
+            .
+        \end{align}
+    \end{proof}
+\end{get_theorem}
+% endregion
 % endregion
 
 \subsection{Corollaries}
+The General Employability Theorem has a few interesting collolaries, the first, and simplest, of which is a more compact, and intuitive, version of it.
+% region: simplified employability corollary 
+\begin{corollary}[Simplified Employability Corollary, SEC]
+    We want to show that, as with the BET and ISL, so too in a maximally and monotonically stratified labor market, employability is the percentage of an operation's total time duration one is capable of producing. Or, mathematically,
+    \begin{gather}
+        \tilde{W}_{q}^{k}
+        =
+        \int_{0}^{\tilde{T}_{q}^{k}}
+        \text{ta}(l)
+        dl
+        :=
+        \Omega_{q}^{k}
+        \in 
+        [0,1]
+        \
+        \forall
+        \
+        k,q \in \{1, \dots, n\}
+        .
+    \end{gather}
+
+    \begin{proof}
+        To prove this result, let us, then, first consider what would be the employability of person $k$ if they had exactly the minimum required productivity for every job subtype. So, for instance, when $v = 1$,
+        \begin{align}
+            \tilde{T}_{q}^{k}
+            =
+            \ell_1
+            =
+            \text{TA}^{-1}
+            \left(
+                \frac{1}{w_q}
+                +
+                \text{TA}(0)
+            \right)
+            \implies
+            \tilde{W}_{q}^{k}
+            =
+            \frac{1}{w_q}
+            ,
+        \end{align}
+        as a productivity coefficient of $\tilde{T}_{q}^{k} = \ell_1$ is just enough to be hireable on the easiest job in occupation $q$'s labor market, but not on the second, much less on the remaining, more difficult, positions.
+        
+        Likewise, for other values of $v$, we have
+        \begin{gather}
+            \tilde{T}_{q}^{k}
+            =
+            \ell_2
+            =
+            \text{TA}^{-1}
+            \left(
+                \frac{2}{w_q}
+                +
+                \text{TA}(0)
+            \right)
+            \implies
+            \tilde{W}_{q}^{k}
+            =
+            \frac{2}{w_q}
+            ,
+            \\
+            \tilde{T}_{q}^{k}
+            =
+            \ell_3
+            =
+            \text{TA}^{-1}
+            \left(
+                \frac{3}{w_q}
+                +
+                \text{TA}(0)
+            \right)
+            \implies
+            \tilde{W}_{q}^{k}
+            =
+            \frac{3}{w_q}
+            ,
+            \\
+            \vdots
+            \\
+            \tilde{T}_{q}^{k}
+            =
+            \ell_{v}
+            =
+            \text{TA}^{-1}
+            \left(
+                \frac{v}{w_q}
+                +
+                \text{TA}(0)
+            \right)
+            \implies
+            \tilde{W}_{q}^{k}
+            =
+            \frac{v}{w_q}
+            ,
+        \end{gather}
+        so that we may derive the following pattern for any $v \in \{1, \dots, w_q\}$:
+        \begin{align}
+            &\tilde{T}_{q}^{k}
+            =
+            \text{TA}^{-1}
+            \left(
+                \tilde{W}_{q}^{k}
+                +
+                \text{TA}(0)
+            \right)
+            \\
+            &
+            \therefore
+            \text{TA}
+            (
+            % \left(
+                \tilde{T}_{q}^{k}
+            )
+            % \right)
+            =
+            \text{TA}
+            \left(
+                \text{TA}^{-1}
+                \left(
+                    \tilde{W}_{q}^{k}
+                    +
+                    \text{TA}(0)
+                \right)
+            \right)
+            \\
+            &
+            \therefore
+            \text{TA}
+            (
+            % \left(
+                \tilde{T}_{q}^{k}
+            )
+            % \right)
+            =
+            \tilde{W}_{q}^{k}
+            +
+            \text{TA}(0)
+            \\
+            &
+            \therefore
+            \tilde{W}_{q}^{k}
+            =
+            \text{TA}
+            (
+            % \left(
+                \tilde{T}_{q}^{k}
+            )
+            % \right)
+            -
+            \text{TA}(0)
+            =
+            \int_{0}^{\tilde{T}_{q}^{k}}
+            \text{ta}(l)
+            dl
+            :=
+            \Omega_{q}^{k}
+            \in 
+            [0,1]
+            ,
+        \end{align}
+        as we wanted to show.
+        
+        However, because $\tilde{T}_{q}^{k} \in [0,1]$ is not discretized as responsability ranges $l \in [l_{v-1},l_{v}], v \in \{1, \dots, w_q\}$ are, and because rational employers do not hire insufficiently qualified employees, we must approximate $\tilde{T}_{q}^{k}$ with the closest 
+        \begin{gather}
+            \tilde{T}_{q}^{\kappa}
+            =
+            \left(
+                \frac{1}{w_q}
+            \right)
+            \sum_{v=1}^{w_q}
+            \left[
+                \tilde{T}_{q}^{k}
+                \geq
+                l_v
+            \right]
+        \end{gather}
+        productivity estimate, such that $\tilde{T}_{q}^{k} \geq \tilde{T}_{q}^{\kappa}$ and $\tilde{T}_{q}^{k} \approx \tilde{T}_{q}^{\kappa}$, where $
+        \tilde{T}_{q}^{\kappa} = \ell_{\kappa} \in \{\ell_0, \dots, \ell_{w_q}\}$ determines the most demanding task for which $k$ is still productive. Therefore, the adjusted coefficient is:
+        \begin{gather}
+            \tilde{W}_{q}^{k}
+            =
+            \int_{0}^{\tilde{T}_{q}^{\kappa}}
+            \text{ta}(l)
+            dl
+            :=
+            \Omega_{q}^{\kappa}
+            \approx
+            \int_{0}^{\tilde{T}_{q}^{k}}
+            \text{ta}(l)
+            dl
+            \in 
+            [0,1]
+            ,
+        \end{gather}
+        when $w_q$ is large enough.
+        
+        Of course, this assumes candidate $k$ is evaluated as ``employable'' in accordance with the hireability statistic
+        \begin{gather}
+            \left[
+                h_{q}^{k}
+                \geq
+                \frac{1}{2}
+            \right]
+            ,
+        \end{gather}
+        which accounts for selection criteria besides minimum required productivity. Thus, a more complete formulation would be:
+        \begin{gather}
+            \tilde{W}_{q}^{k}
+            =
+            \left[
+                h_{q}^{k}
+                \geq
+                \frac{1}{2}
+            \right]
+            \int_{0}^{\tilde{T}_{q}^{\kappa}}
+            \text{ta}(l)
+            dl
+            % \in 
+            % [0,1]
+            ;
+        \end{gather}
+        or, in the aggregate form,
+        \begin{gather}
+            \tilde{W}_k 
+            = 
+            \left(
+                \frac{1}{W}
+            \right)
+            \sum_{q=1}^{n}
+            \left[
+                h_{q}^{k}
+                \geq
+                \frac{1}{2}
+            \right]
+            \int_{0}^{\tilde{T}_{q}^{\kappa}}
+            \text{ta}(l)
+            dl
+            % \\
+            :=
+            \left(
+                \frac{1}{W}
+            \right)
+            \sum_{q=1}^{n}
+            \left[
+                h_{q}^{k}
+                \geq
+                \frac{1}{2}
+            \right]
+            \Omega_{q}^{\kappa}
+            \\
+            % &
+            \
+            \forall
+            \
+            \tilde{T}_{q}^{\kappa} \in \{
+                \ell_{0}, 
+                \dots, 
+                \ell_{w_q}
+            \}
+            ;
+            k,q \in \{1, \dots, n\}
+            .
+        \end{gather}
+    \end{proof}        
+\end{corollary}
+
+% endregion
+
+In addition, the General Employability Theorem can be used to prove the General Competitiveness Corollary (GCC) with the following definition.
+% region: competitiveness definition 
+\begin{definition}[Competitiveness]
+    \label{def_competitiveness}
+    Labor market competitiveness can be defined in a variety of ways. The typical is to think of competitiveness as a ratio of job seekers to the number of available positions. Thus, we say would an occupation's labor market is ``competitive'' if there are too many incumbents per job post.
+    
+    However, this definition has two main flaws: 1) it can be somewhat cumbersome, if not impossible, to gather the necessary data, for every labor market, in shifting conditions, to accurately assess competitiveness; 2) even if such data is available and trustworthy, incumbents per job posts is not that much of an interpretable, or at least complete, statistic.
+    
+    So, we may propose an additional, alternative, definition of competitiveness as the percentage of the workforce which would be \textit{willing} and \textit{able} to compete for jobs in a particular labor market:
+    \begin{align}
+        \tilde{\text{vs}}_{k}
+        &:=
+        \sum_{q=1}^{n}
+        \left[
+            \ddot{u}_{k}^{q}
+            \geq
+            \ddot{u}_{q}^{q}
+        \right]
+        \tilde{W}_{k}^{q}
+        \\
+        &:=
+        \sum_{q=1}^{n}
+        \left[
+            \ddot{u}_{k}^{q}
+            \geq
+            \ddot{u}_{q}^{q}
+        \right]
+        \left[
+            h_{k}^{q}
+            \geq
+            \frac{1}{2}
+        \right]
+        \sum_{v=1}^{p}
+        \left[
+            \tilde{T}_{k}^{q}
+            \geq
+            \tilde{T}_{k}^{v}
+        \right]
+        \tilde{w}_{k}^{v}
+        \in
+        [0,1]
+        ,
+        \end{align}
+    where
+    \begin{gather}
+        \left[
+            \ddot{u}_{k}^{q}
+            \geq
+            \ddot{u}_{q}^{q}
+        \right]
+        ,
+        \\
+        \ddot{u}_{k}^{q} 
+        :=
+        \text{eq}(
+            u_{k}^{q}
+        )
+        :=
+        \text{eq}\left(
+            u(
+            y_k,
+            \boldsymbol{\upsilon_q},
+            \boldsymbol{a_k},
+            \dots
+        )
+        \right)
+        \in
+        [0,1]
+        ,
+    \end{gather}
+    or equivalent, scaled, utility (the umlauts are not derivatives, but a shorthand notation defined in another paper) indicates if the relative utility of person $q$, with preferences for attributes $\boldsymbol{\upsilon_q} \in [0,1] ^ m$, working at a job with skill set $\boldsymbol{a_q} \in [0,1] ^ m$, and earning a wage of $y_q$, would find it sufficiently more rewarding to switch to an occupation $k$, requiring a skill set $\boldsymbol{a_k} \in [0,1] ^ m$, and paying $y_k$; while the other terms are defined as previously.
+    
+    So, what the $\tilde{\text{vs}}_{k}$ (short for ``versus'') statistic tells us is that if workers of type $q$ are willing to compete for an occupation $k$'s job posts, they are evaluated in terms of their employability (cf. Definition \ref{def_employability}) and, if found sufficiently qualified, counted as viable incumbents. Or, in other words, competitiveness is the employability of willing and able workers from other labor markets (i.e. it is the complement of employability).
+
+    Competitiveness in a maximally-monotonically stratified labor market with irregular responsability ranges (i.e. without partial hiring):
+\begin{align}
+    \tilde{\text{vs}}_k 
+    &=
+    \left(
+        \frac{1}{W}
+    \right)
+    \sum_{q=1}^{n}
+    \left[
+        \ddot{u}_{k}^{q}
+        \geq
+        \ddot{u}_{q}^{q}
+    \right]
+    \sum_{v=1}^{w_k}
+    \left[
+        h_{k}^{q}
+        \geq
+        \frac{1}{2}
+    \right]
+    \left[
+        \tilde{T}_{k}^{q}
+        \geq
+        \ell_v
+    \right]
+    \\
+    &=
+    \left(
+        \frac{1}{W}
+    \right)
+    \sum_{q=1}^{n}
+    \left[
+        \ddot{u}_{k}^{q}
+        \geq
+        \ddot{u}_{q}^{q}
+    \right]
+    \sum_{v=1}^{w_k}
+    \left[
+        h_{k}^{q}
+        \geq
+        \frac{1}{2}
+    \right]
+    \left[
+        \tilde{T}_{k}^{q}
+        \geq
+        \text{TA}_{k}^{-1}
+        \left(
+            \frac{v}{w_k}
+            +
+            \text{TA}_{k}(0)
+        \right)
+    \right]
+\end{align}
+\end{definition}
+% endregion
+
+% region: general competitiveness corollary 
+
+% endregion
+
 
 % endregion
 
