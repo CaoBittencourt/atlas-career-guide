@@ -4919,14 +4919,14 @@ In addition, the General Employability Theorem can be used to prove the General 
         \ddot{u}_{k}^{q} 
         :=
         \text{eq}(
-            u_{k}^{q}
+            \hat{u}_{k}^{q}
         )
         :=
         \text{eq}\left(
             u(
-            y_k,
+            \boldsymbol{y},
             \boldsymbol{\upsilon_q},
-            \boldsymbol{a_k},
+            \textbf{A},
             \dots
         )
         \right)
@@ -4934,70 +4934,92 @@ In addition, the General Employability Theorem can be used to prove the General 
         [0,1]
         ,
     \end{gather}
-    or equivalent, scaled, utility (the umlauts are not derivatives, but a shorthand notation defined in another paper) indicates if the relative utility of person $q$, with preferences for attributes $\boldsymbol{\upsilon_q} \in [0,1] ^ m$, working at a job with skill set $\boldsymbol{a_q} \in [0,1] ^ m$, and earning a wage of $y_q$, would find it sufficiently more rewarding to switch to an occupation $k$, requiring a skill set $\boldsymbol{a_k} \in [0,1] ^ m$, and paying $y_k$; while the other terms are defined as previously.
+    or equivalent, scaled, utility\footnote{The umlauts are not derivatives, but a shorthand notation defined in another paper.} indicates if the relative utility of person $q$, with preferences for attributes $\boldsymbol{\upsilon_q} \in [0,1] ^ m$, working at a job with skill set $\boldsymbol{a_q} \in [0,1] ^ m$, and earning a wage of $y_q$, would find it sufficiently more rewarding to switch to an occupation $k$, requiring a skill set $\boldsymbol{a_k} \in [0,1] ^ m$, and paying $y_k$; while the other terms are defined as previously.
     
-    So, what the $\tilde{\text{vs}}_{k}$ (short for ``versus'') statistic tells us is that if workers of type $q$ are willing to compete for an occupation $k$'s job posts, they are evaluated in terms of their employability (cf. Definition \ref{def_employability}) and, if found sufficiently qualified, counted as viable incumbents. Or, in other words, competitiveness is the employability of willing and able workers from other labor markets (i.e. it is the complement of employability).
-
-    Competitiveness in a maximally-monotonically stratified labor market with irregular responsability ranges (i.e. without partial hiring):
-\begin{align}
-    \tilde{\text{vs}}_k 
-    &=
-    \left(
-        \frac{1}{W}
-    \right)
-    \sum_{q=1}^{n}
-    \left[
-        \ddot{u}_{k}^{q}
-        \geq
-        \ddot{u}_{q}^{q}
-    \right]
-    \sum_{v=1}^{w_k}
-    \left[
-        h_{k}^{q}
-        \geq
-        \frac{1}{2}
-    \right]
-    \left[
-        \tilde{T}_{k}^{q}
-        \geq
-        \ell_v
-    \right]
-    \\
-    &=
-    \left(
-        \frac{1}{W}
-    \right)
-    \sum_{q=1}^{n}
-    \left[
-        \ddot{u}_{k}^{q}
-        \geq
-        \ddot{u}_{q}^{q}
-    \right]
-    \sum_{v=1}^{w_k}
-    \left[
-        h_{k}^{q}
-        \geq
-        \frac{1}{2}
-    \right]
-    \left[
-        \tilde{T}_{k}^{q}
-        \geq
-        \text{TA}_{k}^{-1}
-        \left(
-            \frac{v}{w_k}
-            +
-            \text{TA}_{k}(0)
-        \right)
-    \right]
-\end{align}
+    So, what the $\tilde{\text{vs}}_{k}$ (``versus'') competitiveness statistic tells us is that if workers of type $q$ are willing to compete for an occupation $k$'s job posts, they are evaluated in terms of their employability (cf. Definition \ref{def_employability}) and, if found sufficiently qualified, counted as viable incumbents. Or, in other words, competitiveness is the employability of willing and able workers from other labor markets (i.e. it is the complement of employability).
 \end{definition}
 % endregion
+% region: general competitiveness corollary (gcc)
+\begin{corollary}[General Competitiveness Corollary, GCC]
+    \label{gcc}
+    The competitiveness of an occupation's labor market is the percentage of the aggregate workforce $W$ that is willing and able to compete for its job posts.
 
-% region: general competitiveness corollary 
-
+    \begin{proof}
+        By Definition \ref{def_competitiveness} and the General Employability Theorem,
+        \begin{align}
+            \tilde{\text{vs}}_k 
+            &:=
+            \sum_{q=1}^{n}
+            \left[
+                \ddot{u}_{k}^{q}
+                \geq
+                \ddot{u}_{q}^{q}
+            \right]
+            \left[
+                h_{k}^{q}
+                \geq
+                \frac{1}{2}
+            \right]
+            \sum_{v=1}^{p}
+            \left[
+                \tilde{T}_{k}^{q}
+                \geq
+                \tilde{T}_{k}^{v}
+            \right]
+            \tilde{w}_{k}^{v}
+            \\
+            &=
+            \left(
+                \frac{1}{W}
+            \right)
+            \sum_{q=1}^{n}
+            \left[
+                \ddot{u}_{k}^{q}
+                \geq
+                \ddot{u}_{q}^{q}
+            \right]
+            \sum_{v=1}^{w_k}
+            \left[
+                h_{k}^{q}
+                \geq
+                \frac{1}{2}
+            \right]
+            \left[
+                \tilde{T}_{k}^{q}
+                \geq
+                \ell_v
+            \right]
+            \\
+            &=
+            \left(
+                \frac{1}{W}
+            \right)
+            \sum_{q=1}^{n}
+            \left[
+                \ddot{u}_{k}^{q}
+                \geq
+                \ddot{u}_{q}^{q}
+            \right]
+            \sum_{v=1}^{w_k}
+            \left[
+                h_{k}^{q}
+                \geq
+                \frac{1}{2}
+            \right]
+            \left[
+                \tilde{T}_{k}^{q}
+                \geq
+                \text{TA}_{k}^{-1}
+                \left(
+                    \frac{v}{w_k}
+                    +
+                    \text{TA}_{k}(0)
+                \right)
+            \right]
+        \end{align}
+    \end{proof}
+\end{corollary}
 % endregion
-
-
 % endregion
 
 % region: implementation 
