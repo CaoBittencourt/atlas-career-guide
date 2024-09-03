@@ -1654,7 +1654,8 @@ With this, we can now demonstrate that, given the above, maximum labor stratific
         \mho(
             \boldsymbol{w_{q}^{*}},
             \boldsymbol{\mho_q}
-        ) = 
+        )
+        = 
         \min(
             \boldsymbol{w_{q}^{*}}
             \times
@@ -1689,7 +1690,7 @@ With this, we can now demonstrate that, given the above, maximum labor stratific
     Moreover, when optimizing employment levels, this maximum production can only be attained when the percentage of each position relative to the entire workforce respects the Proportional Employment Condition (PEC):
     \begin{gather}
         \boldsymbol{\tilde{w}_{q}^{*}}
-        =
+        :=
         \frac{
             \boldsymbol{w_{q}^{*}}
         }{
@@ -1704,7 +1705,7 @@ With this, we can now demonstrate that, given the above, maximum labor stratific
         \boldsymbol{1} ^ {\top}
         \cdot
         \boldsymbol{\Omega_{q}}
-        = 1
+        := 1
         ,
     \end{gather}
     accounted by it.
@@ -1716,7 +1717,7 @@ With this, we can now demonstrate that, given the above, maximum labor stratific
                 \text{ta}(l)
                 dl
             }
-            =
+            :=
             1
             ,
         \end{gather}
@@ -1756,7 +1757,7 @@ With this, we can now demonstrate that, given the above, maximum labor stratific
             \boldsymbol{1} ^ {\top}
             \cdot
             \boldsymbol{\Omega_{q}}
-            = 
+            := 
             1
             .
         \end{gather}
@@ -1776,7 +1777,7 @@ With this, we can now demonstrate that, given the above, maximum labor stratific
         \begin{gather}
             \Omega_{q}^{\ell}
             \mho_{q}^{\ell}
-            =
+            :=
             \left(
                 \frac{1}{\mho_{q}^{\ell}}
             \right)
@@ -1787,7 +1788,7 @@ With this, we can now demonstrate that, given the above, maximum labor stratific
             .
         \end{gather}
         
-        Finally, as Weak Occupational Complexity implies the production function is homothetic, the aggregate operational output of $w_q$ perfectly qualified employees working independently is:
+        Finally, as weak occupational complexity implies the production function is homothetic, the aggregate operational output of $w_q$ perfectly qualified employees working independently is:
         \begin{gather}
             \mho_{q}^{*}
             =
@@ -1814,7 +1815,7 @@ With this, we can now demonstrate that, given the above, maximum labor stratific
         
         Therefore, a perfectly qualified employee working full-time and independently can output one unit of an occupation's complex tasks with one unit of their time (i.e. their entire time allowance). And, likewise, a workforce with $w_q$ employees identical to this one produces $w_q$ units of operational output. Or, to put it simply, a maximally productive person acchieves maximum production.
         
-        We, now, proceed with the binary setting presented above, where employees choose a $\tilde{w}_{q}^{\text{Jr}} \in [0,1]$ percentage of less qualified (i.e. ``junior'') job posts to offer, which determine the remaining $\tilde{w}_{q}^{\text{Sr}} = 1 - \tilde{w}_{q}^{\text{Jr}} \in [0,1]$ percentage of perfectly qualified (or ``senior'') job posts.
+        We, now, proceed with the binary setting presented above, where employees choose a $\tilde{w}_{q}^{\text{Jr}} \in (0,1)$ percentage of less qualified (i.e. ``junior'') job posts to offer, which determine the remaining $\tilde{w}_{q}^{\text{Sr}} = 1 - \tilde{w}_{q}^{\text{Jr}} \in (0,1)$ percentage of perfectly qualified (or ``senior'') job posts.
         
         In this case,
         \begin{align}
@@ -1822,11 +1823,11 @@ With this, we can now demonstrate that, given the above, maximum labor stratific
             &=
             \min\left(
                 \tilde{w}_{q}^{\text{Jr}}
-                % \times
+                \times
                 \mho_{q}^{\text{Jr}}
                 ,
                 \tilde{w}_{q}^{\text{Sr}}
-                % \times
+                \times
                 \mho_{q}^{\text{Sr}}
             \right)
             \\
@@ -1901,7 +1902,7 @@ With this, we can now demonstrate that, given the above, maximum labor stratific
             \right)
             ,
         \end{align}
-        whereas the operational output of employing $\Omega_{q}^{\text{Jr}} \in [0,1]$ is
+        whereas the operational output of employing $\Omega_{q}^{\text{Jr}} \in (0,1)$ is
         % whereas the operational output of $\Omega_{q}^{\text{Jr}} \in [0,1]$ is
         \begin{align}
             \mho(\Omega_{q}^{\text{Jr}}) 
@@ -1987,6 +1988,8 @@ With this, we can now demonstrate that, given the above, maximum labor stratific
             \mho(\tilde{w}_{q}^{\text{Jr}})
             <
             \mho(\Omega_{q}^{\text{Jr}})
+            =
+            1
             ;
         \end{align}
         and, if $\tilde{w}_{q}^{\text{Jr}} < \Omega_{q}^{\text{Jr}}$,
@@ -2040,6 +2043,8 @@ With this, we can now demonstrate that, given the above, maximum labor stratific
             \mho(\tilde{w}_{q}^{\text{Jr}})
             <
             \mho(\Omega_{q}^{\text{Jr}})
+            =
+            1
             .
         \end{align}
         
@@ -2055,7 +2060,8 @@ With this, we can now demonstrate that, given the above, maximum labor stratific
             \tilde{w}_{q}^{\text{Jr}}
             \neq
             \Omega_{q}^{\text{Jr}}
-            \in [0,1]
+            \in 
+            (0,1)
             .
         \end{gather}
         
@@ -2080,6 +2086,8 @@ With this, we can now demonstrate that, given the above, maximum labor stratific
         \end{gather}
         for, again, since
         \begin{gather}
+            1
+            =:
             \boldsymbol{1} ^ {\top}
             \cdot
             \boldsymbol{\tilde{w}_{q}}
@@ -2087,7 +2095,7 @@ With this, we can now demonstrate that, given the above, maximum labor stratific
             \boldsymbol{1} ^ {\top}
             \cdot
             \boldsymbol{\Omega_{q}}
-            = 1
+            := 1
             ,
         \end{gather}
         choosing any $\tilde{w}_{q}^{\ell} \neq \Omega_{q}^{\ell}$ implies the proportion of at least one position, say $\tilde{w}_{q}^{r}$, is impacted, and aggregate output along with it, either because
