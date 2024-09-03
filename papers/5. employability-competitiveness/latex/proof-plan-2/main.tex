@@ -1116,9 +1116,9 @@ the reason this avoids wasting production is because [...].
 
 % endregion
 \subsection{Introductory Example: Employability with Two Types of Workers}
-With these basic axioms in place, we can attempt to calculate an employability coefficient as presented in Definition \ref{def_employability} above. For ease of understanding, though, let us begin with a simple example and, then, proceed with a more complete, and robust, theorem.
+With these basic axioms in place, we can attempt to derive an employability coefficient as presented in Definition \ref{def_employability} above. For ease of understanding, though, let us begin with a simple example and, then, proceed with a more complete, and robust, theorem.
 
-In this subsection, we shall calculate employability in an occupation $q$'s labor market where there are two types of workers with varying productivity. The first type -- call them ``juniors" -- have lower skill and cannot accomplish tasks with difficulty levels $l \in [0,1]$ higher than $\tilde{T}_{q}^{\text{Jr}} \in [0,1)$. And the other type of employee are perfectly qualified ``seniors'', with $\tilde{T}_{q}^{\text{Sr}} = 1$ productive capacity.
+In this subsection, we shall estimate employability in an occupation $q$'s labor market where there are two types of workers with varying productivity. The first type -- call them ``juniors" -- have lower skill and cannot accomplish tasks with difficulty levels $l \in [0,1]$ higher than $\tilde{T}_{q}^{\text{Jr}} \in [0,1)$. And the other type of employee are perfectly qualified ``seniors'', with $\tilde{T}_{q}^{\text{Sr}} = 1$ productive capacity.
 
 Now, because of weak occupational complexity (WOCA), employers will maximize operational output by producing the entire $l \in [0,1]$ spectrum of occupation $q$'s complex tasks, subject to each task's duration. This can be done either by having only perfectly qualified employees work on these independently, from beginning to end, or by splitting responsabilities into two, or more, types of jobs, thus allowing for less qualified, ``junior'' employees, to work alongside ``seniors'' towards the common goal of accomplishing the whole operation.
 
@@ -1137,31 +1137,35 @@ Either way, if the available talent is enough to output occupation $q$'s operati
     \begin{proof}
         In the binary case, ``junior'' productive output will be given by:
         \begin{gather}
-            \mho_{q}^{\text{Jr}} =
+            \mho_{q}^{\text{Jr}} 
+            :=
             \frac{
                 1
             }{
                 \int_{0}^{\tilde{T}_{q}^{\text{Jr}}}
-                \text{ta}_q(l)
+                \text{ta}(l)
                 dl
-            } = 
+            }
+            = 
             \left(
                 \int_{0}^{\tilde{T}_{q}^{\text{Jr}}}
-                    \text{ta}_q(l)
+                    \text{ta}(l)
                     dl
             \right) ^ {-1}
             ,
         \end{gather}
-        where $\text{ta}_q(l)$ is the time allocation function of occupation $q$'s complex tasks, and time allowance (the numerator) is set to one. Analogously, ``senior'' productive output is:
+        where $\text{ta}(l)$ is the time allocation function of occupation $q$'s complex tasks, and time allowance (the numerator) is set to one. Analogously, ``senior'' output is:
         \begin{gather}
-            \mho_{q}^{\text{Sr}} =
+            \mho_{q}^{\text{Sr}}
+            :=
             \frac{
                 1
             }{
                 \int_{\tilde{T}_{q}^{\text{Jr}}}^{1}
                 \text{ta}_q(l)
                 dl
-            } = 
+            }
+            = 
             \left(
                 \int_{\tilde{T}_{q}^{\text{Jr}}}^{1}
                     \text{ta}_q(l)
@@ -1170,22 +1174,27 @@ Either way, if the available talent is enough to output occupation $q$'s operati
             .
         \end{gather}
 
-        Finally, as a mismatch in productive output due to time allocation differences between ``junior'' and ``senior'' tasks would result in wasted production, a rational employer will optimally ``orchestrate'' the productive effort by offering just enough ``senior'' job posts in the labor market to meet ``junior'' productivity. So, by setting ``junior'' job posts to $w_{q}^{\text{Jr}} > 0$ and ``senior'' job posts to $w_{q}^{\text{Sr}} > 0$, we get the ratio between ``junior'' and ``senior'' positions required to output any level of occupation $q$'s operation:
-        \begin{gather}
-            w_{q}^{\text{Sr}} \times 
-            \mho_{q}^{\text{Sr}} = 
-            w_{q}^{\text{Jr}} \times 
+        Furthermore, as a mismatch in operational output due to time allocation differences between ``junior'' and ``senior'' tasks would result in wasted production, a rational employer will optimally ``orchestrate'' the productive effort by offering just enough ``senior'' job posts in the labor market to meet ``junior'' productivity. So, by setting ``junior'' job posts to $w_{q}^{\text{Jr}} > 0$ and ``senior'' job posts to $w_{q}^{\text{Sr}} > 0$, we get the ratio between ``junior'' and ``senior'' positions required to output any level of occupation $q$'s operation:
+        \begin{align}
+            w_{q}^{\text{Sr}} 
+            \times 
+            \mho_{q}^{\text{Sr}} 
+            &= 
+            w_{q}^{\text{Jr}} 
+            \times 
             \mho_{q}^{\text{Jr}}
             \\
             \therefore
-            w_{q}^{\text{Sr}} \times 
+            w_{q}^{\text{Sr}}
+            \times 
             \left(
                 \int_{\tilde{T}_{q}^{\text{Jr}}}^{1}
                     \text{ta}_q(l)
                     dl
             \right) ^ {-1}
-            = 
-            w_{q}^{\text{Jr}} \times 
+            &= 
+            w_{q}^{\text{Jr}}
+            \times 
             \left(
                 \int_{0}^{\tilde{T}_{q}^{\text{Jr}}}
                     \text{ta}_q(l)
@@ -1194,7 +1203,7 @@ Either way, if the available talent is enough to output occupation $q$'s operati
             \\
             \therefore
             w_{q}^{\text{Sr}}
-            = 
+            &= 
             w_{q}^{\text{Jr}}
             \times
             \left(
@@ -1209,7 +1218,7 @@ Either way, if the available talent is enough to output occupation $q$'s operati
                 }
             \right)
             .
-        \end{gather}
+        \end{align}
         
         With this, ``senior'' employability (i.e. the percentage of job posts for which they could be hired) is
         \begin{gather}
@@ -1222,8 +1231,9 @@ Either way, if the available talent is enough to output occupation $q$'s operati
                 w_{q}^{\text{Sr}}
             }
             = 1
+            ,
         \end{gather}
-        and ``junior'' employability is
+        while ``junior'' employability is
         \begin{align}
             \tilde{w}_{q}^{\text{Jr}} 
             &=
