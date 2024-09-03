@@ -883,14 +883,14 @@ The first worker spends their entire unitary time allowance trying their hardest
     \int_{0}^{\tilde{T}_{q}^{k}}{
         T_{q}(l,l_{q}^{k})
         \times
-        \text{ta}_{q}(l)
+        \text{TA}(l)
         dl
     }
     +
     \int_{0}^{\bar{l}}{
         T_{q}(l,l_{q}^{k})
         \times
-        \text{ta}_{q}(l)
+        \text{TA}(l)
         dl
     }
     = 1
@@ -898,51 +898,51 @@ The first worker spends their entire unitary time allowance trying their hardest
     \int_{0}^{\bar{l}}{
         1
         \times
-        \text{ta}_{q}(l)
+        \text{TA}(l)
         dl
     }
     = 1 -
     \int_{0}^{\tilde{T}_{q}^{k}}{
         1
         \times
-        \text{ta}_{q}(l)
+        \text{TA}(l)
         dl
     }
     \\
     \int_{0}^{\bar{l}}{
-        \text{ta}_{q}(l)
+        \text{TA}(l)
         dl
     }
     = 
     \int_{\tilde{T}_{q}^{k}}^{1}{
-        \text{ta}_{q}(l)
+        \text{TA}(l)
         dl
     }
     \\
-    \text{TA}_{q}(\bar{l}) -
-    \text{TA}_{q}(0)
+    \text{TA}(\bar{l}) -
+    \text{TA}(0)
     = 
-    \text{TA}_{q}(1) -
-    \text{TA}_{q}(\tilde{T}_{q}^{k})
+    \text{TA}(1) -
+    \text{TA}(\tilde{T}_{q}^{k})
     \\
-    \text{TA}_{q}(\bar{l})
+    \text{TA}(\bar{l})
     = 
-    \text{TA}_{q}(1) -
-    \text{TA}_{q}(\tilde{T}_{q}^{k})
+    \text{TA}(1) -
+    \text{TA}(\tilde{T}_{q}^{k})
     \\
     \bar{l}
     = 
-    \text{TA}_{q}^{-1}
+    \text{TA}^{-1}
     \left(
-        \text{TA}_{q}(1) -
-        \text{TA}_{q}(\tilde{T}_{q}^{k})
+        \text{TA}(1) -
+        \text{TA}(\tilde{T}_{q}^{k})
     \right)
     ,
 \end{gather*}
-so that $k$ accomplishes tasks of difficulty levels $0$ through $\tilde{T}_{q}^{k}$ on their ``first run'', and restarts their effort to provide additional $l \in \left[0,\text{TA}_{q}^{-1}
+so that $k$ accomplishes tasks of difficulty levels $0$ through $\tilde{T}_{q}^{k}$ on their ``first run'', and restarts their effort to provide additional $l \in \left[0,\text{TA}^{-1}
 \left(
-    \text{TA}_{q}(1) -
-    \text{TA}_{q}(\tilde{T}_{q}^{k})
+    \text{TA}(1) -
+    \text{TA}(\tilde{T}_{q}^{k})
 \right)
 \right]$ levels worth of complex tasks. Thus, the next worker does not need to start from zero, but rather from where $k$ ``left off'': either $\tilde{T}_{q}^{k}$, $\bar{l}$, or some $l \in [0, \tilde{T}_{q}^{k}]$.
         
@@ -1162,13 +1162,13 @@ Either way, if the available talent is enough to output occupation $q$'s operati
                 1
             }{
                 \int_{\tilde{T}_{q}^{\text{Jr}}}^{1}
-                \text{ta}_q(l)
+                \text{ta}(l)
                 dl
             }
             = 
             \left(
                 \int_{\tilde{T}_{q}^{\text{Jr}}}^{1}
-                    \text{ta}_q(l)
+                    \text{ta}(l)
                     dl
             \right) ^ {-1}
             .
@@ -1189,7 +1189,7 @@ Either way, if the available talent is enough to output occupation $q$'s operati
             \times 
             \left(
                 \int_{\tilde{T}_{q}^{\text{Jr}}}^{1}
-                    \text{ta}_q(l)
+                    \text{ta}(l)
                     dl
             \right) ^ {-1}
             &= 
@@ -1197,7 +1197,7 @@ Either way, if the available talent is enough to output occupation $q$'s operati
             \times 
             \left(
                 \int_{0}^{\tilde{T}_{q}^{\text{Jr}}}
-                    \text{ta}_q(l)
+                    \text{ta}(l)
                     dl
             \right) ^ {-1}
             \\
@@ -1209,11 +1209,11 @@ Either way, if the available talent is enough to output occupation $q$'s operati
             \left(
                 \frac{
                     \int_{\tilde{T}_{q}^{\text{Jr}}}^{1}
-                        \text{ta}_q(l)
+                        \text{ta}(l)
                         dl
                 }{
                     \int_{0}^{\tilde{T}_{q}^{\text{Jr}}}
-                        \text{ta}_q(l)
+                        \text{ta}(l)
                         dl
                 }
             \right)
@@ -1252,11 +1252,11 @@ Either way, if the available talent is enough to output occupation $q$'s operati
                 \left(
                     \frac{
                         \int_{\tilde{T}_{q}^{\text{Jr}}}^{1}
-                            \text{ta}_q(l)
+                            \text{ta}(l)
                             dl
                     }{
                         \int_{0}^{\tilde{T}_{q}^{\text{Jr}}}
-                            \text{ta}_q(l)
+                            \text{ta}(l)
                             dl
                     }
                 \right)
@@ -1266,11 +1266,11 @@ Either way, if the available talent is enough to output occupation $q$'s operati
                 1 + 
                 \frac{
                     \int_{\tilde{T}_{q}^{\text{Jr}}}^{1}
-                        \text{ta}_q(l)
+                        \text{ta}(l)
                         dl
                 }{
                     \int_{0}^{\tilde{T}_{q}^{\text{Jr}}}
-                        \text{ta}_q(l)
+                        \text{ta}(l)
                         dl
                 }
             \right) ^ {-1}
@@ -1279,15 +1279,15 @@ Either way, if the available talent is enough to output occupation $q$'s operati
                 1 + 
                 \frac{
                     \int_{0}^{1}
-                        \text{ta}_q(l)
+                        \text{ta}(l)
                         dl    
                         -
                     \int_{0}^{\tilde{T}_{q}^{\text{Jr}}}
-                        \text{ta}_q(l)
+                        \text{ta}(l)
                         dl
                 }{
                     \int_{0}^{\tilde{T}_{q}^{\text{Jr}}}
-                        \text{ta}_q(l)
+                        \text{ta}(l)
                         dl
                 }
             \right) ^ {-1}
@@ -1297,11 +1297,11 @@ Either way, if the available talent is enough to output occupation $q$'s operati
                 \frac{
                     1 -
                     \int_{0}^{\tilde{T}_{q}^{\text{Jr}}}
-                        \text{ta}_q(l)
+                        \text{ta}(l)
                         dl
                 }{
                     \int_{0}^{\tilde{T}_{q}^{\text{Jr}}}
-                        \text{ta}_q(l)
+                        \text{ta}(l)
                         dl
                 }
             \right) ^ {-1}
@@ -1312,17 +1312,17 @@ Either way, if the available talent is enough to output occupation $q$'s operati
                     1
                 }{
                     \int_{0}^{\tilde{T}_{q}^{\text{Jr}}}
-                        \text{ta}_q(l)
+                        \text{ta}(l)
                         dl
                 }
                 -
                 \frac{
                     \int_{0}^{\tilde{T}_{q}^{\text{Jr}}}
-                        \text{ta}_q(l)
+                        \text{ta}(l)
                         dl
                 }{
                     \int_{0}^{\tilde{T}_{q}^{\text{Jr}}}
-                        \text{ta}_q(l)
+                        \text{ta}(l)
                         dl
                 }
             \right) ^ {-1}
@@ -1333,7 +1333,7 @@ Either way, if the available talent is enough to output occupation $q$'s operati
                     1
                 }{
                     \int_{0}^{\tilde{T}_{q}^{\text{Jr}}}
-                        \text{ta}_q(l)
+                        \text{ta}(l)
                         dl
                 }
                 -
@@ -1345,13 +1345,13 @@ Either way, if the available talent is enough to output occupation $q$'s operati
                     1
                 }{
                     \int_{0}^{\tilde{T}_{q}^{\text{Jr}}}
-                        \text{ta}_q(l)
+                        \text{ta}(l)
                         dl
                 }
             \right) ^ {-1}
             \\&=
             \int_{0}^{\tilde{T}_{q}^{\text{Jr}}}
-                \text{ta}_q(l)
+                \text{ta}(l)
                 dl
             .
         \end{align}
@@ -1402,8 +1402,10 @@ Now, to generalize this conclusion, we shall define notation in terms of maximum
     \end{gather}
     so that any available position is its own job subtype and covers only a restrictive range of task difficulty, accounting for
     \begin{gather}
-    \Omega_{q}^{v} := 
-    \frac{1}{\mho_{q}^{v}} = 
+    \Omega_{q}^{v}
+    := 
+    \frac{1}{\mho_{q}^{v}}
+    := 
     \int_{
         \ell_{v-1}
     }^{
@@ -1427,7 +1429,7 @@ Now, to generalize this conclusion, we shall define notation in terms of maximum
     =
     \int_{0}^{1}
     \text{ta}(l)dl
-    =
+    :=
     1
     .
     \end{gather}
@@ -1462,39 +1464,49 @@ where $p \in \{1, 2, 3, \dots\}$ is the number of positions in a labor market, t
 
 Indeed, if it were possible to stratify beyond $w_q$, rational employers would readly do so, for, again, labor stratification reduces the uncertainty around production and serves as an insurance policy to guarantee the available talent is sufficient to output an occupation's operation.
 
-But, because of this, if $p$ can be greater than $w_q$, then the optimal production strategy is, logically, to offer as many types of jobs as possible, even infinitely many.
+But, because of this, if $p$ can be greater than $w_q$, then the optimal production strategy would, logically, be to offer as many types of jobs as possible, even infinitely many.
 
 Hence, infinite labor stratification is defined as an economic configuration where labor markets are subdivided into infinitesimal jobs, each contributing very little to production. In fact, in such a market, ``job posts'' are so small as to be indistinguishable from tasks themselves:
 \begin{gather}
-\lim_{p \rightarrow \infty}{
-    \tilde{w}_{q}^{v}
-}
-:= 
-\tilde{w}_{q}(l)
-=
-\text{ta}(l)
-\in [0,1]
-\
-\forall
-\
-v \in \{1, \dots, p\}
-\\
-\therefore
-w_{q}(l)
-= 
-w_q \times \tilde{w}_{q}(l)
-=
-w_q \times \text{ta}(l)
-\land
-\int_{0}^{1}{
+    \lim_{p \rightarrow \infty}{
+        \tilde{w}_{q}^{v}
+    }
+    := 
+    \lim_{p \rightarrow \infty}{
+        \left(
+            \frac{
+                w_{q}^{v}
+            }{
+                w_q
+            }
+        \right)
+    }
+    :=
+    \tilde{w}_{q}(l)
+    =
+    \text{ta}(l)
+    \in [0,1]
+    \
+    \forall
+    \
+    v \in \{1, \dots, p\}
+    \\
+    \therefore
     w_{q}(l)
-    dl
-}
-=
-w_q
-.
-\end{gather}
-
+    = 
+    w_q \times \tilde{w}_{q}(l)
+    =
+    w_q \times \text{ta}(l)
+    \land
+    \int_{0}^{1}{
+        w_{q}(l)
+        dl
+    }
+    =
+    w_q
+    .
+    \end{gather}
+    
 Therefore, employers are guaranteed maximum insurance against workers' potential underqualification; and employability is simply
 \begin{gather}
 \tilde{W}_{q}^{k} 
@@ -1549,6 +1561,16 @@ And we may formalize this conclusion as follows.
                 \tilde{w}_{q}^{v}
             }
             := 
+            \lim_{p \rightarrow \infty}{
+                \left(
+                    \frac{
+                        w_{q}^{v}
+                    }{
+                        w_q
+                    }
+                \right)
+            }
+            :=
             \tilde{w}_{q}(l)
             =
             \text{ta}(l)
@@ -1557,20 +1579,6 @@ And we may formalize this conclusion as follows.
             \forall
             \
             v \in \{1, \dots, p\}
-            \\
-            \therefore
-            w_{q}(l)
-            = 
-            w_q \times \tilde{w}_{q}(l)
-            =
-            w_q \times \text{ta}(l)
-            \land
-            \int_{0}^{1}{
-                w_{q}(l)
-                dl
-            }
-            =
-            w_q
             ,
             \end{gather}
             so that employability becomes:
@@ -1614,26 +1622,28 @@ All this said, infinitely stratified markets are rather abstract, and it is not 
     \\
     \sum_{v=1}^{p}
     w_{q}^{v}
-    =
+    :=
     w_q
     ,
     \end{gather}
     and
     \begin{gather}
-    w_{q}^{v} 
-    \in 
-    [1, w_q]
+    w_{q}^{v}
+    \geq
+    1
+    % \in 
+    % [1, w_q]
     \
     \forall
     \
     v \in \{1, \dots, p\}
     ,
     \end{gather}
-    as it is somewhat arbitrary setting minimum employment levels to any value other than one; for then it would always be optimal to choose an even smaller value than that, in which case we would converge back to an infinitely stratified labor market. Thus, we define there has to be at least one worker per job subtype.
+    as it is somewhat arbitrary setting minimum employment levels to any value other than one; for then it would always be optimal to choose an even smaller value than that, in which case we would converge back to an infinitely stratified labor market. Thus, we define there has to be at least one worker per position.
 \end{axiom}
 % endregion
 
-With this, we can now demonstrate that, given the above, maximum-monotonic labor stratification is, in fact, the only optimal production strategy and, so, holds in the labor market. But, to do so, we must first derive an upper limit for aggregate operational output, irrespective of productive arrangement, to serve as our ``benchmark''.
+With this, we can now demonstrate that, given the above, maximum labor stratification is, in fact, the most efficient production strategy and, so, holds in the labor market. But, to do so, we must first derive an upper limit for aggregate operational output, irrespective of productive arrangement, to serve as our ``benchmark'' and show other strategies cannot yield higher production.
 
 % region: maximum operational output lemma (mool) 
 \begin{lemma}[Maximum Operational Output Lemma, MOOL]
@@ -4530,11 +4540,11 @@ With this, we have shown maximally stratified production is the economic arrange
         \left[
             \tilde{T}_{q}^{k}
             \geq
-            \text{TA}_{q}^{-1}
+            \text{TA}^{-1}
             \left(
                 \frac{v}{w_q}
                 +
-                \text{TA}_{q}(0)
+                \text{TA}(0)
             \right)
         \right]
     \end{align}
@@ -4597,11 +4607,11 @@ With this, we have shown maximally stratified production is the economic arrange
             \left[
                 \tilde{T}_{q}^{k}
                 \geq
-                \text{TA}_{q}^{-1}
+                \text{TA}^{-1}
                 \left(
                     \frac{v}{w_q}
                     +
-                    \text{TA}_{q}(0)
+                    \text{TA}(0)
                 \right)
             \right]
             .
@@ -5026,11 +5036,11 @@ And, with this, we may derive the General Competitiveness Corollary.
             \left[
                 \tilde{T}_{k}^{q}
                 \geq
-                \text{TA}_{k}^{-1}
+                \text{TA}^{-1}
                 \left(
                     \frac{v}{w_k}
                     +
-                    \text{TA}_{k}(0)
+                    \text{TA}(0)
                 \right)
             \right]
             .
