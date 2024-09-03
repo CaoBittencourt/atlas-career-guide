@@ -2338,7 +2338,7 @@ With this, we can now demonstrate that, given the above, maximum labor stratific
         =
         \int_{0}^{1}
         \text{ta}(l)dl
-        =
+        :=
         1
         \end{gather}
         be the vector of optimal responsability bounds that maximizes operational output, such that
@@ -2390,7 +2390,7 @@ With this, we can now demonstrate that, given the above, maximum labor stratific
                 }
                 \text{ta}(l)dl
             \right) ^ {-1}
-            =
+            :=
             w_q
             .
         \end{align}
@@ -2434,15 +2434,10 @@ With this, we can now demonstrate that, given the above, maximum labor stratific
         \end{align}
         where $\omega_{q}^{v} \in [0,1]$ is the percentage of worker $v$'s time allowance dedicated to the emphasized $l \in [\ell_{v-1}^{*}, \ell_{v}]$ responsability spectrum.
         
-        Furthermore, because aggregate operational output is given by the Leontief production function, [standardize this notation]
+        Furthermore, because aggregate operational output is given by the Leontief production function, 
         \begin{gather}
-        % \begin{align}
-            \mho_{q}(
-                \boldsymbol{\ell_{q}}
-                ,\boldsymbol{\omega_{q}}
-            )
-            =
-            % &=
+            \mho_{q}
+            :=
             \mho(
                 \boldsymbol{1},
                 \boldsymbol{\mho_q}(
@@ -2450,7 +2445,7 @@ With this, we can now demonstrate that, given the above, maximum labor stratific
                     ,\boldsymbol{\omega_{q}}
                 )
             )
-            =
+            :=
             \min(
                 \boldsymbol{1}
                 \times
@@ -2465,7 +2460,7 @@ With this, we can now demonstrate that, given the above, maximum labor stratific
                 \boldsymbol{\ell_{q}}
                 ,\boldsymbol{\omega_{q}}
             )
-            =
+            :=
             (
                 \mho_{q}^{1}
                 ,
@@ -2473,14 +2468,10 @@ With this, we can now demonstrate that, given the above, maximum labor stratific
                 ,
                 \mho_{q}^{w_q}
             )
-            % \left\{
-            %     \mho_{q}^{v}
-            %     ,
-            %     v \in \{1, \dots, w_q\}
-            % \right\}
             ,
             \\
-            \mho_{q}^{v} = 
+            \mho_{q}^{v}
+            := 
             \min
             \left(
                     \frac{
@@ -2499,75 +2490,8 @@ With this, we can now demonstrate that, given the above, maximum labor stratific
                         }
                     }
                 \right)
-            % \\
-            % &=
-            % \min(
-            %     \boldsymbol{1}
-            %     \times
-            %     \boldsymbol{\mho_q}(
-            %         \boldsymbol{\ell_{q}}
-            %         ,\boldsymbol{\omega_{q}}
-            %     )
-            % )
-            % \\
-            % &=
-            % \min
-            % \left(
-            %     \frac{
-            %         \omega_{q}^{1}
-            %     }{
-            %         \int_{\ell_{0}^{*}}^{\ell_1}{
-            %             \text{ta}(l)dl
-            %         }
-            %     }
-            %     ,
-            %     \frac{
-            %         1 - \omega_{q}^{1}
-            %     }{
-            %         \int_{\ell_1}^{\ell_{1}^{*}}{
-            %             \text{ta}(l)dl
-            %         }
-            %     }
-            %     ,
-            %     \dots
-            %     ,
-            %     \frac{
-            %         \omega_{q}^{w_q}
-            %     }{
-            %         \int_{\ell_{w_q - 1}^{*}}^{\ell_{w_q}}{
-            %             \text{ta}(l)dl
-            %         }
-            %     }
-            %     ,
-            %     \frac{
-            %         1 - \omega_{q}^{w_q}
-            %     }{
-            %         \int_{\ell_{w_q}}^{\ell_{w_q}^{*}}{
-            %             \text{ta}(l)dl
-            %         }
-            %     }
-            % \right)
-            % \\
-            % &:=
-            % \min
-            % \left(
-            %     \frac{1}{
-            %         \int_{0}^{\ell_1}{
-            %             \text{ta}(l)dl
-            %         }
-            %     }
-            %     ,
-            %     \dots
-            %     ,
-            %     \frac{1}{
-            %         \int_{\ell_{w_q-1}}^{1}{
-            %             \text{ta}(l)dl
-            %         }
-            %     }
-            % \right)
             ,
         \end{gather}
-        % \end{align}
         it would be pointless if only a subset of employees were to increase their operational output by themselves; for an occupation's complex tasks are all complementary: they work together to acchieve its operation. Hence, for $\mho_{q}(
             \boldsymbol{\ell_q}
             ,\boldsymbol{\omega_q}
@@ -3117,23 +3041,16 @@ With this, we can now demonstrate that, given the above, maximum labor stratific
                 \text{ta}(l)dl
             \right)
             =
-            % \sum_{v=1}^{w_q}
-            % \int_{
-            %     \ell_{v-1}^{*}
-            % }^{
-            %     \ell_{v}^{*}
-            % }
-            % \text{ta}(l)dl
-            % =
             \int_{0}^{1}
             \text{ta}(l)dl
-            =
+            :=
             1
             .
         \end{gather}
         
         Finally, even with an $\boldsymbol{\omega_{q}^{v}}$ vector of partial time allocations for each worker, at least one difficulty subinterval would have to be neglected to emphasize another, because
         \begin{gather}
+            1 =:
             \boldsymbol{1} ^ \top
             \cdot
             \boldsymbol{\omega_{q}^{v}}
@@ -3141,8 +3058,7 @@ With this, we can now demonstrate that, given the above, maximum labor stratific
             \boldsymbol{1} ^ \top
             \cdot
             \boldsymbol{\Omega_{q}^{v}}
-            =
-            1
+            := 1
             \implies
             \min\left(
                 \boldsymbol{\omega_{q}^{v}}
@@ -3169,10 +3085,9 @@ With this, we can now demonstrate that, given the above, maximum labor stratific
         \end{gather}
         as before.
         
-        Thus, we have demonstrated there cannot be, in any productive arrangement, a higher aggregate operational output than $w_q$, that is the number of employees in a particular labor market, as all attempts to increase production, actually, end up hindering it. 
+        Thus, we have demonstrated there cannot be, in any productive arrangement, a higher aggregate operational output than $w_q$, that is the number of employees in the workforce, as all attempts to increase production, actually, end up hindering it. 
         
-        The intuition for this is quite simple. Production strategies can merely distribute the available talent across an occupation's responsability spectrum: they are but ways of splitting and arranging tasks conveniently (via independent production, or any level of labor stratification); they do not, however, change activities' time requirements, nor the time allowances of employees, both of which are, by definition, equivalent. [] Therefore, these economic configurations only serve the purpose of ``safeguarding'' operational output, guaranteeing production in potentially adverse market conditions. The main limiting factors to production, then, are workers' capacity and time itself.
-        , for the most one can produce in a day is a ``day's work''.
+        The intuition for this is quite simple. Production strategies can merely distribute the available talent across an occupation's responsability spectrum: they are but ways of splitting and organizing tasks conveniently (via independent production, or any level of labor stratification); they do not, however, change activities' time requirements, nor the time allowances of employees, both of which are, by definition, equivalent. Therefore, these economic configurations only serve to ``safeguard'' operational output, guaranteeing production in potentially adverse market conditions. The main limiting factors to production, then, are workers' capacity and time itself. So, the most one can produce in a day is a ``day's work''.
     \end{proof}
 \end{lemma}
 % endregion
