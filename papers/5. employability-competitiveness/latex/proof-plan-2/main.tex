@@ -4192,65 +4192,128 @@ From the above, it follows logically that maximum-monotonic labor stratification
             0
             ,
         \end{gather}
-        that is, if an employee cannot fully output a responsability spectrum, their contribution to production is void, limiting aggregate operational output. This means choosing any production strategy other than maximum-monotonic labor stratification is a risk with no upside, when workers may have varying productivity (WSDA). For, as we have shown, this arrangement by itself guarantees minimum productivity requirements (PSL) and maximum operational output (MOOL). So, it would be irrational of employers to organize production in another manner. Or, more succinctly,
-        \begin{align}
-            &\mathbb{E}[
+        that is, if an employee cannot fully output a responsability spectrum, their contribution to production is void, limiting aggregate operational output. This means choosing any production strategy other than maximum-monotonic labor stratification is a risk with no upside, when workers may have varying productivity (WSDA). For, as we have shown, this arrangement by itself guarantees minimum productivity requirements (PSL) and maximum operational output (MOOL). So, it would be irrational of employers to organize production in another manner. Or, more succinctly, we can write for all $v \in \{1, \dots, w_q\}$:
+        % \begin{align}
+        %     &\mathbb{E}[
+        %         \mho_{q}^{\text{IP}}
+        %         \
+        %         |
+        %         \
+        %         \mathbb{E}[
+        %             \tilde{T}_{q}^{k}
+        %         ]
+        %         \in [0,1]
+        %     ]
+        %     \\
+        %     &\leq
+        %     \mathbb{E}[
+        %         \mho_{q}^{\text{SS}}
+        %         \
+        %         |
+        %         \
+        %         \mathbb{E}[
+        %             \tilde{T}_{q}^{k}
+        %         ]
+        %         \in [0,1]
+        %     ]
+        %     \\
+        %     &\leq
+        %     \mathbb{E}[
+        %         \mho_{q}^{\text{MS}}
+        %         \
+        %         |
+        %         \
+        %         \mathbb{E}[
+        %             \tilde{T}_{q}^{k}
+        %         ]
+        %         \in [0,1]
+        %     ]
+        %     \\
+        %     &=
+        %     \mathbb{E}[
+        %         \mho_{q}^{\text{IP}}
+        %         \
+        %         |
+        %         \
+        %         \tilde{T}_{q}^{k}
+        %         = 1
+        %     ]
+        %     \\
+        %     &=
+        %     w_q
+        %     \\
+        %     &
+        %     \
+        %     \forall
+        %     \
+        %     k,q \in \{1, \dots, n\}
+        %     ,
+        % \end{align}
+        \begin{gather}
+            \mathbb{E}[
                 \mho_{q}^{\text{IP}}
                 \
                 |
                 \
                 \mathbb{E}[
-                    \tilde{T}_{q}^{k}
+                    \tilde{T}_{q}^{v}
                 ]
                 \in [0,1]
             ]
             \\
-            &\leq
+            \leq
             \mathbb{E}[
-                \mho_{q}^{\text{SS}}
+                \mho_{q}^{\text{BS}}
                 \
                 |
                 \
                 \mathbb{E}[
-                    \tilde{T}_{q}^{k}
+                    \tilde{T}_{q}^{v}
                 ]
                 \in [0,1]
             ]
             \\
-            &\leq
+            \leq
+            \mathbb{E}[
+                \mho_{q}^{\text{3S}}
+                \
+                |
+                \
+                \mathbb{E}[
+                    \tilde{T}_{q}^{v}
+                ]
+                \in [0,1]
+            ]
+            \\
+            \vdots
+            \\
+            \leq
             \mathbb{E}[
                 \mho_{q}^{\text{MS}}
                 \
                 |
                 \
                 \mathbb{E}[
-                    \tilde{T}_{q}^{k}
+                    \tilde{T}_{q}^{v}
                 ]
                 \in [0,1]
             ]
             \\
-            &=
+            =
             \mathbb{E}[
                 \mho_{q}^{\text{IP}}
                 \
                 |
                 \
-                \tilde{T}_{q}^{k}
+                \tilde{T}_{q}^{v}
                 = 1
             ]
-            \\
-            &=
+            % \\
+            =
             w_q
-            \\
-            &
-            \
-            \forall
-            \
-            k,q \in \{1, \dots, n\}
             ,
-        \end{align}
-        where each of the terms above represents the expected value of aggregate operational output given the expected productivity in the workforce, for the three main production strategies: 
-        semi-stratified (SS), and independent production (IP), and maximum-monotonic labor stratification (MS).
+        \end{gather}
+        where each of the terms above represents the expected value of aggregate operational output given the expected productivity in the workforce, for the all production strategies other than infinite stratification.
 
         In other words, splitting responsabilities in accordance with competence is always as productive as the maximum operational output (viz. that which is obtained when employing perfectly qualified workers independently), provided employees are sufficiently qualified for their responsabilities. But, again, this is, by definition, guaranteed by employers' rationality, as well as the simple fact the economy is already producing its current operational output (see PSL). 
         
