@@ -1,0 +1,4 @@
+PWD /home/Cao/Storage/github/atlas-research/papers/5. employability-competitiveness/latex/proof-plan-2
+INPUT /etc/texmf/web2c/texmf.cnf
+INPUT /usr/share/texmf/web2c/texmf.cnf
+INPUT /var/lib/texmf/web2c/pdftex/pdflatex.fmt
