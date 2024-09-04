@@ -3524,7 +3524,7 @@ Having derived the optimal responsability ranges for a maximally stratified labo
     \begin{proof}
         To show maximally stratified markets pose the lowest barrier of entry, let us consider the minimum required productivity for each economic configuration.
         
-        So, if production is organized independently,
+        If production is organized independently,
         \begin{gather}
         \mho_q = w_q
         \iff
@@ -3576,7 +3576,7 @@ Having derived the optimal responsability ranges for a maximally stratified labo
         \land
         \tilde{w}_{q}^{\text{Jr}}
         \in
-        (0,1]
+        (0,1)
         ,
         \end{gather}
         rather than $1 \times 1 = 1,$ with independent production. And, if there were three levels of seniority, with $w_{q}^{\text{Ir}}$ interns (less qualified than juniors and seniors), productivity requirements would be even lower:
@@ -3619,7 +3619,7 @@ Having derived the optimal responsability ranges for a maximally stratified labo
         \tilde{w}_{q}^{\text{Ir}},
         \tilde{w}_{q}^{\text{Jr}}
         \in
-        (0,1]
+        (0,1)
         \land
         \tilde{w}_{q}^{\text{Ir}}
         +
@@ -3824,8 +3824,7 @@ Now that we have proven maximum labor stratification with unitary employment is 
             \
             \forall
             \
-            v \in \{1, \dots, p\},
-            p \in \{1, \dots, w_q\}
+            v \in \{1, \dots, w_q\}
             \\
             &
             \iff
@@ -3907,7 +3906,7 @@ Now that we have proven maximum labor stratification with unitary employment is 
     \end{proof}
     
     \begin{proof}[Proof 2]
-        Though simple in itself, it can be easier to understand this proof iteratively. So, as previously, we define the number of job subtypes to be
+        Though simple in itself, it is easier to understand this proof iteratively. Hence, as previously, we can define the number of job subtypes to be
         \begin{gather}
             p := w_q
             ,
@@ -3948,58 +3947,134 @@ Now that we have proven maximum labor stratification with unitary employment is 
         \frac{1}{w_q}
         ,
         \end{gather}
-        we define $\ell_{p - 1}$ by minimizing the amount of perfectly qualified workers for efficient production. And, similarly, for the $
+        we estimate
+        \begin{align}
+            \ell_{p - 1}
+            &=
+            \text{TA}^{-1}\left(
+                \text{TA}(1)
+                -
+                \frac{1}{w_q}
+                \right)
+            \\
+            &=
+            \text{TA}^{-1}\left(
+                1
+                +
+                \text{TA}(0)
+                -
+                \frac{1}{w_q}
+            \right)
+            \\
+            &=
+            \text{TA}^{-1}\left(
+                \frac{w_q}{w_q}
+                -
+                \frac{1}{w_q}
+                +
+                \text{TA}(0)
+            \right)
+            \\
+            &=
+            \text{TA}^{-1}\left(
+                \frac{w_q - 1}{w_q}
+                +
+                \text{TA}(0)
+            \right)
+            \\
+            &=
+            \ell_{w_q - 1}^{*}
+            \\
+            &\because
+            \text{TA}(1)
+            -
+            \text{TA}(0)
+            =
+            \int_{0}^{1}{
+                \text{ta}(l)
+                dl
+            }
+            =
+            1
+        \end{align}
+        by minimizing the amount of perfectly qualified workers for efficient production. And, similarly, for the $
         l \in [
             \ell_{p - 2},
             \ell_{p - 1}
         ]
-        $ responsability spectrum, if $w_{p-1} \geq 1$ is set to 
+        $ responsability spectrum, if $w_{p-1} \geq 1$ is
         \begin{gather}
         w_{p-1} := w_{w_q - 1} = 1
         ,
         \end{gather}
         we minimize productivity requirements:
-        \begin{gather}
-        \int_{
+        \begin{align}
+            &
+            \int_{
+                \ell_{p-2}
+            }^{
+                \ell_{p-1}
+            }{
+                \text{ta}(l)dl
+            }
+            =
+            \int_{
+                \ell_{w_q-2}
+            }^{
+                \ell_{w_q-1}
+            }{
+                \text{ta}(l)dl
+            }
+            =
+            \frac{1}{w_q}
+            \\
+            &
+            \implies
             \ell_{p-2}
-        }^{
-            \ell_{p-1}
-        }{
-            \text{ta}(l)dl
-        }
-        =
-        \int_{
-            \ell_{w_q-2}
-        }^{
-            \ell_{w_q-1}
-        }{
-            \text{ta}(l)dl
-        }
-        =
-        \frac{1}{w_q}
-        .
-        \end{gather}
+            =
+            \ell_{w_q-2}^{*}
+            =
+            \text{TA}^{-1}\left(
+                \frac{w_q - 2}{w_q}
+                +
+                \text{TA}(0)
+            \right)
+            .
+        \end{align}
         Again, $\ell_{p - 3}$ is derived by minimizing the number of highly productive workers:
-        \begin{gather}
-        \int_{
+        \begin{align}
+            &
+            \int_{
+                \ell_{p-3}
+            }^{
+                \ell_{p-2}
+            }{
+                \text{ta}(l)dl
+            }
+            =
+            \int_{
+                \ell_{w_q-3}
+            }^{
+                \ell_{w_q-2}
+            }{
+                \text{ta}(l)dl
+            }
+            =
+            \frac{1}{w_q}
+            \\
+            &
+            \implies
             \ell_{p-3}
-        }^{
-            \ell_{p-2}
-        }{
-            \text{ta}(l)dl
-        }
-        =
-        \int_{
-            \ell_{w_q-3}
-        }^{
-            \ell_{w_q-2}
-        }{
-            \text{ta}(l)dl
-        }
-        =
-        \frac{1}{w_q}
-        ;
-        \end{gather}
+            =
+            \ell_{w_q-3}^{*}
+            =
+            \text{TA}^{-1}\left(
+                \frac{w_q - 3}{w_q}
+                +
+                \text{TA}(0)
+            \right)
+            ;
+        \end{align}
         and, so on and so forth, always minimizing productivity requirements with $w_{q}^{v} := 1 \ \forall \ v \in \{1, \dots, w_q\}$. Notice the pattern here is the same as in the Optimal Stratification Lemma. Therefore, responsability bounds, and also employment levels, are the same as well. Hence,
         \begin{gather}
         p = w_q,
