@@ -1555,30 +1555,15 @@ We may formalize this conclusion as follows.
         w_q
         ,
         \end{gather}
-        then employers' optimal strategy is to infinitely stratify positions as infinitesimal tasks,
+        employers' optimal choice is to infinitely split positions as infinitesimal tasks,
         \begin{gather}
             \lim_{p \rightarrow \infty}{
                 \tilde{w}_{q}^{v}
             }
             := 
-            \lim_{p \rightarrow \infty}{
-                \left(
-                    \frac{
-                        w_{q}^{v}
-                    }{
-                        w_q
-                    }
-                \right)
-            }
-            :=
             \tilde{w}_{q}(l)
             =
             \text{ta}(l)
-            \in [0,1]
-            \
-            \forall
-            \
-            v \in \{1, \dots, p\}
             ,
             \end{gather}
             so that employability becomes:
@@ -1815,7 +1800,7 @@ With this, we can now demonstrate that, given the above, maximum labor stratific
         
         Therefore, a perfectly qualified employee working full-time and independently can output one unit of an occupation's complex tasks with one unit of their time (i.e. their entire time allowance). And, likewise, a workforce with $w_q$ employees identical to this one produces $w_q$ units of operational output. Or, to put it simply, a maximally productive person acchieves maximum production.
         
-        We, now, proceed with the binary setting presented above, where employers choose a $\tilde{w}_{q}^{\text{Jr}} \in (0,1)$ percentage of less qualified (i.e. ``junior'') job posts to offer, which determines the remaining $\tilde{w}_{q}^{\text{Sr}} = 1 - \tilde{w}_{q}^{\text{Jr}} \in (0,1)$ percentage of perfectly qualified (or ``senior'') positions.
+        We, now, proceed with the binary setting presented above, where employers choose a $\tilde{w}_{q}^{\text{Jr}} \in (0,1)$ percentage of less qualified (i.e. ``junior'') job posts to offer, which determines the remaining $\tilde{w}_{q}^{\text{Sr}} := 1 - \tilde{w}_{q}^{\text{Jr}} \in (0,1)$ percentage of perfectly qualified (or ``senior'') positions.
         
         In this case,
         \begin{align}
@@ -2395,7 +2380,7 @@ With this, we can now demonstrate that, given the above, maximum labor stratific
             .
         \end{align}
         
-        Nevertheless, because every worker has the same unitary time allowance, this would also entail the complementary subinterval of complex tasks $l \in (\ell_{v}, \ell_{v}^{*}]$ would either not be produced at all, in which case
+        Nevertheless, because every worker has the same unitary time allowance, this would also entail the complementary subinterval of complex tasks $l \in [\ell_{v}, \ell_{v}^{*}]$ would either not be produced at all, in which case
         \begin{align}
             \mho(\boldsymbol{\ell_{q}})
             =
@@ -2511,12 +2496,14 @@ With this, we can now demonstrate that, given the above, maximum labor stratific
         \end{gather}
         which requires all partial operational outputs to surpass the following point of equilibrium:
         \begin{align}
-            &\mho_{q}(
+            &\mho(
+            % &\mho_{q}(
                 \boldsymbol{\ell_q}
                 ,\boldsymbol{\omega_q}
             ) 
             =
-            \mho_{q}(
+            \mho(
+            % \mho_{q}(
                 \boldsymbol{\ell_{q}^{*}}
             ) 
             = 
@@ -3048,8 +3035,9 @@ With this, we can now demonstrate that, given the above, maximum labor stratific
             .
         \end{gather}
         
-        Finally, even with an $\boldsymbol{\omega_{q}^{v}}$ vector of partial time allocations for each worker, at least one difficulty subinterval would have to be neglected to emphasize another, because
+        Finally, even with an $\boldsymbol{\omega_{q}^{v}}$ vector of partial time allocations for each worker, at least one difficulty subinterval would have to be neglected to emphasize another,
         \begin{gather}
+            \because
             1 =:
             \boldsymbol{1} ^ \top
             \cdot
@@ -3087,7 +3075,7 @@ With this, we can now demonstrate that, given the above, maximum labor stratific
         
         Thus, we have demonstrated there cannot be, in any productive arrangement, a higher aggregate operational output than $w_q$, that is the number of employees in the workforce, as all attempts to increase production, actually, end up hindering it. 
         
-        The intuition for this is quite simple. Production strategies can merely distribute the available talent across an occupation's responsability spectrum: they are but ways of splitting and organizing tasks conveniently (via independent production, or any level of labor stratification); they do not, however, change activities' time requirements, nor the time allowances of employees, both of which are, by definition, equivalent. So, these economic configurations only serve to ``safeguard'' operational output against worker's potential underqualification. The main limiting factors to production, then, are workers' capacity and time itself. Therefore, the most one can produce in a day is a ``day's work''.
+        The intuition for this is quite simple. Production strategies can merely distribute the available talent across an occupation's responsability spectrum: they are but ways of splitting and organizing tasks conveniently (via independent production, or any level of labor stratification); they do not, however, change activities' time requirements, nor the time allowances of employees, both of which are, by definition, equivalent. So, these economic configurations only serve to ``safeguard'' operational output against worker's potential underqualification. The main limiting factors to production, then, are workers' capacity and time itself. Hence, we may say, somewhat tautologically, the most one can produce in a day is a ``day's work''.
     \end{proof}
 \end{lemma}
 % endregion
