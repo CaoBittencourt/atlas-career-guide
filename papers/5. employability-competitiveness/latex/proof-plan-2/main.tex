@@ -1003,9 +1003,9 @@ furthermore, in a continuous setting, rational employers will maximize their hir
 now, as for employees' work routine, rational employers will have them work over their responsability spectrum in a proportional and optimal matter, thus avoiding wasting production (i.e. uncompleted ``loops'' over the responsability spectrum). [this means each employee will spend their entire time allowance producing a partial operational output, that is a multiple of the difficulty subinterval they were hired to accomplish, which will, in turn, contribute, alonside the partial outputs of other employees, to accomplish the entire occupational operation.]
 the reason this avoids wasting production is because [...].
 
-% region: weak skill differences axiom, wsda
+% region: weak skill differences axiom, wsda 
 \begin{axiom}[Weak Skill Differences Axiom, WSDA]
-    There are, or there could be, skill differences among people in the workforce (i.e. workers are not all ``clones'' of one another or equally competent). Thus, the expected value of productivity is:
+    There are, or there could be, skill differences among people in the workforce (i.e. workers are not all ``clones'' of one another or equally competent). So, the expected value of productivity is:
     \begin{gather}
         \mathbb{E}[
             \tilde{T}_{q}^{k}
@@ -1033,7 +1033,7 @@ the reason this avoids wasting production is because [...].
 % region: demonstration 
 \section{The Employability Theorem}
 \subsection{What is Employability?}
-% region: employability definition
+% region: employability definition 
 \begin{definition}[Employability]
     \label{def_employability}
     In any labor market, employability is the percentage of available jobs in which one could be hired:
@@ -3093,6 +3093,7 @@ With this, we can now demonstrate that, given the above, maximum labor stratific
 % endregion
 
 In the lemma above, we have assumed there to be an optimal $\boldsymbol{\ell_{q}^{*}}$ vector of responsability bounds maximizing operational output in stratified production. We shall, now, devote out attention to describing what such a vector would have to be like and, thus, how production is optimally stratified.
+
 % region: optimal stratificaion lemma (osl) 
 \begin{lemma}[Optimal Stratification Lemma, OSL]
     Because in a maximally and monotonically stratified labor market every position is its own job subtype (for, again, employment levels are unitary), optimal production is, then, obtained not by choosing how many workers to allocate to tasks of varying difficulty levels, but instead by setting appropriate responsability ranges for each position (i.e. which tasks to allocate \textit{to} workers). The bounds for these ranges are:
@@ -3514,7 +3515,210 @@ In the lemma above, we have assumed there to be an optimal $\boldsymbol{\ell_{q}
 \end{lemma}
 % endregion
 
-Having derived the optimal responsability ranges for a maximally stratified labor market with unitary employment levels, we shall demonstrate other types of labor stratification cannot attain in an efficient economy.
+Having derived the optimal responsability ranges for a maximally stratified labor market with unitary employment levels, we shall demonstrate other types of labor stratification cannot attain in an efficient economy because: 1) no other strategy has lower productivity requirements (MPL); 2) and, given MSA, there is only one set of optimal responsability bounds and employment levels (ESL).
+
+% region: minimum productivity lemma (mpl) 
+\begin{lemma}[Minimum Productivity Lemma, MPL]
+    Maximally stratified markets have the lowest barrier of entry out of all valid productive arrangements.
+    
+    \begin{proof}
+        To show maximally stratified markets pose the lowest barrier of entry, let us consider the minimum required productivity for each economic configuration.
+        
+        So, if production is organized independently,
+        \begin{gather}
+        \mho_q = w_q
+        \iff
+        \tilde{T}_{q}^{v}
+        =
+        1
+        \
+        \forall
+        \
+        v \in \{1, \dots, w_q\}
+        ,
+        \end{gather}
+        that is, either all $w_q$ employees are perfectly qualified, or maximum operational output (see MOOL) is not acchieved. Moreover, in a binary setting,
+        \begin{gather}
+        \mho_q = w_q
+        \iff
+        \tilde{T}_{q}^{v}
+        \geq
+        \tilde{T}_{q}^{\text{Jr}}
+        \in
+        [0,1)
+        \
+        \forall
+        \
+        v \in \{1, \dots, w_{q}^{\text{Jr}}\}
+        \land
+        \tilde{T}_{q}^{v}
+        =
+        1
+        ,
+        \end{gather}
+        for the rest of the workforce (i.e. all junior employess have at least junior productivity, and all senior employees are perfectly qualified), which means productivity requirements are lower in this economic configuration, with a weighted productivity of, at least,
+        \begin{gather}
+        \tilde{w}_{q}^{\text{Jr}}
+        \times
+        \tilde{T}_{q}^{\text{Jr}}
+        +
+        (
+            1 - \tilde{w}_{q}^{\text{Jr}}
+        )
+        \times
+        1
+        <
+        1
+        \because
+        \tilde{T}_{q}^{\text{Jr}}
+        \in
+        [0,1)
+        \land
+        \tilde{w}_{q}^{\text{Jr}}
+        \in
+        (0,1]
+        ,
+        \end{gather}
+        rather than $1 \times 1 = 1,$ with independent production. And, if there were three levels of seniority, with $w_{q}^{\text{Ir}}$ interns (less qualified than juniors and seniors), productivity requirements would be even lower:
+        \begin{align}
+        \tilde{w}_{q}^{\text{Ir}}
+        \times
+        \tilde{T}_{q}^{\text{Ir}}
+        +
+        \tilde{w}_{q}^{\text{Jr}}
+        \times
+        \tilde{T}_{q}^{\text{Jr}}
+        +
+        (
+            1 - \tilde{w}_{q}^{\text{Jr}} - \tilde{w}_{q}^{\text{Ir}}
+        )
+        \times
+        1
+        \\
+        <
+        \tilde{w}_{q}^{\text{Jr}}
+        \times
+        \tilde{T}_{q}^{\text{Jr}}
+        +
+        (
+            1 - \tilde{w}_{q}^{\text{Jr}}
+        )
+        \times
+        1
+        \\
+        <
+        1
+        \\
+        \because
+        \tilde{T}_{q}^{\text{Ir}}
+        <
+        \tilde{T}_{q}^{\text{Jr}}
+        \in
+        [0,1)
+        \land
+        \tilde{w}_{q}^{\text{Ir}},
+        \tilde{w}_{q}^{\text{Jr}}
+        \in
+        (0,1]
+        \land
+        \tilde{w}_{q}^{\text{Ir}}
+        +
+        \tilde{w}_{q}^{\text{Jr}}
+        \in
+        (0,1)
+        .
+        \end{align}
+        
+        And the pattern continues for all levels of labor stratification, up to the limit of $w_q$ unique positions in a maximally and monotonically stratified labor market, where minimum required productivity is the lowest it can be when infinite stratification is ruled out (MSA):
+        \begin{gather}
+        \sum_{v=1}^{w_q}{
+            \tilde{w}_{q}^{v}
+            \times
+            \tilde{T}_{q}^{v}
+        }
+        =
+        \left(
+            \frac{1}{w_q}
+        \right)
+        \sum_{v=1}^{w_q}{
+            \ell_{q}^{v}
+        }
+        =
+        \left(
+            \frac{1}{w_q}
+        \right)
+        \sum_{v=1}^{w_q}{
+            \text{TA}^{-1}\left(
+            \frac{v}{w_q}
+            +
+            \text{TA}(0)
+        \right)
+        }
+        .
+        \end{gather}
+        
+        And, to summarize, we could also write:
+        \begin{gather}
+            \underline{\tilde{T}_{q}^{\text{IP}}}
+            = 
+            1
+            ,
+            \\
+            \underline{\tilde{T}_{q}^{\text{BS}}}
+            = 
+            \tilde{T}_{q}^{\text{Jr}}
+            <
+            1
+            \therefore
+            \underline{\tilde{T}_{q}^{\text{BS}}}
+            <
+            \underline{\tilde{T}_{q}^{\text{IP}}}
+            \\
+            \underline{\tilde{T}_{q}^{\text{3S}}}
+            = 
+            \tilde{T}_{q}^{\text{Ir}}
+            <
+            \tilde{T}_{q}^{\text{Jr}}
+            <
+            1
+            \therefore
+            \underline{\tilde{T}_{q}^{\text{3S}}}
+            <
+            \underline{\tilde{T}_{q}^{\text{BS}}}
+            <
+            \underline{\tilde{T}_{q}^{\text{IP}}}
+            ,
+            \\
+            \vdots
+            \\
+            \underline{\tilde{T}_{q}^{\text{MS}}}
+            = 
+            \ell_1
+            <
+            \dots
+            <
+            \tilde{T}_{q}^{\text{3S}}
+            <
+            \dots
+            <
+            1
+            \therefore
+            \underline{\tilde{T}_{q}^{\text{MS}}}
+            <
+            \dots
+            <
+            \underline{\tilde{T}_{q}^{\text{3S}}}
+            <
+            \underline{\tilde{T}_{q}^{\text{BS}}}
+            <
+            \underline{\tilde{T}_{q}^{\text{IP}}}
+            ,
+        \end{gather}
+        where the underline denotes the minimum required productivity to implement each strategy, while the superscripts stand for ``independent production'' (IP), ``binary stratification'' (BS), ``three-fold stratification'' (3S), and ``maximum stratification'' (MS), respectively.
+    \end{proof}
+\end{lemma}
+% endregion
+
 % region: equivalent/efficient stratification lemma (esl) 
 \begin{lemma}[Efficient Stratification Lemma, ESL]
     Any efficient labor market where employers choose both $\boldsymbol{w_q}$ and $\boldsymbol{\ell_q}$ with $p \in \{1, \dots, w_q\}$ types of job posts converges to maximum labor stratification with
@@ -3826,7 +4030,7 @@ Having derived the optimal responsability ranges for a maximally stratified labo
 % endregion
 
 Finally, let us show the economy's productivity has to be capable of supporting maximum-monotonic labor stratification.
-% region: productiviry sufficiency lemma (psl) 
+% region: productivity sufficiency lemma (psl) 
 \begin{lemma}[Productivity Sufficiency Lemma, PSL]
     The available talent in a labor market is, at least, sufficient to allow for maximally stratified production.
     
