@@ -689,19 +689,37 @@ Now, even though these results are basically tautological, they are still import
             \mho_q
             :=
             \min\left(
-                \sum_{v=1}^{p}
-                \sum_{r=1}^{w_{q}^{v}}
-                \left[
-                    \tilde{T}_{v}^{r}
-                    \geq
-                    \ell_{q}^{v}
-                \right]
+                \boldsymbol{w_{q}^{\textbf{Sq}}}
                 \times
-                \mho_{q}^{v}
+                \boldsymbol{\mho_q}(
+                    \boldsymbol{\ell_q}
+                )
             \right)
             ,
         \end{gather}
-        and with 
+        where
+        \begin{gather}
+            \boldsymbol{w_{q}^{\textbf{Sq}}} 
+            :=
+            \left(
+                \sum_{r=1}^{w_{q}^{1}}
+                \left[
+                    \tilde{T}_{1}^{r}
+                    \geq
+                    \ell_{q}^{1}
+                \right]
+                ,
+                \dots
+                ,
+                \sum_{r=1}^{w_{q}^{p}}
+                \left[
+                    \tilde{T}_{p}^{r}
+                    \geq
+                    \ell_{q}^{p}
+                \right]
+            \right)
+        \end{gather}
+        is the vector of sufficiently qualified workers in a labor market; or, with
         \begin{gather}
             \left[
                 \tilde{T}_{v}^{r}
@@ -715,8 +733,37 @@ Now, even though these results are basically tautological, they are still import
             ,
             v \in \{1, \dots, p\}
             ,
+            \\
+            \implies
+            \sum_{r=1}^{w_{q}^{v}}
+            \left[
+                \tilde{T}_{v}^{r}
+                \geq
+                \ell_{q}^{v}
+            \right]
+            =
+            \sum_{r=1}^{w_{q}^{v}}
+            1
+            =
+            w_{q}^{v}
+            \\
+            \therefore
+            \boldsymbol{w_{q}^{\textbf{Sq}}} 
+            =
+            \boldsymbol{w_q}
+            :=
+            (
+                w_{q}^{1}
+                ,
+                ,\dots
+                ,
+                w_{q}^{p}
+            )
+            ,
         \end{gather}
-        so that workers in each position are all sufficiently qualified for their responsabilities (see ``Employer Rationality Axiom'', below),
+        so that workers in each position are all sufficiently qualified for their responsabilities\footnote{
+            See ``Employer Rationality Axiom'' and ``Productivity Sufficiency Lemma".
+        },
         \begin{gather}
             \mho_q
             :=
@@ -729,7 +776,7 @@ Now, even though these results are basically tautological, they are still import
             \right)
             ;
         \end{gather}
-        or, alternatively,
+        and, alternatively,
         \begin{gather}
             \mho_q
             :=
