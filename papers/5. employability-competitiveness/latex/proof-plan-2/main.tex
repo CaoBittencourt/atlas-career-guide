@@ -972,37 +972,6 @@ so that $k$ accomplishes tasks of difficulty levels $0$ through $\tilde{T}_{q}^{
 
 weakly holistic: each task $l \geq \bar{l}$ requires all the previous $l \in [0, \bar{l}], \bar{l} \in [0,1]$ difficulty levels to be accomplished. however, if not all $l \in [0,1]$ levels are accomplished, the whole effort is not vain and the operation is partially completed (i.e. do not round $\mho_q$ when calculating operational output). furthermore, each and every $l \in [0,1]$ difficulty level can be outsourced (i.e. workers can output partial units of the occupation's operation, which contribute to the operation's completion).
 
-assume weak occupational complexity axiom (the other versions are too strict)
-perhaps posit an even weaker version of occupational complexity:
-
-\begin{gather}
-    \frac{
-        \partial \mho_{q}
-    }{
-        \partial l
-    } > 0
-    ,\\
-    \frac{
-        \partial^2 \mho_{q}
-    }{
-        \partial l^2
-    } < 0
-    ,
-\end{gather}
-so that even though tasks of a particular level are not required for the operation to ``count'' (i.e. partial delivery), it is still detrimental to focus too much on one subset of tasks, that is, employers are incentivised to produce the entire spectrum of difficulty levels, because marginal productivity increases when a tasks of a particular difficulty level have not been accomplished yet.
-
-(actually, we need a indicator variable for the amount of tasks accomplished for a difficulty level, something analogous to $T_q(l)$)
-
-now, because of weak occupational complexity, employers will maximize operational output by attempting to produce the entire spectrum of difficulty levels for the complex tasks of an occupation.
-this can be done either by having only perfectly qualified employees work on the operation individually from beginning to end, or by splitting responsabilities into two, or more, types of jobs, thus allowing for less qualified, ``junior'' employees, to work alongside more qualified and perfectly qualified, ``senior'' employees towards the common goal of accomplishing the entire occupational operation.
-additionally, because there are skill differences among workers in the labor market, any rational employer will always, and rightly, expect their employees to be of varying skill levels, rather than all perfectly qualified, so that splitting responsabilities into separate positions will not only be an alternative mode of hiring and producing, but in fact the optimal one.
-therefore, given expected and actual skill differences among workers, employers will split job posts based on the required skill level. thus, there will be ``junior'' job posts and ``senior'' job posts, each dedicated to accomplishing a particular subset of complex tasks with difficulty levels appropriate for employees' respective capacity.
-notice this does not mean all people working on ``junior'' positions will, necessarily, be ``junior'' employees themselves, that is, less qualified. indeed, if talent is abundant in the labor market, these ``junior'' positions will have to be filled by more qualified, or even perfectly qualified, ``senior'' employees. for if there were only one type of job, spanning the entire difficulty level spectrum, highly qualified workers would already have to accomplish these ``junior'' tasks themselves, in order to maximize operational output. however, by having two, or more, types of jobs, split by minimum required competence, highly qualified workers may specialize to the measure that there are less qualified workers available to accomplish the easier tasks. but, if there are none, they will, again, have to work on these themselves.
-analogously, from the employers' perspective, it does not matter who accomplishes ``junior'' tasks, so long as they are accomplished. thus, if highly qualified workers are abundant in a particular time period of a labor market, production is not hindered when allocating ``seniors'' to ``junior'' positions, for in these circumstances talent is not wasted. that is, because only highly qualified workers can accomplish highly demanding tasks, rational employers will generally not hire them to work on ``junior'' tasks, thus ``saving'' their talent for more difficult tasks, which a ``junior'' would not be able to accomplish. but, if there is enough talent to output the optimal quantity of ``senior'' tasks, it can actually be more productive to employ the remaining ``seniors'' to ``junior'' positions.
-furthermore, in a continuous setting, rational employers will maximize their hiring pool by offering more than only two types of jobs. thus, there will not only be ``senior'' and ``junior'' positions, but several levels in a production hierarchy, each responsible for a particular subinterval of task difficulty, which will approximate a continuum of ``seniority'' as the number of workers becomes large enough.
-now, as for employees' work routine, rational employers will have them work over their responsability spectrum in a proportional and optimal matter, thus avoiding wasting production (i.e. uncompleted ``loops'' over the responsability spectrum). [this means each employee will spend their entire time allowance producing a partial operational output, that is a multiple of the difficulty subinterval they were hired to accomplish, which will, in turn, contribute, alonside the partial outputs of other employees, to accomplish the entire occupational operation.]
-the reason this avoids wasting production is because [...].
-
 % region: weak skill differences axiom, wsda 
 \begin{axiom}[Weak Skill Differences Axiom, WSDA]
     There are, or there could be, skill differences among people in the workforce (i.e. workers are not all ``clones'' of one another or equally competent). So, the expected value of productivity is:
@@ -1405,7 +1374,7 @@ Now, to generalize this conclusion, we shall define notation in terms of maximum
     \Omega_{q}^{v}
     := 
     \frac{1}{\mho_{q}^{v}}
-    := 
+    = 
     \int_{
         \ell_{v-1}
     }^{
@@ -1466,8 +1435,35 @@ Indeed, if it were possible to stratify beyond $w_q$, rational employers would r
 
 But, because of this, if $p$ can be greater than $w_q$, the optimal production strategy would, logically, be to offer as many types of jobs as possible, even infinitely many.
 
-Hence, infinite labor stratification is defined as an economic configuration where labor markets are subdivided into infinitesimal jobs, each contributing very little to production. In fact, in such a market, ``job posts'' are so small as to be indistinguishable from tasks themselves:
-\begin{gather}
+Hence, infinite labor stratification is defined as an economic configuration where labor markets are subdivided into infinitesimal jobs, each contributing very little to production. In fact, in such a market, ``job posts'' are so small as to be indistinguishable from tasks themselves\footnote{See the Proportional Employment Condition in ``Maximum Operational Output Lemma''.}
+\begin{align}
+    &
+    \because
+    \lim_{p \rightarrow \infty}{
+        \left(
+            \ell_{v}
+            -
+            \ell_{v-1}
+        \right)
+    }
+    =
+    0
+    % \\
+    % &
+    \implies
+    \Omega_{q}^{v}
+    :=
+    \int_{
+        \ell_{v-1}
+    }^{
+        \ell_{v}
+    }
+    \text{ta}(l)dl
+    =
+    \text{ta}(l)
+    \\
+    &
+    \land
     \lim_{p \rightarrow \infty}{
         \tilde{w}_{q}^{v}
     }
@@ -1491,6 +1487,7 @@ Hence, infinite labor stratification is defined as an economic configuration whe
     \
     v \in \{1, \dots, p\}
     \\
+    &
     \therefore
     w_{q}(l)
     = 
@@ -1505,7 +1502,7 @@ Hence, infinite labor stratification is defined as an economic configuration whe
     =
     w_q
     .
-    \end{gather}
+    \end{align}
     
 Therefore, employers are guaranteed maximum insurance against workers' potential underqualification; and employability is simply
 \begin{gather}
@@ -1569,16 +1566,6 @@ We may formalize this conclusion as follows.
             so that employability becomes:
             \begin{gather}
                 \tilde{W}_{q}^{k} 
-                = 
-                \left[
-                    h_{q}^{k}
-                    \geq
-                    \frac{1}{2}
-                \right]
-                \int_{0}^{1}
-                T(l, \l_{q}^{k})
-                \tilde{w}_{q}(l)
-                dl
                 = 
                 \left[
                     h_{q}^{k}
@@ -3765,7 +3752,8 @@ Now that we have proven maximum labor stratification with unitary employment is 
         \begin{gather}
             p := w_q
         \end{gather}
-        is the optimal number of positions in a labor market where employers can split workers' activities without gain or loss to production (WOCA), yielding the same $w_q$ maximum operational output as all economic strategies (MOOL).
+        is the optimal number of positions in a labor market where employers can split workers' activities without gain or loss to production (WOCA), while attaining the same $w_q$ maximum operational output as all economic strategies (MOOL).
+        % is the optimal number of positions in a labor market where employers can split workers' activities without gain or loss to production (WOCA), yielding the same $w_q$ maximum operational output as all economic strategies (MOOL).
         
         In addition, by the Maximum Stratification Axiom,
         \begin{align}
@@ -4458,7 +4446,7 @@ The General Employability Theorem has a few interesting collolaries, the first, 
         To prove this result, let us, then, first consider what would be the employability of person $k$ if they had exactly the minimum required productivity for every job subtype. So, for instance, when $v = 1$,
         \begin{align}
             \tilde{T}_{q}^{k}
-            =
+            :=
             \ell_1
             =
             \text{TA}^{-1}
@@ -4478,7 +4466,7 @@ The General Employability Theorem has a few interesting collolaries, the first, 
         Likewise, for other values of $v$, we have
         \begin{gather}
             \tilde{T}_{q}^{k}
-            =
+            :=
             \ell_2
             =
             \text{TA}^{-1}
@@ -4494,7 +4482,7 @@ The General Employability Theorem has a few interesting collolaries, the first, 
             ,
             \\
             \tilde{T}_{q}^{k}
-            =
+            :=
             \ell_3
             =
             \text{TA}^{-1}
@@ -4512,7 +4500,7 @@ The General Employability Theorem has a few interesting collolaries, the first, 
             \vdots
             \\
             \tilde{T}_{q}^{k}
-            =
+            :=
             \ell_{v}
             =
             \text{TA}^{-1}

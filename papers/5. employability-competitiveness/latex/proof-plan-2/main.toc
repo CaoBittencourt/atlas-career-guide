@@ -1,0 +1,18 @@
+\contentsline {section}{\numberline {1}Introduction}{2}{section.1}%
+\contentsline {section}{\numberline {2}The Issue of Occupational Complexity}{3}{section.2}%
+\contentsline {section}{\numberline {3}Employer Behavior}{9}{section.3}%
+\contentsline {section}{\numberline {4}Task Difficulty and Time Allocation}{10}{section.4}%
+\contentsline {section}{\numberline {5}The Employability Theorem}{12}{section.5}%
+\contentsline {subsection}{\numberline {5.1}What is Employability?}{12}{subsection.5.1}%
+\contentsline {subsection}{\numberline {5.2}Introductory Example: Employability with Two Types of Workers}{12}{subsection.5.2}%
+\contentsline {subsection}{\numberline {5.3}General Employability Theorem}{15}{subsection.5.3}%
+\contentsline {subsection}{\numberline {5.4}Corollaries}{34}{subsection.5.4}%
+\contentsline {section}{\numberline {6}Example Implementation}{37}{section.6}%
+\contentsline {subsection}{\numberline {6.1}Functional Specifications}{37}{subsection.6.1}%
+\contentsline {subsection}{\numberline {6.2}Occupational Information Network Data}{37}{subsection.6.2}%
+\contentsline {subsection}{\numberline {6.3}Results}{37}{subsection.6.3}%
+\contentsline {section}{\numberline {7}Discussion}{37}{section.7}%
+\contentsline {section}{\numberline {8}Conclusion}{37}{section.8}%
+\contentsline {section}{Appendix A -- Basic Definitions}{38}{section*.2}%
+\contentsline {section}{Appendix B -- Employability and Competitiveness Statistics}{38}{section*.3}%
+\contentsline {section}{Appendix C -- Proof Layout}{38}{section*.4}%
