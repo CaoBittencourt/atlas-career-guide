@@ -710,7 +710,7 @@ Now, even though these results are basically tautological, they are still import
     \end{subaxiom}
 
     \begin{subaxiom}[Moderate Occupational Complexity Axiom, MOCA]
-        
+        though the operation, in itself, remains an ``indivisible'' task, it can be outsourced, so long as all its subtasks are completed: it can be ``divided'' if it is, then, ``pieced back together'' with all its parts.
     \end{subaxiom}
 
     \begin{subaxiom}[Weak Occupational Complexity Axiom, WOCA]
@@ -719,7 +719,7 @@ Now, even though these results are basically tautological, they are still import
             \mho_q
             :=
             \min\left(
-                \boldsymbol{w_{q}^{\textbf{Sq}}}
+                \boldsymbol{w_{q}^{S}}
                 \times
                 \boldsymbol{\mho_q}(
                     \boldsymbol{\ell_q}
@@ -729,14 +729,14 @@ Now, even though these results are basically tautological, they are still import
         \end{gather}
         where
         \begin{gather}
-            \boldsymbol{w_{q}^{\textbf{Sq}}} 
+            \boldsymbol{w_{q}^{S}}
             :=
             \left(
                 \sum_{r=1}^{w_{q}^{1}}
                 \left[
                     \tilde{T}_{1}^{r}
                     \geq
-                    \ell_{q}^{1}
+                    \tilde{T}_{1}^{q}
                 \right]
                 ,
                 \dots
@@ -745,7 +745,7 @@ Now, even though these results are basically tautological, they are still import
                 \left[
                     \tilde{T}_{p}^{r}
                     \geq
-                    \ell_{q}^{p}
+                    \tilde{T}_{p}^{q}
                 \right]
             \right)
         \end{gather}
@@ -754,7 +754,7 @@ Now, even though these results are basically tautological, they are still import
             \left[
                 \tilde{T}_{v}^{r}
                 \geq
-                \ell_{q}^{v}
+                \tilde{T}_{v}^{q}
             \right]
             \
             \forall
@@ -769,7 +769,7 @@ Now, even though these results are basically tautological, they are still import
             \left[
                 \tilde{T}_{v}^{r}
                 \geq
-                \ell_{q}^{v}
+                \tilde{T}_{v}^{q}
             \right]
             =
             \sum_{r=1}^{w_{q}^{v}}
@@ -778,7 +778,7 @@ Now, even though these results are basically tautological, they are still import
             w_{q}^{v}
             \\
             \therefore
-            \boldsymbol{w_{q}^{\textbf{Sq}}} 
+            \boldsymbol{w_{q}^{S}}
             =
             \boldsymbol{w_q}
             :=
