@@ -664,7 +664,7 @@ Now, even though these results are basically tautological, they are still import
     
     \begin{subaxiom}[Strong Occupational Complexity Axiom, SOCA]
         
-        Let us denote, then, ``operational output'' (o.o.) with the standard IPA (cite ipa specification for $\mho$) symbol for the near-close near-back rounded vowel (i.e. the ``double o'' sound in words such as ``boot''):
+        Let us denote, then, ``operational output'' (abbreviated to ``o.o.'') with the standard IPA (cite ipa specification for $\mho$) symbol for the near-close near-back rounded vowel (i.e. the ``double o'' sound in words such as ``boot''):
         \begin{gather}
             \mho_{q}^{k} = 
             \left\lfloor
@@ -684,18 +684,39 @@ Now, even though these results are basically tautological, they are still import
     \end{subaxiom}
 
     \begin{subaxiom}[Weak Occupational Complexity Axiom, WOCA]
-        \begin{gather}
-            \mho_q =
+        If production is split into $p$ positions, or job subtypes,
+        \begin{align}
+            \mho_q
+            &:=
             \min\left(
-                \boldsymbol{w_q}
+                \sum_{v=1}^{p}
+                \sum_{r=1}^{z}
+                \left[
+                    \tilde{T}_{v}^{r}
+                    \geq
+                    \ell_{q}^{v}
+                \right]
                 \times
-                \boldsymbol{\mho_q}(
-                    \boldsymbol{\ell_q}
+                \mho_{q}^{v}
+            \right)
+            \\
+            &=
+            \min\left(
+                \boldsymbol{1} ^ \top
+                \cdot
+                \left[
+                    \boldsymbol{\tilde{T}_q}
+                    \geq
+                    \boldsymbol{\ell_{q}}
+                \right]
+                \times
+                \boldsymbol{\mho_{q}}(
+                    \boldsymbol{\ell_{q}}
                 )
             \right)
             ,
-        \end{gather}
-        assuming
+        \end{align}
+        or assuming 
         \begin{gather}
             \left[
                 \boldsymbol{\tilde{T}_{q}}
@@ -704,7 +725,20 @@ Now, even though these results are basically tautological, they are still import
             \right]
             ,
         \end{gather}
-        if production is split into job subtypes; or
+        so that workers in each position are all sufficiently qualified for their responsabilities (see ``Employer Rationality Axiom'', below),
+        \begin{gather}
+            \mho_q
+            :=
+            \min\left(
+                \boldsymbol{w_q}
+                \times
+                \boldsymbol{\mho_q}(
+                    \boldsymbol{\ell_q}
+                )
+            \right)
+            ;
+        \end{gather}
+        and, alternatively,
         \begin{gather}
             \mho_q
             :=
