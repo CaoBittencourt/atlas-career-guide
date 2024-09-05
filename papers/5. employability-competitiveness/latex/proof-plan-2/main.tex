@@ -663,24 +663,54 @@ Now, even though these results are basically tautological, they are still import
     Mathematically, an occupational operation is just a series of complex tasks on a continuum of difficulty levels normalized to the unit interval, all of which are indispensable for the whole operation to be accomplished.
     
     \begin{subaxiom}[Strong Occupational Complexity Axiom, SOCA]
-        
         Let us denote, then, ``operational output'' (abbreviated to ``o.o.'') with the standard IPA (cite ipa specification for $\mho$) symbol for the near-close near-back rounded vowel (i.e. the ``double o'' sound in words such as ``boot''):
         \begin{gather}
-            \mho_{q}^{k} = 
-            \left\lfloor
-                \int_{0}^{1}{
-                    T(l,l_{q}^{k})
-                    dl
+            \mho_q
+            :=
+            \mho_{q}^{\text{IP}}
+            :=
+            \sum_{v=1}^{w_q}{
+                \mho_{q}^{v}
+            }
+            :=
+            \sum_{v=1}^{w_q}{
+                \frac{
+                    \left[
+                        \tilde{T}_{q}^{v}
+                        =
+                        1
+                    \right]
+                }{
+                    \int_{0}^{1}{
+                        \text{ta}(l)
+                        dl
+                    }
                 }
-            \right\rfloor
-            .
+            }
+            =
+            \sum_{v=1}^{w_q}{
+                \left[
+                    \tilde{T}_{q}^{v}
+                    =
+                    1
+                \right]
+            }
+            \because
+            \int_{0}^{1}{
+                \text{ta}(l)
+                dl
+            } := 1
+            ,
         \end{gather}
-    
-        By this formulation, the amount of an occupations's operation a person $k$ can output is the floor of what they accomplish of the operation's complex tasks. Of course, this value is zero if they are not perfectly qualified, which at first can seem too strong of a pressuposition, but is, in fact, an effective strategy to ``side-step'' the issue of occupational complexity and is, also, quite reasonable, as we shall demonstrate below.
+        where the upperscript ``IP'' indicates production is organized independently, such that each worker outputs the $l \in [0,1]$ responsability spectrum by themselves.
+        
+        So, with this formulation, the amount of an occupations' operation produced in its labor market depends on whether employees are perfectly qualified. For, if outsourcing is ruled out, they will have to devote their time allowance to all tasks and, failing to complete any one of them, their contribution to aggregate output will be void.
+
+        Intuitively, the scenario ``painted'' by this axiom is that of several individuals working in parallel entirely disconnected from one another. And, of course, this is hardly the case in a real economy. Thus, we should define occupational complexity in weaker terms, allowing for at least some level of outsourcing.
     \end{subaxiom}
 
     \begin{subaxiom}[Moderate Occupational Complexity Axiom, MOCA]
-        dsds
+        
     \end{subaxiom}
 
     \begin{subaxiom}[Weak Occupational Complexity Axiom, WOCA]
@@ -780,31 +810,8 @@ Now, even though these results are basically tautological, they are still import
         \begin{gather}
             \mho_q
             :=
-            \sum_{v=1}^{w_q}{
-                \frac{
-                    \left[
-                        \tilde{T}_{q}^{v}
-                        =
-                        1
-                    \right]
-                }{
-                    \int_{0}^{1}{
-                        \text{ta}(l)
-                        dl
-                    }
-                }
-            }
+            \mho_{q}^{\text{IP}}
             :=
-            \sum_{v=1}^{w_q}{
-                \left[
-                    \tilde{T}_{q}^{v}
-                    =
-                    1
-                \right]
-                \times
-                1
-            }
-            =
             \sum_{v=1}^{w_q}{
                 \left[
                     \tilde{T}_{q}^{v}
@@ -814,7 +821,7 @@ Now, even though these results are basically tautological, they are still import
             }
             ,
         \end{gather}
-        if production is organized independently.
+        if employers opt for an independent production strategy.
     \end{subaxiom}
 
     We could specifiy even weaker versions of the axiom, which would result in the same conclusions we shall demonstrate in this paper. For mathematical convenience, though, we assume weak occupational complexity (WOCA).
