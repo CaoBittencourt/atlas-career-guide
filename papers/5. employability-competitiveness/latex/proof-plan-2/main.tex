@@ -660,19 +660,92 @@ Now, even though these results are basically tautological, they are still import
     \label{woca}
     All of an occupation's tasks can be thought of as one indivisible task, which mobilizes their entire skill set. We call this ``holistic task'' an occupation's \textit{operation}.
 
-    Mathematically, an occupational operation, is just a complex task that has a continuum of difficulty levels in the unit interval, all of which are indispensable for the task to be accomplished. We denote ``operational output'' (OO) with the standard IPA symbol for the near-close near-back rounded vowel (i.e. the ``double o'' sound in words such as ``boot''):
-    \begin{gather}
-        \mho_{q}^{k} = 
-        \left\lfloor
-            \int_{0}^{1}{
-                T(l,l_{q}^{k})
-                dl
-            }
-        \right\rfloor
-        .
-    \end{gather}
+    Mathematically, an occupational operation is just a series of complex tasks on a continuum of difficulty levels normalized to the unit interval, all of which are indispensable for the whole operation to be accomplished.
+    
+    \begin{subaxiom}[Strong Occupational Complexity Axiom, SOCA]
+        
+        Let us denote, then, ``operational output'' (o.o.) with the standard IPA (cite ipa specification for $\mho$) symbol for the near-close near-back rounded vowel (i.e. the ``double o'' sound in words such as ``boot''):
+        \begin{gather}
+            \mho_{q}^{k} = 
+            \left\lfloor
+                \int_{0}^{1}{
+                    T(l,l_{q}^{k})
+                    dl
+                }
+            \right\rfloor
+            .
+        \end{gather}
+    
+        By this formulation, the amount of an occupations's operation a person $k$ can output is the floor of what they accomplish of the operation's complex tasks. Of course, this value is zero if they are not perfectly qualified, which at first can seem too strong of a pressuposition, but is, in fact, an effective strategy to ``side-step'' the issue of occupational complexity and is, also, quite reasonable, as we shall demonstrate below.
+    \end{subaxiom}
 
-    By this formulation, the amount of an occupations's operation a person $k$ can output is the floor of what they accomplish of the operation's complex tasks. Of course, this value is zero if they are not perfectly qualified, which at first can seem too strong of a pressuposition, but is, in fact, an effective strategy to ``side-step'' the issue of occupational complexity and is, also, quite reasonable, as we shall demonstrate below.
+    \begin{subaxiom}[Moderate Occupational Complexity Axiom, MOCA]
+        dsds
+    \end{subaxiom}
+
+    \begin{subaxiom}[Weak Occupational Complexity Axiom, WOCA]
+        \begin{gather}
+            \mho_q =
+            \min\left(
+                \boldsymbol{w_q}
+                \times
+                \boldsymbol{\mho_q}(
+                    \boldsymbol{\ell_q}
+                )
+            \right)
+            ,
+        \end{gather}
+        assuming
+        \begin{gather}
+            \left[
+                \boldsymbol{\tilde{T}_{q}}
+                \geq
+                \boldsymbol{\ell_q}
+            \right]
+            ,
+        \end{gather}
+        if production is split into job subtypes; or
+        \begin{gather}
+            \mho_q
+            :=
+            \sum_{v=1}^{w_q}{
+                \frac{
+                    \left[
+                        \tilde{T}_{q}^{v}
+                        =
+                        1
+                    \right]
+                }{
+                    \int_{0}^{1}{
+                        \text{ta}(l)
+                        dl
+                    }
+                }
+            }
+            :=
+            \sum_{v=1}^{w_q}{
+                \left[
+                    \tilde{T}_{q}^{v}
+                    =
+                    1
+                \right]
+                \times
+                1
+            }
+            =
+            \sum_{v=1}^{w_q}{
+                \left[
+                    \tilde{T}_{q}^{v}
+                    =
+                    1
+                \right]
+            }
+            ,
+        \end{gather}
+        if production is organized independently.
+    \end{subaxiom}
+
+    We could specifiy even weaker versions of the axiom, which would result in the same conclusions we shall demonstrate in this paper. For mathematical convenience, though, we assume weak occupational complexity (WOCA).
 
     [intuition for operational output formulation]
     
