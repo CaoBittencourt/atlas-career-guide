@@ -685,12 +685,12 @@ Now, even though these results are basically tautological, they are still import
 
     \begin{subaxiom}[Weak Occupational Complexity Axiom, WOCA]
         If production is split into $p$ positions, or job subtypes,
-        \begin{align}
+        \begin{gather}
             \mho_q
-            &:=
+            :=
             \min\left(
                 \sum_{v=1}^{p}
-                \sum_{r=1}^{z}
+                \sum_{r=1}^{w_{q}^{v}}
                 \left[
                     \tilde{T}_{v}^{r}
                     \geq
@@ -699,30 +699,21 @@ Now, even though these results are basically tautological, they are still import
                 \times
                 \mho_{q}^{v}
             \right)
-            \\
-            &=
-            \min\left(
-                \boldsymbol{1} ^ \top
-                \cdot
-                \left[
-                    \boldsymbol{\tilde{T}_q}
-                    \geq
-                    \boldsymbol{\ell_{q}}
-                \right]
-                \times
-                \boldsymbol{\mho_{q}}(
-                    \boldsymbol{\ell_{q}}
-                )
-            \right)
             ,
-        \end{align}
-        or assuming 
+        \end{gather}
+        and with 
         \begin{gather}
             \left[
-                \boldsymbol{\tilde{T}_{q}}
+                \tilde{T}_{v}^{r}
                 \geq
-                \boldsymbol{\ell_q}
+                \ell_{q}^{v}
             \right]
+            \
+            \forall
+            \
+            r \in \{1, \dots, w_{q}^{v}\}
+            ,
+            v \in \{1, \dots, p\}
             ,
         \end{gather}
         so that workers in each position are all sufficiently qualified for their responsabilities (see ``Employer Rationality Axiom'', below),
@@ -738,7 +729,7 @@ Now, even though these results are basically tautological, they are still import
             \right)
             ;
         \end{gather}
-        and, alternatively,
+        or, alternatively,
         \begin{gather}
             \mho_q
             :=
