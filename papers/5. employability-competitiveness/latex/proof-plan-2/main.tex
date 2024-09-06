@@ -889,6 +889,8 @@ Now, even though these results are basically tautological, they are still import
         [0, w_q] ^ {p_q}
         ,
         \\
+        0
+        \leq
         \boldsymbol{1} ^ {\top}
         \cdot
         \boldsymbol{w_{q}}(
@@ -905,7 +907,7 @@ Now, even though these results are basically tautological, they are still import
         :=
         w_q
     \end{gather}
-    are effective workers per position (i.e. those sufficiently qualified for their respective tasks); and
+    are effective (i.e. sufficiently qualified) workers per position; and
     \begin{gather}
         \boldsymbol{\varsigma_{q}}(
             \boldsymbol{\ell_{q}}
@@ -949,195 +951,167 @@ Now, even though these results are basically tautological, they are still import
     \end{subaxiom}
 
     \begin{subaxiom}[Weak Occupational Complexity Axiom, WOCA]
-        If production is split into $p$ positions, or job subtypes,
+        Weakly complex operations are just the same as in MOCA, with an additional assumption about the net effects of labor stratification:
         \begin{gather}
-            \mho_q
-            :=
-            \min\left(
-                \boldsymbol{w_{q}^{S}}
-                \times
-                \boldsymbol{\mho_q}(
-                    \boldsymbol{\ell_q}
-                )
-            \right)
-            ,
-        \end{gather}
-        where
-        \begin{gather}
-            \boldsymbol{w_{q}^{S}}
-            :=
-            \left(
-                \sum_{r=1}^{w_{q}^{1}}
-                \left[
-                    \tilde{T}_{1}^{r}
-                    \geq
-                    \tilde{T}_{1}^{q}
-                \right]
-                ,
-                \dots
-                ,
-                \sum_{r=1}^{w_{q}^{p}}
-                \left[
-                    \tilde{T}_{p}^{r}
-                    \geq
-                    \tilde{T}_{p}^{q}
-                \right]
-            \right)
-        \end{gather}
-        is the vector of sufficiently qualified workers in a labor market; or, with
-        \begin{gather}
-            \left[
-                \tilde{T}_{v}^{r}
-                \geq
-                \tilde{T}_{v}^{q}
-            \right]
-            \
-            \forall
-            \
-            r \in \{1, \dots, w_{q}^{v}\}
-            ,
-            v \in \{1, \dots, p\}
-            ,
-            \\
-            \implies
-            \sum_{r=1}^{w_{q}^{v}}
-            \left[
-                \tilde{T}_{v}^{r}
-                \geq
-                \tilde{T}_{v}^{q}
-            \right]
-            =
-            \sum_{r=1}^{w_{q}^{v}}
-            1
-            =
-            w_{q}^{v}
-            \\
-            \therefore
-            \boldsymbol{w_{q}^{S}}
-            =
-            \boldsymbol{w_q}
-            :=
-            (
-                w_{q}^{1}
-                ,
-                \dots
-                ,
-                w_{q}^{p}
+            \boldsymbol{w_{q}} ^ {\top}
+            \cdot 
+            \boldsymbol{\varsigma_{q}}(
+                \boldsymbol{\ell_{q}}
             )
-            ,
-        \end{gather}
-        so that workers in each position are all sufficiently qualified for their responsabilities\footnote{
-            See ``Employer Rationality Axiom'' and ``Productivity Sufficiency Lemma".
-        },
-        \begin{gather}
+            =
+            0
+            \implies
             \mho_q
-            :=
+            =
             \min\left(
-                \boldsymbol{w_q}
+                \boldsymbol{w_{q}}(
+                    \boldsymbol{\tilde{T}_{q}}
+                    ,
+                    \boldsymbol{\ell_{q}}
+                )
                 \times
-                \boldsymbol{\mho_q}(
-                    \boldsymbol{\ell_q}
+                \boldsymbol{\mho_{q}}(
+                    \boldsymbol{\ell_{q}}
                 )
             \right)
-            ;
-        \end{gather}
-        and, alternatively,
-        \begin{gather}
-            \mho_q
-            :=
-            \mho_{q}^{\text{IP}}
-            :=
-            \sum_{v=1}^{w_q}{
-                \left[
-                    \tilde{T}_{q}^{v}
-                    =
-                    1
-                \right]
-            }
-            ,
-        \end{gather}
-        if employers opt for an independent production strategy.
-    \end{subaxiom}
-
-    We could specifiy even weaker versions of the axiom, which would result in the same conclusions we shall demonstrate in this paper. For mathematical convenience, though, we assume weak occupational complexity (WOCA).
-
-    [intuition for operational output formulation]
-    
-    [clarify the indivisibility of the ``holistic task'' does not imply tasks cannot be outsourced, but that the whole operation has to be accomplished in its entirety]
-
-    [examples in defense of operational output formulation]
-    
-    [how this operational output helps to side-step the issue of occupational complexity]
-
-    So, in a way, a ``holistic task'', or operation, is a ``doubly complex'' task, as, in addition to being complex as already defined, it is also strictly complex in its difficulty levels, for failing to accomplish even the most basic of difficulty levels nullifies the entire operation. It is, in other words, a strongly complex task itself made up of various complex tasks that perfectly complement one another.
-
-    Aggregate occupational operation output:
-    \begin{align}
-        \mho_{q} 
-        &= 
-        \left\lfloor
-        \sum_{k=1}^{n}
-            % [k \in {\Lambda}^{-1}(q)]
-            [k \in {\Lambda}_q]
-            ?
-            % \tilde{Y}_{q}^{k}
-        \right\rfloor
-        % \\
-        % &= 
-        % \left\lfloor
-        % \sum_{k=1}^{n}
-        % \left(
-        %     [k \in {\Lambda}^{-1}(q)]
-        %     \times
-        %     \left(
-        %         \frac{
-        %         \prod_{i=1}^{m}{
-        %             {
-        %                 \max(
-        %                     1 + a_{i}^{k},
-        %                     1 + a_{i}^{q}
-        %                 )
-        %             } ^ {
-        %                 \sigma_{i}^{q}
-        %             }
-        %         }
-        %     }{
-        %         \prod_{i=1}^{m}{
-        %             {
-        %                 (
-        %                     1 + a_{i}^{q}
-        %                 )
-        %             } ^ {
-        %                 \sigma_{i}^{q}
-        %             }
-        %         }
-        %     }
-        %     \right)
-        % \right)
-        % \right\rfloor
-        ,
-    \end{align}
-    where ${\Lambda}_q$ is the set of people working in occupation $q$.
-
-    Labor market taxa ($\Lambda$):
-    \begin{gather}
-        \Lambda_{1}^{1}
-        = \Lambda(1,1)
-        = \{
-            1, \dots, n
-            \}
-        \iff k, q \in 
-        \Lambda_{1}^{1}
-        \\
-        \Lambda = \{
-            \Lambda_{1}^{1},
-            \dots,
-            \Lambda_{n}^{\bar{L}}
-            \}
-        \\
-        \Lambda^{-1}(k) = \Lambda_{k}^{\bar{L}}
+            .
     \end{gather}
 
+    In other words, weak occupational complexity asserts the gains and costs of splitting job posts are both negligeable or cancel each other out. This means employeers may stratify positions without either gain or loss to production.
+        % \begin{gather}
+        %     \mho_q
+        %     :=
+        %     \min\left(
+        %         \boldsymbol{w_{q}^{S}}
+        %         \times
+        %         \boldsymbol{\mho_q}(
+        %             \boldsymbol{\ell_q}
+        %         )
+        %     \right)
+        %     ,
+        % \end{gather}
+        % where
+        % \begin{gather}
+        %     \boldsymbol{w_{q}^{S}}
+        %     :=
+        %     \left(
+        %         \sum_{r=1}^{w_{q}^{1}}
+        %         \left[
+        %             \tilde{T}_{1}^{r}
+        %             \geq
+        %             \tilde{T}_{1}^{q}
+        %         \right]
+        %         ,
+        %         \dots
+        %         ,
+        %         \sum_{r=1}^{w_{q}^{p}}
+        %         \left[
+        %             \tilde{T}_{p}^{r}
+        %             \geq
+        %             \tilde{T}_{p}^{q}
+        %         \right]
+        %     \right)
+        % \end{gather}
+        % is the vector of sufficiently qualified workers in a labor market; or, with
+        % \begin{gather}
+        %     \left[
+        %         \tilde{T}_{v}^{r}
+        %         \geq
+        %         \tilde{T}_{v}^{q}
+        %     \right]
+        %     \
+        %     \forall
+        %     \
+        %     r \in \{1, \dots, w_{q}^{v}\}
+        %     ,
+        %     v \in \{1, \dots, p\}
+        %     ,
+        %     \\
+        %     \implies
+        %     \sum_{r=1}^{w_{q}^{v}}
+        %     \left[
+        %         \tilde{T}_{v}^{r}
+        %         \geq
+        %         \tilde{T}_{v}^{q}
+        %     \right]
+        %     =
+        %     \sum_{r=1}^{w_{q}^{v}}
+        %     1
+        %     =
+        %     w_{q}^{v}
+        %     \\
+        %     \therefore
+        %     \boldsymbol{w_{q}^{S}}
+        %     =
+        %     \boldsymbol{w_q}
+        %     :=
+        %     (
+        %         w_{q}^{1}
+        %         ,
+        %         \dots
+        %         ,
+        %         w_{q}^{p}
+        %     )
+        %     ,
+        % \end{gather}
+        % so that workers in each position are all sufficiently qualified for their responsabilities\footnote{
+        %     See ``Employer Rationality Axiom'' and ``Productivity Sufficiency Lemma".
+        % },
+        % \begin{gather}
+        %     \mho_q
+        %     :=
+        %     \min\left(
+        %         \boldsymbol{w_q}
+        %         \times
+        %         \boldsymbol{\mho_q}(
+        %             \boldsymbol{\ell_q}
+        %         )
+        %     \right)
+        %     ;
+        % \end{gather}
+        % and, alternatively,
+        % \begin{gather}
+        %     \mho_q
+        %     :=
+        %     \mho_{q}^{\text{IP}}
+        %     :=
+        %     \sum_{v=1}^{w_q}{
+        %         \left[
+        %             \tilde{T}_{q}^{v}
+        %             =
+        %             1
+        %         \right]
+        %     }
+        %     ,
+        % \end{gather}
+        % if employers opt for an independent production strategy.
+    \end{subaxiom}
+
+    And we could further specifiy even weaker versions of the axiom, with any
+    \begin{gather}
+        \mho_q
+        :=
+        \mho\left(
+            \boldsymbol{w_{q}}(
+                \boldsymbol{\tilde{T}_{q}}
+                ,
+                \boldsymbol{\ell_{q}}
+            )
+            \times
+            \boldsymbol{\mho_{q}}(
+                \boldsymbol{\ell_{q}}
+            )
+        \right)
+        +
+        [p_q > 1]
+        \times
+        \boldsymbol{w_{q}} ^ {\top}
+        \cdot 
+        \boldsymbol{\varsigma_{q}}(
+            \boldsymbol{\ell_{q}}
+        )
+    \end{gather}
+    aggregation function, which could result in the same conclusions we demonstrate in this paper, if it is ``well behaved'' enough (e.g. satisfying Inada conditions). For simplicity's sake and mathematical convenience, though, we shall assume weak occupational complexity (WOCA).
 \end{axiom}
 % endregion
 % region: occupational composition lemma (ocl) 
