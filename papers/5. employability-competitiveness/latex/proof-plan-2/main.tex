@@ -762,14 +762,15 @@ Now, even though these results are basically tautological, they are still import
             1
             ,
         \end{align}
-        where the upperscript ``IP'' indicates production is organized independently, such that each worker outputs the $l \in [0,1]$ responsability spectrum by themselves.
+        where the upperscript ``IP'' indicates production is organized independently, as each worker outputs the $l \in [0,1]$ responsability spectrum by themselves.
+        % where the upperscript ``IP'' indicates production is organized independently, such that each worker outputs the $l \in [0,1]$ responsability spectrum by themselves.
         
         So, with this formulation, the amount of an occupations' operation produced in its labor market depends on whether employees are perfectly qualified. For, if outsourcing is ruled out, they will have to devote their time allowance to all tasks and, failing to complete any one of them, their contribution to aggregate output will be void.
 
         Intuitively, the scenario ``painted'' by this axiom is that of several individuals working in parallel entirely disconnected from one another. And, of course, this is hardly the case in a real economy. Thus, we should define occupational complexity in weaker terms, allowing for at least some level of outsourcing.
     \end{subaxiom}
 
-    \begin{subaxiom}[Moderate Occupational Complexity Axiom, MOCA] With moderate occupational complexity, we assume production can be split into $p$ positions, or job subtypes, each responsible for their own subset of tasks with increasing difficulty levels.
+    \begin{subaxiom}[Moderate Occupational Complexity Axiom, MOCA] With moderate occupational complexity, we assume production can be split into $p_q \in \left\{1, 2, 3, \dots\right\}$ positions, or job subtypes, each responsible for their own subset of tasks with increasing difficulty levels.
     
     Therefore, though the operation, in itself, remains ``indivisible'', employeers may split it apart and outsource it, so long as every subtask is completed (i.e. if this ``stratified'' operation is, then, ``pieced back together'' with all its parts).
 
@@ -789,6 +790,8 @@ Now, even though these results are basically tautological, they are still import
             )
         \right)
         +
+        [p_q > 1]
+        \times
         \boldsymbol{w_{q}} ^ {\top}
         \cdot 
         \boldsymbol{\varsigma_{q}}(
@@ -807,19 +810,19 @@ Now, even though these results are basically tautological, they are still import
             ,
             \dots
             ,
-            \mho_{q}^{p}
+            \mho_{q}^{p_q}
         \right)
         :=
         \left(
             \frac{1}{
-                \int_{0}^{\ell_1}
+                \int_{0}^{\ell_{1}^{q}}
                 \text{ta}(l)dl
             }
             ,
             \dots
             ,
             \frac{1}{
-                \int_{\ell_{p-1}}^{1}
+                \int_{\ell_{p_q-1}^{q}}^{1}
                 \text{ta}(l)dl
             }
         \right)
@@ -829,11 +832,11 @@ Now, even though these results are basically tautological, they are still import
         \boldsymbol{\ell_q}
         :=
         \left(
-            \ell_0
+            \ell_{0}^{q}
             ,
             \dots
             ,
-            \ell_p
+            \ell_{p_q}^{q}
         \right)
         :=
         \left(
@@ -843,10 +846,16 @@ Now, even though these results are basically tautological, they are still import
             ,
             1
         \right)
+        \in
+        [0,1] ^ {p_q}
         ,
         \\
-        \sum_{v=1}^{p}{
-            \int_{\ell_{v-1}}^{\ell_v}
+        \sum_{v=1}^{p_q}{
+            \int_{
+                \ell_{v-1}^{q}
+            }^{
+                \ell_{v}^{q}
+            }
             \text{ta}(l)dl
         }
         :=
@@ -869,15 +878,17 @@ Now, even though these results are basically tautological, they are still import
             ,
             \dots
             ,
-            \sum_{r=1}^{w_{q}^{p}}
+            \sum_{r=1}^{w_{q}^{p_q}}
             \left[
-                \tilde{T}_{p}^{r}
+                \tilde{T}_{p_q}^{r}
                 \geq
-                \ell_{p}^{q}
+                \ell_{p_q}^{q}
             \right]
         \right)
+        \in 
+        [0, w_q] ^ {p_q}
+        ,
         \\
-        \implies
         \boldsymbol{1} ^ {\top}
         \cdot
         \boldsymbol{w_{q}}(
@@ -903,33 +914,33 @@ Now, even though these results are basically tautological, they are still import
         \left(
             \varsigma_{1}^{q}
             ,
-            , \dots
+            \dots
             ,
-            \varsigma_{p}^{q}
+            \varsigma_{p_q}^{q}
         \right)
         \in
-        \mathbb{R} ^ p
+        \mathbb{R} ^ {p_q}
         ,
         \\
         \varsigma_{v}^{q}
         :=
-        \int_{\ell_{v-1}}^{\ell_{v}}
+        \int_{\ell_{v-1}^{q}}^{\ell_{v}^{q}}
         \text{sg}(l)dl
         -
-        \int_{\ell_{v-1}}^{\ell_{v}}
+        \int_{\ell_{v-1}^{q}}^{\ell_{v}^{q}}
         \text{sc}(l)dl
     \end{gather}
     is the net stratification effect, which measures whether the gains in efficiency due to splitting job posts into separate positions,
     \begin{gather}
-        \sum_{v=1}^{p}
-        \int_{\ell_{v-1}}^{\ell_{v}}
+        \sum_{v=1}^{p_q}
+        \int_{\ell_{v-1}^{q}}^{\ell_{v}^{q}}
         \text{sg}(l)dl
         \geq 0
     \end{gather}
     outweigh its cost,
     \begin{gather}
-        \sum_{v=1}^{p}
-        \int_{\ell_{v-1}}^{\ell_{v}}
+        \sum_{v=1}^{p_q}
+        \int_{\ell_{v-1}^{q}}^{\ell_{v}^{q}}
         \text{sc}(l)dl
         \geq 0.
     \end{gather}
