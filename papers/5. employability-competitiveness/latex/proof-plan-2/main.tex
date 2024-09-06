@@ -1112,7 +1112,7 @@ Now, even though these results are basically tautological, they are still import
             \boldsymbol{\ell_{q}}
         )
     \end{gather}
-    aggregation function, which could result in the same conclusions we demonstrate in this paper, if it is ``well behaved'' enough (e.g. satisfying Inada conditions). For simplicity's sake and mathematical convenience, though, we shall assume weak occupational complexity (WOCA).
+    aggregation function, which could result in the same conclusions we demonstrate in this paper, if it is ``well behaved'' enough (e.g. satisfying Inada conditions). But, for simplicity's sake and mathematical convenience, we shall assume weak occupational complexity (WOCA).
 \end{axiom}
 % endregion
 % region: occupational composition lemma (ocl) 
@@ -1138,7 +1138,7 @@ Now, even though these results are basically tautological, they are still import
 % statement
 \begin{axiom}[Rationality Axiom]
     \label{era}
-    Employers are rational and will only pay for employees to work on tasks they can accomplish. Additionaly, employers will outsource parts of an occupation's operation if their employees cannot accomplish the entire operation.
+    Employers are rational and will only pay for employees to work on tasks they can accomplish. Additionaly, if labor stratification is allowed, employers will outsource parts of an occupation's operation if their employees cannot accomplish the entire operation.
 \end{axiom}
 % endregion
 % region: hireability axiom (ha) 
@@ -1191,12 +1191,12 @@ Now, even though these results are basically tautological, they are still import
 \end{axiom}
 % endregion
 
-% region: weak skill differences axiom, wsda 
-\begin{axiom}[Weak Skill Differences Axiom, WSDA]
-    There are, or there could be, skill differences among people in the workforce (i.e. workers are not all ``clones'' of one another or equally competent). So, the expected value of productivity is:
+% region: productivity differentia axiom, pda 
+\begin{axiom}[Productivity Differentia Axiom, PDA]
+    There are, or there could be, skill differences in the workforce (i.e. employees are, likely, not all equally competent ``clones'' of one another). So, the expected value of productivity is:
     \begin{gather}
         \mathbb{E}[
-            \tilde{T}_{q}^{k}
+            \tilde{T}_{q}^{v}
         ]
         \in
         [0,1]
@@ -1205,14 +1205,16 @@ Now, even though these results are basically tautological, they are still import
     instead of 
     \begin{gather}
         \mathbb{E}[
-            \tilde{T}_{q}^{k}
+            \tilde{T}_{q}^{v}
         ]
         =
-        \tilde{T}_{q}^{k}
+        \tilde{T}_{q}^{v}
         = 1
         ,
     \end{gather}
-    for all $k,q \in \{1, \dots, n\}$. This means employers do not expected every worker to be perfectly qualified and will adjust their hiring and production strategies accordingly.
+    for all $v \in \{1, \dots, w_q\}, q \in \{1, \dots, n\}$. This means employers do not expected every worker to be perfectly qualified and will adjust their hiring and production strategies accordingly.
+    
+    Note we do not assign any specific probability distribution to workers' productivity. Hence, this axiom is as general as it can be.
 \end{axiom}
 % endregion
 
@@ -4437,7 +4439,7 @@ From the above, it follows logically that maximum-monotonic labor stratification
 % region: maximum-monotonic labor stratification lemma (mlsl) 
 \begin{lemma}[Maximum Labor Stratification Lemma, MLSL]
     \label{mlsl}
-    The Maximum Labor Stratification Lemma (MLSL) states that a perfectly rational employer (ERA), which expects there could be skill differences in the workforce (WSDA), and can split operational output without gain or loss to production (WOCA), will, therefore, strategically stratify their job offers monotonically, and even maximally, so that, if indeed there happens to be skill differences in the labor market, they can, then, allocate less competent workers to easier roles, and avoid wasting talent, thus ``saving their best'' for the most demanding tasks.
+    The Maximum Labor Stratification Lemma (MLSL) states that a perfectly rational employer (ERA), which expects there could be skill differences in the workforce (PDA), and can split operational output without gain or loss to production (WOCA), will, therefore, strategically stratify their job offers monotonically, and even maximally, so that, if indeed there happens to be skill differences in the labor market, they can, then, allocate less competent workers to easier roles, and avoid wasting talent, thus ``saving their best'' for the most demanding tasks.
 
     \begin{proof}
         We have demonstrated any productive arrangement can only yield, at most, $w_q$ units of an occupation $q$'s operation, and this if the talent employed is sufficiently qualified (MOOL).
@@ -4462,7 +4464,7 @@ From the above, it follows logically that maximum-monotonic labor stratification
             0
             ,
         \end{gather}
-        that is, if an employee cannot fully output a responsability spectrum, their contribution to production is void, limiting aggregate operational output. This means choosing any production strategy other than maximum-monotonic labor stratification is a risk with no upside, when workers may have varying productivity (WSDA). For, as we have shown, this arrangement by itself guarantees minimum productivity requirements (PSL) and maximum operational output (MOOL). So, it would be irrational of employers to organize production in another manner. Or, more succinctly, we can write for all $v \in \{1, \dots, w_q\}$:
+        that is, if an employee cannot fully output a responsability spectrum, their contribution to production is void, limiting aggregate operational output. This means choosing any production strategy other than maximum-monotonic labor stratification is a risk with no upside, when workers may have varying productivity (PDA). For, as we have shown, this arrangement by itself guarantees minimum productivity requirements (PSL) and maximum operational output (MOOL). So, it would be irrational of employers to organize production in another manner. Or, more succinctly, we can write for all $v \in \{1, \dots, w_q\}$:
         \begin{gather}
             \mathbb{E}[
                 \mho_{q}^{\text{IP}}
