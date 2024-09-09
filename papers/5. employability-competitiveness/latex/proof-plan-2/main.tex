@@ -60,6 +60,7 @@
 
 % region: abstract 
 \begin{abstract}
+    % In this article, we propose a microeconomic framework to evaluate individuals' employability in efficiently organized labor markets as a function of their capacity on measureable professional attributes. We demonstrate employability coincides precisely with the normalized total duration of occupations' tasks their skill set allows them to accomplish, or what we term ``inverse operational output''. We further demonstrate labor market competitiveness can be defined as a complement of this metric, given by the percentage of an occupation's job posts subject to competition with incumbent workers (i.e. competitiveness is the employability of job seekers from other fields).
     In this article, we propose a microeconomic framework to evaluate individuals' employability in efficiently organized labor markets as a function of their capacity on measureable professional attributes. We demonstrate this value coincides precisely with the normalized total duration of occupations' tasks their skill set allows them to accomplish, or what we term ``inverse operational output''. We further demonstrate labor market competitiveness can be defined as a complement of this employability metric, given by the percentage of an occupation's job posts subject to competition with incumbent workers (i.e. competitiveness is the employability of job seekers from other fields).
 \end{abstract}
 
@@ -1112,7 +1113,7 @@ Now, even though these results are basically tautological, they are still import
             \boldsymbol{\ell_{q}}
         )
     \end{gather}
-    aggregation function, which could result in the same conclusions we demonstrate in this paper, if it is ``well behaved'' enough (e.g. satisfying Inada conditions). But, for simplicity's sake and mathematical convenience, we shall assume weak occupational complexity (WOCA).
+    aggregation function, yielding the very same conclusions we demonstrate in this paper, if it is ``well behaved'' enough (e.g. if it satisfies Inada conditions). But, for simplicity's sake and mathematical convenience, we shall assume weak occupational complexity (WOCA) going forward.
 \end{axiom}
 % endregion
 % region: occupational composition lemma (ocl) 
@@ -1136,7 +1137,7 @@ Now, even though these results are basically tautological, they are still import
 % employers will only pay for employees to work on tasks they can accomplish
 % if required, employers will outsource parts of an occupation's operation
 % statement
-\begin{axiom}[Rationality Axiom]
+\begin{axiom}[Employer Rationality Axiom, ERA]
     \label{era}
     Employers are rational and will only pay for employees to work on tasks they can accomplish. Additionaly, if labor stratification is allowed, employers will outsource parts of an occupation's operation if their employees cannot accomplish the entire operation.
 \end{axiom}
@@ -1149,7 +1150,7 @@ Now, even though these results are basically tautological, they are still import
     % Any rational employer hires employees by evaluating a hireability statistic, which quantifies potential employees' skill set similarity with an occupation, their educational attainment, and years of experience.
     Any rational employer hires employees by evaluating a hireability statistic, which quantifies potential employees' expected productivity, their educational attainment, and years of experience.
 
-    \begin{subaxiom}[Weak Hireability Axiom]
+    \begin{subaxiom}[Weak Hireability Axiom, WHA]
         \begin{gather}
             \mathbb{E}
                 \left| 
@@ -1161,7 +1162,7 @@ Now, even though these results are basically tautological, they are still import
         \end{gather}
     \end{subaxiom}
     
-    \begin{subaxiom}[Moderate Hireability Axiom]
+    \begin{subaxiom}[Moderate Hireability Axiom, MHA]
         \begin{gather}
             % \text{E}(
             %     \left| 
@@ -1179,7 +1180,7 @@ Now, even though these results are basically tautological, they are still import
         \end{gather}
     \end{subaxiom}
     
-    \begin{subaxiom}[Strong Hireability Axiom]
+    \begin{subaxiom}[Strong Hireability Axiom, SHA]
         \begin{gather}
             % E(h_{q}^{k}) = h_{q}^{k}
             % \\
@@ -1223,10 +1224,12 @@ Now, even though these results are basically tautological, they are still import
 % region: demonstration 
 \section{The Employability Theorem}
 \subsection{What is Employability?}
+When we speak of ``employability'' what we generally mean is rather trivial: the capacity to find employment. Thus, we say someone is ``employable'' if they are easily \textit{hireable} and could get a job in a large portion of the labor market.
+
 % region: employability definition 
 \begin{definition}[Employability]
     \label{def_employability}
-    In any labor market, employability is the percentage of available jobs in which one could be hired:
+    Mathematically, then, the employability of a person $k$ is the percentage of jobs posts for which they are sufficiently qualified:
     \begin{gather}
     \tilde{W}_{q}^{k}
     :=
@@ -1235,32 +1238,31 @@ Now, even though these results are basically tautological, they are still import
         \geq
         \frac{1}{2}
     \right]
-    \sum_{v=1}^{p}
+    \sum_{v=1}^{p_q}
     \left[
         \tilde{T}_{q}^{k}
         \geq
-        \tilde{T}_{q}^{v}
+        \ell_{q}^{v}
     \right]
     \tilde{w}_{q}^{v}
     \in
     [0,1]
     ,
     \\
-    \sum_{v=1}^{p}
+    \sum_{v=1}^{p_q}
     \tilde{w}_{q}^{v}
     :=
     \left(
         \frac{1}{w_q}
     \right)
-    \sum_{v=1}^{p}
+    \sum_{v=1}^{p_q}
     w_{q}^{v}
-    % \frac{w_{q}^{v}}{w_q}
     := 1
     ,
     \end{gather}
-    where $\tilde{T}_{q}^{v} \in [0,1]$ is the minimum productivity required to be hired in one of $p$ types of positions in a labor market with $w_q$ job posts; while $h_{q}^{k} \in [0,1]$ is a hireability statistic accounting for other selection criteria, such as years of education, experience, etc.
+    where $\ell_{q}^{v} \in [0,1]$ is the upper responsability bound, or the minimum productivity to be hired in one of $p_q$ types of positions in a labor market with a $w_q$ workforce; while $h_{q}^{k} \in [0,1]$ is the hireability statistic accounting for other selection criteria, such as years of education, experience, etc.
     
-    And we can further aggregate employability for $n$ occupations to assess how many of all $W$ jobs in the economy are suitable for one's skill set:
+    And we can further aggregate employability for $n$ occupations to assess how many of all available $W$ jobs in the economy are suitable for one's skill set:
     \begin{gather}
     \tilde{W}_{k}
     :=
@@ -1273,11 +1275,11 @@ Now, even though these results are basically tautological, they are still import
         \geq
         \frac{1}{2}
     \right]
-    \sum_{v=1}^{p}
+    \sum_{v=1}^{p_q}
     \left[
         \tilde{T}_{q}^{k}
         \geq
-        \tilde{T}_{q}^{v}
+        \ell_{q}^{v}
     \right]
     \tilde{w}_{q}^{v}
     \in
@@ -1316,14 +1318,14 @@ Additionally, because we assume there to be skill differences among workers in t
 
 Therefore, employers will stratify job offers based on required competence, providing ``junior'' and ``senior'' positions, both dedicated to their own subset of complex tasks with difficulty levels appropriate for employees' capacity.
 
-Notice this does not mean those working on ``junior'' positions will, necessarily, be ``juniors'' themselves, that is, less qualified. Indeed, if talent is abundant in the labor market, these positions will have to be filled by more qualified, or even perfectly qualified, ``senior'' employees. For if there were only one type of job, spanning the entire responsability spectrum, these highly qualified workers would already have to accomplish ``junior'' tasks themselves, in order to maximize operational output. However, by having two, or more, types of jobs, requiring more, or less, productivity, they may specialize to the measure there are sufficient employees allocated to easier tasks.
+Notice this does not mean those working on ``junior'' positions will, necessarily, be ``juniors'' themselves, that is, less qualified. Indeed, if talent is abundant in the labor market, these positions will have to be filled by more qualified, or even perfectly qualified, ``senior'' employees. For if there were only one type of job, spanning the entire responsability spectrum, these highly qualified workers would already have to accomplish ``junior'' tasks, in order to maximize operational output. However, by having two, or more, types of jobs, requiring more, or less, productivity, they may specialize to the measure there are sufficient employees allocated to easier tasks.
 
 Either way, if the available talent is enough to output occupation $q$'s operation, employability in such a market will be determined by the ratio of junior and senior job posts, as we demonstrate below.
 
 % region: binary employability theorem (bet)
 \begin{theorem}[Binary Employability Theorem, BET]
     \label{bet}
-    In a labor market with two types of workers with varying productivity, each worker's employability is the inverse of their operational output.
+    In a labor market with two types of workers with varying productivity, each worker's employability is the inverse of their maximum operational output.
     \begin{proof}
         In the binary case, ``junior'' productive output will be given by:
         \begin{gather}
@@ -1412,7 +1414,8 @@ Either way, if the available talent is enough to output occupation $q$'s operati
         
         With this, ``senior'' employability (i.e. the percentage of job posts for which they could be hired) is
         \begin{gather}
-            \tilde{w}_{q}^{\text{Sr}} =
+            \tilde{w}_{q}^{\text{Sr}}
+            :=
             \frac{
                 w_{q}^{\text{Jr}} + 
                 w_{q}^{\text{Sr}}
@@ -1426,7 +1429,7 @@ Either way, if the available talent is enough to output occupation $q$'s operati
         while ``junior'' employability is
         \begin{align}
             \tilde{w}_{q}^{\text{Jr}} 
-            &=
+            &:=
             \frac{
                 w_{q}^{\text{Jr}}
             }{

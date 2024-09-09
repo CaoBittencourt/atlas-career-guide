@@ -13,11 +13,11 @@ class Attribute:
         self.a = a
         self.ub = ub
         self.lb = lb
-        # self.normsb = normsb(
-        #     a = self.a,
-        #     ub = self.ub,
-        #     lb = self.lb
-        # )
+        self.normsb = normsb(
+            a = self.a,
+            ub = self.ub,
+            lb = self.lb
+        )
         # self.normax = normax(self.a)
 
 dsds = Attribute(100, 100, 0)
