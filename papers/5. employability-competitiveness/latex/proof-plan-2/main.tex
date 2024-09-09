@@ -1265,7 +1265,7 @@ When we speak of ``employability'' what we generally mean is rather trivial: the
     \end{gather}
     where $\ell_{q}^{v} \in [0,1]$ is the upper responsability bound, or the minimum productivity to be hired in one of $p_q$ types of positions in a labor market with a $w_q$ workforce; while $h_{q}^{k} \in [0,1]$ is the hireability statistic accounting for other selection criteria, such as years of education, experience, etc.
     
-    And we can further aggregate employability for $n$ occupations to assess how many of all available $W$ jobs in the economy are suitable for one's skill set:
+    And we can further aggregate employability for $n$ occupations to assess how many of all available $w$ jobs in the economy are suitable for one's skill set:
     \begin{gather}
     \tilde{W}_{k}
     :=
@@ -1293,7 +1293,7 @@ When we speak of ``employability'' what we generally mean is rather trivial: the
     \tilde{w}_{q}
     :=
     \left(
-        \frac{1}{W}
+        \frac{1}{w}
     \right)
     \sum_{q=1}^{n}
     {w}_{q}
@@ -1301,7 +1301,7 @@ When we speak of ``employability'' what we generally mean is rather trivial: the
     1
     ,
     \\
-    W
+    w
     :=
     \sum_{q=1}^{n}
     {w}_{q}
@@ -1916,7 +1916,7 @@ With this, we can now demonstrate that, given the above, maximum labor stratific
     \begin{proof}
         As we want to derive maximum operational output, throughout this proof we assume
         \begin{gather}
-            [\tilde{T}_{q}^{v} \geq \ell_{v}^{q}] 
+            \tilde{T}_{q}^{v} \geq \ell_{v}^{q}
             \
             \forall
             \
@@ -3926,7 +3926,7 @@ Having derived the optimal responsability ranges for a maximally stratified labo
             <
             \dots
             <
-            \tilde{T}_{q}^{\text{3S}}
+            \tilde{T}_{q}^{\text{Ir}}
             <
             \dots
             <
@@ -4527,7 +4527,7 @@ Finally, let us show the economy's productivity has to be capable of supporting 
         \end{align}
         So, if occupation $q$'s labor market exists at all (i.e. $w_q > 0$), it must have at least one perfectly qualified employee, yielding at least one productive unit.
 
-        Now, binary labor stratification (BS) demands at least one perfectly qualified ``senior'' and a sufficiently qualified ``junior'' for an aggregate output $\mho_{q}^{\text{BS}} > 1$, greater than that of independent production:
+        Now, binary labor stratification (BS) demands a perfectly qualified ``senior'' and a sufficiently qualified ``junior'' for a minimum aggregate output $\mho_{q}^{\text{BS}} > 1$, greater than that of independent production:
         \begin{align}
             \boldsymbol{w_q}(
                 \boldsymbol{\tilde{T}_q},
@@ -4808,7 +4808,7 @@ With this, we have shown maximally stratified production is the only efficient a
         \tilde{W}_k 
         =
         \left(
-            \frac{1}{W}
+            \frac{1}{w}
         \right)
         \sum_{q=1}^{n}
         \left[
@@ -4876,7 +4876,7 @@ With this, we have shown maximally stratified production is the only efficient a
             \\
             &=
             \left(
-                \frac{1}{W}
+                \frac{1}{w}
             \right)
             \sum_{q=1}^{n}
             \left[
@@ -5128,7 +5128,7 @@ The General Employability Theorem has a few interesting collolaries, the first, 
             \tilde{W}_k 
             = 
             \left(
-                \frac{1}{W}
+                \frac{1}{w}
             \right)
             \sum_{q=1}^{n}
             \left[
@@ -5142,7 +5142,7 @@ The General Employability Theorem has a few interesting collolaries, the first, 
             % \\
             :=
             \left(
-                \frac{1}{W}
+                \frac{1}{w}
             \right)
             \sum_{q=1}^{n}
             \left[
@@ -5250,7 +5250,7 @@ And, with this, we may derive the General Competitiveness Corollary.
 % region: general competitiveness corollary (gcc)
 \begin{corollary}[General Competitiveness Corollary, GCC]
     \label{gcc}
-    The competitiveness of an occupation's labor market is the percentage of the aggregate workforce $W$ that is willing and able to compete for its job posts.
+    The competitiveness of an occupation's labor market is the percentage of the aggregate workforce $w$ that is willing and able to compete for its job posts.
 
     \begin{proof}
         By Definition \ref{def_competitiveness} and the General Employability Theorem,
@@ -5278,7 +5278,7 @@ And, with this, we may derive the General Competitiveness Corollary.
             \\
             &=
             \left(
-                \frac{1}{W}
+                \frac{1}{w}
             \right)
             \sum_{q=1}^{n}
             \left[
@@ -5300,7 +5300,7 @@ And, with this, we may derive the General Competitiveness Corollary.
             \\
             &=
             \left(
-                \frac{1}{W}
+                \frac{1}{w}
             \right)
             \sum_{q=1}^{n}
             \left[
