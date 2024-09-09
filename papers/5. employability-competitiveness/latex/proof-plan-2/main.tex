@@ -888,8 +888,10 @@ Now, even though these results are basically tautological, they are still import
                 \ell_{p_q}^{q}
             \right]
         \right)
-        \in 
-        [0, w_q] ^ {p_q}
+        \geq
+        \boldsymbol{0}
+        % \in 
+        % [0, w_q] ^ {p_q}
         ,
         \\
         0
@@ -1640,8 +1642,9 @@ Now, to generalize this conclusion, we shall define notation in terms of maximum
 Having understood what maximum labor stratification is, one may wonder whether there could be more than $w_q$ job subtypes in a labor market. For though it is intuitive to think of $w_q$, the workforce size, as the upper bound for stratification, if we allow for partial hiring, with ``fractional jobs'',
 \begin{gather}
 w_{q}^{v} 
-\in 
-[0, w_q]
+> 0
+% \in 
+% [0, w_q]
 \
 \forall
 \
@@ -1762,8 +1765,9 @@ We may formalize this conclusion as follows.
     If fractional job posts are allowed, with
     \begin{gather}
         w_{q}^{v} 
-        \in 
-        [0, w_q]
+        > 0
+        % \in 
+        % [0, w_q]
         \
         \forall
         \
@@ -1910,7 +1914,7 @@ With this, we can now demonstrate that, given the above, maximum labor stratific
     accounted by it.
     
     \begin{proof}
-        As we are want to derive maximum operational output, throughout this proof we assume
+        As we want to derive maximum operational output, throughout this proof we assume
         \begin{gather}
             [\tilde{T}_{q}^{v} \geq \ell_{v}^{q}] 
             \
@@ -4360,7 +4364,10 @@ Finally, let us show the economy's productivity has to be capable of supporting 
         \mho_q 
         := 
         \mho(
-            \boldsymbol{w_q}
+            \boldsymbol{w_{q}}(
+                \boldsymbol{\tilde{T}_{q}},
+                \boldsymbol{\ell_{q}}
+            )
             ,
             \boldsymbol{\mho_q}(
                 \boldsymbol{\ell_q}
@@ -4368,7 +4375,10 @@ Finally, let us show the economy's productivity has to be capable of supporting 
         )
         := 
         \min\left(
-            \boldsymbol{w_q}
+            \boldsymbol{w_{q}}(
+                \boldsymbol{\tilde{T}_{q}},
+                \boldsymbol{\ell_{q}}
+            )
             \times
             \boldsymbol{\mho_q}(
                 \boldsymbol{\ell_q}
