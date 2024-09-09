@@ -71,7 +71,8 @@
     Career development; 
     Vocational choice; 
     Occupational Information Network; 
-    O*NET.
+    BLS.
+    % O*NET.
 \end{keyword}
 
 % endregion
@@ -1909,7 +1910,26 @@ With this, we can now demonstrate that, given the above, maximum labor stratific
     accounted by it.
     
     \begin{proof}
-        We begin with the most trivial of economic configurations, that of independent production with perfectly qualified workers. In this scenario, each employee devotes their unitary time allowance, which coincides with the total time duration of occupation $q$'s operation,
+        As we are want to derive maximum operational output, throughout this proof we assume
+        \begin{gather}
+            [\tilde{T}_{q}^{v} \geq \ell_{v}^{q}] 
+            \
+            \forall
+            \
+            v \in \{1, \dots, w_q\}
+            \iff
+            \boldsymbol{w_q}(
+                \boldsymbol{\tilde{T_q}},
+                \boldsymbol{\ell_q}
+            )
+            =
+            \boldsymbol{w_q}
+            ,
+        \end{gather}
+        that is all employees are sufficiently qualified for their responsabilities.
+        
+        With this, we begin with the most trivial of economic configurations, that of independent production with perfectly qualified workers. In this scenario, each employee devotes their unitary time allowance, which coincides with the total time duration of occupation $q$'s operation,
+        % We begin with the most trivial of economic configurations, that of independent production with perfectly qualified workers. In this scenario, each employee devotes their unitary time allowance, which coincides with the total time duration of occupation $q$'s operation,
         \begin{gather}
             \int_{0}^{1}{
                 \text{ta}(l)
@@ -1960,7 +1980,8 @@ With this, we can now demonstrate that, given the above, maximum labor stratific
             .
         \end{gather}
         
-        With this, we note that, as each worker's time allowance is the same as operations' total duration, failing to output any single task by overemphasizing another would nullify the whole productive effort. Hence, the optimal choice of hours to allocate to any responsability spectrum has to be the minimum time required to complete it, or
+        Note that, as each worker's time allowance is the same as operations' total duration, failing to output any single task by overemphasizing another would nullify the whole productive effort. Hence, the optimal choice of hours to allocate to any responsability spectrum has to be the minimum time required to complete it, or
+        % With this, we note that, as each worker's time allowance is the same as operations' total duration, failing to output any single task by overemphasizing another would nullify the whole productive effort. Hence, the optimal choice of hours to allocate to any responsability spectrum has to be the minimum time required to complete it, or
         % With this, we note that, as each worker's time allowance is the same as operations' total time requirements, failing to output any single task by overemphasizing another would nullify the whole operation, when production is independent. Hence, the optimal choice of hours to allocate to any responsability spectrum has to be the minimum time requirement to complete it, or
         \begin{gather}
             \Omega_{q}^{\ell} 
@@ -4333,7 +4354,7 @@ Finally, let us show the economy's productivity has to be capable of supporting 
 \begin{lemma}[Productivity Sufficiency Lemma, PSL]
     The available talent in a labor market is, at least, sufficient to allow for maximally stratified production.
     
-    \begin{proof}
+    \begin{proof}[Proof 1]
         If talent were not sufficient to produce occupation $q$'s entire $l \in [0,1]$ responsability spectrum, then, as aggregate operation output is given by the Leontief function (see WOCA, MOOL),
         \begin{gather}
         \mho_q 
@@ -4360,7 +4381,7 @@ Finally, let us show the economy's productivity has to be capable of supporting 
         \lnot \
         \mho_q > 0
         \implies
-        \boldsymbol{w_q} =
+        \boldsymbol{w_{q}^{*}} =
         \boldsymbol{0}
         \\
         \therefore
@@ -4368,16 +4389,29 @@ Finally, let us show the economy's productivity has to be capable of supporting 
         \implies 
         \mho_q > 0
         \iff
-        \boldsymbol{w_q}
+        \boldsymbol{w_q}(
+            \boldsymbol{\tilde{T}_q},
+            \boldsymbol{\ell_q}
+        )
         \geq
         \boldsymbol{1}
-        % \in
-        % [1,w_q] ^ {p}
         ,
         \\
-        \boldsymbol{1} ^ \top
+        0
+        \leq
+        \boldsymbol{1} ^ {\top}
         \cdot
-        \boldsymbol{w_q}
+        \boldsymbol{w_{q}}(
+            \boldsymbol{\tilde{T}_{q}},
+            \boldsymbol{\ell_{q}}
+        )
+        \leq
+        \boldsymbol{1} ^ {\top}
+        \cdot
+        \boldsymbol{w_{q}}(
+            \boldsymbol{1},
+            \boldsymbol{\ell_{q}}
+        )
         :=
         w_q
         .
@@ -4437,6 +4471,218 @@ Finally, let us show the economy's productivity has to be capable of supporting 
             .
         \end{gather}
     \end{proof}
+
+    \begin{proof}[Proof 2]
+        Another proof for this lemma is to start with the minimum productivity condition above,
+        \begin{gather}
+            \boldsymbol{w_q}(
+                \boldsymbol{\tilde{T}_q},
+                \boldsymbol{\ell_q}
+            )
+            \geq
+            \boldsymbol{1}
+            \iff
+            \sum_{r=1}^{w_{q}^{v}}
+            [\tilde{T}_{q}^{r} \geq \ell_{v}^{q}]
+            \geq
+            1
+            \
+            \forall
+            \
+            v \in \{1, \dots, p_q\}
+            ,
+        \end{gather}
+        and write, for every production strategy, what it implies. 
+
+        With independent production (IP),
+        \begin{align}
+            \boldsymbol{w_q}(
+                \boldsymbol{\tilde{T}_q},
+                \boldsymbol{\ell_q}
+            )
+            \geq
+            \boldsymbol{1}
+            &\iff
+            \sum_{v=1}^{w_{q}}
+            [\tilde{T}_{q}^{v} = 1]
+            \geq
+            1
+            \\
+            \therefore
+            w_q > 0
+            &\iff
+            \mho_{q}^{\text{IP}}
+            \in [1, w_q]
+            .
+        \end{align}
+        So, if occupation $q$'s labor market exists at all (i.e. $w_q > 0$), it must have at least one perfectly qualified employee, yielding at least one productive unit.
+
+        Now, binary labor stratification (BS) demands at least one perfectly qualified ``senior'' and a sufficiently qualified ``junior'' for an aggregate output $\mho_{q}^{\text{BS}} > 1$, greater than that of independent production:
+        \begin{align}
+            \boldsymbol{w_q}(
+                \boldsymbol{\tilde{T}_q},
+                \boldsymbol{\ell_q}
+            )
+            \geq
+            \boldsymbol{1}
+            &\iff
+            \sum_{r=1}^{w_{q}^{\text{Jr}}}
+            [\tilde{T}_{q}^{r} \geq \ell_{\text{Jr}}^{q}]
+            \geq
+            1
+            \land
+            \sum_{r=1}^{w_{q}^{\text{Sr}}}
+            [\tilde{T}_{q}^{r} = 1]
+            \geq
+            1
+            \\
+            \therefore
+            w_q > 0
+            &\iff
+            \mho_{q}^{\text{BS}}
+            \in
+            \left[
+                \min\left(
+                    \frac{
+                        1
+                    }{
+                        \int_{0}^{\ell_{\text{Jr}}^{q}}
+                        \text{ta}(l)dl
+                    }
+                    ,
+                    \frac{
+                        1
+                    }{
+                        \int_{\ell_{\text{Jr}}^{q}}^{1}
+                        \text{ta}(l)dl
+                    }
+                \right)
+                ,
+                w_q
+            \right]
+            .
+        \end{align}
+
+        And, again, the pattern repeats for all production strategies, up to maximum labor stratification, where
+        \begin{gather}
+            \boldsymbol{w_q}(
+                \boldsymbol{\tilde{T}_q},
+                \boldsymbol{\ell_q}
+            )
+            \geq
+            \boldsymbol{1}
+            \iff
+            \sum_{r=1}^{w_{q}^{1}}
+            [\tilde{T}_{q}^{r} \geq \ell_{1}^{q}]
+            \geq
+            1
+            \land
+            \dots
+            \land
+            \sum_{r=1}^{w_{q}^{w_q}}
+            [\tilde{T}_{q}^{r} = 1]
+            \geq
+            1
+            .
+        \end{gather}
+        But
+        \begin{align}
+            &\because
+            p_q = w_q
+            \iff
+            \boldsymbol{w_q} =
+            \boldsymbol{1}
+            \land
+            \boldsymbol{\ell_q} =
+            \boldsymbol{\lambda_q}
+            \\
+            &\therefore
+            \sum_{r=1}^{1}
+            [\tilde{T}_{q}^{r} \geq \lambda_{1}^{q}]
+            =
+            1
+            \land
+            \dots
+            \land
+            \sum_{r=1}^{1}
+            [\tilde{T}_{q}^{r} = 1]
+            =
+            1
+            \\
+            &\iff
+            \tilde{T}_{q}^{v} \geq \lambda_{v}^{q}
+            \
+            \forall
+            \
+            v \in \{1, \dots, w_q\}
+            ,
+        \end{align}
+        which means all employees in a maximally stratified labor market necessarily meet the minimum productivity requirements for their responsabilities (i.e. the available talent has to be at least sufficient for maximally stratified production).
+        
+        Therefore,
+        \begin{align}
+            w_q > 0
+            &\iff
+            \mho_{q}^{\text{MS}}
+            \in
+            \left[
+                \min\left(
+                    \frac{1}{
+                        \int_{0}^{
+                            \lambda_{1}^{q}
+                        }{
+                            \text{ta}(l)dl
+                        }
+                    }
+                    ,
+                    \dots
+                    ,
+                    \frac{1}{
+                        \int_{
+                            \lambda_{w_q - 1}^{q}
+                        }^{1}{
+                            \text{ta}(l)dl
+                        }
+                    }
+                \right)
+                ,
+                w_q
+            \right]
+            \\
+            &\iff
+            \mho_{q}^{\text{MS}}
+            \in
+            \left[
+                \left(
+                    \int_{
+                        \lambda_{v-1}^{q}
+                    }^{
+                        \lambda_{v}^{q}
+                    }{
+                        \text{ta}(l)dl
+                    }
+                \right) ^ {-1}
+                ,
+                w_q
+            \right]
+            \\
+            &\iff
+            \mho_{q}^{\text{MS}}
+            \in
+            \left[
+                w_q
+                ,
+                w_q
+            \right]
+            \\
+            &\iff
+            \mho_{q}^{\text{MS}}
+            =
+            w_q
+            ,
+        \end{align}
+        which is also the maximum operational output of any production strategy (MOOL). Hence, productivity requirements are minimized, while aggregate output is maximized. Or, put another way, in this arrangement the minimum guarantees the maximum.
+    \end{proof}
 \end{lemma}
 % endregion
 
@@ -4457,8 +4703,6 @@ From the above, it follows logically that maximum-monotonic labor stratification
             <
             \tilde{T}_{q}^{v}
             \implies
-            \mho_{q}^{k}
-            =
             \left[
                 \tilde{T}_{q}^{k}
                 \geq
