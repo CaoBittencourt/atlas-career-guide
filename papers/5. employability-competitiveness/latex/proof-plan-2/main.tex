@@ -638,9 +638,11 @@ Now, even though these results are basically tautological, they are still import
 \end{lemma}
 % endregion
 % region: time allocation definition 
+In addition to the above, we shall also specifiy tasks' duration in terms of a time allocation function.
 \begin{definition}[Time Allocation]
     \label{ta}
     % statement
+    Time allocation is a continuous function associating task's difficulty with their duration, both normalized to the unit interval:
     \begin{gather}
         \text{ta}(l)
         :=
@@ -660,16 +662,17 @@ Now, even though these results are basically tautological, they are still import
         \forall
         \
         l \in [0,1]
-        % ,
         \land
         \int_{0}^{1}
             \text{ttc}(l)
             dl
             >
             0
-        .
+        ,
     \end{gather}
+    where $\text{ttc}(l)$ is the time to complete a task given its difficulty level.
     
+    Notice, as well, we termed normalized task duration ``time allocation''. This is on purpose, as employees' ``time allowances'', or time constraints, are assumed to coincide with aggregate normalized duration. Or, in other words, workers all have the same unitary time allowance, while tasks' normalized duration, likewise integrate to a dimensionless time unit, so that each worker, if sufficiently qualified, can produce the entire $l \in [0,1]$ responsability spectrum by themselves. Therefore, any independent employee has to spend their time allowance in accordance with normalized duration, or the \textit{percentage} of a single worker's time that has to be \textit{allocated} to complete a task; hence the name ``time allocation''.
 \end{definition} 
 
 % endregion
@@ -4390,13 +4393,19 @@ Finally, let us show the economy's productivity has to be capable of supporting 
         \begin{gather}
         \lnot \
         \mho_q > 0
-        \implies
+        \iff
         \boldsymbol{w_{q}^{*}} =
         \boldsymbol{0}
+        \iff
+        \boldsymbol{1} ^ {\top}
+        \cdot
+        \boldsymbol{w_{q}^{*}}
+        =
+        0
         \\
         \therefore
-        w_q > 0 
-        \implies 
+        w_q > 0
+        \iff 
         \mho_q > 0
         \iff
         \boldsymbol{w_q}(
@@ -4525,6 +4534,7 @@ Finally, let us show the economy's productivity has to be capable of supporting 
             \in [1, w_q]
             .
         \end{align}
+
         So, if occupation $q$'s labor market exists at all (i.e. $w_q > 0$), it must have at least one perfectly qualified employee, yielding at least one productive unit.
 
         Now, binary labor stratification (BS) demands a perfectly qualified ``senior'' and a sufficiently qualified ``junior'' for a minimum aggregate output $\mho_{q}^{\text{BS}} > 1$, greater than that of independent production:
