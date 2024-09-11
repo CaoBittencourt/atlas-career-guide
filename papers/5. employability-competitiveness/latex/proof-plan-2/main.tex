@@ -885,6 +885,7 @@ And, because of these two insightful, yet fairly uncontroversial observations (v
         :=
         1
     \end{gather}
+    
     responsability bounds; while
     \begin{gather}
         \boldsymbol{w_{q}}(
@@ -933,6 +934,7 @@ And, because of these two insightful, yet fairly uncontroversial observations (v
         :=
         w_q
     \end{gather}
+    
     are effective (i.e. sufficiently qualified) workers per position; and
     \begin{gather}
         \boldsymbol{\varsigma_{q}}(
@@ -1170,32 +1172,18 @@ To conclude this section, let us summarize what we have so far defined. With the
 % statement
 \begin{axiom}[Employer Rationality Axiom, ERA]
     \label{era}
-    Employers are rational and will only pay for employees to work on tasks they can accomplish. Additionaly, if labor stratification is allowed, employers will outsource parts of an occupation's operation if their employees cannot accomplish the entire operation.
+    Employers are rational and will only pay for employees to work on tasks they can accomplish. Additionaly, if labor stratification is allowed, rational employers will split job posts and outsource activities if they expect employees cannot accomplish the whole operation.
 
-    they will always choose to implement the production strategy, ``PS'', that maximizes operational output, given the, available talent, or expected productivity in the workforce:
-    \begin{gather}
+    Mathematically, a rational employer's optimization problem is to choose two vectors of $\boldsymbol{w_q}$ employment levels and responsability bounds $\boldsymbol{\ell_q}$ for each of $p_q$ positions and implement a production strategy that maximizes operational output, given the available talent, or expected productivity in the workforce:
+    \begin{align}
         \max_{
-            \text{PS},
+            p_q,
             \boldsymbol{w_q},
             \boldsymbol{\ell_q}
         }
-        \mathbb{E}\left[
-            \mho_{q}
-            \
-            |
-            \
-            \mathbb{E}[
-                \boldsymbol{\tilde{T}_q}
-            ]
-        \right]
-        :=
-        \max_{
-            \text{PS},
-            \boldsymbol{w_q},
-            \boldsymbol{\ell_q}
-        }
+            &
             \mathbb{E}\left[
-                \mho_{q}^{\text{PS}}\left(
+                \mho\left(
                     \boldsymbol{w_q}(
                         \boldsymbol{\tilde{T}_q},
                         \boldsymbol{\ell_q}
@@ -1213,7 +1201,42 @@ To conclude this section, let us summarize what we have so far defined. With the
                     \boldsymbol{\tilde{T}_q}
                 ]
             \right]
-    \end{gather}
+            \\
+            \text{s.t.}
+            \quad
+            &
+            p_q \in \left\{1, 2, 3, \dots\right\}
+            ,
+            \\
+            &
+            \boldsymbol{\ell_q} \in [0,1] ^ {p_q}
+            ,
+            \\
+            &
+            \sum_{v=1}^{p_q}{
+                \int_{
+                    \ell_{v-1}^{q}
+                }^{
+                    \ell_{v}^{q}
+                }
+                \text{ta}(l)dl
+            }
+            =
+            1
+            ,
+            \\
+            &
+            \boldsymbol{w_{q}} \geq \boldsymbol{0}
+            ,
+            \\
+            &
+            \boldsymbol{1} ^ {\top}
+            \cdot
+            \boldsymbol{w_q}
+            =
+            w_q
+            ,
+    \end{align}
 \end{axiom}
 % endregion
 % region: hireability axiom (ha) 
