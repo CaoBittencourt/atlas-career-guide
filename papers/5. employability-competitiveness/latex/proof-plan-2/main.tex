@@ -8,7 +8,7 @@
 % endregion
 
 % region: packages 
-\usepackage{amsmath}
+\usepackage{mathtools}
 \usepackage{amssymb}
 \usepackage{amsthm}
 \usepackage{float}
@@ -4059,7 +4059,7 @@ Having derived the optimal responsability ranges for a maximally stratified labo
             }
             )
             ,\\
-            &\vdots
+            &\vdotswithin{\implies}
             \\
             p_q = w_q
             &\implies
@@ -4088,6 +4088,9 @@ Having derived the optimal responsability ranges for a maximally stratified labo
                 }_{1}
             )
         \end{alignat}
+
+        [does $\tilde{T}_{q}^{r}$ have to be constant across differently stratified markets?]
+        
         are the vectors of minimum required productivity (hence, the underline) to implement each strategy, where the superscripts stand for ``independent production'' (IP), ``binary stratification'' (BS), ``three-fold stratification'' (3S), and ``maximum stratification'' (MS), respectively, while
         \begin{gather}
             w_{q}^{v}(p_q)
