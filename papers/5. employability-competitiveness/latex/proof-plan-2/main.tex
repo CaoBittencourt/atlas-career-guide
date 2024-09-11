@@ -701,7 +701,7 @@ Again, this is what we refer to as the issue of ``occupational complexity'' and 
     Professional attributes serve different purposes in different occupations, and each occupation's attributes complement one another to output a mostly homogenous ``product'', which is the essence of its activity and makes it unique among all occupations. Hence, what a particular job produces is an indivisible, ``atomic'', set of tasks, essentially other than what is produced elsewhere in the labor market.
 \end{observation}
 
-For example, an artist, an airline pilot and a surgeon have manual dexterity as part of their skill set. Nevertheless, one's dexterity is combined with their creativity and applied to producing art, while the others' are combined with specific, technical, knowledge and applied, respectively, to maneuvering airbuses and performing surgery. And, for this reason, each of these's skills are not necessarily transferable to the other's activities: thus, indeed, to be talented with the scalpel does not mean one is any good with a paint brush; for the painter's ability is not really ``manual dexterity'' itself, but ``artistic-manual-dexterity'', whereas a surgeon's is ``surgical-manual-dexterity'' (the hyphens emphasize occupational atomicity, or indivisibility, as the same competency, combined to another set of skills yields quite different results).
+For example, an artist, an airline pilot and a surgeon have \textit{manual dexterity} as part of their skill set. Nevertheless, one's dexterity is combined with their creativity and applied to producing art, while the others' are combined with specific, technical, knowledge and applied, respectively, to maneuvering airbuses and performing surgery. And, for this reason, each of these's skills are not necessarily transferable to the other's activities: thus, indeed, to be talented with the scalpel does not mean one is any good with a paint brush; for the painter's ability is not really ``manual dexterity'' itself, but ``artistic-manual-dexterity'', whereas a surgeon's is ``surgical-manual-dexterity'' (the hyphens emphasize occupational atomicity, or indivisibility, as the same competency, combined to another set of skills yields quite different results).
 
 And we could further state all occupations' simple tasks (i.e. those requiring only one attribute) amount to very little, and perhaps nothing, in terms of time allocation, so that employees in each labor market spend their time allowances on occupations' complex, and essential, tasks (i.e. those that differentiate them). For, if this was not the case, it would not imply an occupation is not complex, only that it was incorrectly categorized: it would not be an issue with the theory here proposed, but an empirical, classification error. Therefore, in such cases, the occupation should be split into however many suboccupations are needed until each of them is indivisible (i.e. ``atomic'').
 
@@ -1171,6 +1171,49 @@ To conclude this section, let us summarize what we have so far defined. With the
 \begin{axiom}[Employer Rationality Axiom, ERA]
     \label{era}
     Employers are rational and will only pay for employees to work on tasks they can accomplish. Additionaly, if labor stratification is allowed, employers will outsource parts of an occupation's operation if their employees cannot accomplish the entire operation.
+
+    they will always choose to implement the production strategy, ``PS'', that maximizes operational output, given the, available talent, or expected productivity in the workforce:
+    \begin{gather}
+        \max_{
+            \text{PS},
+            \boldsymbol{w_q},
+            \boldsymbol{\ell_q}
+        }
+        \mathbb{E}\left[
+            \mho_{q}
+            \
+            |
+            \
+            \mathbb{E}[
+                \boldsymbol{\tilde{T}_q}
+            ]
+        \right]
+        :=
+        \max_{
+            \text{PS},
+            \boldsymbol{w_q},
+            \boldsymbol{\ell_q}
+        }
+            \mathbb{E}\left[
+                \mho_{q}^{\text{PS}}\left(
+                    \boldsymbol{w_q}(
+                        \boldsymbol{\tilde{T}_q},
+                        \boldsymbol{\ell_q}
+                    ),
+                    \boldsymbol{
+                        \mho_q
+                    }(
+                        \boldsymbol{\ell_q}
+                    )
+                \right)
+                \
+                |
+                \
+                \mathbb{E}[
+                    \boldsymbol{\tilde{T}_q}
+                ]
+            \right]
+    \end{gather}
 \end{axiom}
 % endregion
 % region: hireability axiom (ha) 
