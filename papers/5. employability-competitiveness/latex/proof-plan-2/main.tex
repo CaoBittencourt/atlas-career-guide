@@ -3417,7 +3417,7 @@ With this, we can now demonstrate that, given the above, maximum labor stratific
 
 In the lemma above, we have assumed there to be an optimal $\boldsymbol{\ell_{q}^{*}}$ vector of responsability bounds maximizing operational output in stratified production. We shall, now, devote out attention to describing what such a vector would have to be like and, thus, how production is optimally stratified.
 
-% region: optimal stratificaion lemma (osl) 
+% region: optimal stratification lemma (osl) 
 \begin{lemma}[Optimal Stratification Lemma, OSL]
     Because in a maximally and monotonically stratified labor market every position is its own job subtype (for, again, employment levels are unitary), optimal production is, then, obtained not by choosing how many workers to allocate to tasks of varying difficulty levels, but instead by setting appropriate responsability ranges for each position (i.e. which tasks to allocate \textit{to} workers). The bounds for these ranges are:
     \begin{gather}
@@ -3997,7 +3997,9 @@ Having derived the optimal responsability ranges for a maximally stratified labo
                     , \dots
                     , 1
                 )
-            }_{w_q}
+            }_{
+                w_{q}^{1}(1) = w_q
+            }
             ,\\
             p_q = 2
             &\implies
@@ -4011,13 +4013,17 @@ Having derived the optimal responsability ranges for a maximally stratified labo
                     \tilde{T}_{q}^{\text{Jr}}
                     , \dots
                     , \tilde{T}_{q}^{\text{Jr}}
-                }_{w_{q}^{\text{Jr}}}
+                }_{
+                    w_{q}^{1}(2)
+                }
                 ,
                 \underbrace{
                 1
                 , \dots
                 , 1
-            }_{w_{q}^{\text{Sr}}}
+            }_{
+                w_{q}^{2}(2)
+            }
             )
             ,\\
             p_q = 3
@@ -4032,19 +4038,25 @@ Having derived the optimal responsability ranges for a maximally stratified labo
                     \tilde{T}_{q}^{\text{Ir}}
                     , \dots
                     , \tilde{T}_{q}^{\text{Ir}}
-                }_{w_{q}^{\text{Ir}}}
+                }_{
+                    w_{q}^{1}(3)
+                }
                 ,
                 \underbrace{
                     \tilde{T}_{q}^{\text{Jr}}
                     , \dots
                     , \tilde{T}_{q}^{\text{Jr}}
-                }_{w_{q}^{\text{Jr}}}
+                }_{
+                    w_{q}^{2}(3)
+                }
                 ,
                 \underbrace{
                 1
                 , \dots
                 , 1
-            }_{w_{q}^{\text{Sr}}}
+            }_{
+                w_{q}^{3}(3)
+            }
             )
             ,\\
             &\vdots
@@ -4065,8 +4077,125 @@ Having derived the optimal responsability ranges for a maximally stratified labo
                     \lambda_{w_q}^{q}
                 }_{1}
             )
+            :=
+            (
+                \underbrace{
+                    \lambda_{1}^{q}
+                }_{1}
+                , \dots
+                , \underbrace{
+                    1
+                }_{1}
+            )
         \end{alignat}
-        are the vectors of minimum required productivity (hence, the underline) to implement each strategy, where the superscripts stand for ``independent production'' (IP), ``binary stratification'' (BS), ``three-fold stratification'' (3S), and ``maximum stratification'' (MS), respectively.
+        are the vectors of minimum required productivity (hence, the underline) to implement each strategy, where the superscripts stand for ``independent production'' (IP), ``binary stratification'' (BS), ``three-fold stratification'' (3S), and ``maximum stratification'' (MS), respectively, while
+        \begin{gather}
+            w_{q}^{v}(p_q)
+            \geq 
+            1
+            \
+            \forall
+            \
+            v \in \{1, \dots, p_q\}
+            ,
+            p_q \in \{1, \dots, w_q\}
+        \end{gather}
+        are employment levels per job subtype as a function of labor stratification.
+        
+        Or, in matrix form,
+        \begin{gather}
+            \boldsymbol{\tilde{T}_q}
+            =
+            \begin{bmatrix}
+                % ip
+                1 & \hdots & 1 & 1 & \hdots & 1
+                \\
+                % bs
+                \tilde{T}_{q}^{\text{Jr}}
+                &
+                \hdots
+                &
+                \tilde{T}_{q}^{\text{Jr}}
+                &
+                \tilde{T}_{q}^{\text{Jr}}
+                &
+                \hdots
+                &
+                1
+                \\
+                % 3s
+                \tilde{T}_{q}^{\text{Ir}}
+                &
+                \hdots
+                &
+                \tilde{T}_{q}^{\text{Ir}}
+                &
+                \tilde{T}_{q}^{\text{Jr}}
+                &
+                \hdots
+                &
+                1
+                \\
+                % dots
+                \vdots
+                &
+                \ddots
+                &
+                \vdots
+                &
+                \vdots
+                &
+                \ddots
+                &
+                \vdots
+                \\
+                % ms
+                \lambda_{1}^{q}
+                &
+                \hdots
+                &
+                \lambda_{w_{q}^{1}(3)}^{q}
+                &
+                \lambda_{1+w_{q}^{1}(3)}^{q}
+                &
+                \hdots
+                &
+                1
+            \end{bmatrix}
+            .
+        \end{gather}
+
+        It is clear in $\boldsymbol{\tilde{T}_q}$ elements are weakly decreasing on their row number (i.e. those higher up in the matrix are greater or equal to those below them), as
+        \begin{alignat}{2}
+            \lambda_{1}^{q}
+            &< \dots
+            < \tilde{T}_{q}^{\text{Ir}}
+            < \tilde{T}_{q}^{\text{Jr}}
+            &&< \dots
+            < \tilde{T}_{q}^{\text{Sr}}
+            :=
+            1
+            ,\\
+            \lambda_{w_{q}^{1}(3)}^{q}
+            &< \dots
+            < \tilde{T}_{q}^{\text{Ir}}
+            < \tilde{T}_{q}^{\text{Jr}}
+            &&< \dots
+            < \tilde{T}_{q}^{\text{Sr}}
+            :=
+            1
+            ,\\
+            \lambda_{1+w_{q}^{1}(3)}^{q}
+            &< \dots
+            < \tilde{T}_{q}^{\text{Jr}}
+            = \tilde{T}_{q}^{\text{Jr}}
+            &&< \dots
+            < \tilde{T}_{q}^{\text{Sr}}
+            :=
+            1
+            ,
+        \end{alignat}
+        and similarly for every other row. So, we may generalize this as follows: 
     \end{proof}
 \end{lemma}
 % endregion
