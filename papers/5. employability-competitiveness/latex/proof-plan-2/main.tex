@@ -4104,7 +4104,11 @@ Having derived the optimal responsability ranges for a maximally stratified labo
         
         Or, in matrix form,
         \begin{gather}
-            \boldsymbol{\tilde{T}_q}
+            \boldsymbol{
+                \underaccent{\bar}{
+                    \tilde{T}
+                }_q
+            }
             =
             \begin{bmatrix}
                 % ip
@@ -4165,7 +4169,13 @@ Having derived the optimal responsability ranges for a maximally stratified labo
             .
         \end{gather}
 
-        It is clear in $\boldsymbol{\tilde{T}_q}$ elements are weakly decreasing on their row number (i.e. those higher up in the matrix are greater or equal to those below them), as
+        It is clear in $
+        \boldsymbol{
+                \underaccent{\bar}{
+                    \tilde{T}
+                }_q
+            }
+        $ elements are weakly decreasing on their row number (i.e. those higher up in the matrix are greater or equal to those below them), as
         \begin{alignat}{2}
             \lambda_{1}^{q}
             &< \dots
@@ -4195,7 +4205,41 @@ Having derived the optimal responsability ranges for a maximally stratified labo
             1
             ,
         \end{alignat}
-        and similarly for every other row. So, we may generalize this as follows: 
+        and similarly for every other row in every column but the last one, which is the unit vector. So, we may generalize this as follows:
+        \begin{gather}
+            \lambda_{v}^{q}
+            \leq
+            \underaccent{\bar}{\tilde{T}}_{q}^{r}
+            \
+            \forall
+            \
+            v 
+            \in 
+            \left\{
+                1    
+                ,\dots    
+                ,\sum_{z=1}^{r}
+                w_{q}^{z}(p_q)
+            \right\}
+            ,
+            r 
+            \in 
+            \{
+                1    
+                ,\dots    
+                ,p_q
+            \}
+            ,
+            p_q 
+            \in 
+            \{
+                1    
+                ,\dots    
+                ,w_q
+            \}
+            ;
+        \end{gather}
+        that is, a maximally stratified market minimizes productivity requirements.
     \end{proof}
 \end{lemma}
 % endregion
