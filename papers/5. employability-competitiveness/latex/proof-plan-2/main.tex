@@ -4254,6 +4254,157 @@ Now that we have proven maximum labor stratification with unitary employment is 
     \label{gsl}
     % statement
     A generalization of the Optimal Stratification Lemma, the GSL states that, for any degree of labor stratification -- whether binary, three-fold, etc --, rational employers will always choose to split more difficult positions up to the (predefined) limit of one worker per job subtype, leaving the remaining responsabilities to the first, and easiest, role.
+
+    \begin{gather}
+        \boldsymbol{w_{q}^{*}}
+        \times
+        \boldsymbol{
+            \underaccent{\bar}{
+                \tilde{T}
+            }_{q}^{*}
+        }
+        \leq
+        \boldsymbol{w_q}
+        \times
+        \boldsymbol{
+            \underaccent{\bar}{
+                \tilde{T}
+            }_{q}
+        }
+        .
+    \end{gather}
+
+    Now, because minimum required productivity for the most qualified position in any labor market is necessarily the upper limit of the unitary responsability spectrum,
+    \begin{gather}
+        \underaccent{\bar}{
+            \tilde{T}
+        }_{q}^{p_q}
+        =
+        \ell_{q}^{p_q}
+        :=
+        1
+        \
+        \forall
+        \
+        p_q
+        \in
+        \{1,\dots,w_q\}
+        ,
+    \end{gather}
+    the last component of both vectors is already defined. So, we can write, with the MSA and the Proportional Employment Condition,
+    \begin{gather}
+        \int_{\ell_{v-1}^{q}}^{\ell_{v}^{q}}
+        \text{ta}(l)
+        dl
+        =
+        \tilde{w}_{q}^{v}
+        \in [0,1]
+        \land
+        w_{q}^{v} \geq 1
+        \
+        \forall
+        \
+        v \in \{1, \dots, p_q\}
+        ,
+        p_q \in \{1, \dots, w_q\}
+        \\
+        \implies
+        {w_{q}^{p_q}} ^ *
+        \times
+        1
+        \leq
+        w_{q}^{p_q}
+        \times
+        1
+        \iff
+        {\tilde{w}_{q}^{p_q}} ^ *
+        \leq
+        \tilde{w}_{q}^{p_q}
+        \\
+        \iff
+        \int_{
+            {\underaccent{\bar}{
+                \tilde{T}
+            }_{q}^{p_q - 1}} ^ *
+        }^{1}
+        \text{ta}(l)
+        dl
+        \leq
+        \int_{
+            \underaccent{\bar}{
+                \tilde{T}
+        }_{{q}^{p_q - 1}}
+        }^{1}
+        \text{ta}(l)
+        dl
+        ,
+    \end{gather}
+    which is maximally guaranteed when ${w_{q}^{p_q}} ^ *$ is at its minimum value by the MSA:
+    \begin{align}
+        &
+        \int_{
+            {\underaccent{\bar}{
+                \tilde{T}
+            }_{q}^{p_q - 1}} ^ *
+        }^{1}
+        \text{ta}(l)
+        dl
+        =
+        {w_{q}^{p_q}} ^ *
+        =
+        \frac{1}{w_q}
+        \\
+        &\therefore
+        \text{TA}(1)
+        -
+        \text{TA}\left(
+            {\underaccent{\bar}{
+                \tilde{T}
+            }_{q}^{p_q - 1}} ^ *
+        \right)
+        =
+        \frac{1}{w_q}
+        \\
+        &\therefore
+        {\underaccent{\bar}{
+                \tilde{T}
+            }_{q}^{p_q - 1}} ^ *
+        =
+        \text{TA}^{-1}\left(
+            \text{TA}(1)
+            -
+            \frac{1}{w_q}
+        \right)
+        =
+        \text{TA}^{-1}\left(
+            \frac{w_q - 1}{w_q}
+            +
+            \text{TA}(0)
+        \right)
+        \\
+        &\because
+        \text{TA}(1) - 
+        \text{TA}(0) =
+        1
+        .
+    \end{align}
+
+    \begin{gather}
+        \min_{
+            p_q
+            , \boldsymbol{
+                \underaccent{\bar}{
+                    \tilde{T}
+                }_q
+            }
+            , \boldsymbol{w_q}
+        }
+        \sum_{v=1}^{p_q}
+        w_{q}^{v}
+        \underaccent{\bar}{
+            \tilde{T}
+        }_{q}^{v}
+    \end{gather}
 \end{lemma} 
 
 % endregion
