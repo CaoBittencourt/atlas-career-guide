@@ -1,5 +1,30 @@
 % macros
-\newcommand{\ttc}{$\text{ttc}$}
-\newcommand{\ta}{$\text{ta}$}
-\newcommand{\TA}{$\text{TA}$}
-\newcommand{\invTA}{$\text{TA}^{-1}$}
+% time to complete a task
+\newcommand{\ttc}{\text{ttc}}
+
+% time allocation
+\newcommand{\ta}{\text{ta}}
+
+% time allocation antiderivative
+\newcommand{\TA}{\text{TA}}
+
+% time allocation inverse antiderivative
+\newcommand{\invTA}{\text{TA}^{-1}}
+
+% operational output
+\newcommand{\oo}{\mho}
+
+% productivity
+\newcommand{\pctt}{\tilde{T}}
+
+% minimum required productivity
+\newcommand{\mrp}{\underaccent{\bar}{\pctt}}
+
+% sufficiently qualified workers
+\newcommand{\wsq}{
+    \boldsymbol{\ddot{w}_q}(
+        \boldsymbol{w_q}
+        ,\boldsymbol{\mrp_q}
+        ,\boldsymbol{\pctt_q}
+    )
+}

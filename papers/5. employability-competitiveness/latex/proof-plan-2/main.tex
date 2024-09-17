@@ -650,18 +650,18 @@ In addition to the above, we shall also specifiy tasks' duration in terms of a t
     % statement
     Time allocation is a continuous function associating tasks' difficulty with their duration, both normalized to the unit interval:
     \begin{gather}
-        \text{ta}(l)
+        \ta(l)
         :=
-        \text{ttc}(l)
+        \ttc(l)
         \times
         \left(
             \int_{0}^{1}
-            \text{ttc}(l)
+            \ttc(l)
             dl
         \right) ^ {-1}
         ,
         \\
-        \text{ttc}(l)
+        \ttc(l)
         \geq
         0
         \
@@ -670,13 +670,13 @@ In addition to the above, we shall also specifiy tasks' duration in terms of a t
         l \in [0,1]
         \land
         \int_{0}^{1}
-            \text{ttc}(l)
+            \ttc(l)
             dl
             >
             0
         ,
     \end{gather}
-    where $\text{ttc}(l)$ is the number of hours to complete a task given its difficulty level.
+    where $\ttc(l)$ is the number of hours to complete a task given its difficulty level.
     
     Notice, as well, we termed normalized task duration ``time allocation''. This is on purpose, as time constraints are assumed to coincide with aggregate normalized duration. Or, in other words, all employees have the same unitary time allowance, while tasks' normalized duration, likewise integrates to a dimensionless time unit, so that any worker, if sufficiently qualified, can output every task by themselves. Therefore, an independent employee producing the entire $l \in [0,1]$ responsability spectrum must spend their time allowance in accordance with normalized duration, or the \textit{percentage} of a single worker's time that has to be \textit{allocated} to complete a task; hence the name ``time allocation''.
     % Notice, as well, we termed normalized task duration ``time allocation''. This is on purpose, as employees' ``time allowances'', or time constraints, are assumed to coincide with aggregate normalized duration. Or, in other words, workers all have the same unitary time allowance, while tasks' normalized duration, likewise integrates to a dimensionless time unit, so that each worker, if sufficiently qualified, can produce the entire $l \in [0,1]$ responsability spectrum by themselves. Therefore, any independent employee has to spend their time allowance in accordance with normalized duration, or the \textit{percentage} of a single worker's time that has to be \textit{allocated} to complete a task; hence the name ``time allocation''.
@@ -734,10 +734,10 @@ And, because of these two insightful, yet fairly uncontroversial observations (v
     \begin{subaxiom}[Strong Occupational Complexity Axiom, SOCA]
         Let us denote, then, ``operational output'' (abbreviated to ``o.o.'') with the standard IPA (International Phonetic Alphabet, 1919) symbol for the near-close near-back rounded vowel (i.e. the ``double o'' sound in words such as ``boot''):
         \begin{align}
-            \mho_q
+            \oo_q
             &
             :=
-            \mho_{q}^{\text{IP}}
+            \oo_{q}^{\text{IP}}
             :=
             \sum_{v=1}^{w_q}{
                 \left[
@@ -748,7 +748,7 @@ And, because of these two insightful, yet fairly uncontroversial observations (v
                 \times
                 \left(
                     \int_{0}^{1}{
-                        \text{ta}(l)
+                        \ta(l)
                         dl
                     }
                 \right) ^ {-1}
@@ -763,13 +763,13 @@ And, because of these two insightful, yet fairly uncontroversial observations (v
             }
             \\
             &\because
-            \text{ta}(l) 
+            \ta(l) 
             :=
-            \text{ttc}(l)
+            \ttc(l)
             \times
             \left(
                 \int_{0}^{1}{
-                    \text{ttc}(l)
+                    \ttc(l)
                     dl
                 }
             \right) ^ {-1}
@@ -777,18 +777,18 @@ And, because of these two insightful, yet fairly uncontroversial observations (v
             &
             \implies
             \int_{0}^{1}{
-                \text{ta}(l)
+                \ta(l)
                 dl
             }
             =
             \left(
                 \int_{0}^{1}
-                \text{ttc}(l)
+                \ttc(l)
                 dl
             \right) ^ {-1}
             \times
             \int_{0}^{1}{
-                \text{ttc}(l)
+                \ttc(l)
                 dl
             }
             =
@@ -806,7 +806,7 @@ And, because of these two insightful, yet fairly uncontroversial observations (v
 
     More precisely,
     \begin{gather}
-        \mho_q
+        \oo_q
         :=
         \min\left(
             \boldsymbol{w_{q}}(
@@ -815,7 +815,7 @@ And, because of these two insightful, yet fairly uncontroversial observations (v
                 \boldsymbol{\ell_{q}}
             )
             \times
-            \boldsymbol{\mho_{q}}(
+            \boldsymbol{\oo_{q}}(
                 \boldsymbol{\ell_{q}}
             )
         \right)
@@ -831,29 +831,29 @@ And, because of these two insightful, yet fairly uncontroversial observations (v
     \end{gather}
     where
     \begin{gather}
-        \boldsymbol{\mho_{q}}(
+        \boldsymbol{\oo_{q}}(
             \boldsymbol{\ell_{q}}
         )
         :=
         \left(
-            \mho_{q}^{1}
+            \oo_{q}^{1}
             ,
             \dots
             ,
-            \mho_{q}^{p_q}
+            \oo_{q}^{p_q}
         \right)
         :=
         \left(
             \frac{1}{
                 \int_{0}^{\ell_{1}^{q}}
-                \text{ta}(l)dl
+                \ta(l)dl
             }
             ,
             \dots
             ,
             \frac{1}{
                 \int_{\ell_{p_q}^{q}}^{1}
-                \text{ta}(l)dl
+                \ta(l)dl
             }
         \right)
     \end{gather}
@@ -886,7 +886,7 @@ And, because of these two insightful, yet fairly uncontroversial observations (v
             }^{
                 \ell_{v}^{q}
             }
-            \text{ta}(l)dl
+            \ta(l)dl
         }
         :=
         1
@@ -995,7 +995,7 @@ And, because of these two insightful, yet fairly uncontroversial observations (v
             =
             0
             \implies
-            \mho_q
+            \oo_q
             =
             \min\left(
                 \boldsymbol{w_{q}}(
@@ -1004,7 +1004,7 @@ And, because of these two insightful, yet fairly uncontroversial observations (v
                     \boldsymbol{\ell_{q}}
                 )
                 \times
-                \boldsymbol{\mho_{q}}(
+                \boldsymbol{\oo_{q}}(
                     \boldsymbol{\ell_{q}}
                 )
             \right)
@@ -1013,12 +1013,12 @@ And, because of these two insightful, yet fairly uncontroversial observations (v
 
     In other words, weak occupational complexity asserts the gains and costs of splitting job posts are both negligeable or cancel each other out. This means employers may stratify positions without either gain or loss to production.
         % \begin{gather}
-        %     \mho_q
+        %     \oo_q
         %     :=
         %     \min\left(
         %         \boldsymbol{w_{q}^{S}}
         %         \times
-        %         \boldsymbol{\mho_q}(
+        %         \boldsymbol{\oo_q}(
         %             \boldsymbol{\ell_q}
         %         )
         %     \right)
@@ -1092,12 +1092,12 @@ And, because of these two insightful, yet fairly uncontroversial observations (v
         %     See ``Employer Rationality Axiom'' and ``Productivity Sufficiency Lemma".
         % },
         % \begin{gather}
-        %     \mho_q
+        %     \oo_q
         %     :=
         %     \min\left(
         %         \boldsymbol{w_q}
         %         \times
-        %         \boldsymbol{\mho_q}(
+        %         \boldsymbol{\oo_q}(
         %             \boldsymbol{\ell_q}
         %         )
         %     \right)
@@ -1105,9 +1105,9 @@ And, because of these two insightful, yet fairly uncontroversial observations (v
         % \end{gather}
         % and, alternatively,
         % \begin{gather}
-        %     \mho_q
+        %     \oo_q
         %     :=
-        %     \mho_{q}^{\text{IP}}
+        %     \oo_{q}^{\text{IP}}
         %     :=
         %     \sum_{v=1}^{w_q}{
         %         \left[
@@ -1123,16 +1123,16 @@ And, because of these two insightful, yet fairly uncontroversial observations (v
 
     And we could further specifiy even weaker versions of the axiom, with any
     \begin{gather}
-        \mho_q
+        \oo_q
         :=
-        \mho\left(
+        \oo\left(
             \boldsymbol{w_{q}}(
                 \boldsymbol{\tilde{T}_{q}}
                 ,
                 \boldsymbol{\ell_{q}}
             )
             \times
-            \boldsymbol{\mho_{q}}(
+            \boldsymbol{\oo_{q}}(
                 \boldsymbol{\ell_{q}}
             )
         \right)
@@ -1189,13 +1189,13 @@ To conclude this section, let us summarize what we have so far defined. With the
         }
             &
             \mathbb{E}\left[
-                \mho\left(
+                \oo\left(
                     \boldsymbol{w_q}(
                         \boldsymbol{\tilde{T}_q},
                         \boldsymbol{\ell_q}
                     ),
                     \boldsymbol{
-                        \mho_q
+                        \oo_q
                     }(
                         \boldsymbol{\ell_q}
                     )
@@ -1225,7 +1225,7 @@ To conclude this section, let us summarize what we have so far defined. With the
                 }^{
                     \ell_{v}^{q}
                 }
-                \text{ta}(l)dl
+                \ta(l)dl
             }
             =
             1
@@ -1434,38 +1434,38 @@ Either way, if the available talent is enough to output occupation $q$'s operati
     \begin{proof}
         In the binary case, ``junior'' productive output will be given by:
         \begin{gather}
-            \mho_{q}^{\text{Jr}} 
+            \oo_{q}^{\text{Jr}} 
             :=
             \frac{
                 1
             }{
                 \int_{0}^{\tilde{T}_{q}^{\text{Jr}}}
-                \text{ta}(l)
+                \ta(l)
                 dl
             }
             = 
             \left(
                 \int_{0}^{\tilde{T}_{q}^{\text{Jr}}}
-                    \text{ta}(l)
+                    \ta(l)
                     dl
             \right) ^ {-1}
             ,
         \end{gather}
-        where $\text{ta}(l)$ is the time allocation function of occupation $q$'s complex tasks, and time allowance (the numerator) is set to one. Analogously, ``senior'' output is:
+        where $\ta(l)$ is the time allocation function of occupation $q$'s complex tasks, and time allowance (the numerator) is set to one. Analogously, ``senior'' output is:
         \begin{gather}
-            \mho_{q}^{\text{Sr}}
+            \oo_{q}^{\text{Sr}}
             :=
             \frac{
                 1
             }{
                 \int_{\tilde{T}_{q}^{\text{Jr}}}^{1}
-                \text{ta}(l)
+                \ta(l)
                 dl
             }
             = 
             \left(
                 \int_{\tilde{T}_{q}^{\text{Jr}}}^{1}
-                    \text{ta}(l)
+                    \ta(l)
                     dl
             \right) ^ {-1}
             .
@@ -1475,18 +1475,18 @@ Either way, if the available talent is enough to output occupation $q$'s operati
         \begin{align}
             w_{q}^{\text{Sr}} 
             \times 
-            \mho_{q}^{\text{Sr}} 
+            \oo_{q}^{\text{Sr}} 
             &= 
             w_{q}^{\text{Jr}} 
             \times 
-            \mho_{q}^{\text{Jr}}
+            \oo_{q}^{\text{Jr}}
             \\
             \therefore
             w_{q}^{\text{Sr}}
             \times 
             \left(
                 \int_{\tilde{T}_{q}^{\text{Jr}}}^{1}
-                    \text{ta}(l)
+                    \ta(l)
                     dl
             \right) ^ {-1}
             &= 
@@ -1494,7 +1494,7 @@ Either way, if the available talent is enough to output occupation $q$'s operati
             \times 
             \left(
                 \int_{0}^{\tilde{T}_{q}^{\text{Jr}}}
-                    \text{ta}(l)
+                    \ta(l)
                     dl
             \right) ^ {-1}
             \\
@@ -1506,11 +1506,11 @@ Either way, if the available talent is enough to output occupation $q$'s operati
             \left(
                 \frac{
                     \int_{\tilde{T}_{q}^{\text{Jr}}}^{1}
-                        \text{ta}(l)
+                        \ta(l)
                         dl
                 }{
                     \int_{0}^{\tilde{T}_{q}^{\text{Jr}}}
-                        \text{ta}(l)
+                        \ta(l)
                         dl
                 }
             \right)
@@ -1550,11 +1550,11 @@ Either way, if the available talent is enough to output occupation $q$'s operati
                 \left(
                     \frac{
                         \int_{\tilde{T}_{q}^{\text{Jr}}}^{1}
-                            \text{ta}(l)
+                            \ta(l)
                             dl
                     }{
                         \int_{0}^{\tilde{T}_{q}^{\text{Jr}}}
-                            \text{ta}(l)
+                            \ta(l)
                             dl
                     }
                 \right)
@@ -1564,11 +1564,11 @@ Either way, if the available talent is enough to output occupation $q$'s operati
                 1 + 
                 \frac{
                     \int_{\tilde{T}_{q}^{\text{Jr}}}^{1}
-                        \text{ta}(l)
+                        \ta(l)
                         dl
                 }{
                     \int_{0}^{\tilde{T}_{q}^{\text{Jr}}}
-                        \text{ta}(l)
+                        \ta(l)
                         dl
                 }
             \right) ^ {-1}
@@ -1577,15 +1577,15 @@ Either way, if the available talent is enough to output occupation $q$'s operati
                 1 + 
                 \frac{
                     \int_{0}^{1}
-                        \text{ta}(l)
+                        \ta(l)
                         dl    
                         -
                     \int_{0}^{\tilde{T}_{q}^{\text{Jr}}}
-                        \text{ta}(l)
+                        \ta(l)
                         dl
                 }{
                     \int_{0}^{\tilde{T}_{q}^{\text{Jr}}}
-                        \text{ta}(l)
+                        \ta(l)
                         dl
                 }
             \right) ^ {-1}
@@ -1595,11 +1595,11 @@ Either way, if the available talent is enough to output occupation $q$'s operati
                 \frac{
                     1 -
                     \int_{0}^{\tilde{T}_{q}^{\text{Jr}}}
-                        \text{ta}(l)
+                        \ta(l)
                         dl
                 }{
                     \int_{0}^{\tilde{T}_{q}^{\text{Jr}}}
-                        \text{ta}(l)
+                        \ta(l)
                         dl
                 }
             \right) ^ {-1}
@@ -1610,17 +1610,17 @@ Either way, if the available talent is enough to output occupation $q$'s operati
                     1
                 }{
                     \int_{0}^{\tilde{T}_{q}^{\text{Jr}}}
-                        \text{ta}(l)
+                        \ta(l)
                         dl
                 }
                 -
                 \frac{
                     \int_{0}^{\tilde{T}_{q}^{\text{Jr}}}
-                        \text{ta}(l)
+                        \ta(l)
                         dl
                 }{
                     \int_{0}^{\tilde{T}_{q}^{\text{Jr}}}
-                        \text{ta}(l)
+                        \ta(l)
                         dl
                 }
             \right) ^ {-1}
@@ -1631,7 +1631,7 @@ Either way, if the available talent is enough to output occupation $q$'s operati
                     1
                 }{
                     \int_{0}^{\tilde{T}_{q}^{\text{Jr}}}
-                        \text{ta}(l)
+                        \ta(l)
                         dl
                 }
                 -
@@ -1643,13 +1643,13 @@ Either way, if the available talent is enough to output occupation $q$'s operati
                     1
                 }{
                     \int_{0}^{\tilde{T}_{q}^{\text{Jr}}}
-                        \text{ta}(l)
+                        \ta(l)
                         dl
                 }
             \right) ^ {-1}
             \\&=
             \int_{0}^{\tilde{T}_{q}^{\text{Jr}}}
-                \text{ta}(l)
+                \ta(l)
                 dl
             .
         \end{align}
@@ -1702,14 +1702,14 @@ Now, to generalize this conclusion, we shall define notation in terms of maximum
     \begin{gather}
     \Omega_{q}^{v}
     := 
-    \frac{1}{\mho_{q}^{v}}
+    \frac{1}{\oo_{q}^{v}}
     = 
     \int_{
         \ell_{v-1}
     }^{
         \ell_{v}
     }
-    \text{ta}(l)dl
+    \ta(l)dl
     \in [0,1]
     \end{gather}
     of an operation's total time duration,
@@ -1723,10 +1723,10 @@ Now, to generalize this conclusion, we shall define notation in terms of maximum
     }^{
         \ell_{v}
     }
-    \text{ta}(l)dl
+    \ta(l)dl
     =
     \int_{0}^{1}
-    \text{ta}(l)dl
+    \ta(l)dl
     :=
     1
     .
@@ -1788,9 +1788,9 @@ Hence, infinite labor stratification is defined as an economic configuration whe
     }^{
         \ell_{v}
     }
-    \text{ta}(l)dl
+    \ta(l)dl
     =
-    \text{ta}(l)
+    \ta(l)
     \\
     &
     \land
@@ -1811,7 +1811,7 @@ Hence, infinite labor stratification is defined as an economic configuration whe
     =:
     \tilde{w}_{q}(l)
     =
-    \text{ta}(l)
+    \ta(l)
     \in [0,1]
     \
     \forall
@@ -1824,7 +1824,7 @@ Hence, infinite labor stratification is defined as an economic configuration whe
     = 
     w_q \times \tilde{w}_{q}(l)
     =
-    w_q \times \text{ta}(l)
+    w_q \times \ta(l)
     \land
     \int_{0}^{1}{
         w_{q}(l)
@@ -1855,7 +1855,7 @@ dl
     \frac{1}{2}
 \right]
 \int_{0}^{\tilde{T}_{q}^{k}}
-\text{ta}(l)
+\ta(l)
 dl
 ,
 \end{gather}
@@ -1893,7 +1893,7 @@ We may formalize this conclusion as follows.
             =:
             \tilde{w}_{q}(l)
             =
-            \text{ta}(l)
+            \ta(l)
             ,
             \end{gather}
             so that employability becomes:
@@ -1906,7 +1906,7 @@ We may formalize this conclusion as follows.
                     \frac{1}{2}
                 \right]
                 \int_{0}^{\tilde{T}_{q}^{k}}
-                \text{ta}(l)
+                \ta(l)
                 dl
                 .
                 \end{gather}
@@ -1954,28 +1954,28 @@ With this, we can now demonstrate that, given the above, maximum labor stratific
 \begin{lemma}[Maximum Operational Output Lemma, MOOL]
     The maximum operational output of any labor market is exactly the number of employees in its workforce:
     \begin{gather}
-        \mho_{q}^{*}
+        \oo_{q}^{*}
         =
-        \mho(
+        \oo(
             \boldsymbol{w_{q}^{*}},
-            \boldsymbol{\mho_q}
+            \boldsymbol{\oo_q}
         )
         = 
         \min(
             \boldsymbol{w_{q}^{*}}
             \times
-            \boldsymbol{\mho_q}
+            \boldsymbol{\oo_q}
         )
         = w_q
         ,
     \end{gather}
-    where $\boldsymbol{w_{q}^{*}}$ is the vector of optimal employment levels in a labor market with $w_q$ employees; and $\boldsymbol{\mho_q}$, the vector of partial operational outputs. Or, assuming maximum labor stratification with unitary employment levels,
+    where $\boldsymbol{w_{q}^{*}}$ is the vector of optimal employment levels in a labor market with $w_q$ employees; and $\boldsymbol{\oo_q}$, the vector of partial operational outputs. Or, assuming maximum labor stratification with unitary employment levels,
     \begin{gather}
-        \mho_{q}^{*}
+        \oo_{q}^{*}
         =
-        \mho(
+        \oo(
             \boldsymbol{1},
-            \boldsymbol{\mho_q}(
+            \boldsymbol{\oo_q}(
                 \boldsymbol{\ell_{q}^{*}}
             )
         )
@@ -1983,7 +1983,7 @@ With this, we can now demonstrate that, given the above, maximum labor stratific
         \min(
             \boldsymbol{1}
             \times
-            \boldsymbol{\mho_q}(
+            \boldsymbol{\oo_q}(
                 \boldsymbol{\ell_{q}^{*}}
             )
         )
@@ -2038,7 +2038,7 @@ With this, we can now demonstrate that, given the above, maximum labor stratific
         % We begin with the most trivial of economic configurations, that of independent production with perfectly qualified workers. In this scenario, each employee devotes their unitary time allowance, which coincides with the total time duration of occupation $q$'s operation,
         \begin{gather}
             \int_{0}^{1}{
-                \text{ta}(l)
+                \ta(l)
                 dl
             }
             :=
@@ -2051,7 +2051,7 @@ With this, we can now demonstrate that, given the above, maximum labor stratific
             \times
             \left(
                 \int_{0}^{1}{
-                    \text{ta}(l)dl
+                    \ta(l)dl
                 }
             \right) ^ {-1}
             =
@@ -2066,7 +2066,7 @@ With this, we can now demonstrate that, given the above, maximum labor stratific
             \times 
             \left(
                 \int_{0}^{1}{
-                    \text{ta}(l)dl
+                    \ta(l)dl
                 }
             \right) ^ {-1}
             =
@@ -2096,18 +2096,18 @@ With this, we can now demonstrate that, given the above, maximum labor stratific
             .
         \end{gather}
         
-        Furthermore, by the definition of partial operational output (ref) above, one outputs $\mho_{q}^{\ell}$ when spending their unitary time allowance to produce a responsability spectrum. So, the output, with only $\Omega_{q}^{\ell}$ time units, is:
-        % Furthermore, by the definition of partial operational output (ref) above, one outputs $\mho_{q}^{\ell}$ when spending their unitary time allowance to produce some responsability spectrum. So, operational output, with only $\Omega_{q}^{\ell}$ time units, is:
-        % Furthermore, by the definition of partial operational output (ref) above, one outputs $\mho_{q}^{\ell}$ when spending their unitary time allowance to produce some responsability spectrum. Therefore, with only $\Omega_{q}^{\ell}$ time units,  operational output is:
+        Furthermore, by the definition of partial operational output (ref) above, one outputs $\oo_{q}^{\ell}$ when spending their unitary time allowance to produce a responsability spectrum. So, the output, with only $\Omega_{q}^{\ell}$ time units, is:
+        % Furthermore, by the definition of partial operational output (ref) above, one outputs $\oo_{q}^{\ell}$ when spending their unitary time allowance to produce some responsability spectrum. So, operational output, with only $\Omega_{q}^{\ell}$ time units, is:
+        % Furthermore, by the definition of partial operational output (ref) above, one outputs $\oo_{q}^{\ell}$ when spending their unitary time allowance to produce some responsability spectrum. Therefore, with only $\Omega_{q}^{\ell}$ time units,  operational output is:
         \begin{gather}
             \Omega_{q}^{\ell}
-            \mho_{q}^{\ell}
+            \oo_{q}^{\ell}
             :=
             \left(
-                \frac{1}{\mho_{q}^{\ell}}
+                \frac{1}{\oo_{q}^{\ell}}
             \right)
             \times
-            \mho_{q}^{\ell}
+            \oo_{q}^{\ell}
             =
             1
             .
@@ -2115,18 +2115,18 @@ With this, we can now demonstrate that, given the above, maximum labor stratific
         
         Finally, as weak occupational complexity implies the production function is homothetic, the aggregate operational output of $w_q$ perfectly qualified employees working independently is:
         \begin{gather}
-            \mho_{q}^{*}
+            \oo_{q}^{*}
             =
             \min(
                 \boldsymbol{\Omega_q}
                 \times
-                \boldsymbol{\mho_q}
+                \boldsymbol{\oo_q}
             )
             \times
             w_q
             =
             \Omega_{q}^{\ell}
-            \mho_{q}^{\ell}
+            \oo_{q}^{\ell}
             \times
             w_q
             =
@@ -2144,16 +2144,16 @@ With this, we can now demonstrate that, given the above, maximum labor stratific
         
         In this case,
         \begin{align}
-            \mho(\tilde{w}_{q}^{\text{Jr}})
+            \oo(\tilde{w}_{q}^{\text{Jr}})
             &=
             \min\left(
                 \tilde{w}_{q}^{\text{Jr}}
                 \times
-                \mho_{q}^{\text{Jr}}
+                \oo_{q}^{\text{Jr}}
                 ,
                 \tilde{w}_{q}^{\text{Sr}}
                 \times
-                \mho_{q}^{\text{Sr}}
+                \oo_{q}^{\text{Sr}}
             \right)
             \\
             &=
@@ -2164,7 +2164,7 @@ With this, we can now demonstrate that, given the above, maximum labor stratific
                     \int_{0}^{
                         \tilde{T}_{q}^{\text{Jr}}
                     }{
-                        \text{ta}(l)
+                        \ta(l)
                         dl
                     }
                 }
@@ -2175,7 +2175,7 @@ With this, we can now demonstrate that, given the above, maximum labor stratific
                     \int_{
                         \tilde{T}_{q}^{\text{Jr}}
                     }^{1}{
-                        \text{ta}(l)
+                        \ta(l)
                         dl
                     }
                 }
@@ -2189,7 +2189,7 @@ With this, we can now demonstrate that, given the above, maximum labor stratific
                     \int_{0}^{
                         \tilde{T}_{q}^{\text{Jr}}
                     }{
-                        \text{ta}(l)
+                        \ta(l)
                         dl
                     }
                 }
@@ -2198,14 +2198,14 @@ With this, we can now demonstrate that, given the above, maximum labor stratific
                     1 - \tilde{w}_{q}^{\text{Jr}}
                 }{
                     \int_{0}^{1}{
-                        \text{ta}(l)
+                        \ta(l)
                         dl
                     }
                     -
                     \int_{0}^{
                         \tilde{T}_{q}^{\text{Jr}}
                     }{
-                        \text{ta}(l)
+                        \ta(l)
                         dl
                     }
                 }
@@ -2230,7 +2230,7 @@ With this, we can now demonstrate that, given the above, maximum labor stratific
         whereas the operational output of employing $\Omega_{q}^{\text{Jr}} \in (0,1)$ is
         % whereas the operational output of $\Omega_{q}^{\text{Jr}} \in [0,1]$ is
         \begin{align}
-            \mho(\Omega_{q}^{\text{Jr}}) 
+            \oo(\Omega_{q}^{\text{Jr}}) 
             =
             \min\left(
                 \frac{
@@ -2285,7 +2285,7 @@ With this, we can now demonstrate that, given the above, maximum labor stratific
             }
             \\
             &\therefore
-            \mho(\tilde{w}_{q}^{\text{Jr}}) 
+            \oo(\tilde{w}_{q}^{\text{Jr}}) 
             =
             \min\left(
                 \frac{
@@ -2310,9 +2310,9 @@ With this, we can now demonstrate that, given the above, maximum labor stratific
             1
             \\
             &\implies
-            \mho(\tilde{w}_{q}^{\text{Jr}})
+            \oo(\tilde{w}_{q}^{\text{Jr}})
             <
-            \mho(\Omega_{q}^{\text{Jr}})
+            \oo(\Omega_{q}^{\text{Jr}})
             =
             1
             ;
@@ -2340,7 +2340,7 @@ With this, we can now demonstrate that, given the above, maximum labor stratific
             }
             \\
             &\therefore
-            \mho(\tilde{w}_{q}^{\text{Jr}}) 
+            \oo(\tilde{w}_{q}^{\text{Jr}}) 
             =
             \min\left(
                 \frac{
@@ -2365,9 +2365,9 @@ With this, we can now demonstrate that, given the above, maximum labor stratific
             1
             \\
             &\implies
-            \mho(\tilde{w}_{q}^{\text{Jr}})
+            \oo(\tilde{w}_{q}^{\text{Jr}})
             <
-            \mho(\Omega_{q}^{\text{Jr}})
+            \oo(\Omega_{q}^{\text{Jr}})
             =
             1
             .
@@ -2376,8 +2376,8 @@ With this, we can now demonstrate that, given the above, maximum labor stratific
         Hence, 
         % Therefore, 
         \begin{gather}
-            \mho(\tilde{w}_{q}^{\text{Jr}}) < 
-            \mho(\Omega_{q}^{\text{Jr}}) 
+            \oo(\tilde{w}_{q}^{\text{Jr}}) < 
+            \oo(\Omega_{q}^{\text{Jr}}) 
             = 1
             \
             \forall
@@ -2392,12 +2392,12 @@ With this, we can now demonstrate that, given the above, maximum labor stratific
         
         Analogously, with multiple job subtypes, optimal operational output is:
         \begin{gather}
-            \mho(\boldsymbol{\Omega_q})
+            \oo(\boldsymbol{\Omega_q})
             = 
             \min(
                 \boldsymbol{\Omega_q}
                 \times
-                \boldsymbol{\mho_q}
+                \boldsymbol{\oo_q}
             )
             =
             \frac{
@@ -2446,12 +2446,12 @@ With this, we can now demonstrate that, given the above, maximum labor stratific
             }
             \\
             &\therefore
-            \mho(\boldsymbol{\tilde{w}_q})
+            \oo(\boldsymbol{\tilde{w}_q})
             = 
             \min(
                 \boldsymbol{\tilde{w}_q}
                 \times
-                \boldsymbol{\mho_q}
+                \boldsymbol{\oo_q}
             )
             =
             \frac{
@@ -2463,9 +2463,9 @@ With this, we can now demonstrate that, given the above, maximum labor stratific
             1
             \\
             &\implies
-            \mho(\boldsymbol{\tilde{w}_q})
+            \oo(\boldsymbol{\tilde{w}_q})
             <
-            \mho(\boldsymbol{\Omega_q})
+            \oo(\boldsymbol{\Omega_q})
             =
             1
             ;
@@ -2491,12 +2491,12 @@ With this, we can now demonstrate that, given the above, maximum labor stratific
             }
             \\
             &\therefore
-            \mho(\boldsymbol{\tilde{w}_q})
+            \oo(\boldsymbol{\tilde{w}_q})
             = 
             \min(
                 \boldsymbol{\tilde{w}_q}
                 \times
-                \boldsymbol{\mho_q}
+                \boldsymbol{\oo_q}
             )
             =
             \frac{
@@ -2508,9 +2508,9 @@ With this, we can now demonstrate that, given the above, maximum labor stratific
             1
             \\
             &\implies
-            \mho(\boldsymbol{\tilde{w}_q})
+            \oo(\boldsymbol{\tilde{w}_q})
             <
-            \mho(\boldsymbol{\Omega_q})
+            \oo(\boldsymbol{\Omega_q})
             =
             1
             .
@@ -2519,29 +2519,29 @@ With this, we can now demonstrate that, given the above, maximum labor stratific
         Thus, 
         % \begin{align}
         %     % &
-        %     \mho(
+        %     \oo(
         %         \boldsymbol{\tilde{w}_{q}},
-        %         \boldsymbol{\mho_q}
+        %         \boldsymbol{\oo_q}
         %     ) 
         %     &< 
-        %     \mho(
+        %     \oo(
         %         \boldsymbol{\Omega_{q}},
-        %         \boldsymbol{\mho_q}
+        %         \boldsymbol{\oo_q}
         %     ) 
         %     = 1
         %     \\
         %     \therefore
         %     % &\therefore
-        %     \mho(
+        %     \oo(
         %         \boldsymbol{w_{q}},
-        %         \boldsymbol{\mho_q}
+        %         \boldsymbol{\oo_q}
         %     )
         %     &< 
-        %     \mho(
+        %     \oo(
         %         w_{q}
         %         \times
         %         \boldsymbol{\Omega_{q}},
-        %         \boldsymbol{\mho_q}
+        %         \boldsymbol{\oo_q}
         %     ) 
         %     = w_q
         %     \\
@@ -2591,28 +2591,28 @@ With this, we can now demonstrate that, given the above, maximum labor stratific
         %     % .
         % \end{align}
         \begin{gather}
-            \mho(
+            \oo(
                 \boldsymbol{\tilde{w}_{q}},
-                \boldsymbol{\mho_q}
+                \boldsymbol{\oo_q}
             ) 
             < 
-            \mho(
+            \oo(
                 \boldsymbol{\Omega_{q}},
-                \boldsymbol{\mho_q}
+                \boldsymbol{\oo_q}
             ) 
             = 1
             \\
             \therefore
-            \mho(
+            \oo(
                 \boldsymbol{w_{q}},
-                \boldsymbol{\mho_q}
+                \boldsymbol{\oo_q}
             )
             < 
-            \mho(
+            \oo(
                 w_{q}
                 \times
                 \boldsymbol{\Omega_{q}},
-                \boldsymbol{\mho_q}
+                \boldsymbol{\oo_q}
             ) 
             = w_q
             \\
@@ -2659,21 +2659,21 @@ With this, we can now demonstrate that, given the above, maximum labor stratific
         }^{
             \ell_{v}^{*}
         }
-        \text{ta}(l)dl
+        \ta(l)dl
         =
         \int_{0}^{1}
-        \text{ta}(l)dl
+        \ta(l)dl
         :=
         1
         \end{gather}
         be the vector of optimal responsability bounds that maximizes operational output, such that
         \begin{gather}
-            \mho(\boldsymbol{\ell_{q}^{*}})
+            \oo(\boldsymbol{\ell_{q}^{*}})
             =
             \min(
                 \boldsymbol{1}
                 \times
-                \boldsymbol{\mho_q}(
+                \boldsymbol{\oo_q}(
                     \boldsymbol{\ell_{q}^{*}}
                 )
             )
@@ -2686,7 +2686,7 @@ With this, we can now demonstrate that, given the above, maximum labor stratific
                 }^{
                     \ell_{v}^{*}
                 }
-                \text{ta}(l)dl
+                \ta(l)dl
             \right) ^ {-1}
             :=
             w_q
@@ -2704,7 +2704,7 @@ With this, we can now demonstrate that, given the above, maximum labor stratific
                 }^{
                     \ell_{v}
                 }
-                \text{ta}(l)dl
+                \ta(l)dl
             \right) ^ {-1}
             >
             \left(
@@ -2713,7 +2713,7 @@ With this, we can now demonstrate that, given the above, maximum labor stratific
                 }^{
                     \ell_{v}^{*}
                 }
-                \text{ta}(l)dl
+                \ta(l)dl
             \right) ^ {-1}
             :=
             w_q
@@ -2722,7 +2722,7 @@ With this, we can now demonstrate that, given the above, maximum labor stratific
         
         Nevertheless, because every worker has the same unitary time allowance, this would also entail the complementary subinterval of complex tasks $l \in [\ell_{v}, \ell_{v}^{*}]$ would either not be produced at all, in which case
         \begin{align}
-            \mho(\boldsymbol{\ell_{q}})
+            \oo(\boldsymbol{\ell_{q}})
             =
             0
             \times
@@ -2732,7 +2732,7 @@ With this, we can now demonstrate that, given the above, maximum labor stratific
                 }^{
                     \ell_{v}^{*}
                 }
-                \text{ta}(l)dl
+                \ta(l)dl
             \right) ^ {-1}
             =
             0
@@ -2740,7 +2740,7 @@ With this, we can now demonstrate that, given the above, maximum labor stratific
         \end{align}
         or that it would be produced with a $1 - \omega_{q}^{v} \in [0,1]$ fraction of a time unit, yielding some quantity
         \begin{align}
-            \mho(
+            \oo(
                 \boldsymbol{\ell_{q}}
                 ,\boldsymbol{\omega_{q}}
             )
@@ -2753,7 +2753,7 @@ With this, we can now demonstrate that, given the above, maximum labor stratific
                 }^{
                     \ell_{v}^{*}
                 }
-                \text{ta}(l)dl
+                \ta(l)dl
             \right) ^ {-1}
             ,
         \end{align}
@@ -2761,11 +2761,11 @@ With this, we can now demonstrate that, given the above, maximum labor stratific
         
         Furthermore, because aggregate operational output is given by the Leontief production function, 
         \begin{gather}
-            \mho_{q}
+            \oo_{q}
             :=
-            \mho(
+            \oo(
                 \boldsymbol{1},
-                \boldsymbol{\mho_q}(
+                \boldsymbol{\oo_q}(
                     \boldsymbol{\ell_{q}}
                     ,\boldsymbol{\omega_{q}}
                 )
@@ -2774,28 +2774,28 @@ With this, we can now demonstrate that, given the above, maximum labor stratific
             \min(
                 \boldsymbol{1}
                 \times
-                \boldsymbol{\mho_q}(
+                \boldsymbol{\oo_q}(
                     \boldsymbol{\ell_{q}}
                     ,\boldsymbol{\omega_{q}}
                 )
             )
             ,
             \\
-            \boldsymbol{\mho_q}(
+            \boldsymbol{\oo_q}(
                 \boldsymbol{\ell_{q}}
                 ,\boldsymbol{\omega_{q}}
             )
             :=
             (
-                \mho_{q}^{1}
+                \oo_{q}^{1}
                 ,
                 \dots
                 ,
-                \mho_{q}^{w_q}
+                \oo_{q}^{w_q}
             )
             ,
             \\
-            \mho_{q}^{v}
+            \oo_{q}^{v}
             := 
             \min
             \left(
@@ -2803,7 +2803,7 @@ With this, we can now demonstrate that, given the above, maximum labor stratific
                         \omega_{q}^{v}
                     }{
                         \int_{\ell_{v-1}^{*}}^{\ell_v}{
-                            \text{ta}(l)dl
+                            \ta(l)dl
                         }
                     }
                     ,
@@ -2811,23 +2811,23 @@ With this, we can now demonstrate that, given the above, maximum labor stratific
                         1 - \omega_{q}^{v}
                     }{
                         \int_{\ell_v}^{\ell_{v}^{*}}{
-                            \text{ta}(l)dl
+                            \ta(l)dl
                         }
                     }
                 \right)
             ,
         \end{gather}
-        it would be pointless if only a subset of employees were to increase their operational output by themselves; for an occupation's complex tasks are all complementary: they work together to acchieve its operation. Hence, for $\mho_{q}(
+        it would be pointless if only a subset of employees were to increase their operational output by themselves; for an occupation's complex tasks are all complementary: they work together to acchieve its operation. Hence, for $\oo_{q}(
             \boldsymbol{\ell_q}
             ,\boldsymbol{\omega_q}
         )$ to be greater than $
-        \mho_{q}(
+        \oo_{q}(
             \boldsymbol{\ell_{q}^{*}}
         )
         =
         w_q$,
         \begin{gather}
-            \mho_{q}^{v} > w_q
+            \oo_{q}^{v} > w_q
             \
             \forall
             \
@@ -2836,21 +2836,21 @@ With this, we can now demonstrate that, given the above, maximum labor stratific
         \end{gather}
         which requires all partial operational outputs to surpass the following point of equilibrium:
         \begin{align}
-            &\mho(
-            % &\mho_{q}(
+            &\oo(
+            % &\oo_{q}(
                 \boldsymbol{\ell_q}
                 ,\boldsymbol{\omega_q}
             ) 
             =
-            \mho(
-            % \mho_{q}(
+            \oo(
+            % \oo_{q}(
                 \boldsymbol{\ell_{q}^{*}}
             ) 
             = 
             \min(
                 \boldsymbol{1}
                 \times
-                \boldsymbol{\mho_q}(
+                \boldsymbol{\oo_q}(
                     \boldsymbol{\ell_{q}^{*}}
                 )
             )
@@ -2866,7 +2866,7 @@ With this, we can now demonstrate that, given the above, maximum labor stratific
                 }^{
                     \ell_{v}
                 }{
-                    \text{ta}(l)dl
+                    \ta(l)dl
                 }
             }
             =
@@ -2878,7 +2878,7 @@ With this, we can now demonstrate that, given the above, maximum labor stratific
                 }^{
                     \ell_{v}^{*}
                 }{
-                    \text{ta}(l)dl
+                    \ta(l)dl
                 }
             }
             =
@@ -2897,7 +2897,7 @@ With this, we can now demonstrate that, given the above, maximum labor stratific
             }^{
                 \ell_{v}
             }{
-                \text{ta}(l)
+                \ta(l)
                 dl
             }
             \land
@@ -2909,25 +2909,25 @@ With this, we can now demonstrate that, given the above, maximum labor stratific
             }^{
                 \ell_{v}^{*}
             }{
-                \text{ta}(l)
+                \ta(l)
                 dl
             }
             .
         \end{align}
         % \begin{align}
-        %     &\mho_{q}(
+        %     &\oo_{q}(
         %         \boldsymbol{\ell_q}
         %         ,\boldsymbol{\omega_q}
         %     ) 
         %     =
-        %     \mho_{q}(
+        %     \oo_{q}(
         %         \boldsymbol{\ell_{q}^{*}}
         %     ) 
         %     = 
         %     \min(
         %         \boldsymbol{1}
         %         \times
-        %         \boldsymbol{\mho_q}(
+        %         \boldsymbol{\oo_q}(
         %             \boldsymbol{\ell_{q}^{*}}
         %         )
         %     )
@@ -2936,13 +2936,13 @@ With this, we can now demonstrate that, given the above, maximum labor stratific
         %     \\
         %     &\iff
         %     \omega_{q}^{v}
-        %     \mho_{q}^{v}(
+        %     \oo_{q}^{v}(
         %         \ell_{v-1}^{*}
         %         ,\ell_{v}
         %     )
         %     =
         %     (1-\omega_{q}^{v})
-        %     \mho_{q}^{v}(
+        %     \oo_{q}^{v}(
         %         \ell_{v}
         %         ,\ell_{v}^{*}
         %     )
@@ -2957,7 +2957,7 @@ With this, we can now demonstrate that, given the above, maximum labor stratific
         %     \omega_{q}^{v}
         %     =
         %     \frac{w_q}{
-        %         \mho_{q}^{v}(
+        %         \oo_{q}^{v}(
         %             \ell_{v-1}^{*}
         %             ,\ell_{v}
         %         )
@@ -2975,7 +2975,7 @@ With this, we can now demonstrate that, given the above, maximum labor stratific
         %     }^{
         %         \ell_{v}
         %     }{
-        %         \text{ta}(l)
+        %         \ta(l)
         %         dl
         %     }
         %     \\
@@ -2983,7 +2983,7 @@ With this, we can now demonstrate that, given the above, maximum labor stratific
         %     1 - \omega_{q}^{v}
         %     =
         %     \frac{w_q}{
-        %         \mho_{q}^{v}(
+        %         \oo_{q}^{v}(
         %             \ell_{v}
         %             ,\ell_{v}^{*}
         %         )
@@ -3001,25 +3001,25 @@ With this, we can now demonstrate that, given the above, maximum labor stratific
         %     }^{
         %         \ell_{v}^{*}
         %     }{
-        %         \text{ta}(l)
+        %         \ta(l)
         %         dl
         %     }
         %     ,
         % \end{align}
-        % where $\mho_{q}^{v}(\ell_{v},\ell_{r})$, with
+        % where $\oo_{q}^{v}(\ell_{v},\ell_{r})$, with
         % \begin{gather}
-        %     \mho_{q}^{v}
+        %     \oo_{q}^{v}
         %     =
         %     \min
         %     \left[
         %         \omega_{q}^{v}
-        %         \mho_{q}^{v}(
+        %         \oo_{q}^{v}(
         %             \ell_{v-1}^{*}
         %             ,\ell_{v}
         %         )
         %         ,
         %         (1 - \omega_{q}^{v})
-        %         \mho_{q}^{v}(
+        %         \oo_{q}^{v}(
         %             \ell_{v}
         %             ,\ell_{v}^{*}
         %         )
@@ -3037,7 +3037,7 @@ With this, we can now demonstrate that, given the above, maximum labor stratific
             }^{
                 \ell_{v}
             }{
-                \text{ta}(l)
+                \ta(l)
                 dl
             }
             % w_q
@@ -3057,11 +3057,11 @@ With this, we can now demonstrate that, given the above, maximum labor stratific
                 }^{
                     \ell_{v}
                 }{
-                    \text{ta}(l)dl
+                    \ta(l)dl
                 }
             }
             % \omega_{q}^{v}
-            % \mho_{q}^{v}(
+            % \oo_{q}^{v}(
             %     \ell_{v-1}^{*}
             %     ,\ell_{v}
             % )
@@ -3080,11 +3080,11 @@ With this, we can now demonstrate that, given the above, maximum labor stratific
                 }^{
                     \ell_{v}^{*}
                 }{
-                    \text{ta}(l)dl
+                    \ta(l)dl
                 }
             }
             % (1-\omega_{q}^{v})
-            % \mho_{q}^{v}(
+            % \oo_{q}^{v}(
             %     \ell_{v}
             %     ,\ell_{v}^{*}
             % )
@@ -3092,7 +3092,7 @@ With this, we can now demonstrate that, given the above, maximum labor stratific
             w_q
             \\
             &\implies
-            \mho_{q}^{v} = 
+            \oo_{q}^{v} = 
             \min\left(
                 \frac{
                     \omega_{q}^{v}
@@ -3102,7 +3102,7 @@ With this, we can now demonstrate that, given the above, maximum labor stratific
                     }^{
                         \ell_{v}
                     }
-                    \text{ta}(l)dl
+                    \ta(l)dl
                 }
                 ,
                 \frac{
@@ -3113,7 +3113,7 @@ With this, we can now demonstrate that, given the above, maximum labor stratific
                     }^{
                         \ell_{v}^{*}
                     }
-                    \text{ta}(l)dl
+                    \ta(l)dl
                 }
             \right)
             =
@@ -3125,7 +3125,7 @@ With this, we can now demonstrate that, given the above, maximum labor stratific
                 }^{
                     \ell_{v}^{*}
                 }{
-                    \text{ta}(l)dl
+                    \ta(l)dl
                 }
             }
             % \frac{
@@ -3141,12 +3141,12 @@ With this, we can now demonstrate that, given the above, maximum labor stratific
             \\
             &\therefore
             % &\implies
-            \mho_{q}(
+            \oo_{q}(
                 \boldsymbol{\ell_q}
                 ,\boldsymbol{\omega_q}
             ) 
             <
-            \mho_{q}(
+            \oo_{q}(
                 \boldsymbol{\ell_{q}^{*}}
             )
             =
@@ -3171,12 +3171,12 @@ With this, we can now demonstrate that, given the above, maximum labor stratific
             }^{
                 \ell_{v}
             }{
-                \text{ta}(l)dl
+                \ta(l)dl
             }
             \\
             % &\implies
             % \omega_{q}^{v}
-            % \mho_{q}^{v}(
+            % \oo_{q}^{v}(
             %     \ell_{v-1}^{*}
             %     ,\ell_{v}
             % )
@@ -3192,7 +3192,7 @@ With this, we can now demonstrate that, given the above, maximum labor stratific
             % w_q
             % <
             % (1-\omega_{q}^{v})
-            % \mho_{q}^{v}(
+            % \oo_{q}^{v}(
             %     \ell_{v}
             %     ,\ell_{v}^{*}
             % )
@@ -3205,7 +3205,7 @@ With this, we can now demonstrate that, given the above, maximum labor stratific
                 }^{
                     \ell_{v}
                 }
-                \text{ta}(l)dl
+                \ta(l)dl
             }
             % \frac{
             %     \omega_{q}^{v}
@@ -3226,7 +3226,7 @@ With this, we can now demonstrate that, given the above, maximum labor stratific
                 }^{
                     \ell_{v}^{*}
                 }
-                \text{ta}(l)dl
+                \ta(l)dl
             }
             % \frac{
             %     1-\omega_{q}^{v}
@@ -3238,7 +3238,7 @@ With this, we can now demonstrate that, given the above, maximum labor stratific
             % }
             \\
             &\implies
-            \mho_{q}^{v} = 
+            \oo_{q}^{v} = 
             \min\left(
                 \frac{
                     \omega_{q}^{v}
@@ -3248,7 +3248,7 @@ With this, we can now demonstrate that, given the above, maximum labor stratific
                     }^{
                         \ell_{v}
                     }
-                    \text{ta}(l)dl
+                    \ta(l)dl
                 }
                 ,
                 \frac{
@@ -3259,7 +3259,7 @@ With this, we can now demonstrate that, given the above, maximum labor stratific
                     }^{
                         \ell_{v}^{*}
                     }
-                    \text{ta}(l)dl
+                    \ta(l)dl
                 }
             \right)
             % \min\left[
@@ -3290,7 +3290,7 @@ With this, we can now demonstrate that, given the above, maximum labor stratific
                 }^{
                     \ell_{v}
                 }
-                \text{ta}(l)dl
+                \ta(l)dl
             }
             % \frac{
             %     \omega_{q}^{v}
@@ -3305,12 +3305,12 @@ With this, we can now demonstrate that, given the above, maximum labor stratific
             \\
             &\therefore
             % &\implies
-            \mho_{q}(
+            \oo_{q}(
                 \boldsymbol{\ell_q}
                 ,\boldsymbol{\omega_q}
             ) 
             <
-            \mho_{q}(
+            \oo_{q}(
                 \boldsymbol{\ell_{q}^{*}}
             )
             =
@@ -3331,19 +3331,19 @@ With this, we can now demonstrate that, given the above, maximum labor stratific
             \
             \big|
             \
-            \mho_{q}(
+            \oo_{q}(
                 \boldsymbol{\ell_q}
                 ,\boldsymbol{\omega_q}
             ) 
             >
-            \mho_{q}(
+            \oo_{q}(
                 \boldsymbol{\ell_{q}^{*}}
             )
             =
             % \min(
             %     \boldsymbol{1}
             %     \times
-            %     \boldsymbol{\mho_q}(
+            %     \boldsymbol{\oo_q}(
             %         \boldsymbol{\ell_{q}^{*}}
             %     )
             % )
@@ -3358,18 +3358,18 @@ With this, we can now demonstrate that, given the above, maximum labor stratific
                 }^{
                     \ell_{v}
                 }
-                \text{ta}(l)dl
+                \ta(l)dl
                 +
                 \int_{
                     \ell_{v}
                 }^{
                     \ell_{v}^{*}
                 }
-                \text{ta}(l)dl
+                \ta(l)dl
             \right)
             =
             \int_{0}^{1}
-            \text{ta}(l)dl
+            \ta(l)dl
             :=
             1
             .
@@ -3391,7 +3391,7 @@ With this, we can now demonstrate that, given the above, maximum labor stratific
             \min\left(
                 \boldsymbol{\omega_{q}^{v}}
                 \times
-                \boldsymbol{\mho_q}(
+                \boldsymbol{\oo_q}(
                     \boldsymbol{\ell_{q}}
                 )
             \right)
@@ -3399,12 +3399,12 @@ With this, we can now demonstrate that, given the above, maximum labor stratific
             w_q
             \\
             \therefore
-            \mho_q(
+            \oo_q(
                 \boldsymbol{\ell_{q}^{v}},
                 \boldsymbol{\omega_{q}^{v}}
             )
             <
-            \mho_q(
+            \oo_q(
                 \boldsymbol{\ell_{q}^{*}}
             )
             =
@@ -3430,10 +3430,10 @@ In the lemma above, we have assumed there to be an optimal $\boldsymbol{\ell_{q}
     % \ell_{v}^{q}
     % \ell_v
     =
-    \text{TA}^{-1}\left(
+    \invTA\left(
         \frac{v}{w_q}
         +
-        \text{TA}(0)
+        \TA(0)
     \right)
     \
     \forall
@@ -3444,35 +3444,35 @@ In the lemma above, we have assumed there to be an optimal $\boldsymbol{\ell_{q}
     \right\}
     ,
     \end{gather}
-    where $\text{TA}(l)$ is the anti-derivative of the time allocation function $\text{ta}(l)$, and $\text{TA}^{-1}(l)$, its inverse.
+    where $\TA(l)$ is the anti-derivative of the time allocation function $\ta(l)$, and $\invTA(l)$, its inverse.
     
     \begin{proof}
         
         We have just demonstrated the maximum operational output in any labor market, with or without unique, unitary, positions, is exactly 
         % We have just demonstrated that the maximum operational output in any labor market is exactly 
         \begin{gather}
-        \mho_{q}^{*}
+        \oo_{q}^{*}
             =
             \min(
                 \boldsymbol{w_{q}^{*}}
                 \times
-                \boldsymbol{\mho_q}
+                \boldsymbol{\oo_q}
             )
             = 
             \min(
                 \boldsymbol{1}
                 \times
-                \boldsymbol{\mho_q}(
+                \boldsymbol{\oo_q}(
                     \boldsymbol{\ell_{q}^{*}}
                 )
             )
             =
             w_q
-        % \mho_{q}^{*} =
+        % \oo_{q}^{*} =
         % \min\left(
         %     \boldsymbol{w_q}
         %     \times
-        %     \boldsymbol{\mho_{q}}
+        %     \boldsymbol{\oo_{q}}
         % \right)
         % =
         % w_q
@@ -3486,13 +3486,13 @@ In the lemma above, we have assumed there to be an optimal $\boldsymbol{\ell_{q}
         \begin{gather}
         1 \times \left(
             \int_{\ell_0}^{\ell_1}
-            \text{ta}(l)
+            \ta(l)
             dl
         \right) ^ {-1}
         =
         1 \times \left(
             \int_{0}^{\ell_1}
-            \text{ta}(l)
+            \ta(l)
             dl
         \right) ^ {-1}
         =
@@ -3507,7 +3507,7 @@ In the lemma above, we have assumed there to be an optimal $\boldsymbol{\ell_{q}
         &\times 
         \left(
             \int_{0}^{\ell_1}
-            \text{ta}(l)
+            \ta(l)
             dl
         \right) ^ {-1}
         =
@@ -3515,39 +3515,39 @@ In the lemma above, we have assumed there to be an optimal $\boldsymbol{\ell_{q}
         \\
         &\therefore
         \int_{0}^{\ell_1}
-        \text{ta}(l)
+        \ta(l)
         dl
         =
         \frac{1}{w_q}
         \\
         &\therefore
-        \text{TA}(l)
+        \TA(l)
         \big|_{0}^{\ell_1}
         =
-        \text{TA}(\ell_1)
+        \TA(\ell_1)
         -
-        \text{TA}(0)
+        \TA(0)
         =
         \frac{1}{w_q}
         \\
         &\therefore
-        \text{TA}^{-1}(
-            \text{TA}(\ell_1)
+        \invTA(
+            \TA(\ell_1)
         )
         =
-        \text{TA}^{-1}\left(
+        \invTA\left(
             \frac{1}{w_q}
             +
-            \text{TA}(0)
+            \TA(0)
         \right)
         \\
         &\therefore
         \ell_1
         =
-        \text{TA}^{-1}\left(
+        \invTA\left(
             \frac{1}{w_q}
             +
-            \text{TA}(0)
+            \TA(0)
         \right)
         .
         \end{align}
@@ -3558,7 +3558,7 @@ In the lemma above, we have assumed there to be an optimal $\boldsymbol{\ell_{q}
         &\times 
         \left(
             \int_{\ell_1}^{\ell_2}
-            \text{ta}(l)
+            \ta(l)
             dl
         \right) ^ {-1}
         =
@@ -3566,52 +3566,52 @@ In the lemma above, we have assumed there to be an optimal $\boldsymbol{\ell_{q}
         \\
         &\therefore
         \int_{\ell_1}^{\ell_2}
-        \text{ta}(l)
+        \ta(l)
         dl
         =
         \frac{1}{w_q}
         \\
         &\therefore
-        \text{TA}(l)
+        \TA(l)
         \big|_{\ell_1}^{\ell_2}
         =
-        \text{TA}(\ell_2)
+        \TA(\ell_2)
         -
-        \text{TA}(\ell_1)
+        \TA(\ell_1)
         =
         \frac{1}{w_q}
         \\
         &\therefore
-        \text{TA}^{-1}(
-            \text{TA}(\ell_2)
+        \invTA(
+            \TA(\ell_2)
         )
         =
-        \text{TA}^{-1}\left(
+        \invTA\left(
             \frac{1}{w_q}
             +
-            \text{TA}(\ell_1)
+            \TA(\ell_1)
         \right)
         \\
         &\therefore
-        \text{TA}^{-1}(
-            \text{TA}(\ell_2)
+        \invTA(
+            \TA(\ell_2)
         )
         =
-        \text{TA}^{-1}\left(
+        \invTA\left(
             \frac{1}{w_q}
             +
             \frac{1}{w_q}
             +
-            \text{TA}(0)
+            \TA(0)
         \right)
         \\
         &\therefore
         \ell_2
         =
-        \text{TA}^{-1}\left(
+        \invTA\left(
             \frac{2}{w_q}
             +
-            \text{TA}(0)
+            \TA(0)
         \right)
         .
         \end{align}
@@ -3622,7 +3622,7 @@ In the lemma above, we have assumed there to be an optimal $\boldsymbol{\ell_{q}
         &\times 
         \left(
             \int_{\ell_2}^{\ell_3}
-            \text{ta}(l)
+            \ta(l)
             dl
         \right) ^ {-1}
         =
@@ -3630,54 +3630,54 @@ In the lemma above, we have assumed there to be an optimal $\boldsymbol{\ell_{q}
         \\
         &\therefore
         \int_{\ell_2}^{\ell_3}
-        \text{ta}(l)
+        \ta(l)
         dl
         =
         \frac{1}{w_q}
         \\
         &\therefore
-        \text{TA}(l)
+        \TA(l)
         \big|_{\ell_2}^{\ell_3}
         =
-        \text{TA}(\ell_3)
+        \TA(\ell_3)
         -
-        \text{TA}(\ell_2)
+        \TA(\ell_2)
         =
         \frac{1}{w_q}
         \\
         &\therefore
-        \text{TA}^{-1}(
-            \text{TA}(\ell_3)
+        \invTA(
+            \TA(\ell_3)
         )
         =
-        \text{TA}^{-1}\left(
+        \invTA\left(
             \frac{1}{w_q}
             +
-            \text{TA}(\ell_2)
+            \TA(\ell_2)
         \right)
         \\
         &\therefore
-        \text{TA}^{-1}(
-            \text{TA}(\ell_3)
+        \invTA(
+            \TA(\ell_3)
         )
         =
-        \text{TA}^{-1}\left(
+        \invTA\left(
             \frac{1}{w_q}
             +
             \frac{1}{w_q}
             +
             \frac{1}{w_q}
             +
-            \text{TA}(0)
+            \TA(0)
         \right)
         \\
         &\therefore
         \ell_3
         =
-        \text{TA}^{-1}\left(
+        \invTA\left(
             \frac{3}{w_q}
             +
-            \text{TA}(0)
+            \TA(0)
         \right)
         .
         \end{align}
@@ -3688,7 +3688,7 @@ In the lemma above, we have assumed there to be an optimal $\boldsymbol{\ell_{q}
         &\times 
         \left(
             \int_{\ell_{w_q - 1}}^{\ell_{w_q}}
-            \text{ta}(l)
+            \ta(l)
             dl
         \right) ^ {-1}
         =
@@ -3696,90 +3696,90 @@ In the lemma above, we have assumed there to be an optimal $\boldsymbol{\ell_{q}
         \\
         &\therefore
         \int_{\ell_{w_q - 1}}^{\ell_{w_q}}
-        \text{ta}(l)
+        \ta(l)
         dl
         =
         \frac{1}{w_q}
         \\
         &\therefore
-        \text{TA}(l)
+        \TA(l)
         \big|_{\ell_{w_q - 1}}^{\ell_{w_q}}
         =
-        \text{TA}(\ell_{w_q})
+        \TA(\ell_{w_q})
         -
-        \text{TA}(\ell_{w_q - 1})
+        \TA(\ell_{w_q - 1})
         =
         \frac{1}{w_q}
         \\
         &\therefore
-        \text{TA}^{-1}(
-            \text{TA}(\ell_{w_q})
+        \invTA(
+            \TA(\ell_{w_q})
         )
         =
-        \text{TA}^{-1}\left(
+        \invTA\left(
             \frac{1}{w_q}
             +
-            \text{TA}(\ell_{w_q - 1})
+            \TA(\ell_{w_q - 1})
         \right)
         \\
         &\therefore
-        \text{TA}^{-1}(
-            \text{TA}(\ell_{w_q})
+        \invTA(
+            \TA(\ell_{w_q})
         )
         =
-        \text{TA}^{-1}\left(
+        \invTA\left(
             \frac{1}{w_q}
             +
             \dots
             +
             \frac{1}{w_q}
             +
-            \text{TA}(0)
+            \TA(0)
         \right)
         \\
         &\therefore
         \ell_{w_q}
         =
-        \text{TA}^{-1}\left(
+        \invTA\left(
             \frac{w_q}{w_q}
             +
-            \text{TA}(0)
+            \TA(0)
         \right)
         := 1
         \\
         &\iff
-        \text{TA}^{-1}\left(
+        \invTA\left(
             \frac{w_q}{w_q}
             +
-            \text{TA}(0)
+            \TA(0)
         \right)
         =
-        \text{TA}^{-1}\left(
+        \invTA\left(
             1
             +
-            \text{TA}(0)
+            \TA(0)
         \right)
         =
         1
         \\
         &\iff
-        \text{TA}\left(
-            \text{TA}^{-1}\left(
+        \TA\left(
+            \invTA\left(
             1
             +
-            \text{TA}(0)
+            \TA(0)
         \right)
         \right)
         =
-        \text{TA}(1)
+        \TA(1)
         \\
         &\iff
-        \text{TA}(1)
+        \TA(1)
         -
-        \text{TA}(0)
+        \TA(0)
         =
         \int_{0}^{1}{
-            \text{ta}(l)
+            \ta(l)
             dl
         }
         =
@@ -3789,13 +3789,13 @@ In the lemma above, we have assumed there to be an optimal $\boldsymbol{\ell_{q}
         which is true, by definition,
         \begin{align}
         &\because
-        \text{ta}(l) 
+        \ta(l) 
         :=
-        \text{ttc}(l)
+        \ttc(l)
         \times
         \left(
             \int_{0}^{1}{
-                \text{ttc}(l)
+                \ttc(l)
                 dl
             }
         \right) ^ {-1}
@@ -3803,18 +3803,18 @@ In the lemma above, we have assumed there to be an optimal $\boldsymbol{\ell_{q}
         &\implies
         % &\therefore
         \int_{0}^{1}{
-            \text{ta}(l)
+            \ta(l)
             dl
         }
         =
         \left(
             \int_{0}^{1}
-            \text{ttc}(l)
+            \ttc(l)
             dl
         \right) ^ {-1}
         \times
         \int_{0}^{1}{
-            \text{ttc}(l)
+            \ttc(l)
             dl
         }
         =
@@ -3827,10 +3827,10 @@ In the lemma above, we have assumed there to be an optimal $\boldsymbol{\ell_{q}
         \begin{gather}
         \ell_v
         =
-        \text{TA}^{-1}\left(
+        \invTA\left(
             \frac{v}{w_q}
             +
-            \text{TA}(0)
+            \TA(0)
         \right)
         \
         \forall
@@ -3845,7 +3845,81 @@ In the lemma above, we have assumed there to be an optimal $\boldsymbol{\ell_{q}
 \end{lemma}
 % endregion
 
-Having derived the optimal responsability ranges for a maximally stratified labor market with unitary employment levels, we shall demonstrate other types of labor stratification cannot attain in an efficient economy because: 1) no other strategy has lower productivity requirements (MPL); 2) and, given MSA, there is only one set of optimal responsability bounds and employment levels (ESL).
+Having derived optimal responsability ranges for maximally stratified markets with unitary employment levels, we shall demonstrate other types of labor stratification cannot attain in an efficient economy because: 1) no other strategy has lower productivity requirements (GSL, MPL); 2) and, given MSA, there is only one set of optimal responsability bounds and employment levels (ESL).
+
+% region: general stratification lemma (gsl) 
+\begin{lemma}[General Stratification Lemma, GSL]
+    \label{gsl}
+    % statement
+    A generalization of the Optimal Stratification Lemma, the GSL states that, for any degree of labor stratification, responsability bounds are given by
+    \begin{gather}
+        \lambda_{v}^{q} = []
+        \
+        \forall
+        \
+        v \in \{1, \dots, p_q\},
+        p_q \in \{1, \dots, w_q\}
+        .
+    \end{gather}
+    Furthermore, as employers stratify positions, their respective minimum productivity remains constant.
+    \begin{gather}
+        \lambda_{v}^{q}(p_q)
+        =
+        \lambda_{v + 1}^{q}(p_q + 1)
+        \
+        \forall
+        \
+        r \in \{1, \dots, p_q\},
+        p_q \in \{1, \dots, w_q\}
+        .
+    \end{gather}
+    Therefore, new job subtypes are, so to speak, ``appended'' below the current ones, always decreasing the market's barrier of entry, such that
+    \begin{gather}
+        .
+    \end{gather}
+    % \begin{gather}
+    %     \lambda_{v}^{q}(p_q)
+    %     \leq
+    %     \lambda_{r}^{q}(\pi_q)
+    %     \
+    %     \forall
+    %     \
+    %     v 
+    %     \in 
+    %     \left\{
+    %         1
+    %         ,\dots
+    %         ,\sum_{z=1}^{r}
+    %         w_{q}^{z}(p_q)
+    %     \right\}
+    %     ,
+    %     r \in \{1, \dots ,p_q\}
+    %     ,
+    %     \pi_q \geq p_q \in \{1, \dots, w_q\}
+    %     .
+    % \end{gather}
+
+    \begin{proof}
+        Putting aside the choice of the $p_q \in \{1, \dots, w_q\}$ number of positions, or job subtypes, to offer, a rational employer' optimization problem is:
+        \begin{gather}
+            \max_{
+                \boldsymbol{w_q}
+                , \boldsymbol{\mrp_q}
+            }\left(
+                \oo\left(
+                    \wsq
+                    ,\boldsymbol{\oo_q}(
+                        \boldsymbol{
+                            \mrp_q
+                        }
+                    )
+                \right)
+            \right)
+        \end{gather}
+
+    \end{proof}
+\end{lemma}
+% endregion
 
 % region: minimum productivity lemma (mpl) 
 \begin{lemma}[Minimum Productivity Lemma, MPL]
@@ -3856,7 +3930,7 @@ Having derived the optimal responsability ranges for a maximally stratified labo
         
         If production is organized independently,
         \begin{gather}
-        \mho_q = w_q
+        \oo_q = w_q
         \iff
         \tilde{T}_{q}^{v}
         =
@@ -3869,7 +3943,7 @@ Having derived the optimal responsability ranges for a maximally stratified labo
         \end{gather}
         that is, either all $w_q$ employees are perfectly qualified, or maximum operational output (see MOOL) is not acchieved. Moreover, in a binary setting,
         \begin{gather}
-        \mho_q = w_q
+        \oo_q = w_q
         \iff
         \tilde{T}_{q}^{v}
         \geq
@@ -3978,10 +4052,10 @@ Having derived the optimal responsability ranges for a maximally stratified labo
             \frac{1}{w_q}
         \right)
         \sum_{v=1}^{w_q}{
-            \text{TA}^{-1}\left(
+            \invTA\left(
             \frac{v}{w_q}
             +
-            \text{TA}(0)
+            \TA(0)
         \right)
         }
         .
@@ -4254,7 +4328,7 @@ Having derived the optimal responsability ranges for a maximally stratified labo
 
 Now that we have proven maximum labor stratification with unitary employment is the production strategy with the lowest barrier of entry, let us also show it is the only feasible mode of maximum stratification.
 
-% % region: general stratification lemma (gsl)
+% % region: general stratification lemma (gsl) 
 % \begin{lemma}[General Stratification Lemma, GSL]
 %     \label{gsl}
 %     % statement
@@ -4272,7 +4346,7 @@ Now that we have proven maximum labor stratification with unitary employment is 
 %                     }_q
 %                 }
 %             }
-%             \mho_q
+%             \oo_q
 %             , \text{s.t. restrictions.}
 %             \\
 %             &
@@ -4296,7 +4370,7 @@ Now that we have proven maximum labor stratification with unitary employment is 
 %                         }
 %                     )
 %                     \times
-%                     \boldsymbol{\mho_q}(
+%                     \boldsymbol{\oo_q}(
 %                         \boldsymbol{
 %                             \underaccent{\bar}{
 %                                 \tilde{T}
@@ -4320,7 +4394,7 @@ Now that we have proven maximum labor stratification with unitary employment is 
 %                         , \boldsymbol{\ell_q}
 %                     )
 %                     \times
-%                     \boldsymbol{\mho_q}(
+%                     \boldsymbol{\oo_q}(
 %                         \boldsymbol{\ell_q}
 %                     )
 %                 \right)
@@ -4345,11 +4419,11 @@ Now that we have proven maximum labor stratification with unitary employment is 
 %                     \right)
 %                     \times
 %                     \left(
-%                         \mho_{1}^{q}
+%                         \oo_{1}^{q}
 %                         ,
 %                         \dots
 %                         ,
-%                         \mho_{p_q}^{q}
+%                         \oo_{p_q}^{q}
 %                     \right)
 %                 \right)
 %             \right]
@@ -4371,7 +4445,7 @@ Now that we have proven maximum labor stratification with unitary employment is 
 %                 \sum_{r=1}^{w_{q}^{v}}
 %                 [\tilde{T}_{q}^{r} \geq \ell_{v}^{q}]
 %                 \times
-%                 \mho_{v}^{q}
+%                 \oo_{v}^{q}
 %             \right)
 %             , \text{s.t. restrictions.}
 %             \\
@@ -4391,7 +4465,7 @@ Now that we have proven maximum labor stratification with unitary employment is 
 %                     }^{
 %                         \ell_{v}^{q}
 %                     }{
-%                         \text{ta}(l)
+%                         \ta(l)
 %                         dl
 %                     }
 %                 \right) ^ {-1}
@@ -4414,7 +4488,7 @@ Now that we have proven maximum labor stratification with unitary employment is 
 %                     }^{
 %                         \ell_{v}^{q}
 %                     }{
-%                         \text{ta}(l)
+%                         \ta(l)
 %                         dl
 %                     }
 %                 }
@@ -4426,14 +4500,14 @@ Now that we have proven maximum labor stratification with unitary employment is 
 %         \begin{gather}
 %             \Omega_{v}^{q}
 %             :=
-%             \frac{1}{\mho_{v}^{q}}
+%             \frac{1}{\oo_{v}^{q}}
 %             =
 %             \int_{
 %                 \ell_{v-1}^{q}
 %             }^{
 %                 \ell_{v}^{q}
 %             }{
-%                 \text{ta}(l)
+%                 \ta(l)
 %                 dl
 %             }
 %             =
@@ -4445,7 +4519,7 @@ Now that we have proven maximum labor stratification with unitary employment is 
 %             p_q \in \{1, \dots, w_q\}
 %             ,
 %         \end{gather}
-%         $\boldsymbol{\mho_q}$ and $\boldsymbol{w_q}$ are entirely determined by responsability bounds $\boldsymbol{\ell_q}$; or, conversely, $\boldsymbol{\mho_q}$ and $\boldsymbol{\ell_q}$ can be written in terms of $\boldsymbol{w_q}$, so that
+%         $\boldsymbol{\oo_q}$ and $\boldsymbol{w_q}$ are entirely determined by responsability bounds $\boldsymbol{\ell_q}$; or, conversely, $\boldsymbol{\oo_q}$ and $\boldsymbol{\ell_q}$ can be written in terms of $\boldsymbol{w_q}$, so that
 %         \begin{align}
 %             &
 %             \max_{
@@ -4463,7 +4537,7 @@ Now that we have proven maximum labor stratification with unitary employment is 
 %                     }^{
 %                         \ell_{v}^{q}
 %                     }{
-%                         \text{ta}(l)
+%                         \ta(l)
 %                         dl
 %                     }
 %                 }
@@ -4494,25 +4568,25 @@ Now that we have proven maximum labor stratification with unitary employment is 
 %             }^{
 %                 \ell_{p_q}^{q}
 %             }{
-%                 \text{ta}(l)
+%                 \ta(l)
 %                 dl
 %             }
 %             :=
 %             \int_{
 %                 \ell_{p_q-1}^{q}
 %             }^{1}{
-%                 \text{ta}(l)
+%                 \ta(l)
 %                 dl
 %             }
 %             =
 %             \tilde{w}_{q}^{p_q}
 %             \\
 %             &\therefore
-%             \text{TA}
+%             \TA
 %             \int_{
 %                 \ell_{p_q-1}^{q}
 %             }^{1}{
-%                 \text{ta}(l)
+%                 \ta(l)
 %                 dl
 %             }
 %             =
@@ -4560,7 +4634,7 @@ Now that we have proven maximum labor stratification with unitary employment is 
 %     % the last component of both vectors is already defined. So, we can write, with the MSA and the Proportional Employment Condition,
 %     % \begin{gather}
 %     %     \int_{\ell_{v-1}^{q}}^{\ell_{v}^{q}}
-%     %     \text{ta}(l)
+%     %     \ta(l)
 %     %     dl
 %     %     =
 %     %     \tilde{w}_{q}^{v}
@@ -4593,7 +4667,7 @@ Now that we have proven maximum labor stratification with unitary employment is 
 %     %             \tilde{T}
 %     %         }_{q}^{p_q - 1}} ^ *
 %     %     }^{1}
-%     %     \text{ta}(l)
+%     %     \ta(l)
 %     %     dl
 %     %     \leq
 %     %     \int_{
@@ -4601,7 +4675,7 @@ Now that we have proven maximum labor stratification with unitary employment is 
 %     %             \tilde{T}
 %     %     }_{{q}^{p_q - 1}}
 %     %     }^{1}
-%     %     \text{ta}(l)
+%     %     \ta(l)
 %     %     dl
 %     %     ,
 %     % \end{gather}
@@ -4613,7 +4687,7 @@ Now that we have proven maximum labor stratification with unitary employment is 
 %     %             \tilde{T}
 %     %         }_{q}^{p_q - 1}} ^ *
 %     %     }^{1}
-%     %     \text{ta}(l)
+%     %     \ta(l)
 %     %     dl
 %     %     =
 %     %     {w_{q}^{p_q}} ^ *
@@ -4621,9 +4695,9 @@ Now that we have proven maximum labor stratification with unitary employment is 
 %     %     \frac{1}{w_q}
 %     %     \\
 %     %     &\therefore
-%     %     \text{TA}(1)
+%     %     \TA(1)
 %     %     -
-%     %     \text{TA}\left(
+%     %     \TA\left(
 %     %         {\underaccent{\bar}{
 %     %             \tilde{T}
 %     %         }_{q}^{p_q - 1}} ^ *
@@ -4636,21 +4710,21 @@ Now that we have proven maximum labor stratification with unitary employment is 
 %     %             \tilde{T}
 %     %         }_{q}^{p_q - 1}} ^ *
 %     %     =
-%     %     \text{TA}^{-1}\left(
-%     %         \text{TA}(1)
+%     %     \invTA\left(
+%     %         \TA(1)
 %     %         -
 %     %         \frac{1}{w_q}
 %     %     \right)
 %     %     =
-%     %     \text{TA}^{-1}\left(
+%     %     \invTA\left(
 %     %         \frac{w_q - 1}{w_q}
 %     %         +
-%     %         \text{TA}(0)
+%     %         \TA(0)
 %     %     \right)
 %     %     \\
 %     %     &\because
-%     %     \text{TA}(1) - 
-%     %     \text{TA}(0) =
+%     %     \TA(1) - 
+%     %     \TA(0) =
 %     %     1
 %     %     .
 %     % \end{align}
@@ -4705,10 +4779,10 @@ Now that we have proven maximum labor stratification with unitary employment is 
     \\
     \ell_{v}^{*}
     =
-    \text{TA}^{-1}\left(
+    \invTA\left(
         \frac{v}{w_q}
         +
-        \text{TA}(0)
+        \TA(0)
     \right)
     \
     \forall
@@ -4791,7 +4865,7 @@ Now that we have proven maximum labor stratification with unitary employment is 
         \begin{align}
         &
         \int_{\ell_{v-1}}^{\ell_{v}}{
-            \text{ta}(l)
+            \ta(l)
             dl
         }
         =
@@ -4804,7 +4878,7 @@ Now that we have proven maximum labor stratification with unitary employment is 
             }^{
                 \ell_{v}^{*}    
             }{
-                \text{ta}(l)
+                \ta(l)
                 dl
             }
         \right) ^ {-1}
@@ -4814,7 +4888,7 @@ Now that we have proven maximum labor stratification with unitary employment is 
         &
         \implies
         \int_{\ell_{v-1}}^{\ell_{v}}{
-            \text{ta}(l)
+            \ta(l)
             dl
         }
         =
@@ -4825,7 +4899,7 @@ Now that we have proven maximum labor stratification with unitary employment is 
                 }^{
                     \ell_{v}^{*}    
                 }{
-                    \text{ta}(l)
+                    \ta(l)
                     dl
                 }
             \right) ^ {-1}
@@ -4836,7 +4910,7 @@ Now that we have proven maximum labor stratification with unitary employment is 
         }^{
             \ell_{v}^{*}    
         }{
-            \text{ta}(l)
+            \ta(l)
             dl
         }
         \\
@@ -4846,10 +4920,10 @@ Now that we have proven maximum labor stratification with unitary employment is 
         =
         \ell_{v}^{*}
         =
-        \text{TA}^{-1}\left(
+        \invTA\left(
             \frac{v}{w_q}
             +
-            \text{TA}(0)
+            \TA(0)
         \right)
         \
         \forall
@@ -4881,7 +4955,7 @@ Now that we have proven maximum labor stratification with unitary employment is 
         }^{
             \ell_{p}
         }{
-            \text{ta}(l)dl
+            \ta(l)dl
         }
         =
         \int_{
@@ -4889,13 +4963,13 @@ Now that we have proven maximum labor stratification with unitary employment is 
         }^{
             \ell_{w_q}
         }{
-            \text{ta}(l)dl
+            \ta(l)dl
         }
         :=
         \int_{
             \ell_{w_q-1}
         }^{1}{
-            \text{ta}(l)dl
+            \ta(l)dl
         }
         =
         \frac{1}{w_q}
@@ -4905,47 +4979,47 @@ Now that we have proven maximum labor stratification with unitary employment is 
         \begin{align}
             \ell_{p - 1}
             &=
-            \text{TA}^{-1}\left(
-                \text{TA}(1)
+            \invTA\left(
+                \TA(1)
                 -
                 \frac{1}{w_q}
                 \right)
             \\
             &=
-            \text{TA}^{-1}\left(
+            \invTA\left(
                 1
                 +
-                \text{TA}(0)
+                \TA(0)
                 -
                 \frac{1}{w_q}
             \right)
             \\
             &=
-            \text{TA}^{-1}\left(
+            \invTA\left(
                 \frac{w_q}{w_q}
                 -
                 \frac{1}{w_q}
                 +
-                \text{TA}(0)
+                \TA(0)
             \right)
             \\
             &=
-            \text{TA}^{-1}\left(
+            \invTA\left(
                 \frac{w_q - 1}{w_q}
                 +
-                \text{TA}(0)
+                \TA(0)
             \right)
             \\
             &=
             \ell_{w_q - 1}^{*}
             \\
             &\because
-            \text{TA}(1)
+            \TA(1)
             -
-            \text{TA}(0)
+            \TA(0)
             =
             \int_{0}^{1}{
-                \text{ta}(l)
+                \ta(l)
                 dl
             }
             =
@@ -4969,7 +5043,7 @@ Now that we have proven maximum labor stratification with unitary employment is 
             }^{
                 \ell_{p-1}
             }{
-                \text{ta}(l)dl
+                \ta(l)dl
             }
             =
             \int_{
@@ -4977,7 +5051,7 @@ Now that we have proven maximum labor stratification with unitary employment is 
             }^{
                 \ell_{w_q-1}
             }{
-                \text{ta}(l)dl
+                \ta(l)dl
             }
             =
             \frac{1}{w_q}
@@ -4988,10 +5062,10 @@ Now that we have proven maximum labor stratification with unitary employment is 
             =
             \ell_{w_q-2}^{*}
             =
-            \text{TA}^{-1}\left(
+            \invTA\left(
                 \frac{w_q - 2}{w_q}
                 +
-                \text{TA}(0)
+                \TA(0)
             \right)
             .
         \end{align}
@@ -5003,7 +5077,7 @@ Now that we have proven maximum labor stratification with unitary employment is 
             }^{
                 \ell_{p-2}
             }{
-                \text{ta}(l)dl
+                \ta(l)dl
             }
             =
             \int_{
@@ -5011,7 +5085,7 @@ Now that we have proven maximum labor stratification with unitary employment is 
             }^{
                 \ell_{w_q-2}
             }{
-                \text{ta}(l)dl
+                \ta(l)dl
             }
             =
             \frac{1}{w_q}
@@ -5022,10 +5096,10 @@ Now that we have proven maximum labor stratification with unitary employment is 
             =
             \ell_{w_q-3}^{*}
             =
-            \text{TA}^{-1}\left(
+            \invTA\left(
                 \frac{w_q - 3}{w_q}
                 +
-                \text{TA}(0)
+                \TA(0)
             \right)
             ;
         \end{align}
@@ -5055,10 +5129,10 @@ Now that we have proven maximum labor stratification with unitary employment is 
         \\
         \ell_{v}^{*}
         =
-        \text{TA}^{-1}\left(
+        \invTA\left(
             \frac{v}{w_q}
             +
-            \text{TA}(0)
+            \TA(0)
         \right)
         \
         \forall
@@ -5086,15 +5160,15 @@ Finally, let us show the economy's productivity has to be capable of supporting 
     \begin{proof}[Proof 1]
         If talent were not sufficient to produce occupation $q$'s entire $l \in [0,1]$ responsability spectrum, then, as aggregate operation output is given by the Leontief function (see WOCA, MOOL),
         \begin{gather}
-        \mho_q 
+        \oo_q 
         := 
-        \mho(
+        \oo(
             \boldsymbol{w_{q}}(
                 \boldsymbol{\tilde{T}_{q}},
                 \boldsymbol{\ell_{q}}
             )
             ,
-            \boldsymbol{\mho_q}(
+            \boldsymbol{\oo_q}(
                 \boldsymbol{\ell_q}
             )
         )
@@ -5105,7 +5179,7 @@ Finally, let us show the economy's productivity has to be capable of supporting 
                 \boldsymbol{\ell_{q}}
             )
             \times
-            \boldsymbol{\mho_q}(
+            \boldsymbol{\oo_q}(
                 \boldsymbol{\ell_q}
             )
         \right)
@@ -5114,7 +5188,7 @@ Finally, let us show the economy's productivity has to be capable of supporting 
         employers' optimal choice would be to save their resources and completely shutdown the productive effort. Therefore,
         \begin{gather}
         \lnot \
-        \mho_q > 0
+        \oo_q > 0
         \iff
         \boldsymbol{w_{q}^{*}} =
         \boldsymbol{0}
@@ -5128,7 +5202,7 @@ Finally, let us show the economy's productivity has to be capable of supporting 
         \therefore
         w_q > 0
         \iff 
-        \mho_q > 0
+        \oo_q > 0
         \iff
         \boldsymbol{w_q}(
             \boldsymbol{\tilde{T}_q},
@@ -5197,10 +5271,10 @@ Finally, let us show the economy's productivity has to be capable of supporting 
             \geq
             % \ell_{qv}^{*}
             % =
-            \text{TA}^{-1}\left(
+            \invTA\left(
                 \frac{v}{w_q}
                 +
-                \text{TA}(0)
+                \TA(0)
             \right)
             \
             \forall
@@ -5252,14 +5326,14 @@ Finally, let us show the economy's productivity has to be capable of supporting 
             \therefore
             w_q > 0
             &\iff
-            \mho_{q}^{\text{IP}}
+            \oo_{q}^{\text{IP}}
             \in [1, w_q]
             .
         \end{align}
 
         So, if occupation $q$'s labor market exists at all (i.e. $w_q > 0$), it must have at least one perfectly qualified employee, yielding at least one productive unit.
 
-        Now, binary labor stratification (BS) demands a perfectly qualified ``senior'' and a sufficiently qualified ``junior'' for a minimum aggregate output $\mho_{q}^{\text{BS}} > 1$, greater than that of independent production:
+        Now, binary labor stratification (BS) demands a perfectly qualified ``senior'' and a sufficiently qualified ``junior'' for a minimum aggregate output $\oo_{q}^{\text{BS}} > 1$, greater than that of independent production:
         \begin{align}
             \boldsymbol{w_q}(
                 \boldsymbol{\tilde{T}_q},
@@ -5281,7 +5355,7 @@ Finally, let us show the economy's productivity has to be capable of supporting 
             \therefore
             w_q > 0
             &\iff
-            \mho_{q}^{\text{BS}}
+            \oo_{q}^{\text{BS}}
             \in
             \left[
                 \min\left(
@@ -5289,14 +5363,14 @@ Finally, let us show the economy's productivity has to be capable of supporting 
                         1
                     }{
                         \int_{0}^{\ell_{\text{Jr}}^{q}}
-                        \text{ta}(l)dl
+                        \ta(l)dl
                     }
                     ,
                     \frac{
                         1
                     }{
                         \int_{\ell_{\text{Jr}}^{q}}^{1}
-                        \text{ta}(l)dl
+                        \ta(l)dl
                     }
                 \right)
                 ,
@@ -5365,7 +5439,7 @@ Finally, let us show the economy's productivity has to be capable of supporting 
         \begin{align}
             w_q > 0
             &\iff
-            \mho_{q}^{\text{MS}}
+            \oo_{q}^{\text{MS}}
             \in
             \left[
                 \min\left(
@@ -5373,7 +5447,7 @@ Finally, let us show the economy's productivity has to be capable of supporting 
                         \int_{0}^{
                             \lambda_{1}^{q}
                         }{
-                            \text{ta}(l)dl
+                            \ta(l)dl
                         }
                     }
                     ,
@@ -5383,7 +5457,7 @@ Finally, let us show the economy's productivity has to be capable of supporting 
                         \int_{
                             \lambda_{w_q - 1}^{q}
                         }^{1}{
-                            \text{ta}(l)dl
+                            \ta(l)dl
                         }
                     }
                 \right)
@@ -5392,7 +5466,7 @@ Finally, let us show the economy's productivity has to be capable of supporting 
             \right]
             \\
             &\iff
-            \mho_{q}^{\text{MS}}
+            \oo_{q}^{\text{MS}}
             \in
             \left[
                 \left(
@@ -5401,7 +5475,7 @@ Finally, let us show the economy's productivity has to be capable of supporting 
                     }^{
                         \lambda_{v}^{q}
                     }{
-                        \text{ta}(l)dl
+                        \ta(l)dl
                     }
                 \right) ^ {-1}
                 ,
@@ -5409,7 +5483,7 @@ Finally, let us show the economy's productivity has to be capable of supporting 
             \right]
             \\
             &\iff
-            \mho_{q}^{\text{MS}}
+            \oo_{q}^{\text{MS}}
             \in
             \left[
                 w_q
@@ -5418,7 +5492,7 @@ Finally, let us show the economy's productivity has to be capable of supporting 
             \right]
             \\
             &\iff
-            \mho_{q}^{\text{MS}}
+            \oo_{q}^{\text{MS}}
             =
             w_q
             ,
@@ -5450,7 +5524,7 @@ From the above, it follows logically that maximum-monotonic labor stratification
                 \geq
                 \tilde{T}_{q}^{v}
             \right]
-            \mho_{q}^{v}
+            \oo_{q}^{v}
             =
             0
             ,
@@ -5458,7 +5532,7 @@ From the above, it follows logically that maximum-monotonic labor stratification
         that is, if an employee cannot fully output a responsability spectrum, their contribution to production is void, limiting aggregate operational output. This means choosing any production strategy other than maximum-monotonic labor stratification is a risk with no upside, when workers may have varying productivity (PDA). For, as we have shown, this arrangement by itself guarantees minimum productivity requirements (PSL) and maximum operational output (MOOL). So, it would be irrational of employers to organize production in another manner. Or, more succinctly, we can write for all $v \in \{1, \dots, w_q\}$:
         \begin{gather}
             \mathbb{E}[
-                \mho_{q}^{\text{IP}}
+                \oo_{q}^{\text{IP}}
                 \
                 |
                 \
@@ -5470,7 +5544,7 @@ From the above, it follows logically that maximum-monotonic labor stratification
             \\
             \leq
             \mathbb{E}[
-                \mho_{q}^{\text{BS}}
+                \oo_{q}^{\text{BS}}
                 \
                 |
                 \
@@ -5482,7 +5556,7 @@ From the above, it follows logically that maximum-monotonic labor stratification
             \\
             \leq
             \mathbb{E}[
-                \mho_{q}^{\text{3S}}
+                \oo_{q}^{\text{3S}}
                 \
                 |
                 \
@@ -5496,7 +5570,7 @@ From the above, it follows logically that maximum-monotonic labor stratification
             \\
             \leq
             \mathbb{E}[
-                \mho_{q}^{\text{MS}}
+                \oo_{q}^{\text{MS}}
                 \
                 |
                 \
@@ -5508,7 +5582,7 @@ From the above, it follows logically that maximum-monotonic labor stratification
             \\
             =
             \mathbb{E}[
-                \mho_{q}^{\text{IP}}
+                \oo_{q}^{\text{IP}}
                 \
                 |
                 \
@@ -5552,11 +5626,11 @@ With this, we have shown maximally stratified production is the only efficient a
         \left[
             \tilde{T}_{q}^{k}
             \geq
-            \text{TA}^{-1}
+            \invTA
             \left(
                 \frac{v}{w_q}
                 +
-                \text{TA}(0)
+                \TA(0)
             \right)
         \right]
     \end{gather}
@@ -5620,11 +5694,11 @@ With this, we have shown maximally stratified production is the only efficient a
             \left[
                 \tilde{T}_{q}^{k}
                 \geq
-                \text{TA}^{-1}
+                \invTA
                 \left(
                     \frac{v}{w_q}
                     +
-                    \text{TA}(0)
+                    \TA(0)
                 \right)
             \right]
             .
@@ -5644,7 +5718,7 @@ The General Employability Theorem has a few interesting collolaries, the first, 
         \tilde{W}_{q}^{k}
         =
         \int_{0}^{\tilde{T}_{q}^{k}}
-        \text{ta}(l)
+        \ta(l)
         dl
         :=
         \Omega_{q}^{k}
@@ -5664,11 +5738,11 @@ The General Employability Theorem has a few interesting collolaries, the first, 
             :=
             \ell_1
             =
-            \text{TA}^{-1}
+            \invTA
             \left(
                 \frac{1}{w_q}
                 +
-                \text{TA}(0)
+                \TA(0)
             \right)
             \implies
             \tilde{W}_{q}^{k}
@@ -5684,11 +5758,11 @@ The General Employability Theorem has a few interesting collolaries, the first, 
             :=
             \ell_2
             =
-            \text{TA}^{-1}
+            \invTA
             \left(
                 \frac{2}{w_q}
                 +
-                \text{TA}(0)
+                \TA(0)
             \right)
             \implies
             \tilde{W}_{q}^{k}
@@ -5700,11 +5774,11 @@ The General Employability Theorem has a few interesting collolaries, the first, 
             :=
             \ell_3
             =
-            \text{TA}^{-1}
+            \invTA
             \left(
                 \frac{3}{w_q}
                 +
-                \text{TA}(0)
+                \TA(0)
             \right)
             \implies
             \tilde{W}_{q}^{k}
@@ -5718,11 +5792,11 @@ The General Employability Theorem has a few interesting collolaries, the first, 
             :=
             \ell_{v}
             =
-            \text{TA}^{-1}
+            \invTA
             \left(
                 \frac{v}{w_q}
                 +
-                \text{TA}(0)
+                \TA(0)
             \right)
             \implies
             \tilde{W}_{q}^{k}
@@ -5734,35 +5808,35 @@ The General Employability Theorem has a few interesting collolaries, the first, 
         \begin{align}
             &\tilde{T}_{q}^{k}
             =
-            \text{TA}^{-1}
+            \invTA
             \left(
                 \tilde{W}_{q}^{k}
                 +
-                \text{TA}(0)
+                \TA(0)
             \right)
             \\
             &
             \therefore
-            \text{TA}
+            \TA
             (
             % \left(
                 \tilde{T}_{q}^{k}
             )
             % \right)
             =
-            \text{TA}
+            \TA
             \left(
-                \text{TA}^{-1}
+                \invTA
                 \left(
                     \tilde{W}_{q}^{k}
                     +
-                    \text{TA}(0)
+                    \TA(0)
                 \right)
             \right)
             \\
             &
             \therefore
-            \text{TA}
+            \TA
             (
             % \left(
                 \tilde{T}_{q}^{k}
@@ -5771,23 +5845,23 @@ The General Employability Theorem has a few interesting collolaries, the first, 
             =
             \tilde{W}_{q}^{k}
             +
-            \text{TA}(0)
+            \TA(0)
             \\
             &
             \therefore
             \tilde{W}_{q}^{k}
             =
-            \text{TA}
+            \TA
             (
             % \left(
                 \tilde{T}_{q}^{k}
             )
             % \right)
             -
-            \text{TA}(0)
+            \TA(0)
             =
             \int_{0}^{\tilde{T}_{q}^{k}}
-            \text{ta}(l)
+            \ta(l)
             dl
             :=
             \Omega_{q}^{k}
@@ -5817,13 +5891,13 @@ The General Employability Theorem has a few interesting collolaries, the first, 
             \tilde{W}_{q}^{k}
             =
             \int_{0}^{\tilde{T}_{q}^{\kappa}}
-            \text{ta}(l)
+            \ta(l)
             dl
             :=
             \Omega_{q}^{\kappa}
             \approx
             \int_{0}^{\tilde{T}_{q}^{k}}
-            \text{ta}(l)
+            \ta(l)
             dl
             \in 
             [0,1]
@@ -5850,7 +5924,7 @@ The General Employability Theorem has a few interesting collolaries, the first, 
                 \frac{1}{2}
             \right]
             \int_{0}^{\tilde{T}_{q}^{\kappa}}
-            \text{ta}(l)
+            \ta(l)
             dl
             % \in 
             % [0,1]
@@ -5870,7 +5944,7 @@ The General Employability Theorem has a few interesting collolaries, the first, 
                 \frac{1}{2}
             \right]
             \int_{0}^{\tilde{T}_{q}^{\kappa}}
-            \text{ta}(l)
+            \ta(l)
             dl
             % \\
             :=
@@ -6051,11 +6125,11 @@ And, with this, we may derive the General Competitiveness Corollary.
             \left[
                 \tilde{T}_{k}^{q}
                 \geq
-                \text{TA}^{-1}
+                \invTA
                 \left(
                     \frac{v}{w_k}
                     +
-                    \text{TA}(0)
+                    \TA(0)
                 \right)
             \right]
             .
