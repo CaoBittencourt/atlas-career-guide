@@ -3900,12 +3900,14 @@ Having derived optimal responsability ranges for maximally stratified markets wi
     % \end{gather}
 
     \begin{proof}
-        Putting aside the choice of the $p_q \in \{1, \dots, w_q\}$ number of positions, or job subtypes, to offer, a rational employer' optimization problem is:
-        \begin{gather}
+        Putting aside the choice of the $p_q \in \{1, \dots, w_q\}$ number of positions to offer, a rational employer' optimization problem (see ERA, MSA, PDA) is:
+        \begin{align}
             \max_{
                 \boldsymbol{w_q}
                 , \boldsymbol{\mrp_q}
-            }\left(
+            }
+            &
+            \mathbb{E}\left[
                 \oo\left(
                     \wsq
                     ,\boldsymbol{\oo_q}(
@@ -3914,8 +3916,216 @@ Having derived optimal responsability ranges for maximally stratified markets wi
                         }
                     )
                 \right)
+                \
+                \big|
+                \
+                \boldsymbol{
+                    \pctt_q
+                }
+                \in [0,1] ^ {w_q}
+            \right]
+            \\
+            \text{s.t.}
+            \quad
+            &
+            \boldsymbol{\ell_q} \in [0,1] ^ {p_q}
+            ,
+            \\
+            &
+            \sum_{v=1}^{p_q}{
+                \int_{
+                    \ell_{v-1}^{q}
+                }^{
+                    \ell_{v}^{q}
+                }
+                \ta(l)dl
+            }
+            =
+            1
+            ,
+            \\
+            &
+            \boldsymbol{w_{q}} \geq \boldsymbol{1}
+            ,
+            \\
+            &
+            \boldsymbol{1} ^ {\top}
+            \cdot
+            \boldsymbol{w_q}
+            =
+            w_q
+            .
+        \end{align}
+
+        Note that, because [], as well as the PEC,
+        \begin{gather}
+            \Omega_{v}^{q}
+            :=
+            \frac{1}{\oo_{v}^{q}}
+            =
+            \int_{
+                \ell_{v-1}^{q}
+            }^{
+                \ell_{v}^{q}
+            }{
+                \ta(l)
+                dl
+            }
+            =
+            \tilde{w}_{q}^{v}
+            % \\
+            \implies
+            \ell_{v}^{q}
+            =
+            \invTA\left(
+                \TA(0)
+                +
+                \sum_{r=1}^{v}
+                \tilde{w}_{q}^{r}
             \right)
+            ,
         \end{gather}
+        for all $v \in \{1, \dots, p_q\}, p_q \in \{1, \dots, w_q\}$, so that $\boldsymbol{\oo_q}$ and $\boldsymbol{w_q}$ are entirely determined by responsability bounds $\boldsymbol{\ell_q}$; or, conversely, $\boldsymbol{\oo_q}$ and $\boldsymbol{\ell_q}$ can be written in terms of $\boldsymbol{w_q}$. Thus, the left side of the objective function is equivalent to
+        \begin{align}
+            &
+            \oo\left(
+                \wsql
+                ,\boldsymbol{\oo_q}(
+                    \boldsymbol{
+                        \ell_q
+                    }(
+                        \boldsymbol{w_q}
+                    )
+                )
+            \right)
+            \\
+            &=
+            \min\left(
+                \wsql
+                ,\boldsymbol{\oo_q}(
+                    \boldsymbol{
+                        \ell_q
+                    }(
+                        \boldsymbol{w_q}
+                    )
+                )
+            \right)
+            \\
+            &=
+            \min\left(
+                \sum_{r=1}^{w_{q}^{1}}
+                [\pctt_{q}^{r} \geq \ell_{v}^{q}]
+                \times
+                \oo_{1}^{q}
+                ,
+                \dots
+                ,
+                \sum_{r=1}^{w_{q}^{p_q}}
+                [\pctt_{q}^{r} = 1]
+                \times
+                \oo_{p_q}^{q}
+            \right)
+            \\
+            &=
+            \min\left(
+                \frac{
+                    \sum_{r=1}^{w_{q}^{1}}
+                    [\pctt_{q}^{r} \geq \ell_{v}^{q}]
+                }{
+                    \tilde{w}_{q}^{1}
+                }
+                ,
+                \dots
+                ,
+                \frac{
+                    \sum_{r=1}^{w_{q}^{p_q}}
+                    [\pctt_{q}^{r} = 1]
+                }{
+                    \tilde{w}_{q}^{p_q}
+                }
+            \right)
+            ,
+        \end{align}
+        which we can further simplify by applying the no waste condition:
+        \begin{gather}
+            \left(
+                \frac{
+                    1
+                }{
+                    \tilde{w}_{q}^{v}
+                }
+            \right)
+            \sum_{r=1}^{w_{q}^{v}}
+            [\pctt_{q}^{r} \geq \ell_{v}^{q}]
+            =
+            \left(
+                \frac{
+                    1
+                }{
+                    \tilde{w}_{q}^{v}
+                }
+            \right)
+            \sum_{r=1}^{w_{q}^{v}}
+            \left[
+                \pctt_{q}^{r}
+                \geq 
+                \invTA\left(
+                    \TA(0)
+                    +
+                    \sum_{r=1}^{v}
+                    \tilde{w}_{q}^{r}
+                \right)
+            \right]
+            .
+        \end{gather}
+
+        Thus, for any $p_q \in \{1, \dots, w_q\}$, a rational employer's optimization problem is just selecting the $\boldsymbol{w_q}$ vector of employment levels that maximizes the expected aggregate operational output, given the workforce's unknown productivity:
+        \begin{align}
+            \max_{\boldsymbol{w_q}}
+            \
+            &
+            \mathbb{E}\left[
+                \left(
+                    \frac{
+                        1
+                    }{
+                        \tilde{w}_{q}^{v}
+                    }
+                \right)
+                \sum_{r=1}^{w_{q}^{v}}
+                \left[
+                    \pctt_{q}^{r}
+                    \geq 
+                    \invTA\left(
+                        \TA(0)
+                        +
+                        \sum_{r=1}^{v}
+                        \tilde{w}_{q}^{r}
+                    \right)
+                \right]
+                \
+                \bigg|
+                \
+                \boldsymbol{
+                    \pctt_q
+                }
+                \in [0,1] ^ {w_q}
+            \right]
+            \\
+            \text{s.t.}
+            \quad
+            &
+            \boldsymbol{w_{q}} \geq \boldsymbol{1}
+            ,
+            \\
+            &
+            \boldsymbol{1} ^ {\top}
+            \cdot
+            \boldsymbol{w_q}
+            =
+            w_q
+            .
+        \end{align}
 
     \end{proof}
 \end{lemma}
