@@ -4127,6 +4127,60 @@ Having derived optimal responsability ranges for maximally stratified markets wi
             .
         \end{align}
 
+        Notice, however, what this really entails is minimizing productivity requirements per position:
+        \begin{align}
+            \max_{\boldsymbol{w_q}}
+            \
+            -
+            &
+            \left(
+                \invTA\left(
+                    \TA(0)
+                    +
+                    \sum_{z=1}^{v}
+                    \tilde{w}_{q}^{z}
+                \right)
+            \right)
+            \\
+            \text{s.t.}
+            \quad
+            &
+            \boldsymbol{w_{q}} \geq \boldsymbol{1}
+            ,
+            \\
+            &
+            \boldsymbol{1} ^ {\top}
+            \cdot
+            \boldsymbol{w_q}
+            =
+            w_q
+            .
+        \end{align}
+
+        The Lagrangian for this optimization problem is
+        \begin{gather}
+            \mathcal{L}
+            =
+            -
+            \left(
+                \invTA\left(
+                    \TA(0)
+                    +
+                    \sum_{z=1}^{v}
+                    \tilde{w}_{q}^{z}
+                \right)
+            \right)
+            -
+            \xi
+            \times
+            \left(
+                \sum_{v=1}^{p_q}
+                w_{q}^{v}
+                -
+                w_q
+            \right)
+        \end{gather}
+
     \end{proof}
 \end{lemma}
 % endregion
