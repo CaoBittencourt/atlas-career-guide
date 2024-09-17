@@ -162,6 +162,7 @@
     where $T(l, l_{i}^{k})$ is defined as before.
 \end{definition}
 % endregion
+
 % region: attribute definition 2 
 \begin{definition}[Skill]
 \label{skl_difficulty}
@@ -238,6 +239,7 @@
     for virtue is, itself, the capacity to act.
 \end{definition}
 % endregion
+
 % region: skill sufficiency lemma (ssl) 
 % skills are sufficient to accomplish tasks
 P.S.: SSL
@@ -451,6 +453,7 @@ Now, even though these results are basically tautological, they are still import
 \end{proof}
 
 % endregion
+
 % region: complex task definition 
 % statement
 \begin{definition}[Complex Task]
@@ -618,6 +621,7 @@ Now, even though these results are basically tautological, they are still import
 
 \end{definition}
 % endregion
+
 % region: skill composition lemma (scl) 
 % skills are composable to accomplish complex tasks
 % statement
@@ -638,6 +642,7 @@ Now, even though these results are basically tautological, they are still import
     \end{proof}
 \end{lemma}
 % endregion
+
 % region: time allocation definition 
 In addition to the above, we shall also specifiy tasks' duration in terms of a time allocation function.
 \begin{definition}[Time Allocation]
@@ -1162,7 +1167,7 @@ And, because of these two insightful, yet fairly uncontroversial observations (v
 % endregion
 
 % region: section summary 
-To conclude this section, let us summarize what we have so far defined. With the aim of estimating individuals' employability in efficiently organized labor markets, we analyzed occupations in terms of their tasks and the required competence to complete them. We started from a fairly tautological notion of ``skill'' as one's capacity to accomplish tasks in a given domain and generalized, from this, another notion, that of complex tasks. Finally, we observed occupations are, in practice, reducible to their tasks and, though very much complex and hard to quantify in this regard, with an important axiom, we derived a theoretically sound method to measure overall productivity in any occupation's labor market. Thus, we have effectively ``sidestepped'' the issue of occupational complexity by assuming complexity.
+To conclude this section, let us summarize what we have so far defined. With the aim of estimating individuals' employability in efficiently organized labor markets, we analyzed occupations in terms of their tasks and the required competence to complete them. We started from a fairly tautological notion of ``skill'' as one's capacity to accomplish tasks in a given domain and generalized, from this, another notion, that of complex tasks. Finally, we observed occupations are, in practice, reducible to their tasks and, though very much complex and hard to quantify in this regard, with an important axiom (\ref{woca}), we derived a theoretically sound method to measure overall productivity in any occupation's labor market. Thus, we have effectively ``sidestepped'' the issue of occupational complexity by assuming complexity.
 % endregion
 
 \section{Market Conditions and Employer Behavior}
@@ -4249,166 +4254,426 @@ Having derived the optimal responsability ranges for a maximally stratified labo
 
 Now that we have proven maximum labor stratification with unitary employment is the production strategy with the lowest barrier of entry, let us also show it is the only feasible mode of maximum stratification.
 
-% region: general stratification lemma (gsl)
-\begin{lemma}[General Stratification Lemma, GSL]
-    \label{gsl}
-    % statement
-    A generalization of the Optimal Stratification Lemma, the GSL states that, for any degree of labor stratification -- whether binary, three-fold, etc --, rational employers will always choose to split more difficult positions up to the (predefined) limit of one worker per job subtype, leaving the remaining responsabilities to the first, and easiest, role.
+% % region: general stratification lemma (gsl)
+% \begin{lemma}[General Stratification Lemma, GSL]
+%     \label{gsl}
+%     % statement
+%     A generalization of the Optimal Stratification Lemma, the GSL states that, for any degree of labor stratification -- whether binary, three-fold, etc --, rational employers will always choose to split more difficult positions up to the (predefined) limit of one worker per job subtype, leaving the remaining responsabilities to the first, and easiest, role.
+    
+%     \begin{proof}
+%         Given a $p_q \in \{1, \dots, w_q\}$ number of positions, or job subtypes, a rational employer's optimization problem is:
+%         \begin{align}
+%             &
+%             \max_{
+%                 \boldsymbol{w_q},
+%                 \boldsymbol{
+%                     \underaccent{\bar}{
+%                         \tilde{T}
+%                     }_q
+%                 }
+%             }
+%             \mho_q
+%             , \text{s.t. restrictions.}
+%             \\
+%             &
+%             \max_{
+%                 \boldsymbol{w_q},
+%                 \boldsymbol{
+%                     \underaccent{\bar}{
+%                         \tilde{T}
+%                     }_q
+%                 }
+%             }
+%             \left[
+%                 \min\left(
+%                     \boldsymbol{w_q}(
+%                         \boldsymbol{w_q}
+%                         , \boldsymbol{\tilde{T}_q}
+%                         , \boldsymbol{
+%                             \underaccent{\bar}{
+%                                 \tilde{T}
+%                             }_q
+%                         }
+%                     )
+%                     \times
+%                     \boldsymbol{\mho_q}(
+%                         \boldsymbol{
+%                             \underaccent{\bar}{
+%                                 \tilde{T}
+%                             }_q
+%                         }
+%                     )
+%                 \right)
+%             \right]
+%             , \text{s.t. restrictions.}
+%             \\
+%             &
+%             \max_{
+%                 \boldsymbol{w_q},
+%                 \boldsymbol{\ell_q}
+%             }
+%             \left[
+%                 \min\left(
+%                     \boldsymbol{w_q}(
+%                         \boldsymbol{w_q}
+%                         , \boldsymbol{\tilde{T}_q}
+%                         , \boldsymbol{\ell_q}
+%                     )
+%                     \times
+%                     \boldsymbol{\mho_q}(
+%                         \boldsymbol{\ell_q}
+%                     )
+%                 \right)
+%             \right]
+%             , \text{s.t. restrictions.}
+%             \\
+%             &
+%             \max_{
+%                 \boldsymbol{w_q},
+%                 \boldsymbol{\ell_q}
+%             }
+%             \left[
+%                 \min\left(
+%                     \left(
+%                         \sum_{r=1}^{w_{q}^{1}}
+%                         [\tilde{T}_{q}^{r} \geq \ell_{1}^{q}]
+%                         ,
+%                         \dots
+%                         ,
+%                         \sum_{r=1}^{w_{q}^{p_q}}
+%                         [\tilde{T}_{q}^{r} = 1]
+%                     \right)
+%                     \times
+%                     \left(
+%                         \mho_{1}^{q}
+%                         ,
+%                         \dots
+%                         ,
+%                         \mho_{p_q}^{q}
+%                     \right)
+%                 \right)
+%             \right]
+%             ,
+%             \\
+%             &
+%             \text{s.t. restrictions.}
+%             ,
+%         \end{align}
+%         which, by the no waste condition for optimizing a Leontief production function, is simply
+%         \begin{align}
+%             &
+%             \max_{
+%                 w_{q}^{v}
+%                 , \ell_{v-1}^{q}
+%                 , \ell_{v}^{q}
+%             }
+%             \left(
+%                 \sum_{r=1}^{w_{q}^{v}}
+%                 [\tilde{T}_{q}^{r} \geq \ell_{v}^{q}]
+%                 \times
+%                 \mho_{v}^{q}
+%             \right)
+%             , \text{s.t. restrictions.}
+%             \\
+%             &
+%             \max_{
+%                 w_{q}^{v}
+%                 , \ell_{v-1}^{q}
+%                 , \ell_{v}^{q}
+%             }
+%             \left(
+%                 \sum_{r=1}^{w_{q}^{v}}
+%                 [\tilde{T}_{q}^{r} \geq \ell_{v}^{q}]
+%                 \times
+%                 \left(
+%                     \int_{
+%                         \ell_{v-1}^{q}
+%                     }^{
+%                         \ell_{v}^{q}
+%                     }{
+%                         \text{ta}(l)
+%                         dl
+%                     }
+%                 \right) ^ {-1}
+%             \right)
+%             , \text{s.t. restrictions.}
+%             \\
+%             &
+%             \max_{
+%                 w_{q}^{v}
+%                 , \ell_{v-1}^{q}
+%                 , \ell_{v}^{q}
+%             }
+%             \left(
+%                 \frac{
+%                     \sum_{r=1}^{w_{q}^{v}}
+%                     [\tilde{T}_{q}^{r} \geq \ell_{v}^{q}]
+%                 }{
+%                     \int_{
+%                         \ell_{v-1}^{q}
+%                     }^{
+%                         \ell_{v}^{q}
+%                     }{
+%                         \text{ta}(l)
+%                         dl
+%                     }
+%                 }
+%             \right)
+%             , \text{s.t. restrictions.}
+%         \end{align}
 
-    \begin{gather}
-        \boldsymbol{w_{q}^{*}}
-        \times
-        \boldsymbol{
-            \underaccent{\bar}{
-                \tilde{T}
-            }_{q}^{*}
-        }
-        \leq
-        \boldsymbol{w_q}
-        \times
-        \boldsymbol{
-            \underaccent{\bar}{
-                \tilde{T}
-            }_{q}
-        }
-        .
-    \end{gather}
+%         But because of the Proportional Employment Condition,
+%         \begin{gather}
+%             \Omega_{v}^{q}
+%             :=
+%             \frac{1}{\mho_{v}^{q}}
+%             =
+%             \int_{
+%                 \ell_{v-1}^{q}
+%             }^{
+%                 \ell_{v}^{q}
+%             }{
+%                 \text{ta}(l)
+%                 dl
+%             }
+%             =
+%             \tilde{w}_{q}^{v}
+%             \
+%             \forall
+%             \
+%             v \in \{1, \dots, p_q\},
+%             p_q \in \{1, \dots, w_q\}
+%             ,
+%         \end{gather}
+%         $\boldsymbol{\mho_q}$ and $\boldsymbol{w_q}$ are entirely determined by responsability bounds $\boldsymbol{\ell_q}$; or, conversely, $\boldsymbol{\mho_q}$ and $\boldsymbol{\ell_q}$ can be written in terms of $\boldsymbol{w_q}$, so that
+%         \begin{align}
+%             &
+%             \max_{
+%                 w_{q}^{v}
+%                 , \ell_{v-1}^{q}
+%                 , \ell_{v}^{q}
+%             }
+%             \left(
+%                 \frac{
+%                     \sum_{r=1}^{w_{q}^{v}}
+%                     [\tilde{T}_{q}^{r} \geq \ell_{v}^{q}]
+%                 }{
+%                     \int_{
+%                         \ell_{v-1}^{q}
+%                     }^{
+%                         \ell_{v}^{q}
+%                     }{
+%                         \text{ta}(l)
+%                         dl
+%                     }
+%                 }
+%             \right)
+%             , \text{s.t. restrictions.}
+%             \\
+%             &
+%             \iff
+%             \max_{
+%                 w_{q}^{v}
+%             }
+%             \left(
+%                 \left(
+%                     \frac{1}{\tilde{w}_{q}^{v}}
+%                 \right)
+%                 \times
+%                 \sum_{r=1}^{w_{q}^{v}}
+%                     [\tilde{T}_{q}^{r} \geq \ell_{v}^{q}]
+%             \right)
+%             , \text{s.t. restrictions.}
+%         \end{align}
 
-    Now, because minimum required productivity for the most qualified position in any labor market is necessarily the upper limit of the unitary responsability spectrum,
-    \begin{gather}
-        \underaccent{\bar}{
-            \tilde{T}
-        }_{q}^{p_q}
-        =
-        \ell_{q}^{p_q}
-        :=
-        1
-        \
-        \forall
-        \
-        p_q
-        \in
-        \{1,\dots,w_q\}
-        ,
-    \end{gather}
-    the last component of both vectors is already defined. So, we can write, with the MSA and the Proportional Employment Condition,
-    \begin{gather}
-        \int_{\ell_{v-1}^{q}}^{\ell_{v}^{q}}
-        \text{ta}(l)
-        dl
-        =
-        \tilde{w}_{q}^{v}
-        \in [0,1]
-        \land
-        w_{q}^{v} \geq 1
-        \
-        \forall
-        \
-        v \in \{1, \dots, p_q\}
-        ,
-        p_q \in \{1, \dots, w_q\}
-        \\
-        \implies
-        {w_{q}^{p_q}} ^ *
-        \times
-        1
-        \leq
-        w_{q}^{p_q}
-        \times
-        1
-        \iff
-        {\tilde{w}_{q}^{p_q}} ^ *
-        \leq
-        \tilde{w}_{q}^{p_q}
-        \\
-        \iff
-        \int_{
-            {\underaccent{\bar}{
-                \tilde{T}
-            }_{q}^{p_q - 1}} ^ *
-        }^{1}
-        \text{ta}(l)
-        dl
-        \leq
-        \int_{
-            \underaccent{\bar}{
-                \tilde{T}
-        }_{{q}^{p_q - 1}}
-        }^{1}
-        \text{ta}(l)
-        dl
-        ,
-    \end{gather}
-    which is maximally guaranteed when ${w_{q}^{p_q}} ^ *$ is at its minimum value by the MSA:
-    \begin{align}
-        &
-        \int_{
-            {\underaccent{\bar}{
-                \tilde{T}
-            }_{q}^{p_q - 1}} ^ *
-        }^{1}
-        \text{ta}(l)
-        dl
-        =
-        {w_{q}^{p_q}} ^ *
-        =
-        \frac{1}{w_q}
-        \\
-        &\therefore
-        \text{TA}(1)
-        -
-        \text{TA}\left(
-            {\underaccent{\bar}{
-                \tilde{T}
-            }_{q}^{p_q - 1}} ^ *
-        \right)
-        =
-        \frac{1}{w_q}
-        \\
-        &\therefore
-        {\underaccent{\bar}{
-                \tilde{T}
-            }_{q}^{p_q - 1}} ^ *
-        =
-        \text{TA}^{-1}\left(
-            \text{TA}(1)
-            -
-            \frac{1}{w_q}
-        \right)
-        =
-        \text{TA}^{-1}\left(
-            \frac{w_q - 1}{w_q}
-            +
-            \text{TA}(0)
-        \right)
-        \\
-        &\because
-        \text{TA}(1) - 
-        \text{TA}(0) =
-        1
-        .
-    \end{align}
+%         In addition,
+%         \begin{align}
+%             &
+%             \int_{
+%                 \ell_{p_q-1}^{q}
+%             }^{
+%                 \ell_{p_q}^{q}
+%             }{
+%                 \text{ta}(l)
+%                 dl
+%             }
+%             :=
+%             \int_{
+%                 \ell_{p_q-1}^{q}
+%             }^{1}{
+%                 \text{ta}(l)
+%                 dl
+%             }
+%             =
+%             \tilde{w}_{q}^{p_q}
+%             \\
+%             &\therefore
+%             \text{TA}
+%             \int_{
+%                 \ell_{p_q-1}^{q}
+%             }^{1}{
+%                 \text{ta}(l)
+%                 dl
+%             }
+%             =
+%             \tilde{w}_{q}^{p_q}
 
-    \begin{gather}
-        \min_{
-            p_q
-            , \boldsymbol{
-                \underaccent{\bar}{
-                    \tilde{T}
-                }_q
-            }
-            , \boldsymbol{w_q}
-        }
-        \sum_{v=1}^{p_q}
-        w_{q}^{v}
-        \underaccent{\bar}{
-            \tilde{T}
-        }_{q}^{v}
-    \end{gather}
-\end{lemma} 
+%         \end{align}
+%     \end{proof}
+%     % \begin{gather}
+%     %     \boldsymbol{w_{q}^{*}}
+%     %     \times
+%     %     \boldsymbol{
+%     %         \underaccent{\bar}{
+%     %             \tilde{T}
+%     %         }_{q}^{*}
+%     %     }
+%     %     \leq
+%     %     \boldsymbol{w_q}
+%     %     \times
+%     %     \boldsymbol{
+%     %         \underaccent{\bar}{
+%     %             \tilde{T}
+%     %         }_{q}
+%     %     }
+%     %     .
+%     % \end{gather}
 
-% endregion
+%     % [esl proof 2]
+%     % Now, because minimum required productivity for the most qualified position in any labor market is necessarily the upper limit of the unitary responsability spectrum,
+%     % \begin{gather}
+%     %     \underaccent{\bar}{
+%     %         \tilde{T}
+%     %     }_{q}^{p_q}
+%     %     =
+%     %     \ell_{q}^{p_q}
+%     %     :=
+%     %     1
+%     %     \
+%     %     \forall
+%     %     \
+%     %     p_q
+%     %     \in
+%     %     \{1,\dots,w_q\}
+%     %     ,
+%     % \end{gather}
+%     % the last component of both vectors is already defined. So, we can write, with the MSA and the Proportional Employment Condition,
+%     % \begin{gather}
+%     %     \int_{\ell_{v-1}^{q}}^{\ell_{v}^{q}}
+%     %     \text{ta}(l)
+%     %     dl
+%     %     =
+%     %     \tilde{w}_{q}^{v}
+%     %     \in [0,1]
+%     %     \land
+%     %     w_{q}^{v} \geq 1
+%     %     \
+%     %     \forall
+%     %     \
+%     %     v \in \{1, \dots, p_q\}
+%     %     ,
+%     %     p_q \in \{1, \dots, w_q\}
+%     %     \\
+%     %     \implies
+%     %     {w_{q}^{p_q}} ^ *
+%     %     \times
+%     %     1
+%     %     \leq
+%     %     w_{q}^{p_q}
+%     %     \times
+%     %     1
+%     %     \iff
+%     %     {\tilde{w}_{q}^{p_q}} ^ *
+%     %     \leq
+%     %     \tilde{w}_{q}^{p_q}
+%     %     \\
+%     %     \iff
+%     %     \int_{
+%     %         {\underaccent{\bar}{
+%     %             \tilde{T}
+%     %         }_{q}^{p_q - 1}} ^ *
+%     %     }^{1}
+%     %     \text{ta}(l)
+%     %     dl
+%     %     \leq
+%     %     \int_{
+%     %         \underaccent{\bar}{
+%     %             \tilde{T}
+%     %     }_{{q}^{p_q - 1}}
+%     %     }^{1}
+%     %     \text{ta}(l)
+%     %     dl
+%     %     ,
+%     % \end{gather}
+%     % which is maximally guaranteed when ${w_{q}^{p_q}} ^ *$ is at its minimum value by the MSA:
+%     % \begin{align}
+%     %     &
+%     %     \int_{
+%     %         {\underaccent{\bar}{
+%     %             \tilde{T}
+%     %         }_{q}^{p_q - 1}} ^ *
+%     %     }^{1}
+%     %     \text{ta}(l)
+%     %     dl
+%     %     =
+%     %     {w_{q}^{p_q}} ^ *
+%     %     =
+%     %     \frac{1}{w_q}
+%     %     \\
+%     %     &\therefore
+%     %     \text{TA}(1)
+%     %     -
+%     %     \text{TA}\left(
+%     %         {\underaccent{\bar}{
+%     %             \tilde{T}
+%     %         }_{q}^{p_q - 1}} ^ *
+%     %     \right)
+%     %     =
+%     %     \frac{1}{w_q}
+%     %     \\
+%     %     &\therefore
+%     %     {\underaccent{\bar}{
+%     %             \tilde{T}
+%     %         }_{q}^{p_q - 1}} ^ *
+%     %     =
+%     %     \text{TA}^{-1}\left(
+%     %         \text{TA}(1)
+%     %         -
+%     %         \frac{1}{w_q}
+%     %     \right)
+%     %     =
+%     %     \text{TA}^{-1}\left(
+%     %         \frac{w_q - 1}{w_q}
+%     %         +
+%     %         \text{TA}(0)
+%     %     \right)
+%     %     \\
+%     %     &\because
+%     %     \text{TA}(1) - 
+%     %     \text{TA}(0) =
+%     %     1
+%     %     .
+%     % \end{align}
 
+%     % \begin{gather}
+%     %     \min_{
+%     %         p_q
+%     %         , \boldsymbol{
+%     %             \underaccent{\bar}{
+%     %                 \tilde{T}
+%     %             }_q
+%     %         }
+%     %         , \boldsymbol{w_q}
+%     %     }
+%     %     \sum_{v=1}^{p_q}
+%     %     w_{q}^{v}
+%     %     \underaccent{\bar}{
+%     %         \tilde{T}
+%     %     }_{q}^{v}
+%     % \end{gather}
+% \end{lemma} 
+
+% % endregion
 
 % region: equivalent/efficient stratification lemma (esl) 
 \begin{lemma}[Efficient Stratification Lemma, ESL]
@@ -5369,6 +5634,7 @@ With this, we have shown maximally stratified production is the only efficient a
 % endregion
 % endregion
 
+% region: corollaries 
 \subsection{Corollaries}
 The General Employability Theorem has a few interesting collolaries, the first, and simplest, of which is a more compact, and intuitive, version of it.
 % region: simplified employability corollary 
@@ -5714,6 +5980,7 @@ In addition, the General Employability Theorem can be used to prove the General 
 % endregion
 
 And, with this, we may derive the General Competitiveness Corollary.
+
 % region: general competitiveness corollary (gcc)
 \begin{corollary}[General Competitiveness Corollary, GCC]
     \label{gcc}
