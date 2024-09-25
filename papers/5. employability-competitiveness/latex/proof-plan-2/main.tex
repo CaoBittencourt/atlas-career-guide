@@ -3863,14 +3863,14 @@ Having derived optimal responsability ranges for maximally stratified markets wi
     \end{gather}
     Furthermore, as employers stratify positions, their respective minimum productivity remains constant.
     \begin{gather}
-        \lambda_{v}^{q}(p_q)
+        \lambda_{v - 1}^{q}(p_q)
         =
-        \lambda_{v + 1}^{q}(p_q + 1)
+        \lambda_{v}^{q}(p_q + 1)
         \
         \forall
         \
-        r \in \{1, \dots, p_q\},
-        p_q \in \{1, \dots, w_q\}
+        v \in \{2, \dots, p_q\},
+        p_q \in \{1, \dots, w_q - 1\}
         .
     \end{gather}
     Therefore, new job subtypes are, so to speak, ``appended'' below the current ones, always decreasing the market's barrier of entry, such that
@@ -4157,7 +4157,7 @@ Having derived optimal responsability ranges for maximally stratified markets wi
             .
         \end{align}
 
-        The Lagrangian for this optimization problem is
+        The Lagrangian for this optimization problem is?
         \begin{gather}
             \mathcal{L}
             =
@@ -4172,12 +4172,19 @@ Having derived optimal responsability ranges for maximally stratified markets wi
             \right)
             -
             \xi
-            \times
             \left(
                 \sum_{v=1}^{p_q}
                 w_{q}^{v}
                 -
                 w_q
+            \right)
+            -
+            \boldsymbol{\zeta}
+            \times
+            \left(
+                \boldsymbol{w_q}
+                -
+                \boldsymbol{1}
             \right)
         \end{gather}
 
