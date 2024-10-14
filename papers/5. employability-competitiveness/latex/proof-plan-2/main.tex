@@ -62,7 +62,8 @@
 % region: abstract 
 \begin{abstract}
     % In this article, we propose a microeconomic framework to evaluate individuals' employability in efficiently organized labor markets as a function of their capacity on measureable professional attributes. We demonstrate employability coincides precisely with the normalized total duration of occupations' tasks their skill set allows them to accomplish, or what we term ``inverse operational output''. We further demonstrate labor market competitiveness can be defined as a complement of this metric, given by the percentage of an occupation's job posts subject to competition with incumbent workers (i.e. competitiveness is the employability of job seekers from other fields).
-    In this article, we propose a microeconomic framework to evaluate individuals' employability in efficiently organized labor markets as a function of their capacity on measureable professional attributes. We demonstrate this value coincides precisely with the normalized total duration of occupations' tasks their skill set allows them to accomplish, or what we term ``inverse operational output''. We further demonstrate labor market competitiveness can be defined as a complement of this employability metric, given by the percentage of an occupation's job posts subject to competition with incumbent workers (i.e. competitiveness is the employability of job seekers from other fields). [We, then, provide an example implementation of these methods with data from the United States Occupational Information Network  (O*NET) BLS etc.]
+    In this article, we propose a microeconomic framework to evaluate individuals' employability in efficiently organized labor markets as a function of their capacity on measureable professional attributes. We demonstrate this value coincides precisely with the normalized total duration of occupations' tasks their skill set allows them to accomplish, or what we term ``inverse operational output''. We further demonstrate labor market competitiveness can be defined as a complement of this employability metric, given by the percentage of an occupation's job posts subject to competition with incumbent workers (i.e. competitiveness is the employability of job seekers from other fields).
+    % [We, then, provide an example implementation of these methods with data from the United States Occupational Information Network  (O*NET) BLS etc.]
 \end{abstract}
 
 \begin{keyword}
@@ -3848,6 +3849,7 @@ Having derived optimal responsibility ranges for maximally stratified markets wi
 
 % region: minimum productivity lemma (mpl) 
 \begin{lemma}[Minimum Productivity Lemma, MPL]
+    \label{mpl}
     Maximally stratified markets have the lowest barrier of entry out of all valid productive arrangements.
     
     \begin{proof}
@@ -4093,92 +4095,12 @@ Having derived optimal responsibility ranges for maximally stratified markets wi
             \right)
         \end{gather}
         for, as the number of job subtypes goes to infinity, the gap between a task's difficulty and the upper and lower bounds of the responsibility spectrum in which it is cointained disappears:
-        % \begin{gather}
-        %     \sum_{v=1}^{p_q}
-        %     \int_{\ell_{v-1}^{q}}^{\ell_{v}^{q}}
-        %     \ta(l)dl
-        %     :=
-        %     1,
-        %     \ell_{v}^{q} \in [0,1]
-        %     \
-        %     \forall
-        %     \
-        %     v \in \{1, \dots, p_q\}
-        %     \\
-        %     \implies
-        %     \lim_{p_q \rightarrow \infty}{
-        %         \sum_{v=1}^{p_q}
-        %         \int_{\ell_{v-1}^{q}}^{\ell_{v}^{q}}
-        %         \ta(l)dl
-        %     } 
-        %     =
-        %     1
-        %     \iff
-        %     \lim_{p_q \rightarrow \infty}{
-        %         \ell_{v}^{q} - \ell_{v-1}^{q}
-        %     }
-        %     =
-        %     0
-        %     \\
-        %     \therefore
-        %     \lim_{p_q \rightarrow}
-        %     \ell_{1}^{q}
-        %     = 0
-        %     \because
-        %     \lim_{p_q \rightarrow}
-        %     \ell_{1}^{q} - 
-        %     \ell_{0}^{q}
-        %     = 0
-        %     \land
-        %     \ell_{0}^{q}
-        %     := 0
-        % \end{gather}
-        % \begin{gather}
-        %     \lim_{p_q \rightarrow \infty}{
-        %         \ell_{v}^{q} - \ell_{v-1}^{q}
-        %     }
-        %     =
-        %     0
-        %     \implies
-        %     \lim_{p_q \rightarrow \infty}{
-        %         \ell_{r}^{q} - \ell_{r-1}^{q}
-        %     }
-        %     =
-        %     \lim_{p_q \rightarrow \infty}{
-        %         \ell_{r}^{q} - l
-        %     }
-        %     =
-        %     0
-        %     \\
-        %     \land \
-        %     \lim_{p_q \rightarrow \infty}{
-        %         \ell_{1}^{q} - \ell_{0}^{q}
-        %     }
-        %     =
-        %     0
-        %     \implies
-        %     \lim_{p_q \rightarrow \infty}{
-        %         \ell_{1}^{q}
-        %     }
-        %     =
-        %     0
-        %     \because
-        %     \ell_{0}^{q}
-        %     := 0
-        %     \therefore
-        %     \lim_{p_q \rightarrow \infty}{
-        %         \underaccent{\bar}{\tilde{T}}(l, p_q)
-        %     }
-        %     =
-        %     l
-        %     ;
-        % \end{gather}
         \begin{align}
             &
             \sum_{v=1}^{p_q}
             \int_{\ell_{v-1}^{q}}^{\ell_{v}^{q}}
             \ta(l)dl
-            :=
+            =
             \int_{0}^{1}
             \ta(l)dl
             :=
@@ -4188,9 +4110,12 @@ Having derived optimal responsibility ranges for maximally stratified markets wi
             \forall
             \
             v \in \{1, \dots, p_q\}
+            \land
+            \ell_{0}^{q}
+            := 0
             \\
             &
-            \implies
+            \therefore
             \lim_{p_q \rightarrow \infty}{
                 \sum_{v=1}^{p_q}
                 \int_{\ell_{v-1}^{q}}^{\ell_{v}^{q}}
@@ -4206,7 +4131,7 @@ Having derived optimal responsibility ranges for maximally stratified markets wi
             0
             \\
             &
-            \therefore
+            \implies
             \lim_{p_q \rightarrow \infty}
             \ell_{1}^{q}
             = 0
@@ -4214,13 +4139,14 @@ Having derived optimal responsibility ranges for maximally stratified markets wi
             \lim_{p_q \rightarrow \infty}
             \ell_{1}^{q} - 
             \ell_{0}^{q}
+            =
+            \lim_{p_q \rightarrow \infty}
+            \ell_{1}^{q} - 
+            0
             = 0
-            \land
-            \ell_{0}^{q}
-            := 0
             \\
             &
-            \implies
+            \therefore
             \lim_{p_q \rightarrow \infty}{
                 \ell_{r}^{q} - \ell_{r-1}^{q}
             }
@@ -4242,6 +4168,13 @@ Having derived optimal responsibility ranges for maximally stratified markets wi
             }
             =
             l
+            \
+            \forall
+            \
+            l \in
+            [\ell_{r-1}^{q}, \ell_{r}^{q}],
+            \ell_{r-1}^{q}, \ell_{r}^{q}
+            \in [0,1]
             ;
         \end{align}
         whence, again, ``jobs'' themselves converge to tasks (see ISL).
@@ -4251,32 +4184,21 @@ Having derived optimal responsibility ranges for maximally stratified markets wi
             1
             =
             \underaccent{\bar}{\tilde{T}}(l, 1)
-            >
+            \geq
             \underaccent{\bar}{\tilde{T}}(l, 2)
-            >
+            \geq
             \dots
-            >
+            \geq
             \underaccent{\bar}{\tilde{T}}(l, w_q)
-            >
+            \geq
             \dots
-            >
+            \geq
             \underaccent{\bar}{\tilde{T}}(l)
             =
             l
             ,
         \end{gather}
-        for any $l \in [0,1)$ and
-        \begin{gather}
-            \underaccent{\bar}{\tilde{T}}(l, p_q)
-            =
-            1
-            \
-            \forall
-            \
-            p_q \in \{1,2,3,\dots\}
-            ,
-        \end{gather}
-        when $l = 1$.
+        for each and every $l \in [0,1]$. 
 
         But, because the Maximum Stratification Axiom imposes $p_q \in \{1,\dots, w_q \}$,
         \begin{gather}
@@ -4288,6 +4210,11 @@ Having derived optimal responsibility ranges for maximally stratified markets wi
             \forall
             \
             l \in [0,1]
+            \therefore
+            \arg\min_{p_q}{
+                \underaccent{\bar}{\tilde{T}}(l, p_q)
+            }
+            = w_q
             .
         \end{gather}
 
@@ -4306,27 +4233,9 @@ Now that we have proven maximum labor stratification with unitary employment is 
     $
     unique positions;
     \begin{gather}
-    \boldsymbol{\ell_q} = 
-    \boldsymbol{\ell_{q}^{*}}
-    :=
-    (
-        \ell_{0}^{*}
-        ,
-        \dots
-        ,
-        \ell_{p}^{*}
-    )
-    :=
-    (
-        0
-        ,
-        \dots
-        ,
-        1
-    )
-    ,
-    \\
-    \ell_{v}^{*}
+    \ell_{v}^{q}
+    =
+    \ell_{v}^{q*}
     =
     \invTA\left(
         \frac{v}{w_q}
@@ -4348,10 +4257,10 @@ Now that we have proven maximum labor stratification with unitary employment is 
     .
     $
     
-    \begin{proof}[Proof 1]
+    \begin{proof}
         In the MPL above, we have shown maximum stratification minimizes productivity requirements and, thus, the chance workers may not be sufficiently qualified for their responsabilities (i.e. it is the safest production strategy). So, 
         \begin{gather}
-            p := w_q
+            p = w_q
         \end{gather}
         is the optimal number of positions in a labor market where employers can split workers' activities without gain or loss to production (WOCA), while attaining the same $w_q$ maximum operational output as all economic strategies (MOOL).
         % is the optimal number of positions in a labor market where employers can split workers' activities without gain or loss to production (WOCA), yielding the same $w_q$ maximum operational output as all economic strategies (MOOL).
@@ -4481,223 +4390,6 @@ Now that we have proven maximum labor stratification with unitary employment is 
         .
         \end{align}
     \end{proof}
-    
-    \begin{proof}[Proof 2]
-        Though simple in itself, it is easier to understand this proof iteratively. Hence, as before, we can define the number of job subtypes to be
-        \begin{gather}
-            p := w_q
-            ,
-        \end{gather}
-        as this is the upper limit for labor stratification (MSA), which maximally safeguards production (MPL, MOOL); then, proceed by setting
-        \begin{gather}
-        w_{q}^{p} 
-        := 
-        w_{q}^{w_q} 
-        = 
-        1
-        ,
-        \end{gather}
-        as MSA requires $w_{q}^{v} \geq 1 \ \forall \ v \in \{1, \dots, p\}$. Thus, by the Proportional Employment Condition, 
-        \begin{gather}
-        \int_{
-            \ell_{p-1}
-        }^{
-            \ell_{p}
-        }{
-            \ta(l)dl
-        }
-        =
-        \int_{
-            \ell_{w_q-1}
-        }^{
-            \ell_{w_q}
-        }{
-            \ta(l)dl
-        }
-        :=
-        \int_{
-            \ell_{w_q-1}
-        }^{1}{
-            \ta(l)dl
-        }
-        =
-        \frac{1}{w_q}
-        ,
-        \end{gather}
-        we estimate
-        \begin{align}
-            \ell_{p - 1}
-            &=
-            \invTA\left(
-                \TA(1)
-                -
-                \frac{1}{w_q}
-                \right)
-            \\
-            &=
-            \invTA\left(
-                1
-                +
-                \TA(0)
-                -
-                \frac{1}{w_q}
-            \right)
-            \\
-            &=
-            \invTA\left(
-                \frac{w_q}{w_q}
-                -
-                \frac{1}{w_q}
-                +
-                \TA(0)
-            \right)
-            \\
-            &=
-            \invTA\left(
-                \frac{w_q - 1}{w_q}
-                +
-                \TA(0)
-            \right)
-            \\
-            &=
-            \ell_{w_q - 1}^{*}
-            \\
-            &\because
-            \TA(1)
-            -
-            \TA(0)
-            =
-            \int_{0}^{1}{
-                \ta(l)
-                dl
-            }
-            =
-            1
-        \end{align}
-        by minimizing the amount of perfectly qualified workers for efficient production. And, similarly, for the $
-        l \in [
-            \ell_{p - 2},
-            \ell_{p - 1}
-        ]
-        $ responsibility spectrum, if $w_{p-1} \geq 1$ is
-        \begin{gather}
-        w_{p-1} := w_{w_q - 1} = 1
-        ,
-        \end{gather}
-        we minimize productivity requirements:
-        \begin{align}
-            &
-            \int_{
-                \ell_{p-2}
-            }^{
-                \ell_{p-1}
-            }{
-                \ta(l)dl
-            }
-            =
-            \int_{
-                \ell_{w_q-2}
-            }^{
-                \ell_{w_q-1}
-            }{
-                \ta(l)dl
-            }
-            =
-            \frac{1}{w_q}
-            \\
-            &
-            \implies
-            \ell_{p-2}
-            =
-            \ell_{w_q-2}^{*}
-            =
-            \invTA\left(
-                \frac{w_q - 2}{w_q}
-                +
-                \TA(0)
-            \right)
-            .
-        \end{align}
-        Again, $\ell_{p - 3}$ is derived by minimizing the number of highly productive workers:
-        \begin{align}
-            &
-            \int_{
-                \ell_{p-3}
-            }^{
-                \ell_{p-2}
-            }{
-                \ta(l)dl
-            }
-            =
-            \int_{
-                \ell_{w_q-3}
-            }^{
-                \ell_{w_q-2}
-            }{
-                \ta(l)dl
-            }
-            =
-            \frac{1}{w_q}
-            \\
-            &
-            \implies
-            \ell_{p-3}
-            =
-            \ell_{w_q-3}^{*}
-            =
-            \invTA\left(
-                \frac{w_q - 3}{w_q}
-                +
-                \TA(0)
-            \right)
-            ;
-        \end{align}
-        and, so on and so forth, always minimizing productivity requirements with $w_{q}^{v} := 1 \ \forall \ v \in \{1, \dots, w_q\}$. Notice the pattern here is the same as in the Optimal Stratification Lemma. Therefore, responsibility bounds, and also employment levels, are the same as well. Hence,
-        \begin{gather}
-        p = w_q,
-        \\
-        \boldsymbol{\ell_q} = 
-        \boldsymbol{\ell_{q}^{*}}
-        :=
-        (
-            \ell_{0}^{*}
-            ,
-            \dots
-            ,
-            \ell_{p}^{*}
-        )
-        :=
-        (
-            0
-            ,
-            \dots
-            ,
-            1
-        )
-        ,
-        \\
-        \ell_{v}^{*}
-        =
-        \invTA\left(
-            \frac{v}{w_q}
-            +
-            \TA(0)
-        \right)
-        \
-        \forall
-        \
-        v \in 
-        \left\{
-            1, \dots, w_q
-        \right\}
-        ,
-        \\
-        \boldsymbol{w_q} =
-        \boldsymbol{1}
-        .
-        \end{gather}    
-    \end{proof}
-    % [explain intution].
 \end{lemma}
 % endregion
 
@@ -5689,13 +5381,13 @@ And, with this, we may derive the General Competitiveness Corollary.
 % endregion
 % endregion
 
-% region: implementation 
-\section{Example Implementation}
-\subsection{Functional Specifications}
-\subsection{Occupational Information Network Data}
-\subsection{Results}
+% % region: implementation 
+% \section{Example Implementation}
+% \subsection{Functional Specifications}
+% \subsection{Occupational Information Network Data}
+% \subsection{Results}
 
-% endregion
+% % endregion
 
 % region: discussion 
 \section{Discussion}
@@ -5716,17 +5408,17 @@ And, with this, we may derive the General Competitiveness Corollary.
 
 % endregion
 
-% region: appendix 
-\newpage
-\section*{Appendix A -- Basic Definitions}
-\addcontentsline{toc}{section}{Appendix A -- Basic Definitions}
+% % region: appendix 
+% \newpage
+% \section*{Appendix A -- Basic Definitions}
+% \addcontentsline{toc}{section}{Appendix A -- Basic Definitions}
 
-\section*{Appendix B -- Employability and Competitiveness Statistics}
-\addcontentsline{toc}{section}{Appendix B -- Employability and Competitiveness Statistics}
+% \section*{Appendix B -- Employability and Competitiveness Statistics}
+% \addcontentsline{toc}{section}{Appendix B -- Employability and Competitiveness Statistics}
 
-\section*{Appendix C -- Proof Layout}
-\addcontentsline{toc}{section}{Appendix C -- Proof Layout}
+% \section*{Appendix C -- Proof Layout}
+% \addcontentsline{toc}{section}{Appendix C -- Proof Layout}
 
-% endregion
+% % endregion
 
 \end{document}
