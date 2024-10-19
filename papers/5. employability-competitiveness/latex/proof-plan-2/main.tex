@@ -98,300 +98,44 @@
 % region: presuppositions 
 \newpage
 \section{The Issue of Occupational Complexity}
-% region: attribute definition 1 
-\begin{definition}[Skill]
-    \label{skl_tasks}
-    % statement
-    A professional attribute, competency, or skill, of a person $k$ can be conceptualized as a cummulative sum of successes on
-    binary outcome variables representing tasks of progressive difficulty which require only that skill:
+% region: simple task definition 
+\label{def_task}
+\begin{definition}[Simple Task]
+    To begin our investigation, we define $T_i(l)$ as a task of difficulty level $l \in [0,1]$ which requires only competence in one professional attribute $i \in \{1, \dots, m\}$ and
     \begin{gather}
-        a_{i}^{k} = \sum_{l=0}^{l_i}
-        T_{i_{l}}^{k}
-        ,
-    \end{gather}
-    where
-    \begin{gather}
-        T_{i_{l}}^{k} =
+        T(l,\ell_{i}^{k})
+        :=
+        [\ell_{i}^{k} \geq l]
+        :=
         \begin{cases}
-            1, \ \text{if $k$ succedes in a task $T_{i}^{l}$ of difficulty level $l$;} \\
-            0, \ \text{otherwise.}
+            1, \text{ if } \ell_{i}^{k} \geq l,
+            \\
+            0, \text{ if } \ell_{i}^{k} < l,
         \end{cases}
     \end{gather}
-    
-    Or, more rigorously,
-    \begin{gather}
-        a_{i}^{k} = \sum_{l=0}^{l_i}
-        T(l, l_{i}^{k})
-        ,
-    \end{gather}
-    where
-    \begin{gather}
-        T(l, l_{i}^{k}) =
-        T_{i_{l}}^{k} =
-        [l \leq l_{i}^{k}] =
-        \begin{cases}
-            1, \ l \leq l_{i}^{k}; \\
-            % 0, \ \text{otherwise.}
-            0, \ l > l_{i}^{k}.
-        \end{cases}
-    \end{gather}
-    and $l_{i}^{k} \in [0, l_i]$ is the maximum difficulty level on which $k$ still succeedes. Thus, we can define a person $k$'s skill level in an attribute $i$ as the sum
-    of their successful trials on a $T_{i} = \{T_{i}^{0}, \dots, T_{i}^{l_i}\}$ set of tasks of increasing
-    difficulty.
-
-    Furthermore, as we assume scales are truncated (i.e. there is a maximum
-    difficulty level $l_i$, and a trivial difficulty level, which has to be zero),
-    we can also interpret $a_{i}^{k}$ as the \textit{portion} of tasks one is able
-    to accomplish out of all difficulty levels for that skill. By normalizing $l_i$
-    to $100$, for example, we have:
-    
-        $a_{i}^{k} = 0 \iff k$ cannot perform even the most basic of attribute $i$'s tasks;
-        $a_{i}^{k} = 10 \iff k$ can perform only the bottom 10\% of attribute $i$'s tasks, but nothing more;
-        $a_{i}^{k} = 50 \iff k$ can perform the easiest half of attribute $i$'s tasks, but not the most difficult half;
-        $a_{i}^{k} = 100 \iff k$ can perform all of attribute $i$'s tasks.
-    
-
-    Finally, we can define $a_{i}^{k}$ for a continuum of task difficulty $l \in [0,1]$:
-    \begin{gather}
-        a_{i}^{k} =
-        \int_{0}^{1}{
-        T(l, l_{i}^{k})
-        dl
-        }
-        ,
-    \end{gather}
-    where $T(l, l_{i}^{k})$ is defined as before.
+    as its binary indicator of success, given a person $k$'s capacity to execute attribute $i$-related tasks, so that $T(l,\ell_{i}^{k})$ yields one if $k$ is sufficiently qualified at difficulty level $l$; or zero, otherwise.
 \end{definition}
 % endregion
-
-% region: attribute definition 2 
-\begin{definition}[Skill]
-\label{skl_difficulty}
-% statement
-    Alternatively, we can think of a person $k$'s professional attribute, competency, or skill, as the difficulty of the most difficult task they can accomplish, normalized by the difficulty of the most objectively difficult task of that particular skill:
+% region: scale uniformity  
+\label{unif}
+\begin{axiom}[Scale Uniformity Axiom, SUA]
+    Let us also assume
     \begin{gather}
-        a_{i}^{k} =
-        \frac{
-            l_{i}^{k}
-        }{
-            l_{i}
-        }
+        l \sim U(0,1)
         ,
     \end{gather}
-    which we normalize by setting $l_{i} = 1$, so that
-    \begin{gather}
-        a_{i}^{k} =
-        \frac{
-            l_{i}^{k}
-        }{
-            1
-        }
-        =
-        l_{i}^{k}
-        ,
-    \end{gather}
-    and $l_{i}^{k} \in [0,1]$. With this normalization, example interpretations of $a_{i}^{k}$ are:
+    so that difficulty levels are equally represented throughout the scale.
     
-        $a_{i}^{k} = 0 \iff k$ cannot perform even the most basic of attribute $i$'s tasks;
-        $a_{i}^{k} = 0.10 \iff k$ can only perform tasks of up to 10\% the difficulty of attribute $i$'s most difficult task, but nothing more;
-        $a_{i}^{k} = 0.50 \iff k$ can perform tasks of up to half the difficulty of attribute $i$'s most difficult task, but nothing more;
-        $a_{i}^{k} = 1 \iff k$ can perform all of attribute $i$'s tasks.
+    Note, however, scale uniformity is not so much an axiom, but more of a convenient notation. In fact, if task difficulty is not uniformly distributed for a particular attribute, then, given such uniform scales, its underlying distribution will affect assessed productivity statistics (see Definition \ref{def_prod}) and, therefore, the workforce's talent overall.
     
-
-    This is, perhaps, the most natural conceptual model for understanding
-    competencies, as, generally, it is more intuitive to think of skill as the
-    maximum of one's capacity, rather than the portion of tasks one could
-    ly accomplish.
-
-    But, again, [because we assume scales to be truncated], this latter interpretation
-    actually implies and is implied by the former. For if a task is of the same
-    difficulty as another, then they are just as difficult in relation to that
-    skill's most difficult task (i.e. they require the same percentage of the
-    scale's upper limit to be performed), and, likewise, are also included in the
-    same difficulty ``bracket" (i.e. they are equivalent to the same skill test in
-    the aggregate binary outcome interpretation), and, therefore, pressupose the
-    same $a_{i}^{k}$ skill level.
-
-    Of course, this equivalence is quite trivial, given that
-    \begin{gather}
-        \int_{0}^{1}{
-        T(l, l_{i}^{k})
-        dl
-        }
-        =
-        1 \times \int_{0}^{l_{i}^{k}}{dl} +
-        0 \times \int_{l_{i}^{k}}^{1}{dl}
-        =
-        l_{i}^{k} - 0
-        =
-        \frac{l_{i}^{k}}{1}
-        =
-        a_{i}^{k}
-        .
-    \end{gather}
-
-    This means the percentage of a skill's tasks one can accomplish is also
-    the difficulty of the most difficult task one can accomplish relative to that
-    skill's most difficult task.
-
-    So, however one decides to interpret skill levels, the conclusion remains the
-    same: to be skilled in an attribute is to be able to perform the activities
-    associated with that attribute. Put simply, the capacity to act follows virtue,
-    for virtue is, itself, the capacity to act.
-\end{definition}
+    That is, if an attribute's tasks concentrate on the lower end of $l \in [0,1]$ scale, then most people will be fairly competent in it; and vice-versa if tasks concentrate on the higher end of the difficulty scale.
+    
+    But, mathematically, it is far simpler to work with uniform scales and shift difficulty levels' probabilistic complexity, if any, to the \textit{talent} (i.e. productivity) distribution; hence, we pressupose scale uniformity.
+\end{axiom}
 % endregion
 
 % region: skill sufficiency lemma (ssl) 
 % skills are sufficient to accomplish tasks
-P.S.: SSL
-\begin{align}
-    a_{i}^{k} := \frac{l_{i}^{k}}{l_{i}} \in [0,1]
-    \\
-    \tilde{T}_{i}^{k} 
-    &= 
-    \int_{0}^{l_i}{
-        T(l,l_{i}^{k})
-        dl
-    }
-    \left(
-        \int_{0}^{l_i}{
-            T(l,l_{i})
-            dl
-        }
-    \right) ^ {-1}
-    \\
-    &= 
-    \left(
-        \int_{0}^{l_{i}^{k}}{
-            1
-            \times
-            dl
-        }
-        +
-        \int_{l_{i}^{k}}^{l_i}{
-            0
-            \times
-            dl
-        }
-    \right)
-    \times
-    \left(
-        \int_{0}^{l_i}{
-            1
-            \times
-            dl
-        }
-    \right) ^ {-1}
-    \\
-    &= 
-    \frac{l_{i}^{k} - 0}{l_{i} - 0}
-    \\
-    &= 
-    \frac{l_{i}^{k}}{l_{i}}
-    \\
-    &\therefore
-    a_{i}^{k} = \tilde{T}_{i}^{k}
-\end{align}
-
-P.S.: SCL
-\begin{align}
-    \boldsymbol{a_k}
-    &:= (a_{1}^{k}, \dots, a_{m}^{k})
-    ,
-    \boldsymbol{a_q}
-    := (a_{1}^{q}, \dots, a_{m}^{q})
-    \in [0,1]^{m}
-    \
-    \forall
-    \
-    k,q \in \{1, \dots, n\}
-    \\
-    l_{k}^{q}
-    &\leq 
-    l_{q}^{q}
-    \
-    \forall
-    \
-    k,q \in \{1, \dots, n\}
-    \\
-    \tilde{T}_{k}^{q}
-    &= 
-    \int_{0}^{l_{q}^{q}}{
-        T(l,l_{k}^{q})
-        dl
-    }
-    \left(
-        \int_{0}^{l_{q}^{q}}{
-            T(l,l_{q}^{q})
-            dl
-        }
-    \right) ^ {-1}
-    \\
-    &= 
-    \left(
-        \int_{0}^{l_{k}^{q}}{
-            1
-            \times
-            dl
-        }
-        +
-        \int_{l_{k}^{q}}^{l_{q}^{q}}{
-            0
-            \times
-            dl
-        }
-    \right)
-    \times
-    \left(
-        \int_{0}^{l_{q}^{q}}{
-            1
-            \times
-            dl
-        }
-    \right) ^ {-1}
-    \\
-    &= 
-    \frac{l_{k}^{q} - 0}{l_{q}^{q} - 0}
-    \\
-    &= 
-    \frac{l_{k}^{q}}{l_{q}^{q}}
-    \in [0,1]
-    \\
-    &\because
-    \neg
-    \
-    l_{k}^{q}
-    >
-    l_{q}^{q}
-    \\
-    &\because
-    l_{k}^{q} = 
-    f(
-        \boldsymbol{l_k},
-        \boldsymbol{l_q}
-    ) 
-    =
-    f(
-        \boldsymbol{a_k},
-        \boldsymbol{a_q}
-    )?
-    \in [0,1]
-    \
-    \forall
-    \
-    k,q \in \{1, \dots, n\}
-    \\
-    &\therefore
-    \tilde{T}_{k}^{q}
-    =
-    f(
-        \boldsymbol{a_k},
-        \boldsymbol{a_q}
-    )
-\end{align}
-
-% preamble
-Now, even though these results are basically tautological, they are still important to guide our intuition. In fact, our first insight towards the Employability Theorem, namely the Skill Sufficiency Lemma (SSL), follows directly from the definitions above.
 % statement
 \begin{lemma}[Skill Sufficiency Lemma, SSL]
     \label{ssl}
@@ -417,7 +161,7 @@ Now, even though these results are basically tautological, they are still import
 
 % proof
 \begin{proof}
-    By Definitions \ref{skl_tasks} and (productivity definition),
+    By Definitions \ref{def_task} and (productivity definition),
     \begin{gather}
         \tilde{T}_{i}^{k}
         :=
@@ -464,7 +208,11 @@ Now, even though these results are basically tautological, they are still import
         .
     \end{gather}
 
-    Therefore, because competencies are atomic and their difficulty, uniformly distributed, the percentage of tasks one can accomplish coincides precisely with their skill level. That is, to be skilled in an attribute is, really, the same thing as being able to perform its activities. Put simply, then: the capacity to act follows virtue, for virtue is, itself, the capacity to act.
+    Therefore, because competencies are atomic and their difficulty, uniformly distributed, the percentage of tasks one can accomplish coincides precisely with their skill level. That is, to be skilled in an attribute is, really, the same thing as being able to perform its activities.
+    
+    Indeed, we can even conceptualize a person $k$'s $a_{i}^{k}$ skill not only as the level of the hardest task they accomplish of attribute $i$, but also as a sum of their successful trials on a $T_i(l) \ \forall \ l \in [0,1]$ series of infinitely small tasks with increasing difficulty.
+    
+    Put simply, then: the capacity to act follows virtue, for virtue is, itself, the capacity to act.
 \end{proof}
 
 % endregion
