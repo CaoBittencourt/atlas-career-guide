@@ -128,10 +128,30 @@
     
     Note, however, scale uniformity is not so much an axiom, but more of a convenient notation. In fact, if task difficulty is not uniformly distributed for a particular attribute, then, given such uniform scales, its underlying distribution will affect assessed productivity statistics (see Definition \ref{def_prod}) and, therefore, the workforce's talent overall.
     
-    That is, if an attribute's tasks concentrate on the lower end of $l \in [0,1]$ scale, then most people will be fairly competent in it; and vice-versa if tasks concentrate on the higher end of the difficulty scale.
+    That is, if an attribute's tasks concentrate on the lower end of the $l \in [0,1]$ scale, then most people will be fairly competent in it; and vice-versa if tasks concentrate on the higher end of the difficulty scale.
     
     But, mathematically, it is far simpler to work with uniform scales and shift difficulty levels' probabilistic complexity, if any, to the \textit{talent} (i.e. productivity) distribution; hence, we pressupose scale uniformity.
 \end{axiom}
+% endregion
+And, with this, we can define productivity in a more convenient way.
+% region: productivity distribution 
+\label{def_prod}
+\begin{definition}[Productivity]
+    A person $k$'s productivity in any set of tasks is
+    \begin{gather}
+        \tilde{T}_{i}^{k}
+        :=
+        \int_{0}^{1}
+        T(l, \ell_{i}^{k})
+        % T(l, \ell_{k}^{i})
+        dl
+        \in 
+        [0,1]
+        ,
+    \end{gather}
+    or the percentage of tasks for which they are sufficiently qualified.
+\end{definition}
+
 % endregion
 
 % region: skill sufficiency lemma (ssl) 
