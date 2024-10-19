@@ -99,8 +99,8 @@
 \newpage
 \section{The Issue of Occupational Complexity}
 % region: simple task definition 
-\label{def_task}
 \begin{definition}[Simple Task]
+    \label{def_task}
     To begin our investigation, we define $T_i(l)$ as a task of difficulty level $l \in [0,1]$ which requires only competence in one professional attribute $i \in \{1, \dots, m\}$ and
     \begin{gather}
         T(l,\ell_{i}^{k})
@@ -117,11 +117,11 @@
 \end{definition}
 % endregion
 % region: scale uniformity  
-\label{unif}
 \begin{axiom}[Scale Uniformity Axiom, SUA]
+    \label{sua}
     Let us also assume
     \begin{gather}
-        l \sim U(0,1)
+        L \sim U(0,1)
         ,
     \end{gather}
     so that difficulty levels are equally represented throughout the scale.
@@ -133,27 +133,158 @@
     But, mathematically, it is far simpler to work with uniform scales and shift difficulty levels' probabilistic complexity, if any, to the \textit{talent} (i.e. productivity) distribution; hence, we pressupose scale uniformity.
 \end{axiom}
 % endregion
-And, with this, we can define productivity in a more convenient way.
+With this, we can define productivity in a more convenient way.
 % region: productivity distribution 
-\label{def_prod}
 \begin{definition}[Productivity]
-    A person $k$'s productivity in any set of tasks is
+    \label{def_prod}
+    A person $k$'s productivity in any set of tasks is the percentage of tasks for which they are sufficiently qualified,
     \begin{gather}
         \tilde{T}_{i}^{k}
         :=
         \int_{0}^{1}
+        \text{pdf}(l)
+        \times
         T(l, \ell_{i}^{k})
-        % T(l, \ell_{k}^{i})
         dl
         \in 
         [0,1]
         ,
     \end{gather}
-    or the percentage of tasks for which they are sufficiently qualified.
+    which we can simplify with scale uniformity
+    \begin{align}
+        &
+        \because
+        L \sim U(0,1)
+        \implies
+        \text{pdf}(l)
+        =
+        \frac{1}{1-0}
+        =
+        1
+        \
+        \forall
+        \
+        l \in [0,1]
+        \\
+        &
+        \therefore
+        \tilde{T}_{i}^{k}
+        =
+        \int_{0}^{1}
+        T(l, \ell_{i}^{k})
+        dl
+        .
+    \end{align}
 \end{definition}
 
 % endregion
 
+We proceed, now, to frame the concepts of skills and skill sets (Bittencourt, 2024) in terms of tasks.
+% region: attribute reducibility observation (aro) 
+% attributes can be reduced to their tasks
+\begin{observation}[Attribute Reducibility]
+    \label{aro}
+    % statement
+    A professional attribute, or skill, is reducible to its activities, for it is only a quantitatively meaningful category insofar as it describes individuals' success in accomplishing tasks.
+\end{observation}
+% endregion
+
+% region: attribute transitivity observation (ato) 
+% attributes can be reduced to their tasks
+\begin{observation}[Attribute Transitivity]
+    \label{ato}
+    % statement
+    Furthermore,
+    \begin{gather}
+        \ell_{i}^{k}
+        \geq
+        \ell_{i}^{q}
+        \in
+        [0,1]
+        \implies 
+        T(l,\ell_{i}^{k}) = 1
+        \
+        \forall
+        \
+        l
+        \leq
+        \ell_{i}^{q}
+        \because
+        T(l,\ell_{i}^{k})
+        :=
+        [\ell_{i}^{k} \geq l]
+        ;
+    \end{gather}
+    that is, capacity to execute tasks has the transitive property. So, it would make no sense to measure one's professional attributes with anything other than the maximum difficulty of tasks one can accomplish.
+\end{observation}
+% endregion
+
+% region: skill definition 
+\begin{definition}[Skill]
+    \label{def_skill}
+    Hence, an individual $k$'s skill, or competence, in some professional attribute $i \in \{1, \dots, m\}$ is given by the difficulty of its most difficult task they can accomplish,
+    \begin{gather}
+        a_{i}^{k}
+        :=
+        \ell_{i}^{k}
+        \in
+        [0,1]
+        ,
+    \end{gather}
+    while their skill set is a vector of $m$ attributes,
+    \begin{gather}
+        \boldsymbol{a_k}
+        :=
+        (
+            a_{1}^{k}
+            ,
+            \dots
+            ,
+            a_{m}^{k}
+        )
+        :=
+        (
+            \ell_{1}^{k}
+            ,
+            \dots
+            ,
+            \ell_{m}^{k}
+        )
+        \in
+        [0,1] ^ m
+        .
+    \end{gather}
+\end{definition}
+% endregion
+
+Notice, though, we have above implicitly assumed each attribute measures only one thing. Let us, then, make this assumption explicit.
+% region: attribute atomicity axiom (aaa)
+\begin{axiom}[Attribute Atomicity Axiom, AAA]
+    \label{aaa}
+    % statement
+    Professional attributes and their tasks are well-defined. Thus, a skill is an ``atomic'' set of tasks, which may or may not be correlated with other skills, but which, in practice, cannot be further reduced to any elementary ``particle''.
+    
+    Indeed, if skills were not well-defined in this sense, each and every one of them would entail a regress into microbiological, chemical and, even quite literally \textit{atomic}, phenomena so as to be properly defined by indivisible, bedrock ``subskills''. For instance, when we say an individual is good at ``deductive reasoning'' (see O*NET, 2024), we could also describe their intelligence in terms of underlying neurological structures in the brain and, similarly, in the cellular level, within the neurons themselves, etc. But this would not help our analysis.
+
+    We assume, then, attributes are ``atomic'' or, if not so, that all their ``subattributes'' are perfectly correlated to the main, ``high-level'', abstraction which we call a ``skill''. Or, mathematically,
+    \begin{gather}
+        a_{\iota_i}^{k}
+        =
+        a_{i}^{k}
+        \
+        \forall
+        \
+        \iota_i
+        \in 
+        \{1, 2, 3, \dots\},
+        i \in \{1, \dots, m\}
+        ,
+    \end{gather}
+    where subattributes' difficulty scales follow the uniform distribution (SUA).
+\end{axiom}
+% endregion
+
+Given the above, we have our first stepping stone towards a general theorem of employability and competitiveness in efficient labor markets. It is a rather tautological lemma, but shall guide our intuition to more complicated results.
 % region: skill sufficiency lemma (ssl) 
 % skills are sufficient to accomplish tasks
 % statement
@@ -181,7 +312,7 @@ And, with this, we can define productivity in a more convenient way.
 
 % proof
 \begin{proof}
-    By Definitions \ref{def_task} and (productivity definition),
+    By Definitions \ref{def_task}, \ref{def_prod}, \ref{def_skill}, as well as Axioms \ref{sua} and \ref{aaa},
     \begin{gather}
         \tilde{T}_{i}^{k}
         :=
