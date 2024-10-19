@@ -1,0 +1,10 @@
+\contentsline {section}{\numberline {1}Introduction}{2}{section.1}%
+\contentsline {section}{\numberline {2}The Issue of Occupational Complexity}{3}{section.2}%
+\contentsline {section}{\numberline {3}Market Conditions and Employer Behavior}{13}{section.3}%
+\contentsline {section}{\numberline {4}The Employability Theorem}{14}{section.4}%
+\contentsline {subsection}{\numberline {4.1}What is Employability?}{14}{subsection.4.1}%
+\contentsline {subsection}{\numberline {4.2}Introductory Example: Employability with Two Types of Workers}{15}{subsection.4.2}%
+\contentsline {subsection}{\numberline {4.3}General Employability Theorem}{17}{subsection.4.3}%
+\contentsline {subsection}{\numberline {4.4}Corollaries}{37}{subsection.4.4}%
+\contentsline {section}{\numberline {5}Discussion}{39}{section.5}%
+\contentsline {section}{\numberline {6}Conclusion}{39}{section.6}%

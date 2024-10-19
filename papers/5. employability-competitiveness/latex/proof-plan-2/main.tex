@@ -1237,16 +1237,16 @@ And, because of these two insightful, yet fairly uncontroversial observations (v
 % skill sets are composable to accomplish occupations' "operations"
 % statement
 \label{ocl}
-\begin{lemma}[Occupational Composition Lemma]
+\begin{lemma}[Occupational Composition Lemma, OCL]
     Skill sets are composable to accomplish occupations' operations.
 \end{lemma}
 
 % proof
 \begin{proof}
-    We have just concluded an occupation is a collection of complex tasks, which in turn depend on a $\boldsymbol{a_q} := (a_{1}^{q},\dots, a_{m}^{q})$ vector of professional attributes to be accomplished (see Definition \ref{complex_task}). By the Skill Composition Lemma, then,
+    We have just concluded an occupation is a collection of complex tasks, which in turn depend on an $\boldsymbol{a_q} := (a_{1}^{q},\dots, a_{m}^{q})$ vector of professional attributes to be accomplished (see Definition \ref{complex_task}). By the Skill Composition Lemma, then,
     \begin{gather}
         \tilde{T}_{k}^{q}
-        =
+        :=
         \int_{0}^{1}
         T(l, \ell_{k}^{q})
         dl
@@ -1264,6 +1264,7 @@ To conclude this section, let us summarize what we have so far defined. With the
 % endregion
 
 \section{Market Conditions and Employer Behavior}
+In this brief section, we define some basic presuppositions concerning market dynamics. As this is not the main focus of our model, we only make three very general assertions: 1) employers act cohesively as wage makers, choosing the quantities of job subtypes to offer, while distributing the whole industry's monetary value, so that wages are determined residually (i.e. the model is static and wages are besides its scope); 2) employees may, or may not, have varying skill levels, and employers take this into account when choosing which hiring and production strategy to implement; 3) employers can evaluate workers more or less accurately and do not hire insufficiently qualified individuals.
 % region: employer rationality axiom (era) 
 % employers are rational
 % employers will only pay for employees to work on tasks they can accomplish
@@ -1341,62 +1342,13 @@ To conclude this section, let us summarize what we have so far defined. With the
     is to choose vectors of employment levels $\boldsymbol{w_q}$ and responsibility bounds $\boldsymbol{\ell_q}$ for each of $p_q$ positions and implement a production strategy that maximizes operational output, given $\mathbb{E}[\boldsymbol{\tilde{T}_q}]$, or the expected productivity in the workforce.
 \end{axiom}
 % endregion
-% region: hireability axiom (ha) 
-% hiring is done by evaluating a hireability statistic
-% statement
-\begin{axiom}[Hireability Axiom]
-    \label{ha}
-    % Any rational employer hires employees by evaluating a hireability statistic, which quantifies potential employees' skill set similarity with an occupation, their educational attainment, and years of experience.
-    [Furthermore,] Any rational employer hires employees by evaluating a hireability statistic, which quantifies potential employees' expected productivity, their educational attainment, and years of experience.
-
-    \begin{subaxiom}[Weak Hireability Axiom, WHA]
-        \begin{gather}
-            \mathbb{E}
-                \left| 
-                    h_{k}^{q} - 
-                    % \mathbb{E}h_{k}^{q}
-                    \mathbb{E}(h_{k}^{q})
-                \right| 
-            \in [0,1]
-        \end{gather}
-    \end{subaxiom}
-    
-    \begin{subaxiom}[Moderate Hireability Axiom, MHA]
-        \begin{gather}
-            % \text{E}(
-            %     \left| 
-            %         h_{k}^{q} - 
-            %         \text{E}(h_{k}^{q}) 
-            %     \right| 
-            % ) = 0
-            \mathbb{E}
-                \left| 
-                    h_{k}^{q} - 
-                    % \mathbb{E}h_{k}^{q}
-                    \mathbb{E}(h_{k}^{q})
-                \right| 
-            = 0
-        \end{gather}
-    \end{subaxiom}
-    
-    \begin{subaxiom}[Strong Hireability Axiom, SHA]
-        \begin{gather}
-            % E(h_{k}^{q}) = h_{k}^{q}
-            % \\
-            % \mathbb{E}h_{k}^{q} = h_{k}^{q}
-            % \\
-            \mathbb{E}(h_{k}^{q}) = h_{k}^{q}
-        \end{gather}
-    \end{subaxiom}
-\end{axiom}
-% endregion
 
 % region: productivity differentia axiom, pda 
 \begin{axiom}[Productivity Differentia Axiom, PDA]
     There are, or there could be, skill differences in the workforce (i.e. employees are, likely, not all equally competent ``clones'' of one another). So, the expected value of productivity is:
     \begin{gather}
         \mathbb{E}[
-            \tilde{T}_{v}^{r}
+            \tilde{T}_{v}^{q}
         ]
         \in
         [0,1]
@@ -1405,19 +1357,40 @@ To conclude this section, let us summarize what we have so far defined. With the
     instead of 
     \begin{gather}
         \mathbb{E}[
-            \tilde{T}_{v}^{r}
+            \tilde{T}_{v}^{q}
         ]
         =
-        \tilde{T}_{v}^{r}
+        \tilde{T}_{v}^{q}
         = 1
         ,
     \end{gather}
-    for all $r \in \{1, \dots, w_{v}^{q}\}, v \in \{1, \dots, p_q\}, p_q \in \{1, 2, 3, \dots \}$. This means employers do not expected every worker to be perfectly qualified and will adjust their hiring and production strategies accordingly.
+    for all $v \in \{1, \dots, w_q\}$. This means employers do not expected every worker to be perfectly qualified and will adjust their hiring and production strategies accordingly.
     
-    Note we do not assign any specific probability distribution to workers' productivity. Hence, this axiom is as general as it can be.
+    Note we did not assign any specific probability distribution to workers' productivity. Hence, this axiom is as general as it can be.
 \end{axiom}
 % endregion
 
+% region: hireability axiom (ha) 
+% hiring is done by evaluating a hireability statistic
+% statement
+\begin{axiom}[Hireability Axiom, HA]
+    \label{ha}
+    Furthermore, we assume hiring is done by evaluating some statistic which quantifies potential employees' expected productivity, their educational attainment, years of experience, and so on and so forth. Again, as we do not want to overcomplicate this intial model, we shall not introduce issues of uncertainty around the hiring process. So, we define
+    \begin{gather}
+        \mathbb{E}[h_{k}^{q}]
+        =
+        h_{k}^{q}
+        \in
+        [0,1]
+        \
+        \forall
+        \
+        v \in \{1, \dots, w_q\}
+        ,
+    \end{gather}
+    meaning employers' expectations of individual's hireability are always correct (i.e. there is no information asymmetry in hiring).
+\end{axiom}
+% endregion
 % endregion
 
 % region: demonstration 
