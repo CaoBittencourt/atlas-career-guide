@@ -98,6 +98,9 @@
 % region: presuppositions 
 \newpage
 \section{The Issue of Occupational Complexity}
+[preamble]
+
+\subsection{Professional Attributes and Tasks}
 % region: simple task definition 
 \begin{definition}[Simple Task]
     \label{def_task}
@@ -113,7 +116,7 @@
             0, \text{ if } \ell_{i}^{k} < l,
         \end{cases}
     \end{gather}
-    as its binary indicator of success, given a person $k$'s capacity to execute attribute $i$-related tasks, so that $T(l,\ell_{i}^{k})$ yields one if $k$ is sufficiently qualified at difficulty level $l$; or zero, otherwise.
+    as its binary outcome indicator, given a person $k$'s capacity to execute attribute $i$-related tasks, so that $T(l,\ell_{i}^{k})$ yields one if $k$ is sufficiently qualified at difficulty level $l$; or zero, otherwise.
 \end{definition}
 % endregion
 % region: scale uniformity  
@@ -150,7 +153,7 @@ With this, we can define productivity in a more convenient way.
         [0,1]
         ,
     \end{gather}
-    which we can simplify with scale uniformity
+    which we can simplify with scale uniformity,
     \begin{align}
         &
         \because
@@ -313,7 +316,8 @@ Given the above, we have our first stepping stone towards a general theorem of e
 % proof
 \begin{proof}
     By Definitions \ref{def_task}, \ref{def_prod}, \ref{def_skill}, as well as Axioms \ref{sua} and \ref{aaa},
-    \begin{gather}
+    \begin{align}
+        &
         \tilde{T}_{i}^{k}
         :=
         \int_{0}^{1}
@@ -341,10 +345,11 @@ Given the above, we have our first stepping stone towards a general theorem of e
         l\big|_{0}^{\ell_{i}^{k}}
         + 0
         \\
+        &
         \therefore
-        \ell_{i}^{k}
-        :=
         a_{i}^{k}
+        :=
+        \ell_{i}^{k}
         \implies
         \tilde{T}_{i}^{k}
         =
@@ -357,53 +362,69 @@ Given the above, we have our first stepping stone towards a general theorem of e
         \in
         [0,1]
         .
-    \end{gather}
+    \end{align}
 
     Therefore, because competencies are atomic and their difficulty, uniformly distributed, the percentage of tasks one can accomplish coincides precisely with their skill level. That is, to be skilled in an attribute is, really, the same thing as being able to perform its activities.
     
-    Indeed, we can even conceptualize a person $k$'s $a_{i}^{k}$ skill not only as the level of the hardest task they accomplish of attribute $i$, but also as a sum of their successful trials on a $T_i(l) \ \forall \ l \in [0,1]$ series of infinitely small tasks with increasing difficulty.
+    Indeed, we can even conceptualize a person $k$'s $a_{i}^{k}$ skill not only as the level of the hardest task they accomplish of attribute $i$, but also as a sum of successful Bernoulli trials on a $T_i(l) \ \forall \ l \in [0,1]$ series of infinitely small tasks with increasing difficulty.
     
-    Put simply, then: the capacity to act follows virtue, for virtue is, itself, the capacity to act.
+    Or, intuitively speaking, we could say: the capacity to act follows virtue, for virtue is, itself, the capacity to act.
 \end{proof}
-
 % endregion
 
+Our next step is generalizing the SSL for tasks that require multiple skills.
 % region: complex task definition 
 % statement
 \begin{definition}[Complex Task]
     \label{complex_task}
-    A task is said to be complex if it relies on more than one attribute to be accomplished. More precisely, $T_{ij}^{l}$ is a complex task of attributes $i$ and $j$, if its binary outcome indicator is of the form
+    A task is said to be complex if it relies on more than one attribute to be accomplished. More precisely, $T_{ij}(l)$ is a complex task of attributes $i$ and $j$ if its binary outcome indicator is of the form
     \begin{gather}
-        T(l, l_{ij}^{k})
+        T(l, \ell_{ij}^{k})
         :=
-        [l \leq l_{ij}^{k}],
+        [\ell_{ij}^{k} \geq l],
     \end{gather}
     where
     \begin{gather}
-        l_{ij}^{k} := f(l_{i}^{k}, l_{j}^{k})
-    \end{gather}
-    is a strictly increasing aggregation function that returns the maximum difficulty level of the complex task $T_{ij}^{l}$ a person $k$ can accomplish based on each attribute $T_{ij}^{l}$ requires. Or, generalizing for any complex task $T_{q}^{l}$ of $m$ attributes, requiring an entire skill set $\boldsymbol{a_q} := (a_{1}^{q}, \dots, a_{m}^{q})$ to be accomplished, 
-    \begin{gather}
-        T(l, l_{k}^{q})
+        \ell_{ij}^{k}
         :=
-        [l \leq l_{k}^{q}],
+        f(\ell_{i}^{k}, \ell_{j}^{k})
+        ,
+        f
+        :
+        [0,1]^2
+        \rightarrow
+        [0,1]
+        ,
+    \end{gather}
+    is a strictly increasing aggregation function that returns the maximum difficulty level of the complex task $T_{ij}(l)$ a person $k$ can accomplish based on each attribute $T_{ij}(l)$ depends upon. And, for any complex task $T_{q}(l)$ of $m$ attributes, requiring an entire skill set $\boldsymbol{a_q} := (a_{1}^{q}, \dots, a_{m}^{q})$ to be accomplished, 
+    \begin{gather}
+        T(l, \ell_{q}^{k})
+        :=
+        [\ell_{q}^{k} \geq l],
     \end{gather}
     where
     \begin{gather}
-        l_{k}^{q}
+        \ell_{q}^{k}
         := 
-        f(\boldsymbol{l_{k}^{q}})
+        f(\boldsymbol{\ell_k}, \boldsymbol{\ell_q})
         :=
-        f(l_{1}^{k}, \dots, l_{m}^{k})
+        f(\ell_{1}^{k}, \dots, \ell_{m}^{k}, \ell_{1}^{q}, \dots, \ell_{m}^{q})
+        ,
+        f
+        :
+        [0,1]^{2m}
+        \rightarrow
+        [0,1]
+        ,
     \end{gather}
     and 
     \begin{gather}
         \frac{
             \partial
-            f(\boldsymbol{l_{k}^{q}})
+            f(\boldsymbol{\ell_k}, \boldsymbol{\ell_q})
         }{
             \partial 
-            l_{i}^{k}
+            \ell_{i}^{k}
         } > 0
         \
         \forall 
@@ -412,59 +433,20 @@ Given the above, we have our first stepping stone towards a general theorem of e
         .
     \end{gather}
         
-    This means none of the attributes required by the complex task are completely disposable (i.e. they are all helpful in some way). For instance, the task $T_{i}^{l}$, previously defined, with binary outcome $T(l, l_{i}^{k})$ is not complex, because
-    \begin{gather}
-        \frac{
-            \partial
-            l_{i}^{k}
-        }{
-            \partial 
-            l_{i}^{k}
-        } = 1
-        ,
-    \end{gather}
-    but
-    \begin{gather}
-        \frac{
-            \partial
-            l_{i}^{k}
-        }{
-            \partial 
-            l_{j}^{k}
-        } = 0
-        , 
-    \end{gather}
-    where $i \neq j$ and $i, j \in \{1, \dots, m\}$. Or, say the aggregation function is given by
-    \begin{gather}
-        f(l_{i}^{k}, l_{j}^{k})
-        := 
-        l_{i}^{k} - l_{j}^{k}
-        ,
-    \end{gather}
-    so that attribute $j$ actually hinders productivity:
-    \begin{gather}
-        \frac{
-            \partial
-            l_{i}^{k}
-        }{
-            \partial 
-            l_{j}^{k}
-        } = -1
-        .
-    \end{gather}
-        
-    None of these are complex tasks, for they do not coherently mobilize multiple attributes towards a unified goal.
+    This means none of the attributes required by the complex task are completely disposable (i.e. they are all helpful in some way).
     
     \begin{subdefinition}[Weak Complexity]
         Now, beyond these most basic rules, we can define stricter versions of ``task complexity'' with additional assumptions. The first version, of weak complexity, requires that
         \begin{gather}
             \frac{
-                \partial ^ 2 {f(\boldsymbol{l_{k}^{q}})}
+                \partial ^ 2 {
+                    f(\boldsymbol{\ell_k}, \boldsymbol{\ell_q})
+                }
             }{
                 \partial 
-                l_{i}^{k}
+                \ell_{i}^{k}
                 \partial
-                l_{j}^{k}
+                \ell_{j}^{k}
             }
             > 0
             \
@@ -480,10 +462,12 @@ Given the above, we have our first stepping stone towards a general theorem of e
         A task is of moderate complexity if its aggregation function also meets the following criteria:
         \begin{gather}
             \lim_{
-                l_{i}^{k} \rightarrow 0
+                \ell_{i}^{k}
+                \rightarrow 0
             }{
-                f(\boldsymbol{l_{k}^{q}})
-            } = 0
+                f(\boldsymbol{\ell_k}, \boldsymbol{\ell_q})
+            }
+            = 0
             \
             \forall 
             \
@@ -492,50 +476,23 @@ Given the above, we have our first stepping stone towards a general theorem of e
         \end{gather}
         so that a person $k$'s capacity to perform the complex task is weakly increasing on their capacity to perform the simple tasks of its required attributes, and goes to zero when they are unskilled in at least one of these. Thus, a moderately complex task is not reducible to any proper subset of its attributes.
         
-        For instance, a task of the form
-    \begin{gather}
-        T(l, l_{ij}^{k})
-        := [l \leq (1 + l_{i}^{k}) \times (1 + l_{j}^{k}) - 1]
-    \end{gather}
-    is not moderately complex, as person $k$ does not need every attribute to accomplish the task. Indeed, if $k$ has precisely zero capacity in either skill $i$ or $j$, then $T_{ij}^{l}$ collapses to unidimensional, or simple, tasks $T_{i}^{l}$ when
-    \begin{align}
-        T(l, l_{ij}^{k})
-        &= [l \leq (1 + l_{i}^{k}) \times (1 + 0) - 1]
-        \\
-        &= [l \leq l_{i}^{k}]
-        \\
-        &= T(l, l_{i}^{k})
-        ,
-    \end{align}
-    or $T_{j}^{l}$ when
-    \begin{align}
-        T(l, l_{ij}^{k})
-        &= [l \leq (1 + 0) \times (1 + l_{j}^{k}) - 1]
-        \\
-        &= [l \leq l_{j}^{k}]
-        \\
-        &= T(l, l_{j}^{k})
-        ,
-    \end{align}
-    in which case $T_{ij}^{l}$ is not \textit{really} (moderately) complex, but rather a convolution of simple tasks. Notice, however, this does not imply there cannot be a degree of substitution between attributes. That is, moderate task complexity only means a task must require all of its attributes in \textit{some} level, even if its functional form allows for substitution.
-    
+        Notice this does not imply there cannot be a degree of skill substitution. That is, moderate complexity only means a task must require all of its attributes in \textit{some} level, even if its functional form allows for substitution.
     \end{subdefinition}
     
     \begin{subdefinition}[Strong Complexity]
-        The strictest definition of task complexity adds the constraint that skills are aggregated by the Leontief function:
+        The strictest definition of task complexity adds the constraint that skills are aggregated by the Leontief function,
         \begin{gather}
-            f(\boldsymbol{l_{k}^{q}})
-            := 
-            \min(\boldsymbol{l_{k}^{q}})
-            .
+            f(\boldsymbol{\ell_k}, \boldsymbol{\ell_q})
+            :=
+            \min(\boldsymbol{\ell_k})
+            ,
         \end{gather}
-
-        Here, attributes are assumed to be perfect complements, which need to be combined in exactly the same quantities for maximum efficacy. In other words, having additional skills does not help to accomplish the task, but being unskilled in even a single attribute can undermine the whole effort. Hence, productivity is limited by the lowest competency.
+        or a variant of it. Hence, having additional skills does not help to accomplish a task, but being unskilled in a single attribute can undermine the whole effort.
     \end{subdefinition}
 
 \end{definition}
 % endregion
-
+All this said, the General Employability Theorem and its corollaries do not require any specific level of task complexity. So we assume no more than the basic definition (\ref{complex_task}). 
 % region: skill composition lemma (scl) 
 % skills are composable to accomplish complex tasks
 % statement
@@ -558,7 +515,8 @@ Given the above, we have our first stepping stone towards a general theorem of e
     % proof
     \begin{proof}
         Let $T_{q}(l)$ denote an activity of difficulty level $l \in [0,1]$ associated with an $\boldsymbol{a_q} := (a_{1}^{q}, \dots, a_{m}^{q}) \in [0,1]^m$ skill set -- rather than a mere subset of it --, such that $T_{q}(l)$ is a complex task; while $\boldsymbol{a_k} := (a_{1}^{k}, \dots, a_{m}^{k}) \in [0,1]^m$ is a person $k$'s skill set. With this,
-        \begin{gather}
+        \begin{align}
+            &
             \tilde{T}_{k}^{q}
             :=
             \int_{0}^{1}
@@ -586,10 +544,21 @@ Given the above, we have our first stepping stone towards a general theorem of e
             l\big|_{0}^{\ell_{k}^{q}}
             + 0
             \\
+            &
             \therefore
             \ell_{k}^{q}
             :=
-            f(\boldsymbol{a_k}, \boldsymbol{a_q})
+            f(\boldsymbol{\ell_k}, \boldsymbol{\ell_q})
+            \land
+            \boldsymbol{a_k}
+            :=
+            \boldsymbol{\ell_k}
+            \
+            \forall
+            \
+            k,q \in \{1, \dots, n\}
+            \\
+            &
             \implies
             \tilde{T}_{k}^{q}
             =
@@ -602,7 +571,7 @@ Given the above, we have our first stepping stone towards a general theorem of e
             \in
             [0,1]
             .
-        \end{gather}
+        \end{align}
         
         Thus, any economic agent can naturally ``piece together'', that is \textit{compose}, attributes $\{1, \dots, m\}$ to accomplish a complex task, if sufficiently qualified.
     \end{proof}
@@ -649,6 +618,32 @@ In addition to the above, we shall also specifiy tasks' duration in terms of a t
 \end{definition}
 % endregion
 
+% region: time allowance axiom (taa) 
+\begin{axiom}[Time Allowance Axiom, TAA]
+    All workers' time allowances are unitary and perfectly coincide with the
+    \begin{gather}
+        \int_{0}^{1}
+        \ta(l)
+        dl
+        =
+        \left(
+            \int_{0}^{1}
+            \ttc(l)
+            dl
+        \right) ^ {-1}
+        \times
+        \int_{0}^{1}{
+            \ttc(l)
+            dl
+        }
+        =
+        1
+    \end{gather}
+    aggregate normalized duration of occupations' complex tasks.
+\end{axiom}
+% endregion
+
+\subsection{Addressing Occupational Complexity}
 % region: occupational reducibility observation (oro) 
 % occupations can be reduced to their tasks
 Having understood what ``tasks'' are mathematically, we can proceed with our goal of quantifying employability. To this end, we note the following.
@@ -677,7 +672,7 @@ For example, an artist, an airline pilot and a surgeon have \textit{manual dexte
 
 And we could further state all occupations' simple tasks (i.e. those requiring only one attribute) amount to very little, and perhaps nothing, in terms of time allocation, so that employees in each labor market spend their time allowances on occupations' complex, and essential, tasks (i.e. those that differentiate them). For, if this was not the case, it would not imply an occupation is not complex, only that it was incorrectly categorized: it would not be an issue with the theory here proposed, but an empirical, classification error. Therefore, in such cases, the occupation should be split into however many suboccupations are needed until each of them is indivisible (i.e. ``atomic'').
 
-Finally, as with attribute atomicity (see [ref]), occupational atomicity too does not rule out some level of specialization and skill substitution within a job: we do not assume every single position is identical, or even deals with exactly the same subject matter; what we do suppose is that an occupation's job posts are sufficiently and essentially equivalent, despite irrelevant differences in difficulty and specialization, to the point where a person's productivity and employability remains constant across them (i.e. occupations are ``well-defined'').
+Finally, as with attribute atomicity (see Axiom \ref{aaa}), occupational atomicity too does not rule out some level of specialization and skill substitution within a job: we do not assume every single position is identical, or even deals with exactly the same subject matter; what we do suppose is that an occupation's job posts are sufficiently and essentially equivalent, despite irrelevant differences in difficulty and specialization, to the point where a person's productivity and employability remains constant across them (i.e. occupations are ``well-defined'').
 % endregion
 
 % region: (weak) occupational complexity axiom (woca) 
@@ -699,9 +694,8 @@ And, because of these two insightful, yet fairly uncontroversial observations (v
     
     \begin{subaxiom}[Strong Occupational Complexity Axiom, SOCA]
         Let us denote, then, ``operational output'' (abbrev. ``o.o.'') with the standard IPA (International Phonetic Alphabet, 1919) symbol for the near-close near-back rounded vowel (i.e. the ``double o'' sound in words such as ``boot''):
-        \begin{align}
+        \begin{gather}
             \oo_q
-            &
             :=
             \oo_{q}^{\text{IP}}
             :=
@@ -727,40 +721,8 @@ And, because of these two insightful, yet fairly uncontroversial observations (v
                     1
                 \right]
             }
-            \\
-            &\because
-            \ta(l) 
-            :=
-            \ttc(l)
-            \times
-            \left(
-                \int_{0}^{1}{
-                    \ttc(l)
-                    dl
-                }
-            \right) ^ {-1}
-            \\
-            &
-            \implies
-            \int_{0}^{1}{
-                \ta(l)
-                dl
-            }
-            =
-            \left(
-                \int_{0}^{1}
-                \ttc(l)
-                dl
-            \right) ^ {-1}
-            \times
-            \int_{0}^{1}{
-                \ttc(l)
-                dl
-            }
-            =
-            1
             ,
-        \end{align}
+        \end{gather}
         where the upperscript ``IP'' indicates production is organized independently, as each worker outputs the $l \in [0,1]$ responsibility spectrum by themselves. So, the market's aggregate output is exactly the number of perfectly qualified employees in it (i.e. those capable of producing all tasks without outsourcing).
         
         Intuitively, this initial formulation entails a scenario of several individuals working in parallel entirely disconnected from one another; which, of course, is hardly the case in a real economy. Thus, we should define occupational complexity in weaker terms, allowing for at least a degree of outsourcing.
@@ -952,13 +914,26 @@ And, because of these two insightful, yet fairly uncontroversial observations (v
         \int_{\ell_{v-1}^{q}}^{\ell_{v}^{q}}
         \text{sg}(l)dl
         \geq 0
+        ,
+        \text{sg}
+        :
+        [0,1]
+        \rightarrow
+        \mathbb{R}^{+}
     \end{gather}
     outweigh its cost,
     \begin{gather}
         \sum_{v=1}^{p_q}
         \int_{\ell_{v-1}^{q}}^{\ell_{v}^{q}}
         \text{sc}(l)dl
-        \geq 0.
+        \geq 0
+        ,
+        \text{sc}
+        :
+        [0,1]
+        \rightarrow
+        \mathbb{R}^{+}
+        .
     \end{gather}
 
     Note the Leontief function here signifies, again, moderately complex operations are ``indivisible'', so that aggregate production is set to the lowest partial operational output.
@@ -1163,7 +1138,7 @@ To conclude this section, let us summarize what we have so far defined. With the
 % endregion
 
 \section{Market Conditions and Employer Behavior}
-In this brief section, we define some basic presuppositions concerning market dynamics. As this is not the main focus of our model, we only make three very general assertions: 1) employers act cohesively as wage makers, choosing the quantities of job subtypes to offer, while distributing the whole industry's monetary value, so that wages are determined residually (i.e. the model is static and wages are besides its scope); 2) employees may, or may not, have varying skill levels, and employers take this into account when choosing which hiring and production strategy to implement; 3) employers can evaluate workers more or less accurately and do not hire insufficiently qualified individuals.
+In this brief section, we define some presuppositions concerning market dynamics. As this is not the main focus of our model, we only make three very general assertions: 1) employers act cohesively as wage makers, choosing the quantities of job subtypes to offer, while distributing the whole industry's monetary value, so that wages are determined residually (i.e. the model is static and wages are besides its scope); 2) employees may, or may not, have varying skill levels, and employers take this into account when choosing which hiring and production strategy to implement; 3) employers can evaluate workers more or less accurately and do not hire insufficiently qualified individuals.
 % region: employer rationality axiom (era) 
 % employers are rational
 % employers will only pay for employees to work on tasks they can accomplish
@@ -1274,7 +1249,7 @@ In this brief section, we define some basic presuppositions concerning market dy
 % statement
 \begin{axiom}[Hireability Axiom, HA]
     \label{ha}
-    Furthermore, we assume hiring is done by evaluating some statistic which quantifies potential employees' expected productivity, their educational attainment, years of experience, and so on and so forth. Again, as we do not want to overcomplicate this intial model, we shall not introduce issues of uncertainty around the hiring process. So, we define
+    Furthermore, we assume hiring is done by evaluating a statistic that quantifies potential employees' expected productivity, their educational attainment, years of experience, and so on and so forth. Again, as we do not want to overcomplicate this intial model, we shall not introduce issues of uncertainty around the hiring process. Let us define, then,
     \begin{gather}
         \mathbb{E}[h_{k}^{q}]
         =
@@ -1435,7 +1410,7 @@ Either way, if the available talent is enough to output occupation $q$'s operati
             .
         \end{gather}
 
-        Furthermore, as a mismatch in operational output due to time allocation differences between ``junior'' and ``senior'' tasks would result in wasted production, a rational employer will optimally ``orchestrate'' the productive effort by offering just enough ``senior'' job posts in the labor market to meet ``junior'' productivity. So, by setting ``junior'' job posts to $w_{\text{Jr}}^{q} > 0$ and ``senior'' job posts to $w_{\text{Sr}}^{q} > 0$, we get the ratio between ``junior'' and ``senior'' positions required to output any level of occupation $q$'s operation:
+        Furthermore, as a mismatch in operational output due to time allocation differences between ``junior'' and ``senior'' tasks would result in wasted production, a rational employer will optimally ``orchestrate'' the productive effort by offering just enough ``senior'' job posts in the labor market to meet ``junior'' productivity\footnote{Essentially, the ``no waste condition" (cite microeconomic textbooks).}. So, by setting ``junior'' job posts to $w_{\text{Jr}}^{q} > 0$ and ``senior'' job posts to $w_{\text{Sr}}^{q} > 0$, we get the ratio between ``junior'' and ``senior'' positions required to output any level of occupation $q$'s operation:
         \begin{align}
             w_{\text{Sr}}^{q}
             \times 
@@ -1622,7 +1597,8 @@ Either way, if the available talent is enough to output occupation $q$'s operati
     \end{proof}
 \end{theorem}
 % endregion
-\subsection{General Employability Theorem}
+\subsection{Employability With Multiple Types of Workers}
+\subsubsection{Maximum Labor Stratification}
 % region: maximum-monotonic labor stratification definition 
 Now, to generalize this conclusion, we shall define notation in terms of maximum labor stratification, a productive arrangement where there are several job subtypes, indeed as many as there are jobs themselves, each with a limited spectrum of responsabilities.
 
@@ -1676,7 +1652,7 @@ Now, to generalize this conclusion, we shall define notation in terms of maximum
     \ta(l)dl
     \in [0,1]
     \end{gather}
-    of an operation's total time duration,
+    of an operation's total duration,
     \begin{gather}
     \sum_{v=1}^{w_q}
     \Omega_{v}^{q} 
@@ -1696,7 +1672,7 @@ Now, to generalize this conclusion, we shall define notation in terms of maximum
     .
     \end{gather}
     
-    Intuitively speaking, we would say production in a maximally (and monotonically) stratified labor market is not ``independent'', in the sense that employees do not work on an occupation's operation from beginning to end. This means each of them will spend all their time allowance producing a partial operational output, that is a multiple of a difficulty subinterval of complex tasks, which will, in turn, contribute, alonside the partial outputs of other employees, to accomplishing the occupational operation in its entirety.
+    Intuitively speaking, we would say production in a maximally (and monotonically) stratified labor market is not ``independent'' (cf. SOCA), in the sense that employees do not work on an occupation's operation from beginning to end. This means each of them will spend all their time allowance producing a partial operational output, that is a multiple of a difficulty subinterval of complex tasks, which will, in turn, contribute, alonside the partial outputs of other employees, to accomplishing the occupational operation in its entirety.
     
     However, in a maximum labor stratification setting, these partial operational outputs will not be produced merely via ``senior'' and ``junior'' positions, as previously, but rather within a myriad of levels in a production hierarchy, approximating a continuum of ``seniority'' as the workforce becomes large enough.
     % However, in a maximally stratified labor market, these partial operational outputs will not be produced merely via ``senior'' and ``junior'' positions, as previously, but rather within a myriad of levels in a production hierarchy, approximating a continuum of ``seniority'' as the workforce becomes large enough.
@@ -1729,7 +1705,9 @@ Indeed, if it were possible to stratify beyond $w_q$, rational employers would r
 
 But, because of this, if $p_q$ can be greater than $w_q$, the optimal production strategy would, logically, be to offer as many types of jobs as possible, even infinitely many.
 
-Thus, infinite labor stratification is defined as an economic configuration where labor markets are subdivided into infinitesimal jobs, each contributing very little to production. In fact, in such a market, ``job posts'' are so small as to be indistinguishable from tasks themselves\footnote{See the Proportional Employment Condition in ``Maximum Operational Output Lemma''.}
+% region: infinite labor stratification definition
+\begin{definition}[Infinite Labor Stratification]
+    Thus, infinite labor stratification is defined as an economic configuration where labor markets are subdivided into infinitesimal jobs, each contributing very little to production. In fact, in such a market, ``job posts'' are so small as to be indistinguishable from tasks themselves\footnote{See the Proportional Employment Condition in ``Maximum Operational Output Lemma''.}
 \begin{align}
     &
     \because
@@ -1798,7 +1776,8 @@ Thus, infinite labor stratification is defined as an economic configuration wher
     w_q
     .
     \end{align}
-    
+\end{definition} 
+% endregion
 Therefore, employers are guaranteed maximum insurance against workers' potential underqualification; and employability is simply
 \begin{gather}
 \tilde{W}_{k}^{q} 
@@ -1823,9 +1802,7 @@ dl
 dl
 ,
 \end{gather}
-where the hireability statistic $h_{k}^{q} \in [0,1]$ accounts for hiring requirements other than productivity; and $\tilde{w}_{q}(l)$ is the proportion of fractional positions for a particular job subtype, which coincides with its time allocation when there are infinite ``jobs'', each dedicated to a single, infinitely narrow task. We note, as well, this formula is the same as it was in binary labor stratification (with ``junior'' and ``senior'' positions). So, again, employability is the percentage of an operation's total duration one can accomplish. 
-
-And we may formalize this conclusion as follows.
+where the hireability statistic $h_{k}^{q} \in [0,1]$ accounts for hiring requirements other than productivity; and $\tilde{w}_{q}(l)$ is the proportion of fractional positions for a particular job subtype, which coincides with its time allocation when there are infinite ``jobs'', each dedicated to a single, infinitely narrow task. We note, as well, this formula is the same as in binary labor stratification (with ``junior'' and ``senior'' positions). So, again, employability is the percentage of an operation's duration one can accomplish. And we may formalize this conclusion as follows.
 \begin{lemma}[Infinite Stratification Lemma, ISL]
     \label{isl}
     If fractional job posts are allowed, with
@@ -1880,7 +1857,7 @@ And we may formalize this conclusion as follows.
 \end{lemma}
 % endregion
 
-All this said, infinitely stratified markets are rather abstract, and it is not realistic to think of actual job posts as infinitesimal tasks; for, then, the very concept of a ``job'' itself disappears. Fractional positions do not make much sense in reality, where jobs usually deal with a set of multiple responsabilities. Furthermore, a maximally -- though not infinitely -- stratified labor market with sufficient positions, will, in practice, yield the same results when $w_q$ is large enough, so that we do not even need to consider infinite labor stratification as a production strategy.
+This being said, infinitely stratified markets are rather abstract, and it is not realistic to think of actual job posts as infinitesimal tasks; for, then, the very concept of a ``job'' itself disappears. Fractional positions do not make much sense in reality, where jobs usually deal with a set of multiple responsabilities. Furthermore, a maximally -- though not infinitely -- stratified labor market with sufficient positions, will, in practice, yield the same results when $w_q$ is large enough, so that we do not even need to consider infinite labor stratification as a production strategy.
 
 % region: maximum stratification axiom (msa) 
 \begin{axiom}[Maximum Stratification Axiom, MSA]
@@ -1912,11 +1889,12 @@ All this said, infinitely stratified markets are rather abstract, and it is not 
 \end{axiom}
 % endregion
 
+\subsubsection{Efficiently Stratified Markets}
 With this, we can now demonstrate that, given the above, maximum labor stratification is, in fact, the most efficient production strategy and, so, holds in the labor market. But, to do so, we must first derive an upper limit for aggregate operational output, irrespective of productive arrangement, to serve as our ``benchmark'' and show other strategies cannot yield higher production.
 
 % region: maximum operational output lemma (mool) 
 \begin{lemma}[Maximum Operational Output Lemma, MOOL]
-    The maximum operational output of any labor market is exactly the number of employees in its workforce:
+    The maximum operational output of any labor market is exactly the number of employees in its workforce,
     \begin{gather}
         \bar{\oo}_{q}
         =
@@ -1926,7 +1904,7 @@ With this, we can now demonstrate that, given the above, maximum labor stratific
             \boldsymbol{\oo_q}
         )
         = w_q
-        ,
+        ;
     \end{gather}
     where $\boldsymbol{w_{q}^{*}}$ is the vector of optimal employment levels in a labor market with $w_q$ employees; and $\boldsymbol{\oo_q}$, the vector of partial operational outputs. Or, assuming maximum labor stratification with unitary employment levels,
     \begin{gather}
@@ -1944,7 +1922,7 @@ With this, we can now demonstrate that, given the above, maximum labor stratific
     \end{gather}
     where $\boldsymbol{\ell_{q}^{*}}$ are optimal stratification bounds for the responsibility spectra of occupation $q$'s job posts (see ``Optimal Stratification Lemma'' below).
     
-    Moreover, when optimizing employment levels, this maximum production can only be attained when the percentage of each position relative to the entire workforce respects the Proportional Employment Condition (PEC):
+    Moreover, this maximum production is only attainable when the portion of each position relative to the entire workforce respects the Proportional Employment Condition (PEC),
     \begin{gather}
         \boldsymbol{\tilde{w}_{q}^{*}}
         :=
@@ -1987,14 +1965,13 @@ With this, we can now demonstrate that, given the above, maximum labor stratific
         p_q \in \{1, \dots, w_q\}
         $; that is, all employees are sufficiently qualified for their responsabilities.
         
-        With this, we begin with the most trivial of economic configurations, that of independent production with perfectly qualified workers. In this scenario, each employee devotes their unitary time allowance, which coincides with the total time duration of occupation $q$'s operation,
-        % We begin with the most trivial of economic configurations, that of independent production with perfectly qualified workers. In this scenario, each employee devotes their unitary time allowance, which coincides with the total time duration of occupation $q$'s operation,
+        With this, we begin with the most trivial of economic configurations, that of independent production with perfectly qualified workers. In this scenario, each employee devotes their unitary time allowance,
         \begin{gather}
             \int_{0}^{1}{
                 \ta(l)
                 dl
             }
-            :=
+            =
             1
             ,
         \end{gather}
@@ -2045,9 +2022,7 @@ With this, we can now demonstrate that, given the above, maximum labor stratific
 
         Therefore, a perfectly qualified employee working full-time and independently can output one unit of an occupation's complex tasks with one unit of their time (i.e. their entire time allowance). And, likewise, a workforce with $w_q$ employees identical to this one produces $w_q$ units of operational output. Or, to put it simply, a maximally productive person acchieves maximum production.
         
-        We, now, proceed with the binary setting presented above, where employers choose a $\tilde{w}_{\text{Jr}}^{q} \in (0,1)$ percentage of less qualified (i.e. ``junior'') job posts to offer, which determines the remaining $\tilde{w}_{\text{Sr}}^{q} := 1 - \tilde{w}_{\text{Jr}}^{q} \in (0,1)$ percentage of perfectly qualified (or ``senior'') positions.
-        
-        In this case,
+        We, now, proceed with the binary setting presented above, where employers choose a $\tilde{w}_{\text{Jr}}^{q} \in (0,1)$ percentage of less qualified (i.e. ``junior'') job posts to offer, which determines the remaining $\tilde{w}_{\text{Sr}}^{q} := 1 - \tilde{w}_{\text{Jr}}^{q} \in (0,1)$ percentage of perfectly qualified (or ``senior'') positions. Here, we have
         \begin{align}
             \oo(\tilde{w}_{\text{Jr}}^{q})
             &=
@@ -2173,8 +2148,7 @@ With this, we can now demonstrate that, given the above, maximum labor stratific
             1 - \tilde{w}_{\text{Jr}}^{q}
             <
             1 - \Omega_{\text{Jr}}^{q}
-            \\
-            &\therefore
+            \therefore
             \frac{
                 \tilde{w}_{\text{Jr}}^{q}
             }{
@@ -2214,7 +2188,8 @@ With this, we can now demonstrate that, given the above, maximum labor stratific
             <
             1
             \\
-            &\implies
+            &
+            \implies
             \oo(\tilde{w}_{\text{Jr}}^{q})
             <
             \oo(\Omega_{\text{Jr}}^{q})
@@ -2228,8 +2203,7 @@ With this, we can now demonstrate that, given the above, maximum labor stratific
             1 - \tilde{w}_{\text{Jr}}^{q}
             >
             1 - \Omega_{\text{Jr}}^{q}
-            \\
-            &\therefore
+            \therefore
             \frac{
                 \tilde{w}_{\text{Jr}}^{q}
             }{
@@ -2295,7 +2269,7 @@ With this, we can now demonstrate that, given the above, maximum labor stratific
             .
         \end{gather}
         
-        Analogously, with multiple job subtypes, optimal operational output is:
+        Analogously, with multiple job subtypes, optimal operational output is
         \begin{gather}
             \oo(\boldsymbol{\Omega_q})
             = 
@@ -2312,7 +2286,7 @@ With this, we can now demonstrate that, given the above, maximum labor stratific
             }
             =
             1
-            ,
+            ;
         \end{gather}
         for, again, since
         \begin{gather}
@@ -2329,13 +2303,10 @@ With this, we can now demonstrate that, given the above, maximum labor stratific
             ,
         \end{gather}
         choosing any $\tilde{w}_{v}^{q} \neq \Omega_{v}^{q}$ implies the proportion of at least one position, say $\tilde{w}_{q}^{r}$, is impacted, and aggregate output along with it, either because
-        % choosing any $\tilde{w}_{v}^{q} \neq \Omega_{v}^{q}$ implies the proportion of at least one position, say $\tilde{w}_{q}^{r}$, is impacted, and thus aggregate output along with it, either because
-        % choosing any $\tilde{w}_{v}^{q} \neq \Omega_{v}^{q} \in [0,1]$ implies the proportion of at least one position, say $\tilde{w}_{q}^{r}$, is impacted, and thus aggregate output along with it, either because
         \begin{align}
             &
             \tilde{w}_{v}^{q} > \Omega_{v}^{q}
-            \\
-            &\therefore
+            \therefore
             \frac{
                 \tilde{w}_{v}^{q}
             }{
@@ -2367,7 +2338,8 @@ With this, we can now demonstrate that, given the above, maximum labor stratific
             < 
             1
             \\
-            &\implies
+            &
+            \implies
             \oo(\boldsymbol{\tilde{w}_q})
             <
             \oo(\boldsymbol{\Omega_q})
@@ -2379,8 +2351,7 @@ With this, we can now demonstrate that, given the above, maximum labor stratific
         \begin{align}
             &
             \tilde{w}_{v}^{q} < \Omega_{v}^{q}
-            \\
-            &\therefore
+            \therefore
             \frac{
                 \tilde{w}_{v}^{q}
             }{
@@ -2412,7 +2383,8 @@ With this, we can now demonstrate that, given the above, maximum labor stratific
             < 
             1
             \\
-            &\implies
+            &
+            \implies
             \oo(\boldsymbol{\tilde{w}_q})
             <
             \oo(\boldsymbol{\Omega_q})
@@ -2422,80 +2394,9 @@ With this, we can now demonstrate that, given the above, maximum labor stratific
         \end{align}
         
         Thus, 
-        % \begin{align}
-        %     % &
-        %     \oo(
-        %         \boldsymbol{\tilde{w}_{q}},
-        %         \boldsymbol{\oo_q}
-        %     ) 
-        %     &< 
-        %     \oo(
-        %         \boldsymbol{\Omega_{q}},
-        %         \boldsymbol{\oo_q}
-        %     ) 
-        %     = 1
-        %     \\
-        %     \therefore
-        %     % &\therefore
-        %     \oo(
-        %         \boldsymbol{w_{q}},
-        %         \boldsymbol{\oo_q}
-        %     )
-        %     &< 
-        %     \oo(
-        %         w_{q}
-        %         \times
-        %         \boldsymbol{\Omega_{q}},
-        %         \boldsymbol{\oo_q}
-        %     ) 
-        %     = w_q
-        %     \\
-        %     % &
-        %     \forall
-        %     \
-        %     \boldsymbol{\tilde{w}_{q}}
-        %     \neq
-        %     \boldsymbol{\Omega_{q}}
-        %     \in
-        %     \
-        %     &
-        %     [0,1]^{p_q}
-        %     ,
-        %     p_q \in \{1, \dots, w_q\}
-        %     ,
-        %     \\
-        %     1 =:
-        %     \boldsymbol{1} ^ {\top}
-        %     \cdot
-        %     \boldsymbol{\tilde{w}_{q}}
-        %     &=
-        %     \boldsymbol{1} ^ {\top}
-        %     \cdot
-        %     \boldsymbol{\Omega_{q}}
-        %     := 1
-        %     .
-        %     % ,
-        %     % \\
-        %     % &
-        %     % \boldsymbol{\tilde{w}_{q}}
-        %     % ,
-        %     % \boldsymbol{\Omega_{q}}
-        %     % > 
-        %     % \boldsymbol{0}
-        %     % ,
-        %     % \\
-        %     % &
-        %     % \boldsymbol{1} ^ {\top}
-        %     % \cdot
-        %     % \boldsymbol{\tilde{w}_{q}}
-        %     % =
-        %     % \boldsymbol{1} ^ {\top}
-        %     % \cdot
-        %     % \boldsymbol{\Omega_{q}}
-        %     % = 1
-        %     % .
-        % \end{align}
-        \begin{gather}
+        % \begin{gather}
+        \begin{align}
+            &
             \oo(
                 \boldsymbol{\tilde{w}_{q}},
                 \boldsymbol{\oo_q}
@@ -2506,7 +2407,6 @@ With this, we can now demonstrate that, given the above, maximum labor stratific
                 \boldsymbol{\oo_q}
             ) 
             = 1
-            \\
             \therefore
             \oo(
                 \boldsymbol{w_{q}},
@@ -2521,6 +2421,7 @@ With this, we can now demonstrate that, given the above, maximum labor stratific
             ) 
             = w_q
             \\
+            &
             \forall
             \
             \boldsymbol{\tilde{w}_{q}}
@@ -2531,7 +2432,6 @@ With this, we can now demonstrate that, given the above, maximum labor stratific
             ,
             p_q \in \{1, \dots, w_q\}
             ,
-            \\
             1 =:
             \boldsymbol{1} ^ {\top}
             \cdot
@@ -2542,7 +2442,56 @@ With this, we can now demonstrate that, given the above, maximum labor stratific
             \boldsymbol{\Omega_{q}}
             := 1
             .
-        \end{gather}
+        \end{align}
+        % \end{gather}
+        % \begin{gather}
+        %     \oo(
+        %         \boldsymbol{\tilde{w}_{q}},
+        %         \boldsymbol{\oo_q}
+        %     ) 
+        %     < 
+        %     \oo(
+        %         \boldsymbol{\Omega_{q}},
+        %         \boldsymbol{\oo_q}
+        %     ) 
+        %     = 1
+        %     \\
+        %     \therefore
+        %     \oo(
+        %         \boldsymbol{w_{q}},
+        %         \boldsymbol{\oo_q}
+        %     )
+        %     < 
+        %     \oo(
+        %         w_{q}
+        %         \times
+        %         \boldsymbol{\Omega_{q}},
+        %         \boldsymbol{\oo_q}
+        %     ) 
+        %     = w_q
+        %     \\
+        %     \forall
+        %     \
+        %     \boldsymbol{\tilde{w}_{q}}
+        %     \neq
+        %     \boldsymbol{\Omega_{q}}
+        %     \in
+        %     [0,1]^{p_q}
+        %     ,
+        %     p_q \in \{1, \dots, w_q\}
+        %     ,
+        %     \\
+        %     1 =:
+        %     \boldsymbol{1} ^ {\top}
+        %     \cdot
+        %     \boldsymbol{\tilde{w}_{q}}
+        %     =
+        %     \boldsymbol{1} ^ {\top}
+        %     \cdot
+        %     \boldsymbol{\Omega_{q}}
+        %     := 1
+        %     .
+        % \end{gather}
         
         We can derive the same conclusion for a maximally stratified labor market, as well. But here, instead of determining the proportion of job subtypes with a $\boldsymbol{w_{q}^{*}}$ vector of employment levels, employers maximize production selecting optimal $\boldsymbol{\ell_{q}^{*}}$ responsibility bounds for $w_q$ unique job posts.
         
@@ -2568,7 +2517,7 @@ With this, we can now demonstrate that, given the above, maximum labor stratific
         =
         \int_{0}^{1}
         \ta(l)dl
-        :=
+        =
         1
         \end{gather}
         be the vector of optimal responsibility bounds that maximizes operational output, such that
@@ -2970,15 +2919,10 @@ With this, we can now demonstrate that, given the above, maximum labor stratific
                     \ta(l)dl
                 }
             }
-            % (1-\omega_{v}^{q})
-            % \oo_{v}^{q}(
-            %     \ell_{v}^{q}
-            %     ,\ell_{v}^{q*}
-            % )
             <
             w_q
             \\
-            &\implies
+            &\therefore
             \oo_{v}^{q} = 
             \min\left(
                 \frac{
@@ -3015,18 +2959,10 @@ With this, we can now demonstrate that, given the above, maximum labor stratific
                     \ta(l)dl
                 }
             }
-            % \frac{
-            %     1-\omega_{v}^{q}
-            % }{
-            %     \Omega_{v}^{q}(
-            %         \ell_{v}^{q}
-            %         ,\ell_{v}^{q*}
-            %     )
-            % }
             <
             w_q
             \\
-            &\therefore
+            &\implies
             % &\implies
             \oo_{q}(
                 \boldsymbol{\ell_q}
@@ -3042,14 +2978,6 @@ With this, we can now demonstrate that, given the above, maximum labor stratific
         \end{align}
         and, conversely, 
         \begin{align}
-            % &
-            % \omega_{v}^{q} < 
-            % w_q
-            % \Omega_{v}^{q}(
-            %     \ell_{v-1}^{q*}
-            %     ,\ell_{v}^{q}
-            % )
-            % \\
             &
             \omega_{v}^{q} < 
             w_q
@@ -3060,30 +2988,7 @@ With this, we can now demonstrate that, given the above, maximum labor stratific
             }{
                 \ta(l)dl
             }
-            \\
-            % &\implies
-            % \omega_{v}^{q}
-            % \oo_{v}^{q}(
-            %     \ell_{v-1}^{q*}
-            %     ,\ell_{v}^{q}
-            % )
-            % % \frac{
-            % %     \omega_{v}^{q}
-            % % }{
-            % %     \Omega_{v}^{q}(
-            % %         \ell_{v-1}^{q*}
-            % %         ,\ell_{v}^{q}
-            % %     )
-            % % }
-            % < 
-            % w_q
-            % <
-            % (1-\omega_{v}^{q})
-            % \oo_{v}^{q}(
-            %     \ell_{v}^{q}
-            %     ,\ell_{v}^{q*}
-            % )
-            &\implies
+            \therefore
             \frac{
                 \omega_{v}^{q}
             }{
@@ -3094,14 +2999,6 @@ With this, we can now demonstrate that, given the above, maximum labor stratific
                 }
                 \ta(l)dl
             }
-            % \frac{
-            %     \omega_{v}^{q}
-            % }{
-            %     \Omega_{v}^{q}(
-            %         \ell_{v-1}^{q*}
-            %         ,\ell_{v}^{q}
-            %     )
-            % }
             < 
             w_q
             <
@@ -3115,16 +3012,8 @@ With this, we can now demonstrate that, given the above, maximum labor stratific
                 }
                 \ta(l)dl
             }
-            % \frac{
-            %     1-\omega_{v}^{q}
-            % }{
-            %     \Omega_{v}^{q}(
-            %         \ell_{v}^{q}
-            %         ,\ell_{v}^{q*}
-            %     )
-            % }
             \\
-            &\implies
+            &\therefore
             \oo_{v}^{q} = 
             \min\left(
                 \frac{
@@ -3149,25 +3038,6 @@ With this, we can now demonstrate that, given the above, maximum labor stratific
                     \ta(l)dl
                 }
             \right)
-            % \min\left[
-            %     \frac{
-            %         \omega_{v}^{q}
-            %     }{
-            %         \Omega_{v}^{q}(
-            %             \ell_{v-1}^{q*}
-            %             ,\ell_{v}^{q}
-            %         )
-            %     }
-            %     ,
-            %     \frac{
-            %         1-\omega_{v}^{q}
-            %     }{
-            %         \Omega_{v}^{q}(
-            %             \ell_{v}^{q}
-            %             ,\ell_{v}^{q*}
-            %         )
-            %     }
-            % \right]
             =
             \frac{
                 \omega_{v}^{q}
@@ -3179,19 +3049,10 @@ With this, we can now demonstrate that, given the above, maximum labor stratific
                 }
                 \ta(l)dl
             }
-            % \frac{
-            %     \omega_{v}^{q}
-            % }{
-            %     \Omega_{v}^{q}(
-            %         \ell_{v-1}^{q*}
-            %         ,\ell_{v}^{q}
-            %     )
-            % }
             <
             w_q
             \\
-            &\therefore
-            % &\implies
+            &\implies
             \oo_{q}(
                 \boldsymbol{\ell_q}
                 ,\boldsymbol{\omega_q}
@@ -3256,13 +3117,14 @@ With this, we can now demonstrate that, given the above, maximum labor stratific
             =
             \int_{0}^{1}
             \ta(l)dl
-            :=
+            =
             1
             .
         \end{gather}
         
         Finally, even with an $\boldsymbol{\omega_{v}^{q}}$ vector of partial time allocations for each worker, at least one difficulty subinterval would have to be neglected to emphasize another,
-        \begin{gather}
+        \begin{align}
+            &
             \because
             1 =:
             \boldsymbol{1} ^ \top
@@ -3273,7 +3135,7 @@ With this, we can now demonstrate that, given the above, maximum labor stratific
             \cdot
             \boldsymbol{\Omega_{v}^{q}}
             := 1
-            \implies
+            \therefore
             \min\left(
                 \boldsymbol{\omega_{v}^{q}}
                 \times
@@ -3284,7 +3146,8 @@ With this, we can now demonstrate that, given the above, maximum labor stratific
             <
             w_q
             \\
-            \therefore
+            &
+            \implies
             \oo_q(
                 \boldsymbol{\ell_{v}^{q}},
                 \boldsymbol{\omega_{v}^{q}}
@@ -3296,7 +3159,7 @@ With this, we can now demonstrate that, given the above, maximum labor stratific
             =
             w_q
             ,
-        \end{gather}
+        \end{align}
         as before.
         
         Thus, we have demonstrated there cannot be, in any productive arrangement, a higher aggregate operational output than $w_q$, that is the number of employees in the workforce, as all attempts to increase production, actually, end up hindering it. 
@@ -3772,7 +3635,7 @@ Having derived optimal responsibility ranges for maximally stratified markets wi
             = 1
             ,
         \end{gather}
-        where $\underaccent{\bar}{\tilde{T}}_{\text{Jr}}^{q}, \underaccent{\bar}{\tilde{T}}_{\text{Sr}}^{q} \in [0,1]$ denote the minimum productivity workers must have to accomplish all tasks in their responsibility spectrum,
+        where $\underaccent{\bar}{\tilde{T}}_{\text{Jr}}^{q}, \underaccent{\bar}{\tilde{T}}_{\text{Sr}}^{q} \in [0,1]$ denote the minimum productivity workers must have to accomplish all tasks in their responsibility spectra,
         \begin{gather}
             l \in [0, \ell_{\text{Jr}}^{q}]
             \lor
@@ -3783,13 +3646,13 @@ Having derived optimal responsibility ranges for maximally stratified markets wi
 
         Likewise, if there were three levels of seniority, with $w_{\text{Ir}}^{q}$ interns (less qualified than juniors and seniors), productivity requirements would be even lower. And the same holds true for the subsequent production strategies.
         
-        To show this, though, we have to ``shift gears'' and go back to looking at tasks individually, in a continuous fashion, rather than ``bundled together'' in responsability spectra. Indeed, notice above tasks with $l \in [0, \ell_{\text{Jr}}^{q})$, that is easier than the upper bound, still require
+        To show this, though, we have to ``shift gears'' and go back to looking at tasks individually, in a continuous fashion, rather than ``bundled together'' in responsability spectra. Indeed, notice above tasks with $l \in [0, \ell_{\text{Jr}}^{q})$, that is easier than the upper bound, still demand
         \begin{gather}
             \underaccent{\bar}{\tilde{T}}_{\text{Jr}}^{q}
             =
             \ell_{\text{Jr}}^{q}
         \end{gather}
-        minimum productivity, given the labor market is only binarily stratified. Hence, if one is to be hired for either ``junior'' or ``senior'' positions, they should be competent across their entire responsability spectrum, not just a part of it. And this becomes worse in independent production, where jobs cover every $l \in [0,1]$ difficulty level and perfect qualification is required of all employees. Thus, 
+        productivity, given the labor market is only binarily stratified. Hence, if one is to be hired for either ``junior'' or ``senior'' positions, they should be competent across their entire responsability spectrum, not just a part of it. And this becomes worse in independent production, where jobs cover every $l \in [0,1]$ difficulty level and perfect qualification is required of all employees. Thus, 
         \begin{align}
             p_q = 1
             &\implies
@@ -3873,13 +3736,13 @@ Having derived optimal responsibility ranges for maximally stratified markets wi
         \end{align}
         
         With this, it is trivial to demonstrate the economic configuration with maximum productivity requirements is independent production:
-        \begin{gather}
+        \begin{align}
+            &
             \arg\max_{p_q}{
                 \underaccent{\bar}{\tilde{T}}(l, p_q)
             }
             =
             1
-            \\
             \because
             l \in [0,1]
             \implies
@@ -3892,6 +3755,7 @@ Having derived optimal responsibility ranges for maximally stratified markets wi
             \
             p_q \in \{1,2,3,\dots\}
             \\
+            &
             \land \
             \underaccent{\bar}{\tilde{T}}(l, p_q)
             =
@@ -3903,7 +3767,7 @@ Having derived optimal responsibility ranges for maximally stratified markets wi
             \iff
             p_q = 1
             ,
-        \end{gather}
+        \end{align}
         so that our ceiling is $\underaccent{\bar}{\tilde{T}}(l, 1)$.
 
         Furthermore, by the very definition (\ref{complex_task}) of task,
@@ -4051,7 +3915,7 @@ Having derived optimal responsibility ranges for maximally stratified markets wi
             \in [0,1]
             ;
         \end{align}
-        whence, again, ``jobs'' themselves converge to tasks (see ISL).
+        whence, again, ``jobs'' themselves collapse into tasks (see ISL).
 
         So, while independent production is the ceiling for productivity requirements, infinite labor stratification is its floor. Therefore,
         \begin{gather}
@@ -4184,8 +4048,6 @@ Now that we know maximum labor stratification with unitary employment is the pro
             \forall
             \
             v \in \{1, \dots, w_q\}
-            \\
-            &
             \iff
             \boldsymbol{w_{q}^{*}} =
             \boldsymbol{1}
@@ -4291,55 +4153,36 @@ At last, we demonstrate the economy's productivity has to be capable of supporti
         \end{gather}
         employers' optimal choice would be to save their resources and completely shutdown the productive effort. Therefore,
         \begin{gather}
-        \lnot \
-        \oo_q > 0
-        \iff
-        \boldsymbol{\ddot{w}_{q}}
-        =
-        \boldsymbol{0}
-        \\
-        \implies
-        \boldsymbol{w_{q}^{*}}
-        =
-        \boldsymbol{0}
-        \iff
-        \boldsymbol{1} ^ {\top}
-        \cdot
-        \boldsymbol{w_{q}^{*}}
-        :=
-        w_q
-        =
-        0
-        \\
-        \therefore
-        w_q \geq 1
-        \iff 
-        \oo_q > 0
-        \iff
-        \boldsymbol{\ddot{w}_{q}}
-        \geq
-        \boldsymbol{1}
-        ,
-        \\
-        0
-        \leq
-        \boldsymbol{1} ^ {\top}
-        \cdot
-        \boldsymbol{\ddot{w}_{q}}(
-            \boldsymbol{w_{q}},
-            \boldsymbol{\ell_{q}},
-            \boldsymbol{\tilde{T}_{q}}
-        )
-        \leq
-        \boldsymbol{1} ^ {\top}
-        \cdot
-        \boldsymbol{\ddot{w}_{q}}(
-            \boldsymbol{w_{q}},
-            \boldsymbol{\ell_{q}},
+            \lnot \
+            \oo_q > 0
+            \iff
+            \boldsymbol{\ddot{w}_{q}}
+            =
+            \boldsymbol{0}
+            \\
+            \implies
+            \boldsymbol{w_{q}^{*}}
+            =
+            \boldsymbol{0}
+            \iff
+            \boldsymbol{1} ^ {\top}
+            \cdot
+            \boldsymbol{w_{q}^{*}}
+            :=
+            w_q
+            =
+            0
+            \\
+            \label{mpc}
+            \therefore
+            w_q \geq 1
+            \iff 
+            \oo_q > 0
+            \iff
+            \boldsymbol{\ddot{w}_{q}}
+            \geq
             \boldsymbol{1}
-        )
-        :=
-        w_q
+            .
         \end{gather}
 
         In other words, simply because this occupation's labor market exists we know the talent employed is sufficient to output all its responsibility spectra.
@@ -4398,7 +4241,7 @@ At last, we demonstrate the economy's productivity has to be capable of supporti
     \end{proof}
 
     \begin{proof}[Proof 2]
-        Another proof for this lemma is to start with the minimum productivity condition above,
+        Another proof for this lemma is to start with the Equation (\ref{mpc}),
         \begin{gather}
             \boldsymbol{\ddot{w}_q}
             \geq
@@ -4636,7 +4479,7 @@ From the above, it follows logically that maximum-monotonic labor stratification
             0
             ,
         \end{gather}
-        that is, if an employee cannot fully output a responsibility spectrum, their contribution to production is void, limiting aggregate operational output. This means choosing any production strategy other than maximum-monotonic labor stratification is a risk with no upside, when workers may have varying productivity (PDA). For, as we have shown, this arrangement by itself guarantees minimum productivity requirements (PSL) and maximum operational output (MOOL). So, it would be irrational of employers to organize production in another manner. Or, more succinctly, we can write for all $v \in \{1, \dots, w_q\}$:
+        that is, if an employee cannot fully output a responsibility spectrum, their contribution to production is void, limiting aggregate operational output. This means choosing any production strategy other than maximum-monotonic labor stratification is a risk with no upside, when workers may have varying productivity (PDA). For, as we have shown, this arrangement by itself guarantees minimum productivity requirements (PSL) and maximum operational output (MOOL). It would be, then, irrational of employers to organize production in another manner. So, we can write for all $v \in \{1, \dots, w_q\}$:
         \begin{gather}
             \mathbb{E}[
                 \oo_{q}^{\text{IP}}
@@ -4701,6 +4544,7 @@ From the above, it follows logically that maximum-monotonic labor stratification
 \end{lemma}
 % endregion
 
+\subsubsection{General Employability Theorem}
 With this, we have shown maximally stratified production is the only efficient arrangement that holds in reality. So, we can, finally, derive a general employability coefficient by estimating employability in such markets.
 % region: general employability theorem (get) 
 \begin{get_theorem}[GET]
@@ -4817,7 +4661,7 @@ The General Employability Theorem has a few interesting collolaries, the first, 
         \int_{0}^{\tilde{T}_{k}^{q}}
         \ta(l)
         dl
-        :=
+        =:
         \Omega_{k}^{q}
         \in 
         [0,1]
@@ -4958,7 +4802,7 @@ The General Employability Theorem has a few interesting collolaries, the first, 
             \int_{0}^{\tilde{T}_{k}^{q}}
             \ta(l)
             dl
-            :=
+            =:
             \Omega_{k}^{q}
             \in 
             [0,1]
@@ -4987,7 +4831,7 @@ The General Employability Theorem has a few interesting collolaries, the first, 
             \int_{0}^{\tilde{T}_{\kappa}^{q}}
             \ta(l)
             dl
-            :=
+            =:
             \Omega_{\kappa}^{q}
             \approx
             \int_{0}^{\tilde{T}_{k}^{q}}
@@ -5040,17 +4884,6 @@ The General Employability Theorem has a few interesting collolaries, the first, 
             \int_{0}^{\tilde{T}_{\kappa}^{q}}
             \ta(l)
             dl
-            :=
-            \left(
-                \frac{1}{w}
-            \right)
-            \sum_{q=1}^{n}
-            \left[
-                h_{k}^{q}
-                \geq
-                \frac{1}{2}
-            \right]
-            \Omega_{\kappa}^{q}
             .
         \end{gather}
     \end{proof}        
