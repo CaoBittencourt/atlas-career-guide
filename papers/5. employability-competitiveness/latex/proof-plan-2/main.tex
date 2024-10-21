@@ -129,7 +129,7 @@
     \end{gather}
     so that difficulty levels are equally represented throughout the scale.
     
-    Note, however, scale uniformity is not so much an axiom, but more of a convenient notation. In fact, if task difficulty is not uniformly distributed for a particular attribute, then, given such uniform scales, its underlying distribution will affect assessed productivity statistics (see Definition \ref{def_prod}) and, therefore, the workforce's talent overall.
+    Note, however, scale uniformity is not so much an axiom, but more of a convenient notation. In fact, if task difficulty is not uniformly distributed for a particular attribute, then, given such uniform scales, its underlying distribution will affect our estimation of productivity statistics (see Definition \ref{def_prod}) and, therefore, the assessed workforce's talent overall.
     
     That is, if an attribute's tasks concentrate on the lower end of the $l \in [0,1]$ scale, then most people will be fairly competent in it; and vice-versa if tasks concentrate on the higher end of the difficulty scale.
     
@@ -182,7 +182,7 @@ With this, we can define productivity in a more convenient way.
 
 % endregion
 
-We proceed, now, to frame the concepts of skills and skill sets (Bittencourt, 2024) in terms of tasks.
+We proceed, now, to reframe the concepts of skills and skill sets we have spoken about before (see Bittencourt, 2024) in terms of tasks.
 % region: attribute reducibility observation (aro) 
 % attributes can be reduced to their tasks
 \begin{observation}[Attribute Reducibility]
@@ -265,9 +265,9 @@ Notice, though, we have above implicitly assumed each attribute measures only on
 \begin{axiom}[Attribute Atomicity Axiom, AAA]
     \label{aaa}
     % statement
-    Professional attributes and their tasks are well-defined. Thus, a skill is an ``atomic'' set of tasks, which may or may not be correlated with other skills, but which, in practice, cannot be further reduced to any elementary ``particle''.
+    Professional attributes and their tasks are well-defined. Thus, a skill is an ``atomic'' collection of tasks, which may or may not be correlated with other skills, but which, in practice, cannot be further reduced to any elementary ``particle''.
     
-    Indeed, if skills were not well-defined in this sense, each and every one of them would entail a regress into microbiological, chemical and, even quite literally \textit{atomic}, phenomena so as to be properly defined by indivisible, bedrock ``subskills''. For instance, when we say an individual is good at ``deductive reasoning'' (see O*NET, 2024), we could also describe their intelligence in terms of underlying neurological structures in the brain and, similarly, in the cellular level, within the neurons themselves, etc. But this would not help our analysis.
+    Indeed, if skills were not well-defined in this sense, each and every one of them would entail a regress into microbiological, chemical and, quite literally \textit{atomic}, phenomena so as to be properly defined by indivisible, bedrock ``subskills''. For instance, when we say an individual is good at ``deductive reasoning'' (an attribute in O*NET, 2024), we could also describe their intelligence in terms of underlying neurological structures in the brain and, similarly, in the cellular level, within the neurons themselves, etc. But this would not help our analysis.
 
     We assume, then, attributes are ``atomic'' or, if not so, that all their ``subattributes'' are perfectly correlated to the main, ``high-level'', abstraction which we call a ``skill''. Or, mathematically,
     \begin{gather}
@@ -408,7 +408,16 @@ Our next step is generalizing the SSL for tasks that require multiple skills.
         := 
         f(\boldsymbol{\ell_k}, \boldsymbol{\ell_q})
         :=
-        f(\ell_{1}^{k}, \dots, \ell_{m}^{k}, \ell_{1}^{q}, \dots, \ell_{m}^{q})
+        f\big(
+        % f(
+            (\ell_{1}^{k}, \dots, \ell_{m}^{k})
+            ,
+            (\ell_{1}^{q}, \dots, \ell_{m}^{q})
+            % \ell_{1}^{k}, \dots, \ell_{m}^{k}
+            % ;
+            % \ell_{1}^{q}, \dots, \ell_{m}^{q}
+        \big)
+        % )
         ,
         f
         :
@@ -426,6 +435,14 @@ Our next step is generalizing the SSL for tasks that require multiple skills.
             \partial 
             \ell_{i}^{k}
         } > 0
+        \land
+        \frac{
+            \partial
+            f(\boldsymbol{\ell_k}, \boldsymbol{\ell_q})
+        }{
+            \partial 
+            \ell_{i}^{q}
+        } < 0
         \
         \forall 
         \
@@ -596,13 +613,11 @@ In addition to the above, we shall also specifiy tasks' duration in terms of a t
         \right) ^ {-1}
         ,
         \\
-        \ttc(l)
-        \geq
-        0
-        \
-        \forall
-        \
-        l \in [0,1]
+        \ttc
+        :
+        [0,1]
+        \rightarrow
+        \mathbb{R}^{+}        
         \land
         \int_{0}^{1}
             \ttc(l)
@@ -613,13 +628,14 @@ In addition to the above, we shall also specifiy tasks' duration in terms of a t
     \end{gather}
     where $\ttc(l)$ is the number of hours to complete a task given its difficulty level.
     
-    Notice, as well, we termed normalized task duration ``time allocation''. This is on purpose, as time constraints are assumed to coincide with aggregate normalized duration. Or, in other words, all employees have the same unitary time allowance, while tasks' normalized duration, likewise integrates to a dimensionless time unit, so that any worker, if sufficiently qualified, can output every task by themselves. Therefore, an independent employee producing the entire $l \in [0,1]$ responsibility spectrum must spend their time allowance in accordance with normalized duration, or the \textit{percentage} of a single worker's time that has to be \textit{allocated} to complete a task; hence the name ``time allocation''.
+    Notice, as well, we termed normalized task duration ``time allocation''. This is on purpose, as time constraints are assumed to coincide with aggregate normalized duration (Axiom \ref{taa}). Or, in other words, all employees have the same unitary time allowance, while tasks' normalized duration, likewise integrates to a dimensionless time unit, so that any worker, if sufficiently qualified, can output every task by themselves. Therefore, an independent employee producing the entire $l \in [0,1]$ responsibility spectrum must spend their time allowance in accordance with normalized duration, or the \textit{percentage} of a single worker's time that has to be \textit{allocated} to complete a task; hence the name ``time allocation''.
     % Notice, as well, we termed normalized task duration ``time allocation''. This is on purpose, as employees' ``time allowances'', or time constraints, are assumed to coincide with aggregate normalized duration. Or, in other words, workers all have the same unitary time allowance, while tasks' normalized duration, likewise integrates to a dimensionless time unit, so that each worker, if sufficiently qualified, can produce the entire $l \in [0,1]$ responsibility spectrum by themselves. Therefore, any independent employee has to spend their time allowance in accordance with normalized duration, or the \textit{percentage} of a single worker's time that has to be \textit{allocated} to complete a task; hence the name ``time allocation''.
 \end{definition}
 % endregion
 
 % region: time allowance axiom (taa) 
 \begin{axiom}[Time Allowance Axiom, TAA]
+    \label{taa}
     All workers' time allowances are unitary and perfectly coincide with the
     \begin{gather}
         \int_{0}^{1}
@@ -687,7 +703,7 @@ Finally, as with attribute atomicity (see Axiom \ref{aaa}), occupational atomici
 % statement
 And, because of these two insightful, yet fairly uncontroversial observations (viz. of reducibility and atomicity), it seems we have good logical grounds to ``sidestep'' the issue of occupational complexity by an axiom.
 \begin{axiom}[Occupational Complexity Axiom]
-    \label{woca}
+    \label{oca}
     Any occupation can be thought of as one indivisible activity that mobilizes workers' entire skill set. We call this ``holistic task'' an occupation's \textit{operation}.
 
     Mathematically, an occupational operation is just a series of complex tasks on a continuum of difficulty levels normalized to the unit interval, all of which are indispensable for the whole operation to be accomplished.
@@ -723,7 +739,7 @@ And, because of these two insightful, yet fairly uncontroversial observations (v
             }
             ,
         \end{gather}
-        where the upperscript ``IP'' indicates production is organized independently, as each worker outputs the $l \in [0,1]$ responsibility spectrum by themselves. So, the market's aggregate output is exactly the number of perfectly qualified employees in it (i.e. those capable of producing all tasks without outsourcing).
+        where the upperscript ``IP'' indicates production is organized independently, as each worker outputs the $l \in [0,1]$ responsibility spectrum by themselves, so that the market's aggregate output is exactly the number of perfectly qualified employees in it (i.e. those capable of producing all tasks without outsourcing).
         
         Intuitively, this initial formulation entails a scenario of several individuals working in parallel entirely disconnected from one another; which, of course, is hardly the case in a real economy. Thus, we should define occupational complexity in weaker terms, allowing for at least a degree of outsourcing.
     \end{subaxiom}
@@ -865,13 +881,20 @@ And, because of these two insightful, yet fairly uncontroversial observations (v
             \boldsymbol{\ell_{q}},
             \boldsymbol{1}
         )
-        :=
+        =
         w_q
     \end{gather}
     are effective\footnote{
         The \textit{umlaut} operator was defined in previous work (Bittencourt, 2024) and is not to be mistaken with the Newtonian derivative notation. Here, as before, it only indicates an equivalence function, in this case a quite simple one, is applied to its operand vector.
     } (i.e. sufficiently qualified) workers per position, from a pool of
     \begin{gather}
+        w_q
+        :=
+        \boldsymbol{1} ^ {\top}
+        \cdot
+        \boldsymbol{w_q}
+        ,
+        \\
         \boldsymbol{w_{q}} := 
         (
             w_{1}^{q}
@@ -882,6 +905,7 @@ And, because of these two insightful, yet fairly uncontroversial observations (v
         )
         \geq
         \boldsymbol{0}
+        ,
     \end{gather}
     individuals; and
     \begin{gather}
@@ -940,6 +964,7 @@ And, because of these two insightful, yet fairly uncontroversial observations (v
     \end{subaxiom}
 
     \begin{subaxiom}[Weak Occupational Complexity Axiom, WOCA]
+        \label{woca}
         Weakly complex operations are just the same as in MOCA, with an additional assumption about the net effects of labor stratification:
         \begin{gather}
             \boldsymbol{w_{q}} ^ {\top}
@@ -1043,7 +1068,7 @@ And, because of these two insightful, yet fairly uncontroversial observations (v
         %     )
         %     ,
         % \end{gather}
-        % so that workers in each position are all sufficiently qualified for their responsabilities\footnote{
+        % so that workers in each position are all sufficiently qualified for their responsibilities\footnote{
         %     See ``Employer Rationality Axiom'' and ``Productivity Sufficiency Lemma".
         % },
         % \begin{gather}
@@ -1217,6 +1242,163 @@ In this brief section, we define some presuppositions concerning market dynamics
 \end{axiom}
 % endregion
 
+% region: constant compensation lemma (ccl)
+\begin{lemma}[Constant Compensation Lemma, CCL]
+    \label{ccl}
+    The CCL states wages are
+    \begin{gather}
+        y_{v}^{q}
+        =
+        y_q
+        ,
+    \end{gather}
+    for all $v \in \{1, \dots, p_q\}, p_q \in \{1, 2, 3, \dots\}$ job subtypes, where $y_q > 0 $ is the mean wage in occupation $q$'s labor market.
+
+    \begin{proof}
+        \begin{gather}
+            \therefore
+            p_q = 1
+            \implies
+            y_{v}^{q}
+            =
+            y_q
+            \
+            \forall
+            \
+            v \in \{1, \dots, w_q\}
+        \end{gather}
+        The value of responsibility spectrum $l \in [\ell_{v-1}^{q}, \ell_{v}^{q}]$ is
+        \begin{gather}
+            y_q
+            \times
+            \int_{\ell_{v-1}^{q}}^{\ell_{v}^{q}}
+            \ta(l)
+            dl
+            ,
+        \end{gather}
+        irrespective of labor stratification. For any $p_q \in \{1, 2, 3, \dots\}$, then,
+        \begin{gather}
+            y_{v}^{q}
+            =
+            y_q
+            \times
+            \int_{\ell_{v-1}^{q}}^{\ell_{v}^{q}}
+            \ta(l)
+            dl
+            \times
+            \left(
+                \int_{\ell_{v-1}^{q}}^{\ell_{v}^{q}}
+                \ta(l)
+                dl
+            \right) ^ {-1}
+            =
+            y_q
+            \
+            \forall
+            \
+            v \in \{1, \dots, p_q\}
+            .
+        \end{gather}
+    \end{proof}
+\end{lemma} 
+% endregion
+
+This, in turn, greatly simplifies rational employers' optimization problem.
+% region: wage-independent optimization lemma (wiol) 
+\begin{lemma}[Wage-Independent Optimization Lemma, WIOL]
+    \label{wiol}
+    The optimal number of workers of each type to hire is estimated by
+    \begin{gather}
+        w_{v}^{q}
+        \times
+        \oo_{v}^{q}
+        =
+        w_{r}^{q}
+        \times
+        \oo_{r}^{q}
+        \
+        \forall
+        \
+        v,r \in \{1, \dots, p_q\}
+        ,
+        p_q \in \{1, 2, 3, \dots\}
+        .
+    \end{gather}
+
+    \begin{proof}
+        Because weak cccupational complexity (Axiom \ref{woca}) implies optimization is done via the no-waste condition (see [basic textbooks]),
+        \begin{gather}
+            \frac{
+                w_{v}^{q}
+                \times
+                \oo_{v}^{q}
+            }{
+                y_{v}^{q}
+            }
+            =
+            \frac{
+                w_{r}^{q}
+                \times
+                \oo_{r}^{q}
+            }{
+                y_{r}^{q}
+            }
+            \
+            \forall
+            \
+            v,r \in \{1, \dots, p_q\}
+            ,
+            p_q \in \{1, 2, 3, \dots\}
+            ,
+        \end{gather} 
+        with the CCL above we have
+        \begin{gather}
+            \frac{
+                w_{v}^{q}
+                \times
+                \oo_{v}^{q}
+            }{
+                y_q
+            }
+            =
+            \frac{
+                w_{r}^{q}
+                \times
+                \oo_{r}^{q}
+            }{
+                y_q
+            }
+            \therefore
+            \frac{
+                w_{v}^{q}
+                \times
+                \oo_{v}^{q}
+            }{
+                1
+            }
+            =
+            \frac{
+                w_{r}^{q}
+                \times
+                \oo_{r}^{q}
+            }{
+                1
+            }
+            \therefore
+            w_{v}^{q}
+            \times
+            \oo_{v}^{q}
+            =
+            w_{r}^{q}
+            \times
+            \oo_{r}^{q}
+            .
+        \end{gather}
+    \end{proof}
+\end{lemma}
+% endregion
+
+
 % region: productivity differentia axiom, pda 
 \begin{axiom}[Productivity Differentia Axiom, PDA]
     There are, or there could be, skill differences in the workforce (i.e. employees are, likely, not all equally competent ``clones'' of one another). So, the expected value of productivity is:
@@ -1356,9 +1538,9 @@ With these basic axioms in place, we can attempt to derive an employability coef
 
 In this subsection, we shall estimate employability in an occupation $q$'s labor market where there are two types of workers with varying productivity. The first type -- call them ``juniors" -- have lower skill and cannot accomplish tasks with difficulty levels $l > \ell_{\text{Jr}}^{q} \in [0,1)$. And the other type of employee are perfectly qualified ``seniors'', with $\tilde{T}_{\text{Sr}}^{q} = 1$ productive capacity.
 
-Now, because of weak occupational complexity (WOCA), employers will maximize operational output by producing the entire $l \in [0,1]$ spectrum of occupation $q$'s complex tasks, subject to each task's duration. This can be done either by having only perfectly qualified employees work on these independently, from beginning to end, or by splitting responsabilities into two, or more, types of jobs, thus allowing for less qualified, ``junior'' employees, to work alongside ``seniors'' towards the common goal of accomplishing the whole operation.
+Now, because of weak occupational complexity (WOCA), employers will maximize operational output by producing the entire $l \in [0,1]$ spectrum of occupation $q$'s complex tasks, subject to each task's duration. This can be done either by having only perfectly qualified employees work on these independently, from beginning to end, or by splitting responsibilities into two, or more, types of jobs, thus allowing for less qualified, ``junior'' employees, to work alongside ``seniors'' towards the common goal of accomplishing the whole operation.
 
-Additionally, because we assume there to be skill differences among workers in the labor market, any rational employer will always, and rightly, expect potential employees to be of varying skill levels, rather than all perfectly qualified, so that splitting responsabilities into separate positions will not only be an alternative mode of hiring and producing, but in fact the optimal one.
+Additionally, because we assume there to be skill differences among workers in the labor market, any rational employer will always, and rightly, expect potential employees to be of varying skill levels, rather than all perfectly qualified, so that splitting responsibilities into separate positions will not only be an alternative mode of hiring and producing, but in fact the optimal one.
 
 Therefore, employers will stratify job offers based on required competence, providing ``junior'' and ``senior'' positions, both dedicated to their own subset of complex tasks with difficulty levels appropriate for each employee.
 
@@ -1600,7 +1782,7 @@ Either way, if the available talent is enough to output occupation $q$'s operati
 \subsection{Employability With Multiple Types of Workers}
 \subsubsection{Maximum Labor Stratification}
 % region: maximum-monotonic labor stratification definition 
-Now, to generalize this conclusion, we shall define notation in terms of maximum labor stratification, a productive arrangement where there are several job subtypes, indeed as many as there are jobs themselves, each with a limited spectrum of responsabilities.
+Now, to generalize this conclusion, we shall define notation in terms of maximum labor stratification, a productive arrangement where there are several job subtypes, indeed as many as there are jobs themselves, each with a limited spectrum of responsibilities.
 
 \begin{definition}[Maximum Labor Stratification]
     \label{mmls_def}
@@ -1857,7 +2039,7 @@ where the hireability statistic $h_{k}^{q} \in [0,1]$ accounts for hiring requir
 \end{lemma}
 % endregion
 
-This being said, infinitely stratified markets are rather abstract, and it is not realistic to think of actual job posts as infinitesimal tasks; for, then, the very concept of a ``job'' itself disappears. Fractional positions do not make much sense in reality, where jobs usually deal with a set of multiple responsabilities. Furthermore, a maximally -- though not infinitely -- stratified labor market with sufficient positions, will, in practice, yield the same results when $w_q$ is large enough, so that we do not even need to consider infinite labor stratification as a production strategy.
+This being said, infinitely stratified markets are rather abstract, and it is not realistic to think of actual job posts as infinitesimal tasks; for, then, the very concept of a ``job'' itself disappears. Fractional positions do not make much sense in reality, where jobs usually deal with a set of multiple responsibilities. Furthermore, a maximally -- though not infinitely -- stratified labor market with sufficient positions, will, in practice, yield the same results when $w_q$ is large enough, so that we do not even need to consider infinite labor stratification as a production strategy.
 
 % region: maximum stratification axiom (msa) 
 \begin{axiom}[Maximum Stratification Axiom, MSA]
@@ -1963,7 +2145,7 @@ With this, we can now demonstrate that, given the above, maximum labor stratific
         v \in \{1, \dots, p_q\}
         ,
         p_q \in \{1, \dots, w_q\}
-        $; that is, all employees are sufficiently qualified for their responsabilities.
+        $; that is, all employees are sufficiently qualified for their responsibilities.
         
         With this, we begin with the most trivial of economic configurations, that of independent production with perfectly qualified workers. In this scenario, each employee devotes their unitary time allowance,
         \begin{gather}
@@ -2548,7 +2730,7 @@ With this, we can now demonstrate that, given the above, maximum labor stratific
         \end{gather}
         as with the previous economic configurations.
         
-        Note employers could, again, attempt to increase production beyond this level if they, now, reduced the responsabilities of a particular job subtype by setting
+        Note employers could, again, attempt to increase production beyond this level if they, now, reduced the responsibilities of a particular job subtype by setting
         \begin{align}
         \ell_{v}^{q} < \ell_{v}^{q*}
         \implies
@@ -3646,13 +3828,13 @@ Having derived optimal responsibility ranges for maximally stratified markets wi
 
         Likewise, if there were three levels of seniority, with $w_{\text{Ir}}^{q}$ interns (less qualified than juniors and seniors), productivity requirements would be even lower. And the same holds true for the subsequent production strategies.
         
-        To show this, though, we have to ``shift gears'' and go back to looking at tasks individually, in a continuous fashion, rather than ``bundled together'' in responsability spectra. Indeed, notice above tasks with $l \in [0, \ell_{\text{Jr}}^{q})$, that is easier than the upper bound, still demand
+        To show this, though, we have to ``shift gears'' and go back to looking at tasks individually, in a continuous fashion, rather than ``bundled together'' in responsibility spectra. Indeed, notice above tasks with $l \in [0, \ell_{\text{Jr}}^{q})$, that is easier than the upper bound, still demand
         \begin{gather}
             \underaccent{\bar}{\tilde{T}}_{\text{Jr}}^{q}
             =
             \ell_{\text{Jr}}^{q}
         \end{gather}
-        productivity, given the labor market is only binarily stratified. Hence, if one is to be hired for either ``junior'' or ``senior'' positions, they should be competent across their entire responsability spectrum, not just a part of it. And this becomes worse in independent production, where jobs cover every $l \in [0,1]$ difficulty level and perfect qualification is required of all employees. Thus, 
+        productivity, given the labor market is only binarily stratified. Hence, if one is to be hired for either ``junior'' or ``senior'' positions, they should be competent across their entire responsibility spectrum, not just a part of it. And this becomes worse in independent production, where jobs cover every $l \in [0,1]$ difficulty level and perfect qualification is required of all employees. Thus, 
         \begin{align}
             p_q = 1
             &\implies
@@ -3996,7 +4178,7 @@ Now that we know maximum labor stratification with unitary employment is the pro
     $
     
     \begin{proof}
-        In the MPL above, we have shown maximum stratification minimizes productivity requirements and, thus, the chance workers may not be sufficiently qualified for their responsabilities (i.e. it is the safest production strategy). So, 
+        In the MPL above, we have shown maximum stratification minimizes productivity requirements and, thus, the chance workers may not be sufficiently qualified for their responsibilities (i.e. it is the safest production strategy). So, 
         \begin{gather}
             p_{q}^{*} = w_q
         \end{gather}
@@ -4376,7 +4558,7 @@ At last, we demonstrate the economy's productivity has to be capable of supporti
             v \in \{1, \dots, w_q\}
             ,
         \end{align}
-        which means all employees in a maximally stratified labor market necessarily meet the minimum productivity requirements for their responsabilities (i.e. the available talent has to be at least sufficient for maximally stratified production, for no other strategy has a lower barrier of entry). Therefore,
+        which means all employees in a maximally stratified labor market necessarily meet the minimum productivity requirements for their responsibilities (i.e. the available talent has to be at least sufficient for maximally stratified production, for no other strategy has a lower barrier of entry). Therefore,
         \begin{align}
             w_q \geq 1
             &
@@ -4533,13 +4715,13 @@ From the above, it follows logically that maximum-monotonic labor stratification
         \end{gather}
         where each of the terms above represents the expected value of aggregate operational output in production strategies other than infinite stratification, given the workforce's expected productivity.
 
-        In other words, splitting responsabilities with respect to competence always produces the maximum operational output (viz. that which is obtained when employing perfectly qualified workers independently), provided employees are sufficiently qualified for their responsabilities. But, again, this is, by definition, guaranteed by employers' rationality, as well as the simple fact the economy is already producing its current operational output (see PSL). 
+        In other words, splitting responsibilities with respect to competence always produces the maximum operational output (viz. that which is obtained when employing perfectly qualified workers independently), provided employees are sufficiently qualified for their responsibilities. But, again, this is, by definition, guaranteed by employers' rationality, as well as the simple fact the economy is already producing its current operational output (see PSL). 
         
         Therefore, employing potentially underqualified workers to output the entire responsibility spectrum $l \in [0,1]$ independently can only be as productive as the labor stratification strategy, but never more than it. Indepedent production, then, is a suboptimal strategy when employers expect there to be skill differences in the workforce. And the same logic also applies to less than maximally-stratified arrangements.
         
         Thus, maximum labor stratification follows as an insurance policy against worker's potential underqualification: for if talent is lacking in the labor market, there is nothing to gain by employing individuals which are not sufficiently qualified for a difficult job, whereas if talent is abundant, there is nothing to lose when employing overqualified individuals to a job below their skill level.
 
-        Hence, given the same $w_q \geq 1$ workforce, operational output in a maximally stratified labor market is always greater or equal to the output of any other economic configuration. It is, therefore, always optimal to monotonically and maximally stratify responsabilities across $w_q$ unique positions, each focused on increasingly demanding tasks.
+        Hence, given the same $w_q \geq 1$ workforce, operational output in a maximally stratified labor market is always greater or equal to the output of any other economic configuration. It is, therefore, always optimal to monotonically and maximally stratify responsibilities across $w_q$ unique positions, each focused on increasingly demanding tasks.
     \end{proof}
 \end{lemma}
 % endregion
