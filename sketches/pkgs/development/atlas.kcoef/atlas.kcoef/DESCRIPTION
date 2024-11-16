@@ -1,0 +1,12 @@
+Package: atlas.kcoef
+Type: Package
+Title: Statistical Analysis of Human Capital
+Version: 0.1.0
+Author: Cao Bittencourt Ferreira
+Maintainer: Cao Bittencourt Ferreira <caobittencourt@gmail.com>
+Description: This package contains various methods and metrics for analysing human capital as numeric attributes.
+Depends: dplyr, tidyr, atlas.skew
+Remotes: github::CaoBittencourtFerreira/atlas.skew
+License: What license is it under?
+Encoding: UTF-8
+LazyData: true

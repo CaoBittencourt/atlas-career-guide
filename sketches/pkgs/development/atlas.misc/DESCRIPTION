@@ -1,0 +1,11 @@
+Package: atlas.misc
+Type: Package
+Title: Miscellaneous Helper Functions
+Version: 0.1.0
+Author: Cao Bittencourt Ferreira
+Maintainer: Cao Bittencourt Ferreira <caobittencourt@gmail.com>
+Description: This package includes simple helper functions for statistical analysis and back-end development.
+Depends: dplyr, tidyr, stringr
+License: What license is it under?
+Encoding: UTF-8
+LazyData: true
