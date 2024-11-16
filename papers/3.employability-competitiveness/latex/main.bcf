@@ -3066,4 +3066,99 @@
     <bcf:citekey order="4" intorder="1">onet2024about</bcf:citekey>
     <bcf:citekey order="5" intorder="1">cao_gene_comp</bcf:citekey>
     <bcf:citekey order="6" intorder="1">atlas.aeq</bcf:citekey>
-  
+    <bcf:citekey order="6" intorder="2">atlas.gene</bcf:citekey>
+    <bcf:citekey order="6" intorder="3">atlas.comp</bcf:citekey>
+    <bcf:citekey order="6" intorder="4">repo_gene_comp</bcf:citekey>
+    <bcf:citekey order="7" intorder="1">epi</bcf:citekey>
+    <bcf:citekey order="7" intorder="2">bigfive</bcf:citekey>
+    <bcf:citekey order="8" intorder="1">stanford_binet5</bcf:citekey>
+    <bcf:citekey order="8" intorder="2">wisc5</bcf:citekey>
+    <bcf:citekey order="9" intorder="1">mmpi3</bcf:citekey>
+    <bcf:citekey order="9" intorder="2">holland1997making</bcf:citekey>
+    <bcf:citekey order="9" intorder="3">schein1993careeranchors</bcf:citekey>
+    <bcf:citekey order="10" intorder="1">jehle_reny_micro</bcf:citekey>
+    <bcf:citekey order="10" intorder="2">romer_macro</bcf:citekey>
+    <bcf:citekey order="11" intorder="1">romer_human_capital</bcf:citekey>
+    <bcf:citekey order="11" intorder="2">barro_1991</bcf:citekey>
+    <bcf:citekey order="11" intorder="3">nelson_phelps_1966</bcf:citekey>
+    <bcf:citekey order="11" intorder="4">becker1994</bcf:citekey>
+    <bcf:citekey order="11" intorder="5">becker1962</bcf:citekey>
+    <bcf:citekey order="11" intorder="6">lucas_1988</bcf:citekey>
+    <bcf:citekey order="11" intorder="7">uhr_et_al_2020</bcf:citekey>
+    <bcf:citekey order="11" intorder="8">mulligan_sala_1995</bcf:citekey>
+    <bcf:citekey order="12" intorder="1">schütt_human_capital</bcf:citekey>
+    <bcf:citekey order="13" intorder="1">tom_behavioral_labor_econ</bcf:citekey>
+    <bcf:citekey order="14" intorder="1">winter_behavioral_labor_econ</bcf:citekey>
+    <bcf:citekey order="14" intorder="2">berg_behavioral_labor_econ</bcf:citekey>
+    <bcf:citekey order="14" intorder="3">onet1998data</bcf:citekey>
+    <bcf:citekey order="14" intorder="4">gippity2024</bcf:citekey>
+    <bcf:citekey order="15" intorder="1">onet_publications</bcf:citekey>
+    <bcf:citekey order="16" intorder="1">onet2023data</bcf:citekey>
+    <bcf:citekey order="17" intorder="1">onet2023data</bcf:citekey>
+    <bcf:citekey order="18" intorder="1">onet2023data</bcf:citekey>
+    <bcf:citekey order="19" intorder="1">onet_art</bcf:citekey>
+    <bcf:citekey order="19" intorder="2">onet_pilot</bcf:citekey>
+    <bcf:citekey order="19" intorder="3">onet_surgeon</bcf:citekey>
+    <bcf:citekey order="20" intorder="1">ipa</bcf:citekey>
+    <bcf:citekey order="21" intorder="1">cao_gene_comp</bcf:citekey>
+  </bcf:section>
+  <!-- SORTING TEMPLATES -->
+  <bcf:sortingtemplate name="apa">
+    <bcf:sort order="1">
+      <bcf:sortitem order="1">presort</bcf:sortitem>
+    </bcf:sort>
+    <bcf:sort order="2" final="1">
+      <bcf:sortitem order="1">sortkey</bcf:sortitem>
+    </bcf:sort>
+    <bcf:sort order="3">
+      <bcf:sortitem order="1">sortname</bcf:sortitem>
+      <bcf:sortitem order="2">author</bcf:sortitem>
+      <bcf:sortitem order="3">editor</bcf:sortitem>
+      <bcf:sortitem order="4">sorttitle</bcf:sortitem>
+      <bcf:sortitem order="5">title</bcf:sortitem>
+    </bcf:sort>
+    <bcf:sort order="4">
+      <bcf:sortitem order="1">pubstate</bcf:sortitem>
+    </bcf:sort>
+    <bcf:sort order="5">
+      <bcf:sortitem order="1">sortyear</bcf:sortitem>
+      <bcf:sortitem order="2">year</bcf:sortitem>
+      <bcf:sortitem literal="1" order="3">-2000000000</bcf:sortitem>
+    </bcf:sort>
+    <bcf:sort order="6">
+      <bcf:sortitem order="1">month</bcf:sortitem>
+      <bcf:sortitem literal="1" order="2">-2000000000</bcf:sortitem>
+    </bcf:sort>
+    <bcf:sort order="7">
+      <bcf:sortitem order="1">day</bcf:sortitem>
+      <bcf:sortitem literal="1" order="2">-2000000000</bcf:sortitem>
+    </bcf:sort>
+    <bcf:sort order="8">
+      <bcf:sortitem order="1">sorttitle</bcf:sortitem>
+      <bcf:sortitem order="2">title</bcf:sortitem>
+    </bcf:sort>
+    <bcf:sort order="9">
+      <bcf:sortitem order="1">volume</bcf:sortitem>
+      <bcf:sortitem literal="1" order="2">0</bcf:sortitem>
+    </bcf:sort>
+  </bcf:sortingtemplate>
+  <!-- DATALISTS -->
+  <bcf:datalist section="0"
+                name="apa/apasortcite//global/global"
+                type="entry"
+                sortingtemplatename="apa"
+                sortingnamekeytemplatename="apasortcite"
+                labelprefix=""
+                uniquenametemplatename="global"
+                labelalphanametemplatename="global">
+  </bcf:datalist>
+  <bcf:datalist section="0"
+                name="apa/global//global/global"
+                type="entry"
+                sortingtemplatename="apa"
+                sortingnamekeytemplatename="global"
+                labelprefix=""
+                uniquenametemplatename="global"
+                labelalphanametemplatename="global">
+  </bcf:datalist>
+</bcf:controlfile>

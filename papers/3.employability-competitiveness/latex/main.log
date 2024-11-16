@@ -742,6 +742,7 @@ Package biblatex Info: ... file 'main.bbl' found.
 Package biblatex Info: Reference section=0 on input line 64.
 Package biblatex Info: Reference segment=0 on input line 64.
 Package hyperref Info: Link coloring OFF on input line 64.
+ (./main.out) (./main.out)
 \@outlinefile=\write5
 \openout5 = `main.out'.
 
@@ -752,12 +753,7 @@ File: umsa.fd 2013/01/14 v3.01 AMS symbols A
 LaTeX Font Info:    Trying to load font information for U+msb on input line 89.
  (/usr/share/texmf/tex/latex/amsfonts/umsb.fd
 File: umsb.fd 2013/01/14 v3.01 AMS symbols B
-)
-No file main.toc.
-\tf@toc=\write6
-\openout6 = `main.toc'.
-
-
+) (./main.toc
 Overfull \hbox (2.22221pt too wide) has occurred while \output is active
 [] 
  []
@@ -765,24 +761,14 @@ Overfull \hbox (2.22221pt too wide) has occurred while \output is active
 [1
 
 
-{/var/lib/texmf/fonts/map/pdftex/updmap/pdftex.map}] [2] [3]
+{/var/lib/texmf/fonts/map/pdftex/updmap/pdftex.map}])
+\tf@toc=\write6
+\openout6 = `main.toc'.
 
-LaTeX Warning: Reference `def_prod' on page 4 undefined on input line 181.
+ [2] [3] [4] [5] [6] [7] [8] [9] [10] [11] [12] [13] [14] [15] [16] [17] [18] [19] [20] [21] [22] [23] [24] [25] [26] [27] [28] [29] [30] [31] [32] [33] [34] [35] [36] [37] [38] [39] [40] [41] [42] [43] [44]
+Overfull \hbox (11.56873pt too wide) in paragraph at lines 5489--5489
+\OT1/cmr/m/it/10 Are the Most Com-pe-tent Work-ers?"\OT1/cmr/m/n/10 . []$https : / / github . com / CaoBittencourt /
+ []
 
-[4] [5]
-
-LaTeX Warning: Reference `def_task' on page 6 undefined on input line 367.
-
-
-LaTeX Warning: Reference `def_prod' on page 6 undefined on input line 367.
-
-
-LaTeX Warning: Reference `def_skill' on page 6 undefined on input line 367.
-
-
-LaTeX Warning: Reference `sua' on page 6 undefined on input line 367.
-
-
-LaTeX Warning: Reference `aaa' on page 6 undefined on input line 367.
-
-[6] 
+[45]
+Overfull \hbox (7.88005pt too wide) in paragrap
