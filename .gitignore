@@ -2,5 +2,7 @@
 .Rhistory
 .RData
 .Ruserdata
-# introduction-matching
-# atlas.*
+
+# nested git repos
+"1. introduction-matching/"
+atlas.*
