@@ -64,10 +64,11 @@ df_attribute_names <- read_csv("https://docs.google.com/spreadsheets/d/e/2PACX-1
 # endregion
 # model
 # region: generality and competence
-df_occupations %>%
+df_occupations |>
   select(
     occupation,
-    employment_variants,
+    employment_norm,
+    # employment_variants,
     starts_with("skl_"),
     starts_with("abl_"),
     starts_with("knw_")
@@ -98,7 +99,8 @@ df_occupations %>%
 wtd.cors(
   x = df_model$generality,
   y = df_model$competence,
-  weight = df_model$employment_variants
+  weight = df_model$employment_norm
+  # weight = df_model$employment_variants
 ) -> dbl_correlation
 
 # endregion
@@ -107,7 +109,8 @@ wtd.cors(
 df_model |>
   fun_plot.density(aes(
     x = generality,
-    weights = employment_variants
+    weights = employment_norm
+    # weights = employment_variants
   ))
 
 # endregion
@@ -115,12 +118,15 @@ df_model |>
 df_model |>
   fun_plot.density(aes(
     x = competence,
-    weights = employment_variants
+    weights = employment_norm
+    # weights = employment_variants
   ))
 
 # endregion
 # region: generality vs competence scatter plot
 df_model |>
+  group_by(occupation) |> 
+  slice(rep(1, employment_norm)) |> 
   fun_plot.scatter(
     aes(
       x = competence,
