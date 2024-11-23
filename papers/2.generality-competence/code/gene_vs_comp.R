@@ -72,7 +72,6 @@ df_occupations |>
   select(
     occupation,
     employment_norm,
-    # employment_variants,
     starts_with("skl_"),
     starts_with("abl_"),
     starts_with("knw_")
@@ -104,27 +103,85 @@ wtd.cors(
   x = df_model$generality,
   y = df_model$competence,
   weight = df_model$employment_norm
-  # weight = df_model$employment_variants
 ) -> dbl_correlation
 
 # endregion
 # plots
 # region: generality distribution
 df_model |>
-  fun_plot.density(aes(
-    x = generality,
-    weights = employment_norm
-    # weights = employment_variants
-  ))
+  fun_plot.density(
+    aes(
+      x = generality,
+      weights = employment_norm
+    ),
+    .list_axis.x.args = list(
+      breaks = seq(0, 1, length.out = 7),
+      limits = c(-.1, 1.1)
+    ),
+    .fun_format.x = percent,
+    .list_labs = list(
+      title = "Skill Set Generality Distribution",
+      subtitle = "Weighted density of skill set generality",
+      x = "Generality",
+      y = "",
+      caption = "Note: generality is the degree to which one employs all attributes in their skill set."
+    )
+  )
 
 # endregion
 # region: competence distribution
 df_model |>
-  fun_plot.density(aes(
-    x = competence,
-    weights = employment_norm
-    # weights = employment_variants
-  ))
+  fun_plot.density(
+    aes(
+      x = competence,
+      weights = employment_norm
+    ),
+    .list_axis.x.args = list(
+      breaks = seq(0, 1, length.out = 7),
+      limits = c(-.1, 1.1)
+    ),
+    .fun_format.x = percent,
+    .list_labs = list(
+      title = "Skill Set Competence Distribution",
+      subtitle = "Weighted density of skill set competence",
+      x = "Competence",
+      y = "",
+      caption = "Note: competence is the overall magnitude of one's skill level."
+    )
+  )
+
+# endregion
+# region: generality vs competence distribution
+df_model |>
+  pivot_longer(
+    cols = c(
+      generality,
+      competence
+    ),
+  ) |>
+  fun_plot.density(
+    aes(
+      x = value,
+      fill = name,
+      weights = employment_norm
+    ),
+    .list_axis.x.args = list(
+      breaks = seq(0, 1, length.out = 7),
+      limits = c(-.1, 1.1)
+    ),
+    .fun_format.x = percent,
+    .list_labs = list(
+      title = "Skill Set Generality vs Competence Distributions",
+      subtitle = "Weighted densities of skill set generality and competence",
+      x = "Value",
+      y = "",
+      fill = ""
+      # caption = "Note: competence is the overall magnitude of one's skill level."
+    )
+  ) + theme(
+    legend.position = "bottom",
+    legend.direction = "horizontal"
+  )
 
 # endregion
 # region: generality vs competence scatter plot

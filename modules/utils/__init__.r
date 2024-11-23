@@ -8,4 +8,4 @@ options("box.path" = file.path(box::file(), "modules"))
 
 # module exports
 #' @export
-box::use(assert = utils / assert)
+box::use(assert = modules / utils / assert)

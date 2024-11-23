@@ -9,7 +9,7 @@ options("box.path" = file.path(box::file(), "modules"))
 # module exports
 #' @export
 box::use(
-  cp = stats / comp,
-  gn = stats / gene,
-  eq = stats / eqvl
+  # cp = modules / stats / comp,
+  gn = modules / stats / gene
+  # eq = modules / stats / eqvl
 )
