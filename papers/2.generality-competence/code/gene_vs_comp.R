@@ -191,12 +191,29 @@ df_model |>
   fun_plot.scatter(
     aes(
       x = competence,
-      y = generality
+      y = generality,
+      color = employment_norm
     ),
     .list_smooth.param = list(
       method = "lm",
       color = "#212121",
       size = 1.23
+    ),
+    .scale_colors = scale_color_viridis(
+      option = "viridis",
+      discrete = F
+    ),
+    .fun_format.x = percent,
+    .fun_format.y = percent,
+    .dbl_limits.x = c(0, 1),
+    .dbl_limits.y = c(0, 1),
+    .list_labs = list(
+      title = "Skill Set Generality vs Competence",
+      subtitle = "Comparing the overall skill of generalists and specialists",
+      x = "Competence",
+      y = "Generality",
+      color = "Employment Levels",
+      caption = "Note: it seems specialists are, in general, more skilled than generalists."
     )
   )
 
