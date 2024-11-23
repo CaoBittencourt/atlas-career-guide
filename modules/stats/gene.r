@@ -9,14 +9,14 @@ options("box.path" = file.path(box::file(), "modules"))
 
 # endregion
 # region: imports
-box::use(utils = modules/utils)
-utils$assert$assert_skill_set()
+box::use(modules / utils / assert)
 
 # endregion
 # region: skill set generality
+#' @export
 gene <- function(skill_set) {
   # assert args
-  assert$is.skill_set(skill_set)
+  assert$valid_skill_set(skill_set)
 
   # return skill set generality
   return(mean(skill_set / max(skill_set)))

@@ -1,11 +1,11 @@
 # region: attribute equivalence
-aeq <- function(skill_set, generality = NULL){
+# aeq <- function(skill_set, generality = NULL){
 
-  # remove generality from attribute equivalence?
-  # assert args
+#   # remove generality from attribute equivalence?
+#   # assert args
   
 
-}
+# }
 
 # endregion
 # region: workforce equivalence
