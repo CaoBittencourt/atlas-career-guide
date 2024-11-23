@@ -1,0 +1,31 @@
+/////////////////////////////////////
+ATLAS CAREER GUIDE TASKS
+/////////////////////////////////////
+
+current task
+-------------------------------------
+[\] refine competence coefficient
+[\] standardize notation
+
+notes
+-------------------------------------
+[!] 
+
+fixes
+-------------------------------------
+[ ] modular R code with box package
+[ ] remove hungarian notation
+[ ] keep dot notation in namespace
+[ ] create atlas metapackage
+[ ] clean namespace
+    - export only necessary functions
+
+features
+-------------------------------------
+[ ] generality vs competence article
+
+finished
+-------------------------------------
+[x] generality vs competence model
+[x] moved over to positron 
+[x] reorganized dirs

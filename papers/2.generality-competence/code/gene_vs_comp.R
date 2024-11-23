@@ -2,10 +2,14 @@
 # region: imports
 # cran packages
 chr_pkg <- c(
-  "devtools" # gitHub packages
-  , "readr" # read and write data
-  , "tidyr", "dplyr", "stringr", "scales" # data wrangling
-  , "weights" # fast weighted correlation
+  # gitHub packages
+  "devtools",
+  # read and write data
+  "readr",
+  # data wrangling
+  "tidyr", "dplyr", "stringr", "scales",
+  # fast weighted correlation
+  "weights"
 )
 
 # github packages
@@ -125,8 +129,8 @@ df_model |>
 # endregion
 # region: generality vs competence scatter plot
 df_model |>
-  group_by(occupation) |> 
-  slice(rep(1, employment_norm)) |> 
+  group_by(occupation) |>
+  slice(rep(1, employment_norm)) |>
   fun_plot.scatter(
     aes(
       x = competence,
