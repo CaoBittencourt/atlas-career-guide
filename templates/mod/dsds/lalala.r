@@ -17,31 +17,19 @@ options(box.path = getwd())
 
 # endregion
 # region: imports
-box::use(assert = src / mod / utils / assert)
+# box::use(dsds = src / mod / dsds)
 
 # endregion
-# region: attribute equivalence
-aeq <- function(skill_set, generality = NULL) {
-  # assert args
-  assert$valid_skill_set(skill_set)
-
-  # remove generality from attribute equivalence?
-  return(skill_set / max(skill_set))
-}
+# region: functions
 
 # endregion
-# region: workforce equivalence
-
-# endregion
-# region: equivalent similarity
-
-# endregion
-# region: equivalence generic
+# region: functions
 
 # endregion
 # region: exports
 box::export(
-  aeq
+  # functions to export
+  # if blank, exports all functions
 )
 
 # endregion

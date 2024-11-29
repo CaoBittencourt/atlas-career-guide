@@ -4,6 +4,7 @@ ATLAS CAREER GUIDE TASKS
 
 current task
 -------------------------------------
+[ ] resolve generality edge-cases
 [ ] generality vs competence article
 [\] refine competence coefficient
 [\] standardize notation

@@ -16,6 +16,6 @@ options(box.path = getwd())
 
 #' @export
 box::use(
-  gn = src / mod / stats / gene,
-  eq = src / mod / stats / eqvl
+  dsdsds = src / mod / dsds / dsdsds,
+  lalala = src / mod / dsds / lalala
 )

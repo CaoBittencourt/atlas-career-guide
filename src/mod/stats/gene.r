@@ -1,4 +1,4 @@
-# region: box modules
+# region: modules
 # install box if not installed
 if (!any(utils::installed.packages()[, 1] == "box")) {
   install.packages("box", dependencies = T)
@@ -9,22 +9,22 @@ if (!any(utils::installed.packages()[, 1] == "modular")) {
   devtools::install_github("CaoBittencourt/modular")
 }
 
-library(modular)
-project.root()
-getwd()
-# # set modules path
-# options(box.path = file.path(getwd(), "src"))
+# objective project root
+modular::project.root(root.name = "atlas.root")
+
+# box module search path
+options(box.path = getwd())
 
 # endregion
 # region: imports
-box::use(util = mod / utils)
+box::use(assert = src / mod / utils / assert)
 
 # endregion
 # region: skill set generality
 gene <- function(skill_set) {
   # assert args
-  util$assert$valid_skill_set(skill_set)
-
+  assert$valid_skill_set(skill_set)
+  
   # return skill set generality
   return(mean(skill_set / max(skill_set)))
 }

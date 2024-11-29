@@ -1,12 +1,111 @@
+# region: modules
 # install box if not installed
 if (!any(utils::installed.packages()[, 1] == "box")) {
   install.packages("box", dependencies = T)
 }
 
-# set modules path
-project.root()
+# install modular if not installed
+if (!any(utils::installed.packages()[, 1] == "modular")) {
+  devtools::install_github("CaoBittencourt/modular")
+}
 
-# imports
+# objective project root
+modular::project.root(root.name = "atlas.root")
+
+# box module search path
+options(box.path = getwd())
+
+# endregion
+# region: imports
 box::use(
-  st = mod / stats
+  ast = src / mod / stats,
+  util = src / mod / utils
 )
+
+# endregion
+# region: test attribute equivalence
+# equivalent attributes form a valid skill set
+runif(1) |>
+  rep(120) |>
+  ast$eq$aeq() |>
+  util$assert$valid_skill_set() |>
+  try() |>
+  class() !=
+  "try-error"
+
+# invalid skill sets attribute equivalence
+c(rep(0, 119), 1.1) |>
+  ast$eq$aeq() |>
+  try() |>
+  class() ==
+  "try-error"
+
+c(rep(0, 119), -0.1) |>
+  ast$eq$aeq() |>
+  try() |>
+  class() ==
+  "try-error"
+
+c(rep(0, 119), Inf) |>
+  ast$eq$aeq() |>
+  try() |>
+  class() ==
+  "try-error"
+
+c(rep(0, 119), "dsds") |>
+  ast$eq$aeq() |>
+  try() |>
+  class() ==
+  "try-error"
+
+# endregion
+# region: test generality
+# 1 generality
+runif(1) |> rep(120) -> skills
+all(
+  ast$gn$gene(skills) == 1,
+  ast$gn$gene(skills) |> length() == 1
+)
+rm(skills)
+
+# # 0 generality
+# all(
+#   ast$gn$gene(c(rep(0, 120), 1)) == 0,
+#   ast$gn$gene(rep(1, 120)) |> length() == 1
+# )
+
+# NA generality
+all(
+  ast$gn$gene(rep(0, 120)) |> is.na(),
+  ast$gn$gene(rep(0, 120)) |> length() == 1
+)
+
+# invalid skill sets generality
+c(rep(0, 119), 1.1) |>
+  ast$gn$gene() |>
+  try() |>
+  class() ==
+  "try-error"
+
+c(rep(0, 119), -0.1) |>
+  ast$gn$gene() |>
+  try() |>
+  class() ==
+  "try-error"
+
+c(rep(0, 119), Inf) |>
+  ast$gn$gene() |>
+  try() |>
+  class() ==
+  "try-error"
+
+c(rep(0, 119), "dsds") |>
+  ast$gn$gene() |>
+  try() |>
+  class() ==
+  "try-error"
+
+# endregion
+# region: test competence
+
+# endregion
