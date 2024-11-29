@@ -107,5 +107,49 @@ c(rep(0, 119), "dsds") |>
 
 # endregion
 # region: test competence
+# whereas generality of repeated skill set is 1, competence is not
+runif(1) |> rep(120) -> skills
+all(
+  ast$cp$comp(skills) != 1,
+  ast$cp$comp(skills) |> length() == 1
+)
+rm(skills)
+
+# 1 competence
+all(
+  ast$cp$comp(rep(1, 120)) == 1,
+  ast$cp$comp(rep(1, 120)) |> length() == 1
+)
+
+# 0 competence
+all(
+  ast$cp$comp(c(rep(0, 120))) == 0,
+  ast$cp$comp(rep(1, 120)) |> length() == 1
+)
+
+# invalid skill sets competence
+c(rep(0, 119), 1.1) |>
+  ast$cp$comp() |>
+  try() |>
+  class() ==
+  "try-error"
+
+c(rep(0, 119), -0.1) |>
+  ast$cp$comp() |>
+  try() |>
+  class() ==
+  "try-error"
+
+c(rep(0, 119), Inf) |>
+  ast$cp$comp() |>
+  try() |>
+  class() ==
+  "try-error"
+
+c(rep(0, 119), "dsds") |>
+  ast$cp$comp() |>
+  try() |>
+  class() ==
+  "try-error"
 
 # endregion
