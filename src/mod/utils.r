@@ -9,12 +9,12 @@ if (!any(utils::installed.packages()[, 1] == "modular")) {
 }
 
 # objective project root
-modular::project.root(root.name = "atlas.root")
+modular::project.root(root.name = "src.root")
 
 # box module search path
 options(box.path = getwd())
 
 #' @export
 box::use(
-  assert = src / mod / utils / assert
+  assert = mod / utils / assert
 )

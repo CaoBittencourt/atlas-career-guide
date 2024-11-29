@@ -9,14 +9,14 @@ if (!any(utils::installed.packages()[, 1] == "modular")) {
 }
 
 # objective project root
-modular::project.root(root.name = "atlas.root")
+modular::project.root(root.name = "src.root")
 
 # box module search path
 options(box.path = getwd())
 
 #' @export
 box::use(
-  gn = src / mod / stats / gene,
-  eq = src / mod / stats / eqvl,
-  cp = src / mod / stats / comp
+  gn = mod / stats / gene,
+  eq = mod / stats / eqvl,
+  cp = mod / stats / comp
 )

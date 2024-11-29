@@ -10,7 +10,7 @@
 # }
 
 # # objective project root
-# modular::project.root(root.name = "atlas.root")
+# modular::project.root(root.name = "src.root")
 
 # # box module search path
 # options(box.path = getwd())

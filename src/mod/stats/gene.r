@@ -10,14 +10,14 @@ if (!any(utils::installed.packages()[, 1] == "modular")) {
 }
 
 # objective project root
-modular::project.root(root.name = "atlas.root")
+modular::project.root(root.name = "src.root")
 
 # box module search path
 options(box.path = getwd())
 
 # endregion
 # region: imports
-box::use(assert = src / mod / utils / assert)
+box::use(assert = mod / utils / assert)
 
 # endregion
 # region: skill set generality

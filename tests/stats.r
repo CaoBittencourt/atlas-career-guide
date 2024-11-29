@@ -18,8 +18,10 @@ options(box.path = getwd())
 # endregion
 # region: imports
 box::use(
-  ast = src / mod / stats,
-  util = src / mod / utils
+  # ast = src / mod / stats,
+  # util = src / mod / utils
+  ast = mod / stats,
+  util = mod / utils
 )
 
 # endregion

@@ -10,7 +10,7 @@ if (!any(utils::installed.packages()[, 1] == "modular")) {
 }
 
 # objective project root
-modular::project.root(root.name = "atlas.root")
+modular::project.root(root.name = "src.root")
 
 # box module search path
 options(box.path = getwd())
@@ -18,9 +18,9 @@ options(box.path = getwd())
 # endregion
 # region: imports
 box::use(
-  gn = src / mod / stats / gene,
-  eq = src / mod / stats / eqvl,
-  assert = src / mod / utils / assert,
+  gn = mod / stats / gene,
+  eq = mod / stats / eqvl,
+  assert = mod / utils / assert,
   stats[weighted.mean]
 )
 
@@ -38,6 +38,21 @@ comp <- function(skill_set, generality = NULL) {
     )
   )
 }
+
+comp2 <- function(skill_set, generality = NULL) {
+  # assert args
+  assert$valid_skill_set(skill_set)
+
+  # return skill set competence
+  return(
+    weighted.mean(
+      x = skill_set,
+      w = skill_set |> eq$aeq2()
+    )
+  )
+}
+
+# rm(skills)
 
 # endregion
 # region: exports
