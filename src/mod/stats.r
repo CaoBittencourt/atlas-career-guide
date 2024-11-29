@@ -3,9 +3,11 @@ if (!any(utils::installed.packages()[, 1] == "box")) {
   install.packages("box", dependencies = T)
 }
 
-# modules search path
-options("box.path" = file.path(box::file(), "modules"))
+# set modules path
+options(box.path = file.path(getwd(), "src"))
 
-# module exports
 #' @export
-box::use(assert = modules / utils / assert)
+box::use(
+  gn = mod / stats / gene
+  # , eq = mod / stats / eqvl
+)
