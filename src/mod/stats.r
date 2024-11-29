@@ -4,7 +4,8 @@ if (!any(utils::installed.packages()[, 1] == "box")) {
 }
 
 # set modules path
-options(box.path = file.path(getwd(), "src"))
+project.root()
+# options(box.path = file.path(getwd(), "src"))
 
 #' @export
 box::use(
