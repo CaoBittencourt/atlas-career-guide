@@ -18,7 +18,8 @@ project.options(
     atlas.src = "src",
     atlas.mod = "src/mod",
     box.path = "src",
-    atlas.data = "data"
+    atlas.data = "data",
+    atlas.occupations = "/data/occupations/df_occupations_2022.csv"
   ),
   root.name = ".atlas"
 )

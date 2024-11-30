@@ -19,7 +19,8 @@ project.options(
     atlas.src = "src",
     atlas.mod = "src/mod",
     box.path = "src",
-    atlas.data = "data"
+    atlas.data = "data",
+    atlas.occupations = "/data/occupations/df_occupations_2022.csv"
   ),
   root.name = ".atlas"
 )
@@ -28,8 +29,17 @@ project.options(
 # region: imports
 box::use(
   assert = mod / utils / assert,
-  gn = mod / stats / gene
+  gn = mod / stats / gene,
+  dplyr[...],
+  tidyr[...]
 )
+
+# endregion
+# region: data
+getOption("atlas.occupations") |>
+  read.csv() |>
+  as_tibble() ->
+df_occupations
 
 # endregion
 # models
