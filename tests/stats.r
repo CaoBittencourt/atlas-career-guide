@@ -9,21 +9,28 @@ if (!any(utils::installed.packages()[, 1] == "modular")) {
   devtools::install_github("CaoBittencourt/modular")
 }
 
-# objective project root
-modular::project.root(root.name = "atlas.root")
+library(modular)
 
-# box module search path
-options(box.path = getwd())
+# objective project root
+project.options(
+  project.name = "atlas",
+  relative.paths = list(
+    atlas.src = "src",
+    atlas.mod = "src/mod",
+    box.path = "src",
+    atlas.data = "data"
+  ),
+  root.name = ".atlas"
+)
 
 # endregion
 # region: imports
 box::use(
-  # ast = src / mod / stats,
-  # util = src / mod / utils
-  ast = mod / stats,
-  util = mod / utils
+  ast = stats,
+  util = utils
 )
 
+getOption("box.path")
 # endregion
 # region: test attribute equivalence
 # equivalent attributes form a valid skill set
