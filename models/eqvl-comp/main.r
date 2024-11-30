@@ -1,3 +1,4 @@
+# setup
 # region: modules
 # install box if not installed
 if (!any(utils::installed.packages()[, 1] == "box")) {
@@ -26,11 +27,12 @@ project.options(
 # endregion
 # region: imports
 box::use(
-  assert = utils / assert,
-  gn = stats / gene
+  assert = mod / utils / assert,
+  gn = mod / stats / gene
 )
 
 # endregion
+# models
 # region: attribute equivalence 1
 aeq <- function(skill_set, generality = NULL) {
   # assert args
@@ -81,18 +83,34 @@ aeq2 <- function(skill_set, generality = NULL) {
 }
 
 # endregion
-# region: workforce equivalence
+# region: skill set competence 1
+comp <- function(skill_set, generality = NULL) {
+  # assert args
+  assert$valid_skill_set(skill_set)
+
+  # return skill set competence
+  return(
+    weighted.mean(
+      x = skill_set,
+      w = skill_set |> eq$aeq()
+    )
+  )
+}
 
 # endregion
-# region: equivalent similarity
+# region: skill set competence 2
+comp2 <- function(skill_set, generality = NULL) {
+  # assert args
+  assert$valid_skill_set(skill_set)
+
+  # return skill set competence
+  return(
+    weighted.mean(
+      x = skill_set,
+      w = skill_set |> eq$aeq2()
+    )
+  )
+}
 
 # endregion
-# region: equivalence generic
-
-# endregion
-# region: exports
-box::export(
-  aeq, aeq2
-)
-
-# endregion
+# comments

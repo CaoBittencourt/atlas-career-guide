@@ -26,11 +26,10 @@ project.options(
 # endregion
 # region: imports
 box::use(
-  ast = stats,
-  util = utils
+  ast = mod / stats,
+  util = mod / utils
 )
 
-getOption("box.path")
 # endregion
 # region: test attribute equivalence
 # equivalent attributes form a valid skill set

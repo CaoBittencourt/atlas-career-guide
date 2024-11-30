@@ -1,26 +1,7 @@
-# region: modules
-# install box if not installed
-if (!any(utils::installed.packages()[, 1] == "box")) {
-  install.packages("box", dependencies = T)
-}
-
-# # install modular if not installed
-# if (!any(utils::installed.packages()[, 1] == "modular")) {
-#   devtools::install_github("CaoBittencourt/modular")
-# }
-
-# # objective project root
-# modular::project.root(root.name = ".atlas")
-
-# # box module search path
-# options(box.path = getwd())
-
-# endregion
 # region: imports
 box::use(
-  assert = utils / assert,
-  gn = stats / gene
-  # gn = mod / stats / gene
+  assert = mod / utils / assert,
+  gn = mod / stats / gene
 )
 
 # endregion
