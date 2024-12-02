@@ -253,7 +253,7 @@ df_model |>
   mutate(
     diff = competence1 - competence2
   ) |>
-  fun_plot.histogram()(
+  fun_plot.histogram(
     aes(x = diff),
   )
 
@@ -389,3 +389,4 @@ df_correlations |>
   )
 
 # endregion
+# use competence metrics 2 or 5 (both are equivalent)
