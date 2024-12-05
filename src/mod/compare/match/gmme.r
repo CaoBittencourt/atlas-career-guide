@@ -5,19 +5,11 @@ gmme <- function(skill_set, skill_mtx, weights = NULL, zeros = 1 / 100) {
   # weights: a vector of attribute weights for each skill set in skill_mtx
   # zeros: a number to substitute zeros so that the whole expression is not null when an attribute is zero
 
-  skill_set |> pmax(zeros) -> ss
-
-  # (((ss / skill_mtx) |> pmin(1))^(weights / sum(weights))) |>
-  (((ss / skill_mtx) |> pmin(1))^(weights)) |>
-    apply(2, prod) ->
-  mtx_prod
-
-  # normalize weights by sum
-  # (weights / colSums(weights)) -> weights
-
-  # assess similarity as normalized weighted product
-
-  return(mtx_prod^(1 / length(ss)))
+  # estimate similarity as geometric mean of relative attribute scores
+  (skill_set |> pmax(zeros) / skill_mtx) |> pmin(1) -> mtx_prod
+  (mtx_prod^weights) |> apply(2, prod) -> mtx_prod
+  mtx_prod^(1 / length(skill_set)) -> mtx_prod
+  return(mtx_prod)
 }
 
 # runif(120) -> ss
@@ -36,4 +28,3 @@ gmme <- function(skill_set, skill_mtx, weights = NULL, zeros = 1 / 100) {
 # ss |> length()
 
 # gmme(ss, mtx_ss, mtx_aeq)
-

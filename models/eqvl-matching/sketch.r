@@ -218,7 +218,7 @@ cbdg$cobb_douglas(
   print(n = 25)
 
 # endregion
-# region: geomtric mean matching model
+# region: geometric mean matching model
 # df_occupations |>
 #   slice_head(n = 1) |>
 #   select(
@@ -256,8 +256,8 @@ aeq_mtx |> dim()
 ss |> length()
 
 gmme$gmme(
-  skill_set = ss * 100,
-  skill_mtx = ss_mtx * 100,
+  skill_set = ss,
+  skill_mtx = ss_mtx,
   weights = aeq_mtx
 ) |>
   as_tibble(
