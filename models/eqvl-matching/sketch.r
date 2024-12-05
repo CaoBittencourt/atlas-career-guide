@@ -27,7 +27,8 @@ project.options(
 # endregion
 # region: imports
 box::use(
-  match = mod / compare / match / cobb_douglas
+  cbdg = mod / compare / match / cobb_douglas,
+  gmme = mod / compare / match / gmme,
 )
 
 library(dplyr)
@@ -156,7 +157,7 @@ aeq_mtx |> dim()
 (ss_mtx^aeq_mtx) |> dim()
 ss |> length()
 
-match$cobb_douglas(
+cbdg$cobb_douglas(
   skill_set = ss,
   skill_mtx = ss_mtx,
   weights = aeq_mtx
@@ -173,7 +174,7 @@ match$cobb_douglas(
     )
   )
 
-match$cobb_douglas(
+cbdg$cobb_douglas(
   skill_set = ss,
   skill_mtx = ss_mtx,
   weights = aeq_mtx,
@@ -205,10 +206,108 @@ match$cobb_douglas(
     )
   )
 
-match$cobb_douglas(
+cbdg$cobb_douglas(
   skill_set = ss,
   skill_mtx = ss_mtx,
   weights = aeq_mtx,
+) |>
+  as_tibble(
+    rownames = "occupation"
+  ) |>
+  arrange(-value) |>
+  print(n = 25)
+
+# endregion
+# region: geomtric mean matching model
+# df_occupations |>
+#   slice_head(n = 1) |>
+#   select(
+#     occupation,
+#     starts_with("skl_"),
+#     starts_with("abl_"),
+#     starts_with("knw_")
+#   ) -> df_skill_set
+
+df_skill_set[-1] ->
+df_skill_set
+
+df_skill_set |>
+  as.numeric() -> ss
+
+df_occupations |>
+  select(
+    names(df_skill_set)
+  ) |>
+  as.matrix() |>
+  t() -> ss_mtx
+
+df_occupations$
+  occupation ->
+colnames(ss_mtx)
+
+ss_mtx |>
+  apply(
+    2, fun_aeq_aequivalence
+  ) -> aeq_mtx
+
+ss_mtx |> dim()
+aeq_mtx |> dim()
+(ss_mtx^aeq_mtx) |> dim()
+ss |> length()
+
+gmme$gmme(
+  skill_set = ss * 100,
+  skill_mtx = ss_mtx * 100,
+  weights = aeq_mtx
+) |>
+  as_tibble(
+    rownames = "occupation"
+  ) |>
+  rename(
+    similarity = 2
+  ) |>
+  fun_plot.histogram(
+    aes(
+      x = similarity
+    )
+  )
+
+gmme$gmme(
+  skill_set = ss,
+  skill_mtx = ss_mtx,
+  weights = aeq_mtx
+) |>
+  as_tibble(
+    rownames = "occupation"
+  ) |>
+  rename(
+    similarity = 2
+  ) |>
+  fun_plot.density(
+    aes(
+      x = similarity
+    ),
+    .list_geom.param = list(
+      bw = .1,
+      fill = "#290396",
+      color = "#212121",
+      size = 1.23,
+      alpha = 0.77
+    ),
+    .list_axis.x.args = list(
+      limits = c(-.25, 1.25),
+      breaks = seq(0, 1, length.out = 7)
+    ),
+    .fun_format.x = percent,
+    .list_labs = list(
+      y = ""
+    )
+  )
+
+gmme$gmme(
+  skill_set = ss,
+  skill_mtx = ss_mtx,
+  weights = aeq_mtx
 ) |>
   as_tibble(
     rownames = "occupation"
