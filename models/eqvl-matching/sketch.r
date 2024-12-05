@@ -94,7 +94,35 @@ df_sample %>%
 
 # endregion
 # model
+# region: runif cobb-douglas matching model
+runif(120) -> ss
+
+replicate(
+  n = 873,
+  runif(120)
+) -> mtx_ss
+
+mtx_ss |> apply(2, fun_aeq_aequivalence) -> mtx_aeq
+
+mtx_ss |> dim()
+mtx_aeq |> dim()
+(mtx_ss^mtx_aeq) |> dim()
+ss |> length()
+
+match$cobb_douglas(ss, mtx_ss, mtx_aeq)
+match$cobb_douglas(ss, cbind(ss), cbind(ss))
+
+# endregion
 # region: cobb-douglas matching model
+df_occupations |>
+  slice_head(n = 1) |>
+  select(
+    occupation,
+    starts_with("skl_"),
+    starts_with("abl_"),
+    starts_with("knw_")
+  ) -> df_skill_set
+
 df_skill_set[-1] ->
 df_skill_set
 
@@ -105,12 +133,22 @@ df_occupations |>
   select(
     names(df_skill_set)
   ) |>
-  as.matrix() -> ss_mtx
+  as.matrix() |>
+  t() -> ss_mtx
+
+df_occupations$
+  occupation ->
+colnames(ss_mtx)
 
 ss_mtx |>
   apply(
     2, fun_aeq_aequivalence
   ) -> aeq_mtx
+
+ss_mtx |> dim()
+aeq_mtx |> dim()
+(ss_mtx^aeq_mtx) |> dim()
+ss |> length()
 
 match$cobb_douglas(
   skill_set = ss,
