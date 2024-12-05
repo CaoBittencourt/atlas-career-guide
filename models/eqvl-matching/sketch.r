@@ -32,6 +32,7 @@ box::use(
 
 library(dplyr)
 library(atlas.aeq)
+library(atlas.plot)
 
 # endregion
 # region: data
@@ -114,14 +115,14 @@ match$cobb_douglas(ss, cbind(ss), cbind(ss))
 
 # endregion
 # region: cobb-douglas matching model
-df_occupations |>
-  slice_head(n = 1) |>
-  select(
-    occupation,
-    starts_with("skl_"),
-    starts_with("abl_"),
-    starts_with("knw_")
-  ) -> df_skill_set
+# df_occupations |>
+#   slice_head(n = 1) |>
+#   select(
+#     occupation,
+#     starts_with("skl_"),
+#     starts_with("abl_"),
+#     starts_with("knw_")
+#   ) -> df_skill_set
 
 df_skill_set[-1] ->
 df_skill_set
@@ -151,9 +152,66 @@ aeq_mtx |> dim()
 ss |> length()
 
 match$cobb_douglas(
-  skill_set = ss,
+  skill_set = ss |> pmax(.0001),
   skill_mtx = ss_mtx,
   weights = aeq_mtx
+) |> 
+  as_tibble(
+    rownames = 'occupation'
+  ) |> 
+  rename(
+    similarity = 2
+  ) |> 
+  fun_plot.histogram(
+    aes(
+    x = similarity
+  )
 )
+  
+match$cobb_douglas(
+  skill_set = (ss / 100) |> pmax(.0001),
+  skill_mtx = (ss_mtx / 100),
+  weights = aeq_mtx
+) |> 
+  as_tibble(
+    rownames = 'occupation'
+  ) |> 
+  rename(
+    similarity = 2
+  ) |> 
+  fun_plot.histogram(
+    aes(
+    x = similarity
+  )
+)
+  
+match$cobb_douglas(
+  skill_set = (ss / 100) |> pmax(.0001),
+  skill_mtx = (ss_mtx / 100),
+  weights = aeq_mtx
+) |> 
+  as_tibble(
+    rownames = 'occupation'
+  ) |> 
+  rename(
+    similarity = 2
+  ) |> 
+  fun_plot.histogram(
+    aes(
+    x = similarity
+  )
+)
+  
+match$cobb_douglas(
+  # skill_set = (ss / 100) |> pmax(.0001),
+  # skill_mtx = (ss_mtx / 100),
+  skill_set = ss |> pmax(1),
+  skill_mtx = ss_mtx,
+  weights = aeq_mtx
+) |> 
+  as_tibble(
+    rownames = 'occupation'
+  ) |> 
+  arrange(-value)
 
 # endregion
