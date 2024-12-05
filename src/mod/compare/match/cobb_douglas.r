@@ -19,20 +19,19 @@ cobb_douglas <- function(skill_set, skill_mtx, weights = NULL) {
   )
 }
 
-runif(120) -> ss
+# runif(120) -> ss
 
-replicate(
-  n = 873,
-  runif(120)
-) -> mtx_ss
+# replicate(
+#   n = 873,
+#   runif(120)
+# ) -> mtx_ss
 
+# library(atlas.aeq)
+# mtx_ss |> apply(2, fun_aeq_aequivalence) -> mtx_aeq
 
-library(atlas.aeq)
-mtx_ss |> apply(2, fun_aeq_aequivalence) -> mtx_aeq
+# mtx_ss |> dim()
+# mtx_aeq |> dim()
+# (mtx_ss^mtx_aeq) |> dim()
+# ss |> length()
 
-mtx_ss |> dim()
-mtx_aeq |> dim()
-(mtx_ss^mtx_aeq) |> dim()
-ss |> length()
-
-cobb_douglas(skill_set = ss, skill_mtx = mtx_ss, weights = mtx_aeq)
+# cobb_douglas(ss, mtx_ss, mtx_aeq)
