@@ -27,7 +27,7 @@ project.options(
 # endregion
 # region: imports
 box::use(
-  ast = mod / stats,
+  ast = mod / describe,
   util = mod / utils
 )
 
