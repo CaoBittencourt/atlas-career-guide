@@ -42,6 +42,18 @@ getOption("atlas.occupations") |>
   as_tibble() ->
 df_occupations
 
+df_occupations |>
+  mutate(
+    across(
+      .cols = c(
+        starts_with("skl_"),
+        starts_with("abl_"),
+        starts_with("knw_")
+      ),
+      .fns = ~ .x / 100
+    )
+  ) -> df_occupations
+
 # my preference-adjusted skill set
 getOption("atlas.data") |>
   file.path(
@@ -51,6 +63,18 @@ getOption("atlas.data") |>
   read.csv() |>
   as_tibble() ->
 df_skill_set
+
+df_skill_set |>
+  mutate(
+    across(
+      .cols = c(
+        starts_with("skl_"),
+        starts_with("abl_"),
+        starts_with("knw_")
+      ),
+      .fns = ~ .x / 100
+    )
+  ) -> df_skill_set
 
 # sample occupations
 c(
@@ -95,25 +119,6 @@ df_sample %>%
 
 # endregion
 # model
-# region: runif cobb-douglas matching model
-runif(120) -> ss
-
-replicate(
-  n = 873,
-  runif(120)
-) -> mtx_ss
-
-mtx_ss |> apply(2, fun_aeq_aequivalence) -> mtx_aeq
-
-mtx_ss |> dim()
-mtx_aeq |> dim()
-(mtx_ss^mtx_aeq) |> dim()
-ss |> length()
-
-match$cobb_douglas(ss, mtx_ss, mtx_aeq)
-match$cobb_douglas(ss, cbind(ss), cbind(ss))
-
-# endregion
 # region: cobb-douglas matching model
 # df_occupations |>
 #   slice_head(n = 1) |>
@@ -152,50 +157,63 @@ aeq_mtx |> dim()
 ss |> length()
 
 match$cobb_douglas(
-  skill_set = ss / 100,
-  skill_mtx = ss_mtx / 100,
+  skill_set = ss,
+  skill_mtx = ss_mtx,
   weights = aeq_mtx
-) |> 
+) |>
   as_tibble(
-    rownames = 'occupation'
-  ) |> 
+    rownames = "occupation"
+  ) |>
   rename(
     similarity = 2
-  ) |> 
+  ) |>
   fun_plot.histogram(
     aes(
-    x = similarity
+      x = similarity
+    )
   )
-)
-  
+
 match$cobb_douglas(
   skill_set = ss,
   skill_mtx = ss_mtx,
   weights = aeq_mtx,
-  zeros = 1
-) |> 
+) |>
   as_tibble(
-    rownames = 'occupation'
-  ) |> 
+    rownames = "occupation"
+  ) |>
   rename(
     similarity = 2
-  ) |> 
-  fun_plot.histogram(
+  ) |>
+  fun_plot.density(
     aes(
-    x = similarity
+      x = similarity
+    ),
+    .list_geom.param = list(
+      bw = .1,
+      fill = "#290396",
+      color = "#212121",
+      size = 1.23,
+      alpha = 0.77
+    ),
+    .list_axis.x.args = list(
+      limits = c(-.25, 1.25),
+      breaks = seq(0, 1, length.out = 7)
+    ),
+    .fun_format.x = percent,
+    .list_labs = list(
+      y = ""
+    )
   )
-)
-  
+
 match$cobb_douglas(
   skill_set = ss,
   skill_mtx = ss_mtx,
   weights = aeq_mtx,
-  zeros = 1
-) |> 
+) |>
   as_tibble(
-    rownames = 'occupation'
-  ) |> 
-  arrange(-value) |> 
+    rownames = "occupation"
+  ) |>
+  arrange(-value) |>
   print(n = 25)
 
 # endregion

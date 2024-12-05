@@ -1,4 +1,4 @@
-cobb_douglas <- function(skill_set, skill_mtx, weights = NULL, zeros = .1) {
+cobb_douglas <- function(skill_set, skill_mtx, weights = NULL, zeros = 1/100) {
   # assert args in main function
   # skill_set: a skill set in the unit interval to compare with skill_mtx
   # skill_mtx: a skill set matrix in the unit interval to compare with skill_set
