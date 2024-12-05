@@ -29,7 +29,7 @@ project.options(
 # region: imports
 box::use(
   assert = mod / utils / assert,
-  gn = mod / stats / gene,
+  gn = mod / describe / gene,
   dplyr[...],
   tidyr[...],
   modeest[mlv],
