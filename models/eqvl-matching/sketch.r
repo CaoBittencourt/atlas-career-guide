@@ -169,9 +169,10 @@ match$cobb_douglas(
 )
   
 match$cobb_douglas(
-  skill_set = ss / 100,
-  skill_mtx = ss_mtx / 100,
+  skill_set = ss,
+  skill_mtx = ss_mtx,
   weights = aeq_mtx,
+  zeros = 1
 ) |> 
   as_tibble(
     rownames = 'occupation'
@@ -186,9 +187,10 @@ match$cobb_douglas(
 )
   
 match$cobb_douglas(
-  skill_set = ss / 100,
-  skill_mtx = ss_mtx / 100,
-  weights = aeq_mtx
+  skill_set = ss,
+  skill_mtx = ss_mtx,
+  weights = aeq_mtx,
+  zeros = 1
 ) |> 
   as_tibble(
     rownames = 'occupation'
