@@ -152,8 +152,8 @@ aeq_mtx |> dim()
 ss |> length()
 
 match$cobb_douglas(
-  skill_set = ss |> pmax(.0001),
-  skill_mtx = ss_mtx,
+  skill_set = ss / 100,
+  skill_mtx = ss_mtx / 100,
   weights = aeq_mtx
 ) |> 
   as_tibble(
@@ -169,9 +169,9 @@ match$cobb_douglas(
 )
   
 match$cobb_douglas(
-  skill_set = (ss / 100) |> pmax(.0001),
-  skill_mtx = (ss_mtx / 100),
-  weights = aeq_mtx
+  skill_set = ss / 100,
+  skill_mtx = ss_mtx / 100,
+  weights = aeq_mtx,
 ) |> 
   as_tibble(
     rownames = 'occupation'
@@ -186,32 +186,14 @@ match$cobb_douglas(
 )
   
 match$cobb_douglas(
-  skill_set = (ss / 100) |> pmax(.0001),
-  skill_mtx = (ss_mtx / 100),
+  skill_set = ss / 100,
+  skill_mtx = ss_mtx / 100,
   weights = aeq_mtx
 ) |> 
   as_tibble(
     rownames = 'occupation'
   ) |> 
-  rename(
-    similarity = 2
-  ) |> 
-  fun_plot.histogram(
-    aes(
-    x = similarity
-  )
-)
-  
-match$cobb_douglas(
-  # skill_set = (ss / 100) |> pmax(.0001),
-  # skill_mtx = (ss_mtx / 100),
-  skill_set = ss |> pmax(1),
-  skill_mtx = ss_mtx,
-  weights = aeq_mtx
-) |> 
-  as_tibble(
-    rownames = 'occupation'
-  ) |> 
-  arrange(-value)
+  arrange(-value) |> 
+  print(n = 25)
 
 # endregion
