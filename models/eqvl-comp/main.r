@@ -178,6 +178,34 @@ comp5 <- function(skill_set, generality = NULL) {
 }
 
 # endregion
+# region: skill set competence 6
+comp6 <- function(skill_set, generality = NULL) {
+  # assert args
+  assert$valid_skill_set(skill_set)
+
+  # return skill set competence
+  return(
+    prod(
+      skill_set^((skill_set |> aeq()) / (skill_set |> aeq() |> sum()))
+    )
+  )
+}
+
+# endregion
+# region: skill set competence 7
+comp7 <- function(skill_set, generality = NULL) {
+  # assert args
+  assert$valid_skill_set(skill_set)
+
+  # return skill set competence
+  return(
+    prod(
+      skill_set^((skill_set |> aeq2()) / (skill_set |> aeq2() |> sum()))
+    )
+  )
+}
+
+# endregion
 # results
 # region: competence and generality
 df_occupations |>
@@ -200,6 +228,8 @@ df_occupations |>
     competence3 = comp3(item_score / 100),
     competence4 = comp4(item_score / 100),
     competence5 = comp5(item_score / 100),
+    competence6 = comp6(item_score / 100),
+    competence7 = comp7(item_score / 100),
     generality = gn$gene(item_score / 100),
     across(
       .cols = -starts_with("item"),
@@ -266,6 +296,7 @@ df_model |>
   filter(
     name == "competence1" |
       name == "competence2" |
+      name == "competence7" |
       name == "generality"
   ) |>
   fun_plot.density(
