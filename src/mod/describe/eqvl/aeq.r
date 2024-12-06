@@ -42,19 +42,22 @@ aeq.linear_logistic <- function(ã, generality) {
 
 # endregion
 # region: attribute equivalence generic
-aeq <- function(skill_set, generality = NULL, method = c("linear-logistic", "specialty-root", "linear")[[1]]) {
+aeq <- function(skill_set, generality = NULL, aeq_method = c("linear-logistic", "specialty-root", "linear")[[1]]) {
   # assert args
   assert$valid_skill_set(skill_set)
   assert$valid_generality(generality)
 
   stopifnot(
-    "'method' must be one of the following methods: 'linear-logistic', 'specialty-root', 'linear'." = any(
-      method == c("linear-logistic", "specialty-root", "linear")
+    "'aeq_method' must be one of the following methods: 'linear-logistic', 'specialty-root', 'linear'." = any(
+      aeq_method == c("linear-logistic", "specialty-root", "linear")
     )
   )
 
   # estimate skill set generality
-  if (is.null(generality[[1]])) {
+  if (all(
+    aeq_method != "linear",
+    is.null(generality[[1]])
+  )) {
     gn$gene(skill_set) -> generality
   }
 
@@ -62,7 +65,7 @@ aeq <- function(skill_set, generality = NULL, method = c("linear-logistic", "spe
   ã <- skill_set / max(skill_set)
 
   # multiple dispatch
-  switch(method[[1]],
+  switch(aeq_method[[1]],
     "linear-logistic" = return(aeq.linear_logistic(ã, generality[[1]])),
     "specialty-root" = return(aeq.specialty_root(ã, generality[[1]])),
     "linear" = return(aeq.linear(ã))

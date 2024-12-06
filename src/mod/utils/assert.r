@@ -6,8 +6,8 @@ valid_skill_set <- function(skill_set) {
   stopifnot(
     '"skill_set" must be a numeric vector in the unit interval."' = all(
       is.numeric(skill_set),
-      skill_set <= 1,
-      skill_set >= 0
+      skill_set >= 0,
+      skill_set <= 1
     )
   )
 }
