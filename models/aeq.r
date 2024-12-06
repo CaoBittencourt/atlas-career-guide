@@ -26,19 +26,44 @@ project.options(
 
 # endregion
 # region: imports
-library(atlas.aeq)
+library(dplyr)
+library(tidyr)
+
 library(atlas.plot)
 
 box::use(
-  eq = mod / describe / eqvl
+  eq = mod / describe / eqvl,
 )
 
 # endregion
 # region: data
-seq(0, 1, .001) |>
-  as_tibble() |>
+seq(0, 1, length.out = 8) |>
+  setNames(
+    seq(0, 1, length.out = 8) |> round(2)
+  ) |>
+  lapply(
+    function(gamma) {
+      list(ã = seq(0, 1, .001)) |>
+        as_tibble() |>
+        mutate(
+          aeq_linear = eq$aeq(skill_set = ã, generality = gamma, method = "linear"),
+          aeq_linear_logistic = eq$aeq(skill_set = ã, generality = gamma),
+          aeq_specialty_root = eq$aeq(skill_set = ã, generality = gamma, method = "specialty-root")
+        )
+    }
+  ) |>
+  bind_rows(
+    .id = "generality"
+  ) |>
   mutate(
-    aeq = eq$aeq(value, 1 - .9999999)
+    generality = as.ordered(
+      generality
+    )
+  ) |>
+  pivot_longer(
+    cols = -c(1, 2),
+    names_to = "metric",
+    values_to = "aeq"
   ) -> df_aeq
 
 # endregion
@@ -46,13 +71,17 @@ seq(0, 1, .001) |>
 df_aeq |>
   fun_plot.line(
     aes(
-      x = value,
-      y = aeq
+      x = ã,
+      y = aeq,
+      color = metric,
+      group = metric
     ),
     .dbl_limits.x = c(0, 1),
     .dbl_limits.y = c(0, 1),
     .fun_format.x = percent,
-    .fun_format.y = percent
+    .fun_format.y = percent,
+    .sym_facets = generality,
+    .int_facets = 4
   )
 
 # endregion
