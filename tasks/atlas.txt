@@ -18,6 +18,7 @@ notes
 
 fixes
 -------------------------------------
+[ ] aeq = 0 for all x when gamma = 1
 [ ] remove hungarian notation
 [ ] use dot notation in functions etc
 [ ] clean namespace
