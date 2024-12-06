@@ -7,7 +7,7 @@ gene <- function(skill_set) {
   # assert args
   assert$valid_skill_set(skill_set)
 
-  # return skill set generality
+  # generality is the mean of maxima-normalized attributes
   return(mean(skill_set / max(skill_set)))
 }
 
