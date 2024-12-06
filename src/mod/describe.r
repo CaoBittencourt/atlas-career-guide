@@ -1,6 +1,6 @@
 #' @export
 box::use(
-  gn = describe / gene,
-  eq = describe / eqvl,
-  cp = describe / comp
+  gn = mod / describe / gene,
+  eq = mod / describe / eqvl,
+  cp = mod / describe / comp
 )
