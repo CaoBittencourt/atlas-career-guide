@@ -20,11 +20,12 @@ comp.mean <- function(skill_set, ä) {
 }
 
 # endregion
-# region: geometric mean method
+# region: weighted geometric mean method
 comp.geometric_mean <- function(skill_set, ä) {
   # assert args in main function
-  # skill set competence as geometric mean
-  return(prod(skill_set^ä)^(1 / length(skill_set)))
+  # skill set competence as a weighted geometric mean
+  return((prod(skill_set^ä))^(1 / sum(ä)))
+  # return(prod(skill_set^ä)^(1 / sum(ä)))
 }
 
 # endregion
