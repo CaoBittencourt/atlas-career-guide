@@ -20,6 +20,15 @@ comp.mean <- function(skill_set, ä) {
 }
 
 # endregion
+# region: geometric mean method
+comp.geometric_mean <- function(skill_set, ä) {
+  # assert args in main function
+  # skill set competence as geometric mean
+  return(prod(skill_set^ä)^(1 / length(skill_set)))
+  # return(prod(skill_set^(ä / sum(ä)))^(1 / length(skill_set)))
+}
+
+# endregion
 # region: cobb-douglas method
 comp.cobb_douglas <- function(skill_set, ä) {
   # assert args in main function
@@ -29,13 +38,13 @@ comp.cobb_douglas <- function(skill_set, ä) {
 
 # endregion
 # region: skill set competence generic
-comp <- function(skill_set, comp_method = c("mean", "cobb-douglas")[[1]], ...) {
+comp <- function(skill_set, comp_method = c("mean", "geom-mean", "cobb-douglas")[[1]], ...) {
   # assert args
   assert$valid_skill_set(skill_set)
 
   stopifnot(
-    "'comp_method' must be one of the following methods: 'mean', 'cobb-douglas'." = any(
-      comp_method == c("mean", "cobb-douglas")
+    "'comp_method' must be one of the following methods: 'mean', 'geom-mean', 'cobb-douglas'." = any(
+      comp_method == c("mean", "geom-mean", "cobb-douglas")
     )
   )
 
@@ -45,6 +54,7 @@ comp <- function(skill_set, comp_method = c("mean", "cobb-douglas")[[1]], ...) {
   # multiple dispatch
   switch(comp_method[[1]],
     "mean" = return(comp.mean(skill_set, ä)),
+    "geom-mean" = return(comp.geometric_mean(skill_set, ä)),
     "cobb-douglas" = return(comp.cobb_douglas(skill_set, ä))
   )
 }

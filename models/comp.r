@@ -118,22 +118,76 @@ df_sample %>%
 
 # endregion
 # model
-# region: competence
-df_skill_set |>
+# region: estimation methods
+aeq_methods <- c("linear-logistic", "specialty-root", "linear")
+comp_methods <- c("mean", "geom-mean", "cobb-douglas")
+
+expand.grid(
+  aeq_method = aeq_methods,
+  comp_method = comp_methods
+) -> df_models
+
+# endregion
+# region: my competence
+df_skill_set[-1] |>
+  as.numeric() ->
+dbl_skill_set
+
+df_models |>
+  mutate(
+    comp_method = df_models$comp_method,
+    aeq_method = df_models$aeq_method,
+    comp =
+      mapply(
+        function(cpm, aem) {
+          desc$cp$comp(
+            skill_set = dbl_skill_set,
+            comp_method = cpm,
+            aeq_method = aem
+          )
+        },
+        cpm = comp_method,
+        aem = aeq_method
+      )
+  ) |>
+  arrange(-comp) ->
+df_comp_mine
+
+# endregion
+# region: occupations' competence
+df_occupations |>
+  select(
+    occupation,
+    starts_with("skl_"),
+    starts_with("abl_"),
+    starts_with("knw_")
+  ) |>
   pivot_longer(
     cols = -1,
     names_to = "item",
-    values_to = "item_score",
+    values_to = "item_score"
   ) |>
-  group_by(across(
-    -starts_with("item")
-  )) |>
+  group_by(occupation) |>
   reframe(
-    generality = desc$gn$gene(item_score),
-    comp_mean_specialty_root = desc$cp$comp(item_score, comp_method = "mean", aeq_method = "specialty-root"),
-    comp_cobb_douglas_specialty_root = desc$cp$comp(item_score, comp_method = "cobb-douglas", aeq_method = "specialty-root"),
-    comp_mean_default = desc$cp$comp(item_score, comp_method = "mean"),
-    comp_cobb_douglas_default = desc$cp$comp(item_score, comp_method = "cobb-douglas")
-  )
+    comp_method = df_models$comp_method,
+    aeq_method = df_models$aeq_method,
+    comp = mapply(
+      function(cpm, aem) {
+        desc$cp$comp(
+          skill_set = item_score,
+          comp_method = cpm,
+          aeq_method = aem
+        )
+      },
+      cpm = comp_method,
+      aem = aeq_method
+    )
+  ) |>
+  group_by(occupation) |>
+  arrange(-comp) |>
+  ungroup() ->
+df_comp_occupations
+
+df_comp_occupations
 
 # endregion
