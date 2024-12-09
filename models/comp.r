@@ -121,13 +121,15 @@ df_sample %>%
 # endregion
 # model
 # region: estimation methods
+# note: comp_method == "mean" with aeq_method == "linear-logistic" makes the most sense
 aeq_methods <- c("linear-logistic", "specialty-root", "linear")
-comp_methods <- c("mean", "geom-mean", "cobb-douglas")
+comp_methods <- c("mean", "cobb-douglas")
 
 expand.grid(
   aeq_method = aeq_methods,
   comp_method = comp_methods
 ) -> df_models
+
 
 # endregion
 # region: my competence and generality
@@ -153,6 +155,8 @@ df_models |>
       )
   ) |>
   arrange(-comp) ->
+df_comp_mine
+
 df_comp_mine
 
 # endregion
@@ -190,7 +194,8 @@ df_occupations |>
     df_occupations |>
       select(
         occupation,
-        employment_variants
+        employment_variants,
+        wage
       )
   ) |>
   group_by(occupation) |>
@@ -203,13 +208,6 @@ df_comp_occupations
 # endregion
 # region: competence vs generality correlation
 df_comp_occupations |>
-  left_join(
-    df_occupations |>
-      select(
-        occupation,
-        wage
-      )
-  ) |> 
   group_by(comp_method, aeq_method) |>
   reframe(
     gene_comp_corr = wtd.cors(

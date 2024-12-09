@@ -65,11 +65,13 @@ aeq <- function(skill_set, generality = NULL, aeq_method = c("linear-logistic", 
   ã <- skill_set / max(skill_set)
 
   # multiple dispatch
-  switch(aeq_method[[1]],
-    "linear-logistic" = return(aeq.linear_logistic(ã, generality[[1]])),
-    "specialty-root" = return(aeq.specialty_root(ã, generality[[1]])),
-    "linear" = return(aeq.linear(ã))
-  )
+  aeq_method[[1]] |>
+    as.character() |>
+    switch(
+      "linear-logistic" = return(aeq.linear_logistic(ã, generality[[1]])),
+      "specialty-root" = return(aeq.specialty_root(ã, generality[[1]])),
+      "linear" = return(aeq.linear(ã))
+    )
 }
 
 # endregion
