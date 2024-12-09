@@ -28,9 +28,11 @@ project.options(
 # region: imports
 library(dplyr)
 library(tidyr)
+library(atlas.plot)
 
 box::use(
-  desc = mod / describe
+  desc = mod / describe,
+  weights[wtd.cors]
 )
 
 # endregion
@@ -128,7 +130,7 @@ expand.grid(
 ) -> df_models
 
 # endregion
-# region: my competence
+# region: my competence and generality
 df_skill_set[-1] |>
   as.numeric() ->
 dbl_skill_set
@@ -154,7 +156,7 @@ df_models |>
 df_comp_mine
 
 # endregion
-# region: occupations' competence
+# region: occupations' competence and generality
 df_occupations |>
   select(
     occupation,
@@ -171,6 +173,7 @@ df_occupations |>
   reframe(
     comp_method = df_models$comp_method,
     aeq_method = df_models$aeq_method,
+    gene = desc$gn$gene(item_score),
     comp = mapply(
       function(cpm, aem) {
         desc$cp$comp(
@@ -183,11 +186,60 @@ df_occupations |>
       aem = aeq_method
     )
   ) |>
+  left_join(
+    df_occupations |>
+      select(
+        occupation,
+        employment_variants
+      )
+  ) |>
   group_by(occupation) |>
   arrange(-comp) |>
   ungroup() ->
 df_comp_occupations
 
 df_comp_occupations
+
+# endregion
+# region: competence vs generality correlation
+df_comp_occupations |>
+  left_join(
+    df_occupations |>
+      select(
+        occupation,
+        wage
+      )
+  ) |> 
+  group_by(comp_method, aeq_method) |>
+  reframe(
+    gene_comp_corr = wtd.cors(
+      gene, comp, employment_variants
+    ) |> as.numeric(),
+    wage_comp_corr = wtd.cors(
+      wage, comp, employment_variants
+    ) |> as.numeric(),
+    gene_wage_corr = wtd.cors(
+      gene, wage, employment_variants
+    ) |> as.numeric(),
+  ) |>
+  arrange(gene_comp_corr)
+
+# endregion
+# plots
+# region: methods vs competence distribution
+df_comp_occupations |>
+  fun_plot.density(
+    aes(
+      x = comp,
+      weights = employment_variants
+    ),
+    .sym_facets = c(aeq_method, comp_method),
+    .list_axis.x.args = list(
+      limits = c(-.25, 1.25),
+      breaks = seq(0, 1, length.out = 7)
+    ),
+    .fun_format.x = percent,
+    .reorder_desc = T
+  )
 
 # endregion

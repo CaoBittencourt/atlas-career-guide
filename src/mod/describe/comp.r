@@ -25,7 +25,6 @@ comp.geometric_mean <- function(skill_set, ä) {
   # assert args in main function
   # skill set competence as geometric mean
   return(prod(skill_set^ä)^(1 / length(skill_set)))
-  # return(prod(skill_set^(ä / sum(ä)))^(1 / length(skill_set)))
 }
 
 # endregion
