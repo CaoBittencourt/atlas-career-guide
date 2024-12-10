@@ -158,17 +158,14 @@ c(
 # region: matching combinations
 crossing(
   method = chr_methods,
-  weight = chr_weights,
-  sub = lgc_over_sub
+  weight = chr_weights
 ) -> df_methods
 
 df_methods %>%
   mutate(
     .before = 1,
     model = paste0(
-      method, "_", weight, if_else(
-        sub, "_sub", ""
-      )
+      method, "_", weight
     ),
     model = str_replace_all(
       model, "-", "_"

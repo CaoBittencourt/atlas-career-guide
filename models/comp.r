@@ -130,7 +130,6 @@ expand.grid(
   comp_method = comp_methods
 ) -> df_models
 
-
 # endregion
 # region: my competence and generality
 df_skill_set[-1] |>
@@ -164,17 +163,23 @@ df_comp_mine
 df_occupations |>
   select(
     occupation,
+    employment_norm,
+    wage,
     starts_with("skl_"),
     starts_with("abl_"),
     starts_with("knw_")
   ) |>
   pivot_longer(
-    cols = -1,
+    cols = -c(1:3),
     names_to = "item",
     values_to = "item_score"
   ) |>
   group_by(occupation) |>
   reframe(
+    across(
+      .cols = -starts_with("item"),
+      .fns = first
+    ),
     comp_method = df_models$comp_method,
     aeq_method = df_models$aeq_method,
     gene = desc$gn$gene(item_score),
@@ -190,17 +195,7 @@ df_occupations |>
       aem = aeq_method
     )
   ) |>
-  left_join(
-    df_occupations |>
-      select(
-        occupation,
-        employment_variants,
-        wage
-      )
-  ) |>
-  group_by(occupation) |>
-  arrange(-comp) |>
-  ungroup() ->
+  arrange(-comp) ->
 df_comp_occupations
 
 df_comp_occupations
@@ -211,16 +206,19 @@ df_comp_occupations |>
   group_by(comp_method, aeq_method) |>
   reframe(
     gene_comp_corr = wtd.cors(
-      gene, comp, employment_variants
+      gene, comp, employment_norm
     ) |> as.numeric(),
     wage_comp_corr = wtd.cors(
-      wage, comp, employment_variants
+      wage, comp, employment_norm
     ) |> as.numeric(),
     gene_wage_corr = wtd.cors(
-      gene, wage, employment_variants
+      gene, wage, employment_norm
     ) |> as.numeric(),
   ) |>
-  arrange(gene_comp_corr)
+  arrange(gene_comp_corr) ->
+df_corr
+
+df_corr
 
 # endregion
 # plots
@@ -229,7 +227,7 @@ df_comp_occupations |>
   fun_plot.density(
     aes(
       x = comp,
-      weights = employment_variants
+      weights = employment_norm
     ),
     .sym_facets = c(aeq_method, comp_method),
     .list_axis.x.args = list(

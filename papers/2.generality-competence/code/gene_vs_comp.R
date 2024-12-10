@@ -97,6 +97,8 @@ df_occupations |>
     )
   ) -> df_model
 
+df_model
+
 # endregion
 # region: generality vs competence correlation
 wtd.cors(
@@ -104,6 +106,8 @@ wtd.cors(
   y = df_model$competence,
   weight = df_model$employment_norm
 ) -> dbl_correlation
+
+dbl_correlation
 
 # endregion
 # plots

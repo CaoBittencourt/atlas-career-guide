@@ -25,17 +25,24 @@ aeq.specialty_root <- function(ã, generality) {
 # region: linear-logistic method
 aeq.linear_logistic <- function(ã, generality) {
   # assert args in main function
+  
+  # variable
+  x <- ã
+
+  # midpoint
+  m <- 1 - generality
+  
   # apply generalized logistic function with parameters
   return(
     glogis$logistic(
-      x = ã,
-      m = generality,
+      x = x,
+      m = m,
       a = 0,
-      k = ã,
+      k = x,
       c = 1,
-      q = generality * (1 - ã),
-      nu = ã / generality,
-      b = 1 / (1 - generality)
+      q = m * (1 - x),
+      nu = x / m,
+      b = 1 / (1 - m)
     )
   )
 }
