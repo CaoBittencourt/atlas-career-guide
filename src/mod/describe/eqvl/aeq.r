@@ -25,13 +25,13 @@ aeq.specialty_root <- function(ã, generality) {
 # region: linear-logistic method
 aeq.linear_logistic <- function(ã, generality) {
   # assert args in main function
-  
+
   # variable
   x <- ã
 
   # midpoint
   m <- 1 - generality
-  
+
   # apply generalized logistic function with parameters
   return(
     glogis$logistic(
@@ -41,7 +41,8 @@ aeq.linear_logistic <- function(ã, generality) {
       k = x,
       c = 1,
       q = m * (1 - x),
-      nu = x / m,
+      nu = x / (m * (x != 1)),
+      # nu = x / m,
       b = 1 / (1 - m)
     )
   )
@@ -70,6 +71,11 @@ aeq <- function(skill_set, generality = NULL, aeq_method = c("linear-logistic", 
 
   # maxima-normalized attributes
   ã <- skill_set / max(skill_set)
+
+  # edge-case: a == null vector
+  if (all(is.na(ã))) {
+    ã <- rep(1, length(ã))
+  }
 
   # multiple dispatch
   aeq_method[[1]] |>

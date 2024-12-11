@@ -5,7 +5,6 @@ ATLAS CAREER GUIDE TASKS
 current task
 -------------------------------------
 [ ] aeq = 0 for all x when gamma = 1
-[ ] resolve generality edge-cases
 [ ] resolve competence edge-cases
 [ ] generality vs competence article
 [\] refine competence coefficient
@@ -28,6 +27,7 @@ features
 
 finished
 -------------------------------------
+[x] resolve generality edge-cases
 [x] my cobb-douglas competence
 [x] cobb-douglas similarity
 [x] modular R code with box package
