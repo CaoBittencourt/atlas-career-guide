@@ -4,8 +4,7 @@ ATLAS CAREER GUIDE TASKS
 
 current task
 -------------------------------------
-[ ] my cobb-douglas competence
-[ ] cobb-douglas similarity
+[ ] aeq = 0 for all x when gamma = 1
 [ ] resolve generality edge-cases
 [ ] resolve competence edge-cases
 [ ] generality vs competence article
@@ -18,7 +17,6 @@ notes
 
 fixes
 -------------------------------------
-[ ] aeq = 0 for all x when gamma = 1
 [ ] remove hungarian notation
 [ ] use dot notation in functions etc
 [ ] clean namespace
@@ -30,6 +28,8 @@ features
 
 finished
 -------------------------------------
+[x] my cobb-douglas competence
+[x] cobb-douglas similarity
 [x] modular R code with box package
 [x] generality vs competence model
 [x] moved over to positron 

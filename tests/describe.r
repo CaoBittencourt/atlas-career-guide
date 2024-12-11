@@ -77,11 +77,11 @@ all(
 )
 rm(skills)
 
-# # 0 generality
-# all(
-#   ast$gn$gene(c(rep(0, 120), 1)) == 0,
-#   ast$gn$gene(rep(1, 120)) |> length() == 1
-# )
+# 0 generality
+all(
+  ast$gn$gene(c(rep(0, 120), 1)) == 0,
+  ast$gn$gene(rep(1, 120)) |> length() == 1
+)
 
 # NA generality
 all(
