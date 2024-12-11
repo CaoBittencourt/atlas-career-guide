@@ -281,7 +281,9 @@ list(
   aeq = test_aeq(),
   gene = test_gene(),
   comp = test_comp()
-) |>
+) -> tests
+
+tests |>
   lapply(
     function(submodule) {
       submodule |>

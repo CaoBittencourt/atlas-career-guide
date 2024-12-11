@@ -1,5 +1,9 @@
-# `utils` submodule
+# `utils` module
 General utilities for keeping code concise and modular.
 
-- assert: common argument assertion operations.
-- logistic: generalized logistic curve and sigmoid.
+
+## `assert` submodule
+Common argument assertion operations.
+
+## `logistic` submodule
+Generalized logistic curve and sigmoid.

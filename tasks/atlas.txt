@@ -4,9 +4,7 @@ ATLAS CAREER GUIDE TASKS
 
 current task
 -------------------------------------
-[ ] aeq = 0 for all x when gamma = 1
-[ ] resolve competence edge-cases
-[ ] generality vs competence article
+[\] modularize codebase
 [\] refine competence coefficient
 [\] standardize notation
 
@@ -23,10 +21,13 @@ fixes
 
 features
 -------------------------------------
+[ ] generality vs competence article
 [ ] create atlas metapackage
 
 finished
 -------------------------------------
+[x] resolve competence edge-cases
+[x] aeq = 0 for all x when gamma = 1
 [x] resolve generality edge-cases
 [x] my cobb-douglas competence
 [x] cobb-douglas similarity
