@@ -50,40 +50,29 @@ test_aeq <- function() {
         runif(120) |>
           desc$eq$aeq() |>
           util$assert$valid_skill_set() |>
-          try() |>
-          class() !=
-          "try-error",
+          util$test$is.error() |>
+          isFALSE(),
       "invalid skill sets attribute equivalence" = list(
         "attribute > 1" =
           c(rep(0, 119), 1.1) |>
             desc$eq$aeq() |>
-            try() |>
-            class() ==
-            "try-error",
+            util$test$is.error(),
         "attribute < 0" =
           c(rep(0, 119), -0.1) |>
             desc$eq$aeq() |>
-            try() |>
-            class() ==
-            "try-error",
+            util$test$is.error(),
         "attribute == Inf" =
           c(rep(0, 119), Inf) |>
             desc$eq$aeq() |>
-            try() |>
-            class() ==
-            "try-error",
+            util$test$is.error(),
         "attribute == NA" =
           c(rep(0, 119), NA) |>
             desc$eq$aeq() |>
-            try() |>
-            class() ==
-            "try-error",
+            util$test$is.error(),
         "attribute not numeric" =
           c(rep(0, 119), "dsds") |>
             desc$eq$aeq() |>
-            try() |>
-            class() ==
-            "try-error"
+            util$test$is.error()
       ),
       "unit vector attribute equivalence" =
         all(
@@ -118,33 +107,23 @@ test_gene <- function() {
         "attribute > 1" =
           c(rep(0, 119), 1.1) |>
             desc$gn$gene() |>
-            try() |>
-            class() ==
-            "try-error",
+            util$test$is.error(),
         "attribute < 0" =
           c(rep(0, 119), -0.1) |>
             desc$gn$gene() |>
-            try() |>
-            class() ==
-            "try-error",
+            util$test$is.error(),
         "attribute == Inf" =
           c(rep(0, 119), Inf) |>
             desc$gn$gene() |>
-            try() |>
-            class() ==
-            "try-error",
+            util$test$is.error(),
         "attribute == NA" =
           c(rep(0, 119), NA) |>
             desc$gn$gene() |>
-            try() |>
-            class() ==
-            "try-error",
+            util$test$is.error(),
         "attribute not numeric" =
           c(rep(0, 119), "dsds") |>
             desc$gn$gene() |>
-            try() |>
-            class() ==
-            "try-error"
+            util$test$is.error()
       ),
       "hyper-generalist generality" =
         all(
@@ -179,33 +158,23 @@ test_comp <- function() {
         "attribute > 1" =
           c(rep(0, 119), 1.1) |>
             desc$cp$comp() |>
-            try() |>
-            class() ==
-            "try-error",
+            util$test$is.error(),
         "attribute < 0" =
           c(rep(0, 119), -0.1) |>
             desc$cp$comp() |>
-            try() |>
-            class() ==
-            "try-error",
+            util$test$is.error(),
         "attribute == Inf" =
           c(rep(0, 119), Inf) |>
             desc$cp$comp() |>
-            try() |>
-            class() ==
-            "try-error",
+            util$test$is.error(),
         "attribute == NA" =
           c(rep(0, 119), NA) |>
             desc$cp$comp() |>
-            try() |>
-            class() ==
-            "try-error",
+            util$test$is.error(),
         "attribute not numeric" =
           c(rep(0, 119), "dsds") |>
             desc$cp$comp() |>
-            try() |>
-            class() ==
-            "try-error"
+            util$test$is.error()
       ),
       "hyper-generalist competence" =
         all(
@@ -230,50 +199,6 @@ test_comp <- function() {
     )
   )
 }
-# whereas generality of repeated skill set is 1, competence is not
-runif(1) |> rep(120) -> skills
-all(
-  desc$cp$comp(skills) != 1,
-  desc$cp$comp(skills) |> length() == 1
-)
-rm(skills)
-
-# 1 competence
-all(
-  desc$cp$comp(rep(1, 120)) == 1,
-  desc$cp$comp(rep(1, 120)) |> length() == 1
-)
-
-# 0 competence
-all(
-  desc$cp$comp(c(rep(0, 120))) == 0,
-  desc$cp$comp(rep(1, 120)) |> length() == 1
-)
-
-# invalid skill sets competence
-c(rep(0, 119), 1.1) |>
-  desc$cp$comp() |>
-  try() |>
-  class() ==
-  "try-error"
-
-c(rep(0, 119), -0.1) |>
-  desc$cp$comp() |>
-  try() |>
-  class() ==
-  "try-error"
-
-c(rep(0, 119), Inf) |>
-  desc$cp$comp() |>
-  try() |>
-  class() ==
-  "try-error"
-
-c(rep(0, 119), "dsds") |>
-  desc$cp$comp() |>
-  try() |>
-  class() ==
-  "try-error"
 
 # endregion
 # region: run all tests

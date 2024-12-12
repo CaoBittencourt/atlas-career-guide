@@ -13,6 +13,18 @@ valid_skill_set <- function(skill_set) {
 }
 
 # endregion
+# region: assert skill set matrix
+valid_skill_mtx <- function(skill_mtx) {
+  stopifnot(
+    '"skill_mtx" must be a numeric matrix or data frame in the unit interval."' = all(
+      any(is.matrix(skill_mtx), is.data.frame(skill_mtx)),
+      skill_mtx >= 0,
+      skill_mtx <= 1
+    )
+  )
+}
+
+# endregion
 # region: assert generality
 valid_generality <- function(generality) {
   stopifnot(
@@ -31,6 +43,7 @@ valid_generality <- function(generality) {
 # region: exports
 box::export(
   valid_skill_set,
+  valid_skill_mtx,
   valid_generality
 )
 

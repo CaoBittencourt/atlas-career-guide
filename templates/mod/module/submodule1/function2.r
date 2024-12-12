@@ -3,7 +3,7 @@ box::use()
 
 # endregion
 # region: method 1 name
-function1.method1 <- function() {
+function2.method1 <- function() {
   # assert args in main function
   # description
   return("method1")
@@ -11,7 +11,7 @@ function1.method1 <- function() {
 
 # endregion
 # region: method 2 name
-function1.method2 <- function() {
+function2.method2 <- function() {
   # assert args in main function
   # description
   return("method2")
@@ -19,25 +19,25 @@ function1.method2 <- function() {
 
 # endregion
 # region: generic function
-function1 <- function(function1_method = c("method1", "method2")[[1]], ...) {
+function2 <- function(function2_method = c("method1", "method2")[[1]], ...) {
   # assert args
   stopifnot(
-    "'function1_method' must be one of the following methods: 'method1', 'method2'." = any(
-      function1_method == c("method1", "method2")
+    "'function2_method' must be one of the following methods: 'method1', 'method2'." = any(
+      function2_method == c("method1", "method2")
     )
   )
 
   # multiple dispatch
-  function1_method[[1]] |>
+  function2_method[[1]] |>
     as.character() |>
     switch(
-      "method1" = return(function1.method1()),
-      "method2" = return(function1.method2())
+      "method1" = return(function2.method1()),
+      "method2" = return(function2.method2())
     )
 }
 
 # endregion
 # region: exports
-box::export(function1)
+box::export(function2)
 
 # endregion
