@@ -1,6 +1,7 @@
 # region: imports
 box::use(
-  assert = mod / utils / assert
+  assert = mod / utils / assert,
+  stats[weighted.mean]
 )
 
 # endregion
