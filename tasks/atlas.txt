@@ -4,6 +4,9 @@ ATLAS CAREER GUIDE TASKS
 
 current task
 -------------------------------------
+[ ] construct dependency matrix
+    - then cluster (with efa?)
+    - use this to determine modules
 [\] modularize codebase
 [\] refine competence coefficient
 [\] standardize notation

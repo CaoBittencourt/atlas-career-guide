@@ -1,0 +1,41 @@
+id|symbol|construct|dependencies|multiple_attribute_vectors|given_data|estimated_data
+1|$\tilde{a}_k$|maxima-normalized skill set|$a_k$|0|0|0
+2|$\gamma_k$|skill set generality|$\tilde{a}_k$|0|0|0
+3|$\ddot{a}_k$|attribute equivalence|$\tilde{a}_k, \gamma_k$|0|0|0
+4|$c_k$|skill set competence|$a_k, \ddot{a}_k$|0|0|0
+5|$\hat{g}_k$|estimated intelligence|$a_k, \Psi, \psi$|0|0|1
+6|$\bar{\upsilon}_k$|skill set utility|$a_q, \upsilon_k$|1|0|0
+7|$u_k$|job satisfaction|$a_q, \upsilon_k, y_k,\dots$|1|1|0
+8|$s_{kq}$|skill set similarity|$a_k, a_q, \ddot{a}_k, \ddot{a}_q$|1|0|0
+9|$s^{\theta} = \text{cos}{\theta}$|field similarity|$a_k, a_q, \ddot{a}_k, \ddot{a}_q$|1|0|0
+10|$\delta_{kq}$|gap function|$a_k, a_q$|1|0|0
+11|$\tilde{\delta}_{kq}^{<}$|underqualification|$a_k, a_q$|1|0|0
+12|$\tilde{\delta}_{kq}^{\geq}$|overqualification|$a_k, a_q$|1|0|0
+13|$s_{kq}^{\geq}$|sufficient qualification|$a_k, a_q$|1|0|0
+14|$\textit{ß}_{kq}, \ddot{s}_{kq}$|sufficient / equivalent similarity / interchangeability|$a_k, a_q, \ddot{a}_k, \ddot{a}_q, \dots$|1|0|0
+15|$\ddot{\tau}_{kq}$|education and experience equivalence|$\tau_k, \tau_q, \dots$|0|1|0
+16|$\tilde{T}_{kq}$|productivity|$a_k, a_q, \ddot{a}_k, \ddot{a}_q$|1|0|0
+17|$h_{kq}$|hireability|$\dots$|1|1|0.5
+18|$\text{ta}_k$|time allocation function|-|0|0|0
+19|$\tilde{W}_k$|employability|$a_k, \text{A}, \text{ta}_q, \dots$|1|1|0.5
+20|$\tilde{\text{vs}}$|labor market competitiveness|$a_k, \text{A}, \text{ta}_q, u_{qk}, \dots$|1|1|0.5
+21|$\Lambda$|labor market strata|$\text{S}_{\Theta}, \dots$|1|0|0
+22|?|evolutionary model of occupations|$\text{A}, \dots$|1|0|0
+23|?|dynamic labor markets|$\text{A}, w, y, u, \dots$|1|1|0.5
+24|$\hat{y}_i$|marginal compensation / labor market prices|$\text{A}, w, y$|1|1|0
+25|$\hat{\eta}$|marginal time investment|$\text{A}, w, \tau, \phi?, \dots$|1|1|0.5
+26|$\hat{\phi}$?, $\phi$|human capital microflexibility|$\text{A}, w, \dots?$|1|1|0
+27|?|leverage|$a_k, \phi$|0|0|1
+28|$\hat{\Phi}$?, $\Phi$|human capital macroflexibility|$\text{A}, w$|1|1|0
+29|?|versatility|$a_k, \Phi$|0|0|1
+30|$\hat{y}$?|skill set value|$a_k, \hat{y}_i$|0|0|1
+31|$H$|total time investment|$a_k, a_q, \eta, \phi?, \dots$|1|0|1
+32|?|letter-shaped skill sets|$a_k, \dots$|1|1|0.5
+33|?|macro-strategy|-|0|1|0
+34|$R$|preference-adjusted strategic matching|$a_k, a_q, \ddot{a}_k, \ddot{a}_q, y, w, \tilde{W}, \tilde{\text{vs}}, \Phi, \phi, \dots$|1|1|1
+35|?|micro-strategy|-|0|1|0
+36|$r$|preference-adjusted strategic training|$a_k, a_q, \ddot{a}_k, \ddot{a}_q, y, w, \tilde{W}, \tilde{\text{vs}}, \Phi, \phi, \dots$|1|1|1
+37|$\Psi, \psi$|factor model|$\text{A}, w$|1|1|0
+38|?|psychometric questionnaire optimization|$\Psi, \psi, \text{A}, w, \dots$|1|1|1
+39|?|factor-analytic comparative statics|$\Psi, \psi, \text{A}, w, \dots$|1|1|1
+40|?|atlas career type indicator (ACTI)|$a_k, \Psi, \psi$|0|0|1
