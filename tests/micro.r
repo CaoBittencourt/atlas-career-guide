@@ -99,6 +99,30 @@ test_Phi <- function() {
           ) |>
           util$test$is.error()
       )
+    ),
+    "output is in the unit interval" = list(
+      all(
+        df_skill_mtx |> micro$kflex$Phi() >= 0,
+        df_skill_mtx |> micro$kflex$Phi() <= 1
+      ),
+      all(
+        df_skill_mtx |> as.matrix() |> micro$kflex$Phi() >= 0,
+        df_skill_mtx |> as.matrix() |> micro$kflex$Phi() <= 1
+      ),
+      all(
+        df_skill_mtx |> micro$kflex$Phi(weights = df_occupations$employment_norm) >= 0,
+        df_skill_mtx |> micro$kflex$Phi(weights = df_occupations$employment_norm) <= 1
+      ),
+      all(
+        df_skill_mtx |> as.matrix() |> micro$kflex$Phi(weights = df_occupations$employment_norm) >= 0,
+        df_skill_mtx |> as.matrix() |> micro$kflex$Phi(weights = df_occupations$employment_norm) <= 1
+      )
+    ),
+    "output is the same length as the number of attributes in the skill set matrix" = list(
+      df_skill_mtx |> micro$kflex$Phi() |> length() == ncol(df_skill_mtx),
+      df_skill_mtx |> as.matrix() |> micro$kflex$Phi() |> length() == ncol(df_skill_mtx),
+      df_skill_mtx |> micro$kflex$Phi(weights = df_occupations$employment_norm) |> length() == ncol(df_skill_mtx),
+      df_skill_mtx |> as.matrix() |> micro$kflex$Phi(weights = df_occupations$employment_norm) |> length() == ncol(df_skill_mtx)
     )
   )
 }

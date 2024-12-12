@@ -26,6 +26,7 @@ features
 
 finished
 -------------------------------------
+[x] modular human capital macroflex
 [x] resolve competence edge-cases
 [x] aeq = 0 for all x when gamma = 1
 [x] resolve generality edge-cases

@@ -34,7 +34,34 @@ Phi <- function(skill_mtx, weights = NULL) {
 }
 
 # endregion
+# region: [VECTORIZE] skill set versatility
+versatility <- function(skill_set, macroflex) {
+  # assert args
+  assert$valid_skill_set(skill_set)
+
+  stopifnot(
+    "'macroflex' must be a numeric vector in the unit interval the same length as 'skill_set'." = all(
+      is.numeric(macroflex),
+      macroflex >= 0,
+      macroflex <= 1,
+      length(macroflex) == length(skill_set)
+    )
+  )
+
+  # a skill set's versatility is their aggregate human capital macroflexibility
+  # do not employ attribute equivalence in weighting: weights need to be linear
+  return(
+    weighted.mean(
+      x = macroflex,
+      w = skill_set
+    )
+  )
+}
+
+# df_skill_mtx |> t() |> as.data.frame() |> sapply(versatility, macroflex = capital_macroflex)
+
+# endregion
 # region: exports
-box::export(Phi)
+box::export(Phi, versatility)
 
 # endregion
