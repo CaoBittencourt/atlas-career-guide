@@ -1,35 +1,13 @@
 # setup
 # region: modules
-# install box if not installed
-if (!any(utils::installed.packages()[, 1] == "box")) {
-  install.packages("box", dependencies = T)
-}
-
-# install modular if not installed
-if (!any(utils::installed.packages()[, 1] == "modular")) {
-  devtools::install_github("CaoBittencourt/modular")
-}
-
-library(modular)
-
-# objective project root
-project.options(
-  project.name = "atlas",
-  relative.paths = list(
-    atlas.src = "src",
-    atlas.mod = "src/mod",
-    box.path = "src",
-    atlas.data = "data"
-  ),
-  root.name = ".atlas"
-)
+modular::project.options("atlas")
 
 # endregion
 # region: imports
 box::use(
   dplyr[...],
   tidyr[...],
-  kflex = sketch / micro / kflex / microflex,
+  kflex = mod / micro / kflex / microflex,
 )
 
 library(atlas.plot)
@@ -62,13 +40,24 @@ df_occupations |>
 # endregion
 # plots
 # region: microflexibility heatmap
-mtx_phi |> 
+mtx_phi |>
   as_tibble(
-    rownames = 'from'
-  ) |> 
-  pivot_longer
-fun_plot.heatmap()
+    rownames = "from"
+  ) |>
+  pivot_longer(
+    cols = -1,
+    names_to = "to",
+    values_to = "phi"
+  ) |>
+  fun_plot.heatmap(
+    aes(
+      x = from,
+      y = to,
+      fill = phi
+    ),
+    .reorder_desc = F,
+    .reorder_fun = min,
+    .list_geom.param = list()
+  )
 
 # endregion
-# r-styler
-# CaoBittencourt/modular

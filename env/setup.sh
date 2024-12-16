@@ -9,14 +9,14 @@ SCRIPT_PATH=$(
 
 cd $SCRIPT_PATH
 
-# while loop to create each environment
-ENV_NAME="atlas"
-ENV_FILE="atlas.yaml"
-
 # install miniconda if not installed
 if ! command -v conda &>/dev/null; then
     bash ./miniconda.sh
 fi
+
+# environment specifications
+ENV_NAME="atlas"
+ENV_FILE="atlas.yaml"
 
 # create or update conda environment
 if conda info --envs | grep -q "^$ENV_NAME\s"; then

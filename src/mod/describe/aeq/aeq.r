@@ -14,11 +14,11 @@ aeq.linear <- function(ã) {
 }
 
 # endregion
-# region: specialty-root method
-aeq.specialty_root <- function(ã, generality) {
+# region: gene-root method
+aeq.gene_root <- function(ã, generality) {
   # assert args in main function
-  # take the root of skill set with respect to specialty (i.e. 1 - generality)
-  return(ã^(1 / (1 - generality)))
+  # take the root of skill set with respect to generality
+  return(ã^(1 / generality))
 }
 
 # endregion
@@ -50,14 +50,14 @@ aeq.linear_logistic <- function(ã, generality) {
 
 # endregion
 # region: attribute equivalence generic
-aeq <- function(skill_set, generality = NULL, aeq_method = c("linear-logistic", "specialty-root", "linear")[[1]]) {
+aeq <- function(skill_set, generality = NULL, aeq_method = c("linear-logistic", "gene-root", "linear")[[1]]) {
   # assert args
   assert$valid_skill_set(skill_set)
   assert$valid_generality(generality)
 
   stopifnot(
-    "'aeq_method' must be one of the following methods: 'linear-logistic', 'specialty-root', 'linear'." = any(
-      aeq_method == c("linear-logistic", "specialty-root", "linear")
+    "'aeq_method' must be one of the following methods: 'linear-logistic', 'gene-root', 'linear'." = any(
+      aeq_method == c("linear-logistic", "gene-root", "linear")
     )
   )
 
@@ -82,7 +82,7 @@ aeq <- function(skill_set, generality = NULL, aeq_method = c("linear-logistic", 
     as.character() |>
     switch(
       "linear-logistic" = return(aeq.linear_logistic(ã, generality[[1]])),
-      "specialty-root" = return(aeq.specialty_root(ã, generality[[1]])),
+      "gene-root" = return(aeq.gene_root(ã, generality[[1]])),
       "linear" = return(aeq.linear(ã))
     )
 }

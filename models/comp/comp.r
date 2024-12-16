@@ -1,28 +1,6 @@
 # setup
 # region: modules
-# install box if not installed
-if (!any(utils::installed.packages()[, 1] == "box")) {
-  install.packages("box", dependencies = T)
-}
-
-# install modular if not installed
-if (!any(utils::installed.packages()[, 1] == "modular")) {
-  devtools::install_github("CaoBittencourt/modular")
-}
-
-library(modular)
-
-# objective project root
-project.options(
-  project.name = "atlas",
-  relative.paths = list(
-    atlas.src = "src",
-    atlas.mod = "src/mod",
-    box.path = "src",
-    atlas.data = "data"
-  ),
-  root.name = ".atlas"
-)
+modular::project.options("atlas")
 
 # endregion
 # region: imports
@@ -122,7 +100,7 @@ df_sample %>%
 # model
 # region: estimation methods
 # note: comp_method == "mean" with aeq_method == "linear-logistic" makes the most sense
-aeq_methods <- c("linear-logistic", "specialty-root", "linear")
+aeq_methods <- c("linear-logistic", "gene-root", "linear")
 comp_methods <- c("mean", "cobb-douglas")
 
 expand.grid(

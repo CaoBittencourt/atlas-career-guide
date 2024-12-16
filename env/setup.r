@@ -17,9 +17,12 @@ project.options(
   project.name = "atlas",
   relative.paths = list(
     atlas.src = "src",
-    atlas.mod = "src/mod",
     box.path = "src",
-    atlas.data = "data"
+    atlas.mod = "src/mod",
+    atlas.data = "data",
+    atlas.occupations = "data/occupations/df_occupations_2022.csv"
   ),
-  root.name = ".atlas"
+  root.name = ".atlas",
+  start.path = ".",
+  end.path = "."
 )

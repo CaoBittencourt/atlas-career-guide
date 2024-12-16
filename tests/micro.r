@@ -30,9 +30,10 @@ project.options(
 box::use(
   micro = mod / micro,
   util = mod / utils,
+  dplyr[...]
 )
 
-library(dplyr)
+# library(dplyr)
 
 # endregion
 # region: data
@@ -129,18 +130,20 @@ test_Phi <- function() {
 
 # endregion
 # region: run all tests
-list(
-  macroflex = test_Phi()
-  # , microflex = test_phi(),
-) -> tests
+tests.run <- function() {
+  list(
+    macroflex = test_Phi()
+    # , microflex = test_phi(),
+  ) |>
+    lapply(
+      function(submodule) {
+        submodule |>
+          unlist() |>
+          all()
+      }
+    )
+}
 
-tests |>
-  lapply(
-    function(submodule) {
-      submodule |>
-        unlist() |>
-        all()
-    }
-  )
+tests.run()
 
 # endregion

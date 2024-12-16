@@ -49,10 +49,12 @@ phi <- function(skill_mtx, weights = NULL) {
         b = a_ik,
         bl = scale_lb,
         bu = scale_ub
-      )$x |>
-        setNames(
-          colnames(A)
-        )
+      )$x -> phi_coef
+
+      colnames(A) ->
+      names(phi_coef)
+
+      return(phi_coef)
     },
     a_ik = attributes,
     drop = 1:length(attributes)
