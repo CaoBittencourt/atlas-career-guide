@@ -4,9 +4,6 @@ ATLAS CAREER GUIDE TASKS
 
 current task
 -------------------------------------
-[ ] construct dependency matrix
-    - then cluster (with efa?)
-    - use this to determine modules
 [\] modularize codebase
 [\] refine competence coefficient
 [\] standardize notation
@@ -30,6 +27,9 @@ features
 
 finished
 -------------------------------------
+[x] construct dependency matrix
+    - then cluster (with efa?)
+    - use this to determine modules
 [x] modular human capital macroflex
 [x] resolve competence edge-cases
 [x] aeq = 0 for all x when gamma = 1

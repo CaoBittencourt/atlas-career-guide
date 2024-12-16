@@ -1,16 +1,16 @@
 # `describe` module
 This module contains coefficients that are calculated using a single skill set. They don't require direct comparison with other skill sets, but are *descriptive* and can, thus, be thought of as "properties" of a skill set. 
 
-## `eqvl` (equivalence) submodule
-- `aeq`: attribute equivalence is calculated for each attribute in a skill set and indicates its importance. 
+## `aeq` submodule
+Attribute equivalence is calculated for each attribute in a skill set and indicates its importance. 
 
-## `gene` (generality) submodule
+## `gene` submodule
 A skill set's generality determines whether one is a generalist or specialist.
 - Methods:
     - Weighted Penalized Mode (`mean`):
         - Mathematically equivalent to the mean of a maxima-normalized skill set.
 
-## `comp` (competence) submodule
+## `comp` submodule
 A skill set's competence describes the magnitude of one's overall skill level.
 - Methods:
     - Weighted Penalized Mode (`mean`):

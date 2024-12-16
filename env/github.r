@@ -1,11 +1,11 @@
 # setup
 library(devtools)
 
-# read PAT
-gh_token <- scan("./.ghtoken", character(), quote = "")
+# # read PAT
+# gh_token <- scan("./.ghtoken", character(), quote = "")
 
-# temporarily set PAT
-Sys.setenv("GITHUB_PAT" = gh_token)
+# # temporarily set PAT
+# Sys.setenv("GITHUB_PAT" = gh_token)
 
 # read github package files
 c(
@@ -18,11 +18,11 @@ c(
 # install github packages
 install_github(
   github_packages,
-  auth_token = gh_token,
+  # auth_token = gh_token,
   dependencies = T,
   upgrade = F,
   force = T
 )
 
-# remove PAT
-Sys.unsetenv("GITHUB_PAT")
+# # remove PAT
+# Sys.unsetenv("GITHUB_PAT")
