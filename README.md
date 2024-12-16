@@ -5,7 +5,7 @@ To setup this development environment with all its dependencies, run
 ```
 git clone https://github.com/CaoBittencourt/atlas-career-guide/ atlas
 cd atlas
-bash atlas/env/setup.sh
+bash /env/setup.sh
 ```
 
 ## Structure
@@ -17,7 +17,7 @@ bash atlas/env/setup.sh
 
 `/models`: experiments for creating and choosing statistical models.
 
-`/sketches`: legacy code and outdated models and tests.
+`/sketches`: legacy code, outdated models and tests.
 
 `/src`: source code.
 
