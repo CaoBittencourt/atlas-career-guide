@@ -65,7 +65,7 @@ Modules are to be grouped in accordance with functionality and their requirement
 |11|$\tilde{\delta}_{kq}^{<}$|underqualification|$a_k, a_q$|1|0|0|
 |12|$\tilde{\delta}_{kq}^{\geq}$|overqualification|$a_k, a_q$|1|0|0|
 |13|$s_{kq}^{\geq}$|sufficient qualification|$a_k, a_q$|1|0|0|
-|14|$\textit{ß}_{kq}, \ddot{s}_{kq}$|sufficient / equivalent similarity / interchangeability|$a_k, a_q, \ddot{a}_k, \ddot{a}_q, \dots$|1|0|0|
+|14|$\textit{\ss}_{kq}, \ddot{s}_{kq}$|sufficient / equivalent similarity / interchangeability|$a_k, a_q, \ddot{a}_k, \ddot{a}_q, \dots$|1|0|0|
 |15|$\ddot{\tau}_{kq}$|education and experience equivalence|$\tau_k, \tau_q, \dots$|0|1|0|
 |16|$\tilde{T}_{kq}$|productivity|$a_k, a_q, \ddot{a}_k, \ddot{a}_q$|1|0|0|
 |17|$h_{kq}$|hireability|$\dots$|1|1|0.5|
