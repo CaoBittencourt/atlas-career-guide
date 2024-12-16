@@ -1,5 +1,7 @@
 # region: imports
-box::use(assert = mod / utils / assert)
+box::use(
+  assert = mod / utils / assert
+)
 
 # endregion
 # region: skill set generality
