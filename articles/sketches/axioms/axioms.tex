@@ -1,0 +1,740 @@
+%SECTION: SETUP
+% region: document class 
+% \documentclass{article}
+\documentclass{elsarticle} %elsevier
+% \documentclass[twocolumn]{elsarticle} %elsevier
+% \documentclass{apa7} %american psychological association
+% \documentclass[doc]{apa7} %american psychological association
+% \documentclass{aomart} %annals of mathematics
+% \documentclass{imsproc} %institute of mathematics and statistics
+% \documentclass{nwejmart} %north-western european journal of mathematics
+% \documentclass{paper} 
+% \documentclass{sr-vorl} %springer book
+% \documentclass{ecca} %economica
+% \documentclass{ecta} %econometrica
+% \documentclass{apecon} %applied economics
+
+% endregion
+
+% region: packages 
+\usepackage{xr}
+\usepackage{physics}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{float}
+\usepackage{enumitem}
+\setlist[enumerate]{label*=\arabic*.}
+\usepackage[hidelinks]{hyperref}
+
+% endregion
+
+% region: title 
+% Title
+\title{
+    Derivation of the Employability Theorem
+}
+\author{Cao Bittencourt}
+\affiliation{{B. Sc. in Economics from EPGE (FGV), RJ, Brazil.}}
+\affiliation{{Statistician at Atlas Career Guide Inc., FL, USA.}}
+\date{\today}
+
+% endregion
+
+% region: display breaks 
+\allowdisplaybreaks
+
+% endregion
+
+%SECTION: PAPER
+\begin{document}
+
+% \maketitle
+
+% region: abstract 
+\begin{abstract}
+    \noindent
+    This is document demonstrates the employability theorem from a set of fairly tautological axioms, which are presupposed in quantitative career choice and career development methods.
+\end{abstract}
+% endregion
+
+% region: title 
+\maketitle
+
+% endregion
+
+% region: table of contents 
+\tableofcontents
+\newpage
+% endregion
+
+% region: premises 
+\section{Premises of the Employability Theorem}
+\subsection{Skill Set Sufficiency Axiom}
+\begin{enumerate}
+    \item having the required skill level of an attribute is sufficient to perform its
+          activities at that level
+    \item skills are sufficient to perform activities
+\end{enumerate}
+
+Idea:
+\begin{gather*}
+    x \iff T_x
+\end{gather*}
+
+Weak Version:
+\begin{gather*}
+    x \geq \bar{x} \iff 1 \times T_{\bar{x}}
+\end{gather*}
+
+Moderate Version:
+\begin{gather*}
+    x \geq \bar{x} \iff 1 \times T_{\bar{x}};\\
+    x < \bar{x} \iff f_{x}(x, \bar{x}) \times T_{\bar{x}}
+\end{gather*}
+
+Strong Version:
+\begin{gather*}
+    x \geq \bar{x} \iff 1 \times T_{\bar{x}};\\
+    x < \bar{x} \iff (x / \bar{x}) \times T_{\bar{x}}
+\end{gather*}
+
+\subsection{Skill Set Composition Axiom}
+\begin{enumerate}
+    \item rational economic agents can naturally compose multiple skills to accomplish
+          complex tasks (i.e. tasks that require multiple skills)
+    \item skills are composable to perform complex activities
+    \item $x,y \iff T_{xy}$
+    \item p.s.: it does not matter \textit{how} skills are composed to perform a complex
+          activity. the point of the axiom is that any rational person which is also
+          sufficiently qualified can ``figure out'' how to ``piece together'', that is
+          compose, the required skills to perform a complex activity:
+          \begin{gather*}
+              (x,y \iff T_{xy}) \iff (x,y \iff T_{yx})
+              .
+          \end{gather*}
+\end{enumerate}
+
+\begin{gather*}
+    \sigma_{i}^{k} = 
+    \frac{
+        a_{i}^{k}
+        }{
+            \sum_{i=1}^{m}{
+                a_{i}^{k}
+            }
+        }
+        \in [0,1]
+        ;\\
+    \boldsymbol{\sigma_{k}} = 
+    (\sigma_{1}^{k}, \dots, \sigma_{m}^{k})
+    ;\\
+    \boldsymbol{\sigma} =
+    \begin{bmatrix}
+        \sigma_{1}^{1} & \hdots & \sigma_{m}^{1} \\
+        \vdots    & \ddots & \vdots    \\
+        \sigma_{1}^{n} & \hdots & \sigma_{m}^{n} \\
+    \end{bmatrix}
+    .
+\end{gather*}
+
+Actually, the strong supposition is not that of complementarity, but rather of substitution. It is less realistic to suppose strong substitution than moderate complementarity. Therefore, invert the axiom's strength.
+Strong Composition Axiom (Maximum Complementarity, Leontief production function?):
+\begin{gather*}
+    s_{kq}^{h} = 
+    {\min_{i}\left(
+        % {\boldsymbol{a_{k}}} ^ {\boldsymbol{\sigma_{q}}}
+        {\boldsymbol{a_{k}^ {\boldsymbol{\sigma_{q}}}}}
+    % )} ^ \frac{1}{\sigma_{m}^{q}}
+    \right)} ^ {1 / \sigma_{i}^{q}}
+    % s_{kq}^{h} = 
+    % {\min_{i}\left(
+    %     % {\boldsymbol{a_{k}}} ^ {\boldsymbol{\hat{a}_{q}}}
+    %     {\boldsymbol{a_{k}^ {\boldsymbol{\hat{a}_{q}}}}}
+    % % )} ^ \frac{1}{\hat{a}_{m}^{q}}
+    % \right)} ^ {1 / \hat{a}_{i}^{q}}
+    % =
+    % {\min_{i}(
+    %     {a_{1}^{k}} ^ {\sigma_{1}^{q}}
+    %     , \dots, 
+    %     {a_{m}^{k}} ^ {\sigma_{m}^{q}}
+    % % )} ^ \frac{1}{\sigma_{m}^{q}}
+    % )} ^ {1 / \sigma_{i}^{q}}
+\end{gather*}
+
+Moderate Composition Axiom (Moderate Complementarity, Weak Substitution, Cobb-Douglas production function):
+\begin{gather*}
+    s_{kq}^{h} = 
+    \frac{
+        \prod_{i=1}^{m}{
+            {\min\left(
+                {a_{i}^{k}},
+                {a_{i}^{q}}
+            \right)} ^ {
+            \sigma_{i}^{q}
+        }
+    }
+    }{
+        \prod_{i=1}^{m}{
+        {a_{i}^{q}} ^ {
+            \sigma_{i}^{q}
+        }
+    }
+    }
+    =
+    \prod_{i=1}^{m}{
+            % {\min\left(
+            {\min(
+                {a_{i}^{k}},
+                {a_{i}^{q}}
+            % \right)} ^ {
+            )} ^ {
+            \sigma_{i}^{q}
+        }
+    }{\left(
+        \prod_{i=1}^{m}{
+        {a_{i}^{q}} ^ {
+            \sigma_{i}^{q}
+        }
+    }\right)} ^ {-1}
+    \in [0,1]
+    ,\\
+    \sum_{i=1}^{m}{
+        \sigma_{i}^{q}
+    } = 1
+    .
+\end{gather*}
+
+Moderate-Low Composition Axiom (Weak Complementarity, Moderate Substitution, Cobb-Douglas production function):
+\begin{gather*}
+    s_{kq}^{h} = 
+    \min\left(
+        \frac{
+        \prod_{i=1}^{m}{
+        {a_{i}^{k}} ^ {
+            \sigma_{i}^{q}
+        }
+    }
+    }{
+        \prod_{i=1}^{m}{
+        {a_{i}^{q}} ^ {
+            \sigma_{i}^{q}
+        }
+    }
+    }
+    , 1
+    \right)
+    \in [0,1]
+    ,\\
+    \sum_{i=1}^{m}{
+        \sigma_{i}^{q}
+    } = 1
+    .
+\end{gather*}
+
+Weak Composition Axiom (Strong Substitution, Linear production function):
+\begin{gather*}
+    s_{kq}^{h} = 
+        \frac{
+        \sum_{i=1}^{m}{
+            a_{i}^{q}
+            \min(
+                {a_{i}^{k}},           
+                {a_{i}^{q}}
+            )
+    }
+    }{
+        \sum_{i=1}^{m}{
+        {a_{i}^{q}} ^ 2
+    }
+    } = 
+    {\sum_{i=1}^{m}{
+            a_{i}^{q}
+            \min(
+                {a_{i}^{k}},           
+                {a_{i}^{q}}
+            )
+    }}{\left(
+        \sum_{i=1}^{m}{
+        {a_{i}^{q}} ^ 2
+        }
+    \right)
+    } ^ {-1}
+    \in [0,1]
+    ,\\
+    \sum_{i=1}^{m}{
+        \sigma_{i}^{q}
+    } = 1
+    .
+\end{gather*}
+
+Weakest Composition Axiom (Strong Substitution, Linear production function):
+\begin{gather*}
+    s_{kq}^{h} = 
+    \min\left(
+        \frac{
+        \sum_{i=1}^{m}{
+        {a_{i}^{q}}
+        {a_{i}^{k}}
+    }
+    }{
+        \sum_{i=1}^{m}{
+        {a_{i}^{q}} ^ 2
+    }
+    }
+    , 1
+    \right)
+    \in [0,1]
+    ,\\
+    \sum_{i=1}^{m}{
+        \sigma_{i}^{q}
+    } = 1
+    .
+\end{gather*}
+
+Probably define production and normalization separately for looks.
+
+\begin{gather*}
+    \Lambda_{kq} = 
+        \prod_{i=1}^{m}{
+        {a_{i}^{k}} ^ {
+            \sigma_{i}^{q}
+        }
+    }
+    ,\\
+    \sum_{i=1}^{m}{
+        \sigma_{i}^{q}
+    } = 1
+    .
+\end{gather*}
+
+\begin{gather*}
+    s_{kq}^{h} = 
+    \tilde{\Lambda}_{kq} = 
+    \min\left(
+        \frac{\Lambda_{kq}}{\Lambda_{q,q}},
+        1
+    \right)
+    \in [0,1]
+\end{gather*}
+
+Change employability notation?
+e.g.
+\begin{enumerate}
+    \item output $h_{kq}$
+    \item output vector $\boldsymbol{h_{kq}}$
+    \item output matrix $\boldsymbol{h}$ or $\vb{h}$
+    \item h would stand for human-capital output
+    \begin{enumerate}
+        \item and/or hours of equivalent labor produced
+        \item i.e. percentage of the output a perfectly qualified q worker produces in a time period
+    \end{enumerate}
+    \item it would then make more sense to call ``production similarity'' $s_{kq}^{h} = \tilde{h}_{kq} = h_{kq} / h_{q,q} = 
+    \frac{h_{kq}}{h_{q,q}}$
+    \item and it would be even more pedantic to call H not H, but uppercase ETA
+\end{enumerate}
+
+or e.g.
+\begin{enumerate}
+    \item output $Y_{kq}$
+    \item output vector $\boldsymbol{Y_{k}}$
+    \item output matrix $\vb{Y}$
+\end{enumerate}
+
+\subsection{Occupational Reducibility Axiom}
+\begin{enumerate}
+    \item from a practical standpoint, occupations are just a collection of job
+          activities
+    \item occupations can be reduced to their job activities
+    \item $\boldsymbol{q} \iff \boldsymbol{T_q}$
+\end{enumerate}
+
+\subsection{Occupational Skill-Sufficiency Corollary}
+\begin{enumerate}
+    \item from axioms: Reducibility, Sufficiency
+    \item as occupations are just a collection of job activities and skills are
+          sufficient to perform activities, therefore occupations are just a collection
+          of skills
+    \item occupations can be reduced to their skill set
+    \item $\boldsymbol{q} \iff \boldsymbol{T_q} \iff \boldsymbol{a_q}$
+\end{enumerate}
+
+% endregion
+
+% region: demonstration 
+\section{Demonstration of the Employability Theorem}
+Worker Time Allocation Problem: maximize worker output subject to time and productivity constraints.
+
+For workers of type $k$, the optimization problem is: 
+\begin{gather*}
+    \max_{
+        T_{\text{Jr}}^{k},
+        T_{\text{Sr}}^{k}
+    }{% production function
+        \left[
+            \frac{
+                Y_{\text{Jr}}^{k}
+                T_{\text{Jr}}^{k}
+            }{
+                \text{ttc}(T_{\text{Jr}})
+            } + 
+            \frac{
+                Y_{\text{Sr}}^{k}
+                T_{\text{Sr}}^{k}
+            }{
+                \text{ttc}(T_{\text{Sr}})
+            }
+        \right]
+    }\\
+    % subject to
+    \begin{align*}
+        \text{s.t.} \quad
+        % k's time constraint
+        & T_{\text{Jr}}^{k} \times \text{ttc}(T_{\text{Jr}}) +
+        T_{\text{Sr}}^{k} \times \text{ttc}(T_{\text{Sr}}) 
+        \leq 1
+        \\
+        & T_{\text{Jr}}^{k} + T_{\text{Sr}}^{k} \leq 1
+        \\
+        % k's productivity on jr-level tasks
+        & Y_{\text{Jr}}^{k} = 1
+        \\
+        % k's productivity on sr-level tasks
+        & Y_{\text{Sr}}^{k} = 0
+    \end{align*}
+\end{gather*}
+
+The solution of this problem is trivial:
+\begin{gather*}
+    T_{\text{Jr}}^{k} = 1
+    ;\\
+    T_{\text{Sr}}^{k} = 0
+    ,
+\end{gather*}
+and yields the output
+\begin{gather*}
+    T_{\text{Jr}} = 
+    \frac{1}{\text{ttc}(T_{\text{Jr}})}
+    % {1}/{\text{ttc}(T_{\text{Jr}})}
+    ;\\
+    T_{\text{Sr}} = 0
+\end{gather*}
+for each worker of type $k$.
+
+The intuition behind this result is just as trivial as the result itself. If workers of type $k$ cannot output any units whatsoever of senior, or advanced, tasks, they will specialize on the only tasks they can perform (viz. junior, or simpler, tasks), allocating all of their time to them.
+
+Now, if we were to build an entire economy with only these less skilled workers, the total product would be:
+\begin{gather*}
+    T_{\text{Jr}} = 
+    \frac{w_{q}^{k}}{\text{ttc}(T_{\text{Jr}})}
+    % {w_{q}^{k}}/{\text{ttc}(T_{\text{Jr}})}
+    ;\\
+    T_{\text{Sr}} = 0
+    ,
+\end{gather*}
+where $w_{q}^{k}$ is the number of workers of type $k$ employed on a job $q$, for which they are not perfectly qualified.
+
+And, of course, if we wanted to produce the same output as a comparable economy of perfectly skilled workers, we would have to hire at least some of these to cover the gap left by workers of type $k$, that is, to perform the senior activities juniors cannot perform:
+
+\begin{gather*}
+    \max_{
+        T_{\text{Jr}}^{q},
+        T_{\text{Sr}}^{q}
+    }{% production function
+        \left\{
+            % \frac{w_{q}^{k}}{\text{ttc}(T_{\text{Jr}})} + 
+            % w_{q}^{k} \times
+            w_{q}^{k}
+            \left[
+                \frac{1}{\text{ttc}(T_{\text{Jr}})}
+            \right]
+             + 
+            % w_{q}^{q} \times
+            w_{q}^{q}
+            \left[
+                \frac{
+                    Y_{\text{Jr}}^{q}
+                    T_{\text{Jr}}^{q}
+                }{
+                    \text{ttc}(T_{\text{Jr}})
+                } + 
+                \frac{
+                    Y_{\text{Sr}}^{q}
+                    T_{\text{Sr}}^{q}
+                }{
+                    \text{ttc}(T_{\text{Sr}})
+                }
+            \right]
+        \right\}
+    }\\
+    % subject to
+    \begin{align*}
+        \text{s.t.} \quad
+        % constant production constraint
+        & T_{\text{Sr}} = 
+        T_{\text{Jr}} = 
+        w_{q}^{k}
+        \left[
+            \frac{1}{\text{ttc}(T_{\text{Jr}})}
+        \right]
+        \\
+        % k's time constraint
+        & T_{\text{Jr}}^{q} \times \text{ttc}(T_{\text{Jr}}) +
+        T_{\text{Sr}}^{q} \times \text{ttc}(T_{\text{Sr}}) 
+        \leq 1
+        \\
+        & T_{\text{Jr}}^{q} + T_{\text{Sr}}^{q} \leq 1
+        \\
+        % k's productivity on jr-level tasks
+        & Y_{\text{Jr}}^{q} = 1
+        \\
+        % k's productivity on sr-level tasks
+        & Y_{\text{Sr}}^{q} = 1
+    \end{align*}
+\end{gather*}
+
+Again, the solution of this problem is trivial. The time allocation of senior workers will be:
+\begin{gather*}
+    T_{\text{Jr}}^{q} = 0
+    ;\\
+    T_{\text{Sr}}^{q} = 1
+    ,
+\end{gather*}
+yielding
+\begin{gather*}
+    T_{\text{Jr}} = 0
+    ;\\
+    T_{\text{Sr}} = 
+    \frac{1}{\text{ttc}(T_{\text{Sr}})}
+\end{gather*}
+for every worker of type $q$.
+The amount of workers needed, however, will depend on the time required to perform senior and junior tasks. That is, because one unit of ``job $q$'' is only produced when both junior and senior tasks are accomplished, the production function for any ``job $q$'' is of the Leontief functional form (i.e. junior and senior tasks are perfect complements to produce one unit of occupation $q$'s ``operation''):
+\begin{align*}
+    T_q = \min(T_{\text{Jr}}, T_{\text{Sr}})
+    .
+\end{align*}
+
+Thus, one cannot produce more output by overdoing junior tasks, just as one cannot neglect these tasks completely, for the product which is an occupation's ``operation'' is holistic, and it can only be divided insofar as all of its parts are produced in exact quantities and combined. In other words, it does not matter if one person is not solely responsible for producing one entire unit of an occupation's ``operation''. What matters is that, however tasks are divided among juniors and seniors, the entire unit be produced. But, doing more of ``senior work'' or ``junior work'' won't help produce more units of ``$q$'s operation'', just as doing \textit{only} ``senior work'' or \textit{only} ``junior work'' won't help either. That is, the division between ``junior tasks'' and ``senior tasks'' is artificial, and only useful mathematically to understand how an occupation's indivisible, holistic, activity can be accomplished.  
+
+Therefore, if we keep production constant at the ``junior activity'' output level, we can determine the number of ``seniors'' that need to be hired for efficient production  with the Leontief function:
+\begin{gather*}
+    T_q = T_{\text{Jr}}^{k} = T_{\text{Sr}}^{q}
+    \ \therefore \\
+    \frac{w_{q}^{k}}{\text{ttc}(T_{\text{Jr}})} = 
+    \frac{w_{q}^{q}}{\text{ttc}(T_{\text{Sr}})}
+    \ \iff
+    w_{q}^{q} = 
+    w_{q}^{k}
+    \left[
+        \frac{
+            \text{ttc}(T_{\text{Sr}})
+        }{
+            \text{ttc}(T_{\text{Jr}})
+        }
+    \right]
+\end{gather*}
+
+Finally, in order to calculate ``junior'' employability in a real economy, we define:
+\begin{gather*}
+    w_{q} = 
+    w_{q}^{k} +
+    w_{q}^{q} 
+    ,
+\end{gather*}
+where $w_{q}$ is the number of people employed in occupation $q$. Thus, the maximum employability of workers of type $k$ in this economy is given by
+\begin{align*}
+    \frac{
+        w_{q}^{k}
+    }{
+        w_{q}
+    }
+    & =
+    \frac{
+        w_{q}^{k}
+    }{
+        w_{q}^{k} + w_{q}^{q}
+    }
+    \\
+    & =
+    \frac{
+        w_{q}^{k}
+    }{
+        w_{q}^{k} + 
+        w_{q}^{k}
+    \left[
+        \frac{
+            \text{ttc}(T_{\text{Sr}})
+        }{
+            \text{ttc}(T_{\text{Jr}})
+        }
+    \right]
+    }
+    \\
+    & =
+    \frac{
+        1
+    }{
+        1 + 
+        \frac{
+            \text{ttc}(T_{\text{Sr}})
+        }{
+            \text{ttc}(T_{\text{Jr}})
+        }
+    }
+    \\
+    & =
+    \frac{
+        \text{ttc}(T_{\text{Jr}})
+    }{
+        \text{ttc}(T_{\text{Jr}}) + 
+        \text{ttc}(T_{\text{Sr}})
+    }
+\end{align*}
+
+Maximization problem:
+\begin{gather*}
+    % maximize production
+    \min_{
+        w_{q}^{k}, %number of ks hired (junior qs)
+        w_{q}^{q} %number of qs hired (senior qs)
+    }{% production function
+        \left[
+        y_{k} w_{q}^{k} + 
+        y_{q} w_{q}^{q}
+        \right]
+    }, \text{ s.t. }\\ % subject to
+    \begin{cases}
+        % time constraint (k)
+        T_{\text{Jr}}^{k} \times \text{ttc}(T_{\text{Jr}}) + 
+        (1 - T_{\text{Jr}}^{k}) \times \text{ttc}(T_{\text{Sr}}) 
+        \leq 1
+        ;\\
+        % time constraint (q)
+        T_{\text{Jr}}^{q} \times \text{ttc}(T_{\text{Jr}}) + 
+        (1 - T_{\text{Jr}}^{q}) \times \text{ttc}(T_{\text{Sr}}) 
+        \leq 1
+        ;\\
+        % worker productivity (k)
+        Y_{\text{Jr}}^k(T_{\text{Jr}}^{k}) = 1 \times T_{\text{Jr}}^{k} = T_{\text{Jr}}^{k}
+        ;\\
+        Y_{\text{Sr}}^k(T_{\text{Jr}}^{k}) = 0 \times (1 - T_{\text{Jr}}^{k}) = 0
+        ;\\
+        % worker productivity (q)
+        Y_{\text{Jr}}^q(T_{\text{Jr}}^{q}) = 1 \times T_{\text{Jr}}^{q} = T_{\text{Jr}}^{q}
+        ;\\
+        Y_{\text{Sr}}^q(T_{\text{Jr}}^{q}) = 1 \times (1 - T_{\text{Jr}}^{q}) = 1 - T_{\text{Jr}}^{q}
+        ;\\
+        % constant production
+        w_{q}^{k} \times Y_{\text{Jr}}^k + 
+        w_{q}^{k} \times Y_{\text{Jr}}^k + 
+        % % worker productivity (k)
+        % Y_{k}(T_{\text{Jr}}^{k}) = 
+        % 1 \times T_{\text{Jr}}^{k} + 
+        % 0 \times (1 - T_{\text{Jr}}^{k})
+        % =
+        % T_{\text{Jr}}^{k}
+        % ;\\
+        % % worker productivity (k)
+        % Y_{q}(T_{\text{Jr}}^{q}) = 
+        % 1 \times T_{\text{Jr}}^{q} + 
+        % 1 \times (1 - T_{\text{Jr}}^{q})
+        % =
+        % 1
+        % ;\\
+    \end{cases}
+\end{gather*}
+
+% \begin{gather*}
+%     % \min_{k^*, q^*}{\left[ y_{k} k + y_{q} q \right]}, \text{ s.t. }\\
+%     % \min_{{w_{q}^{k}}^*, {w_{q}^{q}}^*}{\left[ y_{k} \times w_{q}^{k} + y_{q} \times w_{q}^{q} \right]}, \text{ s.t. }\\
+%     \min_{{w_{q}^{k}}, {w_{q}^{q}}}{\left[ y_{k} \times w_{q}^{k} + y_{q} \times w_{q}^{q} \right]}, \text{ s.t. }\\
+%     % \min_{{w_{kq}^*}, {w_{q,q}^*}}{\left[ y_{k} \times w_{kq} + y_{q} \times w_{q,q} \right]}, \text{ s.t. }\\
+%     \begin{cases}
+%         \int_{0}^{1} \text{tm}(T_{l}^q) dl = 1 \\
+%         \int_{0}^{\tilde{Y}_{kq}} \text{tm}(T_{l}^q) dl = \tilde{Y}_{kq} \\
+%         \int_{0}^{\tilde{Y}_{kq}} p_{l}^{q} \times \text{tm}(T_{l}^q)  dl \leq y_k \\
+%         \int_{\tilde{Y}_{kq}}^{1} p_{l}^{q} \times \text{tm}(T_{l}^q)  dl \leq y_q \\
+%         \int_{0}^{1} p_{l}^{q} \times \text{tm}(T_{l}^q) dl = \bar{y}_q \\
+%         % \text{tm}(T_{l}^q, c_q) = \frac{\text{ttc}(T_{l}^q, c_q)}{\int_{0}^{1} \text{ttc}(T_{l}^q) dl} \\
+%         \text{tm}_{l}^{q} = \text{tm}(T_{l}^q, c_q) = {\text{ttc}(T_{l}^q, c_q) / \int_{0}^{1} \text{ttc}(T_{l}^q, c_q) dl} \\
+%         \text{ttc}(T_{l}^q, c_q) = l ^ {\frac{1}{1 - c_q}} \\
+%         % w_{kq} \int_{0}^{\tilde{Y}_{kq}} {T_{l}^q} dl + 
+%         w_{q}^{k} \int_{0}^{\tilde{Y}_{kq}} {T_{l}^q} dl + 
+%         % w_{q,q} \int_{\tilde{Y}_{kq}}^{1} {T_{l}^q} dl =
+%         w_{q}^{q} \int_{\tilde{Y}_{kq}}^{1} {T_{l}^q} dl =
+%         w_{q} \int_{0}^{1} {T_{l}^q} dl \\
+%         \tilde{Y}_{kq} = \min(1, Y_{kq} / Y_{q,q}) \\
+%         % \tilde{Y}_{kq} = \min\left(1, \frac{Y_{kq}}{Y_{q,q}}\right) \\
+%         Y_{kq} = \prod_{i=1}^{m}{a_{i}^{k}} ^ {\sigma_{i}^{q}} \\
+%         \sigma_{i}^{q} = \frac{a_{i}^{q}}{\sum_{i=1}^{m}{a_{i}^{q}}} \\
+%         \text{employability of k as a q: } \tilde{\Lambda}_{q}^{k} = w_{q}^{k} / w_q
+%     \end{cases}
+% \end{gather*}
+
+
+% endregion
+
+% region: additional corollaries 
+\section{Additional Corollaries}
+\subsection{Occupational Divisibility Corollary 1 (Suboccupations)}
+\begin{enumerate}
+    \item from axioms: Reducibility, Sufficiency, Composition
+    \item as occupations are just a collection of simple and complex job activities, and
+          skills are sufficient to perform activities, and rational agents can naturally
+          compose skills to accomplish complex activities, therefore occupations can be
+          ``broken down'' into ``suboccupations'', each with their own subset of the
+          ``main'' occupation's activities and respective skill ``subsets''
+    \item occupations can be divided into suboccupations, each with its own skill subset
+    \item $
+              \boldsymbol{q} \iff \boldsymbol{T_q}
+              \text{ and }
+              \boldsymbol{T_q} = \{T_x, T_y, T_z, ..., T_{xy}, T_{yx}, T_{xz}, T_{xzy}\}
+              \implies \\
+              \boldsymbol{T_{q_{xyz}}} = \{T_x, T_y, T_z, ..., T_{xy}, T_{yx}, T_{xz}, T_{xzy}\},\\
+              \boldsymbol{T_{q_{xy}}} = \{T_x, T_y, ..., T_{xy}, T_{yx}\},\\
+              \boldsymbol{T_{q_{xz}}} = \{T_x, T_z, ..., T_{xz}\},\\
+              \boldsymbol{T_{q_{yz}}} = \{T_y, T_z, ...\},\\
+              \boldsymbol{T_{q_x}} = T_x,\\
+              \boldsymbol{T_{q_y}} = T_y,\\
+              \boldsymbol{T_{q_z}} = T_z
+              .
+          $
+    \item notice: we are not saying \textit{how} an occupation's complex activities are
+          composed. what the corollary states is only that an occupation, which is just a
+          collection of activities, can \textit{potentially} be divided into
+          suboccupations, based on how their job activities are composed.
+\end{enumerate}
+\subsection{Occupational Divisibility Corollary 2 (Skill Subsets)}
+\begin{enumerate}
+    \item from corollary: Divisibility 1
+    \item from axioms: Reducibility, Sufficiency, Composition
+    \item to the extent to which an occupation is divisible, a sufficiently qualified
+          skill set does not need to be a perfect match with an occupation's entire skill
+          set in order to perform at least a portion of their job activities
+    \item partial matching: people can perform isolated subsets of an occupation's job
+          activities
+    \item $
+              \boldsymbol{q} \iff \boldsymbol{T_q}
+              \text{ and }
+              \boldsymbol{T_q} = \{T_x, T_y, T_z, ..., T_{xy}, T_{yx}, T_{xz}, T_{xzy}\}
+              \implies \\
+              \boldsymbol{T_{q_{xyz}}} = \{T_x, T_y, T_z, ..., T_{xy}, T_{yx}, T_{xz}, T_{xzy}\} \implies (x,y,z \implies \boldsymbol{T_{q_{xyz}}}),\\
+              \boldsymbol{T_{q_{xy}}} = \{T_x, T_y, ..., T_{xy}, T_{yx}\} \implies (x,y \implies \boldsymbol{T_{q_{xy}}}),\\
+              \boldsymbol{T_{q_{xz}}} = \{T_x, T_z, ..., T_{xz}\} \implies (x,z \implies \boldsymbol{T_{q_{xz}}}),\\
+              \boldsymbol{T_{q_{yz}}} = \{T_y, T_z, ...\} \implies (y,z \implies \boldsymbol{T_{q_{yz}}}),\\
+              \boldsymbol{T_{q_x}} = T_x \implies (x \implies \boldsymbol{T_{q_{x}}}),\\
+              \boldsymbol{T_{q_y}} = T_y \implies (y \implies \boldsymbol{T_{q_{y}}}),\\
+              \boldsymbol{T_{q_z}} = T_z \implies (z \implies \boldsymbol{T_{q_{z}}})
+              .
+          $
+    \item again, we are not stating \textit{how} an occupation is divided, only that,
+          because of skill set sufficiency, composition, and occupational reducibility,
+          occupations are, therefore, potentially divisible into suboccupations (with
+          skill subsets), and to the extent to which they are divisible, therefore, any
+          sufficiently qualified person can perform the skill subset for which they are
+          qualified
+\end{enumerate}
+\subsection{Occupational Divisibility Corollary 3 (Partial Employment)}
+
+% endregion
+
+\end{document}

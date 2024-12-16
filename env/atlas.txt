@@ -1,0 +1,16 @@
+CaoBittencourt/modular
+CaoBittencourt/atlas.plot
+CaoBittencourt/atlas.labor
+CaoBittencourt/atlas.letters
+CaoBittencourt/atlas.efa
+CaoBittencourt/atlas.aeq
+CaoBittencourt/atlas.taxa
+CaoBittencourt/atlas.intc
+CaoBittencourt/atlas.gene
+CaoBittencourt/atlas.eqvl
+CaoBittencourt/atlas.econ
+CaoBittencourt/atlas.comp
+CaoBittencourt/atlas.acti
+CaoBittencourt/atlas.match
+CaoBittencourt/atlas.class
+CaoBittencourt/atlas.qua

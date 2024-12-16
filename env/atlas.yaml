@@ -1,0 +1,11 @@
+name: atlas
+channels:
+  - conda-forge
+dependencies:
+  - r-base
+  - r-essentials
+  - r-tidyverse
+  - r-devtools
+  - r-psych
+  - r-box
+  - r-styler

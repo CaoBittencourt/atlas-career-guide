@@ -1,0 +1,73 @@
+%SECTION: SETUP
+% region: document class
+\documentclass{article}
+
+% endregion
+
+% region: packages 
+\usepackage{xr}
+\usepackage{physics}
+\usepackage{amsmath}
+% \usepackage{float}
+% \usepackage{tabularray}
+% \UseTblrLibrary{booktabs}
+% \usepackage[
+%     backend=biber,
+%     style=apa
+% ]{biblatex}
+
+% endregion
+
+% region: title 
+% Title
+\title{Equivalence Estimators}
+\author{Cao Bittencourt}
+\date{\today}
+
+% endregion
+
+%SECTION: PAPER
+\maketitle
+
+\begin{document}
+    \begin{gather}
+        % inverse scaling equivalence
+        % \ddot{a}_{i}^{k} = 
+        \text{aeq}(x,M) = x \left[
+            1 + M(1-x)\exp\left(
+                -\frac{x-M}{1-M}
+            \right)
+        \right] ^ {-\frac{M}{x}}\\
+        % % inverse scaling equivalence
+        % \text{eq}(x,M) = x \left\{
+        %     1 + M(1-x)\exp\left[
+        %         -(x-M)/(1-M)
+        %     \right]
+        % \right\} ^ {-\frac{M}{x}}\\
+        % trigonometrically-scaled equivalence
+        % \text{eq}(x,M) = x \left\{ 
+        \text{seq}(x,M) = x \left\{ 
+            1 + M(1-x)\exp\left[
+                -(x-M)
+                \tan\bigg(
+                    \arccos\big(
+                        x(1-M)
+                    \big)
+                \bigg)
+            \right]
+        \right\} ^ {-\frac{M}{x}}\\
+        % tau (education + xp) equivalence
+        \ddot{\tau}_{kq} = 
+        \text{teq}(\tau_{k}, \tau_{q}, c_{q}) = 
+        \left\{
+            1 + \exp[-
+                \frac{
+                    \tau_{q}
+                    (1 + \tau_{k} - \tau_{q})
+                }{
+                    1 - c_{q}
+                }
+            ]
+        \right\} ^ {-1}
+    \end{gather}
+\end{document}

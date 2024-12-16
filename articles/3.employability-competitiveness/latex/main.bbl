@@ -1,0 +1,2665 @@
+% $ biblatex auxiliary file $
+% $ biblatex bbl format version 3.2 $
+% Do not modify the above lines!
+%
+% This is an auxiliary file used by the 'biblatex' package.
+% This file may safely be deleted. It will be recreated by
+% biber as required.
+%
+\begingroup
+\makeatletter
+\@ifundefined{ver@biblatex.sty}
+  {\@latex@error
+     {Missing 'biblatex' package}
+     {The bibliography requires the 'biblatex' package.}
+      \aftergroup\endinput}
+  {}
+\endgroup
+
+
+\refsection{0}
+  \datalist[entry]{apa/apasortcite//global/global}
+    \entry{barro_1991}{article}{}
+      \name{author}{1}{}{%
+        {{un=0,uniquepart=base,hash=12e80febb122b75421416b9e181d4657}{%
+           family={Barro},
+           familyi={B\bibinitperiod},
+           given={Robert\bibnamedelima J.},
+           giveni={R\bibinitperiod\bibinitdelim J\bibinitperiod},
+           givenun=0}}%
+      }
+      \strng{namehash}{12e80febb122b75421416b9e181d4657}
+      \strng{fullhash}{12e80febb122b75421416b9e181d4657}
+      \strng{bibnamehash}{12e80febb122b75421416b9e181d4657}
+      \strng{authorbibnamehash}{12e80febb122b75421416b9e181d4657}
+      \strng{authornamehash}{12e80febb122b75421416b9e181d4657}
+      \strng{authorfullhash}{12e80febb122b75421416b9e181d4657}
+      \field{sortinit}{B}
+      \field{sortinithash}{d7095fff47cda75ca2589920aae98399}
+      \field{extradatescope}{labelyear}
+      \field{labeldatesource}{}
+      \true{uniqueprimaryauthor}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{journaltitle}{Quarterly Journal of Economics}
+      \field{number}{2}
+      \field{title}{Economic growth in a cross-section of countries}
+      \field{volume}{106}
+      \field{year}{1991}
+      \field{pages}{407\bibrangedash 443}
+      \range{pages}{37}
+    \endentry
+    \entry{becker1962}{article}{}
+      \name{author}{1}{}{%
+        {{un=0,uniquepart=base,hash=ddbce888dc6e767c124c5bff0dcb3f4c}{%
+           family={Becker},
+           familyi={B\bibinitperiod},
+           given={Gary},
+           giveni={G\bibinitperiod},
+           givenun=0}}%
+      }
+      \strng{namehash}{ddbce888dc6e767c124c5bff0dcb3f4c}
+      \strng{fullhash}{ddbce888dc6e767c124c5bff0dcb3f4c}
+      \strng{bibnamehash}{ddbce888dc6e767c124c5bff0dcb3f4c}
+      \strng{authorbibnamehash}{ddbce888dc6e767c124c5bff0dcb3f4c}
+      \strng{authornamehash}{ddbce888dc6e767c124c5bff0dcb3f4c}
+      \strng{authorfullhash}{ddbce888dc6e767c124c5bff0dcb3f4c}
+      \field{extraname}{1}
+      \field{sortinit}{B}
+      \field{sortinithash}{d7095fff47cda75ca2589920aae98399}
+      \field{extradatescope}{labelyear}
+      \field{labeldatesource}{}
+      \true{uniqueprimaryauthor}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{journaltitle}{The University of Chicago Press}
+      \field{number}{5}
+      \field{title}{Investment in Human Capital: A Theoretical Analysis}
+      \field{volume}{70}
+      \field{year}{1962}
+    \endentry
+    \entry{becker1994}{book}{}
+      \name{author}{1}{}{%
+        {{un=0,uniquepart=base,hash=ddbce888dc6e767c124c5bff0dcb3f4c}{%
+           family={Becker},
+           familyi={B\bibinitperiod},
+           given={Gary},
+           giveni={G\bibinitperiod},
+           givenun=0}}%
+      }
+      \list{publisher}{1}{%
+        {The University of Chicago Press}%
+      }
+      \strng{namehash}{ddbce888dc6e767c124c5bff0dcb3f4c}
+      \strng{fullhash}{ddbce888dc6e767c124c5bff0dcb3f4c}
+      \strng{bibnamehash}{ddbce888dc6e767c124c5bff0dcb3f4c}
+      \strng{authorbibnamehash}{ddbce888dc6e767c124c5bff0dcb3f4c}
+      \strng{authornamehash}{ddbce888dc6e767c124c5bff0dcb3f4c}
+      \strng{authorfullhash}{ddbce888dc6e767c124c5bff0dcb3f4c}
+      \field{extraname}{2}
+      \field{sortinit}{B}
+      \field{sortinithash}{d7095fff47cda75ca2589920aae98399}
+      \field{extradatescope}{labelyear}
+      \field{labeldatesource}{}
+      \true{uniqueprimaryauthor}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{title}{Human Capital: A theoretical and empirical analysis with special reference to Education.}
+      \field{year}{1994}
+    \endentry
+    \entry{mmpi3}{book}{}
+      \name{author}{2}{}{%
+        {{un=0,uniquepart=base,hash=b167c04c944cbb18ebb5d31850c05d27}{%
+           family={Ben-Porath},
+           familyi={B\bibinithyphendelim P\bibinitperiod},
+           given={Y.\bibnamedelimi S.},
+           giveni={Y\bibinitperiod\bibinitdelim S\bibinitperiod},
+           givenun=0}}%
+        {{un=0,uniquepart=base,hash=e0016d55d0e27657a3b53ac6c0a8cd9e}{%
+           family={Tellegen},
+           familyi={T\bibinitperiod},
+           given={A.},
+           giveni={A\bibinitperiod},
+           givenun=0}}%
+      }
+      \list{publisher}{1}{%
+        {University of Minnesota Press}%
+      }
+      \strng{namehash}{2630cbcc36273f74626316e5bb500e99}
+      \strng{fullhash}{2630cbcc36273f74626316e5bb500e99}
+      \strng{bibnamehash}{2630cbcc36273f74626316e5bb500e99}
+      \strng{authorbibnamehash}{2630cbcc36273f74626316e5bb500e99}
+      \strng{authornamehash}{2630cbcc36273f74626316e5bb500e99}
+      \strng{authorfullhash}{2630cbcc36273f74626316e5bb500e99}
+      \field{sortinit}{B}
+      \field{sortinithash}{d7095fff47cda75ca2589920aae98399}
+      \field{extradatescope}{labelyear}
+      \field{labeldatesource}{}
+      \true{uniqueprimaryauthor}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{title}{{Minnesota Multiphasic Personality Inventory-3 (MMPI-3)}}
+      \field{year}{2020}
+    \endentry
+    \entry{berg_behavioral_labor_econ}{inbook}{}
+      \name{author}{2}{}{%
+        {{un=0,uniquepart=base,hash=48f42badc4b800912ce497069d3ccc69}{%
+           family={Berg},
+           familyi={B\bibinitperiod},
+           given={Nathan},
+           giveni={N\bibinitperiod},
+           givenun=0}}%
+        {{un=0,uniquepart=base,hash=65cf779c8b1783a33b0749d452de6108}{%
+           family={Altman},
+           familyi={A\bibinitperiod},
+           given={Morris},
+           giveni={M\bibinitperiod},
+           givenun=0}}%
+      }
+      \list{publisher}{1}{%
+        {Routledge}%
+      }
+      \strng{namehash}{e4e91741495d564b23f7fb8b63294f60}
+      \strng{fullhash}{e4e91741495d564b23f7fb8b63294f60}
+      \strng{bibnamehash}{e4e91741495d564b23f7fb8b63294f60}
+      \strng{authorbibnamehash}{e4e91741495d564b23f7fb8b63294f60}
+      \strng{authornamehash}{e4e91741495d564b23f7fb8b63294f60}
+      \strng{authorfullhash}{e4e91741495d564b23f7fb8b63294f60}
+      \field{sortinit}{B}
+      \field{sortinithash}{d7095fff47cda75ca2589920aae98399}
+      \field{extradatescope}{labelyear}
+      \field{labeldatesource}{}
+      \true{uniqueprimaryauthor}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{chapter}{Behavioral Labor Economics}
+      \field{title}{Handbook of Contemporary Behavioral Economics: Foundations and Developments}
+      \field{year}{2015}
+    \endentry
+    \entry{atlas.aeq}{online}{}
+      \name{author}{1}{}{%
+        {{un=0,uniquepart=base,hash=3fc5b083d748e229d5714c1904867b9c}{%
+           family={Bittencourt},
+           familyi={B\bibinitperiod},
+           given={Cao},
+           giveni={C\bibinitperiod},
+           givenun=0}}%
+      }
+      \strng{namehash}{3fc5b083d748e229d5714c1904867b9c}
+      \strng{fullhash}{3fc5b083d748e229d5714c1904867b9c}
+      \strng{bibnamehash}{3fc5b083d748e229d5714c1904867b9c}
+      \strng{authorbibnamehash}{3fc5b083d748e229d5714c1904867b9c}
+      \strng{authornamehash}{3fc5b083d748e229d5714c1904867b9c}
+      \strng{authorfullhash}{3fc5b083d748e229d5714c1904867b9c}
+      \field{extraname}{1}
+      \field{sortinit}{B}
+      \field{sortinithash}{d7095fff47cda75ca2589920aae98399}
+      \field{extradate}{1}
+      \field{extradatescope}{labelyear}
+      \field{labeldatesource}{}
+      \true{uniqueprimaryauthor}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{title}{{atlas.aeq: An Attribute Equivalence Coefficient for Skill Set Analyses}}
+      \field{year}{2024}
+      \verb{urlraw}
+      \verb https://github.com/CaoBittencourt/atlas.eqvl
+      \endverb
+      \verb{url}
+      \verb https://github.com/CaoBittencourt/atlas.eqvl
+      \endverb
+    \endentry
+    \entry{atlas.comp}{online}{}
+      \name{author}{1}{}{%
+        {{un=0,uniquepart=base,hash=3fc5b083d748e229d5714c1904867b9c}{%
+           family={Bittencourt},
+           familyi={B\bibinitperiod},
+           given={Cao},
+           giveni={C\bibinitperiod},
+           givenun=0}}%
+      }
+      \strng{namehash}{3fc5b083d748e229d5714c1904867b9c}
+      \strng{fullhash}{3fc5b083d748e229d5714c1904867b9c}
+      \strng{bibnamehash}{3fc5b083d748e229d5714c1904867b9c}
+      \strng{authorbibnamehash}{3fc5b083d748e229d5714c1904867b9c}
+      \strng{authornamehash}{3fc5b083d748e229d5714c1904867b9c}
+      \strng{authorfullhash}{3fc5b083d748e229d5714c1904867b9c}
+      \field{extraname}{2}
+      \field{sortinit}{B}
+      \field{sortinithash}{d7095fff47cda75ca2589920aae98399}
+      \field{extradate}{2}
+      \field{extradatescope}{labelyear}
+      \field{labeldatesource}{}
+      \true{uniqueprimaryauthor}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{title}{{atlas.comp: A Skill Set Competence Coefficient}}
+      \field{year}{2024}
+      \verb{urlraw}
+      \verb https://github.com/CaoBittencourt/atlas.comp
+      \endverb
+      \verb{url}
+      \verb https://github.com/CaoBittencourt/atlas.comp
+      \endverb
+    \endentry
+    \entry{atlas.gene}{online}{}
+      \name{author}{1}{}{%
+        {{un=0,uniquepart=base,hash=3fc5b083d748e229d5714c1904867b9c}{%
+           family={Bittencourt},
+           familyi={B\bibinitperiod},
+           given={Cao},
+           giveni={C\bibinitperiod},
+           givenun=0}}%
+      }
+      \strng{namehash}{3fc5b083d748e229d5714c1904867b9c}
+      \strng{fullhash}{3fc5b083d748e229d5714c1904867b9c}
+      \strng{bibnamehash}{3fc5b083d748e229d5714c1904867b9c}
+      \strng{authorbibnamehash}{3fc5b083d748e229d5714c1904867b9c}
+      \strng{authornamehash}{3fc5b083d748e229d5714c1904867b9c}
+      \strng{authorfullhash}{3fc5b083d748e229d5714c1904867b9c}
+      \field{extraname}{3}
+      \field{sortinit}{B}
+      \field{sortinithash}{d7095fff47cda75ca2589920aae98399}
+      \field{extradate}{3}
+      \field{extradatescope}{labelyear}
+      \field{labeldatesource}{}
+      \true{uniqueprimaryauthor}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{title}{{atlas.gene: A Skill Set Generality Coefficient}}
+      \field{year}{2024}
+      \verb{urlraw}
+      \verb https://github.com/CaoBittencourt/atlas.gene
+      \endverb
+      \verb{url}
+      \verb https://github.com/CaoBittencourt/atlas.gene
+      \endverb
+    \endentry
+    \entry{atlas.match}{online}{}
+      \name{author}{1}{}{%
+        {{un=0,uniquepart=base,hash=3fc5b083d748e229d5714c1904867b9c}{%
+           family={Bittencourt},
+           familyi={B\bibinitperiod},
+           given={Cao},
+           giveni={C\bibinitperiod},
+           givenun=0}}%
+      }
+      \strng{namehash}{3fc5b083d748e229d5714c1904867b9c}
+      \strng{fullhash}{3fc5b083d748e229d5714c1904867b9c}
+      \strng{bibnamehash}{3fc5b083d748e229d5714c1904867b9c}
+      \strng{authorbibnamehash}{3fc5b083d748e229d5714c1904867b9c}
+      \strng{authornamehash}{3fc5b083d748e229d5714c1904867b9c}
+      \strng{authorfullhash}{3fc5b083d748e229d5714c1904867b9c}
+      \field{extraname}{4}
+      \field{sortinit}{B}
+      \field{sortinithash}{d7095fff47cda75ca2589920aae98399}
+      \field{extradate}{4}
+      \field{extradatescope}{labelyear}
+      \field{labeldatesource}{}
+      \true{uniqueprimaryauthor}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{title}{{atlas.match: Quantitative Career Matching}}
+      \field{year}{2024}
+      \verb{urlraw}
+      \verb https://github.com/CaoBittencourt/atlas.match
+      \endverb
+      \verb{url}
+      \verb https://github.com/CaoBittencourt/atlas.match
+      \endverb
+    \endentry
+    \entry{cao_gene_comp}{article}{}
+      \name{author}{1}{}{%
+        {{un=0,uniquepart=base,hash=3fc5b083d748e229d5714c1904867b9c}{%
+           family={Bittencourt},
+           familyi={B\bibinitperiod},
+           given={Cao},
+           giveni={C\bibinitperiod},
+           givenun=0}}%
+      }
+      \list{publisher}{1}{%
+        {Elsavier}%
+      }
+      \strng{namehash}{3fc5b083d748e229d5714c1904867b9c}
+      \strng{fullhash}{3fc5b083d748e229d5714c1904867b9c}
+      \strng{bibnamehash}{3fc5b083d748e229d5714c1904867b9c}
+      \strng{authorbibnamehash}{3fc5b083d748e229d5714c1904867b9c}
+      \strng{authornamehash}{3fc5b083d748e229d5714c1904867b9c}
+      \strng{authorfullhash}{3fc5b083d748e229d5714c1904867b9c}
+      \field{extraname}{5}
+      \field{sortinit}{B}
+      \field{sortinithash}{d7095fff47cda75ca2589920aae98399}
+      \field{extradate}{5}
+      \field{extradatescope}{labelyear}
+      \field{labeldatesource}{}
+      \true{uniqueprimaryauthor}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{journaltitle}{Econometrics and Statistics}
+      \field{title}{{Generalists vs Specialists: Who Are the Most Competent Workers?}}
+      \field{year}{2024}
+    \endentry
+    \entry{cao_intro_match}{article}{}
+      \name{author}{1}{}{%
+        {{un=0,uniquepart=base,hash=3fc5b083d748e229d5714c1904867b9c}{%
+           family={Bittencourt},
+           familyi={B\bibinitperiod},
+           given={Cao},
+           giveni={C\bibinitperiod},
+           givenun=0}}%
+      }
+      \list{publisher}{1}{%
+        {Elsavier}%
+      }
+      \strng{namehash}{3fc5b083d748e229d5714c1904867b9c}
+      \strng{fullhash}{3fc5b083d748e229d5714c1904867b9c}
+      \strng{bibnamehash}{3fc5b083d748e229d5714c1904867b9c}
+      \strng{authorbibnamehash}{3fc5b083d748e229d5714c1904867b9c}
+      \strng{authornamehash}{3fc5b083d748e229d5714c1904867b9c}
+      \strng{authorfullhash}{3fc5b083d748e229d5714c1904867b9c}
+      \field{extraname}{6}
+      \field{sortinit}{B}
+      \field{sortinithash}{d7095fff47cda75ca2589920aae98399}
+      \field{extradate}{6}
+      \field{extradatescope}{labelyear}
+      \field{labeldatesource}{}
+      \true{uniqueprimaryauthor}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{journaltitle}{Econometrics and Statistics}
+      \field{title}{{Introduction to Quantitative Career Matching: How to Statistically Pick the Right Occupation}}
+      \field{year}{2024}
+    \endentry
+    \entry{repo_gene_comp}{online}{}
+      \name{author}{1}{}{%
+        {{un=0,uniquepart=base,hash=3fc5b083d748e229d5714c1904867b9c}{%
+           family={Bittencourt},
+           familyi={B\bibinitperiod},
+           given={Cao},
+           giveni={C\bibinitperiod},
+           givenun=0}}%
+      }
+      \strng{namehash}{3fc5b083d748e229d5714c1904867b9c}
+      \strng{fullhash}{3fc5b083d748e229d5714c1904867b9c}
+      \strng{bibnamehash}{3fc5b083d748e229d5714c1904867b9c}
+      \strng{authorbibnamehash}{3fc5b083d748e229d5714c1904867b9c}
+      \strng{authornamehash}{3fc5b083d748e229d5714c1904867b9c}
+      \strng{authorfullhash}{3fc5b083d748e229d5714c1904867b9c}
+      \field{extraname}{7}
+      \field{sortinit}{B}
+      \field{sortinithash}{d7095fff47cda75ca2589920aae98399}
+      \field{extradate}{7}
+      \field{extradatescope}{labelyear}
+      \field{labeldatesource}{}
+      \true{uniqueprimaryauthor}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{title}{{Scripts and Data for ``Generalists vs Specialists: Who Are the Most Competent Workers?"}}
+      \field{year}{2024}
+      \verb{urlraw}
+      \verb https://github.com/CaoBittencourt/gene-comp
+      \endverb
+      \verb{url}
+      \verb https://github.com/CaoBittencourt/gene-comp
+      \endverb
+    \endentry
+    \entry{repo_intro_career_matching}{online}{}
+      \name{author}{1}{}{%
+        {{un=0,uniquepart=base,hash=3fc5b083d748e229d5714c1904867b9c}{%
+           family={Bittencourt},
+           familyi={B\bibinitperiod},
+           given={Cao},
+           giveni={C\bibinitperiod},
+           givenun=0}}%
+      }
+      \strng{namehash}{3fc5b083d748e229d5714c1904867b9c}
+      \strng{fullhash}{3fc5b083d748e229d5714c1904867b9c}
+      \strng{bibnamehash}{3fc5b083d748e229d5714c1904867b9c}
+      \strng{authorbibnamehash}{3fc5b083d748e229d5714c1904867b9c}
+      \strng{authornamehash}{3fc5b083d748e229d5714c1904867b9c}
+      \strng{authorfullhash}{3fc5b083d748e229d5714c1904867b9c}
+      \field{extraname}{8}
+      \field{sortinit}{B}
+      \field{sortinithash}{d7095fff47cda75ca2589920aae98399}
+      \field{extradate}{8}
+      \field{extradatescope}{labelyear}
+      \field{labeldatesource}{}
+      \true{uniqueprimaryauthor}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{title}{{Scripts and Data for ``Introduction to Quantitative Career Matching: How to Statistically Pick the Right Occupation"}}
+      \field{year}{2024}
+      \verb{urlraw}
+      \verb https://github.com/CaoBittencourt/introduction-matching
+      \endverb
+      \verb{url}
+      \verb https://github.com/CaoBittencourt/introduction-matching
+      \endverb
+    \endentry
+    \entry{bigfive}{inbook}{}
+      \name{author}{2}{}{%
+        {{un=0,uniquepart=base,hash=38ab318f5ba5dc9560fe196c868a8dbb}{%
+           family={Costa},
+           familyi={C\bibinitperiod},
+           given={P.\bibnamedelimi T.\bibnamedelimi Jr.},
+           giveni={P\bibinitperiod\bibinitdelim T\bibinitperiod\bibinitdelim J\bibinitperiod},
+           givenun=0}}%
+        {{un=0,uniquepart=base,hash=22a6fab4ca9a67393061b9d97316bd13}{%
+           family={McCrae},
+           familyi={M\bibinitperiod},
+           given={R.\bibnamedelimi R.},
+           giveni={R\bibinitperiod\bibinitdelim R\bibinitperiod},
+           givenun=0}}%
+      }
+      \name{editor}{3}{}{%
+        {{hash=c4312ef36c7470e5a5e4993c59df3f64}{%
+           family={Boyle},
+           familyi={B\bibinitperiod},
+           given={G.\bibnamedelimi J.},
+           giveni={G\bibinitperiod\bibinitdelim J\bibinitperiod}}}%
+        {{hash=20813ccd7600411626136ef0ed8cbe39}{%
+           family={Matthews},
+           familyi={M\bibinitperiod},
+           given={G.},
+           giveni={G\bibinitperiod}}}%
+        {{hash=a4bcbbadf60ff39bdd9a3473af4b0a03}{%
+           family={Saklofske},
+           familyi={S\bibinitperiod},
+           given={D.\bibnamedelimi H.},
+           giveni={D\bibinitperiod\bibinitdelim H\bibinitperiod}}}%
+      }
+      \list{publisher}{1}{%
+        {Sage Publications}%
+      }
+      \strng{namehash}{7391b7b5b8052d8ff9ff965459292f50}
+      \strng{fullhash}{7391b7b5b8052d8ff9ff965459292f50}
+      \strng{bibnamehash}{7391b7b5b8052d8ff9ff965459292f50}
+      \strng{authorbibnamehash}{7391b7b5b8052d8ff9ff965459292f50}
+      \strng{authornamehash}{7391b7b5b8052d8ff9ff965459292f50}
+      \strng{authorfullhash}{7391b7b5b8052d8ff9ff965459292f50}
+      \strng{editorbibnamehash}{847cf994ca84978804b7ce58b43831c3}
+      \strng{editornamehash}{e47c739f3e0e3a0650fa69a5991f6a43}
+      \strng{editorfullhash}{847cf994ca84978804b7ce58b43831c3}
+      \field{sortinit}{C}
+      \field{sortinithash}{4d103a86280481745c9c897c925753c0}
+      \field{extradatescope}{labelyear}
+      \field{labeldatesource}{}
+      \true{uniqueprimaryauthor}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{chapter}{{The Revised NEO Personality Inventory (NEO-PI-R)}}
+      \field{title}{The SAGE handbook of personality theory and assessment, Vol. 2. Personality measurement and testing}
+      \field{year}{2008}
+      \field{pages}{179\bibrangedash 198}
+      \range{pages}{20}
+    \endentry
+    \entry{tom_behavioral_labor_econ}{article}{}
+      \name{author}{1}{}{%
+        {{un=0,uniquepart=base,hash=1baf3bef1e1e7d01d5a6b203d8f6ee70}{%
+           family={Dohmen},
+           familyi={D\bibinitperiod},
+           given={Thomas},
+           giveni={T\bibinitperiod},
+           givenun=0}}%
+      }
+      \strng{namehash}{1baf3bef1e1e7d01d5a6b203d8f6ee70}
+      \strng{fullhash}{1baf3bef1e1e7d01d5a6b203d8f6ee70}
+      \strng{bibnamehash}{1baf3bef1e1e7d01d5a6b203d8f6ee70}
+      \strng{authorbibnamehash}{1baf3bef1e1e7d01d5a6b203d8f6ee70}
+      \strng{authornamehash}{1baf3bef1e1e7d01d5a6b203d8f6ee70}
+      \strng{authorfullhash}{1baf3bef1e1e7d01d5a6b203d8f6ee70}
+      \field{sortinit}{D}
+      \field{sortinithash}{6f385f66841fb5e82009dc833c761848}
+      \field{extradatescope}{labelyear}
+      \field{labeldatesource}{}
+      \true{uniqueprimaryauthor}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{journaltitle}{Labour Economics}
+      \field{title}{Behavioral labor economics: Advances and future directions}
+      \field{volume}{30}
+      \field{year}{2014}
+      \field{pages}{71\bibrangedash 85}
+      \range{pages}{15}
+    \endentry
+    \entry{gippity2024}{article}{}
+      \name{author}{4}{}{%
+        {{un=0,uniquepart=base,hash=7acbec2d39020460335e73a07de706e4}{%
+           family={Eloundou},
+           familyi={E\bibinitperiod},
+           given={Tyna},
+           giveni={T\bibinitperiod},
+           givenun=0}}%
+        {{un=0,uniquepart=base,hash=fd98cf8f44d45a7d097eec72424a9a4a}{%
+           family={Manning},
+           familyi={M\bibinitperiod},
+           given={Sam},
+           giveni={S\bibinitperiod},
+           givenun=0}}%
+        {{un=0,uniquepart=base,hash=2321e04943bcadb0275819652b980521}{%
+           family={Mishkin},
+           familyi={M\bibinitperiod},
+           given={Pamela},
+           giveni={P\bibinitperiod},
+           givenun=0}}%
+        {{un=0,uniquepart=base,hash=2e01e687f3caab6d764e9e5588261295}{%
+           family={Rock},
+           familyi={R\bibinitperiod},
+           given={Daniel},
+           giveni={D\bibinitperiod},
+           givenun=0}}%
+      }
+      \strng{namehash}{44030746c147dbe174c0315c97f8cf61}
+      \strng{fullhash}{4d37b858190d9085ef0e29abc07dfa89}
+      \strng{bibnamehash}{4d37b858190d9085ef0e29abc07dfa89}
+      \strng{authorbibnamehash}{4d37b858190d9085ef0e29abc07dfa89}
+      \strng{authornamehash}{44030746c147dbe174c0315c97f8cf61}
+      \strng{authorfullhash}{4d37b858190d9085ef0e29abc07dfa89}
+      \field{sortinit}{E}
+      \field{sortinithash}{8da8a182d344d5b9047633dfc0cc9131}
+      \field{extradatescope}{labelyear}
+      \field{labeldatesource}{}
+      \true{uniqueprimaryauthor}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{journaltitle}{Science}
+      \field{number}{6702}
+      \field{title}{GPTs are GPTs: Labor market impact potential of LLMs}
+      \field{volume}{384}
+      \field{year}{2024}
+      \field{pages}{1306\bibrangedash 1308}
+      \range{pages}{3}
+    \endentry
+    \entry{epi}{book}{}
+      \name{author}{2}{}{%
+        {{un=1,uniquepart=given,hash=b029e0d4e8453d5968a22deb02d479e9}{%
+           family={Eysenck},
+           familyi={E\bibinitperiod},
+           given={Hans\bibnamedelima Jürgen},
+           giveni={H\bibinitperiod\bibinitdelim J\bibinitperiod},
+           givenun=1}}%
+        {{un=1,uniquepart=given,hash=5051143535caee48640e4e793957db26}{%
+           family={Eysenck},
+           familyi={E\bibinitperiod},
+           given={Sybil\bibnamedelimb B.\bibnamedelimi G.},
+           giveni={S\bibinitperiod\bibinitdelim B\bibinitperiod\bibinitdelim G\bibinitperiod},
+           givenun=1}}%
+      }
+      \list{publisher}{2}{%
+        {London: Hodder}%
+        {Stoughton}%
+      }
+      \strng{namehash}{6ee42e83b2ee49277addd7722dc95151}
+      \strng{fullhash}{6ee42e83b2ee49277addd7722dc95151}
+      \strng{bibnamehash}{6ee42e83b2ee49277addd7722dc95151}
+      \strng{authorbibnamehash}{6ee42e83b2ee49277addd7722dc95151}
+      \strng{authornamehash}{6ee42e83b2ee49277addd7722dc95151}
+      \strng{authorfullhash}{6ee42e83b2ee49277addd7722dc95151}
+      \field{sortinit}{E}
+      \field{sortinithash}{8da8a182d344d5b9047633dfc0cc9131}
+      \field{extradatescope}{labelyear}
+      \field{labeldatesource}{}
+      \true{uniqueprimaryauthor}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{title}{Manual of the Eysenck Personality Questionnaire}
+      \field{year}{1975}
+    \endentry
+    \entry{holland1997making}{book}{}
+      \name{author}{1}{}{%
+        {{un=0,uniquepart=base,hash=6b0c33ef1e675b5bffe677f1743e656c}{%
+           family={Holland},
+           familyi={H\bibinitperiod},
+           given={John\bibnamedelima L},
+           giveni={J\bibinitperiod\bibinitdelim L\bibinitperiod},
+           givenun=0}}%
+      }
+      \list{publisher}{1}{%
+        {Psychological Assessment Resources}%
+      }
+      \strng{namehash}{6b0c33ef1e675b5bffe677f1743e656c}
+      \strng{fullhash}{6b0c33ef1e675b5bffe677f1743e656c}
+      \strng{bibnamehash}{6b0c33ef1e675b5bffe677f1743e656c}
+      \strng{authorbibnamehash}{6b0c33ef1e675b5bffe677f1743e656c}
+      \strng{authornamehash}{6b0c33ef1e675b5bffe677f1743e656c}
+      \strng{authorfullhash}{6b0c33ef1e675b5bffe677f1743e656c}
+      \field{sortinit}{H}
+      \field{sortinithash}{23a3aa7c24e56cfa16945d55545109b5}
+      \field{extradatescope}{labelyear}
+      \field{labeldatesource}{}
+      \true{uniqueprimaryauthor}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{title}{{Making vocational choices: A theory of vocational personalities and work environments.}}
+      \field{year}{1997}
+    \endentry
+    \entry{ipa}{book}{}
+      \name{author}{1}{}{%
+        {{un=0,uniquepart=base,hash=09bfa6cc666e60040dc93f7d43b69f78}{%
+           family={{International Phonetic Association}},
+           familyi={I\bibinitperiod}}}%
+      }
+      \list{publisher}{1}{%
+        {Cambridge: Cambridge University Press}%
+      }
+      \strng{namehash}{09bfa6cc666e60040dc93f7d43b69f78}
+      \strng{fullhash}{09bfa6cc666e60040dc93f7d43b69f78}
+      \strng{bibnamehash}{09bfa6cc666e60040dc93f7d43b69f78}
+      \strng{authorbibnamehash}{09bfa6cc666e60040dc93f7d43b69f78}
+      \strng{authornamehash}{09bfa6cc666e60040dc93f7d43b69f78}
+      \strng{authorfullhash}{09bfa6cc666e60040dc93f7d43b69f78}
+      \field{sortinit}{I}
+      \field{sortinithash}{8d291c51ee89b6cd86bf5379f0b151d8}
+      \field{extradatescope}{labelyear}
+      \field{labeldatesource}{}
+      \true{uniqueprimaryauthor}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{title}{{Handbook of the International Phonetic Association: A guide to the use of the International Phonetic Alphabet}}
+      \field{year}{1999}
+    \endentry
+    \entry{jehle_reny_micro}{book}{}
+      \name{author}{2}{}{%
+        {{un=0,uniquepart=base,hash=d6af8350e417d68dabca6ce5ae530ee0}{%
+           family={Jehle},
+           familyi={J\bibinitperiod},
+           given={G.},
+           giveni={G\bibinitperiod},
+           givenun=0}}%
+        {{un=0,uniquepart=base,hash=573d0c660548f49f49c2ad7766fc149c}{%
+           family={Reny},
+           familyi={R\bibinitperiod},
+           given={P.},
+           giveni={P\bibinitperiod},
+           givenun=0}}%
+      }
+      \list{publisher}{1}{%
+        {Financial Times Prentice Hall, London}%
+      }
+      \strng{namehash}{ef02dd24d443230ee1e0b1d26c097d98}
+      \strng{fullhash}{ef02dd24d443230ee1e0b1d26c097d98}
+      \strng{bibnamehash}{ef02dd24d443230ee1e0b1d26c097d98}
+      \strng{authorbibnamehash}{ef02dd24d443230ee1e0b1d26c097d98}
+      \strng{authornamehash}{ef02dd24d443230ee1e0b1d26c097d98}
+      \strng{authorfullhash}{ef02dd24d443230ee1e0b1d26c097d98}
+      \field{sortinit}{J}
+      \field{sortinithash}{b2f54a9081ace9966a7cb9413811edb4}
+      \field{extradatescope}{labelyear}
+      \field{labeldatesource}{}
+      \true{uniqueprimaryauthor}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{title}{Advanced Microeconomic Theory}
+      \field{year}{2011}
+    \endentry
+    \entry{lucas_1988}{article}{}
+      \name{author}{1}{}{%
+        {{un=0,uniquepart=base,hash=03c2f49b0d2db428ed94d386078c3f7c}{%
+           family={Lucas},
+           familyi={L\bibinitperiod},
+           given={R.E.},
+           giveni={R\bibinitperiod},
+           givenun=0}}%
+      }
+      \strng{namehash}{03c2f49b0d2db428ed94d386078c3f7c}
+      \strng{fullhash}{03c2f49b0d2db428ed94d386078c3f7c}
+      \strng{bibnamehash}{03c2f49b0d2db428ed94d386078c3f7c}
+      \strng{authorbibnamehash}{03c2f49b0d2db428ed94d386078c3f7c}
+      \strng{authornamehash}{03c2f49b0d2db428ed94d386078c3f7c}
+      \strng{authorfullhash}{03c2f49b0d2db428ed94d386078c3f7c}
+      \field{sortinit}{L}
+      \field{sortinithash}{7c47d417cecb1f4bd38d1825c427a61a}
+      \field{extradatescope}{labelyear}
+      \field{labeldatesource}{}
+      \true{uniqueprimaryauthor}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{journaltitle}{Journal of Monetary Economics}
+      \field{title}{On the mechanics of economic development}
+      \field{volume}{22}
+      \field{year}{1988}
+      \field{pages}{3\bibrangedash 42}
+      \range{pages}{40}
+    \endentry
+    \entry{onet1998data}{online}{}
+      \name{author}{1}{}{%
+        {{hash=542cd90c52616746efdefa2118f486b3}{%
+           family={{National Center for O*NET Development}},
+           familyi={N\bibinitperiod}}}%
+      }
+      \name{shortauthor}{1}{}{%
+        {{un=0,uniquepart=base,hash=48326684b98eef4701ef3b9fb1b6b1e2}{%
+           family={O*NET},
+           familyi={O\bibinitperiod}}}%
+      }
+      \strng{namehash}{48326684b98eef4701ef3b9fb1b6b1e2}
+      \strng{fullhash}{542cd90c52616746efdefa2118f486b3}
+      \strng{bibnamehash}{48326684b98eef4701ef3b9fb1b6b1e2}
+      \strng{authorbibnamehash}{542cd90c52616746efdefa2118f486b3}
+      \strng{authornamehash}{542cd90c52616746efdefa2118f486b3}
+      \strng{authorfullhash}{542cd90c52616746efdefa2118f486b3}
+      \strng{shortauthorbibnamehash}{48326684b98eef4701ef3b9fb1b6b1e2}
+      \strng{shortauthornamehash}{48326684b98eef4701ef3b9fb1b6b1e2}
+      \strng{shortauthorfullhash}{48326684b98eef4701ef3b9fb1b6b1e2}
+      \field{extraname}{1}
+      \field{sortinit}{N}
+      \field{sortinithash}{22369a73d5f88983a108b63f07f37084}
+      \field{extradatescope}{labelyear}
+      \field{labeldatesource}{}
+      \true{uniqueprimaryauthor}
+      \field{labelnamesource}{shortauthor}
+      \field{labeltitlesource}{title}
+      \field{title}{{O*NET 98. O*NET Transitional Databases. O*NET Resource Center.}}
+      \field{year}{1998}
+      \verb{urlraw}
+      \verb https://www.onetcenter.org/db_transitional.html
+      \endverb
+      \verb{url}
+      \verb https://www.onetcenter.org/db_transitional.html
+      \endverb
+    \endentry
+    \entry{onet2023data}{online}{}
+      \name{author}{1}{}{%
+        {{hash=542cd90c52616746efdefa2118f486b3}{%
+           family={{National Center for O*NET Development}},
+           familyi={N\bibinitperiod}}}%
+      }
+      \name{shortauthor}{1}{}{%
+        {{un=0,uniquepart=base,hash=48326684b98eef4701ef3b9fb1b6b1e2}{%
+           family={O*NET},
+           familyi={O\bibinitperiod}}}%
+      }
+      \strng{namehash}{48326684b98eef4701ef3b9fb1b6b1e2}
+      \strng{fullhash}{542cd90c52616746efdefa2118f486b3}
+      \strng{bibnamehash}{48326684b98eef4701ef3b9fb1b6b1e2}
+      \strng{authorbibnamehash}{542cd90c52616746efdefa2118f486b3}
+      \strng{authornamehash}{542cd90c52616746efdefa2118f486b3}
+      \strng{authorfullhash}{542cd90c52616746efdefa2118f486b3}
+      \strng{shortauthorbibnamehash}{48326684b98eef4701ef3b9fb1b6b1e2}
+      \strng{shortauthornamehash}{48326684b98eef4701ef3b9fb1b6b1e2}
+      \strng{shortauthorfullhash}{48326684b98eef4701ef3b9fb1b6b1e2}
+      \field{extraname}{2}
+      \field{sortinit}{N}
+      \field{sortinithash}{22369a73d5f88983a108b63f07f37084}
+      \field{extradatescope}{labelyear}
+      \field{labeldatesource}{}
+      \true{uniqueprimaryauthor}
+      \field{labelnamesource}{shortauthor}
+      \field{labeltitlesource}{title}
+      \field{title}{{O*NET 27.3. O*NET Database Releases Archive. O*NET Resource Center.}}
+      \field{year}{2023}
+      \verb{urlraw}
+      \verb https://www.onetcenter.org/db_releases.html
+      \endverb
+      \verb{url}
+      \verb https://www.onetcenter.org/db_releases.html
+      \endverb
+    \endentry
+    \entry{onet2024about}{online}{}
+      \name{author}{1}{}{%
+        {{hash=542cd90c52616746efdefa2118f486b3}{%
+           family={{National Center for O*NET Development}},
+           familyi={N\bibinitperiod}}}%
+      }
+      \name{shortauthor}{1}{}{%
+        {{un=0,uniquepart=base,hash=48326684b98eef4701ef3b9fb1b6b1e2}{%
+           family={O*NET},
+           familyi={O\bibinitperiod}}}%
+      }
+      \strng{namehash}{48326684b98eef4701ef3b9fb1b6b1e2}
+      \strng{fullhash}{542cd90c52616746efdefa2118f486b3}
+      \strng{bibnamehash}{48326684b98eef4701ef3b9fb1b6b1e2}
+      \strng{authorbibnamehash}{542cd90c52616746efdefa2118f486b3}
+      \strng{authornamehash}{542cd90c52616746efdefa2118f486b3}
+      \strng{authorfullhash}{542cd90c52616746efdefa2118f486b3}
+      \strng{shortauthorbibnamehash}{48326684b98eef4701ef3b9fb1b6b1e2}
+      \strng{shortauthornamehash}{48326684b98eef4701ef3b9fb1b6b1e2}
+      \strng{shortauthorfullhash}{48326684b98eef4701ef3b9fb1b6b1e2}
+      \field{extraname}{3}
+      \field{sortinit}{N}
+      \field{sortinithash}{22369a73d5f88983a108b63f07f37084}
+      \field{extradate}{1}
+      \field{extradatescope}{labelyear}
+      \field{labeldatesource}{}
+      \true{uniqueprimaryauthor}
+      \field{labelnamesource}{shortauthor}
+      \field{labeltitlesource}{title}
+      \field{title}{{About O*NET. O*NET Resource Center.}}
+      \field{year}{2024}
+      \verb{urlraw}
+      \verb https://www.onetcenter.org/overview.html
+      \endverb
+      \verb{url}
+      \verb https://www.onetcenter.org/overview.html
+      \endverb
+    \endentry
+    \entry{onet_pilot}{online}{}
+      \name{author}{1}{}{%
+        {{hash=542cd90c52616746efdefa2118f486b3}{%
+           family={{National Center for O*NET Development}},
+           familyi={N\bibinitperiod}}}%
+      }
+      \name{shortauthor}{1}{}{%
+        {{un=0,uniquepart=base,hash=48326684b98eef4701ef3b9fb1b6b1e2}{%
+           family={O*NET},
+           familyi={O\bibinitperiod}}}%
+      }
+      \strng{namehash}{48326684b98eef4701ef3b9fb1b6b1e2}
+      \strng{fullhash}{542cd90c52616746efdefa2118f486b3}
+      \strng{bibnamehash}{48326684b98eef4701ef3b9fb1b6b1e2}
+      \strng{authorbibnamehash}{542cd90c52616746efdefa2118f486b3}
+      \strng{authornamehash}{542cd90c52616746efdefa2118f486b3}
+      \strng{authorfullhash}{542cd90c52616746efdefa2118f486b3}
+      \strng{shortauthorbibnamehash}{48326684b98eef4701ef3b9fb1b6b1e2}
+      \strng{shortauthornamehash}{48326684b98eef4701ef3b9fb1b6b1e2}
+      \strng{shortauthorfullhash}{48326684b98eef4701ef3b9fb1b6b1e2}
+      \field{extraname}{4}
+      \field{sortinit}{N}
+      \field{sortinithash}{22369a73d5f88983a108b63f07f37084}
+      \field{extradate}{2}
+      \field{extradatescope}{labelyear}
+      \field{labeldatesource}{}
+      \true{uniqueprimaryauthor}
+      \field{labelnamesource}{shortauthor}
+      \field{labeltitlesource}{title}
+      \field{title}{{Airline Pilots, Copilots, and Flight Engineers}}
+      \field{year}{2024}
+      \verb{urlraw}
+      \verb https://www.onetonline.org/link/summary/53-2011.00
+      \endverb
+      \verb{url}
+      \verb https://www.onetonline.org/link/summary/53-2011.00
+      \endverb
+    \endentry
+    \entry{onet_art}{online}{}
+      \name{author}{1}{}{%
+        {{hash=542cd90c52616746efdefa2118f486b3}{%
+           family={{National Center for O*NET Development}},
+           familyi={N\bibinitperiod}}}%
+      }
+      \name{shortauthor}{1}{}{%
+        {{un=0,uniquepart=base,hash=48326684b98eef4701ef3b9fb1b6b1e2}{%
+           family={O*NET},
+           familyi={O\bibinitperiod}}}%
+      }
+      \strng{namehash}{48326684b98eef4701ef3b9fb1b6b1e2}
+      \strng{fullhash}{542cd90c52616746efdefa2118f486b3}
+      \strng{bibnamehash}{48326684b98eef4701ef3b9fb1b6b1e2}
+      \strng{authorbibnamehash}{542cd90c52616746efdefa2118f486b3}
+      \strng{authornamehash}{542cd90c52616746efdefa2118f486b3}
+      \strng{authorfullhash}{542cd90c52616746efdefa2118f486b3}
+      \strng{shortauthorbibnamehash}{48326684b98eef4701ef3b9fb1b6b1e2}
+      \strng{shortauthornamehash}{48326684b98eef4701ef3b9fb1b6b1e2}
+      \strng{shortauthorfullhash}{48326684b98eef4701ef3b9fb1b6b1e2}
+      \field{extraname}{5}
+      \field{sortinit}{N}
+      \field{sortinithash}{22369a73d5f88983a108b63f07f37084}
+      \field{extradate}{3}
+      \field{extradatescope}{labelyear}
+      \field{labeldatesource}{}
+      \true{uniqueprimaryauthor}
+      \field{labelnamesource}{shortauthor}
+      \field{labeltitlesource}{title}
+      \field{title}{{Fine Artists, Including Painters, Sculptors, and Illustrators}}
+      \field{year}{2024}
+      \verb{urlraw}
+      \verb https://www.onetonline.org/link/summary/27-1013.00
+      \endverb
+      \verb{url}
+      \verb https://www.onetonline.org/link/summary/27-1013.00
+      \endverb
+    \endentry
+    \entry{onet_publications}{online}{}
+      \name{author}{1}{}{%
+        {{hash=542cd90c52616746efdefa2118f486b3}{%
+           family={{National Center for O*NET Development}},
+           familyi={N\bibinitperiod}}}%
+      }
+      \name{shortauthor}{1}{}{%
+        {{un=0,uniquepart=base,hash=48326684b98eef4701ef3b9fb1b6b1e2}{%
+           family={O*NET},
+           familyi={O\bibinitperiod}}}%
+      }
+      \strng{namehash}{48326684b98eef4701ef3b9fb1b6b1e2}
+      \strng{fullhash}{542cd90c52616746efdefa2118f486b3}
+      \strng{bibnamehash}{48326684b98eef4701ef3b9fb1b6b1e2}
+      \strng{authorbibnamehash}{542cd90c52616746efdefa2118f486b3}
+      \strng{authornamehash}{542cd90c52616746efdefa2118f486b3}
+      \strng{authorfullhash}{542cd90c52616746efdefa2118f486b3}
+      \strng{shortauthorbibnamehash}{48326684b98eef4701ef3b9fb1b6b1e2}
+      \strng{shortauthornamehash}{48326684b98eef4701ef3b9fb1b6b1e2}
+      \strng{shortauthorfullhash}{48326684b98eef4701ef3b9fb1b6b1e2}
+      \field{extraname}{6}
+      \field{sortinit}{N}
+      \field{sortinithash}{22369a73d5f88983a108b63f07f37084}
+      \field{extradate}{4}
+      \field{extradatescope}{labelyear}
+      \field{labeldatesource}{}
+      \true{uniqueprimaryauthor}
+      \field{labelnamesource}{shortauthor}
+      \field{labeltitlesource}{title}
+      \field{title}{{Reports and Documents. O*NET Resource Center}}
+      \field{year}{2024}
+      \verb{urlraw}
+      \verb https://www.onetcenter.org/research.html
+      \endverb
+      \verb{url}
+      \verb https://www.onetcenter.org/research.html
+      \endverb
+    \endentry
+    \entry{onet_surgeon}{online}{}
+      \name{author}{1}{}{%
+        {{hash=542cd90c52616746efdefa2118f486b3}{%
+           family={{National Center for O*NET Development}},
+           familyi={N\bibinitperiod}}}%
+      }
+      \name{shortauthor}{1}{}{%
+        {{un=0,uniquepart=base,hash=48326684b98eef4701ef3b9fb1b6b1e2}{%
+           family={O*NET},
+           familyi={O\bibinitperiod}}}%
+      }
+      \strng{namehash}{48326684b98eef4701ef3b9fb1b6b1e2}
+      \strng{fullhash}{542cd90c52616746efdefa2118f486b3}
+      \strng{bibnamehash}{48326684b98eef4701ef3b9fb1b6b1e2}
+      \strng{authorbibnamehash}{542cd90c52616746efdefa2118f486b3}
+      \strng{authornamehash}{542cd90c52616746efdefa2118f486b3}
+      \strng{authorfullhash}{542cd90c52616746efdefa2118f486b3}
+      \strng{shortauthorbibnamehash}{48326684b98eef4701ef3b9fb1b6b1e2}
+      \strng{shortauthornamehash}{48326684b98eef4701ef3b9fb1b6b1e2}
+      \strng{shortauthorfullhash}{48326684b98eef4701ef3b9fb1b6b1e2}
+      \field{extraname}{7}
+      \field{sortinit}{N}
+      \field{sortinithash}{22369a73d5f88983a108b63f07f37084}
+      \field{extradate}{5}
+      \field{extradatescope}{labelyear}
+      \field{labeldatesource}{}
+      \true{uniqueprimaryauthor}
+      \field{labelnamesource}{shortauthor}
+      \field{labeltitlesource}{title}
+      \field{title}{{Surgeons, All Other}}
+      \field{year}{2024}
+      \verb{urlraw}
+      \verb https://www.onetonline.org/link/summary/29-1249.00
+      \endverb
+      \verb{url}
+      \verb https://www.onetonline.org/link/summary/29-1249.00
+      \endverb
+    \endentry
+    \entry{nelson_phelps_1966}{article}{}
+      \name{author}{2}{}{%
+        {{un=0,uniquepart=base,hash=c5b45bf7517b3cd30d8676e7f6aab95f}{%
+           family={Nelson},
+           familyi={N\bibinitperiod},
+           given={R.\bibnamedelimi R.},
+           giveni={R\bibinitperiod\bibinitdelim R\bibinitperiod},
+           givenun=0}}%
+        {{un=0,uniquepart=base,hash=932dcfc291a67f09e260b966c1434970}{%
+           family={Phelps},
+           familyi={P\bibinitperiod},
+           given={E.\bibnamedelimi S.},
+           giveni={E\bibinitperiod\bibinitdelim S\bibinitperiod},
+           givenun=0}}%
+      }
+      \strng{namehash}{58e7e88dff8d09a18769136f1275a07e}
+      \strng{fullhash}{58e7e88dff8d09a18769136f1275a07e}
+      \strng{bibnamehash}{58e7e88dff8d09a18769136f1275a07e}
+      \strng{authorbibnamehash}{58e7e88dff8d09a18769136f1275a07e}
+      \strng{authornamehash}{58e7e88dff8d09a18769136f1275a07e}
+      \strng{authorfullhash}{58e7e88dff8d09a18769136f1275a07e}
+      \field{sortinit}{N}
+      \field{sortinithash}{22369a73d5f88983a108b63f07f37084}
+      \field{extradatescope}{labelyear}
+      \field{labeldatesource}{}
+      \true{uniqueprimaryauthor}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{journaltitle}{The American Economic Review}
+      \field{number}{1}
+      \field{title}{Investment in humans, technological diffusion, and economic growth.}
+      \field{volume}{56}
+      \field{year}{1966}
+      \field{pages}{69\bibrangedash 75}
+      \range{pages}{7}
+    \endentry
+    \entry{stanford_binet5}{book}{}
+      \name{author}{1}{}{%
+        {{un=0,uniquepart=base,hash=d3b2f8cd0c7fb75613ef6d5fbd8132b5}{%
+           family={Roid},
+           familyi={R\bibinitperiod},
+           given={G.\bibnamedelimi H.},
+           giveni={G\bibinitperiod\bibinitdelim H\bibinitperiod},
+           givenun=0}}%
+      }
+      \list{publisher}{1}{%
+        {Itasca: Riverside Publishing}%
+      }
+      \strng{namehash}{d3b2f8cd0c7fb75613ef6d5fbd8132b5}
+      \strng{fullhash}{d3b2f8cd0c7fb75613ef6d5fbd8132b5}
+      \strng{bibnamehash}{d3b2f8cd0c7fb75613ef6d5fbd8132b5}
+      \strng{authorbibnamehash}{d3b2f8cd0c7fb75613ef6d5fbd8132b5}
+      \strng{authornamehash}{d3b2f8cd0c7fb75613ef6d5fbd8132b5}
+      \strng{authorfullhash}{d3b2f8cd0c7fb75613ef6d5fbd8132b5}
+      \field{sortinit}{R}
+      \field{sortinithash}{5e1c39a9d46ffb6bebd8f801023a9486}
+      \field{extradatescope}{labelyear}
+      \field{labeldatesource}{}
+      \true{uniqueprimaryauthor}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{title}{Stanford-Binet Intelligence Scales, Fifth Edition}
+      \field{year}{2012}
+    \endentry
+    \entry{romer_macro}{book}{}
+      \name{author}{1}{}{%
+        {{un=1,uniquepart=given,hash=195992cee97f71c78cff99d54d74edbd}{%
+           family={Romer},
+           familyi={R\bibinitperiod},
+           given={David},
+           giveni={D\bibinitperiod},
+           givenun=1}}%
+      }
+      \list{publisher}{1}{%
+        {New York: New York: McGraw-Hill/Irwin}%
+      }
+      \strng{namehash}{195992cee97f71c78cff99d54d74edbd}
+      \strng{fullhash}{195992cee97f71c78cff99d54d74edbd}
+      \strng{bibnamehash}{195992cee97f71c78cff99d54d74edbd}
+      \strng{authorbibnamehash}{195992cee97f71c78cff99d54d74edbd}
+      \strng{authornamehash}{195992cee97f71c78cff99d54d74edbd}
+      \strng{authorfullhash}{195992cee97f71c78cff99d54d74edbd}
+      \field{sortinit}{R}
+      \field{sortinithash}{5e1c39a9d46ffb6bebd8f801023a9486}
+      \field{extradatescope}{labelyear}
+      \field{labeldatesource}{}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{title}{Advanced macroeconomics, 2nd edition}
+      \field{year}{2012}
+    \endentry
+    \entry{romer_human_capital}{article}{}
+      \name{author}{1}{}{%
+        {{un=1,uniquepart=given,hash=9fef23c81fd49d969a17f8db3046f51f}{%
+           family={Romer},
+           familyi={R\bibinitperiod},
+           given={Paul\bibnamedelima M.},
+           giveni={P\bibinitperiod\bibinitdelim M\bibinitperiod},
+           givenun=1}}%
+      }
+      \strng{namehash}{9fef23c81fd49d969a17f8db3046f51f}
+      \strng{fullhash}{9fef23c81fd49d969a17f8db3046f51f}
+      \strng{bibnamehash}{9fef23c81fd49d969a17f8db3046f51f}
+      \strng{authorbibnamehash}{9fef23c81fd49d969a17f8db3046f51f}
+      \strng{authornamehash}{9fef23c81fd49d969a17f8db3046f51f}
+      \strng{authorfullhash}{9fef23c81fd49d969a17f8db3046f51f}
+      \field{sortinit}{R}
+      \field{sortinithash}{5e1c39a9d46ffb6bebd8f801023a9486}
+      \field{extradatescope}{labelyear}
+      \field{labeldatesource}{}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{journaltitle}{National Bureau of Economic Research}
+      \field{title}{Human capital and growth: theory and evidence}
+      \field{year}{1989}
+    \endentry
+    \entry{mulligan_sala_1995}{book}{}
+      \name{author}{2}{}{%
+        {{un=0,uniquepart=base,hash=c0498e37ce48a2e5489951c991717ee8}{%
+           family={Sala-i-Martin},
+           familyi={S\bibinithyphendelim i\bibinithyphendelim M\bibinitperiod},
+           given={X.},
+           giveni={X\bibinitperiod},
+           givenun=0}}%
+        {{un=0,uniquepart=base,hash=f59a68c4bd9875f8b712d507f29d4dc3}{%
+           family={Mulligan},
+           familyi={M\bibinitperiod},
+           given={C.\bibnamedelimi B.},
+           giveni={C\bibinitperiod\bibinitdelim B\bibinitperiod},
+           givenun=0}}%
+      }
+      \list{publisher}{1}{%
+        {New Haven, Connecticut: Yale University.}%
+      }
+      \strng{namehash}{6812d1e5acfd19726ebd80b1644c34ea}
+      \strng{fullhash}{6812d1e5acfd19726ebd80b1644c34ea}
+      \strng{bibnamehash}{6812d1e5acfd19726ebd80b1644c34ea}
+      \strng{authorbibnamehash}{6812d1e5acfd19726ebd80b1644c34ea}
+      \strng{authornamehash}{6812d1e5acfd19726ebd80b1644c34ea}
+      \strng{authorfullhash}{6812d1e5acfd19726ebd80b1644c34ea}
+      \field{sortinit}{S}
+      \field{sortinithash}{b164b07b29984b41daf1e85279fbc5ab}
+      \field{extradatescope}{labelyear}
+      \field{labeldatesource}{}
+      \true{uniqueprimaryauthor}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{title}{Measuring aggregate human capital}
+      \field{year}{1995}
+    \endentry
+    \entry{schein1993careeranchors}{book}{}
+      \name{author}{1}{}{%
+        {{un=0,uniquepart=base,hash=e42d1c85fa97296c41f3ee2134e4569b}{%
+           family={Schein},
+           familyi={S\bibinitperiod},
+           given={E.\bibnamedelimi H},
+           giveni={E\bibinitperiod\bibinitdelim H\bibinitperiod},
+           givenun=0}}%
+      }
+      \list{publisher}{1}{%
+        {London, Pfeiffer \& Company}%
+      }
+      \strng{namehash}{e42d1c85fa97296c41f3ee2134e4569b}
+      \strng{fullhash}{e42d1c85fa97296c41f3ee2134e4569b}
+      \strng{bibnamehash}{e42d1c85fa97296c41f3ee2134e4569b}
+      \strng{authorbibnamehash}{e42d1c85fa97296c41f3ee2134e4569b}
+      \strng{authornamehash}{e42d1c85fa97296c41f3ee2134e4569b}
+      \strng{authorfullhash}{e42d1c85fa97296c41f3ee2134e4569b}
+      \field{sortinit}{S}
+      \field{sortinithash}{b164b07b29984b41daf1e85279fbc5ab}
+      \field{extradatescope}{labelyear}
+      \field{labeldatesource}{}
+      \true{uniqueprimaryauthor}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{title}{{Career Anchors -- Discovering your real values}}
+      \field{year}{1993}
+    \endentry
+    \entry{schütt_human_capital}{book}{}
+      \name{author}{1}{}{%
+        {{un=0,uniquepart=base,hash=aac8af2dcbcaf581e3118843670b867a}{%
+           family={Schütt},
+           familyi={S\bibinitperiod},
+           given={F.},
+           giveni={F\bibinitperiod},
+           givenun=0}}%
+      }
+      \list{publisher}{1}{%
+        {Bremen: University of Bremen}%
+      }
+      \strng{namehash}{aac8af2dcbcaf581e3118843670b867a}
+      \strng{fullhash}{aac8af2dcbcaf581e3118843670b867a}
+      \strng{bibnamehash}{aac8af2dcbcaf581e3118843670b867a}
+      \strng{authorbibnamehash}{aac8af2dcbcaf581e3118843670b867a}
+      \strng{authornamehash}{aac8af2dcbcaf581e3118843670b867a}
+      \strng{authorfullhash}{aac8af2dcbcaf581e3118843670b867a}
+      \field{sortinit}{S}
+      \field{sortinithash}{b164b07b29984b41daf1e85279fbc5ab}
+      \field{extradatescope}{labelyear}
+      \field{labeldatesource}{}
+      \true{uniqueprimaryauthor}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{title}{The Importance of Human Capital for Economic Growth}
+      \field{year}{2003}
+    \endentry
+    \entry{uhr_et_al_2020}{article}{}
+      \name{author}{5}{}{%
+        {{un=0,uniquepart=base,hash=939b720e240351bcf09270981041218f}{%
+           family={Uhr},
+           familyi={U\bibinitperiod},
+           given={Daniel\bibnamedelimb de\bibnamedelimb Abreu\bibnamedelima Pereira},
+           giveni={D\bibinitperiod\bibinitdelim d\bibinitperiod\bibinitdelim A\bibinitperiod\bibinitdelim P\bibinitperiod},
+           givenun=0}}%
+        {{un=0,uniquepart=base,hash=6d0c2fa86f9992b25166268567df2642}{%
+           family={Paula},
+           familyi={P\bibinitperiod},
+           given={Silvio\bibnamedelimb da\bibnamedelima Rosa},
+           giveni={S\bibinitperiod\bibinitdelim d\bibinitperiod\bibinitdelim R\bibinitperiod},
+           givenun=0}}%
+        {{un=0,uniquepart=base,hash=9559cc258912e4905451b8fe48a69a80}{%
+           family={Ferreira},
+           familyi={F\bibinitperiod},
+           given={Mariana\bibnamedelima Fialho},
+           giveni={M\bibinitperiod\bibinitdelim F\bibinitperiod},
+           givenun=0}}%
+        {{un=0,uniquepart=base,hash=7f35c33e0cdc51d49f835661045403af}{%
+           family={Passos},
+           familyi={P\bibinitperiod},
+           given={Marcelo\bibnamedelimb de\bibnamedelima Oliveira},
+           giveni={M\bibinitperiod\bibinitdelim d\bibinitperiod\bibinitdelim O\bibinitperiod},
+           givenun=0}}%
+        {{un=0,uniquepart=base,hash=5c949333f551f9e907bf90533552b496}{%
+           family={Uhr},
+           familyi={U\bibinitperiod},
+           given={Julia\bibnamedelimb Gallego\bibnamedelima Ziero},
+           giveni={J\bibinitperiod\bibinitdelim G\bibinitperiod\bibinitdelim Z\bibinitperiod},
+           givenun=0}}%
+      }
+      \strng{namehash}{addfe374345961de49c64a75405febc4}
+      \strng{fullhash}{43133f4fcde6a988ea4a19930da7c763}
+      \strng{bibnamehash}{43133f4fcde6a988ea4a19930da7c763}
+      \strng{authorbibnamehash}{43133f4fcde6a988ea4a19930da7c763}
+      \strng{authornamehash}{addfe374345961de49c64a75405febc4}
+      \strng{authorfullhash}{43133f4fcde6a988ea4a19930da7c763}
+      \field{sortinit}{U}
+      \field{sortinithash}{6901a00e45705986ee5e7ca9fd39adca}
+      \field{extradatescope}{labelyear}
+      \field{labeldatesource}{}
+      \true{uniqueprimaryauthor}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{journaltitle}{Revista Brasileira de Economia}
+      \field{number}{1}
+      \field{title}{Economic Growth Channels From Human Capital: A Dynamic Panel Analysis for Brazil}
+      \field{volume}{74}
+      \field{year}{2020}
+      \field{pages}{95\bibrangedash 118}
+      \range{pages}{24}
+    \endentry
+    \entry{bls2018soc}{online}{}
+      \name{author}{1}{}{%
+        {{hash=1dd47a822521d43ebc6c17a6a2917cc6}{%
+           family={{U.S. Bureau of Labor Statistics}},
+           familyi={U\bibinitperiod}}}%
+      }
+      \name{shortauthor}{1}{}{%
+        {{un=0,uniquepart=base,hash=7219d59ab850d03befc2c446ff3f604b}{%
+           family={BLS},
+           familyi={B\bibinitperiod}}}%
+      }
+      \strng{namehash}{7219d59ab850d03befc2c446ff3f604b}
+      \strng{fullhash}{1dd47a822521d43ebc6c17a6a2917cc6}
+      \strng{bibnamehash}{7219d59ab850d03befc2c446ff3f604b}
+      \strng{authorbibnamehash}{1dd47a822521d43ebc6c17a6a2917cc6}
+      \strng{authornamehash}{1dd47a822521d43ebc6c17a6a2917cc6}
+      \strng{authorfullhash}{1dd47a822521d43ebc6c17a6a2917cc6}
+      \strng{shortauthorbibnamehash}{7219d59ab850d03befc2c446ff3f604b}
+      \strng{shortauthornamehash}{7219d59ab850d03befc2c446ff3f604b}
+      \strng{shortauthorfullhash}{7219d59ab850d03befc2c446ff3f604b}
+      \field{sortinit}{U}
+      \field{sortinithash}{6901a00e45705986ee5e7ca9fd39adca}
+      \field{extradatescope}{labelyear}
+      \field{labeldatesource}{}
+      \true{uniqueprimaryauthor}
+      \field{labelnamesource}{shortauthor}
+      \field{labeltitlesource}{title}
+      \field{title}{{2018 SOC System. About SOC.}}
+      \field{year}{2018}
+      \verb{urlraw}
+      \verb https://www.bls.gov/soc/2018/#materials
+      \endverb
+      \verb{url}
+      \verb https://www.bls.gov/soc/2018/#materials
+      \endverb
+    \endentry
+    \entry{wisc5}{book}{}
+      \name{author}{1}{}{%
+        {{un=0,uniquepart=base,hash=1ec51a63687697c126932783dcc23ae7}{%
+           family={Wechsler},
+           familyi={W\bibinitperiod},
+           given={D.},
+           giveni={D\bibinitperiod},
+           givenun=0}}%
+      }
+      \list{publisher}{1}{%
+        {Bloomington: Pearson}%
+      }
+      \strng{namehash}{1ec51a63687697c126932783dcc23ae7}
+      \strng{fullhash}{1ec51a63687697c126932783dcc23ae7}
+      \strng{bibnamehash}{1ec51a63687697c126932783dcc23ae7}
+      \strng{authorbibnamehash}{1ec51a63687697c126932783dcc23ae7}
+      \strng{authornamehash}{1ec51a63687697c126932783dcc23ae7}
+      \strng{authorfullhash}{1ec51a63687697c126932783dcc23ae7}
+      \field{sortinit}{W}
+      \field{sortinithash}{4315d78024d0cea9b57a0c6f0e35ed0d}
+      \field{extradatescope}{labelyear}
+      \field{labeldatesource}{}
+      \true{uniqueprimaryauthor}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{title}{Wechsler Intelligence Scale for Children, Fifth Edition}
+      \field{year}{2014}
+    \endentry
+    \entry{winter_behavioral_labor_econ}{article}{}
+      \name{author}{1}{}{%
+        {{un=0,uniquepart=base,hash=31244b1f8f768bf821b3170002577e52}{%
+           family={Winter-Ebmer},
+           familyi={W\bibinithyphendelim E\bibinitperiod},
+           given={Rudolf},
+           giveni={R\bibinitperiod},
+           givenun=0}}%
+      }
+      \strng{namehash}{31244b1f8f768bf821b3170002577e52}
+      \strng{fullhash}{31244b1f8f768bf821b3170002577e52}
+      \strng{bibnamehash}{31244b1f8f768bf821b3170002577e52}
+      \strng{authorbibnamehash}{31244b1f8f768bf821b3170002577e52}
+      \strng{authornamehash}{31244b1f8f768bf821b3170002577e52}
+      \strng{authorfullhash}{31244b1f8f768bf821b3170002577e52}
+      \field{sortinit}{W}
+      \field{sortinithash}{4315d78024d0cea9b57a0c6f0e35ed0d}
+      \field{extradatescope}{labelyear}
+      \field{labeldatesource}{}
+      \true{uniqueprimaryauthor}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{journaltitle}{Labour Economics}
+      \field{title}{What is (not) behavioural in labour economics?}
+      \field{volume}{30}
+      \field{year}{2014}
+      \field{pages}{86\bibrangedash 87}
+      \range{pages}{2}
+    \endentry
+  \enddatalist
+  \datalist[entry]{apa/global//global/global}
+    \entry{barro_1991}{article}{}
+      \name{author}{1}{}{%
+        {{un=0,uniquepart=base,hash=12e80febb122b75421416b9e181d4657}{%
+           family={Barro},
+           familyi={B\bibinitperiod},
+           given={Robert\bibnamedelima J.},
+           giveni={R\bibinitperiod\bibinitdelim J\bibinitperiod},
+           givenun=0}}%
+      }
+      \strng{namehash}{12e80febb122b75421416b9e181d4657}
+      \strng{fullhash}{12e80febb122b75421416b9e181d4657}
+      \strng{bibnamehash}{12e80febb122b75421416b9e181d4657}
+      \strng{authorbibnamehash}{12e80febb122b75421416b9e181d4657}
+      \strng{authornamehash}{12e80febb122b75421416b9e181d4657}
+      \strng{authorfullhash}{12e80febb122b75421416b9e181d4657}
+      \field{sortinit}{B}
+      \field{sortinithash}{d7095fff47cda75ca2589920aae98399}
+      \field{extradatescope}{labelyear}
+      \field{labeldatesource}{}
+      \true{uniqueprimaryauthor}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{journaltitle}{Quarterly Journal of Economics}
+      \field{number}{2}
+      \field{title}{Economic growth in a cross-section of countries}
+      \field{volume}{106}
+      \field{year}{1991}
+      \field{pages}{407\bibrangedash 443}
+      \range{pages}{37}
+    \endentry
+    \entry{becker1962}{article}{}
+      \name{author}{1}{}{%
+        {{un=0,uniquepart=base,hash=ddbce888dc6e767c124c5bff0dcb3f4c}{%
+           family={Becker},
+           familyi={B\bibinitperiod},
+           given={Gary},
+           giveni={G\bibinitperiod},
+           givenun=0}}%
+      }
+      \strng{namehash}{ddbce888dc6e767c124c5bff0dcb3f4c}
+      \strng{fullhash}{ddbce888dc6e767c124c5bff0dcb3f4c}
+      \strng{bibnamehash}{ddbce888dc6e767c124c5bff0dcb3f4c}
+      \strng{authorbibnamehash}{ddbce888dc6e767c124c5bff0dcb3f4c}
+      \strng{authornamehash}{ddbce888dc6e767c124c5bff0dcb3f4c}
+      \strng{authorfullhash}{ddbce888dc6e767c124c5bff0dcb3f4c}
+      \field{extraname}{1}
+      \field{sortinit}{B}
+      \field{sortinithash}{d7095fff47cda75ca2589920aae98399}
+      \field{extradatescope}{labelyear}
+      \field{labeldatesource}{}
+      \true{uniqueprimaryauthor}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{journaltitle}{The University of Chicago Press}
+      \field{number}{5}
+      \field{title}{Investment in Human Capital: A Theoretical Analysis}
+      \field{volume}{70}
+      \field{year}{1962}
+    \endentry
+    \entry{becker1994}{book}{}
+      \name{author}{1}{}{%
+        {{un=0,uniquepart=base,hash=ddbce888dc6e767c124c5bff0dcb3f4c}{%
+           family={Becker},
+           familyi={B\bibinitperiod},
+           given={Gary},
+           giveni={G\bibinitperiod},
+           givenun=0}}%
+      }
+      \list{publisher}{1}{%
+        {The University of Chicago Press}%
+      }
+      \strng{namehash}{ddbce888dc6e767c124c5bff0dcb3f4c}
+      \strng{fullhash}{ddbce888dc6e767c124c5bff0dcb3f4c}
+      \strng{bibnamehash}{ddbce888dc6e767c124c5bff0dcb3f4c}
+      \strng{authorbibnamehash}{ddbce888dc6e767c124c5bff0dcb3f4c}
+      \strng{authornamehash}{ddbce888dc6e767c124c5bff0dcb3f4c}
+      \strng{authorfullhash}{ddbce888dc6e767c124c5bff0dcb3f4c}
+      \field{extraname}{2}
+      \field{sortinit}{B}
+      \field{sortinithash}{d7095fff47cda75ca2589920aae98399}
+      \field{extradatescope}{labelyear}
+      \field{labeldatesource}{}
+      \true{uniqueprimaryauthor}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{title}{Human Capital: A theoretical and empirical analysis with special reference to Education.}
+      \field{year}{1994}
+    \endentry
+    \entry{mmpi3}{book}{}
+      \name{author}{2}{}{%
+        {{un=0,uniquepart=base,hash=b167c04c944cbb18ebb5d31850c05d27}{%
+           family={Ben-Porath},
+           familyi={B\bibinithyphendelim P\bibinitperiod},
+           given={Y.\bibnamedelimi S.},
+           giveni={Y\bibinitperiod\bibinitdelim S\bibinitperiod},
+           givenun=0}}%
+        {{un=0,uniquepart=base,hash=e0016d55d0e27657a3b53ac6c0a8cd9e}{%
+           family={Tellegen},
+           familyi={T\bibinitperiod},
+           given={A.},
+           giveni={A\bibinitperiod},
+           givenun=0}}%
+      }
+      \list{publisher}{1}{%
+        {University of Minnesota Press}%
+      }
+      \strng{namehash}{2630cbcc36273f74626316e5bb500e99}
+      \strng{fullhash}{2630cbcc36273f74626316e5bb500e99}
+      \strng{bibnamehash}{2630cbcc36273f74626316e5bb500e99}
+      \strng{authorbibnamehash}{2630cbcc36273f74626316e5bb500e99}
+      \strng{authornamehash}{2630cbcc36273f74626316e5bb500e99}
+      \strng{authorfullhash}{2630cbcc36273f74626316e5bb500e99}
+      \field{sortinit}{B}
+      \field{sortinithash}{d7095fff47cda75ca2589920aae98399}
+      \field{extradatescope}{labelyear}
+      \field{labeldatesource}{}
+      \true{uniqueprimaryauthor}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{title}{{Minnesota Multiphasic Personality Inventory-3 (MMPI-3)}}
+      \field{year}{2020}
+    \endentry
+    \entry{berg_behavioral_labor_econ}{inbook}{}
+      \name{author}{2}{}{%
+        {{un=0,uniquepart=base,hash=48f42badc4b800912ce497069d3ccc69}{%
+           family={Berg},
+           familyi={B\bibinitperiod},
+           given={Nathan},
+           giveni={N\bibinitperiod},
+           givenun=0}}%
+        {{un=0,uniquepart=base,hash=65cf779c8b1783a33b0749d452de6108}{%
+           family={Altman},
+           familyi={A\bibinitperiod},
+           given={Morris},
+           giveni={M\bibinitperiod},
+           givenun=0}}%
+      }
+      \list{publisher}{1}{%
+        {Routledge}%
+      }
+      \strng{namehash}{e4e91741495d564b23f7fb8b63294f60}
+      \strng{fullhash}{e4e91741495d564b23f7fb8b63294f60}
+      \strng{bibnamehash}{e4e91741495d564b23f7fb8b63294f60}
+      \strng{authorbibnamehash}{e4e91741495d564b23f7fb8b63294f60}
+      \strng{authornamehash}{e4e91741495d564b23f7fb8b63294f60}
+      \strng{authorfullhash}{e4e91741495d564b23f7fb8b63294f60}
+      \field{sortinit}{B}
+      \field{sortinithash}{d7095fff47cda75ca2589920aae98399}
+      \field{extradatescope}{labelyear}
+      \field{labeldatesource}{}
+      \true{uniqueprimaryauthor}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{chapter}{Behavioral Labor Economics}
+      \field{title}{Handbook of Contemporary Behavioral Economics: Foundations and Developments}
+      \field{year}{2015}
+    \endentry
+    \entry{atlas.aeq}{online}{}
+      \name{author}{1}{}{%
+        {{un=0,uniquepart=base,hash=3fc5b083d748e229d5714c1904867b9c}{%
+           family={Bittencourt},
+           familyi={B\bibinitperiod},
+           given={Cao},
+           giveni={C\bibinitperiod},
+           givenun=0}}%
+      }
+      \strng{namehash}{3fc5b083d748e229d5714c1904867b9c}
+      \strng{fullhash}{3fc5b083d748e229d5714c1904867b9c}
+      \strng{bibnamehash}{3fc5b083d748e229d5714c1904867b9c}
+      \strng{authorbibnamehash}{3fc5b083d748e229d5714c1904867b9c}
+      \strng{authornamehash}{3fc5b083d748e229d5714c1904867b9c}
+      \strng{authorfullhash}{3fc5b083d748e229d5714c1904867b9c}
+      \field{extraname}{1}
+      \field{sortinit}{B}
+      \field{sortinithash}{d7095fff47cda75ca2589920aae98399}
+      \field{extradate}{1}
+      \field{extradatescope}{labelyear}
+      \field{labeldatesource}{}
+      \true{uniqueprimaryauthor}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{title}{{atlas.aeq: An Attribute Equivalence Coefficient for Skill Set Analyses}}
+      \field{year}{2024}
+      \verb{urlraw}
+      \verb https://github.com/CaoBittencourt/atlas.eqvl
+      \endverb
+      \verb{url}
+      \verb https://github.com/CaoBittencourt/atlas.eqvl
+      \endverb
+    \endentry
+    \entry{atlas.comp}{online}{}
+      \name{author}{1}{}{%
+        {{un=0,uniquepart=base,hash=3fc5b083d748e229d5714c1904867b9c}{%
+           family={Bittencourt},
+           familyi={B\bibinitperiod},
+           given={Cao},
+           giveni={C\bibinitperiod},
+           givenun=0}}%
+      }
+      \strng{namehash}{3fc5b083d748e229d5714c1904867b9c}
+      \strng{fullhash}{3fc5b083d748e229d5714c1904867b9c}
+      \strng{bibnamehash}{3fc5b083d748e229d5714c1904867b9c}
+      \strng{authorbibnamehash}{3fc5b083d748e229d5714c1904867b9c}
+      \strng{authornamehash}{3fc5b083d748e229d5714c1904867b9c}
+      \strng{authorfullhash}{3fc5b083d748e229d5714c1904867b9c}
+      \field{extraname}{2}
+      \field{sortinit}{B}
+      \field{sortinithash}{d7095fff47cda75ca2589920aae98399}
+      \field{extradate}{2}
+      \field{extradatescope}{labelyear}
+      \field{labeldatesource}{}
+      \true{uniqueprimaryauthor}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{title}{{atlas.comp: A Skill Set Competence Coefficient}}
+      \field{year}{2024}
+      \verb{urlraw}
+      \verb https://github.com/CaoBittencourt/atlas.comp
+      \endverb
+      \verb{url}
+      \verb https://github.com/CaoBittencourt/atlas.comp
+      \endverb
+    \endentry
+    \entry{atlas.gene}{online}{}
+      \name{author}{1}{}{%
+        {{un=0,uniquepart=base,hash=3fc5b083d748e229d5714c1904867b9c}{%
+           family={Bittencourt},
+           familyi={B\bibinitperiod},
+           given={Cao},
+           giveni={C\bibinitperiod},
+           givenun=0}}%
+      }
+      \strng{namehash}{3fc5b083d748e229d5714c1904867b9c}
+      \strng{fullhash}{3fc5b083d748e229d5714c1904867b9c}
+      \strng{bibnamehash}{3fc5b083d748e229d5714c1904867b9c}
+      \strng{authorbibnamehash}{3fc5b083d748e229d5714c1904867b9c}
+      \strng{authornamehash}{3fc5b083d748e229d5714c1904867b9c}
+      \strng{authorfullhash}{3fc5b083d748e229d5714c1904867b9c}
+      \field{extraname}{3}
+      \field{sortinit}{B}
+      \field{sortinithash}{d7095fff47cda75ca2589920aae98399}
+      \field{extradate}{3}
+      \field{extradatescope}{labelyear}
+      \field{labeldatesource}{}
+      \true{uniqueprimaryauthor}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{title}{{atlas.gene: A Skill Set Generality Coefficient}}
+      \field{year}{2024}
+      \verb{urlraw}
+      \verb https://github.com/CaoBittencourt/atlas.gene
+      \endverb
+      \verb{url}
+      \verb https://github.com/CaoBittencourt/atlas.gene
+      \endverb
+    \endentry
+    \entry{atlas.match}{online}{}
+      \name{author}{1}{}{%
+        {{un=0,uniquepart=base,hash=3fc5b083d748e229d5714c1904867b9c}{%
+           family={Bittencourt},
+           familyi={B\bibinitperiod},
+           given={Cao},
+           giveni={C\bibinitperiod},
+           givenun=0}}%
+      }
+      \strng{namehash}{3fc5b083d748e229d5714c1904867b9c}
+      \strng{fullhash}{3fc5b083d748e229d5714c1904867b9c}
+      \strng{bibnamehash}{3fc5b083d748e229d5714c1904867b9c}
+      \strng{authorbibnamehash}{3fc5b083d748e229d5714c1904867b9c}
+      \strng{authornamehash}{3fc5b083d748e229d5714c1904867b9c}
+      \strng{authorfullhash}{3fc5b083d748e229d5714c1904867b9c}
+      \field{extraname}{4}
+      \field{sortinit}{B}
+      \field{sortinithash}{d7095fff47cda75ca2589920aae98399}
+      \field{extradate}{4}
+      \field{extradatescope}{labelyear}
+      \field{labeldatesource}{}
+      \true{uniqueprimaryauthor}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{title}{{atlas.match: Quantitative Career Matching}}
+      \field{year}{2024}
+      \verb{urlraw}
+      \verb https://github.com/CaoBittencourt/atlas.match
+      \endverb
+      \verb{url}
+      \verb https://github.com/CaoBittencourt/atlas.match
+      \endverb
+    \endentry
+    \entry{cao_gene_comp}{article}{}
+      \name{author}{1}{}{%
+        {{un=0,uniquepart=base,hash=3fc5b083d748e229d5714c1904867b9c}{%
+           family={Bittencourt},
+           familyi={B\bibinitperiod},
+           given={Cao},
+           giveni={C\bibinitperiod},
+           givenun=0}}%
+      }
+      \list{publisher}{1}{%
+        {Elsavier}%
+      }
+      \strng{namehash}{3fc5b083d748e229d5714c1904867b9c}
+      \strng{fullhash}{3fc5b083d748e229d5714c1904867b9c}
+      \strng{bibnamehash}{3fc5b083d748e229d5714c1904867b9c}
+      \strng{authorbibnamehash}{3fc5b083d748e229d5714c1904867b9c}
+      \strng{authornamehash}{3fc5b083d748e229d5714c1904867b9c}
+      \strng{authorfullhash}{3fc5b083d748e229d5714c1904867b9c}
+      \field{extraname}{5}
+      \field{sortinit}{B}
+      \field{sortinithash}{d7095fff47cda75ca2589920aae98399}
+      \field{extradate}{5}
+      \field{extradatescope}{labelyear}
+      \field{labeldatesource}{}
+      \true{uniqueprimaryauthor}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{journaltitle}{Econometrics and Statistics}
+      \field{title}{{Generalists vs Specialists: Who Are the Most Competent Workers?}}
+      \field{year}{2024}
+    \endentry
+    \entry{cao_intro_match}{article}{}
+      \name{author}{1}{}{%
+        {{un=0,uniquepart=base,hash=3fc5b083d748e229d5714c1904867b9c}{%
+           family={Bittencourt},
+           familyi={B\bibinitperiod},
+           given={Cao},
+           giveni={C\bibinitperiod},
+           givenun=0}}%
+      }
+      \list{publisher}{1}{%
+        {Elsavier}%
+      }
+      \strng{namehash}{3fc5b083d748e229d5714c1904867b9c}
+      \strng{fullhash}{3fc5b083d748e229d5714c1904867b9c}
+      \strng{bibnamehash}{3fc5b083d748e229d5714c1904867b9c}
+      \strng{authorbibnamehash}{3fc5b083d748e229d5714c1904867b9c}
+      \strng{authornamehash}{3fc5b083d748e229d5714c1904867b9c}
+      \strng{authorfullhash}{3fc5b083d748e229d5714c1904867b9c}
+      \field{extraname}{6}
+      \field{sortinit}{B}
+      \field{sortinithash}{d7095fff47cda75ca2589920aae98399}
+      \field{extradate}{6}
+      \field{extradatescope}{labelyear}
+      \field{labeldatesource}{}
+      \true{uniqueprimaryauthor}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{journaltitle}{Econometrics and Statistics}
+      \field{title}{{Introduction to Quantitative Career Matching: How to Statistically Pick the Right Occupation}}
+      \field{year}{2024}
+    \endentry
+    \entry{repo_gene_comp}{online}{}
+      \name{author}{1}{}{%
+        {{un=0,uniquepart=base,hash=3fc5b083d748e229d5714c1904867b9c}{%
+           family={Bittencourt},
+           familyi={B\bibinitperiod},
+           given={Cao},
+           giveni={C\bibinitperiod},
+           givenun=0}}%
+      }
+      \strng{namehash}{3fc5b083d748e229d5714c1904867b9c}
+      \strng{fullhash}{3fc5b083d748e229d5714c1904867b9c}
+      \strng{bibnamehash}{3fc5b083d748e229d5714c1904867b9c}
+      \strng{authorbibnamehash}{3fc5b083d748e229d5714c1904867b9c}
+      \strng{authornamehash}{3fc5b083d748e229d5714c1904867b9c}
+      \strng{authorfullhash}{3fc5b083d748e229d5714c1904867b9c}
+      \field{extraname}{7}
+      \field{sortinit}{B}
+      \field{sortinithash}{d7095fff47cda75ca2589920aae98399}
+      \field{extradate}{7}
+      \field{extradatescope}{labelyear}
+      \field{labeldatesource}{}
+      \true{uniqueprimaryauthor}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{title}{{Scripts and Data for ``Generalists vs Specialists: Who Are the Most Competent Workers?"}}
+      \field{year}{2024}
+      \verb{urlraw}
+      \verb https://github.com/CaoBittencourt/gene-comp
+      \endverb
+      \verb{url}
+      \verb https://github.com/CaoBittencourt/gene-comp
+      \endverb
+    \endentry
+    \entry{repo_intro_career_matching}{online}{}
+      \name{author}{1}{}{%
+        {{un=0,uniquepart=base,hash=3fc5b083d748e229d5714c1904867b9c}{%
+           family={Bittencourt},
+           familyi={B\bibinitperiod},
+           given={Cao},
+           giveni={C\bibinitperiod},
+           givenun=0}}%
+      }
+      \strng{namehash}{3fc5b083d748e229d5714c1904867b9c}
+      \strng{fullhash}{3fc5b083d748e229d5714c1904867b9c}
+      \strng{bibnamehash}{3fc5b083d748e229d5714c1904867b9c}
+      \strng{authorbibnamehash}{3fc5b083d748e229d5714c1904867b9c}
+      \strng{authornamehash}{3fc5b083d748e229d5714c1904867b9c}
+      \strng{authorfullhash}{3fc5b083d748e229d5714c1904867b9c}
+      \field{extraname}{8}
+      \field{sortinit}{B}
+      \field{sortinithash}{d7095fff47cda75ca2589920aae98399}
+      \field{extradate}{8}
+      \field{extradatescope}{labelyear}
+      \field{labeldatesource}{}
+      \true{uniqueprimaryauthor}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{title}{{Scripts and Data for ``Introduction to Quantitative Career Matching: How to Statistically Pick the Right Occupation"}}
+      \field{year}{2024}
+      \verb{urlraw}
+      \verb https://github.com/CaoBittencourt/introduction-matching
+      \endverb
+      \verb{url}
+      \verb https://github.com/CaoBittencourt/introduction-matching
+      \endverb
+    \endentry
+    \entry{bigfive}{inbook}{}
+      \name{author}{2}{}{%
+        {{un=0,uniquepart=base,hash=38ab318f5ba5dc9560fe196c868a8dbb}{%
+           family={Costa},
+           familyi={C\bibinitperiod},
+           given={P.\bibnamedelimi T.\bibnamedelimi Jr.},
+           giveni={P\bibinitperiod\bibinitdelim T\bibinitperiod\bibinitdelim J\bibinitperiod},
+           givenun=0}}%
+        {{un=0,uniquepart=base,hash=22a6fab4ca9a67393061b9d97316bd13}{%
+           family={McCrae},
+           familyi={M\bibinitperiod},
+           given={R.\bibnamedelimi R.},
+           giveni={R\bibinitperiod\bibinitdelim R\bibinitperiod},
+           givenun=0}}%
+      }
+      \name{editor}{3}{}{%
+        {{hash=c4312ef36c7470e5a5e4993c59df3f64}{%
+           family={Boyle},
+           familyi={B\bibinitperiod},
+           given={G.\bibnamedelimi J.},
+           giveni={G\bibinitperiod\bibinitdelim J\bibinitperiod}}}%
+        {{hash=20813ccd7600411626136ef0ed8cbe39}{%
+           family={Matthews},
+           familyi={M\bibinitperiod},
+           given={G.},
+           giveni={G\bibinitperiod}}}%
+        {{hash=a4bcbbadf60ff39bdd9a3473af4b0a03}{%
+           family={Saklofske},
+           familyi={S\bibinitperiod},
+           given={D.\bibnamedelimi H.},
+           giveni={D\bibinitperiod\bibinitdelim H\bibinitperiod}}}%
+      }
+      \list{publisher}{1}{%
+        {Sage Publications}%
+      }
+      \strng{namehash}{7391b7b5b8052d8ff9ff965459292f50}
+      \strng{fullhash}{7391b7b5b8052d8ff9ff965459292f50}
+      \strng{bibnamehash}{7391b7b5b8052d8ff9ff965459292f50}
+      \strng{authorbibnamehash}{7391b7b5b8052d8ff9ff965459292f50}
+      \strng{authornamehash}{7391b7b5b8052d8ff9ff965459292f50}
+      \strng{authorfullhash}{7391b7b5b8052d8ff9ff965459292f50}
+      \strng{editorbibnamehash}{847cf994ca84978804b7ce58b43831c3}
+      \strng{editornamehash}{e47c739f3e0e3a0650fa69a5991f6a43}
+      \strng{editorfullhash}{847cf994ca84978804b7ce58b43831c3}
+      \field{sortinit}{C}
+      \field{sortinithash}{4d103a86280481745c9c897c925753c0}
+      \field{extradatescope}{labelyear}
+      \field{labeldatesource}{}
+      \true{uniqueprimaryauthor}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{chapter}{{The Revised NEO Personality Inventory (NEO-PI-R)}}
+      \field{title}{The SAGE handbook of personality theory and assessment, Vol. 2. Personality measurement and testing}
+      \field{year}{2008}
+      \field{pages}{179\bibrangedash 198}
+      \range{pages}{20}
+    \endentry
+    \entry{tom_behavioral_labor_econ}{article}{}
+      \name{author}{1}{}{%
+        {{un=0,uniquepart=base,hash=1baf3bef1e1e7d01d5a6b203d8f6ee70}{%
+           family={Dohmen},
+           familyi={D\bibinitperiod},
+           given={Thomas},
+           giveni={T\bibinitperiod},
+           givenun=0}}%
+      }
+      \strng{namehash}{1baf3bef1e1e7d01d5a6b203d8f6ee70}
+      \strng{fullhash}{1baf3bef1e1e7d01d5a6b203d8f6ee70}
+      \strng{bibnamehash}{1baf3bef1e1e7d01d5a6b203d8f6ee70}
+      \strng{authorbibnamehash}{1baf3bef1e1e7d01d5a6b203d8f6ee70}
+      \strng{authornamehash}{1baf3bef1e1e7d01d5a6b203d8f6ee70}
+      \strng{authorfullhash}{1baf3bef1e1e7d01d5a6b203d8f6ee70}
+      \field{sortinit}{D}
+      \field{sortinithash}{6f385f66841fb5e82009dc833c761848}
+      \field{extradatescope}{labelyear}
+      \field{labeldatesource}{}
+      \true{uniqueprimaryauthor}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{journaltitle}{Labour Economics}
+      \field{title}{Behavioral labor economics: Advances and future directions}
+      \field{volume}{30}
+      \field{year}{2014}
+      \field{pages}{71\bibrangedash 85}
+      \range{pages}{15}
+    \endentry
+    \entry{gippity2024}{article}{}
+      \name{author}{4}{}{%
+        {{un=0,uniquepart=base,hash=7acbec2d39020460335e73a07de706e4}{%
+           family={Eloundou},
+           familyi={E\bibinitperiod},
+           given={Tyna},
+           giveni={T\bibinitperiod},
+           givenun=0}}%
+        {{un=0,uniquepart=base,hash=fd98cf8f44d45a7d097eec72424a9a4a}{%
+           family={Manning},
+           familyi={M\bibinitperiod},
+           given={Sam},
+           giveni={S\bibinitperiod},
+           givenun=0}}%
+        {{un=0,uniquepart=base,hash=2321e04943bcadb0275819652b980521}{%
+           family={Mishkin},
+           familyi={M\bibinitperiod},
+           given={Pamela},
+           giveni={P\bibinitperiod},
+           givenun=0}}%
+        {{un=0,uniquepart=base,hash=2e01e687f3caab6d764e9e5588261295}{%
+           family={Rock},
+           familyi={R\bibinitperiod},
+           given={Daniel},
+           giveni={D\bibinitperiod},
+           givenun=0}}%
+      }
+      \strng{namehash}{44030746c147dbe174c0315c97f8cf61}
+      \strng{fullhash}{4d37b858190d9085ef0e29abc07dfa89}
+      \strng{bibnamehash}{4d37b858190d9085ef0e29abc07dfa89}
+      \strng{authorbibnamehash}{4d37b858190d9085ef0e29abc07dfa89}
+      \strng{authornamehash}{44030746c147dbe174c0315c97f8cf61}
+      \strng{authorfullhash}{4d37b858190d9085ef0e29abc07dfa89}
+      \field{sortinit}{E}
+      \field{sortinithash}{8da8a182d344d5b9047633dfc0cc9131}
+      \field{extradatescope}{labelyear}
+      \field{labeldatesource}{}
+      \true{uniqueprimaryauthor}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{journaltitle}{Science}
+      \field{number}{6702}
+      \field{title}{GPTs are GPTs: Labor market impact potential of LLMs}
+      \field{volume}{384}
+      \field{year}{2024}
+      \field{pages}{1306\bibrangedash 1308}
+      \range{pages}{3}
+    \endentry
+    \entry{epi}{book}{}
+      \name{author}{2}{}{%
+        {{un=1,uniquepart=given,hash=b029e0d4e8453d5968a22deb02d479e9}{%
+           family={Eysenck},
+           familyi={E\bibinitperiod},
+           given={Hans\bibnamedelima Jürgen},
+           giveni={H\bibinitperiod\bibinitdelim J\bibinitperiod},
+           givenun=1}}%
+        {{un=1,uniquepart=given,hash=5051143535caee48640e4e793957db26}{%
+           family={Eysenck},
+           familyi={E\bibinitperiod},
+           given={Sybil\bibnamedelimb B.\bibnamedelimi G.},
+           giveni={S\bibinitperiod\bibinitdelim B\bibinitperiod\bibinitdelim G\bibinitperiod},
+           givenun=1}}%
+      }
+      \list{publisher}{2}{%
+        {London: Hodder}%
+        {Stoughton}%
+      }
+      \strng{namehash}{6ee42e83b2ee49277addd7722dc95151}
+      \strng{fullhash}{6ee42e83b2ee49277addd7722dc95151}
+      \strng{bibnamehash}{6ee42e83b2ee49277addd7722dc95151}
+      \strng{authorbibnamehash}{6ee42e83b2ee49277addd7722dc95151}
+      \strng{authornamehash}{6ee42e83b2ee49277addd7722dc95151}
+      \strng{authorfullhash}{6ee42e83b2ee49277addd7722dc95151}
+      \field{sortinit}{E}
+      \field{sortinithash}{8da8a182d344d5b9047633dfc0cc9131}
+      \field{extradatescope}{labelyear}
+      \field{labeldatesource}{}
+      \true{uniqueprimaryauthor}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{title}{Manual of the Eysenck Personality Questionnaire}
+      \field{year}{1975}
+    \endentry
+    \entry{holland1997making}{book}{}
+      \name{author}{1}{}{%
+        {{un=0,uniquepart=base,hash=6b0c33ef1e675b5bffe677f1743e656c}{%
+           family={Holland},
+           familyi={H\bibinitperiod},
+           given={John\bibnamedelima L},
+           giveni={J\bibinitperiod\bibinitdelim L\bibinitperiod},
+           givenun=0}}%
+      }
+      \list{publisher}{1}{%
+        {Psychological Assessment Resources}%
+      }
+      \strng{namehash}{6b0c33ef1e675b5bffe677f1743e656c}
+      \strng{fullhash}{6b0c33ef1e675b5bffe677f1743e656c}
+      \strng{bibnamehash}{6b0c33ef1e675b5bffe677f1743e656c}
+      \strng{authorbibnamehash}{6b0c33ef1e675b5bffe677f1743e656c}
+      \strng{authornamehash}{6b0c33ef1e675b5bffe677f1743e656c}
+      \strng{authorfullhash}{6b0c33ef1e675b5bffe677f1743e656c}
+      \field{sortinit}{H}
+      \field{sortinithash}{23a3aa7c24e56cfa16945d55545109b5}
+      \field{extradatescope}{labelyear}
+      \field{labeldatesource}{}
+      \true{uniqueprimaryauthor}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{title}{{Making vocational choices: A theory of vocational personalities and work environments.}}
+      \field{year}{1997}
+    \endentry
+    \entry{ipa}{book}{}
+      \name{author}{1}{}{%
+        {{un=0,uniquepart=base,hash=09bfa6cc666e60040dc93f7d43b69f78}{%
+           family={{International Phonetic Association}},
+           familyi={I\bibinitperiod}}}%
+      }
+      \list{publisher}{1}{%
+        {Cambridge: Cambridge University Press}%
+      }
+      \strng{namehash}{09bfa6cc666e60040dc93f7d43b69f78}
+      \strng{fullhash}{09bfa6cc666e60040dc93f7d43b69f78}
+      \strng{bibnamehash}{09bfa6cc666e60040dc93f7d43b69f78}
+      \strng{authorbibnamehash}{09bfa6cc666e60040dc93f7d43b69f78}
+      \strng{authornamehash}{09bfa6cc666e60040dc93f7d43b69f78}
+      \strng{authorfullhash}{09bfa6cc666e60040dc93f7d43b69f78}
+      \field{sortinit}{I}
+      \field{sortinithash}{8d291c51ee89b6cd86bf5379f0b151d8}
+      \field{extradatescope}{labelyear}
+      \field{labeldatesource}{}
+      \true{uniqueprimaryauthor}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{title}{{Handbook of the International Phonetic Association: A guide to the use of the International Phonetic Alphabet}}
+      \field{year}{1999}
+    \endentry
+    \entry{jehle_reny_micro}{book}{}
+      \name{author}{2}{}{%
+        {{un=0,uniquepart=base,hash=d6af8350e417d68dabca6ce5ae530ee0}{%
+           family={Jehle},
+           familyi={J\bibinitperiod},
+           given={G.},
+           giveni={G\bibinitperiod},
+           givenun=0}}%
+        {{un=0,uniquepart=base,hash=573d0c660548f49f49c2ad7766fc149c}{%
+           family={Reny},
+           familyi={R\bibinitperiod},
+           given={P.},
+           giveni={P\bibinitperiod},
+           givenun=0}}%
+      }
+      \list{publisher}{1}{%
+        {Financial Times Prentice Hall, London}%
+      }
+      \strng{namehash}{ef02dd24d443230ee1e0b1d26c097d98}
+      \strng{fullhash}{ef02dd24d443230ee1e0b1d26c097d98}
+      \strng{bibnamehash}{ef02dd24d443230ee1e0b1d26c097d98}
+      \strng{authorbibnamehash}{ef02dd24d443230ee1e0b1d26c097d98}
+      \strng{authornamehash}{ef02dd24d443230ee1e0b1d26c097d98}
+      \strng{authorfullhash}{ef02dd24d443230ee1e0b1d26c097d98}
+      \field{sortinit}{J}
+      \field{sortinithash}{b2f54a9081ace9966a7cb9413811edb4}
+      \field{extradatescope}{labelyear}
+      \field{labeldatesource}{}
+      \true{uniqueprimaryauthor}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{title}{Advanced Microeconomic Theory}
+      \field{year}{2011}
+    \endentry
+    \entry{lucas_1988}{article}{}
+      \name{author}{1}{}{%
+        {{un=0,uniquepart=base,hash=03c2f49b0d2db428ed94d386078c3f7c}{%
+           family={Lucas},
+           familyi={L\bibinitperiod},
+           given={R.E.},
+           giveni={R\bibinitperiod},
+           givenun=0}}%
+      }
+      \strng{namehash}{03c2f49b0d2db428ed94d386078c3f7c}
+      \strng{fullhash}{03c2f49b0d2db428ed94d386078c3f7c}
+      \strng{bibnamehash}{03c2f49b0d2db428ed94d386078c3f7c}
+      \strng{authorbibnamehash}{03c2f49b0d2db428ed94d386078c3f7c}
+      \strng{authornamehash}{03c2f49b0d2db428ed94d386078c3f7c}
+      \strng{authorfullhash}{03c2f49b0d2db428ed94d386078c3f7c}
+      \field{sortinit}{L}
+      \field{sortinithash}{7c47d417cecb1f4bd38d1825c427a61a}
+      \field{extradatescope}{labelyear}
+      \field{labeldatesource}{}
+      \true{uniqueprimaryauthor}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{journaltitle}{Journal of Monetary Economics}
+      \field{title}{On the mechanics of economic development}
+      \field{volume}{22}
+      \field{year}{1988}
+      \field{pages}{3\bibrangedash 42}
+      \range{pages}{40}
+    \endentry
+    \entry{onet1998data}{online}{}
+      \name{author}{1}{}{%
+        {{hash=542cd90c52616746efdefa2118f486b3}{%
+           family={{National Center for O*NET Development}},
+           familyi={N\bibinitperiod}}}%
+      }
+      \name{shortauthor}{1}{}{%
+        {{un=0,uniquepart=base,hash=48326684b98eef4701ef3b9fb1b6b1e2}{%
+           family={O*NET},
+           familyi={O\bibinitperiod}}}%
+      }
+      \strng{namehash}{48326684b98eef4701ef3b9fb1b6b1e2}
+      \strng{fullhash}{542cd90c52616746efdefa2118f486b3}
+      \strng{bibnamehash}{48326684b98eef4701ef3b9fb1b6b1e2}
+      \strng{authorbibnamehash}{542cd90c52616746efdefa2118f486b3}
+      \strng{authornamehash}{542cd90c52616746efdefa2118f486b3}
+      \strng{authorfullhash}{542cd90c52616746efdefa2118f486b3}
+      \strng{shortauthorbibnamehash}{48326684b98eef4701ef3b9fb1b6b1e2}
+      \strng{shortauthornamehash}{48326684b98eef4701ef3b9fb1b6b1e2}
+      \strng{shortauthorfullhash}{48326684b98eef4701ef3b9fb1b6b1e2}
+      \field{extraname}{1}
+      \field{sortinit}{N}
+      \field{sortinithash}{22369a73d5f88983a108b63f07f37084}
+      \field{extradatescope}{labelyear}
+      \field{labeldatesource}{}
+      \true{uniqueprimaryauthor}
+      \field{labelnamesource}{shortauthor}
+      \field{labeltitlesource}{title}
+      \field{title}{{O*NET 98. O*NET Transitional Databases. O*NET Resource Center.}}
+      \field{year}{1998}
+      \verb{urlraw}
+      \verb https://www.onetcenter.org/db_transitional.html
+      \endverb
+      \verb{url}
+      \verb https://www.onetcenter.org/db_transitional.html
+      \endverb
+    \endentry
+    \entry{onet2023data}{online}{}
+      \name{author}{1}{}{%
+        {{hash=542cd90c52616746efdefa2118f486b3}{%
+           family={{National Center for O*NET Development}},
+           familyi={N\bibinitperiod}}}%
+      }
+      \name{shortauthor}{1}{}{%
+        {{un=0,uniquepart=base,hash=48326684b98eef4701ef3b9fb1b6b1e2}{%
+           family={O*NET},
+           familyi={O\bibinitperiod}}}%
+      }
+      \strng{namehash}{48326684b98eef4701ef3b9fb1b6b1e2}
+      \strng{fullhash}{542cd90c52616746efdefa2118f486b3}
+      \strng{bibnamehash}{48326684b98eef4701ef3b9fb1b6b1e2}
+      \strng{authorbibnamehash}{542cd90c52616746efdefa2118f486b3}
+      \strng{authornamehash}{542cd90c52616746efdefa2118f486b3}
+      \strng{authorfullhash}{542cd90c52616746efdefa2118f486b3}
+      \strng{shortauthorbibnamehash}{48326684b98eef4701ef3b9fb1b6b1e2}
+      \strng{shortauthornamehash}{48326684b98eef4701ef3b9fb1b6b1e2}
+      \strng{shortauthorfullhash}{48326684b98eef4701ef3b9fb1b6b1e2}
+      \field{extraname}{2}
+      \field{sortinit}{N}
+      \field{sortinithash}{22369a73d5f88983a108b63f07f37084}
+      \field{extradatescope}{labelyear}
+      \field{labeldatesource}{}
+      \true{uniqueprimaryauthor}
+      \field{labelnamesource}{shortauthor}
+      \field{labeltitlesource}{title}
+      \field{title}{{O*NET 27.3. O*NET Database Releases Archive. O*NET Resource Center.}}
+      \field{year}{2023}
+      \verb{urlraw}
+      \verb https://www.onetcenter.org/db_releases.html
+      \endverb
+      \verb{url}
+      \verb https://www.onetcenter.org/db_releases.html
+      \endverb
+    \endentry
+    \entry{onet2024about}{online}{}
+      \name{author}{1}{}{%
+        {{hash=542cd90c52616746efdefa2118f486b3}{%
+           family={{National Center for O*NET Development}},
+           familyi={N\bibinitperiod}}}%
+      }
+      \name{shortauthor}{1}{}{%
+        {{un=0,uniquepart=base,hash=48326684b98eef4701ef3b9fb1b6b1e2}{%
+           family={O*NET},
+           familyi={O\bibinitperiod}}}%
+      }
+      \strng{namehash}{48326684b98eef4701ef3b9fb1b6b1e2}
+      \strng{fullhash}{542cd90c52616746efdefa2118f486b3}
+      \strng{bibnamehash}{48326684b98eef4701ef3b9fb1b6b1e2}
+      \strng{authorbibnamehash}{542cd90c52616746efdefa2118f486b3}
+      \strng{authornamehash}{542cd90c52616746efdefa2118f486b3}
+      \strng{authorfullhash}{542cd90c52616746efdefa2118f486b3}
+      \strng{shortauthorbibnamehash}{48326684b98eef4701ef3b9fb1b6b1e2}
+      \strng{shortauthornamehash}{48326684b98eef4701ef3b9fb1b6b1e2}
+      \strng{shortauthorfullhash}{48326684b98eef4701ef3b9fb1b6b1e2}
+      \field{extraname}{3}
+      \field{sortinit}{N}
+      \field{sortinithash}{22369a73d5f88983a108b63f07f37084}
+      \field{extradate}{1}
+      \field{extradatescope}{labelyear}
+      \field{labeldatesource}{}
+      \true{uniqueprimaryauthor}
+      \field{labelnamesource}{shortauthor}
+      \field{labeltitlesource}{title}
+      \field{title}{{About O*NET. O*NET Resource Center.}}
+      \field{year}{2024}
+      \verb{urlraw}
+      \verb https://www.onetcenter.org/overview.html
+      \endverb
+      \verb{url}
+      \verb https://www.onetcenter.org/overview.html
+      \endverb
+    \endentry
+    \entry{onet_pilot}{online}{}
+      \name{author}{1}{}{%
+        {{hash=542cd90c52616746efdefa2118f486b3}{%
+           family={{National Center for O*NET Development}},
+           familyi={N\bibinitperiod}}}%
+      }
+      \name{shortauthor}{1}{}{%
+        {{un=0,uniquepart=base,hash=48326684b98eef4701ef3b9fb1b6b1e2}{%
+           family={O*NET},
+           familyi={O\bibinitperiod}}}%
+      }
+      \strng{namehash}{48326684b98eef4701ef3b9fb1b6b1e2}
+      \strng{fullhash}{542cd90c52616746efdefa2118f486b3}
+      \strng{bibnamehash}{48326684b98eef4701ef3b9fb1b6b1e2}
+      \strng{authorbibnamehash}{542cd90c52616746efdefa2118f486b3}
+      \strng{authornamehash}{542cd90c52616746efdefa2118f486b3}
+      \strng{authorfullhash}{542cd90c52616746efdefa2118f486b3}
+      \strng{shortauthorbibnamehash}{48326684b98eef4701ef3b9fb1b6b1e2}
+      \strng{shortauthornamehash}{48326684b98eef4701ef3b9fb1b6b1e2}
+      \strng{shortauthorfullhash}{48326684b98eef4701ef3b9fb1b6b1e2}
+      \field{extraname}{4}
+      \field{sortinit}{N}
+      \field{sortinithash}{22369a73d5f88983a108b63f07f37084}
+      \field{extradate}{2}
+      \field{extradatescope}{labelyear}
+      \field{labeldatesource}{}
+      \true{uniqueprimaryauthor}
+      \field{labelnamesource}{shortauthor}
+      \field{labeltitlesource}{title}
+      \field{title}{{Airline Pilots, Copilots, and Flight Engineers}}
+      \field{year}{2024}
+      \verb{urlraw}
+      \verb https://www.onetonline.org/link/summary/53-2011.00
+      \endverb
+      \verb{url}
+      \verb https://www.onetonline.org/link/summary/53-2011.00
+      \endverb
+    \endentry
+    \entry{onet_art}{online}{}
+      \name{author}{1}{}{%
+        {{hash=542cd90c52616746efdefa2118f486b3}{%
+           family={{National Center for O*NET Development}},
+           familyi={N\bibinitperiod}}}%
+      }
+      \name{shortauthor}{1}{}{%
+        {{un=0,uniquepart=base,hash=48326684b98eef4701ef3b9fb1b6b1e2}{%
+           family={O*NET},
+           familyi={O\bibinitperiod}}}%
+      }
+      \strng{namehash}{48326684b98eef4701ef3b9fb1b6b1e2}
+      \strng{fullhash}{542cd90c52616746efdefa2118f486b3}
+      \strng{bibnamehash}{48326684b98eef4701ef3b9fb1b6b1e2}
+      \strng{authorbibnamehash}{542cd90c52616746efdefa2118f486b3}
+      \strng{authornamehash}{542cd90c52616746efdefa2118f486b3}
+      \strng{authorfullhash}{542cd90c52616746efdefa2118f486b3}
+      \strng{shortauthorbibnamehash}{48326684b98eef4701ef3b9fb1b6b1e2}
+      \strng{shortauthornamehash}{48326684b98eef4701ef3b9fb1b6b1e2}
+      \strng{shortauthorfullhash}{48326684b98eef4701ef3b9fb1b6b1e2}
+      \field{extraname}{5}
+      \field{sortinit}{N}
+      \field{sortinithash}{22369a73d5f88983a108b63f07f37084}
+      \field{extradate}{3}
+      \field{extradatescope}{labelyear}
+      \field{labeldatesource}{}
+      \true{uniqueprimaryauthor}
+      \field{labelnamesource}{shortauthor}
+      \field{labeltitlesource}{title}
+      \field{title}{{Fine Artists, Including Painters, Sculptors, and Illustrators}}
+      \field{year}{2024}
+      \verb{urlraw}
+      \verb https://www.onetonline.org/link/summary/27-1013.00
+      \endverb
+      \verb{url}
+      \verb https://www.onetonline.org/link/summary/27-1013.00
+      \endverb
+    \endentry
+    \entry{onet_publications}{online}{}
+      \name{author}{1}{}{%
+        {{hash=542cd90c52616746efdefa2118f486b3}{%
+           family={{National Center for O*NET Development}},
+           familyi={N\bibinitperiod}}}%
+      }
+      \name{shortauthor}{1}{}{%
+        {{un=0,uniquepart=base,hash=48326684b98eef4701ef3b9fb1b6b1e2}{%
+           family={O*NET},
+           familyi={O\bibinitperiod}}}%
+      }
+      \strng{namehash}{48326684b98eef4701ef3b9fb1b6b1e2}
+      \strng{fullhash}{542cd90c52616746efdefa2118f486b3}
+      \strng{bibnamehash}{48326684b98eef4701ef3b9fb1b6b1e2}
+      \strng{authorbibnamehash}{542cd90c52616746efdefa2118f486b3}
+      \strng{authornamehash}{542cd90c52616746efdefa2118f486b3}
+      \strng{authorfullhash}{542cd90c52616746efdefa2118f486b3}
+      \strng{shortauthorbibnamehash}{48326684b98eef4701ef3b9fb1b6b1e2}
+      \strng{shortauthornamehash}{48326684b98eef4701ef3b9fb1b6b1e2}
+      \strng{shortauthorfullhash}{48326684b98eef4701ef3b9fb1b6b1e2}
+      \field{extraname}{6}
+      \field{sortinit}{N}
+      \field{sortinithash}{22369a73d5f88983a108b63f07f37084}
+      \field{extradate}{4}
+      \field{extradatescope}{labelyear}
+      \field{labeldatesource}{}
+      \true{uniqueprimaryauthor}
+      \field{labelnamesource}{shortauthor}
+      \field{labeltitlesource}{title}
+      \field{title}{{Reports and Documents. O*NET Resource Center}}
+      \field{year}{2024}
+      \verb{urlraw}
+      \verb https://www.onetcenter.org/research.html
+      \endverb
+      \verb{url}
+      \verb https://www.onetcenter.org/research.html
+      \endverb
+    \endentry
+    \entry{onet_surgeon}{online}{}
+      \name{author}{1}{}{%
+        {{hash=542cd90c52616746efdefa2118f486b3}{%
+           family={{National Center for O*NET Development}},
+           familyi={N\bibinitperiod}}}%
+      }
+      \name{shortauthor}{1}{}{%
+        {{un=0,uniquepart=base,hash=48326684b98eef4701ef3b9fb1b6b1e2}{%
+           family={O*NET},
+           familyi={O\bibinitperiod}}}%
+      }
+      \strng{namehash}{48326684b98eef4701ef3b9fb1b6b1e2}
+      \strng{fullhash}{542cd90c52616746efdefa2118f486b3}
+      \strng{bibnamehash}{48326684b98eef4701ef3b9fb1b6b1e2}
+      \strng{authorbibnamehash}{542cd90c52616746efdefa2118f486b3}
+      \strng{authornamehash}{542cd90c52616746efdefa2118f486b3}
+      \strng{authorfullhash}{542cd90c52616746efdefa2118f486b3}
+      \strng{shortauthorbibnamehash}{48326684b98eef4701ef3b9fb1b6b1e2}
+      \strng{shortauthornamehash}{48326684b98eef4701ef3b9fb1b6b1e2}
+      \strng{shortauthorfullhash}{48326684b98eef4701ef3b9fb1b6b1e2}
+      \field{extraname}{7}
+      \field{sortinit}{N}
+      \field{sortinithash}{22369a73d5f88983a108b63f07f37084}
+      \field{extradate}{5}
+      \field{extradatescope}{labelyear}
+      \field{labeldatesource}{}
+      \true{uniqueprimaryauthor}
+      \field{labelnamesource}{shortauthor}
+      \field{labeltitlesource}{title}
+      \field{title}{{Surgeons, All Other}}
+      \field{year}{2024}
+      \verb{urlraw}
+      \verb https://www.onetonline.org/link/summary/29-1249.00
+      \endverb
+      \verb{url}
+      \verb https://www.onetonline.org/link/summary/29-1249.00
+      \endverb
+    \endentry
+    \entry{nelson_phelps_1966}{article}{}
+      \name{author}{2}{}{%
+        {{un=0,uniquepart=base,hash=c5b45bf7517b3cd30d8676e7f6aab95f}{%
+           family={Nelson},
+           familyi={N\bibinitperiod},
+           given={R.\bibnamedelimi R.},
+           giveni={R\bibinitperiod\bibinitdelim R\bibinitperiod},
+           givenun=0}}%
+        {{un=0,uniquepart=base,hash=932dcfc291a67f09e260b966c1434970}{%
+           family={Phelps},
+           familyi={P\bibinitperiod},
+           given={E.\bibnamedelimi S.},
+           giveni={E\bibinitperiod\bibinitdelim S\bibinitperiod},
+           givenun=0}}%
+      }
+      \strng{namehash}{58e7e88dff8d09a18769136f1275a07e}
+      \strng{fullhash}{58e7e88dff8d09a18769136f1275a07e}
+      \strng{bibnamehash}{58e7e88dff8d09a18769136f1275a07e}
+      \strng{authorbibnamehash}{58e7e88dff8d09a18769136f1275a07e}
+      \strng{authornamehash}{58e7e88dff8d09a18769136f1275a07e}
+      \strng{authorfullhash}{58e7e88dff8d09a18769136f1275a07e}
+      \field{sortinit}{N}
+      \field{sortinithash}{22369a73d5f88983a108b63f07f37084}
+      \field{extradatescope}{labelyear}
+      \field{labeldatesource}{}
+      \true{uniqueprimaryauthor}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{journaltitle}{The American Economic Review}
+      \field{number}{1}
+      \field{title}{Investment in humans, technological diffusion, and economic growth.}
+      \field{volume}{56}
+      \field{year}{1966}
+      \field{pages}{69\bibrangedash 75}
+      \range{pages}{7}
+    \endentry
+    \entry{stanford_binet5}{book}{}
+      \name{author}{1}{}{%
+        {{un=0,uniquepart=base,hash=d3b2f8cd0c7fb75613ef6d5fbd8132b5}{%
+           family={Roid},
+           familyi={R\bibinitperiod},
+           given={G.\bibnamedelimi H.},
+           giveni={G\bibinitperiod\bibinitdelim H\bibinitperiod},
+           givenun=0}}%
+      }
+      \list{publisher}{1}{%
+        {Itasca: Riverside Publishing}%
+      }
+      \strng{namehash}{d3b2f8cd0c7fb75613ef6d5fbd8132b5}
+      \strng{fullhash}{d3b2f8cd0c7fb75613ef6d5fbd8132b5}
+      \strng{bibnamehash}{d3b2f8cd0c7fb75613ef6d5fbd8132b5}
+      \strng{authorbibnamehash}{d3b2f8cd0c7fb75613ef6d5fbd8132b5}
+      \strng{authornamehash}{d3b2f8cd0c7fb75613ef6d5fbd8132b5}
+      \strng{authorfullhash}{d3b2f8cd0c7fb75613ef6d5fbd8132b5}
+      \field{sortinit}{R}
+      \field{sortinithash}{5e1c39a9d46ffb6bebd8f801023a9486}
+      \field{extradatescope}{labelyear}
+      \field{labeldatesource}{}
+      \true{uniqueprimaryauthor}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{title}{Stanford-Binet Intelligence Scales, Fifth Edition}
+      \field{year}{2012}
+    \endentry
+    \entry{romer_macro}{book}{}
+      \name{author}{1}{}{%
+        {{un=1,uniquepart=given,hash=195992cee97f71c78cff99d54d74edbd}{%
+           family={Romer},
+           familyi={R\bibinitperiod},
+           given={David},
+           giveni={D\bibinitperiod},
+           givenun=1}}%
+      }
+      \list{publisher}{1}{%
+        {New York: New York: McGraw-Hill/Irwin}%
+      }
+      \strng{namehash}{195992cee97f71c78cff99d54d74edbd}
+      \strng{fullhash}{195992cee97f71c78cff99d54d74edbd}
+      \strng{bibnamehash}{195992cee97f71c78cff99d54d74edbd}
+      \strng{authorbibnamehash}{195992cee97f71c78cff99d54d74edbd}
+      \strng{authornamehash}{195992cee97f71c78cff99d54d74edbd}
+      \strng{authorfullhash}{195992cee97f71c78cff99d54d74edbd}
+      \field{sortinit}{R}
+      \field{sortinithash}{5e1c39a9d46ffb6bebd8f801023a9486}
+      \field{extradatescope}{labelyear}
+      \field{labeldatesource}{}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{title}{Advanced macroeconomics, 2nd edition}
+      \field{year}{2012}
+    \endentry
+    \entry{romer_human_capital}{article}{}
+      \name{author}{1}{}{%
+        {{un=1,uniquepart=given,hash=9fef23c81fd49d969a17f8db3046f51f}{%
+           family={Romer},
+           familyi={R\bibinitperiod},
+           given={Paul\bibnamedelima M.},
+           giveni={P\bibinitperiod\bibinitdelim M\bibinitperiod},
+           givenun=1}}%
+      }
+      \strng{namehash}{9fef23c81fd49d969a17f8db3046f51f}
+      \strng{fullhash}{9fef23c81fd49d969a17f8db3046f51f}
+      \strng{bibnamehash}{9fef23c81fd49d969a17f8db3046f51f}
+      \strng{authorbibnamehash}{9fef23c81fd49d969a17f8db3046f51f}
+      \strng{authornamehash}{9fef23c81fd49d969a17f8db3046f51f}
+      \strng{authorfullhash}{9fef23c81fd49d969a17f8db3046f51f}
+      \field{sortinit}{R}
+      \field{sortinithash}{5e1c39a9d46ffb6bebd8f801023a9486}
+      \field{extradatescope}{labelyear}
+      \field{labeldatesource}{}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{journaltitle}{National Bureau of Economic Research}
+      \field{title}{Human capital and growth: theory and evidence}
+      \field{year}{1989}
+    \endentry
+    \entry{mulligan_sala_1995}{book}{}
+      \name{author}{2}{}{%
+        {{un=0,uniquepart=base,hash=c0498e37ce48a2e5489951c991717ee8}{%
+           family={Sala-i-Martin},
+           familyi={S\bibinithyphendelim i\bibinithyphendelim M\bibinitperiod},
+           given={X.},
+           giveni={X\bibinitperiod},
+           givenun=0}}%
+        {{un=0,uniquepart=base,hash=f59a68c4bd9875f8b712d507f29d4dc3}{%
+           family={Mulligan},
+           familyi={M\bibinitperiod},
+           given={C.\bibnamedelimi B.},
+           giveni={C\bibinitperiod\bibinitdelim B\bibinitperiod},
+           givenun=0}}%
+      }
+      \list{publisher}{1}{%
+        {New Haven, Connecticut: Yale University.}%
+      }
+      \strng{namehash}{6812d1e5acfd19726ebd80b1644c34ea}
+      \strng{fullhash}{6812d1e5acfd19726ebd80b1644c34ea}
+      \strng{bibnamehash}{6812d1e5acfd19726ebd80b1644c34ea}
+      \strng{authorbibnamehash}{6812d1e5acfd19726ebd80b1644c34ea}
+      \strng{authornamehash}{6812d1e5acfd19726ebd80b1644c34ea}
+      \strng{authorfullhash}{6812d1e5acfd19726ebd80b1644c34ea}
+      \field{sortinit}{S}
+      \field{sortinithash}{b164b07b29984b41daf1e85279fbc5ab}
+      \field{extradatescope}{labelyear}
+      \field{labeldatesource}{}
+      \true{uniqueprimaryauthor}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{title}{Measuring aggregate human capital}
+      \field{year}{1995}
+    \endentry
+    \entry{schein1993careeranchors}{book}{}
+      \name{author}{1}{}{%
+        {{un=0,uniquepart=base,hash=e42d1c85fa97296c41f3ee2134e4569b}{%
+           family={Schein},
+           familyi={S\bibinitperiod},
+           given={E.\bibnamedelimi H},
+           giveni={E\bibinitperiod\bibinitdelim H\bibinitperiod},
+           givenun=0}}%
+      }
+      \list{publisher}{1}{%
+        {London, Pfeiffer \& Company}%
+      }
+      \strng{namehash}{e42d1c85fa97296c41f3ee2134e4569b}
+      \strng{fullhash}{e42d1c85fa97296c41f3ee2134e4569b}
+      \strng{bibnamehash}{e42d1c85fa97296c41f3ee2134e4569b}
+      \strng{authorbibnamehash}{e42d1c85fa97296c41f3ee2134e4569b}
+      \strng{authornamehash}{e42d1c85fa97296c41f3ee2134e4569b}
+      \strng{authorfullhash}{e42d1c85fa97296c41f3ee2134e4569b}
+      \field{sortinit}{S}
+      \field{sortinithash}{b164b07b29984b41daf1e85279fbc5ab}
+      \field{extradatescope}{labelyear}
+      \field{labeldatesource}{}
+      \true{uniqueprimaryauthor}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{title}{{Career Anchors -- Discovering your real values}}
+      \field{year}{1993}
+    \endentry
+    \entry{schütt_human_capital}{book}{}
+      \name{author}{1}{}{%
+        {{un=0,uniquepart=base,hash=aac8af2dcbcaf581e3118843670b867a}{%
+           family={Schütt},
+           familyi={S\bibinitperiod},
+           given={F.},
+           giveni={F\bibinitperiod},
+           givenun=0}}%
+      }
+      \list{publisher}{1}{%
+        {Bremen: University of Bremen}%
+      }
+      \strng{namehash}{aac8af2dcbcaf581e3118843670b867a}
+      \strng{fullhash}{aac8af2dcbcaf581e3118843670b867a}
+      \strng{bibnamehash}{aac8af2dcbcaf581e3118843670b867a}
+      \strng{authorbibnamehash}{aac8af2dcbcaf581e3118843670b867a}
+      \strng{authornamehash}{aac8af2dcbcaf581e3118843670b867a}
+      \strng{authorfullhash}{aac8af2dcbcaf581e3118843670b867a}
+      \field{sortinit}{S}
+      \field{sortinithash}{b164b07b29984b41daf1e85279fbc5ab}
+      \field{extradatescope}{labelyear}
+      \field{labeldatesource}{}
+      \true{uniqueprimaryauthor}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{title}{The Importance of Human Capital for Economic Growth}
+      \field{year}{2003}
+    \endentry
+    \entry{uhr_et_al_2020}{article}{}
+      \name{author}{5}{}{%
+        {{un=0,uniquepart=base,hash=939b720e240351bcf09270981041218f}{%
+           family={Uhr},
+           familyi={U\bibinitperiod},
+           given={Daniel\bibnamedelimb de\bibnamedelimb Abreu\bibnamedelima Pereira},
+           giveni={D\bibinitperiod\bibinitdelim d\bibinitperiod\bibinitdelim A\bibinitperiod\bibinitdelim P\bibinitperiod},
+           givenun=0}}%
+        {{un=0,uniquepart=base,hash=6d0c2fa86f9992b25166268567df2642}{%
+           family={Paula},
+           familyi={P\bibinitperiod},
+           given={Silvio\bibnamedelimb da\bibnamedelima Rosa},
+           giveni={S\bibinitperiod\bibinitdelim d\bibinitperiod\bibinitdelim R\bibinitperiod},
+           givenun=0}}%
+        {{un=0,uniquepart=base,hash=9559cc258912e4905451b8fe48a69a80}{%
+           family={Ferreira},
+           familyi={F\bibinitperiod},
+           given={Mariana\bibnamedelima Fialho},
+           giveni={M\bibinitperiod\bibinitdelim F\bibinitperiod},
+           givenun=0}}%
+        {{un=0,uniquepart=base,hash=7f35c33e0cdc51d49f835661045403af}{%
+           family={Passos},
+           familyi={P\bibinitperiod},
+           given={Marcelo\bibnamedelimb de\bibnamedelima Oliveira},
+           giveni={M\bibinitperiod\bibinitdelim d\bibinitperiod\bibinitdelim O\bibinitperiod},
+           givenun=0}}%
+        {{un=0,uniquepart=base,hash=5c949333f551f9e907bf90533552b496}{%
+           family={Uhr},
+           familyi={U\bibinitperiod},
+           given={Julia\bibnamedelimb Gallego\bibnamedelima Ziero},
+           giveni={J\bibinitperiod\bibinitdelim G\bibinitperiod\bibinitdelim Z\bibinitperiod},
+           givenun=0}}%
+      }
+      \strng{namehash}{addfe374345961de49c64a75405febc4}
+      \strng{fullhash}{43133f4fcde6a988ea4a19930da7c763}
+      \strng{bibnamehash}{43133f4fcde6a988ea4a19930da7c763}
+      \strng{authorbibnamehash}{43133f4fcde6a988ea4a19930da7c763}
+      \strng{authornamehash}{addfe374345961de49c64a75405febc4}
+      \strng{authorfullhash}{43133f4fcde6a988ea4a19930da7c763}
+      \field{sortinit}{U}
+      \field{sortinithash}{6901a00e45705986ee5e7ca9fd39adca}
+      \field{extradatescope}{labelyear}
+      \field{labeldatesource}{}
+      \true{uniqueprimaryauthor}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{journaltitle}{Revista Brasileira de Economia}
+      \field{number}{1}
+      \field{title}{Economic Growth Channels From Human Capital: A Dynamic Panel Analysis for Brazil}
+      \field{volume}{74}
+      \field{year}{2020}
+      \field{pages}{95\bibrangedash 118}
+      \range{pages}{24}
+    \endentry
+    \entry{bls2018soc}{online}{}
+      \name{author}{1}{}{%
+        {{hash=1dd47a822521d43ebc6c17a6a2917cc6}{%
+           family={{U.S. Bureau of Labor Statistics}},
+           familyi={U\bibinitperiod}}}%
+      }
+      \name{shortauthor}{1}{}{%
+        {{un=0,uniquepart=base,hash=7219d59ab850d03befc2c446ff3f604b}{%
+           family={BLS},
+           familyi={B\bibinitperiod}}}%
+      }
+      \strng{namehash}{7219d59ab850d03befc2c446ff3f604b}
+      \strng{fullhash}{1dd47a822521d43ebc6c17a6a2917cc6}
+      \strng{bibnamehash}{7219d59ab850d03befc2c446ff3f604b}
+      \strng{authorbibnamehash}{1dd47a822521d43ebc6c17a6a2917cc6}
+      \strng{authornamehash}{1dd47a822521d43ebc6c17a6a2917cc6}
+      \strng{authorfullhash}{1dd47a822521d43ebc6c17a6a2917cc6}
+      \strng{shortauthorbibnamehash}{7219d59ab850d03befc2c446ff3f604b}
+      \strng{shortauthornamehash}{7219d59ab850d03befc2c446ff3f604b}
+      \strng{shortauthorfullhash}{7219d59ab850d03befc2c446ff3f604b}
+      \field{sortinit}{U}
+      \field{sortinithash}{6901a00e45705986ee5e7ca9fd39adca}
+      \field{extradatescope}{labelyear}
+      \field{labeldatesource}{}
+      \true{uniqueprimaryauthor}
+      \field{labelnamesource}{shortauthor}
+      \field{labeltitlesource}{title}
+      \field{title}{{2018 SOC System. About SOC.}}
+      \field{year}{2018}
+      \verb{urlraw}
+      \verb https://www.bls.gov/soc/2018/#materials
+      \endverb
+      \verb{url}
+      \verb https://www.bls.gov/soc/2018/#materials
+      \endverb
+    \endentry
+    \entry{wisc5}{book}{}
+      \name{author}{1}{}{%
+        {{un=0,uniquepart=base,hash=1ec51a63687697c126932783dcc23ae7}{%
+           family={Wechsler},
+           familyi={W\bibinitperiod},
+           given={D.},
+           giveni={D\bibinitperiod},
+           givenun=0}}%
+      }
+      \list{publisher}{1}{%
+        {Bloomington: Pearson}%
+      }
+      \strng{namehash}{1ec51a63687697c126932783dcc23ae7}
+      \strng{fullhash}{1ec51a63687697c126932783dcc23ae7}
+      \strng{bibnamehash}{1ec51a63687697c126932783dcc23ae7}
+      \strng{authorbibnamehash}{1ec51a63687697c126932783dcc23ae7}
+      \strng{authornamehash}{1ec51a63687697c126932783dcc23ae7}
+      \strng{authorfullhash}{1ec51a63687697c126932783dcc23ae7}
+      \field{sortinit}{W}
+      \field{sortinithash}{4315d78024d0cea9b57a0c6f0e35ed0d}
+      \field{extradatescope}{labelyear}
+      \field{labeldatesource}{}
+      \true{uniqueprimaryauthor}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{title}{Wechsler Intelligence Scale for Children, Fifth Edition}
+      \field{year}{2014}
+    \endentry
+    \entry{winter_behavioral_labor_econ}{article}{}
+      \name{author}{1}{}{%
+        {{un=0,uniquepart=base,hash=31244b1f8f768bf821b3170002577e52}{%
+           family={Winter-Ebmer},
+           familyi={W\bibinithyphendelim E\bibinitperiod},
+           given={Rudolf},
+           giveni={R\bibinitperiod},
+           givenun=0}}%
+      }
+      \strng{namehash}{31244b1f8f768bf821b3170002577e52}
+      \strng{fullhash}{31244b1f8f768bf821b3170002577e52}
+      \strng{bibnamehash}{31244b1f8f768bf821b3170002577e52}
+      \strng{authorbibnamehash}{31244b1f8f768bf821b3170002577e52}
+      \strng{authornamehash}{31244b1f8f768bf821b3170002577e52}
+      \strng{authorfullhash}{31244b1f8f768bf821b3170002577e52}
+      \field{sortinit}{W}
+      \field{sortinithash}{4315d78024d0cea9b57a0c6f0e35ed0d}
+      \field{extradatescope}{labelyear}
+      \field{labeldatesource}{}
+      \true{uniqueprimaryauthor}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{journaltitle}{Labour Economics}
+      \field{title}{What is (not) behavioural in labour economics?}
+      \field{volume}{30}
+      \field{year}{2014}
+      \field{pages}{86\bibrangedash 87}
+      \range{pages}{2}
+    \endentry
+  \enddatalist
+\endrefsection
+\endinput
+
