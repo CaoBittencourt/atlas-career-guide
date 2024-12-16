@@ -202,21 +202,10 @@ test_comp <- function() {
 
 # endregion
 # region: run all tests
-tests.run <- function() {
-  list(
-    aeq = test_aeq(),
-    gene = test_gene(),
-    comp = test_comp()
-  ) |>
-    lapply(
-      function(submodule) {
-        submodule |>
-          unlist() |>
-          all()
-      }
-    )
-}
-
-tests.run()
+util$test$tests.run(list(
+  aeq = test_aeq,
+  gene = test_gene,
+  comp = test_comp
+))
 
 # endregion

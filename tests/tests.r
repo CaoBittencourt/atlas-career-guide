@@ -4,10 +4,9 @@ modular::project.options("atlas")
 
 # run all test files
 getOption("atlas.root") |>
-  file.path("tests") |>
+  file.path("tests", "test-files") |>
   list.files(full.names = T) |>
   str_subset(".r$") |>
-  str_subset("tests.r$", negate = T) |>
   lapply(function(file) {
     source(file)$value
   }) |>

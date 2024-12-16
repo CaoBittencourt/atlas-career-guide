@@ -130,20 +130,9 @@ test_Phi <- function() {
 
 # endregion
 # region: run all tests
-tests.run <- function() {
-  list(
-    macroflex = test_Phi()
-    # , microflex = test_phi(),
-  ) |>
-    lapply(
-      function(submodule) {
-        submodule |>
-          unlist() |>
-          all()
-      }
-    )
-}
-
-tests.run()
+util$test$tests.run(list(
+  macroflex = test_Phi
+  # ,  microflex = test_phi
+))
 
 # endregion

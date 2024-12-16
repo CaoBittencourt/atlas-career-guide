@@ -1,6 +1,6 @@
 # setup
 # region: modules
-modular::project.options('atlas')
+modular::project.options("atlas")
 
 # endregion
 # region: imports
@@ -397,4 +397,3 @@ df_correlations |>
   )
 
 # endregion
-# use competence metrics 2 or 5 (both are equivalent)

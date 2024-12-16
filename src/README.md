@@ -25,7 +25,8 @@ project.options(
     atlas.src = 'src',
     atlas.mod = 'src/mod',
     box.path = 'src',
-    atlas.data = 'data'
+    atlas.data = 'data',
+    atlas.occupations = 'data/occupations/df_occupations_2022.csv',
   ),
   root.name = '.atlas'
 )
@@ -34,8 +35,7 @@ project.options(
 This will conditionally create root and options files, if they do not exist; and load them otherwise. 
 Alternatively, one might simply write
 ```
-library(modular)
-project.options(project.name = 'atlas')
+modular::project.options(project.name = 'atlas')
 ```
 or, even,
 ```
