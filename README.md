@@ -5,7 +5,7 @@ To setup this development environment with all its dependencies, run
 ```
 git clone https://github.com/CaoBittencourt/atlas-career-guide/ atlas
 cd atlas
-bash /env/setup.sh
+bash env/setup.sh
 ```
 
 ## Structure
