@@ -28,6 +28,7 @@ features
 
 finished
 -------------------------------------
+[x] improved testing framework
 [x] construct dependency matrix
     - then cluster (with efa?)
     - use this to determine modules

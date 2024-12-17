@@ -129,10 +129,88 @@ test_Phi <- function() {
 }
 
 # endregion
+# region: microflex submodule
+test_phi <- function() {
+  list(
+    "invalid skill set matrices" = list(
+      "non-numeric skill sets" =
+        micro$kflex$phi(df_occupations) |>
+          util$test$is.error(),
+      "skill sets outside the unit interval" =
+        df_occupations |>
+          select(names(df_skill_mtx)) |>
+          micro$kflex$phi() |>
+          util$test$is.error(),
+      "valid skill set data frame" =
+        micro$kflex$phi(df_skill_mtx) |>
+          util$test$is.error() |>
+          isFALSE(),
+      "valid skill set matrix" =
+        df_skill_mtx |>
+          as.matrix() |>
+          micro$kflex$phi() |>
+          util$test$is.error() |>
+          isFALSE()
+    ),
+    "invalid weights" = list(
+      "null weights" =
+        df_skill_mtx |>
+          micro$kflex$phi(
+            weights = NULL
+          ) |>
+          util$test$is.error() |>
+          isFALSE(),
+      "invalid weight length" = list(
+        df_skill_mtx |>
+          micro$kflex$phi(
+            weights = rep(1, 1000)
+          ) |>
+          util$test$is.error(),
+        df_skill_mtx |>
+          micro$kflex$phi(
+            weights = rep(1, 1)
+          ) |>
+          util$test$is.error()
+      )
+    ),
+    "output is in the unit interval" = list(
+      all(
+        df_skill_mtx |> micro$kflex$phi() >= 0,
+        df_skill_mtx |> micro$kflex$phi() <= 1
+      ),
+      all(
+        df_skill_mtx |> as.matrix() |> micro$kflex$phi() >= 0,
+        df_skill_mtx |> as.matrix() |> micro$kflex$phi() <= 1
+      ),
+      all(
+        df_skill_mtx |> micro$kflex$phi(weights = df_occupations$employment_norm) >= 0,
+        df_skill_mtx |> micro$kflex$phi(weights = df_occupations$employment_norm) <= 1
+      ),
+      all(
+        df_skill_mtx |> as.matrix() |> micro$kflex$phi(weights = df_occupations$employment_norm) >= 0,
+        df_skill_mtx |> as.matrix() |> micro$kflex$phi(weights = df_occupations$employment_norm) <= 1
+      )
+    ),
+    "output is the same length as the number of attributes in the skill set matrix" = list(
+      df_skill_mtx |> micro$kflex$phi() |> dim() == ncol(df_skill_mtx),
+      df_skill_mtx |> as.matrix() |> micro$kflex$phi() |> dim() == ncol(df_skill_mtx),
+      df_skill_mtx |> micro$kflex$phi(weights = df_occupations$employment_norm) |> dim() == ncol(df_skill_mtx),
+      df_skill_mtx |> as.matrix() |> micro$kflex$phi(weights = df_occupations$employment_norm) |> dim() == ncol(df_skill_mtx)
+    ),
+    "attributes' microflexibility with respect to themselves is 1." = list(
+      df_skill_mtx |> micro$kflex$phi() |> diag() == 1,
+      df_skill_mtx |> as.matrix() |> micro$kflex$phi() |> diag() == 1,
+      df_skill_mtx |> micro$kflex$phi(weights = df_occupations$employment_norm) |> diag() == 1,
+      df_skill_mtx |> as.matrix() |> micro$kflex$phi(weights = df_occupations$employment_norm) |> diag() == 1
+    )
+  )
+}
+
+# endregion
 # region: run all tests
 util$test$tests.run(list(
-  macroflex = test_Phi
-  # ,  microflex = test_phi
+  macroflex = test_Phi,
+  microflex = test_phi
 ))
 
 # endregion

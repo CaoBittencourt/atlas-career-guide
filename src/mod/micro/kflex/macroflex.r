@@ -34,7 +34,7 @@ Phi <- function(skill_mtx, weights = NULL) {
 }
 
 # endregion
-# region: [VECTORIZE] skill set versatility
+# region: [VECTORIZE?] skill set versatility
 versatility <- function(skill_set, macroflex) {
   # assert args
   assert$valid_skill_set(skill_set)

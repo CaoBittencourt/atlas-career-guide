@@ -9,7 +9,7 @@ bash env/setup.sh
 ```
 
 ## Structure
-`/articles`: scientific papers written using models and data in this directory.
+`/articles`: scientific papers written using models and data in this repository.
 
 `/data`: labor market and occupational requirements data from the BLS and O*NET; also, sample questionnaires, factor models, etc.
 

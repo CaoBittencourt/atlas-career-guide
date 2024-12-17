@@ -3,7 +3,7 @@
 # endregion
 # region: is.error
 is.error <- function(expr) {
-  try(expr) |> class() == "try-error"
+  any(try(expr) |> class() == "try-error")
 }
 
 # endregion
