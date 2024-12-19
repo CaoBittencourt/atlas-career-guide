@@ -2,19 +2,21 @@
 .databases
 .open atlas.db
 
+-- enable foreign keys
+PRAGMA foreign_keys = ON;
+
 -- create tables
-.read tables/activities.sqlite
-.read tables/attributes.sqlite
-.read tables/competencies.sqlite
-.read tables/contexts.sqlite
-.read tables/education.sqlite
-.read tables/labor.sqlite
 .read tables/occupations.sqlite
-.read tables/required_education.sqlite
+.read tables/attributes.sqlite
+.read tables/education.sqlite
+
+.read tables/competencies.sqlite
+.read tables/activities.sqlite
+.read tables/contexts.sqlite
 .read tables/styles.sqlite
 
--- -- create constraints
--- .read tables/constraints/relationships.sqlite
+.read tables/required_education.sqlite
+.read tables/labor.sqlite
 
 -- -- create indexes
 -- .read tables/indexes.sqlite
@@ -28,15 +30,18 @@
 -- populate database
 .mode csv
 .separator ","
-.import --skip 1 data/activities.csv activities
-.import --skip 1 data/attributes.csv attributes
-.import --skip 1 data/competencies.csv competencies
-.import --skip 1 data/contexts.csv contexts
-.import --skip 1 data/education.csv education
-.import --skip 1 data/labor.csv labor
+
 .import --skip 1 data/occupations.csv occupations
-.import --skip 1 data/required_education.csv required_education
+.import --skip 1 data/attributes.csv attributes
+.import --skip 1 data/education.csv education
+
+.import --skip 1 data/competencies.csv competencies
+.import --skip 1 data/activities.csv activities
+.import --skip 1 data/contexts.csv contexts
 .import --skip 1 data/styles.csv styles
+
+.import --skip 1 data/required_education.csv required_education
+.import --skip 1 data/labor.csv labor
 
 -- exit sqlite
 .exit
