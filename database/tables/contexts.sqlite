@@ -1,0 +1,6 @@
+CREATE TABLE IF NOT EXISTS contexts (
+    pk_occupation_id INTEGER,
+    pk_item_id INTEGER,
+    item_score REAL CHECK (item_score BETWEEN 0 AND 1),
+    PRIMARY KEY (pk_occupation_id, pk_item_id)
+);

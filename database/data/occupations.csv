@@ -1,0 +1,874 @@
+pk_occupation_id,occupation,soc_2int,soc_4int
+1,Accountants and Auditors,13,2011
+2,Actors,27,2011
+3,Actuaries,15,2011
+4,Acupuncturists,29,1291
+5,Acute Care Nurses,29,1141
+6,Adapted Physical Education Specialists,25,2059
+7,Adhesive Bonding Machine Operators and Tenders,51,9191
+8,"Administrative Law Judges, Adjudicators, and Hearing Officers",23,1021
+9,Administrative Services Managers,11,3012
+10,"Adult Basic Education, Adult Secondary Education, and English as a Second Language Instructors",25,3011
+11,Advanced Practice Psychiatric Nurses,29,1141
+12,Advertising Sales Agents,41,3011
+13,Advertising and Promotions Managers,11,2011
+14,Aerospace Engineering and Operations Technologists and Technicians,17,3021
+15,Aerospace Engineers,17,2011
+16,"Agents and Business Managers of Artists, Performers, and Athletes",13,1011
+17,Agricultural Engineers,17,2021
+18,Agricultural Equipment Operators,45,2091
+19,Agricultural Inspectors,45,2011
+20,"Agricultural Sciences Teachers, Postsecondary",25,1041
+21,Agricultural Technicians,19,4012
+22,Air Traffic Controllers,53,2021
+23,Aircraft Cargo Handling Supervisors,53,1041
+24,Aircraft Mechanics and Service Technicians,49,3011
+25,"Aircraft Structure, Surfaces, Rigging, and Systems Assemblers",51,2011
+26,Airfield Operations Specialists,53,2022
+27,"Airline Pilots, Copilots, and Flight Engineers",53,2011
+28,Allergists and Immunologists,29,1229
+29,"Ambulance Drivers and Attendants, Except Emergency Medical Technicians",53,3011
+30,Amusement and Recreation Attendants,39,3091
+31,Anesthesiologist Assistants,29,1071
+32,Anesthesiologists,29,1211
+33,Animal Breeders,45,2021
+34,Animal Caretakers,39,2021
+35,Animal Control Workers,33,9011
+36,Animal Scientists,19,1011
+37,Animal Trainers,39,2011
+38,Anthropologists and Archeologists,19,3091
+39,"Anthropology and Archeology Teachers, Postsecondary",25,1061
+40,Appraisers and Assessors of Real Estate,13,2023
+41,"Arbitrators, Mediators, and Conciliators",23,1022
+42,"Architects, Except Landscape and Naval",17,1011
+43,Architectural and Civil Drafters,17,3011
+44,Architectural and Engineering Managers,11,9041
+45,"Architecture Teachers, Postsecondary",25,1031
+46,Archivists,25,4011
+47,"Area, Ethnic, and Cultural Studies Teachers, Postsecondary",25,1062
+48,Art Directors,27,1011
+49,Art Therapists,29,1129
+50,"Art, Drama, and Music Teachers, Postsecondary",25,1121
+51,Astronomers,19,2011
+52,Athletes and Sports Competitors,27,2021
+53,Athletic Trainers,29,9091
+54,Atmospheric and Space Scientists,19,2021
+55,"Atmospheric, Earth, Marine, and Space Sciences Teachers, Postsecondary",25,1051
+56,Audio and Video Technicians,27,4011
+57,Audiologists,29,1181
+58,Audiovisual Equipment Installers and Repairers,49,2097
+59,Automotive Body and Related Repairers,49,3021
+60,Automotive Engineering Technicians,17,3027
+61,Automotive Engineers,17,2141
+62,Automotive Glass Installers and Repairers,49,3022
+63,Automotive Service Technicians and Mechanics,49,3023
+64,Automotive and Watercraft Service Attendants,53,6031
+65,Aviation Inspectors,53,6051
+66,Avionics Technicians,49,2091
+67,Baggage Porters and Bellhops,39,6011
+68,Bailiffs,33,3011
+69,Bakers,51,3011
+70,Barbers,39,5011
+71,Baristas,35,3023
+72,Bartenders,35,3011
+73,Bicycle Repairers,49,3091
+74,Bill and Account Collectors,43,3011
+75,Billing and Posting Clerks,43,3021
+76,Biochemists and Biophysicists,19,1021
+77,Bioengineers and Biomedical Engineers,17,2031
+78,Biofuels Processing Technicians,51,8099
+79,Biofuels Production Managers,11,3051
+80,Biofuels/Biodiesel Technology and Product Development Managers,11,9041
+81,Bioinformatics Scientists,19,1029
+82,Bioinformatics Technicians,15,2099
+83,"Biological Science Teachers, Postsecondary",25,1042
+84,Biological Technicians,19,4021
+85,Biologists,19,1029
+86,Biomass Plant Technicians,51,8013
+87,Biomass Power Plant Managers,11,3051
+88,Biostatisticians,15,2041
+89,Boilermakers,47,2011
+90,"Bookkeeping, Accounting, and Auditing Clerks",43,3031
+91,Brickmasons and Blockmasons,47,2021
+92,Bridge and Lock Tenders,53,6011
+93,Broadcast Announcers and Radio Disc Jockeys,27,3011
+94,Broadcast Technicians,27,4012
+95,Brokerage Clerks,43,4011
+96,Brownfield Redevelopment Specialists and Site Managers,11,9199
+97,Budget Analysts,13,2031
+98,"Bus Drivers, Transit and Intercity",53,3052
+99,Bus and Truck Mechanics and Diesel Engine Specialists,49,3031
+100,Business Continuity Planners,13,1199
+101,Business Intelligence Analysts,15,2051
+102,"Business Teachers, Postsecondary",25,1011
+103,Butchers and Meat Cutters,51,3021
+104,"Buyers and Purchasing Agents, Farm Products",13,1021
+105,Cabinetmakers and Bench Carpenters,51,7011
+106,"Camera Operators, Television, Video, and Film",27,4031
+107,Camera and Photographic Equipment Repairers,49,9061
+108,"Captains, Mates, and Pilots of Water Vessels",53,5021
+109,Cardiovascular Technologists and Technicians,29,2031
+110,"Career/Technical Education Teachers, Middle School",25,2023
+111,"Career/Technical Education Teachers, Postsecondary",25,1194
+112,"Career/Technical Education Teachers, Secondary School",25,2032
+113,Cargo and Freight Agents,43,5011
+114,Carpenters,47,2031
+115,Carpet Installers,47,2041
+116,Cartographers and Photogrammetrists,17,1021
+117,Cashiers,41,2011
+118,Cement Masons and Concrete Finishers,47,2051
+119,Chefs and Head Cooks,35,1011
+120,Chemical Engineers,17,2041
+121,Chemical Equipment Operators and Tenders,51,9011
+122,Chemical Plant and System Operators,51,8091
+123,Chemical Technicians,19,4031
+124,"Chemistry Teachers, Postsecondary",25,1052
+125,Chemists,19,2031
+126,Chief Executives,11,1011
+127,Chief Sustainability Officers,11,1011
+128,"Child, Family, and School Social Workers",21,1021
+129,Childcare Workers,39,9011
+130,Chiropractors,29,1011
+131,Choreographers,27,2032
+132,Civil Engineering Technologists and Technicians,17,3022
+133,Civil Engineers,17,2051
+134,"Claims Adjusters, Examiners, and Investigators",13,1031
+135,Cleaners of Vehicles and Equipment,53,7061
+136,"Cleaning, Washing, and Metal Pickling Equipment Operators and Tenders",51,9192
+137,Clergy,21,2011
+138,Climate Change Policy Analysts,19,2041
+139,Clinical Data Managers,15,2051
+140,Clinical Nurse Specialists,29,1141
+141,Clinical Research Coordinators,11,9121
+142,Clinical and Counseling Psychologists,19,3033
+143,Coaches and Scouts,27,2022
+144,"Coating, Painting, and Spraying Machine Setters, Operators, and Tenders",51,9124
+145,"Coil Winders, Tapers, and Finishers",51,2021
+146,"Coin, Vending, and Amusement Machine Servicers and Repairers",49,9091
+147,Commercial Divers,49,9092
+148,Commercial Pilots,53,2012
+149,Commercial and Industrial Designers,27,1021
+150,"Communications Teachers, Postsecondary",25,1122
+151,Community Health Workers,21,1094
+152,Compensation and Benefits Managers,11,3111
+153,"Compensation, Benefits, and Job Analysis Specialists",13,1141
+154,Compliance Managers,11,9199
+155,Compliance Officers,13,1041
+156,Computer Hardware Engineers,17,2061
+157,Computer Network Architects,15,1241
+158,Computer Network Support Specialists,15,1231
+159,Computer Numerically Controlled Tool Operators,51,9161
+160,Computer Numerically Controlled Tool Programmers,51,9162
+161,Computer Programmers,15,1251
+162,"Computer Science Teachers, Postsecondary",25,1021
+163,Computer Systems Analysts,15,1211
+164,Computer Systems Engineers/Architects,15,1299
+165,Computer User Support Specialists,15,1232
+166,Computer and Information Research Scientists,15,1221
+167,Computer and Information Systems Managers,11,3021
+168,"Computer, Automated Teller, and Office Machine Repairers",49,2011
+169,Concierges,39,6012
+170,Conservation Scientists,19,1031
+171,Construction Laborers,47,2061
+172,Construction Managers,11,9021
+173,Construction and Building Inspectors,47,4011
+174,Continuous Mining Machine Operators,47,5041
+175,"Control and Valve Installers and Repairers, Except Mechanical Door",49,9012
+176,Conveyor Operators and Tenders,53,7011
+177,"Cooks, Fast Food",35,2011
+178,"Cooks, Institution and Cafeteria",35,2012
+179,"Cooks, Private Household",35,2013
+180,"Cooks, Restaurant",35,2014
+181,"Cooks, Short Order",35,2015
+182,Cooling and Freezing Equipment Operators and Tenders,51,9193
+183,Coroners,13,1041
+184,Correctional Officers and Jailers,33,3012
+185,Correspondence Clerks,43,4021
+186,Cost Estimators,13,1051
+187,Costume Attendants,39,3092
+188,Counter and Rental Clerks,41,2021
+189,Couriers and Messengers,43,5021
+190,Court Reporters and Simultaneous Captioners,27,3092
+191,"Court, Municipal, and License Clerks",43,4031
+192,Craft Artists,27,1012
+193,Crane and Tower Operators,53,7021
+194,Credit Analysts,13,2041
+195,"Credit Authorizers, Checkers, and Clerks",43,4041
+196,Credit Counselors,13,2071
+197,"Criminal Justice and Law Enforcement Teachers, Postsecondary",25,1111
+198,Critical Care Nurses,29,1141
+199,Crossing Guards and Flaggers,33,9091
+200,"Crushing, Grinding, and Polishing Machine Setters, Operators, and Tenders",51,9021
+201,Curators,25,4012
+202,Customer Service Representatives,43,4051
+203,Customs Brokers,13,1041
+204,Customs and Border Protection Officers,33,3051
+205,"Cutters and Trimmers, Hand",51,9031
+206,"Cutting and Slicing Machine Setters, Operators, and Tenders",51,9032
+207,"Cutting, Punching, and Press Machine Setters, Operators, and Tenders, Metal and Plastic",51,4031
+208,Cytogenetic Technologists,29,2011
+209,Cytotechnologists,29,2011
+210,Dancers,27,2031
+211,Data Entry Keyers,43,9021
+212,Data Warehousing Specialists,15,1243
+213,Database Administrators,15,1242
+214,Database Architects,15,1243
+215,Demonstrators and Product Promoters,41,9011
+216,Dental Assistants,31,9091
+217,Dental Hygienists,29,1292
+218,Dental Laboratory Technicians,51,9081
+219,"Dentists, General",29,1021
+220,Dermatologists,29,1213
+221,"Derrick Operators, Oil and Gas",47,5011
+222,Desktop Publishers,43,9031
+223,Detectives and Criminal Investigators,33,3021
+224,Diagnostic Medical Sonographers,29,2032
+225,Dietetic Technicians,29,2051
+226,Dietitians and Nutritionists,29,1031
+227,Dining Room and Cafeteria Attendants and Bartender Helpers,35,9011
+228,"Directors, Religious Activities and Education",21,2021
+229,Dishwashers,35,9021
+230,"Dispatchers, Except Police, Fire, and Ambulance",43,5032
+231,Document Management Specialists,15,1299
+232,"Door-to-Door Sales Workers, News and Street Vendors, and Related Workers",41,9091
+233,Dredge Operators,53,7031
+234,"Drilling and Boring Machine Tool Setters, Operators, and Tenders, Metal and Plastic",51,4032
+235,Driver/Sales Workers,53,3031
+236,Drywall and Ceiling Tile Installers,47,2081
+237,"Earth Drillers, Except Oil and Gas",47,5023
+238,"Economics Teachers, Postsecondary",25,1063
+239,Economists,19,3011
+240,Editors,27,3041
+241,"Education Administrators, Kindergarten through Secondary",11,9032
+242,"Education Administrators, Postsecondary",11,9033
+243,"Education Teachers, Postsecondary",25,1081
+244,"Education and Childcare Administrators, Preschool and Daycare",11,9031
+245,"Educational, Guidance, and Career Counselors and Advisors",21,1012
+246,"Electric Motor, Power Tool, and Related Repairers",49,2092
+247,Electrical Engineers,17,2071
+248,Electrical Power-Line Installers and Repairers,49,9051
+249,Electrical and Electronic Engineering Technologists and Technicians,17,3023
+250,Electrical and Electronic Equipment Assemblers,51,2022
+251,Electrical and Electronics Drafters,17,3012
+252,"Electrical and Electronics Installers and Repairers, Transportation Equipment",49,2093
+253,"Electrical and Electronics Repairers, Commercial and Industrial Equipment",49,2094
+254,"Electrical and Electronics Repairers, Powerhouse, Substation, and Relay",49,2095
+255,Electricians,47,2111
+256,Electro-Mechanical and Mechatronics Technologists and Technicians,17,3024
+257,Electromechanical Equipment Assemblers,51,2023
+258,"Electronic Equipment Installers and Repairers, Motor Vehicles",49,2096
+259,"Electronics Engineers, Except Computer",17,2072
+260,"Elementary School Teachers, Except Special Education",25,2021
+261,Elevator and Escalator Installers and Repairers,47,4021
+262,"Eligibility Interviewers, Government Programs",43,4061
+263,Embalmers,39,4011
+264,Emergency Management Directors,11,9161
+265,Endoscopy Technicians,31,9099
+266,Energy Auditors,47,4011
+267,"Energy Engineers, Except Wind and Solar",17,2199
+268,Engine and Other Machine Assemblers,51,2031
+269,"Engineering Teachers, Postsecondary",25,1032
+270,"English Language and Literature Teachers, Postsecondary",25,1123
+271,Environmental Compliance Inspectors,13,1041
+272,Environmental Economists,19,3011
+273,Environmental Engineering Technologists and Technicians,17,3025
+274,Environmental Engineers,17,2081
+275,Environmental Restoration Planners,19,2041
+276,"Environmental Science Teachers, Postsecondary",25,1053
+277,"Environmental Science and Protection Technicians, Including Health",19,4042
+278,"Environmental Scientists and Specialists, Including Health",19,2041
+279,Epidemiologists,19,1041
+280,Equal Opportunity Representatives and Officers,13,1041
+281,Etchers and Engravers,51,9194
+282,"Excavating and Loading Machine and Dragline Operators, Surface Mining",47,5022
+283,Executive Secretaries and Executive Administrative Assistants,43,6011
+284,Exercise Physiologists,29,1128
+285,Exercise Trainers and Group Fitness Instructors,39,9031
+286,"Explosives Workers, Ordnance Handling Experts, and Blasters",47,5032
+287,"Extruding and Drawing Machine Setters, Operators, and Tenders, Metal and Plastic",51,4021
+288,"Extruding and Forming Machine Setters, Operators, and Tenders, Synthetic and Glass Fibers",51,6091
+289,"Extruding, Forming, Pressing, and Compacting Machine Setters, Operators, and Tenders",51,9041
+290,Fabric and Apparel Patternmakers,51,6092
+291,Fallers,45,4021
+292,Family Medicine Physicians,29,1215
+293,"Family and Consumer Sciences Teachers, Postsecondary",25,1192
+294,Farm Equipment Mechanics and Service Technicians,49,3041
+295,Farm Labor Contractors,13,1074
+296,Farm and Home Management Educators,25,9021
+297,"Farmers, Ranchers, and Other Agricultural Managers",11,9013
+298,"Farmworkers and Laborers, Crop, Nursery, and Greenhouse",45,2092
+299,"Farmworkers, Farm, Ranch, and Aquacultural Animals",45,2093
+300,Fashion Designers,27,1022
+301,Fast Food and Counter Workers,35,3023
+302,Fence Erectors,47,4031
+303,Fiberglass Laminators and Fabricators,51,2051
+304,File Clerks,43,4071
+305,Film and Video Editors,27,4032
+306,Financial Examiners,13,2061
+307,Financial Managers,11,3031
+308,Financial Quantitative Analysts,13,2099
+309,"Fine Artists, Including Painters, Sculptors, and Illustrators",27,1013
+310,Fire Inspectors and Investigators,33,2021
+311,Fire-Prevention and Protection Engineers,17,2111
+312,Firefighters,33,2011
+313,First-Line Supervisors of Construction Trades and Extraction Workers,47,1011
+314,First-Line Supervisors of Correctional Officers,33,1011
+315,"First-Line Supervisors of Farming, Fishing, and Forestry Workers",45,1011
+316,First-Line Supervisors of Firefighting and Prevention Workers,33,1021
+317,First-Line Supervisors of Food Preparation and Serving Workers,35,1012
+318,First-Line Supervisors of Gambling Services Workers,39,1013
+319,"First-Line Supervisors of Helpers, Laborers, and Material Movers, Hand",53,1042
+320,First-Line Supervisors of Housekeeping and Janitorial Workers,37,1011
+321,"First-Line Supervisors of Landscaping, Lawn Service, and Groundskeeping Workers",37,1012
+322,First-Line Supervisors of Material-Moving Machine and Vehicle Operators,53,1043
+323,"First-Line Supervisors of Mechanics, Installers, and Repairers",49,1011
+324,First-Line Supervisors of Non-Retail Sales Workers,41,1012
+325,First-Line Supervisors of Office and Administrative Support Workers,43,1011
+326,First-Line Supervisors of Personal Service Workers,39,1022
+327,First-Line Supervisors of Police and Detectives,33,1012
+328,First-Line Supervisors of Production and Operating Workers,51,1011
+329,First-Line Supervisors of Retail Sales Workers,41,1011
+330,Fish and Game Wardens,33,3031
+331,Fishing and Hunting Workers,45,3031
+332,Fitness and Wellness Coordinators,11,9179
+333,Flight Attendants,53,2031
+334,"Floor Layers, Except Carpet, Wood, and Hard Tiles",47,2042
+335,Floor Sanders and Finishers,47,2043
+336,Floral Designers,27,1023
+337,Food Batchmakers,51,3092
+338,Food Cooking Machine Operators and Tenders,51,3093
+339,Food Preparation Workers,35,2021
+340,Food Science Technicians,19,4013
+341,Food Scientists and Technologists,19,1012
+342,"Food Servers, Non Restaurant",35,3041
+343,Food Service Managers,11,9051
+344,"Food and Tobacco Roasting, Baking, and Drying Machine Operators and Tenders",51,3091
+345,"Foreign Language and Literature Teachers, Postsecondary",25,1124
+346,Forensic Science Technicians,19,4092
+347,Forest Fire Inspectors and Prevention Specialists,33,2022
+348,Forest and Conservation Technicians,19,4071
+349,Forest and Conservation Workers,45,4011
+350,Foresters,19,1032
+351,"Forestry and Conservation Science Teachers, Postsecondary",25,1043
+352,"Forging Machine Setters, Operators, and Tenders, Metal and Plastic",51,4022
+353,Foundry Mold and Coremakers,51,4071
+354,"Fraud Examiners, Investigators and Analysts",13,2099
+355,Freight Forwarders,43,5011
+356,Fuel Cell Engineers,17,2141
+357,Fundraisers,13,1131
+358,Funeral Attendants,39,4021
+359,Funeral Home Managers,11,9171
+360,"Furnace, Kiln, Oven, Drier, and Kettle Operators and Tenders",51,9051
+361,Furniture Finishers,51,7021
+362,Gambling Cage Workers,43,3041
+363,Gambling Change Persons and Booth Cashiers,41,2012
+364,Gambling Dealers,39,3011
+365,Gambling Managers,11,9071
+366,Gambling Surveillance Officers and Gambling Investigators,33,9031
+367,Gambling and Sports Book Writers and Runners,39,3012
+368,Gas Compressor and Gas Pumping Station Operators,53,7071
+369,Gas Plant Operators,51,8092
+370,Gem and Diamond Workers,51,9071
+371,General Internal Medicine Physicians,29,1216
+372,General and Operations Managers,11,1021
+373,Genetic Counselors,29,9092
+374,Geneticists,19,1029
+375,Geodetic Surveyors,17,1022
+376,Geographers,19,3092
+377,Geographic Information Systems Technologists and Technicians,15,1299
+378,"Geography Teachers, Postsecondary",25,1064
+379,"Geological Technicians, Except Hydrologic Technicians",19,4043
+380,"Geoscientists, Except Hydrologists and Geographers",19,2042
+381,Geothermal Production Managers,11,3051
+382,Geothermal Technicians,49,9099
+383,"Glass Blowers, Molders, Benders, and Finishers",51,9195
+384,Glaziers,47,2121
+385,Government Property Inspectors and Investigators,13,1041
+386,"Graders and Sorters, Agricultural Products",45,2041
+387,Graphic Designers,27,1024
+388,"Grinding and Polishing Workers, Hand",51,9022
+389,"Grinding, Lapping, Polishing, and Buffing Machine Tool Setters, Operators, and Tenders, Metal and Plastic",51,4033
+390,"Hairdressers, Hair Stylists, and Cosmetologists",39,5012
+391,Hazardous Materials Removal Workers,47,4041
+392,Health Education Specialists,21,1091
+393,Health Informatics Specialists,15,1211
+394,"Health Specialties Teachers, Postsecondary",25,1071
+395,"Health and Safety Engineers, Except Mining Safety Engineers and Inspectors",17,2111
+396,Healthcare Social Workers,21,1022
+397,Hearing Aid Specialists,29,2092
+398,"Heat Treating Equipment Setters, Operators, and Tenders, Metal and Plastic",51,4191
+399,"Heating, Air Conditioning, and Refrigeration Mechanics and Installers",49,9021
+400,Heavy and Tractor-Trailer Truck Drivers,53,3032
+401,"Helpers--Brickmasons, Blockmasons, Stonemasons, and Tile and Marble Setters",47,3011
+402,Helpers--Carpenters,47,3012
+403,Helpers--Electricians,47,3013
+404,Helpers--Extraction Workers,47,5081
+405,"Helpers--Installation, Maintenance, and Repair Workers",49,9098
+406,"Helpers--Painters, Paperhangers, Plasterers, and Stucco Masons",47,3014
+407,"Helpers--Pipelayers, Plumbers, Pipefitters, and Steamfitters",47,3015
+408,Helpers--Production Workers,51,9198
+409,Helpers--Roofers,47,3016
+410,Highway Maintenance Workers,47,4051
+411,Historians,19,3093
+412,"History Teachers, Postsecondary",25,1125
+413,Hoist and Winch Operators,53,7041
+414,Home Appliance Repairers,49,9031
+415,Home Health Aides,31,1121
+416,Hospitalists,29,1229
+417,"Hosts and Hostesses, Restaurant, Lounge, and Coffee Shop",35,9031
+418,"Hotel, Motel, and Resort Desk Clerks",43,4081
+419,Human Factors Engineers and Ergonomists,17,2112
+420,"Human Resources Assistants, Except Payroll and Timekeeping",43,4161
+421,Human Resources Managers,11,3121
+422,Human Resources Specialists,13,1071
+423,Hydroelectric Plant Technicians,51,8013
+424,Hydroelectric Production Managers,11,3051
+425,Hydrologists,19,2043
+426,Industrial Ecologists,19,2041
+427,Industrial Engineering Technologists and Technicians,17,3026
+428,Industrial Engineers,17,2112
+429,Industrial Machinery Mechanics,49,9041
+430,Industrial Production Managers,11,3051
+431,Industrial Truck and Tractor Operators,53,7051
+432,Industrial-Organizational Psychologists,19,3032
+433,Information Security Analysts,15,1212
+434,Information Technology Project Managers,15,1299
+435,"Inspectors, Testers, Sorters, Samplers, and Weighers",51,9061
+436,Instructional Coordinators,25,9031
+437,"Insulation Workers, Floor, Ceiling, and Wall",47,2131
+438,"Insulation Workers, Mechanical",47,2132
+439,"Insurance Appraisers, Auto Damage",13,1032
+440,Insurance Claims and Policy Processing Clerks,43,9041
+441,Insurance Sales Agents,41,3021
+442,Insurance Underwriters,13,2053
+443,Intelligence Analysts,33,3021
+444,Interior Designers,27,1025
+445,Interpreters and Translators,27,3091
+446,"Interviewers, Except Eligibility and Loan",43,4111
+447,Investment Fund Managers,11,3031
+448,"Janitors and Cleaners, Except Maids and Housekeeping Cleaners",37,2011
+449,Jewelers and Precious Stone and Metal Workers,51,9071
+450,"Judges, Magistrate Judges, and Magistrates",23,1023
+451,Judicial Law Clerks,23,1012
+452,"Kindergarten Teachers, Except Special Education",25,2012
+453,Labor Relations Specialists,13,1075
+454,"Laborers and Freight, Stock, and Material Movers, Hand",53,7062
+455,Landscape Architects,17,1012
+456,Landscaping and Groundskeeping Workers,37,3011
+457,"Lathe and Turning Machine Tool Setters, Operators, and Tenders, Metal and Plastic",51,4034
+458,Laundry and Dry-Cleaning Workers,51,6011
+459,"Law Teachers, Postsecondary",25,1112
+460,Lawyers,23,1011
+461,"Layout Workers, Metal and Plastic",51,4192
+462,Legal Secretaries and Administrative Assistants,43,6012
+463,Librarians and Media Collections Specialists,25,4022
+464,"Library Assistants, Clerical",43,4121
+465,"Library Science Teachers, Postsecondary",25,1082
+466,Library Technicians,25,4031
+467,Licensed Practical and Licensed Vocational Nurses,29,2061
+468,"Lifeguards, Ski Patrol, and Other Recreational Protective Service Workers",33,9092
+469,Light Truck Drivers,53,3033
+470,"Loading and Moving Machine Operators, Underground Mining",47,5044
+471,Loan Interviewers and Clerks,43,4131
+472,Loan Officers,13,2072
+473,"Locker Room, Coatroom, and Dressing Room Attendants",39,3093
+474,Locksmiths and Safe Repairers,49,9094
+475,Locomotive Engineers,53,4011
+476,Lodging Managers,11,9081
+477,Log Graders and Scalers,45,4023
+478,Logging Equipment Operators,45,4022
+479,Logisticians,13,1081
+480,Logistics Analysts,13,1081
+481,Logistics Engineers,13,1081
+482,Loss Prevention Managers,11,9199
+483,"Low Vision Therapists, Orientation and Mobility Specialists, and Vision Rehabilitation Therapists",29,1122
+484,Machine Feeders and Offbearers,53,7063
+485,Machinists,51,4041
+486,Magnetic Resonance Imaging Technologists,29,2035
+487,Maids and Housekeeping Cleaners,37,2012
+488,"Mail Clerks and Mail Machine Operators, Except Postal Service",43,9051
+489,"Maintenance Workers, Machinery",49,9043
+490,"Maintenance and Repair Workers, General",49,9071
+491,"Makeup Artists, Theatrical and Performance",39,5091
+492,Management Analysts,13,1111
+493,Manicurists and Pedicurists,39,5092
+494,Manufactured Building and Mobile Home Installers,49,9095
+495,Manufacturing Engineers,17,2112
+496,Marine Engineers and Naval Architects,17,2121
+497,Market Research Analysts and Marketing Specialists,13,1161
+498,Marketing Managers,11,2021
+499,Marriage and Family Therapists,21,1013
+500,Massage Therapists,31,9011
+501,Materials Engineers,17,2131
+502,Materials Scientists,19,2032
+503,"Mathematical Science Teachers, Postsecondary",25,1022
+504,Mathematicians,15,2021
+505,"Meat, Poultry, and Fish Cutters and Trimmers",51,3022
+506,Mechanical Door Repairs,49,9011
+507,Mechanical Drafters,17,3013
+508,Mechanical Engineering Technologists and Technicians,17,3027
+509,Mechanical Engineers,17,2141
+510,Mechatronics Engineers,17,2199
+511,Media Programming Directors,27,2012
+512,Media Technical Directors/Managers,27,2012
+513,Medical Appliance Technicians,51,9082
+514,Medical Assistants,31,9092
+515,Medical Equipment Preparers,31,9093
+516,Medical Equipment Repairers,49,9062
+517,"Medical Scientists, Except Epidemiologists",19,1042
+518,Medical Secretaries and Administrative Assistants,43,6013
+519,Medical Transcriptionists,31,9094
+520,Medical and Clinical Laboratory Technicians,29,2012
+521,Medical and Clinical Laboratory Technologists,29,2011
+522,Medical and Health Services Managers,11,9111
+523,"Meeting, Convention, and Event Planners",13,1121
+524,Mental Health Counselors,21,1014
+525,Mental Health and Substance Abuse Social Workers,21,1023
+526,Merchandise Displayers and Window Trimmers,27,1026
+527,Metal-Refining Furnace Operators and Tenders,51,4051
+528,"Meter Readers, Utilities",43,5041
+529,Microbiologists,19,1022
+530,Microsystems Engineers,17,2199
+531,"Middle School Teachers, Except Special and Career/Technical Education",25,2022
+532,Midwives,29,9099
+533,"Milling and Planing Machine Setters, Operators, and Tenders, Metal and Plastic",51,4035
+534,Millwrights,49,9044
+535,"Mining and Geological Engineers, Including Mining Safety Engineers",17,2151
+536,"Mixing and Blending Machine Setters, Operators, and Tenders",51,9023
+537,"Mobile Heavy Equipment Mechanics, Except Engines",49,3042
+538,"Model Makers, Metal and Plastic",51,4061
+539,"Model Makers, Wood",51,7031
+540,Models,41,9012
+541,"Molders, Shapers, and Casters, Except Metal and Plastic",51,9195
+542,"Molding, Coremaking, and Casting Machine Setters, Operators, and Tenders, Metal and Plastic",51,4072
+543,Molecular and Cellular Biologists,19,1029
+544,"Morticians, Undertakers, and Funeral Arrangers",39,4031
+545,Motion Picture Projectionists,39,3021
+546,Motorboat Mechanics and Service Technicians,49,3051
+547,Motorboat Operators,53,5022
+548,Motorcycle Mechanics,49,3052
+549,"Multiple Machine Tool Setters, Operators, and Tenders, Metal and Plastic",51,4081
+550,Museum Technicians and Conservators,25,4013
+551,Music Directors and Composers,27,2041
+552,Music Therapists,29,1129
+553,Musical Instrument Repairers and Tuners,49,9063
+554,Musicians and Singers,27,2042
+555,Nannies,39,9011
+556,Nanosystems Engineers,17,2199
+557,Nanotechnology Engineering Technologists and Technicians,17,3026
+558,Natural Sciences Managers,11,9121
+559,Naturopathic Physicians,29,1299
+560,Network and Computer Systems Administrators,15,1244
+561,Neurodiagnostic Technologists,29,2099
+562,Neurologists,29,1217
+563,New Accounts Clerks,43,4141
+564,"News Analysts, Reporters, and Journalists",27,3023
+565,Non-Destructive Testing Specialists,17,3029
+566,Nuclear Engineers,17,2161
+567,Nuclear Medicine Technologists,29,2033
+568,Nuclear Monitoring Technicians,19,4051
+569,Nuclear Power Reactor Operators,51,8011
+570,Nuclear Technicians,19,4051
+571,Nurse Anesthetists,29,1151
+572,Nurse Midwives,29,1161
+573,Nurse Practitioners,29,1171
+574,Nursing Assistants,31,1131
+575,"Nursing Instructors and Teachers, Postsecondary",25,1072
+576,Obstetricians and Gynecologists,29,1218
+577,Occupational Health and Safety Specialists,19,5011
+578,Occupational Health and Safety Technicians,19,5012
+579,Occupational Therapists,29,1122
+580,Occupational Therapy Aides,31,2012
+581,Occupational Therapy Assistants,31,2011
+582,"Office Clerks, General",43,9061
+583,"Office Machine Operators, Except Computer",43,9071
+584,Online Merchants,13,1199
+585,Operating Engineers and Other Construction Equipment Operators,47,2073
+586,Operations Research Analysts,15,2031
+587,Ophthalmic Laboratory Technicians,51,9083
+588,Ophthalmic Medical Technicians,29,2057
+589,Ophthalmic Medical Technologists,29,2099
+590,"Ophthalmologists, Except Pediatric",29,1241
+591,"Opticians, Dispensing",29,2081
+592,Optometrists,29,1041
+593,Oral and Maxillofacial Surgeons,29,1022
+594,Order Clerks,43,4151
+595,Orderlies,31,1132
+596,Orthodontists,29,1023
+597,Orthoptists,29,1299
+598,Orthotists and Prosthetists,29,2091
+599,Outdoor Power Equipment and Other Small Engine Mechanics,49,3053
+600,Packaging and Filling Machine Operators and Tenders,51,9111
+601,"Packers and Packagers, Hand",53,7064
+602,"Painters, Construction and Maintenance",47,2141
+603,"Painting, Coating, and Decorating Workers",51,9123
+604,"Paper Goods Machine Setters, Operators, and Tenders",51,9196
+605,Paperhangers,47,2142
+606,Paralegals and Legal Assistants,23,2011
+607,Park Naturalists,19,1031
+608,Parking Attendants,53,6021
+609,Parking Enforcement Workers,33,3041
+610,Parts Salespersons,41,2022
+611,Passenger Attendants,53,6061
+612,Patient Representatives,29,2099
+613,"Patternmakers, Metal and Plastic",51,4062
+614,"Patternmakers, Wood",51,7032
+615,"Paving, Surfacing, and Tamping Equipment Operators",47,2071
+616,Payroll and Timekeeping Clerks,43,3051
+617,"Pediatricians, General",29,1221
+618,Personal Care Aides,31,1122
+619,Personal Financial Advisors,13,2052
+620,Pest Control Workers,37,2021
+621,"Pesticide Handlers, Sprayers, and Applicators, Vegetation",37,3012
+622,Petroleum Engineers,17,2171
+623,"Petroleum Pump System Operators, Refinery Operators, and Gaugers",51,8093
+624,Pharmacists,29,1051
+625,Pharmacy Aides,31,9095
+626,Pharmacy Technicians,29,2052
+627,"Philosophy and Religion Teachers, Postsecondary",25,1126
+628,Phlebotomists,31,9097
+629,Photographers,27,4021
+630,Photographic Process Workers and Processing Machine Operators,51,9151
+631,Photonics Engineers,17,2199
+632,Photonics Technicians,17,3029
+633,Physical Medicine and Rehabilitation Physicians,29,1229
+634,Physical Therapist Aides,31,2022
+635,Physical Therapist Assistants,31,2021
+636,Physical Therapists,29,1123
+637,Physician Assistants,29,1071
+638,"Physicians, Pathologists",29,1222
+639,Physicists,19,2012
+640,"Physics Teachers, Postsecondary",25,1054
+641,Pile Driver Operators,47,2072
+642,Pipelayers,47,2151
+643,Plasterers and Stucco Masons,47,2161
+644,"Plating Machine Setters, Operators, and Tenders, Metal and Plastic",51,4193
+645,"Plumbers, Pipefitters, and Steamfitters",47,2152
+646,Podiatrists,29,1081
+647,"Poets, Lyricists and Creative Writers",27,3043
+648,Police Identification and Records Officers,33,3021
+649,Police and Sheriff's Patrol Officers,33,3051
+650,"Political Science Teachers, Postsecondary",25,1065
+651,Political Scientists,19,3094
+652,Postal Service Clerks,43,5051
+653,Postal Service Mail Carriers,43,5052
+654,"Postal Service Mail Sorters, Processors, and Processing Machine Operators",43,5053
+655,Postmasters and Mail Superintendents,11,9131
+656,"Potters, Manufacturing",51,9195
+657,"Pourers and Casters, Metal",51,4052
+658,Power Distributors and Dispatchers,51,8012
+659,Power Plant Operators,51,8013
+660,Precision Agriculture Technicians,19,4012
+661,Prepress Technicians and Workers,51,5111
+662,"Preschool Teachers, Except Special Education",25,2011
+663,"Pressers, Textile, Garment, and Related Materials",51,6021
+664,Preventive Medicine Physicians,29,1229
+665,Print Binding and Finishing Workers,51,5113
+666,Printing Press Operators,51,5112
+667,Private Detectives and Investigators,33,9021
+668,Probation Officers and Correctional Treatment Specialists,21,1092
+669,Procurement Clerks,43,3061
+670,Producers and Directors,27,2012
+671,"Production, Planning, and Expediting Clerks",43,5061
+672,Proofreaders and Copy Markers,43,9081
+673,"Property, Real Estate, and Community Association Managers",11,9141
+674,Prosthodontists,29,1024
+675,Psychiatric Aides,31,1133
+676,Psychiatric Technicians,29,2053
+677,Psychiatrists,29,1223
+678,"Psychology Teachers, Postsecondary",25,1066
+679,Public Relations Specialists,27,3031
+680,Public Safety Telecommunicators,43,5031
+681,"Pump Operators, Except Wellhead Pumpers",53,7072
+682,"Purchasing Agents, Except Wholesale, Retail, and Farm Products",13,1023
+683,Purchasing Managers,11,3061
+684,Quality Control Analysts,19,4099
+685,Quality Control Systems Managers,11,3051
+686,Radiation Therapists,29,1124
+687,Radio Frequency Identification Device Specialists,17,2072
+688,"Radio, Cellular, and Tower Equipment Installers and Repairers",49,2021
+689,Radiologic Technologists and Technicians,29,2034
+690,Radiologists,29,1224
+691,Rail Car Repairers,49,3043
+692,"Rail Yard Engineers, Dinkey Operators, and Hostlers",53,4013
+693,Rail-Track Laying and Maintenance Equipment Operators,47,4061
+694,"Railroad Brake, Signal, and Switch Operators and Locomotive Firers",53,4022
+695,Railroad Conductors and Yardmasters,53,4031
+696,Range Managers,19,1031
+697,Real Estate Brokers,41,9021
+698,Real Estate Sales Agents,41,9022
+699,Receptionists and Information Clerks,43,4171
+700,Recreation Workers,39,9032
+701,"Recreation and Fitness Studies Teachers, Postsecondary",25,1193
+702,Recreational Therapists,29,1125
+703,Recreational Vehicle Service Technicians,49,3092
+704,Recycling Coordinators,53,1042
+705,Recycling and Reclamation Workers,53,7062
+706,"Refractory Materials Repairers, Except Brickmasons",49,9045
+707,Refuse and Recyclable Material Collectors,53,7081
+708,Registered Nurses,29,1141
+709,Regulatory Affairs Managers,11,9199
+710,Regulatory Affairs Specialists,13,1041
+711,Rehabilitation Counselors,21,1015
+712,Reinforcing Iron and Rebar Workers,47,2171
+713,Remote Sensing Scientists and Technologists,19,2099
+714,Remote Sensing Technicians,19,4099
+715,Reservation and Transportation Ticket Agents and Travel Clerks,43,4181
+716,Residential Advisors,39,9041
+717,Respiratory Therapists,29,1126
+718,Retail Loss Prevention Specialists,33,9099
+719,Retail Salespersons,41,2031
+720,Riggers,49,9096
+721,Robotics Engineers,17,2199
+722,Robotics Technicians,17,3024
+723,"Rock Splitters, Quarry",47,5051
+724,"Rolling Machine Setters, Operators, and Tenders, Metal and Plastic",51,4023
+725,"Roof Bolters, Mining",47,5043
+726,Roofers,47,2181
+727,"Rotary Drill Operators, Oil and Gas",47,5012
+728,"Roustabouts, Oil and Gas",47,5071
+729,Sailors and Marine Oilers,53,5011
+730,Sales Engineers,41,9031
+731,Sales Managers,11,2022
+732,"Sales Representatives, Wholesale and Manufacturing, Except Technical and Scientific Products",41,4012
+733,"Sales Representatives, Wholesale and Manufacturing, Technical and Scientific Products",41,4011
+734,"Sawing Machine Setters, Operators, and Tenders, Wood",51,7041
+735,School Psychologists,19,3034
+736,Search Marketing Strategists,13,1161
+737,"Secondary School Teachers, Except Special and Career/Technical Education",25,2031
+738,"Secretaries and Administrative Assistants, Except Legal, Medical, and Executive",43,6014
+739,"Securities, Commodities, and Financial Services Sales Agents",41,3031
+740,Security Guards,33,9032
+741,Security and Fire Alarm Systems Installers,49,2098
+742,Segmental Pavers,47,4091
+743,Self-Enrichment Teachers,25,3021
+744,Semiconductor Processing Technicians,51,9141
+745,"Separating, Filtering, Clarifying, Precipitating, and Still Machine Setters, Operators, and Tenders",51,9012
+746,Septic Tank Servicers and Sewer Pipe Cleaners,47,4071
+747,"Service Unit Operators, Oil and Gas",47,5013
+748,Set and Exhibit Designers,27,1027
+749,"Sewers, Hand",51,6051
+750,Sewing Machine Operators,51,6031
+751,Shampooers,39,5093
+752,Sheet Metal Workers,47,2211
+753,Ship Engineers,53,5031
+754,"Shipping, Receiving, and Inventory Clerks",43,5071
+755,Shoe Machine Operators and Tenders,51,6042
+756,Shoe and Leather Workers and Repairers,51,6041
+757,Signal and Track Switch Repairers,49,9097
+758,Skincare Specialists,39,5094
+759,Slaughterers and Meat Packers,51,3023
+760,Social Science Research Assistants,19,4061
+761,"Social Work Teachers, Postsecondary",25,1113
+762,Social and Community Service Managers,11,9151
+763,Social and Human Service Assistants,21,1093
+764,Sociologists,19,3041
+765,"Sociology Teachers, Postsecondary",25,1067
+766,Software Quality Assurance Analysts and Testers,15,1253
+767,Soil and Plant Scientists,19,1013
+768,Solar Energy Installation Managers,47,1011
+769,Solar Energy Systems Engineers,17,2199
+770,Solar Photovoltaic Installers,47,2231
+771,Solar Sales Representatives and Assessors,41,4011
+772,Solar Thermal Installers and Technicians,47,2152
+773,Sound Engineering Technicians,27,4014
+774,Spa Managers,11,9179
+775,"Special Education Teachers, Middle School",25,2057
+776,"Special Education Teachers, Preschool",25,2051
+777,"Special Education Teachers, Secondary School",25,2058
+778,Special Effects Artists and Animators,27,1014
+779,Speech-Language Pathologists,29,1127
+780,Speech-Language Pathology Assistants,31,9099
+781,Sports Medicine Physicians,29,1229
+782,Stationary Engineers and Boiler Operators,51,8021
+783,Statistical Assistants,43,9111
+784,Statisticians,15,2041
+785,Stockers and Order Fillers,53,7065
+786,"Stone Cutters and Carvers, Manufacturing",51,9195
+787,Stonemasons,47,2022
+788,Structural Iron and Steel Workers,47,2221
+789,Structural Metal Fabricators and Fitters,51,2041
+790,Substance Abuse and Behavioral Disorder Counselors,21,1011
+791,Subway and Streetcar Operators,53,4041
+792,Supply Chain Managers,11,3071
+793,Surgical Assistants,29,9093
+794,Surgical Technologists,29,2055
+795,Survey Researchers,19,3022
+796,Surveying and Mapping Technicians,17,3031
+797,Surveyors,17,1022
+798,Sustainability Specialists,13,1199
+799,"Switchboard Operators, Including Answering Service",43,2011
+800,"Tailors, Dressmakers, and Custom Sewers",51,6052
+801,Talent Directors,27,2012
+802,"Tank Car, Truck, and Ship Loaders",53,7121
+803,Tapers,47,2082
+804,"Tax Examiners and Collectors, and Revenue Agents",13,2081
+805,Tax Preparers,13,2082
+806,"Teaching Assistants, Postsecondary",25,9044
+807,Team Assemblers,51,2092
+808,Technical Writers,27,3042
+809,Telecommunications Engineering Specialists,15,1241
+810,"Telecommunications Equipment Installers and Repairers, Except Line Installers",49,2022
+811,Telecommunications Line Installers and Repairers,49,9052
+812,Telemarketers,41,9041
+813,Telephone Operators,43,2021
+814,Tellers,43,3071
+815,Terrazzo Workers and Finishers,47,2053
+816,Textile Bleaching and Dyeing Machine Operators and Tenders,51,6061
+817,"Textile Cutting Machine Setters, Operators, and Tenders",51,6062
+818,"Textile Knitting and Weaving Machine Setters, Operators, and Tenders",51,6063
+819,"Textile Winding, Twisting, and Drawing Out Machine Setters, Operators, and Tenders",51,6064
+820,Tile and Stone Setters,47,2044
+821,Timing Device Assemblers and Adjusters,51,2061
+822,Tire Builders,51,9197
+823,Tire Repairers and Changers,49,3093
+824,"Title Examiners, Abstractors, and Searchers",23,2093
+825,"Tool Grinders, Filers, and Sharpeners",51,4194
+826,Tool and Die Makers,51,4111
+827,Tour Guides and Escorts,39,7011
+828,Traffic Technicians,53,6041
+829,Training and Development Managers,11,3131
+830,Training and Development Specialists,13,1151
+831,Transit and Railroad Police,33,3052
+832,Transportation Engineers,17,2051
+833,Transportation Inspectors,53,6051
+834,Transportation Planners,19,3099
+835,Transportation Security Screeners,33,9093
+836,"Transportation Vehicle, Equipment and Systems Inspectors, Except Aviation",53,6051
+837,"Transportation, Storage, and Distribution Managers",11,3071
+838,Travel Agents,41,3041
+839,Travel Guides,39,7012
+840,Treasurers and Controllers,11,3031
+841,Tree Trimmers and Pruners,37,3013
+842,Tutors,25,3041
+843,"Umpires, Referees, and Other Sports Officials",27,2023
+844,Upholsterers,51,6093
+845,Urban and Regional Planners,19,3051
+846,Urologists,29,1229
+847,"Ushers, Lobby Attendants, and Ticket Takers",39,3031
+848,Validation Engineers,17,2112
+849,Veterinarians,29,1131
+850,Veterinary Assistants and Laboratory Animal Caretakers,31,9096
+851,Veterinary Technologists and Technicians,29,2056
+852,Video Game Designers,15,1255
+853,Waiters and Waitresses,35,3031
+854,Watch and Clock Repairers,49,9064
+855,Water Resource Specialists,11,9121
+856,Water and Wastewater Treatment Plant and System Operators,51,8031
+857,Water/Wastewater Engineers,17,2051
+858,Weatherization Installers and Technicians,47,4099
+859,Web Administrators,15,1299
+860,Web Developers,15,1254
+861,"Weighers, Measurers, Checkers, and Samplers, Recordkeeping",43,5111
+862,"Welders, Cutters, Solderers, and Brazers",51,4121
+863,"Welding, Soldering, and Brazing Machine Setters, Operators, and Tenders",51,4122
+864,Wellhead Pumpers,53,7073
+865,"Wholesale and Retail Buyers, Except Farm Products",13,1022
+866,Wind Energy Development Managers,11,9199
+867,Wind Energy Engineers,17,2199
+868,Wind Energy Operations Managers,11,9199
+869,Wind Turbine Service Technicians,49,9081
+870,"Woodworking Machine Setters, Operators, and Tenders, Except Sawing",51,7042
+871,Word Processors and Typists,43,9022
+872,Writers and Authors,27,3043
+873,Zoologists and Wildlife Biologists,19,1023

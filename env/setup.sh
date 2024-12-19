@@ -35,4 +35,5 @@ conda activate $ENV_NAME
 # Rscript ./github.r
 
 # setup project root
+cd ..
 Rscript ./setup.r

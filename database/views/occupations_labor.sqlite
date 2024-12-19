@@ -1,0 +1,11 @@
+CREATE VIEW IF NOT EXISTS occupations_labor AS
+SELECT
+    occupation,
+    (employment / soc_variants) AS employment_variants,
+    (
+        (employment / soc_variants) / MIN(employment_variants)
+    ) AS employment_norm,
+    wage
+FROM
+    labor
+    RIGHT JOIN soc_variants ON labor.pk_occupation_id = soc_variants.pk_occupation_id;

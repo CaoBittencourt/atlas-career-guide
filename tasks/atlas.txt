@@ -4,6 +4,7 @@ ATLAS CAREER GUIDE TASKS
 
 current task
 -------------------------------------
+[ ] setup local sqlite database
 [\] modularize codebase
 [\] refine competence coefficient
 [\] standardize notation
