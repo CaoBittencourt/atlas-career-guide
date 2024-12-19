@@ -1,8 +1,20 @@
 CREATE VIEW IF NOT EXISTS soc_variants AS
 SELECT
     pk_occupation_id,
-    COUNT(*) AS soc_variants
+    COUNT(*) OVER (
+        PARTITION BY
+            soc_code
+    ) AS soc_variants
 FROM
-    occupations
-GROUP BY
-    soc_code;
+    occupations;
+
+-- CREATE VIEW IF NOT EXISTS soc_variants AS
+-- SELECT
+--     pk_occupation_id,
+--     COUNT(*) AS soc_variants
+-- FROM
+--     occupations
+-- GROUP BY
+--     soc_code
+-- ORDER BY
+--     pk_occupation_id;

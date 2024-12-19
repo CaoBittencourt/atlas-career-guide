@@ -205,6 +205,30 @@ list(
     pk_item_id = row_number()
   ) -> attributes
 
+activities |>
+  inner_join(attributes) |>
+  select(-item, -item_category) |>
+  relocate(-item_score) ->
+activities
+
+competencies |>
+  inner_join(attributes) |>
+  select(-item, -item_category) |>
+  relocate(-item_score) ->
+competencies
+
+contexts |>
+  inner_join(attributes) |>
+  select(-item, -item_category) |>
+  relocate(-item_score) ->
+contexts
+
+styles |>
+  inner_join(attributes) |>
+  select(-item, -item_category) |>
+  relocate(-item_score) ->
+styles
+
 # endregion
 # write
 # region: export data
@@ -212,32 +236,16 @@ print("Writing attributes data.")
 attributes |> write_csv("attributes.csv")
 
 print("Writing activities data.")
-activities |>
-  inner_join(attributes) |>
-  select(-item, -item_category) |>
-  relocate(-item_score) |>
-  write_csv("activities.csv")
+activities |> write_csv("activities.csv")
 
 print("Writing competencies data.")
-competencies |>
-  inner_join(attributes) |>
-  select(-item, -item_category) |>
-  relocate(-item_score) |>
-  write_csv("competencies.csv")
+competencies |> write_csv("competencies.csv")
 
 print("Writing contexts data.")
-contexts |>
-  inner_join(attributes) |>
-  select(-item, -item_category) |>
-  relocate(-item_score) |>
-  write_csv("contexts.csv")
+contexts |> write_csv("contexts.csv")
 
 print("Writing styles data.")
-styles |>
-  inner_join(attributes) |>
-  select(-item, -item_category) |>
-  relocate(-item_score) |>
-  write_csv("styles.csv")
+styles |> write_csv("styles.csv")
 
 print("Writing education data.")
 education |> write_csv("education.csv")
