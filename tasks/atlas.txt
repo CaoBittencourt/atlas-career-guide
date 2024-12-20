@@ -4,7 +4,6 @@ ATLAS CAREER GUIDE TASKS
 
 current task
 -------------------------------------
-[ ] setup local sqlite database
 [\] modularize codebase
 [\] refine competence coefficient
 [\] standardize notation
@@ -29,6 +28,7 @@ features
 
 finished
 -------------------------------------
+[x] setup local sqlite database
 [x] improved testing framework
 [x] construct dependency matrix
     - then cluster (with efa?)
