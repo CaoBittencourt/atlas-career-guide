@@ -2,42 +2,42 @@
 SOURCE CODE MODULARIZATION
 /////////////////////////////////////
 
-modularization execution order
+modularization execution (in order)
 -------------------------------------
-[ ] atlas/src/mod/compare
-    - [ ] atlas/src/mod/compare/dom.r
-    - [ ] atlas/src/mod/compare/eeq.r
-    - [ ] atlas/src/mod/compare/field.r
-    - [ ] atlas/src/mod/compare/hire.r
-    - [ ] atlas/src/mod/compare/joy.r
-    - [ ] atlas/src/mod/compare/match.r
-    - [ ] atlas/src/mod/compare/prod.r
-    - [ ] atlas/src/mod/compare/qa.r
-    - [ ] atlas/src/mod/compare/qa.r
-[ ] atlas/src/mod/fa
-    - [ ] atlas/src/mod/fa/efa.r
-    - [ ] atlas/src/mod/fa/fstatics.r
-    - [ ] atlas/src/mod/fa/ftools.r
-    - [ ] atlas/src/mod/fa/quest.r
-[ ] atlas/src/mod/ideal
-    - [ ] atlas/src/mod/ideal/ideal.r
-    - [ ] atlas/src/mod/ideal/optimize.r
-[ ] atlas/src/mod/labor
-    - [ ] atlas/src/mod/labor/employability.r
-    - [ ] atlas/src/mod/labor/market.r
-[ ] atlas/src/mod/macro
-    - [ ] atlas/src/mod/macro/evol.r
-    - [ ] atlas/src/mod/macro/taxa.r
-[\] atlas/src/mod/micro
-    - [ ] atlas/src/mod/micro/eta.r
-    - [\] atlas/src/mod/micro/kflex.r
-    - [ ] atlas/src/mod/micro/wage.r
-[ ] atlas/src/mod/plots
-    - [ ] atlas/src/mod/plots.r
-[ ] atlas/src/mod/roadmap
-    - [ ] atlas/src/mod/roadmap/goal.r
-    - [ ] atlas/src/mod/roadmap/path.r
-[x] atlas/src/mod/describe
-    - [x] atlas/src/mod/describe/aeq.r
-    - [x] atlas/src/mod/describe/comp.r
-    - [x] atlas/src/mod/describe/gene.r
+[\] atlas/src/mod/micro/kflex.r
+
+[ ] atlas/src/mod/compare/qa.r
+[ ] atlas/src/mod/compare/joy.r
+[ ] atlas/src/mod/compare/eeq.r
+[ ] atlas/src/mod/compare/match.r
+[ ] atlas/src/mod/compare/field.r
+[ ] atlas/src/mod/compare/prod.r
+[ ] atlas/src/mod/compare/hire.r
+[ ] atlas/src/mod/labor/employability.r
+
+[ ] atlas/src/mod/micro/wage.r
+[ ] atlas/src/mod/micro/eta.r
+
+[ ] atlas/src/mod/fa/efa.r
+[ ] atlas/src/mod/fa/fstatics.r
+[ ] atlas/src/mod/fa/ftools.r
+[ ] atlas/src/mod/fa/quest.r
+
+[ ] atlas/src/mod/ideal/ideal.r
+[ ] atlas/src/mod/ideal/optimize.r
+
+[ ] atlas/src/mod/macro/taxa.r
+
+[ ] atlas/src/mod/roadmap/goal.r
+[ ] atlas/src/mod/roadmap/path.r
+
+[ ] atlas/src/mod/macro/evol.r
+
+[ ] atlas/src/mod/labor/market.r
+[ ] atlas/src/mod/plots.r
+
+[x] atlas/src/mod/compare/dom.r
+
+[x] atlas/src/mod/describe/aeq.r
+[x] atlas/src/mod/describe/comp.r
+[x] atlas/src/mod/describe/gene.r

@@ -1,2 +1,2 @@
 # dom
-Dominance (`dom`) is calculated from a square matrix in the unit interval (and a vector of weights?).
+Dominance (`dom`) is calculated from a square matrix in the unit interval and an optional vector of weights.

@@ -39,4 +39,6 @@ cd ..
 Rscript env/setup.r
 
 # create database
-bash database/setup.sh
+if ! test -f database/atlas.db; then
+    bash database/setup.sh
+fi
