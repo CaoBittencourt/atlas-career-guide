@@ -20,7 +20,7 @@ skill_sets |>
   as_tibble() |>
   saveRDS("output/rds/skill_sets.rds")
 
-skill_sets |>
+skill_set_mtx |>
   as_tibble() |>
   saveRDS("output/rds/skill_set_mtx.rds")
 

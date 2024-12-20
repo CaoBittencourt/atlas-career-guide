@@ -15,6 +15,6 @@ cd $script_path
 # create database
 sqlite3 atlas.db <setup.sqlite
 
-# output database
+# # output database
 sqlite3 atlas.db <output.sqlite
 Rscript output.r

@@ -16,7 +16,11 @@ box::use(
 # endregion
 # region: data
 # onet occupations data frame
+# getOption("atlas.skills_mtx") |> readRDS() -> df_occupations
 getOption("atlas.skills") |> readRDS() -> df_occupations
+
+# labor statistics
+getOption("atlas.labor") |> readRDS() -> df_labor
 
 # my preference-adjusted skill set
 getOption("atlas.data") |>
@@ -40,38 +44,6 @@ df_skill_set |>
       .fns = ~ .x / 100
     )
   ) -> df_skill_set
-
-# sample occupations
-c(
-  "Mechanical Engineers",
-  "Physicists",
-  "Credit Analysts",
-  "Dishwashers",
-  "Registered Nurses",
-  "Hospitalists",
-  "Philosophy and Religion Teachers, Postsecondary"
-) -> chr_sample
-
-# df_occupations$
-#   occupation ->
-# chr_sample
-
-# Sample occupations data frame
-df_occupations %>%
-  filter(
-    occupation %in%
-      chr_sample
-  ) %>%
-  mutate(
-    occupation = factor(
-      occupation,
-      levels =
-        chr_sample
-    )
-  ) %>%
-  arrange(
-    occupation
-  ) -> df_sample
 
 # endregion
 # model
@@ -116,17 +88,8 @@ df_comp_mine
 # endregion
 # region: occupations' competence and generality
 df_occupations |>
-  pivot_longer(
-    cols = -c(1:3),
-    names_to = "item",
-    values_to = "item_score"
-  ) |>
   group_by(occupation) |>
   reframe(
-    across(
-      .cols = -starts_with("item"),
-      .fns = first
-    ),
     comp_method = df_models$comp_method,
     aeq_method = df_models$aeq_method,
     gene = desc$gn$gene(item_score),
@@ -142,6 +105,7 @@ df_occupations |>
       aem = aeq_method
     )
   ) |>
+  inner_join(df_labor) |>
   arrange(-comp) ->
 df_comp_occupations
 

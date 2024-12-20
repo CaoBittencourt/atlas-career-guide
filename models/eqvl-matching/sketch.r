@@ -1,12 +1,13 @@
 # setup
 # region: modules
-modular::project.options('atlas')
+modular::project.options("atlas")
 
 # endregion
 # region: imports
 box::use(
   cbdg = mod / compare / match / methods / cobb_douglas,
   gmme = mod / compare / match / methods / gmme,
+  stringr[str_remove_all]
 )
 
 library(dplyr)
@@ -16,34 +17,17 @@ library(atlas.plot)
 # endregion
 # region: data
 # onet occupations data frame
-getOption("atlas.occupations") |>
-  read.csv() |>
-  as_tibble() ->
-df_occupations
-
-df_occupations |>
-  mutate(
-    across(
-      .cols = c(
-        starts_with("skl_"),
-        starts_with("abl_"),
-        starts_with("knw_")
-      ),
-      .fns = ~ .x / 100
-    )
-  ) -> df_occupations
+getOption("atlas.skills_mtx") |> readRDS() -> df_occupations
 
 # my preference-adjusted skill set
 getOption("atlas.data") |>
   file.path(
+    "old",
     "questionnaires",
     "questionnaire_Cao.csv"
   ) |>
   read.csv() |>
-  as_tibble() ->
-df_skill_set
-
-df_skill_set |>
+  as_tibble() |>
   mutate(
     across(
       .cols = c(
@@ -53,61 +37,19 @@ df_skill_set |>
       ),
       .fns = ~ .x / 100
     )
+  ) |>
+  rename_with(
+    .fn = function(x) {
+      x |>
+        str_remove_all("^skl_") |>
+        str_remove_all("^abl_") |>
+        str_remove_all("^knw_")
+    }
   ) -> df_skill_set
-
-# sample occupations
-c(
-  "Mechanical Engineers",
-  "Physicists",
-  "Credit Analysts",
-  "Dishwashers",
-  "Registered Nurses",
-  "Hospitalists",
-  "Philosophy and Religion Teachers, Postsecondary"
-) -> chr_sample
-
-# df_occupations$
-#   occupation ->
-# chr_sample
-
-# Sample occupations data frame
-df_occupations %>%
-  filter(
-    occupation %in%
-      chr_sample
-  ) %>%
-  mutate(
-    occupation = factor(
-      occupation,
-      levels =
-        chr_sample
-    )
-  ) %>%
-  arrange(
-    occupation
-  ) -> df_sample
-
-# Select only occupations and attributes
-df_sample %>%
-  select(
-    occupation,
-    starts_with("skl_"),
-    starts_with("abl_"),
-    starts_with("knw_")
-  ) -> df_sample
 
 # endregion
 # model
 # region: cobb-douglas matching model
-# df_occupations |>
-#   slice_head(n = 1) |>
-#   select(
-#     occupation,
-#     starts_with("skl_"),
-#     starts_with("abl_"),
-#     starts_with("knw_")
-#   ) -> df_skill_set
-
 df_skill_set[-1] ->
 df_skill_set
 
@@ -197,15 +139,6 @@ cbdg$cobb_douglas(
 
 # endregion
 # region: geometric mean matching model
-# df_occupations |>
-#   slice_head(n = 1) |>
-#   select(
-#     occupation,
-#     starts_with("skl_"),
-#     starts_with("abl_"),
-#     starts_with("knw_")
-#   ) -> df_skill_set
-
 df_skill_set[-1] ->
 df_skill_set
 

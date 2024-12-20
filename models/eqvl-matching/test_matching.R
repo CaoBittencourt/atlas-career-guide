@@ -56,61 +56,35 @@ Map(
 # endregion
 # region: data
 # onet occupations data frame
-getOption("atlas.occupations") |>
-  read.csv() |>
-  as_tibble() ->
-df_occupations
+getOption("atlas.skills_mtx") |> readRDS() -> df_occupations
 
 # my preference-adjusted skill set
 getOption("atlas.data") |>
   file.path(
+    "old",
     "questionnaires",
     "questionnaire_Cao.csv"
   ) |>
   read.csv() |>
-  as_tibble() ->
-df_skill_set
-
-# sample occupations
-c(
-  "Mechanical Engineers",
-  "Physicists",
-  "Credit Analysts",
-  "Dishwashers",
-  "Registered Nurses",
-  "Hospitalists",
-  "Philosophy and Religion Teachers, Postsecondary"
-) -> chr_sample
-
-# df_occupations$
-#   occupation ->
-# chr_sample
-
-# Sample occupations data frame
-df_occupations %>%
-  filter(
-    occupation %in%
-      chr_sample
-  ) %>%
+  as_tibble() |>
   mutate(
-    occupation = factor(
-      occupation,
-      levels =
-        chr_sample
+    across(
+      .cols = c(
+        starts_with("skl_"),
+        starts_with("abl_"),
+        starts_with("knw_")
+      ),
+      .fns = ~ .x / 100
     )
-  ) %>%
-  arrange(
-    occupation
-  ) -> df_sample
-
-# Select only occupations and attributes
-df_sample %>%
-  select(
-    occupation,
-    starts_with("skl_"),
-    starts_with("abl_"),
-    starts_with("knw_")
-  ) -> df_sample
+  ) |>
+  rename_with(
+    .fn = function(x) {
+      x |>
+        str_remove_all("^skl_") |>
+        str_remove_all("^abl_") |>
+        str_remove_all("^knw_")
+    }
+  ) -> df_skill_set
 
 # endregion
 # model
@@ -192,6 +166,8 @@ Map(
 
 # endregion
 df_matches_mine
+
+df_matches_mine |> group_by(model) |> group_split() -> dsds
 
 
 list_matches_mine

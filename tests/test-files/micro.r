@@ -38,22 +38,25 @@ box::use(
 # endregion
 # region: data
 # skill set matrix
-getOption("atlas.occupations") |>
-  read.csv() |>
-  as_tibble() ->
-df_occupations
+getOption("atlas.skills_mtx") |> readRDS() -> df_skill_mtx
 
-df_occupations |>
-  select(
-    starts_with("skl_"),
-    starts_with("abl_"),
-    starts_with("knw_")
-  ) |>
-  mutate(across(
-    .cols = everything(),
-    .fns = ~ .x / 100
-  )) ->
-df_skill_mtx
+# labor statistics
+getOption("atlas.labor") |> readRDS() -> df_labor
+
+# non-numeric data
+df_skill_mtx |>
+  select(occupation) |>
+  inner_join(
+    getOption("atlas.oldata") |>
+      read.csv() |>
+      as_tibble()
+  ) -> df_occupations
+
+# check if ordered
+all(df_skill_mtx$occupation == df_occupations$occupation)
+all(df_skill_mtx$occupation == df_labor$occupation)
+
+df_skill_mtx[-1] -> df_skill_mtx
 
 # endregion
 # tests
@@ -111,19 +114,19 @@ test_Phi <- function() {
         df_skill_mtx |> as.matrix() |> micro$kflex$Phi() <= 1
       ),
       all(
-        df_skill_mtx |> micro$kflex$Phi(weights = df_occupations$employment_norm) >= 0,
-        df_skill_mtx |> micro$kflex$Phi(weights = df_occupations$employment_norm) <= 1
+        df_skill_mtx |> micro$kflex$Phi(weights = df_labor$employment_norm) >= 0,
+        df_skill_mtx |> micro$kflex$Phi(weights = df_labor$employment_norm) <= 1
       ),
       all(
-        df_skill_mtx |> as.matrix() |> micro$kflex$Phi(weights = df_occupations$employment_norm) >= 0,
-        df_skill_mtx |> as.matrix() |> micro$kflex$Phi(weights = df_occupations$employment_norm) <= 1
+        df_skill_mtx |> as.matrix() |> micro$kflex$Phi(weights = df_labor$employment_norm) >= 0,
+        df_skill_mtx |> as.matrix() |> micro$kflex$Phi(weights = df_labor$employment_norm) <= 1
       )
     ),
     "output is the same length as the number of attributes in the skill set matrix" = list(
       df_skill_mtx |> micro$kflex$Phi() |> length() == ncol(df_skill_mtx),
       df_skill_mtx |> as.matrix() |> micro$kflex$Phi() |> length() == ncol(df_skill_mtx),
-      df_skill_mtx |> micro$kflex$Phi(weights = df_occupations$employment_norm) |> length() == ncol(df_skill_mtx),
-      df_skill_mtx |> as.matrix() |> micro$kflex$Phi(weights = df_occupations$employment_norm) |> length() == ncol(df_skill_mtx)
+      df_skill_mtx |> micro$kflex$Phi(weights = df_labor$employment_norm) |> length() == ncol(df_skill_mtx),
+      df_skill_mtx |> as.matrix() |> micro$kflex$Phi(weights = df_labor$employment_norm) |> length() == ncol(df_skill_mtx)
     )
   )
 }
@@ -183,25 +186,25 @@ test_phi <- function() {
         df_skill_mtx |> as.matrix() |> micro$kflex$phi() <= 1
       ),
       all(
-        df_skill_mtx |> micro$kflex$phi(weights = df_occupations$employment_norm) >= 0,
-        df_skill_mtx |> micro$kflex$phi(weights = df_occupations$employment_norm) <= 1
+        df_skill_mtx |> micro$kflex$phi(weights = df_labor$employment_norm) >= 0,
+        df_skill_mtx |> micro$kflex$phi(weights = df_labor$employment_norm) <= 1
       ),
       all(
-        df_skill_mtx |> as.matrix() |> micro$kflex$phi(weights = df_occupations$employment_norm) >= 0,
-        df_skill_mtx |> as.matrix() |> micro$kflex$phi(weights = df_occupations$employment_norm) <= 1
+        df_skill_mtx |> as.matrix() |> micro$kflex$phi(weights = df_labor$employment_norm) >= 0,
+        df_skill_mtx |> as.matrix() |> micro$kflex$phi(weights = df_labor$employment_norm) <= 1
       )
     ),
     "output is the same length as the number of attributes in the skill set matrix" = list(
       df_skill_mtx |> micro$kflex$phi() |> dim() == ncol(df_skill_mtx),
       df_skill_mtx |> as.matrix() |> micro$kflex$phi() |> dim() == ncol(df_skill_mtx),
-      df_skill_mtx |> micro$kflex$phi(weights = df_occupations$employment_norm) |> dim() == ncol(df_skill_mtx),
-      df_skill_mtx |> as.matrix() |> micro$kflex$phi(weights = df_occupations$employment_norm) |> dim() == ncol(df_skill_mtx)
+      df_skill_mtx |> micro$kflex$phi(weights = df_labor$employment_norm) |> dim() == ncol(df_skill_mtx),
+      df_skill_mtx |> as.matrix() |> micro$kflex$phi(weights = df_labor$employment_norm) |> dim() == ncol(df_skill_mtx)
     ),
     "attributes' microflexibility with respect to themselves is 1." = list(
       df_skill_mtx |> micro$kflex$phi() |> diag() == 1,
       df_skill_mtx |> as.matrix() |> micro$kflex$phi() |> diag() == 1,
-      df_skill_mtx |> micro$kflex$phi(weights = df_occupations$employment_norm) |> diag() == 1,
-      df_skill_mtx |> as.matrix() |> micro$kflex$phi(weights = df_occupations$employment_norm) |> diag() == 1
+      df_skill_mtx |> micro$kflex$phi(weights = df_labor$employment_norm) |> diag() == 1,
+      df_skill_mtx |> as.matrix() |> micro$kflex$phi(weights = df_labor$employment_norm) |> diag() == 1
     )
   )
 }

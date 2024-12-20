@@ -9,9 +9,9 @@ library(tidyr)
 getOption("atlas.db") |> setwd()
 
 # data
-readRDS('output/rds/skill_sets.rds') -> skill_set_mtx
-readRDS('output/rds/education.rds') -> education
-readRDS('output/rds/labor.rds') -> labor
+readRDS("output/rds/skill_set_mtx.rds") -> skill_set_mtx
+readRDS("output/rds/education.rds") -> education
+readRDS("output/rds/labor.rds") -> labor
 
 # check if data matches
 skill_set_mtx |>
@@ -27,7 +27,10 @@ skill_set_mtx |>
   as_tibble() ->
 occupations
 
-read.csv("data/old/occupations/df_occupations_2022.csv") |> as_tibble() -> df_occupations
+getOption("atlas.oldata") |>
+  read.csv() |>
+  as_tibble() ->
+df_occupations
 
 occupations |>
   select(

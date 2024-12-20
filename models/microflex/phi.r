@@ -14,28 +14,24 @@ library(atlas.plot)
 
 # endregion
 # region: data
-getOption("atlas.occupations") |>
-  read.csv() |>
-  as_tibble() ->
-df_occupations
+# skill set matrix
+getOption("atlas.skills_mtx") |> readRDS() -> df_occupations
+
+# labor statistics
+getOption("atlas.labor") |>
+  readRDS() |>
+  inner_join(
+    df_occupations
+  ) -> df_labor
+
+df_labor$employment_norm |>
+  setNames(df_labor$occupation) ->
+employment_levels
 
 # endregion
 # model
 # region: human capital microflexibility
-df_occupations |>
-  select(
-    starts_with("skl_"),
-    starts_with("abl_"),
-    starts_with("knw_")
-  ) |>
-  mutate(across(
-    .cols = everything(),
-    .fns = ~ .x / 100
-  )) |>
-  kflex$phi(
-    weights = df_occupations$
-      employment_variants
-  ) -> mtx_phi
+df_occupations[-1] |> kflex$phi(employment_levels) -> mtx_phi
 
 # endregion
 # plots
