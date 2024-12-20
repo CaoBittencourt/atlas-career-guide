@@ -18,14 +18,14 @@ PRAGMA foreign_keys = ON;
 .read tables/required_education.sqlite
 .read tables/labor.sqlite
 
--- -- create indexes
--- .read tables/indexes.sqlite
-
 -- create views
 .read views/soc_variants.sqlite
 .read views/occupations_education.sqlite
 .read views/occupations_labor.sqlite
 .read views/occupations_skills.sqlite
+
+-- -- create indexes
+-- .read tables/indexes.sqlite
 
 -- populate database
 .mode csv

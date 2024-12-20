@@ -16,26 +16,12 @@ box::use(
 # endregion
 # region: data
 # onet occupations data frame
-getOption("atlas.occupations") |>
-  read.csv() |>
-  as_tibble() ->
-df_occupations
-
-df_occupations |>
-  mutate(
-    across(
-      .cols = c(
-        starts_with("skl_"),
-        starts_with("abl_"),
-        starts_with("knw_")
-      ),
-      .fns = ~ .x / 100
-    )
-  ) -> df_occupations
+getOption("atlas.skills") |> readRDS() -> df_occupations
 
 # my preference-adjusted skill set
 getOption("atlas.data") |>
   file.path(
+    "old",
     "questionnaires",
     "questionnaire_Cao.csv"
   ) |>
@@ -87,15 +73,6 @@ df_occupations %>%
     occupation
   ) -> df_sample
 
-# Select only occupations and attributes
-df_sample %>%
-  select(
-    occupation,
-    starts_with("skl_"),
-    starts_with("abl_"),
-    starts_with("knw_")
-  ) -> df_sample
-
 # endregion
 # model
 # region: estimation methods
@@ -139,14 +116,6 @@ df_comp_mine
 # endregion
 # region: occupations' competence and generality
 df_occupations |>
-  select(
-    occupation,
-    employment_norm,
-    wage,
-    starts_with("skl_"),
-    starts_with("abl_"),
-    starts_with("knw_")
-  ) |>
   pivot_longer(
     cols = -c(1:3),
     names_to = "item",
