@@ -44,6 +44,8 @@ mtx_phi |> dom$dominance(aggregate = F) -> mtx_dom
 # region: aggregate attribute dominance
 mtx_phi |> dom$dominance() -> dominance
 
+dominance
+
 # endregion
 # tests
 # region: dominance diagonal is zero
@@ -66,9 +68,15 @@ mtx_dom |>
       y = to,
       fill = value
     ),
+    .reorder_fct = F,
     .list_geom.param = list(),
-    .reorder_desc = T,
-    .reorder_fun = max
+  ) +
+  theme(
+    axis.text.x = element_text(
+      angle = 90,
+      vjust = 0.5,
+      hjust = 1,
+    )
   )
 
 # endregion
