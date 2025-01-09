@@ -4,8 +4,8 @@ SOURCE CODE MODULARIZATION
 
 modularization execution (in order)
 -------------------------------------
-[ ] atlas/src/mod/compare/joy.r
 [ ] atlas/src/mod/compare/eeq.r
+[ ] atlas/src/mod/compare/joy.r
 [ ] atlas/src/mod/compare/match.r
 [ ] atlas/src/mod/compare/field.r
 [ ] atlas/src/mod/compare/prod.r
