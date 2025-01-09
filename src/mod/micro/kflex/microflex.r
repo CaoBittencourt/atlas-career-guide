@@ -1,6 +1,7 @@
 # region: imports
 box::use(
   assert = mod / utils / assert,
+  dom = mod / compare / dom,
   bvls[bvls],
   dplyr[bind_rows, select]
 )
@@ -80,9 +81,13 @@ phi <- function(skill_mtx, weights = NULL) {
 
 # endregion
 # region: attribute dominance
+attribute.dominance <- function(skill_mtx, weights = NULL, aggregate = T) {
+  # estimate capital microflexibility matrix, then pass it to the dominance function
+  return(phi(skill_mtx, weights = NULL) |> dom$dominance(weights = NULL, aggregate))
+}
 
 # endregion
 # region: exports
-box::export(phi)
+box::export(phi, attribute.dominance)
 
 # endregion

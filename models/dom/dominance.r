@@ -56,11 +56,11 @@ all(mtx_dom |> diag() == 0)
 # region: attribute dominance matrix heatmap
 mtx_dom |>
   as_tibble(
-    rownames = "from"
+    rownames = "to"
   ) |>
   pivot_longer(
     cols = -1,
-    names_to = "to"
+    names_to = "from"
   ) |>
   fun_plot.heatmap(
     aes(
@@ -70,13 +70,23 @@ mtx_dom |>
     ),
     .reorder_fct = F,
     .list_geom.param = list(),
+    .list_labs = list(
+      title = "Attribute Dominance Heatmap",
+      subtitle = "Which skills contribute to learning other skills?",
+      x = "",
+      y = "",
+      fill = "Human Capital Dominance",
+      caption = 'Note: it is clear some attributes do contribute more to learning than others; however, no single attribute stands out as being more "dominant" overall.'
+    )
   ) +
   theme(
     axis.text.x = element_text(
       angle = 90,
       vjust = 0.5,
       hjust = 1,
-    )
+    ),
+    legend.justification = "center",
+    legend.title.position = "top"
   )
 
 # endregion

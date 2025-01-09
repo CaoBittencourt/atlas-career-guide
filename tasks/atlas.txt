@@ -22,6 +22,7 @@ fixes
 
 features
 -------------------------------------
+[ ] vectorize aeq?
 [ ] check out ggraph package
 [ ] generality vs competence article
 [ ] create atlas metapackage

@@ -25,6 +25,17 @@ valid_skill_mtx <- function(skill_mtx) {
 }
 
 # endregion
+# region: as skill set matrix
+as.skill_mtx <- function(skill_mtx) {
+  # skill sets as columns (for lapply)
+  cbind(skill_mtx) -> skill_mtx
+  # rbind(skill_mtx) -> skill_mtx
+  valid_skill_mtx(skill_mtx)
+  # rownames(skill_mtx) <- NULL
+  return(as.data.frame(skill_mtx))
+}
+
+# endregion
 # region: assert generality
 valid_generality <- function(generality) {
   stopifnot(
@@ -44,6 +55,7 @@ valid_generality <- function(generality) {
 box::export(
   valid_skill_set,
   valid_skill_mtx,
+  as.skill_mtx,
   valid_generality
 )
 

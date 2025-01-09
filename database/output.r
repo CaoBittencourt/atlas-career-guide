@@ -6,7 +6,8 @@ read.csv("output/skill_sets.csv") -> skill_sets
 
 skill_sets |> 
   pivot_wider(
-    names_from = "item",
+    # names_from = "item",
+    names_from = "occupation",
     values_from = "item_score"
   ) -> skill_set_mtx
 

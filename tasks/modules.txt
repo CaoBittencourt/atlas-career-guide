@@ -4,9 +4,6 @@ SOURCE CODE MODULARIZATION
 
 modularization execution (in order)
 -------------------------------------
-[\] atlas/src/mod/micro/kflex.r
-
-[ ] atlas/src/mod/compare/qa.r
 [ ] atlas/src/mod/compare/joy.r
 [ ] atlas/src/mod/compare/eeq.r
 [ ] atlas/src/mod/compare/match.r
@@ -14,6 +11,8 @@ modularization execution (in order)
 [ ] atlas/src/mod/compare/prod.r
 [ ] atlas/src/mod/compare/hire.r
 [ ] atlas/src/mod/labor/employability.r
+
+[ ] atlas/src/mod/micro/kflex/macroflex.r
 
 [ ] atlas/src/mod/micro/wage.r
 [ ] atlas/src/mod/micro/eta.r
@@ -37,7 +36,8 @@ modularization execution (in order)
 [ ] atlas/src/mod/plots.r
 
 [x] atlas/src/mod/compare/dom.r
-
+[x] atlas/src/mod/compare/qa.r
 [x] atlas/src/mod/describe/aeq.r
 [x] atlas/src/mod/describe/comp.r
 [x] atlas/src/mod/describe/gene.r
+[x] atlas/src/mod/micro/kflex/microflex.r
