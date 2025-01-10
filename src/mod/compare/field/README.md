@@ -12,6 +12,17 @@ s_{kq}^{\theta} :=
     \left\lVert{\boldsymbol{\ddot{a}_{k}}}\right\lVert
     \left\lVert{\boldsymbol{\ddot{a}_{q}}}\right\lVert
 }
+:=
+\frac{
+    \sum_{i=1}^{m} \ddot{a}_{i}^{k} \ddot{a}_{i}^{q}
+}{
+    \sqrt{
+        \sum_{i=1}^{m} \ddot{a}_{i}^{k} \ddot{a}_{i}^{k}
+    }
+    \sqrt{
+        \sum_{i=1}^{m} \ddot{a}_{i}^{k} \ddot{a}_{i}^{k}
+    }
+}
 \in
 [0,1]
 .

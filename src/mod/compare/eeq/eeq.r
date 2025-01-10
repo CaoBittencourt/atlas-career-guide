@@ -23,7 +23,7 @@ eeq.log <- function(years, min_years) {
   # assert args in main function
   return(
     glogis$logistic(
-      x = years,
+      x = 1 + years,
       a = 0,
       k = 1,
       c = 1,
