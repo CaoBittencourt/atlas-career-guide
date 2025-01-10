@@ -28,7 +28,7 @@ seq(0, 2 * max(min_years), length.out = 1000) -> years
 # region: education and experience equivalence
 expand.grid(
   req_years = min_years,
-  method = c("linear-logistic", "logistic", "linear", "binary")
+  method = c("logistic", "binary", "linear")
 ) |>
   mutate(
     model =
@@ -73,6 +73,10 @@ df_eeq |>
     y = eeq,
     ), 
   .sym_facets = c(method, req_years)
+  ) + geom_vline(aes(
+      xintercept = req_years
+    ),
+    linetype = 'dashed'
   )
 
 # endregion
