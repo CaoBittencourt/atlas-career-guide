@@ -9,3 +9,4 @@
     |attribute m1| ... |attribute mn|
 even though attributes are variables and, should, therefore, be the columns. Pragmatically, then, the skill set matrix is assumed to be pivoted throughout this source code (even if not so in the papers)
 4. use matrix and vector operations whenever appropriate (even preferable over apply function)
+?. skill_set |> assert$as.skill_mtx() |> ls?apply(function) |> return()
