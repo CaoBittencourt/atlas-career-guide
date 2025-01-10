@@ -66,7 +66,7 @@ eee$eeq |>
 
 # endregion
 # plots
-# region:
+# region: eeq line plot
 df_eeq |>
   fun_plot.line(aes(
     x = years,
