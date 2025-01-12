@@ -78,14 +78,15 @@ list(
   occupations = list(
     skill_mtx = matrix(19, 120, 4),
     aeq_mtx = matrix(1, 120, 4)
-  ),
-  # methods = rbind(c(paste0('method', 1:5)))
-  match_method = list(as.list(paste0("method", 1:5))),
-  dsds = rbind(c("dsds", "lalala"))
-  # dsds = list(as.list(c("dsds", "lalala")))
+  )
+  # ,
+  # # methods = rbind(c(paste0('method', 1:5)))
+  # match_method = list(as.list(paste0("method", 1:5))),
+  # dsds = rbind(c("dsds", "lalala"))
+  # # dsds = list(as.list(c("dsds", "lalala")))
 ) -> dsds
-dsds |> egmap(matching) -> eg
-dsds[names(eg)] |> nestmap(as.data.frame)
+# dsds |> egmap(matching) -> eg
+# dsds[names(eg)] |> nestmap(as.data.frame)
 # mapply(
 #   function(data, comb){
 #     fn()
@@ -99,7 +100,7 @@ dsds |> lapply(nestmap, as.data.frame) -> iters
 
 iters |>
   sapply(nestmap, ncol) |>
-  sapply(nestmap, seq_len) |>
+  lapply(nestmap, seq_len) |>
   sapply(function(i) {
     i[[1]]
   }) |>
@@ -125,6 +126,31 @@ mapply(
 eg
 
 list_flatten(iters) -> iters
-eg |> t() |> as.data.frame()
 
-iters
+eg |>
+  t() |>
+  as.data.frame() |>
+  lapply(function(i) {
+    Map(
+      function(data, i) {
+        sum(data[, i])
+        # do.call(
+        #   fn, c(data[, i], ...)
+        # )
+      },
+      data = iters,
+      i = i
+    )
+  }) ->
+dsdsds
+
+Map(
+  function(data, i) {
+    data[, i]
+  },
+  data = iters,
+  i = dsdsds[[1]]
+)
+iters |> lapply(function(data) {
+  data[, i]
+})
