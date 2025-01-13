@@ -1,11 +1,13 @@
 modular::project.options("atlas")
 # region: imports
+# install.packages('mgsub')
 box::use(
   mod / utils / depth[...],
   mod / utils / sublist[...],
   mod / utils / nestmap[...],
   mod / utils / proper_list[...],
-  purrr[list_flatten]
+  purrr[list_flatten, map_if],
+  mgsub[mgsub]
 )
 # endregion
 # region: expand.grid map
@@ -68,18 +70,6 @@ egmap <- function(iters, fn, args = NULL) {
   )
 }
 
-# list(
-#   skill_set = data.frame(person1 = c(1, rep(19, 119)), person2 = c(9, rep(19, 119))),
-#   occupations = list(
-#     skill_mtx = matrix(19, 120, 4),
-#     aeq_mtx = matrix(1, 120, 4)
-#   )
-#   # ,
-#   # # methods = rbind(c(paste0('method', 1:5)))
-#   # match_method = list(as.list(paste0("method", 1:5))),
-#   # dsds = rbind(c("dsds", "lalala"))
-#   # # dsds = list(as.list(c("dsds", "lalala")))
-# ) -> dsds
 getOption("atlas.skills_mtx") |> readRDS() -> dsds
 dsds[-1] -> dsds
 
@@ -87,10 +77,26 @@ skill_set <- dsds[1:2]
 skill_mtx <- dsds[1:4]
 weights_mtx <- dsds[1:4]
 
+box::use(stats[weighted.mean])
+fn <- function(ak, aq, äq, method) {
+  if (method == "method1") {
+    print("method1")
+    return(weighted.mean(ak, aq, äq))
+  }
+
+  if (method == "method2") {
+    print("method2")
+    return(max(äq * ak) - max(äq * aq))
+  }
+
+  print("no such method")
+  return(NA)
+}
+
 list(
   individuals = skill_set,
   occupations = list(
-    skill_mtx = skill_mtx, 
+    skill_mtx = skill_mtx,
     weights_mtx = weights_mtx
   ),
   method = rbind(paste0("method", 1:2) |> setNames(paste0("method", 1:2)))
@@ -98,7 +104,29 @@ list(
 
 dsds |> lapply(nestmap, as.data.frame) -> iters
 
-iters |> lapply(nestmap, colnames)
+iters |> lapply(nestmap, colnames) -> lalala
+
+# lalala |> list() |> nestmap(names) |> list_flatten()
+
+# lalala |> names() -> names.iters
+# lalala |> nestmap(names) -> names.parallel
+# names(lalala)[]
+# lalala[lalala |> sapply(is.null)] <- names(lalala)
+
+# lalala |> names()
+# lalala |> map_if(is.proper.list, colnames, names)
+
+# lalala |> lapply(
+#   function(i){
+#     if(is.proper.list(i)){
+
+#     }
+#   }
+# )
+# lalala |> names() |> length()
+# lalala |> nestmap(names) |> length()
+# # lalala |> lapply(is.proper.list)
+# lalala |> names()
 
 iters |>
   sapply(nestmap, ncol) |>
@@ -130,21 +158,9 @@ eg
 # iters |> names()
 # iters |> lapply(names)
 list_flatten(iters) -> iters
-box::use(stats[weighted.mean])
-fn <- function(ak, aq, äq, method){
-  if(method == 'method1'){
-    print('method1')
-    return(weighted.mean(ak, aq, äq)) 
-  }
-  
-  if(method == 'method2'){
-    print('method2')
-    return(max(äq * ak) - max(äq * aq)) 
-  }
-  
-  print('no such method')
-  return(NA)
-}
+eg
+iters
+lalala
 
 eg |>
   t() |>
@@ -154,10 +170,10 @@ eg |>
       do.call(
         fn,
         Map(
-          function(
-            # name, 
-            data, i) {
-            data[, i]
+          function( # name,
+                   data, i) {
+            # data[, i]
+            data[i]
           },
           # name = colnames(iters),
           i = i,
@@ -166,7 +182,17 @@ eg |>
         # |> c(...)
       )
     }
-  ) 
-# ->
-# eg$value
-# eg
+  ) -> value
+
+mgsub |>
+  mapply(
+    eg,
+    eg |> lapply(unique),
+    iters |>
+      lapply(nestmap, colnames) |>
+      list_flatten()
+  ) |>
+  as.data.frame() ->
+eg
+
+eg$value <- value
