@@ -6,202 +6,123 @@ box::use(
   mod / utils / sublist[...],
   mod / utils / nestmap[...],
   mod / utils / proper_list[...],
-  mod / utils / enlist[...],
+  mod / utils / name[...],
   purrr[list_flatten, map_if],
+  tidyr[as_tibble],
   mgsub[mgsub]
 )
 # endregion
 # region: expand.grid map
-
-# endregion
-# region: exports
-# box::export()
-
-# endregion
-# expand.grid map
-egmap <- function(iters, fn, args = NULL) {
+egmap <- function(iters, fn, ...) {
   # assert args
   stopifnot(
-    "'iters' must not be nested more than two levels deep." = all(
-      iters |> sapply(depth) <= 2
-    )
+    "'iters' must be a list of arguments over which to iterate with 'fn'." =
+      is.proper.list(iters)
   )
 
-  # parallel iterables must have the same number of columns each
+  # stopifnot(
+  #   "'iters' must not be nested more than two levels deep." = all(
+  #     iters |> sapply(depth) <= 2
+  #   )
+  # )
+
+  stopifnot(
+    "'fn' must be a function." = is.function(fn)
+  )
+
+  # convert everything to dataframes for iteration
+  iters |> name() -> iters
+  Map(name, iters, names(iters)) -> iters
   iters |> lapply(nestmap, as.data.frame) -> iters
-  # iters |> sublist(is.proper.list) -> iters.parallel
-  # iters |> sublist(is.proper.list, negate = T) -> iters
 
-  # iters |> lapply(as.data.frame) -> iters
-  # iters.parallel |> lapply(lapply, as.data.frame) -> iters.parallel
-
+  # get reps for parallel args
   iters |>
-    lapply(
-      function(i) {
-        1:ncol(i)
-      }
+    map_if(
+      is.proper.list,
+      length,
+      .else = ~1
+    ) ->
+  reps
+
+  # expand grid
+  iters |>
+    map_if(
+      is.proper.list,
+      ~ .x[[1]] |> ncol(),
+      .else = ncol
     ) |>
-    c(
-      iters.parallel |> lapply(
-        function(i) {
-          1:ncol(i[[1]])
-        }
-      )
-    ) |>
+    lapply(seq_len) |>
     expand.grid() ->
   eg
 
-  return(
-    eg
-    # eg |>
-    #   t() |>
-    #   as.data.frame() |>
-    #   lapply(
-    #     function(i) {
-    #       do.call(
-    #         fn,
-    #         args = c(
-    #           iters, c(iters.parallel)
-    #         ) |> lapply(function(data) {
-    #           data[[i]]
-    #         }) |> c(args)
-    #       )
-    #     }
-    #   )
-  )
-}
+  eg[
+    rep |>
+      mapply(
+        1:ncol(eg),
+        reps
+      ) |>
+      unlist()
+  ] -> eg
 
-getOption("atlas.skills_mtx") |> readRDS() -> dsds
-dsds[-1] -> dsds
+  # iter names
+  mapply(
+    function(name, nested.name, is.nested) {
+      if (is.nested) {
+        return(nested.name)
+      }
 
-skill_set <- dsds[1:2]
-skill_mtx <- dsds[1:4]
-weights_mtx <- dsds[1:4]
+      return(name)
+    },
+    is.nested = reps > 1,
+    name = iters |> names(),
+    nested.name = iters |> nestmap(names)
+  ) |>
+    unlist() |>
+    unname() ->
+  iters.names
 
-box::use(stats[weighted.mean])
-fn <- function(ak, aq, äq, method) {
-  if (method == "method1") {
-    print("method1")
-    return(weighted.mean(ak, aq, äq))
-  }
+  # call function over expand grid
+  list_flatten(iters) -> iters
 
-  if (method == "method2") {
-    print("method2")
-    return(max(äq * ak) - max(äq * aq))
-  }
-
-  print("no such method")
-  return(NA)
-}
-
-list(
-  individuals = skill_set,
-  occupations = list(
-    skill_mtx = skill_mtx,
-    weights_mtx = weights_mtx
-  ),
-  method = rbind(paste0("method", 1:2) |> setNames(paste0("method", 1:2)))
-) -> dsds
-
-dsds |> lapply(nestmap, as.data.frame) -> iters
-
-iters |> names()
-iters |>
-  map_if(
-    is.proper.list,
-    length,
-    .else = function(x) {
-      1
-    }
-  ) ->
-reps
-
-rep |> mapply(function, ...)
-reps
-# dsds |> map_if(is.proper.list, names)
-
-iters |>
-  lapply(enlist) |>
-  lapply(nestmap, names) |>
-  list_flatten()
-
-iters |> names()
-iters |>
-  sublist(is.proper.list) |>
-  lapply(names)
-
-
-iters[iters |> sapply(is.proper.list)]
-
-iters |>
-  sapply(nestmap, ncol) |>
-  sapply(function(i) {
-    i[[1]]
-  }) |>
-  lapply(nestmap, seq_len) |>
-  expand.grid() ->
-eg
-
-mapply(
-  function(i, reps) {
-    eg[rep(i, reps)]
-  },
-  i = eg |> ncol() |> seq_len(),
-  reps = iters |>
+  eg |>
+    t() |>
+    as.data.frame() |>
     sapply(
       function(i) {
-        if (is.proper.list(i)) {
-          return(length(i))
-        }
-        return(1)
-      }
-    )
-) |>
-  as.data.frame() ->
-eg
-
-# mapply(
-#   function(i, reps) {
-#     rep(i, reps)
-#   },
-#   i = names(eg),
-#   reps = iters |> map_if(is.proper.list, length, .else = function(x){1})
-# )
-
-
-# iters |> names()
-# iters |> lapply(names)
-list_flatten(iters) -> iters
-
-eg |>
-  t() |>
-  as.data.frame() |>
-  lapply(
-    function(i) {
-      do.call(
-        fn,
-        Map(
-          function(data, i) {
-            data[i]
-          },
-          i = i,
-          data = iters
+        do.call(
+          fn,
+          Map(
+            function(data, i) {
+              data[[i]]
+            },
+            i = i,
+            data = iters
+          )
+          # |> c(...)
         )
-        # |> c(...)
-      )
-    }
-  ) -> value
+      }
+    ) -> value
 
-mgsub |>
-  mapply(
-    eg,
-    eg |> lapply(unique),
-    iters |>
-      lapply(nestmap, colnames) |>
-      list_flatten()
-  ) |>
-  as.data.frame() ->
-eg
+  mgsub |>
+    mapply(
+      eg,
+      eg |> lapply(unique),
+      iters |>
+        lapply(nestmap, colnames) |>
+        list_flatten()
+    ) |>
+    as.data.frame() |>
+    setNames(iters.names) ->
+  eg
 
-eg$value <- value
-eg
+  value |> unname() -> eg$value
+
+  # expand grid with values
+  return(eg |> as_tibble())
+}
+
+# endregion
+# region: exports
+box::export(egmap)
+
+# endregion
