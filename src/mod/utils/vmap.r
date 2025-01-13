@@ -2,7 +2,7 @@
 vmap <- function(vm, mv, fn, ...) {
   vm |> as.data.frame() -> vm
   mv |> as.data.frame() -> mv
-  
+
   expand.grid(
     k = 1:ncol(vm),
     q = 1:ncol(mv)
@@ -22,6 +22,7 @@ vmap <- function(vm, mv, fn, ...) {
           names(vm),
           names(mv)
         )
-      )
+      ) |>
+      t()
   )
 }

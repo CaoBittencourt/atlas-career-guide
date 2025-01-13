@@ -1,13 +1,9 @@
-modular::project.options("atlas")
 # region: imports
 box::use(
   eq = mod / describe / aeq,
   assert = mod / utils / assert,
   cs = mod / utils / cosine[...],
   mod / utils / vmap[...]
-  # ,
-  # dplyr[...],
-  # # dplyr[bind_rows],
 )
 
 # endregion
@@ -48,62 +44,7 @@ field <- function(aeq_set, aeq_mtx) {
 # }
 
 # endregion
-# # region: exports
-# box::export(field)
-
-# # # endregion
-# region: test
-(getOption("atlas.skills_mtx") |> readRDS())[-1] -> dsds
-
-dsds[1:2] |> field(dsds[1])
-dsds[1] |> field(dsds[1:2])
-dsds[1:2] |> field(dsds[1:2])
-
-dsds[1:2] |> field(dsds) |> View()
-dsds |> field(dsds[1:2]) |> View()
-dsds[1:2] |> field(dsds[1:2]) |> View()
-dsds |> field(dsds) |> View()
-
-
-# dsds[[1]] |> crossprod(as.matrix(dsds))
-# dsds |> sapply(function(col){col * dsds[[1]]}) |> dim()
-
-sum(dsds[1:2]^2)
-sum(dsds[[1]] * dsds[[2]])
-crossprod()
-diag(t(crossprod())) / prod(sqrt(diag(crossprod())))
-dsds |>
-  as.matrix() |>
-  crossprod(dsds[1:2] |> as.matrix()) |>
-  View()
-dsds |>
-  as.matrix() |>
-  crossprod(dsds[1:2] |> as.matrix()) |>
-  diag() |>
-  sqrt() # denominator
-
-crossprod(dsds |> as.matrix()) |>
-  diag() |>
-  sqrt() |>
-  length()
-
-dsds[1:2] |>
-  as.matrix() |>
-  crossprod(dsds |> as.matrix()) |>
-  diag() |>
-  sqrt() |>
-  length()
-dsds[1:2] |>
-  as.matrix() |>
-  crossprod(dsds |> as.matrix())
-
-diag(t(crossprod(as.matrix(dsds) |> crossprod()))) / sqrt(diag(as.matrix(dsds) |> crossprod()))
-dsds[1:2] |>
-  as.matrix() |>
-  crossprod()
-dsds[[1]] |> crossprod(dsds[[1]])
-dsds[[1]] |> field(dsds[[1]])
-# |> round(2) |> sum()
-# dsds[[1]] |> field(dsds, aeq_method = 'linear') |> round(2)
+# region: exports
+box::export(field)
 
 # endregion
