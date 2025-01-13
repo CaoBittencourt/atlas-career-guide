@@ -22,3 +22,17 @@ linear.logistic <- function(x, m) {
     b = 1 / (1 - m)
   ))
 }
+
+linear.logistic <- function(x,m) {
+  return(logistic(
+    x = x/m,
+    m = m/m,
+    a = 0,
+    k = x/m,
+    c = 1,
+    q = 1 * (1 - x/m),
+    nu = (x/m) / ((m/m) * (x/m != 1)),
+    # nu = x/m / 1,
+    b = 1 / (1 - 1)
+  ))
+}

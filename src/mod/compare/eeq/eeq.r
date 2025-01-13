@@ -23,7 +23,8 @@ eeq.log <- function(years, min_years) {
   # assert args in main function
   return(
     glogis$logistic(
-      x = 1 + years,
+      # x = 1 + years,
+      x = years,
       a = 0,
       k = 1,
       c = 1,
@@ -36,9 +37,30 @@ eeq.log <- function(years, min_years) {
 }
 
 # endregion
+# region: linear-logistic method
+eeq.llo <- function(years, min_years) {
+  # assert args in main function
+  return(
+    glogis$logistic(
+      x = years,
+      a = 0,
+      k = 1,
+      # k = min(years / min_years, 1),
+      c = 1,
+      q = 1/min_years,
+      m = min_years,
+      # b = 1,
+      # b = min_years / years,
+      b = min_years,
+      nu = 1
+    )
+  )
+}
+
+# endregion
 # region: generic function
 # midpoint, scale parameter?
-eeq <- function(years, min_years, eeq_method = c("logistic", "binary", "linear")[[1]]) {
+eeq <- function(years, min_years, eeq_method = c("linear-logistic", "logistic", "binary", "linear")[[1]]) {
   # assert args
   stopifnot(
     "'years' must be a non-negative number." = all(
@@ -54,8 +76,8 @@ eeq <- function(years, min_years, eeq_method = c("logistic", "binary", "linear")
   )
 
   stopifnot(
-    "'eeq_method' must be one of the following methods: 'logistic', 'binary', 'linear'." = any(
-      eeq_method == c("logistic", "binary", "linear")
+    "'eeq_method' must be one of the following methods: 'linear-logistic', 'logistic', 'binary', 'linear'." = any(
+      eeq_method == c("linear-logistic", "logistic", "binary", "linear")
     )
   )
 
@@ -65,6 +87,7 @@ eeq <- function(years, min_years, eeq_method = c("logistic", "binary", "linear")
   eeq_method[[1]] |>
     as.character() |>
     switch(
+      "linear-logistic" = return(eeq.llo(years, min_years)),
       "logistic" = return(eeq.log(years, min_years)),
       "binary" = return(eeq.bin(years, min_years)),
       "linear" = return(eeq.lin(years, min_years))
