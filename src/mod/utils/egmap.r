@@ -6,6 +6,7 @@ box::use(
   mod / utils / sublist[...],
   mod / utils / nestmap[...],
   mod / utils / proper_list[...],
+  mod / utils / enlist[...],
   purrr[list_flatten, map_if],
   mgsub[mgsub]
 )
@@ -104,29 +105,33 @@ list(
 
 dsds |> lapply(nestmap, as.data.frame) -> iters
 
-iters |> lapply(nestmap, colnames) -> lalala
+iters |> names()
+iters |>
+  map_if(
+    is.proper.list,
+    length,
+    .else = function(x) {
+      1
+    }
+  ) ->
+reps
 
-# lalala |> list() |> nestmap(names) |> list_flatten()
+rep |> mapply(function, ...)
+reps
+# dsds |> map_if(is.proper.list, names)
 
-# lalala |> names() -> names.iters
-# lalala |> nestmap(names) -> names.parallel
-# names(lalala)[]
-# lalala[lalala |> sapply(is.null)] <- names(lalala)
+iters |>
+  lapply(enlist) |>
+  lapply(nestmap, names) |>
+  list_flatten()
 
-# lalala |> names()
-# lalala |> map_if(is.proper.list, colnames, names)
+iters |> names()
+iters |>
+  sublist(is.proper.list) |>
+  lapply(names)
 
-# lalala |> lapply(
-#   function(i){
-#     if(is.proper.list(i)){
 
-#     }
-#   }
-# )
-# lalala |> names() |> length()
-# lalala |> nestmap(names) |> length()
-# # lalala |> lapply(is.proper.list)
-# lalala |> names()
+iters[iters |> sapply(is.proper.list)]
 
 iters |>
   sapply(nestmap, ncol) |>
@@ -155,12 +160,18 @@ mapply(
   as.data.frame() ->
 eg
 
+# mapply(
+#   function(i, reps) {
+#     rep(i, reps)
+#   },
+#   i = names(eg),
+#   reps = iters |> map_if(is.proper.list, length, .else = function(x){1})
+# )
+
+
 # iters |> names()
 # iters |> lapply(names)
 list_flatten(iters) -> iters
-eg
-iters
-lalala
 
 eg |>
   t() |>
@@ -170,12 +181,9 @@ eg |>
       do.call(
         fn,
         Map(
-          function( # name,
-                   data, i) {
-            # data[, i]
+          function(data, i) {
             data[i]
           },
-          # name = colnames(iters),
           i = i,
           data = iters
         )
@@ -196,3 +204,4 @@ mgsub |>
 eg
 
 eg$value <- value
+eg
