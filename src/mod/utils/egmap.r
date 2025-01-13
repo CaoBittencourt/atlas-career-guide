@@ -73,8 +73,9 @@ egmap <- function(iters, fn, args = NULL) {
 #   vm[kq$k],
 #   mv[kq$q]
 # )
+
 list(
-  skill_set = data.frame(person1 = rep(19, 120), person2 = rep(19, 120)),
+  skill_set = data.frame(person1 = c(1,rep(19, 119)), person2 = c(9, rep(19, 119))),
   occupations = list(
     skill_mtx = matrix(19, 120, 4),
     aeq_mtx = matrix(1, 120, 4)
@@ -85,25 +86,15 @@ list(
   # dsds = rbind(c("dsds", "lalala"))
   # # dsds = list(as.list(c("dsds", "lalala")))
 ) -> dsds
-# dsds |> egmap(matching) -> eg
-# dsds[names(eg)] |> nestmap(as.data.frame)
-# mapply(
-#   function(data, comb){
-#     fn()
-#   },
-#   data = c(iters, iters.parallel),
-#   comb = eg |> t() |> as.data.frame()
-# )
 
-# dsds |> nestmap(as.data.frame)
 dsds |> lapply(nestmap, as.data.frame) -> iters
 
 iters |>
   sapply(nestmap, ncol) |>
-  lapply(nestmap, seq_len) |>
   sapply(function(i) {
     i[[1]]
   }) |>
+  lapply(nestmap, seq_len) |>
   expand.grid() ->
 eg
 
@@ -111,7 +102,7 @@ mapply(
   function(i, reps) {
     eg[rep(i, reps)]
   },
-  i = 1:length(iters),
+  i = eg |> ncol() |> seq_len(),
   reps = iters |>
     sapply(
       function(i) {
@@ -130,27 +121,18 @@ list_flatten(iters) -> iters
 eg |>
   t() |>
   as.data.frame() |>
-  lapply(function(i) {
-    Map(
-      function(data, i) {
-        sum(data[, i])
-        # do.call(
-        #   fn, c(data[, i], ...)
-        # )
-      },
-      data = iters,
-      i = i
-    )
-  }) ->
-dsdsds
-
-Map(
-  function(data, i) {
-    data[, i]
-  },
-  data = iters,
-  i = dsdsds[[1]]
-)
-iters |> lapply(function(data) {
-  data[, i]
-})
+  lapply(
+    function(i) {
+      do.call(
+        sum,
+        Map(
+          function(data, i) {
+            data[, i]
+          },
+          i = i,
+          data = iters
+        )
+          # |> c(...)
+      )
+    }
+  )
