@@ -68,26 +68,37 @@ egmap <- function(iters, fn, args = NULL) {
   )
 }
 
-# mapply(
-#   fn,
-#   vm[kq$k],
-#   mv[kq$q]
-# )
+# list(
+#   skill_set = data.frame(person1 = c(1, rep(19, 119)), person2 = c(9, rep(19, 119))),
+#   occupations = list(
+#     skill_mtx = matrix(19, 120, 4),
+#     aeq_mtx = matrix(1, 120, 4)
+#   )
+#   # ,
+#   # # methods = rbind(c(paste0('method', 1:5)))
+#   # match_method = list(as.list(paste0("method", 1:5))),
+#   # dsds = rbind(c("dsds", "lalala"))
+#   # # dsds = list(as.list(c("dsds", "lalala")))
+# ) -> dsds
+getOption("atlas.skills_mtx") |> readRDS() -> dsds
+dsds[-1] -> dsds
+
+skill_set <- dsds[1:2]
+skill_mtx <- dsds[1:4]
+weights_mtx <- dsds[1:4]
 
 list(
-  skill_set = data.frame(person1 = c(1,rep(19, 119)), person2 = c(9, rep(19, 119))),
+  individuals = skill_set,
   occupations = list(
-    skill_mtx = matrix(19, 120, 4),
-    aeq_mtx = matrix(1, 120, 4)
-  )
-  # ,
-  # # methods = rbind(c(paste0('method', 1:5)))
-  # match_method = list(as.list(paste0("method", 1:5))),
-  # dsds = rbind(c("dsds", "lalala"))
-  # # dsds = list(as.list(c("dsds", "lalala")))
+    skill_mtx = skill_mtx, 
+    weights_mtx = weights_mtx
+  ),
+  method = rbind(paste0("method", 1:2) |> setNames(paste0("method", 1:2)))
 ) -> dsds
 
 dsds |> lapply(nestmap, as.data.frame) -> iters
+
+iters |> lapply(nestmap, colnames)
 
 iters |>
   sapply(nestmap, ncol) |>
@@ -116,7 +127,24 @@ mapply(
   as.data.frame() ->
 eg
 
+# iters |> names()
+# iters |> lapply(names)
 list_flatten(iters) -> iters
+box::use(stats[weighted.mean])
+fn <- function(ak, aq, äq, method){
+  if(method == 'method1'){
+    print('method1')
+    return(weighted.mean(ak, aq, äq)) 
+  }
+  
+  if(method == 'method2'){
+    print('method2')
+    return(max(äq * ak) - max(äq * aq)) 
+  }
+  
+  print('no such method')
+  return(NA)
+}
 
 eg |>
   t() |>
@@ -124,15 +152,21 @@ eg |>
   lapply(
     function(i) {
       do.call(
-        sum,
+        fn,
         Map(
-          function(data, i) {
+          function(
+            # name, 
+            data, i) {
             data[, i]
           },
+          # name = colnames(iters),
           i = i,
           data = iters
         )
-          # |> c(...)
+        # |> c(...)
       )
     }
-  )
+  ) 
+# ->
+# eg$value
+# eg
