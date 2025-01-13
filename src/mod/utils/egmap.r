@@ -1,16 +1,16 @@
-modular::project.options("atlas")
 # region: imports
-# install.packages('mgsub')
 box::use(
   mod / utils / depth[...],
   mod / utils / sublist[...],
   mod / utils / nestmap[...],
   mod / utils / proper_list[...],
   mod / utils / name[...],
+  stats[setNames],
   purrr[list_flatten, map_if],
   tidyr[as_tibble],
   mgsub[mgsub]
 )
+
 # endregion
 # region: expand.grid map
 egmap <- function(iters, fn, ...) {
@@ -91,14 +91,16 @@ egmap <- function(iters, fn, ...) {
       function(i) {
         do.call(
           fn,
-          Map(
-            function(data, i) {
-              data[[i]]
-            },
-            i = i,
-            data = iters
+          c(
+            Map(
+              function(data, i) {
+                data[[i]]
+              },
+              i = i,
+              data = iters
+            ),
+            ...
           )
-          # |> c(...)
         )
       }
     ) -> value

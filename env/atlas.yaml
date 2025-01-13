@@ -9,3 +9,4 @@ dependencies:
   - r-psych
   - r-box
   - r-styler
+  - r-mgsub

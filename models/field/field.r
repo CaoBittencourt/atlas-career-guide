@@ -9,7 +9,8 @@ box::use(
   eq = mod / describe / aeq,
   dplyr[...],
   tidyr[...],
-  tibble[column_to_rownames]
+  tibble[column_to_rownames],
+  mod / utils / egmap[...]
 )
 
 library(atlas.plot)
