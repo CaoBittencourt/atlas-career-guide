@@ -2,7 +2,7 @@
 Qualification (`qa`) models measure to which extent an individual is qualified relative to an occupation. As opposed to other comparative models, qualification, by default, is unweighted. The reason for this is that, here, we're not necessarily interested in matching individuals to occupations, but in assessing how much of occupations' attribute requirements they can fulfill. More precisely, we count here, exactly, how much of their skill set is greater or equal to the required skill levels. We, then, normalize the sum of scores to the unit interval to provide an estimation of the percentage of required skill levels they already have.
 
 Mathematically, given the gap function
-$$
+```math
 \begin{gather}
     \delta(a_{i}^{k}, a_{i}^{q}) :=
     \max(
@@ -12,7 +12,7 @@ $$
     \in [0, 1]
     ,
 \end{gather}
-$$
+```
 which measures only positive competency gaps (so as to not "punish" overqualification), we can write three unweighted qualification coefficients:
 ```math
 \begin{align}
