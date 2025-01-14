@@ -16,11 +16,11 @@ $$
 which measures only positive competency gaps (so as to not "punish" overqualification), we can write three unweighted qualification coefficients:
 ```math
 \begin{align}
-x + x = 2x
-;\\
-\tilde{\delta}
+&x + x = 2x
+&;\\
+&\tilde{\delta}
 \\
-\boldsymbol{a_k}
+&\boldsymbol{a_k}
 .
 \end{align}
 ```
