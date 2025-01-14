@@ -1,0 +1,7 @@
+---
+title: "`eeq`"
+subtitle: "Atlas Career Guide Education and Experience Equivalence Submodule"
+author: "Cao Bittencourt"
+output: rmarkdown::github_document
+---
+# `eeq`
