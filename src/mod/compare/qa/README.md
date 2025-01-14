@@ -16,9 +16,17 @@ $$
 which measures only positive competency gaps (so as to not "punish" overqualification), we can write three unweighted qualification coefficients:
 ```math
 \begin{align}
+x + x = 2x
+;\\
+x + x = 2x
+.
+\end{align}
+```
+$$
+\begin{align}
     \tilde{\delta}_{kq}^{\geq} 
     &:=
-    \text{oqa}({a_k}, {a_q}) :=
+    \text{oqa}(\boldsymbol{a_k}, \boldsymbol{a_q}) :=
     \frac{
     \sum_{i=1}^{m}{
     {\delta(a_{i}^{k}, a_{i}^{q})}
@@ -40,7 +48,7 @@ which measures only positive competency gaps (so as to not "punish" overqualific
     ;\\
     s_{kq}^{\geq}
     &:=
-    \text{sqa}({a_k}, {a_q}) :=
+    \text{sqa}(\boldsymbol{a_k}, \boldsymbol{a_q}) :=
     1 -
     \frac{
     \sum_{i=1}^{m}{
@@ -51,11 +59,11 @@ which measures only positive competency gaps (so as to not "punish" overqualific
     {\delta(a_{i}^{q}, 0)}
     }
     } =
-    1 - \text{uqa}({a_k}, {a_q})
+    1 - \text{uqa}(\boldsymbol{a_k}, \boldsymbol{a_q})
     ;\\
     \tilde{\delta}_{kq}^{<}
     &:=
-    \text{uqa}({a_k}, {a_q}) :=
+    \text{uqa}(\boldsymbol{a_k}, \boldsymbol{a_q}) :=
     \frac{
     \sum_{i=1}^{m}{
     {\delta(a_{i}^{q}, a_{i}^{k})}
@@ -76,7 +84,7 @@ which measures only positive competency gaps (so as to not "punish" overqualific
     }
     .
 \end{align}
-```
+$$
 
 The first of these is the overqualification coefficient and measures the percentage of a skill set in which an individual is overqualified. The second coefficient is that of "sufficient qualification" and measures the percentage of a skill set in which an individual is not underqualified. And lastly, the underqualification coefficient measures the percentage of a skill set which is higher than an individuals' current capacity.
 
@@ -122,11 +130,11 @@ $$
     {\delta(a_{i}^{q}, 0)}
     }
     } =
-    1 - \text{uqa}({a_k}, {a_q})
+    1 - \text{uqa}(\boldsymbol{a_k}, \boldsymbol{a_q})
     ;\\
     \ddot{\delta}_{kq}^{<}
     &:=
-    \text{uqa}({a_k}, {a_q}) :=
+    \text{uqa}(\boldsymbol{a_k}, \boldsymbol{a_q}) :=
     \frac{
     \sum_{i=1}^{m}{
     \ddot{a}_{i}^{q}
