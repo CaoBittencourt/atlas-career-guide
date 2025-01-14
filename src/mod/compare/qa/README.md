@@ -32,33 +32,21 @@ which measures only positive competency gaps (so as to not "punish" overqualific
         \delta(1, a_{i}^{q})
     }
 }
+=
+\frac{
+    \sum_{i=1}^{m}{
+        \delta(a_{i}^{k}, a_{i}^{q})
+    }
+}{
+    \sum_{i=1}^{m}{
+        (1 - a_{i}^{q})
+    }
+}
+;\\
 \end{align}
 ```
 $$
 \begin{align}
-    \tilde{\delta}_{kq}^{\geq} 
-    &:=
-    \text{oqa}(\boldsymbol{a_k}, \boldsymbol{a_q}) :=
-    \frac{
-    \sum_{i=1}^{m}{
-    {\delta(a_{i}^{k}, a_{i}^{q})}
-    }
-    }{
-    \sum_{i=1}^{m}{
-    {\delta(1, a_{i}^{q})}
-    }
-    }
-    
-    =
-    \frac{
-    \sum_{i=1}^{m}{
-    {\delta(a_{i}^{k}, a_{i}^{q})}
-    }
-    }{
-    \sum_{i=1}^{m}{
-    {(1 - a_{i}^{q})}
-    }
-    }
     ;\\
     s_{kq}^{\geq}
     &:=
