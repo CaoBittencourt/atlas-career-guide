@@ -93,7 +93,7 @@ And note, also, all three coefficients are unweighted. Therefore, they shouldn't
 ```math
 \begin{align}
 \ddot{\delta}_{kq}^{\geq}
-:=
+&:=
 \frac{
     \sum_{i=1}^{m}{
         \ddot{a}_{i}^{q}
@@ -130,43 +130,45 @@ And note, also, all three coefficients are unweighted. Therefore, they shouldn't
     }
 }
 ;\\
-\ddot{s}_{kq}^{\geq}
-:=
-\frac{
-    \sum_{i=1}^{m}{
-        \ddot{a}_{i}^{q}
-        \delta(
-            {a}_{i}^{k},
-            {a}_{i}^{q}
-        )
-    }
-}{\ddot{s}_{kq}^{\geq}
-    \sum_{i=1}^{m}{
-        \ddot{a}_{i}^{q}
-        \delta(
-            1,
-            {a}_{i}^{q}
-        )
-    }
-}
-=
-\frac{
-    \sum_{i=1}^{m}{
-        \ddot{a}_{i}^{q}
-        \delta(
-            {a}_{i}^{k},
-            {a}_{i}^{q}
-        )
-    }
-}{
-    \sum_{i=1}^{m}{
-        \ddot{a}_{i}^{q}
-        (
-            1 - 
-            {a}_{i}^{q}
-        )
-    }
-}
+1 + 1 = 2
+% \ddot{s}_{kq}^{\geq}
+% &:=
+% \frac{
+%     \sum_{i=1}^{m}{
+%         \ddot{a}_{i}^{q}
+%         \delta(
+%             {a}_{i}^{k},
+%             {a}_{i}^{q}
+%         )
+%     }
+% }{
+%     \sum_{i=1}^{m}{
+%         \ddot{a}_{i}^{q}
+%         \delta(
+%             1,
+%             {a}_{i}^{q}
+%         )
+%     }
+% }
+% =
+% \frac{
+%     \sum_{i=1}^{m}{
+%         \ddot{a}_{i}^{q}
+%         \delta(
+%             {a}_{i}^{k},
+%             {a}_{i}^{q}
+%         )
+%     }
+% }{
+%     \sum_{i=1}^{m}{
+%         \ddot{a}_{i}^{q}
+%         (
+%             1 - 
+%             {a}_{i}^{q}
+%         )
+%     }
+% }
+% ;\\
 \end{align}
 ```
 <!-- ```math
