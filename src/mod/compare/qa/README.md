@@ -95,64 +95,67 @@ And note, also, all three coefficients are unweighted. Therefore, they shouldn't
 \begin{align}
 \ddot{\delta}_{kq}^{\geq}
 &:=
-\text{oqa}(
-    \boldsymbol{a_k},
-    \boldsymbol{a_q}
-)
-:=
 \frac{
     \sum_{i=1}^{m}{
+        \ddot{a}_{i}^{q}
         \delta(a_{i}^{k}, a_{i}^{q})
     }
 }{
     \sum_{i=1}^{m}{
+        \ddot{a}_{i}^{q}
         \delta(1, a_{i}^{q})
     }
 }
 =
 \frac{
     \sum_{i=1}^{m}{
+        \ddot{a}_{i}^{q}
         \delta(a_{i}^{k}, a_{i}^{q})
     }
 }{
     \sum_{i=1}^{m}{
+        \ddot{a}_{i}^{q}
         (1 - a_{i}^{q})
     }
 }
 ;\\
 \ddot{s}_{kq}^{\geq}
 &:=
-\text{sqa}(\boldsymbol{a_k}, \boldsymbol{a_q}) :=
 1 -
 \frac{
 \sum_{i=1}^{m}{
+    \ddot{a}_{i}^{q}
 {\delta(a_{i}^{q}, a_{i}^{k})}
 }
 }{
 \sum_{i=1}^{m}{
+    \ddot{a}_{i}^{q}
 {\delta(a_{i}^{q}, 0)}
 }
 } =
-1 - \text{uqa}(\boldsymbol{a_k}, \boldsymbol{a_q})
+1 - \ddot{\delta}_{kq}^{<}
 ;\\
 \ddot{\delta}_{kq}^{<}
 &:=
-\text{uqa}(\boldsymbol{a_k}, \boldsymbol{a_q}) :=
 \frac{
 \sum_{i=1}^{m}{
+    \ddot{a}_{i}^{q}
 {\delta(a_{i}^{q}, a_{i}^{k})}
 }
 }{
 \sum_{i=1}^{m}{
+    \ddot{a}_{i}^{q}
 {\delta(a_{i}^{q}, 0)}
 }
 } =
 \frac{
 \sum_{i=1}^{m}{
+    \ddot{a}_{i}^{q}
 {\delta(a_{i}^{q}, a_{i}^{k})}
 }
 }{
 \sum_{i=1}^{m}{
+    \ddot{a}_{i}^{q}
 {a_{i}^{q}}
 }
 }
