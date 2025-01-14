@@ -13,7 +13,9 @@ Mathematically, given the gap function
     ,
 \end{gather}
 ```
+
 which measures only positive competency gaps (so as to not "punish" overqualification), we can write three unweighted qualification coefficients:
+
 ```math
 \begin{align}
 \tilde{\delta}_{kq}^{\geq}
@@ -90,70 +92,111 @@ Note, again, normalized (non-negative) Euclidean distance is the only method of 
 And note, also, all three coefficients are unweighted. Therefore, they shouldn't be used in matching, for they do not account for each attribute's importance to each occupation. If one wished to apply the qualification coefficient for matching, the following formulae, with attribute equivalence weights, would be more appropriate:
 ```math
 \begin{align}
-{\delta}_{kq}^{\geq} 
+\ddot{\delta}_{kq}^{\geq}
 &:=
 \frac{
-\sum_{i=1}^{m}{
-{a}_{i}^{q}
-{\delta(a_{i}^{k}, a_{i}^{q})}
-}
+    \sum_{i=1}^{m}{
+        \ddot{a}_{i}^{q}
+        \delta(
+            {a}_{i}^{k},
+            {a}_{i}^{q}
+        )
+    }
 }{
-\sum_{i=1}^{m}{
-{a}_{i}^{q}
-{\delta(1, a_{i}^{q})}
+    \sum_{i=1}^{m}{
+        \ddot{a}_{i}^{q}
+        \delta(
+            1,
+            {a}_{i}^{q}
+        )
+    }
 }
-} =
+=
 \frac{
-\sum_{i=1}^{m}{
-{\delta(a_{i}^{k}, a_{i}^{q})}
-}
+    \sum_{i=1}^{m}{
+        \ddot{a}_{i}^{q}
+        \delta(
+            {a}_{i}^{k},
+            {a}_{i}^{q}
+        )
+    }
 }{
-\sum_{i=1}^{m}{
-{(1 - a_{i}^{q})}
+    \sum_{i=1}^{m}{
+        \ddot{a}_{i}^{q}
+        (
+            1 - 
+            {a}_{i}^{q}
+        )
+    }
 }
-}
-;\\
-{s}_{kq}^{\geq}
-&:=
-1 -
-\frac{
-\sum_{i=1}^{m}{
-{a}_{i}^{q}
-{\delta(a_{i}^{q}, a_{i}^{k})}
-}
-}{
-\sum_{i=1}^{m}{
-{a}_{i}^{q}
-{\delta(a_{i}^{q}, 0)}
-}
-} =
-1 - \text{uqa}(\boldsymbol{a_k}, \boldsymbol{a_q})
-;\\
-{\delta}_{kq}^{<}
-&:=
-\text{uqa}(\boldsymbol{a_k}, \boldsymbol{a_q}) :=
-\frac{
-\sum_{i=1}^{m}{
-{a}_{i}^{q}
-{\delta(a_{i}^{q}, a_{i}^{k})}
-}
-}{
-\sum_{i=1}^{m}{
-{a}_{i}^{q}
-{\delta(a_{i}^{q}, 0)}
-}
-} =
-\frac{
-\sum_{i=1}^{m}{
-{a}_{i}^{q}
-{\delta(a_{i}^{q}, a_{i}^{k})}
-}
-}{
-\sum_{i=1}^{m}{
-{a}_{i}^{q}
-{a_{i}^{q}}
-}
-}
-.
+\end{align}
+```
+```math
+\begin{align}
+    \ddot{\delta}_{kq}^{\geq} 
+    &:=
+    \frac{
+    \sum_{i=1}^{m}{
+    \ddot{a}_{i}^{q}
+    {\delta(a_{i}^{k}, a_{i}^{q})}
+    }
+    }{
+    \sum_{i=1}^{m}{
+    \ddot{a}_{i}^{q}
+    {\delta(1, a_{i}^{q})}
+    }
+    } =
+    \frac{
+    \sum_{i=1}^{m}{
+    {\delta(a_{i}^{k}, a_{i}^{q})}
+    }
+    }{
+    \sum_{i=1}^{m}{
+    {(1 - a_{i}^{q})}
+    }
+    }
+    ;\\
+    \ddot{s}_{kq}^{\geq}
+    &:=
+    1 -
+    \frac{
+    \sum_{i=1}^{m}{
+    \ddot{a}_{i}^{q}
+    {\delta(a_{i}^{q}, a_{i}^{k})}
+    }
+    }{
+    \sum_{i=1}^{m}{
+    \ddot{a}_{i}^{q}
+    {\delta(a_{i}^{q}, 0)}
+    }
+    } =
+    1 - \text{uqa}(\boldsymbol{a_k}, \boldsymbol{a_q})
+    ;\\
+    \ddot{\delta}_{kq}^{<}
+    &:=
+    \text{uqa}(\boldsymbol{a_k}, \boldsymbol{a_q}) :=
+    \frac{
+    \sum_{i=1}^{m}{
+    \ddot{a}_{i}^{q}
+    {\delta(a_{i}^{q}, a_{i}^{k})}
+    }
+    }{
+    \sum_{i=1}^{m}{
+    \ddot{a}_{i}^{q}
+    {\delta(a_{i}^{q}, 0)}
+    }
+    } =
+    \frac{
+    \sum_{i=1}^{m}{
+    \ddot{a}_{i}^{q}
+    {\delta(a_{i}^{q}, a_{i}^{k})}
+    }
+    }{
+    \sum_{i=1}^{m}{
+    \ddot{a}_{i}^{q}
+    {a_{i}^{q}}
+    }
+    }
+    .
 \end{align}
 ```
