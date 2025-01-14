@@ -43,6 +43,21 @@ which measures only positive competency gaps (so as to not "punish" overqualific
     }
 }
 ;\\
+s_{kq}^{\geq}
+&:=
+\text{sqa}(\boldsymbol{a_k}, \boldsymbol{a_q}) :=
+1 -
+\frac{
+\sum_{i=1}^{m}{
+{\delta(a_{i}^{q}, a_{i}^{k})}
+}
+}{
+\sum_{i=1}^{m}{
+{\delta(a_{i}^{q}, 0)}
+}
+} =
+1 - \text{uqa}(\boldsymbol{a_k}, \boldsymbol{a_q})
+;\\
 \end{align}
 ```
 $$
