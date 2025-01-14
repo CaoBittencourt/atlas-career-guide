@@ -16,14 +16,13 @@ $$
 which measures only positive competency gaps (so as to not "punish" overqualification), we can write three unweighted qualification coefficients:
 ```math
 \begin{align}
-&x + x = 2x
-&;\\
-&\tilde{\delta}
-\\
-&\boldsymbol{a_k}
-\\
-&\text{oqa}
-.
+\tilde{\delta}_{kq}^{\geq}
+&:=
+\text{oqa}(
+    \boldsymbol{a_k},
+    \boldsymbol{a_q}
+)
+:=
 \end{align}
 ```
 $$
