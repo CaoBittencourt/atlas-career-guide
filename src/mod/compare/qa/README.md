@@ -83,10 +83,10 @@ The first of these is the overqualification coefficient and measures the percent
 Note, again, normalized (non-negative) Euclidean distance is the only method of estimation. This is because the concept of qualification itself determines we use actual attribute gaps instead of similarity metrics.
 
 And note, also, all three coefficients are unweighted. Therefore, they shouldn't be used in matching, for they do not account for each attribute's importance to each occupation. If one wished to apply the qualification coefficient for matching, the following formulae, with attribute equivalence weights, would be more appropriate:
-```math
+$$
 \begin{align}
     \ddot{\delta}_{kq}^{\geq} 
-    \&:=
+    &:=
     \frac{
     \sum_{i=1}^{m}{
     \ddot{a}_{i}^{q}
@@ -109,7 +109,7 @@ And note, also, all three coefficients are unweighted. Therefore, they shouldn't
     }
     ;\\
     \ddot{s}_{kq}^{\geq}
-    \&:=
+    &:=
     1 -
     \frac{
     \sum_{i=1}^{m}{
@@ -125,7 +125,7 @@ And note, also, all three coefficients are unweighted. Therefore, they shouldn't
     1 - \text{uqa}(\boldsymbol{a_k}, \boldsymbol{a_q})
     ;\\
     \ddot{\delta}_{kq}^{<}
-    \&:=
+    &:=
     \text{uqa}(\boldsymbol{a_k}, \boldsymbol{a_q}) :=
     \frac{
     \sum_{i=1}^{m}{
@@ -151,4 +151,4 @@ And note, also, all three coefficients are unweighted. Therefore, they shouldn't
     }
     .
 \end{align}
-```
+$$
