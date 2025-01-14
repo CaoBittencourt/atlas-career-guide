@@ -93,7 +93,7 @@ And note, also, all three coefficients are unweighted. Therefore, they shouldn't
 ```math
 \begin{align}
 \ddot{\delta}_{kq}^{\geq}
-&:=
+:=
 \frac{
     \sum_{i=1}^{m}{
         \ddot{a}_{i}^{q}
@@ -131,7 +131,7 @@ And note, also, all three coefficients are unweighted. Therefore, they shouldn't
 }
 ;\\
 \ddot{s}_{kq}^{\geq}
-&:=
+:=
 \frac{
     \sum_{i=1}^{m}{
         \ddot{a}_{i}^{q}
