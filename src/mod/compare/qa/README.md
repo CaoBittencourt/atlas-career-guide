@@ -15,7 +15,6 @@ Mathematically, given the gap function
 ```
 which measures only positive competency gaps (so as to not "punish" overqualification), we can write three unweighted qualification coefficients:
 ```math
-$$
 \begin{align}
     \tilde{\delta}_{kq}^{\geq} 
     &:=
@@ -77,7 +76,6 @@ $$
     }
     .
 \end{align}
-$$
 ```
 
 The first of these is the overqualification coefficient and measures the percentage of a skill set in which an individual is overqualified. The second coefficient is that of "sufficient qualification" and measures the percentage of a skill set in which an individual is not underqualified. And lastly, the underqualification coefficient measures the percentage of a skill set which is higher than an individuals' current capacity.
