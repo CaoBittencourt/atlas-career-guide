@@ -2,7 +2,7 @@
 Field similarity determines if two skill sets can be said to be in the same "field" within the industry (e.g. Finance, Engineering, Fine Arts, etc). By definition, then, this concept is not concerned with vector magnitude, only its direction: we do not care about assessing competence here, but rather classifying occupations with respect to their field of activity (i.e. whether they deal with the same "sorts of things").
 
 This implies the appropriate mathematical matching method for this is cosine similarity:
-$$
+```math
 \begin{gather}
 s_{kq}^{\theta} := 
 \cos\theta_{kq} := 
@@ -27,7 +27,7 @@ s_{kq}^{\theta} :=
 [0,1]
 .
 \end{gather}
-$$
+```
 
 In addition, the matrix of all field similarities in the economy,
 $
