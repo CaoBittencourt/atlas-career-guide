@@ -58,26 +58,32 @@ s_{kq}^{\geq}
 } =
 1 - \text{uqa}(\boldsymbol{a_k}, \boldsymbol{a_q})
 ;\\
+\tilde{\delta}_{kq}^{<}
+&:=
+\text{uqa}(\boldsymbol{a_k}, \boldsymbol{a_q}) :=
+\frac{
+\sum_{i=1}^{m}{
+{\delta(a_{i}^{q}, a_{i}^{k})}
+}
+}{
+\sum_{i=1}^{m}{
+{\delta(a_{i}^{q}, 0)}
+}
+} =
+\frac{
+\sum_{i=1}^{m}{
+{\delta(a_{i}^{q}, a_{i}^{k})}
+}
+}{
+\sum_{i=1}^{m}{
+{a_{i}^{q}}
+}
+}
+.
 \end{align}
 ```
 $$
 \begin{align}
-    ;\\
-    s_{kq}^{\geq}
-    &:=
-    \text{sqa}(\boldsymbol{a_k}, \boldsymbol{a_q}) :=
-    1 -
-    \frac{
-    \sum_{i=1}^{m}{
-    {\delta(a_{i}^{q}, a_{i}^{k})}
-    }
-    }{
-    \sum_{i=1}^{m}{
-    {\delta(a_{i}^{q}, 0)}
-    }
-    } =
-    1 - \text{uqa}(\boldsymbol{a_k}, \boldsymbol{a_q})
-    ;\\
     \tilde{\delta}_{kq}^{<}
     &:=
     \text{uqa}(\boldsymbol{a_k}, \boldsymbol{a_q}) :=
