@@ -15,10 +15,10 @@ $$
 $$
 which measures only positive competency gaps (so as to not "punish" overqualification), we can write three unweighted qualification coefficients:
 ```math
-\begin{align*}
+\begin{align}
     \tilde{\delta}_{kq}^{\geq} 
     &:=
-    \text{oqa}(\boldsymbol{a_k}, \boldsymbol{a_q}) :=
+    \text{oqa}({a_k}, {a_q}) :=
     \frac{
     \sum_{i=1}^{m}{
     {\delta(a_{i}^{k}, a_{i}^{q})}
@@ -36,10 +36,11 @@ which measures only positive competency gaps (so as to not "punish" overqualific
     \sum_{i=1}^{m}{
     {(1 - a_{i}^{q})}
     }
-    };\\
+    }
+    ;\\
     s_{kq}^{\geq}
     &:=
-    \text{sqa}(\boldsymbol{a_k}, \boldsymbol{a_q}) :=
+    \text{sqa}({a_k}, {a_q}) :=
     1 -
     \frac{
     \sum_{i=1}^{m}{
@@ -50,10 +51,11 @@ which measures only positive competency gaps (so as to not "punish" overqualific
     {\delta(a_{i}^{q}, 0)}
     }
     } =
-    1 - \text{uqa}(\boldsymbol{a_k}, \boldsymbol{a_q});\\
+    1 - \text{uqa}({a_k}, {a_q})
+    ;\\
     \tilde{\delta}_{kq}^{<}
     &:=
-    \text{uqa}(\boldsymbol{a_k}, \boldsymbol{a_q}) :=
+    \text{uqa}({a_k}, {a_q}) :=
     \frac{
     \sum_{i=1}^{m}{
     {\delta(a_{i}^{q}, a_{i}^{k})}
@@ -73,7 +75,7 @@ which measures only positive competency gaps (so as to not "punish" overqualific
     }
     }
     .
-\end{align*}
+\end{align}
 ```
 
 The first of these is the overqualification coefficient and measures the percentage of a skill set in which an individual is overqualified. The second coefficient is that of "sufficient qualification" and measures the percentage of a skill set in which an individual is not underqualified. And lastly, the underqualification coefficient measures the percentage of a skill set which is higher than an individuals' current capacity.
@@ -120,11 +122,11 @@ $$
     {\delta(a_{i}^{q}, 0)}
     }
     } =
-    1 - \text{uqa}(\boldsymbol{a_k}, \boldsymbol{a_q})
+    1 - \text{uqa}({a_k}, {a_q})
     ;\\
     \ddot{\delta}_{kq}^{<}
     &:=
-    \text{uqa}(\boldsymbol{a_k}, \boldsymbol{a_q}) :=
+    \text{uqa}({a_k}, {a_q}) :=
     \frac{
     \sum_{i=1}^{m}{
     \ddot{a}_{i}^{q}
