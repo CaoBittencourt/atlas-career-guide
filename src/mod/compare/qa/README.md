@@ -93,7 +93,7 @@ And note, also, all three coefficients are unweighted. Therefore, they shouldn't
 
 ```math
 \begin{align}
-\tilde{\delta}_{kq}^{\geq}
+\ddot{\delta}_{kq}^{\geq}
 &:=
 \text{oqa}(
     \boldsymbol{a_k},
@@ -135,7 +135,7 @@ s_{kq}^{\geq}
 } =
 1 - \text{uqa}(\boldsymbol{a_k}, \boldsymbol{a_q})
 ;\\
-\tilde{\delta}_{kq}^{<}
+\ddot{\delta}_{kq}^{<}
 &:=
 \text{uqa}(\boldsymbol{a_k}, \boldsymbol{a_q}) :=
 \frac{
@@ -159,6 +159,7 @@ s_{kq}^{\geq}
 .
 \end{align}
 ```
+
 <!-- ```math
 \begin{align}
 \ddot{\delta}_{kq}^{\geq}
