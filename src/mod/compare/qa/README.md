@@ -18,7 +18,7 @@ which measures only positive competency gaps (so as to not "punish" overqualific
 \begin{align}
 x + x = 2x
 ;\\
-x + x = 2x
+\tilde{\delta}
 .
 \end{align}
 ```
