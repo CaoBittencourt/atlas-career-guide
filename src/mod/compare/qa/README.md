@@ -23,6 +23,15 @@ which measures only positive competency gaps (so as to not "punish" overqualific
     \boldsymbol{a_q}
 )
 :=
+\frac{
+    \sum{i=1}^{m}{
+        \delta(a_{i}^{k}, a_{i}^{q})
+    }
+}{
+    \sum{i=1}^{m}{
+        \delta(1, a_{i}^{q})
+    }
+}
 \end{align}
 ```
 $$
@@ -38,7 +47,9 @@ $$
     \sum_{i=1}^{m}{
     {\delta(1, a_{i}^{q})}
     }
-    } =
+    }
+    
+    =
     \frac{
     \sum_{i=1}^{m}{
     {\delta(a_{i}^{k}, a_{i}^{q})}
