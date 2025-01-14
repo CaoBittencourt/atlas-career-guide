@@ -140,7 +140,7 @@ And note, also, all three coefficients are unweighted. Therefore, they shouldn't
             {a}_{i}^{q}
         )
     }
-}{
+}{\ddot{s}_{kq}^{\geq}
     \sum_{i=1}^{m}{
         \ddot{a}_{i}^{q}
         \delta(
@@ -167,7 +167,6 @@ And note, also, all three coefficients are unweighted. Therefore, they shouldn't
         )
     }
 }
-;\\
 \end{align}
 ```
 <!-- ```math
