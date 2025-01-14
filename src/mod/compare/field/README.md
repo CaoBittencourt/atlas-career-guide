@@ -3,7 +3,8 @@ Field similarity determines if two skill sets can be said to be in the same "fie
 
 This implies the appropriate mathematical matching method for this is cosine similarity:
 
-$$ \begin{gather}
+```math
+\begin{gather}
 s_{kq}^{\theta} := 
 \cos\theta_{kq} := 
 \frac{
@@ -26,7 +27,8 @@ s_{kq}^{\theta} :=
 \in
 [0,1]
 .
-\end{gather} $$
+\end{gather}
+```
 
 In addition, the matrix of all field similarities in the economy,
 $
