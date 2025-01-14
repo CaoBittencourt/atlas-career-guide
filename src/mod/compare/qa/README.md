@@ -90,16 +90,16 @@ Note, again, normalized (non-negative) Euclidean distance is the only method of 
 And note, also, all three coefficients are unweighted. Therefore, they shouldn't be used in matching, for they do not account for each attribute's importance to each occupation. If one wished to apply the qualification coefficient for matching, the following formulae, with attribute equivalence weights, would be more appropriate:
 ```math
 \begin{align}
-\ddot{\delta}_{kq}^{\geq} 
+{\delta}_{kq}^{\geq} 
 &:=
 \frac{
 \sum_{i=1}^{m}{
-\ddot{a}_{i}^{q}
+{a}_{i}^{q}
 {\delta(a_{i}^{k}, a_{i}^{q})}
 }
 }{
 \sum_{i=1}^{m}{
-\ddot{a}_{i}^{q}
+{a}_{i}^{q}
 {\delta(1, a_{i}^{q})}
 }
 } =
@@ -113,44 +113,44 @@ And note, also, all three coefficients are unweighted. Therefore, they shouldn't
 }
 }
 ;\\
-\ddot{s}_{kq}^{\geq}
+{s}_{kq}^{\geq}
 &:=
 1 -
 \frac{
 \sum_{i=1}^{m}{
-\ddot{a}_{i}^{q}
+{a}_{i}^{q}
 {\delta(a_{i}^{q}, a_{i}^{k})}
 }
 }{
 \sum_{i=1}^{m}{
-\ddot{a}_{i}^{q}
+{a}_{i}^{q}
 {\delta(a_{i}^{q}, 0)}
 }
 } =
 1 - \text{uqa}(\boldsymbol{a_k}, \boldsymbol{a_q})
 ;\\
-\ddot{\delta}_{kq}^{<}
+{\delta}_{kq}^{<}
 &:=
 \text{uqa}(\boldsymbol{a_k}, \boldsymbol{a_q}) :=
 \frac{
 \sum_{i=1}^{m}{
-\ddot{a}_{i}^{q}
+{a}_{i}^{q}
 {\delta(a_{i}^{q}, a_{i}^{k})}
 }
 }{
 \sum_{i=1}^{m}{
-\ddot{a}_{i}^{q}
+{a}_{i}^{q}
 {\delta(a_{i}^{q}, 0)}
 }
 } =
 \frac{
 \sum_{i=1}^{m}{
-\ddot{a}_{i}^{q}
+{a}_{i}^{q}
 {\delta(a_{i}^{q}, a_{i}^{k})}
 }
 }{
 \sum_{i=1}^{m}{
-\ddot{a}_{i}^{q}
+{a}_{i}^{q}
 {a_{i}^{q}}
 }
 }
