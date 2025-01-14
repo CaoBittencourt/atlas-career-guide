@@ -36,8 +36,7 @@ which measures only positive competency gaps (so as to not "punish" overqualific
     \sum_{i=1}^{m}{
     {(1 - a_{i}^{q})}
     }
-    }
-    ;\\
+    };\\
     s_{kq}^{\geq}
     &:=
     \text{sqa}(\boldsymbol{a_k}, \boldsymbol{a_q}) :=
@@ -51,8 +50,7 @@ which measures only positive competency gaps (so as to not "punish" overqualific
     {\delta(a_{i}^{q}, 0)}
     }
     } =
-    1 - \text{uqa}(\boldsymbol{a_k}, \boldsymbol{a_q})
-    ;\\
+    1 - \text{uqa}(\boldsymbol{a_k}, \boldsymbol{a_q});\\
     \tilde{\delta}_{kq}^{<}
     &:=
     \text{uqa}(\boldsymbol{a_k}, \boldsymbol{a_q}) :=
