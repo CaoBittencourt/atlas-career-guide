@@ -120,7 +120,7 @@ And note, also, all three coefficients are unweighted. Therefore, they shouldn't
     }
 }
 ;\\
-s_{kq}^{\geq}
+\ddot{s}_{kq}^{\geq}
 &:=
 \text{sqa}(\boldsymbol{a_k}, \boldsymbol{a_q}) :=
 1 -
