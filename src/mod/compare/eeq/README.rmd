@@ -1,0 +1,4 @@
+---
+output: rmarkdown::github_document
+---
+# `eeq`

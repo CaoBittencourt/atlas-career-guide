@@ -1,5 +1,2 @@
-`eeq`
-================
-Cao Bittencourt
 
 # `eeq`
