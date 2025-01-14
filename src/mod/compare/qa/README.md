@@ -82,32 +82,6 @@ s_{kq}^{\geq}
 .
 \end{align}
 ```
-$$
-\begin{align}
-    \tilde{\delta}_{kq}^{<}
-    &:=
-    \text{uqa}(\boldsymbol{a_k}, \boldsymbol{a_q}) :=
-    \frac{
-    \sum_{i=1}^{m}{
-    {\delta(a_{i}^{q}, a_{i}^{k})}
-    }
-    }{
-    \sum_{i=1}^{m}{
-    {\delta(a_{i}^{q}, 0)}
-    }
-    } =
-    \frac{
-    \sum_{i=1}^{m}{
-    {\delta(a_{i}^{q}, a_{i}^{k})}
-    }
-    }{
-    \sum_{i=1}^{m}{
-    {a_{i}^{q}}
-    }
-    }
-    .
-\end{align}
-$$
 
 The first of these is the overqualification coefficient and measures the percentage of a skill set in which an individual is overqualified. The second coefficient is that of "sufficient qualification" and measures the percentage of a skill set in which an individual is not underqualified. And lastly, the underqualification coefficient measures the percentage of a skill set which is higher than an individuals' current capacity.
 
