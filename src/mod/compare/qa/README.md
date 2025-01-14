@@ -21,6 +21,8 @@ which measures only positive competency gaps (so as to not "punish" overqualific
 &\tilde{\delta}
 \\
 &\boldsymbol{a_k}
+\\
+&\text{oqa}
 .
 \end{align}
 ```
