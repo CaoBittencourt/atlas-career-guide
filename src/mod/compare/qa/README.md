@@ -136,34 +136,34 @@ And note, also, all three coefficients are unweighted. Therefore, they shouldn't
     \frac{
     \sum_{i=1}^{m}{
     \ddot{a}_{i}^{q}
-    {\delta(a_{i}^{q}, a_{i}^{k})}
+    \delta(a_{i}^{q}, a_{i}^{k})
     }
     }{
     \sum_{i=1}^{m}{
     \ddot{a}_{i}^{q}
-    {\delta(a_{i}^{q}, 0)}
+    \delta(a_{i}^{q}, 0)
     }
     } =
     1 - \text{uqa}(\boldsymbol{a_k}, \boldsymbol{a_q})
-    ;\\
+;\\
     \ddot{\delta}_{kq}^{<}
     &:=
     \text{uqa}(\boldsymbol{a_k}, \boldsymbol{a_q}) :=
     \frac{
     \sum_{i=1}^{m}{
     \ddot{a}_{i}^{q}
-    {\delta(a_{i}^{q}, a_{i}^{k})}
+    \delta(a_{i}^{q}, a_{i}^{k})
     }
     }{
     \sum_{i=1}^{m}{
     \ddot{a}_{i}^{q}
-    {\delta(a_{i}^{q}, 0)}
+    \delta(a_{i}^{q}, 0)
     }
     } =
     \frac{
     \sum_{i=1}^{m}{
     \ddot{a}_{i}^{q}
-    {\delta(a_{i}^{q}, a_{i}^{k})}
+    \delta(a_{i}^{q}, a_{i}^{k})
     }
     }{
     \sum_{i=1}^{m}{
@@ -174,7 +174,7 @@ And note, also, all three coefficients are unweighted. Therefore, they shouldn't
     .
 \end{align}
 ```
-```math
+<!-- ```math
 \begin{align}
     \ddot{s}_{kq}^{\geq}
     &:=
@@ -219,4 +219,4 @@ And note, also, all three coefficients are unweighted. Therefore, they shouldn't
     }
     .
 \end{align}
-```
+``` -->
