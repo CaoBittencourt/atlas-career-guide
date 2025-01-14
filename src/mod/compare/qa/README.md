@@ -129,33 +129,53 @@ And note, also, all three coefficients are unweighted. Therefore, they shouldn't
         )
     }
 }
-\end{align}
-```
-```math
-\begin{align}
-    \ddot{\delta}_{kq}^{\geq} 
+;\\
+\ddot{s}_{kq}^{\geq}
     &:=
+    1 -
     \frac{
     \sum_{i=1}^{m}{
     \ddot{a}_{i}^{q}
-    {\delta(a_{i}^{k}, a_{i}^{q})}
+    {\delta(a_{i}^{q}, a_{i}^{k})}
     }
     }{
     \sum_{i=1}^{m}{
     \ddot{a}_{i}^{q}
-    {\delta(1, a_{i}^{q})}
+    {\delta(a_{i}^{q}, 0)}
+    }
+    } =
+    1 - \text{uqa}(\boldsymbol{a_k}, \boldsymbol{a_q})
+    ;\\
+    \ddot{\delta}_{kq}^{<}
+    &:=
+    \text{uqa}(\boldsymbol{a_k}, \boldsymbol{a_q}) :=
+    \frac{
+    \sum_{i=1}^{m}{
+    \ddot{a}_{i}^{q}
+    {\delta(a_{i}^{q}, a_{i}^{k})}
+    }
+    }{
+    \sum_{i=1}^{m}{
+    \ddot{a}_{i}^{q}
+    {\delta(a_{i}^{q}, 0)}
     }
     } =
     \frac{
     \sum_{i=1}^{m}{
-    {\delta(a_{i}^{k}, a_{i}^{q})}
+    \ddot{a}_{i}^{q}
+    {\delta(a_{i}^{q}, a_{i}^{k})}
     }
     }{
     \sum_{i=1}^{m}{
-    {(1 - a_{i}^{q})}
+    \ddot{a}_{i}^{q}
+    {a_{i}^{q}}
     }
     }
-    ;\\
+    .
+\end{align}
+```
+```math
+\begin{align}
     \ddot{s}_{kq}^{\geq}
     &:=
     1 -
