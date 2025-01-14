@@ -1,7 +1,7 @@
 
 # `eeq`
 
-$$
+$$`
 \begin{gather}
 s_{kq}^{\theta} := 
 \cos\theta_{kq} := 
@@ -26,4 +26,4 @@ s_{kq}^{\theta} :=
 [0,1]
 .
 \end{gather}
-$$
+`$$
