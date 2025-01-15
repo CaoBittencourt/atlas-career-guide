@@ -21,7 +21,7 @@ s_{kq}^{\theta} :=
         \sum_{i=1}^{m} \ddot{a}_{i}^{k} \ddot{a}_{i}^{k}
     }
     \sqrt{
-        \sum_{i=1}^{m} \ddot{a}_{i}^{k} \ddot{a}_{i}^{k}
+        \sum_{i=1}^{m} \ddot{a}_{i}^{q} \ddot{a}_{i}^{q}
     }
 }
 \in
