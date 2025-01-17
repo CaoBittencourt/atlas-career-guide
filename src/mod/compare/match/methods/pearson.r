@@ -5,7 +5,7 @@ box::use(
 
 # endregion
 # region: pearson correlation matching method
-s.pearson <- function(ak, aq, äq) {
+s.pearson <- function(ak, aq, äq = rep(1, length(aq))) {
   # assert args in main function
   return((1 + wtd.cors(ak, aq, äq)) / 2)
 }

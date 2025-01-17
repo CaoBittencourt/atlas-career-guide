@@ -6,6 +6,7 @@ box::use(
   eq = mod / describe / aeq,
   mod / compare / match / methods / bvls[...],
   mod / compare / match / methods / pearson[...],
+  mod / compare / match / methods / euclidean[...],
   stats[setNames]
 )
 
@@ -58,7 +59,18 @@ similarity <- function(skill_set, skill_mtx, match_method = c("euclidean", "bvls
 # region: test
 (getOption("atlas.skills_mtx") |> readRDS())[-1] -> dsds
 
-similarity(dsds[1:4], dsds[1:4], match_method = c("bvls", "pearson")) -> lalala
-lalala
+# similarity(dsds[1:4], dsds[1:4], match_method = c("euclidean", "bvls", "pearson")) -> lalala
+# similarity(dsds[1:4], dsds[1:4], match_method = c("euclidean", "pearson")) -> lalala
+similarity(dsds[1], dsds, match_method = "euclidean") -> lalala
+# similarity(dsds[1:4], dsds[1:4], match_method = "euclidean") -> lalala
+lalala |>
+  dplyr::arrange(
+    match_method,
+    from,
+    -value
+  ) |>
+  print(
+    n = nrow(lalala)
+  )
 
 # endregion
