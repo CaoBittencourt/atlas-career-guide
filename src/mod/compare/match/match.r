@@ -1,4 +1,3 @@
-modular::project.options("atlas")
 # region: imports
 box::use(
   assert = mod / utils / assert,
@@ -8,6 +7,8 @@ box::use(
   mod / compare / match / methods / pearson[...],
   mod / compare / match / methods / euclidean[...],
   mod / compare / match / methods / logit[...],
+  mod / compare / match / methods / cobb_douglas[...],
+  mod / compare / match / methods / gmme[...],
   stats[setNames]
 )
 
@@ -23,8 +24,8 @@ s <- function(ak, aq, äq, match_method = c("euclidean", "bvls", "logit", "probi
       "bvls" = s.bvls(ak, aq, äq),
       "logit" = s.logit(ak, aq, äq, link = "logit"),
       "probit" = s.logit(ak, aq, äq, link = "probit"),
-      "cobb-douglas" = s.cobb_douglas(ak, aq, äq),
-      "gmme" = s.gmme(ak, aq, äq),
+      "cobb-douglas" = s.cobb_douglas(ak, aq, äq, ...),
+      "gmme" = s.gmme(ak, aq, äq, ...),
       "pearson" = s.pearson(ak, aq, äq)
     )
 }
@@ -49,29 +50,23 @@ similarity <- function(skill_set, skill_mtx, match_method = c("euclidean", "bvls
 
   # egmap similarity
   # note: vectorize aeq
-  return(list(from = Ak, to = list(to = Aq, aeq = Aq |> vapply(eq$aeq, numeric(120))), match_method = match_method |> setNames(match_method) |> rbind()) |> egmap(s, ...))
+  return(
+    list(
+      from = Ak,
+      to = list(
+        to = Aq,
+        aeq = Aq |> vapply(eq$aeq, numeric(120))
+      ),
+      match_method =
+        match_method |>
+          setNames(match_method) |>
+          rbind()
+    ) |> egmap(s, ...)
+  )
 }
 
 # endregion
-# # region: exports
-# box::export(similarity)
-
-# # endregion
-# region: test
-(getOption("atlas.skills_mtx") |> readRDS())[-1] -> dsds
-
-# similarity(dsds[1:4], dsds[1:4], match_method = c("euclidean", "bvls", "pearson")) -> lalala
-# similarity(dsds[1:4], dsds[1:4], match_method = c("euclidean", "pearson")) -> lalala
-similarity(dsds[1:3], dsds[1:3], match_method = c("euclidean", "bvls", "pearson", "probit", "logit")) -> lalala
-# similarity(dsds[1:4], dsds[1:4], match_method = "euclidean") -> lalala
-lalala |>
-  dplyr::arrange(
-    match_method,
-    from,
-    -value
-  ) |>
-  print(
-    n = nrow(lalala)
-  )
+# region: exports
+box::export(similarity)
 
 # endregion

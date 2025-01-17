@@ -1,3 +1,18 @@
+s.cobb_douglas <- function(ak, aq, äq = rep(1, length(aq)), zeros = 1 / 100) {
+  # assert args in main function
+  
+  # truncate skill set by the skill set matrix
+  # this allows for moderate attribute substitution
+  # but disallows attribute "over-substitution"
+  aq |> pmin(ak |> pmax(zeros)) -> ak
+  
+  # normalize weights by sum
+  äq / sum(äq) -> äq
+  
+  # assess similarity as normalized weighted product
+  return(prod(ak^äq) / prod(aq^äq))
+}
+
 cobb_douglas <- function(skill_set, skill_mtx, weights = NULL, zeros = 1 / 100) {
   # assert args in main function
   # skill_set: a skill set in the unit interval to compare with skill_mtx

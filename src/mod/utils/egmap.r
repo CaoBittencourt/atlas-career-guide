@@ -89,6 +89,8 @@ egmap <- function(iters, fn, ...) {
     as.data.frame() |>
     sapply(
       function(i) {
+        print(i)
+        
         do.call(
           fn,
           c(
