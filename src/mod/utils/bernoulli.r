@@ -37,7 +37,7 @@ as.bernoulli <- function(x, ub = 100, lb = 0) {
               )
             )
           },
-          integer(ub[[1]])
+          numeric(ub[[1]])
         )
     )
   )

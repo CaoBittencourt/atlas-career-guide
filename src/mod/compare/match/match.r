@@ -7,6 +7,7 @@ box::use(
   mod / compare / match / methods / bvls[...],
   mod / compare / match / methods / pearson[...],
   mod / compare / match / methods / euclidean[...],
+  mod / compare / match / methods / logit[...],
   stats[setNames]
 )
 
@@ -20,8 +21,8 @@ s <- function(ak, aq, äq, match_method = c("euclidean", "bvls", "logit", "probi
     switch(
       "euclidean" = s.euclidean(ak, aq, äq),
       "bvls" = s.bvls(ak, aq, äq),
-      "logit" = s.logit(ak, aq, äq),
-      "probit" = s.probit(ak, aq, äq),
+      "logit" = s.logit(ak, aq, äq, link = "logit"),
+      "probit" = s.logit(ak, aq, äq, link = "probit"),
       "cobb-douglas" = s.cobb_douglas(ak, aq, äq),
       "gmme" = s.gmme(ak, aq, äq),
       "pearson" = s.pearson(ak, aq, äq)
@@ -61,7 +62,7 @@ similarity <- function(skill_set, skill_mtx, match_method = c("euclidean", "bvls
 
 # similarity(dsds[1:4], dsds[1:4], match_method = c("euclidean", "bvls", "pearson")) -> lalala
 # similarity(dsds[1:4], dsds[1:4], match_method = c("euclidean", "pearson")) -> lalala
-similarity(dsds[1], dsds, match_method = "euclidean") -> lalala
+similarity(dsds[1:3], dsds[1:3], match_method = c("euclidean", "bvls", "pearson", "probit", "logit")) -> lalala
 # similarity(dsds[1:4], dsds[1:4], match_method = "euclidean") -> lalala
 lalala |>
   dplyr::arrange(
