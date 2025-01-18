@@ -2,6 +2,7 @@
 box::use(
   assert = mod / utils / assert,
   mod / utils / egmap[...],
+  mod / utils / vmap[...],
   eq = mod / describe / aeq,
   bin = mod / compare / match / methods / bin,
   vec = mod / compare / match / methods / vec,
@@ -9,8 +10,8 @@ box::use(
 )
 
 # endregion
-# region: dispatch function
-s <- function(ak, aq, äq, match_method = c("euclidean", "bvls", "logit", "probit", "cobb-douglas", "gmme", "pearson")[[1]], aeq_method, ...) {
+# region: binary dispatch function
+s.bin <- function(ak, aq, äq, match_method = c("euclidean", "bvls", "logit", "probit", "cobb-douglas", "gmme", "pearson")[[1]], ...) {
   # assert args in main function
 
   # multiple dispatch
@@ -27,7 +28,13 @@ s <- function(ak, aq, äq, match_method = c("euclidean", "bvls", "logit", "probi
 }
 
 # endregion
-# region: egmap function
+# region: vectorized dispatch function
+s.vec <- function(ak, A, Ä, match_method = c("euclidean", "bvls", "logit", "probit", "cobb-douglas", "gmme", "pearson")[[1]], ...) {
+
+}
+
+# endregion
+# region: generic function
 similarity <- function(skill_set, skill_mtx, match_method = c("euclidean", "bvls", "logit", "probit", "cobb-douglas", "gmme", "pearson")[[1]], mode = c("vector", "egmap")[[1]], ...) {
   # assert args
   assert$as.skill_mtx(skill_set) -> Ak
@@ -46,30 +53,30 @@ similarity <- function(skill_set, skill_mtx, match_method = c("euclidean", "bvls
 
   stopifnot(
     "'mode' must be either 'vector' or 'egmap'." = any(
-      mode[[1]] == c("vector", "egmap")
+      mode[[1]] == c("vector", "vmap", "egmap")
     )
   )
 
-  # egmap similarity
-  if (mode[[1]] == "egmap") {
-    return(
-      list(
-        from = Ak,
-        to = list(
-          to = Aq,
-          # note: vectorize aeq
-          aeq = Aq |> vapply(eq$aeq, numeric(120))
-        ),
-        match_method =
-          match_method |>
-            setNames(match_method) |>
-            rbind()
-      ) |> egmap(s, ...)
+  # multiple dispatch on mode
+  mode[[1]] |>
+    switch(
+      "vector" = return("vector mode"),
+      "vmap" = return("vmap mode"),
+      "egmap" = return(
+        list(
+          from = Ak,
+          to = list(
+            to = Aq,
+            # note: vectorize aeq
+            aeq = Aq |> vapply(eq$aeq, numeric(120))
+          ),
+          match_method =
+            match_method |>
+              setNames(match_method) |>
+              rbind()
+        ) |> egmap(s.bin, ...)
+      ),
     )
-  }
-
-  # vectorized similarity
-  return(code)
 }
 
 # endregion
