@@ -8,7 +8,7 @@ box::use(
 
 # endregion
 # region: logit / probit matching method
-s.logit <- function(ak, aq, äq = rep(1, length(aq)), link = c("logit", "probit")[[1]]) {
+logit <- function(ak, aq, äq = rep(1, length(aq)), link = c("logit", "probit")[[1]]) {
   # assert args in main function
 
   # convert to bernoulli
@@ -33,6 +33,6 @@ s.logit <- function(ak, aq, äq = rep(1, length(aq)), link = c("logit", "probit"
 
 # endregion
 # region: exports
-box::export(s.logit)
+box::export(logit)
 
 # endregion

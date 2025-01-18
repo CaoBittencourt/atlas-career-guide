@@ -1,18 +1,19 @@
+modular::project.options("atlas")
 # region: imports
 box::use(
-  bvls[bvls],
+  reg.bvls = bvls,
   stats[coef]
 )
 
 # endregion
 # region: bvls matching method
-s.bvls <- function(ak, aq, äq = rep(1, length(aq))) {
+bvls <- function(ak, aq, äq = rep(1, length(aq))) {
   # assert args in main function
   sqrt(äq) -> äq
 
   return(
     as.matrix(aq * äq) |>
-      bvls(
+      reg.bvls$bvls(
         ak * äq,
         bl = 0,
         bu = 1
@@ -23,6 +24,6 @@ s.bvls <- function(ak, aq, äq = rep(1, length(aq))) {
 
 # endregion
 # region: exports
-box::export(s.bvls)
+box::export(bvls)
 
 # endregion

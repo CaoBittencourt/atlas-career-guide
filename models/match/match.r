@@ -19,9 +19,10 @@ df_occupations[-1] -> df_occupations
 # endregion
 # model
 # region: egmap all matching methods
-df_occupations |>
+df_occupations[1:3] |>
   s$similarity(
-    df_occupations,
+    df_occupations[1:3],
+    mode = "egmap",
     match_method = c(
       "euclidean",
       "bvls",
@@ -33,5 +34,10 @@ df_occupations |>
     )
   ) ->
 eg_similarity
+
+eg_similarity |> print(n = nrow(eg_similarity))
+
+# endregion
+# region: vmap all matching methods
 
 # endregion
