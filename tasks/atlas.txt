@@ -14,6 +14,9 @@ notes
 
 fixes
 -------------------------------------
+[ ] egmap, vmap vs conform?
+    - instead of expand.grid, use rep
+    to conform dimensions then mapply
 [ ] check if box can create R package
 [ ] remove hungarian notation
 [ ] use dot notation in functions etc

@@ -1,3 +1,4 @@
+modular::project.options("atlas")
 # region: imports
 box::use(
   assert = mod / utils / assert,
@@ -10,7 +11,7 @@ box::use(
 )
 
 # endregion
-# region: binary dispatch function
+# region: egmap dispatch function
 s.bin <- function(ak, aq, äq, match_method = c("euclidean", "bvls", "logit", "probit", "cobb-douglas", "gmme", "pearson")[[1]], ...) {
   # assert args in main function
 
@@ -28,10 +29,14 @@ s.bin <- function(ak, aq, äq, match_method = c("euclidean", "bvls", "logit", "p
 }
 
 # endregion
-# region: vectorized dispatch function
+# region: vmap dispatch function
 s.vec <- function(ak, A, Ä, match_method = c("euclidean", "bvls", "logit", "probit", "cobb-douglas", "gmme", "pearson")[[1]], ...) {
-
+  # assert args in main function
+  #
 }
+
+# endregion
+# region: vector dispatch function
 
 # endregion
 # region: generic function
@@ -61,7 +66,13 @@ similarity <- function(skill_set, skill_mtx, match_method = c("euclidean", "bvls
   mode[[1]] |>
     switch(
       "vector" = return("vector mode"),
-      "vmap" = return("vmap mode"),
+      "vmap" = return(
+        "vmap mode"
+        # match_method |>
+        #   lapply(
+        #     s.vec()
+        #   )
+      ),
       "egmap" = return(
         list(
           from = Ak,
