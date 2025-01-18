@@ -1,4 +1,3 @@
-modular::project.options("atlas")
 # region: imports
 box::use(
   assert = mod / utils / assert,
@@ -7,7 +6,8 @@ box::use(
   eq = mod / describe / aeq,
   bin = mod / compare / match / methods / bin,
   vec = mod / compare / match / methods / vec,
-  stats[setNames]
+  stats[setNames],
+  mod / utils / conform[...]
 )
 
 # endregion
@@ -29,14 +29,25 @@ s.bin <- function(ak, aq, äq, match_method = c("euclidean", "bvls", "logit", "p
 }
 
 # endregion
-# region: vmap dispatch function
+# region: vector dispatch function
 s.vec <- function(ak, A, Ä, match_method = c("euclidean", "bvls", "logit", "probit", "cobb-douglas", "gmme", "pearson")[[1]], ...) {
   # assert args in main function
-  #
+
+  # multiple dispatch
+  match_method[[1]] |>
+    switch(
+      # "euclidean" = vec$euclidean(ak, aq, äq),
+      # "bvls" = vec$bvls(ak, aq, äq),
+      # "logit" = vec$logit(ak, aq, äq, link = "logit"),
+      # "probit" = vec$logit(ak, aq, äq, link = "probit"),
+      # "cobb-douglas" = vec$cobb_douglas(ak, aq, äq, ...),
+      # "gmme" = vec$gmme(ak, aq, äq, ...),
+      "pearson" = ak |> conform(A) |> vec$pearson(A, Ä)
+    )
 }
 
 # endregion
-# region: vector dispatch function
+# region: vmap dispatch function
 
 # endregion
 # region: generic function
@@ -65,14 +76,15 @@ similarity <- function(skill_set, skill_mtx, match_method = c("euclidean", "bvls
   # multiple dispatch on mode
   mode[[1]] |>
     switch(
-      "vector" = return("vector mode"),
-      "vmap" = return(
-        "vmap mode"
-        # match_method |>
-        #   lapply(
-        #     s.vec()
-        #   )
+      "vector" = return(
+        skill_set |>
+          s.vec(
+            skill_mtx,
+            skill_mtx |> vapply(eq$aeq, numeric(120)) |> as.data.frame(),
+            match_method
+          )
       ),
+      "vmap" = return("vmap mode"),
       "egmap" = return(
         list(
           from = Ak,
@@ -80,6 +92,7 @@ similarity <- function(skill_set, skill_mtx, match_method = c("euclidean", "bvls
             to = Aq,
             # note: vectorize aeq
             aeq = Aq |> vapply(eq$aeq, numeric(120))
+            # aeq = Aq |> lapply(eq$aeq)
           ),
           match_method =
             match_method |>

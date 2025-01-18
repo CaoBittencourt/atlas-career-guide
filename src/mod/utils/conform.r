@@ -11,6 +11,14 @@ conform.x <- function(x, A) {
   A |> as.data.frame() -> A
 
   rep(1, ncol(A)) -> reps
+  names(A) -> mtx.names
+
+  if (!length(mtx.names)) {
+    "x" |>
+      paste0(
+        seq_along(reps)
+      ) -> mtx.names
+  }
 
   return(
     x |>
@@ -20,10 +28,7 @@ conform.x <- function(x, A) {
         function(mtx) {
           mtx[, reps] -> mtx
 
-          "x" |>
-            paste0(
-              seq_along(reps)
-            ) ->
+          mtx.names ->
           colnames(mtx)
 
           return(mtx)
@@ -45,6 +50,17 @@ conform.rep <- function(x, A) {
 
   rep(1, ncol(A)) -> reps
 
+  rep(1, ncol(A)) -> reps
+  names(A) -> mtx.names
+
+  if (!length(mtx.names)) {
+    "x" |>
+      paste0(
+        seq_along(reps)
+      ) -> mtx.names
+  }
+
+
   return(
     list(
       from =
@@ -55,10 +71,7 @@ conform.rep <- function(x, A) {
             function(mtx) {
               mtx[, reps] -> mtx
 
-              "x" |>
-                paste0(
-                  seq_along(reps)
-                ) ->
+              mtx.names ->
               colnames(mtx)
 
               return(mtx)

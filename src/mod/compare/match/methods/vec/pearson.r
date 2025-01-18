@@ -1,26 +1,37 @@
-modular::project.options("atlas")
 # region: imports
 box::use(
-  weights[wtd.cors]
+  weights[wtd.cors],
+  dplyr[bind_rows]
 )
 
 # endregion
 # region: pearson correlation matching method
-pearson <- function(Ak, A, Ä = rep(1, length(aq))) {
+pearson <- function(Ak, A, Ä) {
   # assert args in main function
-  return((1 + wtd.cors(ak, aq, äq)) / 2)
+  # lapply weighted pearson correlation
+  return(
+    Ak |>
+      lapply(
+        function(ak) {
+          wtd.cors |>
+            mapply(
+              ak,
+              A,
+              Ä
+            )
+        }
+      ) |>
+      lapply(
+        function(s) {
+          (1 + s) / 2
+        }
+      ) |>
+      bind_rows(
+        .id = "to"
+      )
+  )
 }
 
-box::use(mod / utils / conform[...])
-(getOption("atlas.skills_mtx") |> readRDS())[-1] -> dsds
-
-dsds[1:2] |> conform(dsds, F) -> lalala
-dsds[1:2] |> conform(dsds, T) -> dsdsds
-
-wtd.cors(dsds[[1]], as.matrix(dsds), weight = as.matrix(dsds))
-wtd.cors(dsds[[1]], as.matrix(dsds), weight = as.matrix(dsds))
-
-?weights::wtd.cors()
 # endregion
 # region: exports
 box::export(pearson)
