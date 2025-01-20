@@ -31,7 +31,7 @@ s.bin <- function(ak, aq, äq, match_method = c("euclidean", "bvls", "logit", "p
 }
 
 # endregion
-# region: vector dispatch function
+# region: cbmap dispatch function
 s.vec <- function(ak, A, Ä, match_method = c("euclidean", "bvls", "logit", "probit", "cobb-douglas", "gmme", "pearson")[[1]], bind = T, ...) {
   # assert args in main function
   # conform skill sets to skill set matrix
