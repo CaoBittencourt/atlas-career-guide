@@ -39,9 +39,9 @@ eg_similarity |> print(n = nrow(eg_similarity))
 
 # endregion
 # region: vector mode
-df_occupations |>
+df_occupations[1:3] |>
   s$similarity(
-    df_occupations,
+    df_occupations[1:3],
     mode = "vector",
     match_method = c(
       # "euclidean",
