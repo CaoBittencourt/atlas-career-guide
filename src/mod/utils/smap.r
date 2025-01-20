@@ -1,19 +1,19 @@
 # conform-bind map
-method |>
-  setNames(method) |>
-  lapply(dispatch) ->
-output
-
-# bind results into data frame
-if (bind) {
-  output |>
-    bind_rows(
-      .id = "match_method"
-    ) ->
-  match.results
-}
-
-return(match.results)
+# method |>
+#   setNames(method) |>
+#   lapply(dispatch) ->
+# output
+#
+# # bind results into data frame
+# if (bind) {
+#   output |>
+#     bind_rows(
+#       .id = "match_method"
+#     ) ->
+#   match.results
+# }
+#
+# return(match.results)
 
 smap <- function(methods, dispatch = seq_along(methods), bind = T, ...) {
   if (!length(names(methods))) {

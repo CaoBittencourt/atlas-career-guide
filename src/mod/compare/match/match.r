@@ -48,7 +48,7 @@ s.vec <- function(ak, A, Ä, match_method = c("euclidean", "bvls", "logit", "pro
       # "bvls" = vec$bvls(ak, aq, äq),
       # "logit" = vec$logit(ak, aq, äq, link = "logit"),
       # "probit" = vec$logit(ak, aq, äq, link = "probit"),
-      # "cobb-douglas" = vec$cobb_douglas(ak, aq, äq, ...),
+      "cobb-douglas" = Ak |> cbindmap(vec$cobb_douglas, names(A), A, Ä),
       # "gmme" = vec$gmme(ak, aq, äq, ...),
       "pearson" = Ak |> cbindmap(vec$pearson, names(A), A, Ä)
     ) ->
@@ -74,7 +74,7 @@ s.vec <- function(ak, A, Ä, match_method = c("euclidean", "bvls", "logit", "pro
 similarity <- function(skill_set, skill_mtx, match_method = c("euclidean", "bvls", "logit", "probit", "cobb-douglas", "gmme", "pearson")[[1]], mode = c("vector", "egmap")[[1]], bind = T, ...) {
   # assert args
   assert$as.skill_mtx(skill_set) -> Ak
-  assert$as.skill_mtx(skill_mtx) -> Aq
+  assert$as.skill_mtx(skill_mtx) -> A
 
   stopifnot(
     "'match_method' must be one of the following methods: 'euclidean', 'bvls', 'logit', 'probit', 'cobb-douglas', 'gmme', 'pearson'." = all(
@@ -97,10 +97,10 @@ similarity <- function(skill_set, skill_mtx, match_method = c("euclidean", "bvls
   mode[[1]] |>
     switch(
       "vector" = return(
-        skill_set |>
+        Ak |>
           s.vec(
-            skill_mtx,
-            skill_mtx |> vapply(eq$aeq, numeric(120)) |> as.data.frame(),
+            A,
+            A |> vapply(eq$aeq, numeric(nrow(A))) |> as.data.frame(),
             match_method,
             bind
           )
@@ -110,9 +110,9 @@ similarity <- function(skill_set, skill_mtx, match_method = c("euclidean", "bvls
         list(
           from = Ak,
           to = list(
-            to = Aq,
+            to = A,
             # note: vectorize aeq
-            aeq = Aq |> vapply(eq$aeq, numeric(120))
+            aeq = A |> vapply(eq$aeq, numeric(nrow(A)))
             # aeq = Aq |> lapply(eq$aeq)
           ),
           match_method =

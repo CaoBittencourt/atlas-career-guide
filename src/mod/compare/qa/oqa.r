@@ -3,14 +3,16 @@ box::use(
   eq = mod / describe / aeq,
   assert = mod / utils / assert,
   mod / utils / gap[...],
-  dplyr[bind_rows]
+  dplyr[bind_rows],
+  mod / utils / conform[...]
 )
 
 # endregion
 # region: overqualification
 oqa <- function(skill_set, skill_mtx, aeq_method = NULL) {
   # assert args
-  assert$valid_skill_set(skill_set)
+  # assert$valid_skill_set(skill_set)
+  assert$as.skill_mtx(skill_set) -> skill_set
   assert$as.skill_mtx(skill_mtx) -> skill_mtx
 
   # default to unweighted
@@ -26,7 +28,18 @@ oqa <- function(skill_set, skill_mtx, aeq_method = NULL) {
   }
 
   # estimate (un)weighted overqualification coefficient
-  return(colSums(weights_mtx * gap(skill_set, skill_mtx)) / colSums(weights_mtx * gap(1, skill_mtx)))
+  # return(colSums(weights_mtx * gap(skill_set, skill_mtx)) / colSums(weights_mtx * gap(1, skill_mtx)))
+  colSums(weights_mtx * gap(1, skill_mtx)) -> max.qa
+
+  return(
+    skill_set |>
+      conform(skill_mtx) |>
+      lapply(
+        function(Ak) {
+          colSums(weights_mtx * gap(Ak, skill_mtx)) / max.qa
+        }
+      )
+  )
 }
 
 # endregion

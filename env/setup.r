@@ -22,15 +22,17 @@ project.options(
     atlas.db = "database",
     atlas.data = "database/data",
     atlas.oldata = "database/data/old/occupations/df_occupations_2022.csv",
+    # questionnaires
+    atlas.quest = "database/quest",
     # rds
     atlas.rds = "database/data/output/rds",
     atlas.skills_mtx = "database/output/rds/skill_set_mtx.rds",
     atlas.skills = "database/output/rds/skill_sets.rds",
     atlas.labor = "database/output/rds/labor.rds",
-    atlas.education = "database/output/rds/education.rds"
+    atlas.education = "database/output/rds/education.rds",
+    atlas.cao = "database/quest/rds/cao.rds"
   ),
   root.name = ".atlas",
   start.path = ".",
   end.path = "."
 )
-
