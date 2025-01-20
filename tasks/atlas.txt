@@ -4,24 +4,29 @@ ATLAS CAREER GUIDE TASKS
 
 current task
 -------------------------------------
+[\] egmap, vmap vs conform?
+    - instead of expand.grid, use rep
+    to conform dimensions then mapply
 [\] modularize codebase
 [\] refine competence coefficient
+    - shift generalist to specialist?
+        - calculate a generalist's 
+        competence based on the best
+        specialist they could be?
+        (given their skill set)
 [\] standardize notation
 
 notes
 -------------------------------------
-[!] 
+[!] remove hungarian notation
+[!] use dot notation in functions etc
+[!] clean namespace
+    - export only necessary functions
 
 fixes
 -------------------------------------
-[ ] egmap, vmap vs conform?
-    - instead of expand.grid, use rep
-    to conform dimensions then mapply
+[ ] harsher attribute equivalence?
 [ ] check if box can create R package
-[ ] remove hungarian notation
-[ ] use dot notation in functions etc
-[ ] clean namespace
-    - export only necessary functions
 
 features
 -------------------------------------

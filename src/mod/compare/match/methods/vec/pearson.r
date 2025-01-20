@@ -1,34 +1,22 @@
 # region: imports
 box::use(
-  weights[wtd.cors],
-  dplyr[bind_rows]
+  weights[wtd.cors]
 )
 
 # endregion
 # region: pearson correlation matching method
-pearson <- function(Ak, A, Ä) {
+pearson <- function(ak, A, Ä) {
   # assert args in main function
-  # lapply weighted pearson correlation
+  # weighted pearson correlation
   return(
-    Ak |>
-      lapply(
-        function(ak) {
-          wtd.cors |>
-            mapply(
-              ak,
-              A,
-              Ä
-            )
-        }
-      ) |>
-      lapply(
-        function(s) {
-          (1 + s) / 2
-        }
-      ) |>
-      bind_rows(
-        .id = "to"
-      )
+    mapply(
+      function(k, q, w) {
+        (1 + wtd.cors(k, q, w)) / 2
+      },
+      ak,
+      A,
+      Ä
+    )
   )
 }
 

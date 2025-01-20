@@ -7,7 +7,9 @@ box::use(
   bin = mod / compare / match / methods / bin,
   vec = mod / compare / match / methods / vec,
   stats[setNames],
-  mod / utils / conform[...]
+  mod / utils / conform[...],
+  dplyr[bind_rows],
+  mod / utils / cbindmap[...]
 )
 
 # endregion
@@ -30,20 +32,38 @@ s.bin <- function(ak, aq, äq, match_method = c("euclidean", "bvls", "logit", "p
 
 # endregion
 # region: vector dispatch function
-s.vec <- function(ak, A, Ä, match_method = c("euclidean", "bvls", "logit", "probit", "cobb-douglas", "gmme", "pearson")[[1]], ...) {
+s.vec <- function(ak, A, Ä, match_method = c("euclidean", "bvls", "logit", "probit", "cobb-douglas", "gmme", "pearson")[[1]], bind = T, ...) {
   # assert args in main function
+  # conform skill sets to skill set matrix
+  ak |> conform(A) -> Ak
 
   # multiple dispatch
-  match_method[[1]] |>
-    switch(
-      # "euclidean" = vec$euclidean(ak, aq, äq),
+  match_method |>
+    setNames(
+      match_method
+    ) |>
+    lapply(
+      switch,
+      "euclidean" = Ak |> cbindmap(vec$euclidean, names(A), A, Ä),
       # "bvls" = vec$bvls(ak, aq, äq),
       # "logit" = vec$logit(ak, aq, äq, link = "logit"),
       # "probit" = vec$logit(ak, aq, äq, link = "probit"),
       # "cobb-douglas" = vec$cobb_douglas(ak, aq, äq, ...),
       # "gmme" = vec$gmme(ak, aq, äq, ...),
-      "pearson" = ak |> conform(A) |> vec$pearson(A, Ä)
-    )
+      "pearson" = Ak |> cbindmap(vec$pearson, names(A), A, Ä)
+    ) ->
+  match.results
+
+  # bind results into data frame
+  if (bind) {
+    match.results |>
+      bind_rows(
+        .id = "match_method"
+      ) ->
+    match.results
+  }
+
+  return(match.results)
 }
 
 # endregion
@@ -51,7 +71,7 @@ s.vec <- function(ak, A, Ä, match_method = c("euclidean", "bvls", "logit", "pro
 
 # endregion
 # region: generic function
-similarity <- function(skill_set, skill_mtx, match_method = c("euclidean", "bvls", "logit", "probit", "cobb-douglas", "gmme", "pearson")[[1]], mode = c("vector", "egmap")[[1]], ...) {
+similarity <- function(skill_set, skill_mtx, match_method = c("euclidean", "bvls", "logit", "probit", "cobb-douglas", "gmme", "pearson")[[1]], mode = c("vector", "egmap")[[1]], bind = T, ...) {
   # assert args
   assert$as.skill_mtx(skill_set) -> Ak
   assert$as.skill_mtx(skill_mtx) -> Aq
@@ -81,7 +101,8 @@ similarity <- function(skill_set, skill_mtx, match_method = c("euclidean", "bvls
           s.vec(
             skill_mtx,
             skill_mtx |> vapply(eq$aeq, numeric(120)) |> as.data.frame(),
-            match_method
+            match_method,
+            bind
           )
       ),
       "vmap" = return("vmap mode"),

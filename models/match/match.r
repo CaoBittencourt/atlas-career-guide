@@ -5,7 +5,8 @@ modular::project.options("atlas")
 # endregion
 # region: imports
 box::use(
-  s = mod / compare / match
+  s = mod / compare / match,
+  mod / utils / conform[...]
 )
 
 library(atlas.plot)
@@ -39,22 +40,92 @@ eg_similarity |> print(n = nrow(eg_similarity))
 
 # endregion
 # region: vector mode
-df_occupations[1:3] |>
+# note: is from/to inverted?
+df_occupations[1] |>
   s$similarity(
-    df_occupations[1:3],
+    df_occupations,
     mode = "vector",
+    bind = F,
     match_method = c(
-      # "euclidean",
-      # "bvls",
-      # "logit",
-      # "probit",
-      # "cobb-douglas",
-      # "gmme",
+      "euclidean",
+      # ,
+      # # "bvls",
+      # # "logit",
+      # # "probit",
+      # # "cobb-douglas",
+      # # "gmme",
       "pearson"
     )
   ) ->
 vec_similarity
 
+vec_similarity |> bind_rows(.id = "method")
+
+df_occupations[1:2] |>
+  conform(df_occupations) -> Ak
+
+box::use(mod / utils / cbindmap[...], weights[wtd.cors])
+
+Ak |> cbindmap(pearson, A = df_occupations, Ä = df_occupations)
+
+
+box::use(
+  mod / compare / match / methods / vec / euclidean[...]
+)
+
+s.vec <- function() {
+  ak |> conform(A) -> Ak
+
+  match_method |>
+    setNames(
+      match_method
+    ) |>
+    lapply(
+      switch,
+      "euclidean" = Ak |> vec.apply(vec$euclidean, A, Ä)
+    )
+}
+
+library(purrr)
+
+cbindmap <- function(list, fn, to = NULL, ...) {
+  return(
+    list |>
+      lapply(fn, ...) |>
+      bind_cols() |>
+      mutate(
+        .before = 1,
+        to = to
+      )
+  )
+}
+
+df_occupations[1:2] |>
+  conform(df_occupations) |>
+  map_dfc(
+    euclidean,
+    df_occupations,
+    df_occupations
+  ) |>
+  mutate(
+    .before = 1,
+    to = NULL
+  )
+
+df_occupations[1:2] |>
+  conform(df_occupations) |>
+  lapply(
+    euclidean,
+    df_occupations,
+    df_occupations
+  ) |>
+  bind_cols() |>
+  mutate(
+    .before = 1,
+    to = NULL
+  )
+
+dsds
 vec_similarity |> print(n = nrow(vec_similarity))
 
 # endregion
