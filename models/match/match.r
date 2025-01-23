@@ -30,46 +30,45 @@ df_occupations_cao
 box::use(eq = mod / describe / aeq)
 
 df_cao |>
-  mutate(
-    cao = eq$aeq(cao)
-  ) |>
+  # mutate(
+  #   cao = eq$aeq(cao)
+  # ) |>
   s$similarity(
-    # df_occupations_cao,
-    df_occupations_cao[-1] |>
-      lapply(eq$aeq) |>
-      as_tibble(),
+    df_occupations_cao,
+    # df_occupations_cao[-1] |>
+    #   lapply(eq$aeq) |>
+    #   as_tibble(),
     mode = "vector",
     bind = T,
     match_method = c(
-      # "euclidean",
-      "cobb-douglas"
-      # ,
-      # "pearson"
+      "euclidean",
+      "cobb-douglas",
+      "pearson"
     )
   ) ->
 vec_similarity
 
 # endregion
-# region: egmap mode
-df_occupations[1:3] |>
-  s$similarity(
-    df_occupations[1:3],
-    mode = "egmap",
-    match_method = c(
-      "euclidean",
-      "bvls",
-      "logit",
-      "probit",
-      "cobb-douglas",
-      "gmme",
-      "pearson"
-    )
-  ) ->
-eg_similarity
+# # region: egmap mode
+# df_occupations[1:3] |>
+#   s$similarity(
+#     df_occupations[1:3],
+#     mode = "egmap",
+#     match_method = c(
+#       "euclidean",
+#       "bvls",
+#       "logit",
+#       "probit",
+#       "cobb-douglas",
+#       "gmme",
+#       "pearson"
+#     )
+#   ) ->
+# eg_similarity
 
-eg_similarity |> print(n = nrow(eg_similarity))
+# eg_similarity |> print(n = nrow(eg_similarity))
 
-# endregion
+# # endregion
 # region: vmap mode
 df_occupations[1:3] |>
   s$similarity(
@@ -88,14 +87,5 @@ df_occupations[1:3] |>
 vm_similarity
 
 vm_similarity |> print(n = nrow(vm_similarity))
-
-# endregion
-# region: test qa
-box::use(mod / compare / qa)
-
-df_cao |> qa$uqa(df_occupations_cao)
-df_cao |> qa$sqa(df_occupations_cao)
-df_cao |> qa$oqa(df_occupations_cao)
-
 
 # endregion
