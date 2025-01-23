@@ -4,9 +4,6 @@ ATLAS CAREER GUIDE TASKS
 
 current task
 -------------------------------------
-[\] egmap, vmap vs conform?
-    - instead of expand.grid, use rep
-    to conform dimensions then mapply
 [\] modularize codebase
 [\] refine competence coefficient
     - shift generalist to specialist?
@@ -25,6 +22,7 @@ notes
 
 fixes
 -------------------------------------
+[ ] switch to juliaLang?
 [ ] harsher attribute equivalence?
 [ ] check if box can create R package
 
@@ -37,6 +35,9 @@ features
 
 finished
 -------------------------------------
+[x] egmap, vmap vs conform?
+    - instead of expand.grid, use rep
+    to conform dimensions then mapply
 [x] setup local sqlite database
 [x] improved testing framework
 [x] construct dependency matrix
