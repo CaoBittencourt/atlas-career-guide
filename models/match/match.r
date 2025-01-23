@@ -27,19 +27,11 @@ df_occupations_cao
 # model
 # region: vector mode
 # note: is from/to inverted?
-box::use(eq = mod / describe / aeq, qa = mod / compare / qa)
-
 df_cao |>
-  # mutate(
-  #   cao = eq$aeq(cao)
-  # ) |>
   s$similarity(
     df_occupations_cao,
-    # df_occupations_cao[-1] |>
-    #   lapply(eq$aeq) |>
-    #   as_tibble(),
     mode = "vector",
-    bind = T,
+    bind = F,
     match_method = c(
       "euclidean",
       "cobb-douglas",
@@ -47,6 +39,8 @@ df_cao |>
     )
   ) ->
 vec_similarity
+
+vec_similarity |> lapply(arrange, desc(cao))
 
 # endregion
 # # region: egmap mode
