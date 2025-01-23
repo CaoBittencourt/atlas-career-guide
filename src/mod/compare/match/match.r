@@ -79,7 +79,7 @@ s.vec <- function(ak, A, Ä, match_method = c("euclidean", "bvls", "logit", "pro
       "logit" = bernoulliAk |> cbindmap(vec$logit, names(A), bernoulliA, repsÄ, link = "logit"),
       "probit" = bernoulliAk |> cbindmap(vec$logit, names(A), bernoulliA, repsÄ, link = "probit"),
       "cobb-douglas" = Ak |> cbindmap(vec$cobb_douglas, names(A), A, Ä),
-      # "gmme" = vec$gmme(ak, aq, äq, ...),
+      "gmme" = Ak |> cbindmap(vec$gmme, names(A), A, Ä),
       "pearson" = Ak |> cbindmap(vec$pearson, names(A), A, Ä)
     ) ->
   match.results
@@ -97,11 +97,8 @@ s.vec <- function(ak, A, Ä, match_method = c("euclidean", "bvls", "logit", "pro
 }
 
 # endregion
-# region: vmap dispatch function
-
-# endregion
 # region: generic function
-similarity <- function(skill_set, skill_mtx, match_method = c("euclidean", "bvls", "logit", "probit", "cobb-douglas", "gmme", "pearson")[[1]], mode = c("vector", "egmap")[[1]], bind = T, ...) {
+similarity <- function(skill_set, skill_mtx, match_method = c("euclidean", "bvls", "logit", "probit", "cobb-douglas", "gmme", "pearson")[[1]], mode = c("cbmap", "egmap")[[1]], bind = T, ...) {
   # assert args
   assert$as.skill_mtx(skill_set) -> Ak
   assert$as.skill_mtx(skill_mtx) -> A
@@ -118,15 +115,15 @@ similarity <- function(skill_set, skill_mtx, match_method = c("euclidean", "bvls
   )
 
   stopifnot(
-    "'mode' must be either 'vector' or 'egmap'." = any(
-      mode[[1]] == c("vector", "vmap", "egmap")
+    "'mode' must be either 'cbmap' or 'egmap'." = any(
+      mode[[1]] == c("cbmap", "egmap")
     )
   )
 
   # multiple dispatch on mode
   mode[[1]] |>
     switch(
-      "vector" = return(
+      "cbmap" = return(
         Ak |>
           s.vec(
             A,
@@ -135,7 +132,6 @@ similarity <- function(skill_set, skill_mtx, match_method = c("euclidean", "bvls
             bind
           )
       ),
-      "vmap" = return("vmap mode"),
       "egmap" = return(
         list(
           from = Ak,
@@ -143,7 +139,6 @@ similarity <- function(skill_set, skill_mtx, match_method = c("euclidean", "bvls
             to = A,
             # note: vectorize aeq
             aeq = A |> vapply(eq$aeq, numeric(nrow(A)))
-            # aeq = Aq |> lapply(eq$aeq)
           ),
           match_method =
             match_method |>

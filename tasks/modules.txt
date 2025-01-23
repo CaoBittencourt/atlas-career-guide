@@ -4,9 +4,6 @@ SOURCE CODE MODULARIZATION
 
 modularization execution (in order)
 -------------------------------------
-[\] atlas/src/mod/compare/match.r
-    - [x] binary mode
-    - [\] vector mode
 [ ] atlas/src/mod/compare/prod.r
 
 [ ] atlas/src/mod/labor/employability.r
@@ -37,6 +34,9 @@ modularization execution (in order)
 [ ] atlas/src/mod/labor/market.r
 [ ] atlas/src/mod/plots.r
 
+[x] atlas/src/mod/compare/match.r
+    - [x] binary mode
+    - [x] vector mode
 [x] atlas/src/mod/compare/field.r
 [x] atlas/src/mod/compare/eeq.r
 [x] atlas/src/mod/compare/dom.r

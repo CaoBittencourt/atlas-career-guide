@@ -26,70 +26,52 @@ df_occupations_cao
 
 # endregion
 # model
-# region: vector mode
+# region: cbmap mode (my matches)
 # note: is from/to inverted?
 df_cao |>
   s$similarity(
     df_occupations_cao,
-    mode = "vector",
+    mode = "cbmap",
     bind = F,
     match_method = c(
       "euclidean",
       "cobb-douglas",
+      "gmme",
       "pearson",
       "bvls",
       "logit",
       "probit"
     )
   ) ->
-vec_similarity
+similarity_cao
 
-vec_similarity |>
+similarity_cao |>
   lapply(arrange, desc(cao)) |>
   lapply(head, 10)
 
-vec_similarity |>
+similarity_cao |>
   lapply(arrange, desc(cao)) |>
   lapply(tail, 10)
 
 # endregion
-# # region: egmap mode
-# df_occupations[1:3] |>
-#   s$similarity(
-#     df_occupations[1:3],
-#     mode = "egmap",
-#     match_method = c(
-#       "euclidean",
-#       "bvls",
-#       "logit",
-#       "probit",
-#       "cobb-douglas",
-#       "gmme",
-#       "pearson"
-#     )
-#   ) ->
-# eg_similarity
-
-# eg_similarity |> print(n = nrow(eg_similarity))
-
-# # endregion
-# region: vmap mode
-df_occupations[1:3] |>
+# region: cbmap mode (occupations)
+# note: is from/to inverted?
+df_occupations |>
   s$similarity(
-    df_occupations[1:3],
-    mode = "vmap",
+    df_occupations,
+    mode = "cbmap",
+    bind = F,
     match_method = c(
-      "euclidean",
-      "bvls",
-      "logit",
-      "probit",
-      "cobb-douglas",
-      "gmme",
-      "pearson"
+      "euclidean"
+      # ,
+      # "cobb-douglas",
+      # "gmme",
+      # "pearson",
+      # "bvls",
+      # "logit",
+      # "probit"
     )
   ) ->
-vm_similarity
-
-vm_similarity |> print(n = nrow(vm_similarity))
+similarity
 
 # endregion
