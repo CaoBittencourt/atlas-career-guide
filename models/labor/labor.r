@@ -23,6 +23,10 @@ getOption("atlas.labor") |> readRDS() -> df_labor
 # region: employability
 df_occupations[1:2] |> tt$productivity(df_occupations[1:19]) -> ttilde
 
+box::use(
+  mod / labor / employability / misc / pec[...]
+)
+
 labor$employability(
   hk = 1,
   Tk = ttilde$`Accountants and Auditors`,

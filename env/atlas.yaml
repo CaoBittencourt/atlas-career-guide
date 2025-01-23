@@ -10,3 +10,5 @@ dependencies:
   - r-box
   - r-styler
   - r-mgsub
+  - r-cubature
+  - r-Rsolnp
