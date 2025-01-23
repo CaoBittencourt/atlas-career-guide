@@ -27,7 +27,7 @@ df_occupations_cao
 # model
 # region: vector mode
 # note: is from/to inverted?
-box::use(eq = mod / describe / aeq)
+box::use(eq = mod / describe / aeq, qa = mod / compare / qa)
 
 df_cao |>
   # mutate(
