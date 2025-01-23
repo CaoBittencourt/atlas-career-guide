@@ -37,7 +37,9 @@ df_cao |>
       "euclidean",
       "cobb-douglas",
       "pearson",
-      "bvls"
+      "bvls",
+      "logit",
+      "probit"
     )
   ) ->
 vec_similarity

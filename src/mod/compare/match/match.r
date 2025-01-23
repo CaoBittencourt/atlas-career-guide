@@ -9,6 +9,7 @@ box::use(
   stats[setNames],
   mod / utils / conform[...],
   dplyr[bind_rows],
+  mod / utils / bernoulli[...],
   mod / utils / cbindmap[...]
 )
 
@@ -37,6 +38,35 @@ s.vec <- function(ak, A, Ä, match_method = c("euclidean", "bvls", "logit", "pro
   # conform skill sets to skill set matrix
   ak |> conform(A) -> Ak
 
+  if (
+    any(match_method %in% c("logit", "probit"))
+  ) {
+    Ak |>
+      lapply(
+        as.bernoulli,
+        ub = 100,
+        lb = 0
+      ) |>
+      lapply(as.data.frame) ->
+    bernoulliAk
+
+    A |>
+      as.bernoulli(
+        ub = 100,
+        lb = 0
+      ) |>
+      as.data.frame() ->
+    bernoulliA
+
+    Ä[
+      Ä |>
+        nrow() |>
+        seq_len() |>
+        rep(each = 100 - 0),
+    ] |> as.data.frame() ->
+    repsÄ
+  }
+
   # multiple dispatch
   match_method |>
     setNames(
@@ -46,8 +76,8 @@ s.vec <- function(ak, A, Ä, match_method = c("euclidean", "bvls", "logit", "pro
       switch,
       "euclidean" = Ak |> cbindmap(vec$euclidean, names(A), A, Ä),
       "bvls" = Ak |> cbindmap(vec$bvls, names(A), A, sqrt(Ä)),
-      # "logit" = vec$logit(ak, aq, äq, link = "logit"),
-      # "probit" = vec$logit(ak, aq, äq, link = "probit"),
+      "logit" = bernoulliAk |> cbindmap(vec$logit, names(A), bernoulliA, repsÄ, link = "logit"),
+      "probit" = bernoulliAk |> cbindmap(vec$logit, names(A), bernoulliA, repsÄ, link = "probit"),
       "cobb-douglas" = Ak |> cbindmap(vec$cobb_douglas, names(A), A, Ä),
       # "gmme" = vec$gmme(ak, aq, äq, ...),
       "pearson" = Ak |> cbindmap(vec$pearson, names(A), A, Ä)

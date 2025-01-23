@@ -1,6 +1,5 @@
 # region: imports
 box::use(
-  mod / utils / bernoulli[...],
   fastglm[fastglmPure],
   stats[binomial, coef],
   mod / utils / prob[...]
@@ -8,26 +7,28 @@ box::use(
 
 # endregion
 # region: logit / probit matching method
-logit <- function(ak, aq, äq = rep(1, length(aq)), link = c("logit", "probit")[[1]]) {
+logit <- function(bernoulliAk, bernoulliA, repsÄ, link = c("logit", "probit")[[1]]) {
   # assert args in main function
-
-  # convert to bernoulli
-  ak |> as.bernoulli(ub = 100, lb = 0) -> ak
-  aq |> as.bernoulli(ub = 100, lb = 0) -> aq
-  äq |> rep(each = 100 - 0) -> äq
-
+  # convert to bernoulli in main function
   # run weighted logit or probit regression
   # convert log or prob unit to probability
   return(
-    aq |>
-      as.matrix() |>
-      fastglmPure(
-        y = ak,
-        family = binomial(link),
-        weights = äq
-      ) |>
-      coef() |>
-      prob.from(link)
+    mapply(
+      function(ak, aq, äq) {
+        aq |>
+          as.matrix() |>
+          fastglmPure(
+            y = ak,
+            family = binomial(link),
+            weights = äq
+          ) |>
+          coef() |>
+          prob.from(link)
+      },
+      ak = bernoulliAk,
+      aq = bernoulliA,
+      äq = repsÄ
+    )
   )
 }
 
