@@ -45,7 +45,7 @@ s.vec <- function(ak, A, Ä, match_method = c("euclidean", "bvls", "logit", "pro
     lapply(
       switch,
       "euclidean" = Ak |> cbindmap(vec$euclidean, names(A), A, Ä),
-      # "bvls" = vec$bvls(ak, aq, äq),
+      "bvls" = Ak |> cbindmap(vec$bvls, names(A), A, sqrt(Ä)),
       # "logit" = vec$logit(ak, aq, äq, link = "logit"),
       # "probit" = vec$logit(ak, aq, äq, link = "probit"),
       "cobb-douglas" = Ak |> cbindmap(vec$cobb_douglas, names(A), A, Ä),

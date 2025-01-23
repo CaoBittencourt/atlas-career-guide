@@ -1,4 +1,3 @@
-modular::project.options("atlas")
 # region: imports
 box::use(
   reg.bvls = bvls,
@@ -9,7 +8,7 @@ box::use(
 # region: bvls matching method
 bvls <- function(ak, aq, äq = rep(1, length(aq))) {
   # assert args in main function
-  sqrt(äq) -> äq
+  äq |> sqrt() -> äq
 
   return(
     as.matrix(aq * äq) |>

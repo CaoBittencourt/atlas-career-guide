@@ -7,7 +7,8 @@ modular::project.options("atlas")
 box::use(
   s = mod / compare / match,
   mod / utils / conform[...],
-  vec = mod / compare / match / methods / vec
+  vec = mod / compare / match / methods / vec,
+  assert = mod / utils / assert
 )
 
 library(atlas.plot)
@@ -35,12 +36,19 @@ df_cao |>
     match_method = c(
       "euclidean",
       "cobb-douglas",
-      "pearson"
+      "pearson",
+      "bvls"
     )
   ) ->
 vec_similarity
 
-vec_similarity |> lapply(arrange, desc(cao))
+vec_similarity |>
+  lapply(arrange, desc(cao)) |>
+  lapply(head, 10)
+
+vec_similarity |>
+  lapply(arrange, desc(cao)) |>
+  lapply(tail, 10)
 
 # endregion
 # # region: egmap mode
