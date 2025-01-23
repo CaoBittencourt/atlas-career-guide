@@ -1,6 +1,7 @@
 # region: imports
 box::use(
-  mod / labor / employability / ta / ta[...]
+  mod / labor / employability / ta / ta[...],
+  stats[integrate]
 )
 
 # endregion
