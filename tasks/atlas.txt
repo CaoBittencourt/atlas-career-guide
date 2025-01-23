@@ -4,7 +4,7 @@ ATLAS CAREER GUIDE TASKS
 
 current task
 -------------------------------------
-[\] modularize codebase
+[\] modularize / vectorize codebase
 [\] refine competence coefficient
     - shift generalist to specialist?
         - calculate a generalist's 
