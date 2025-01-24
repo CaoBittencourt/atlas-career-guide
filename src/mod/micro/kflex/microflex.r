@@ -3,14 +3,19 @@ box::use(
   assert = mod / utils / assert,
   dom = mod / compare / dom,
   bvls[bvls],
-  dplyr[bind_rows, select]
+  dplyr[bind_rows, select],
+  stats[setNames]
 )
 
 # endregion
 # region: human capital microflexibility (lowercase phi)
-microflex <- function(skill_mtx, weights = NULL) {
+microflex <- function(skill_mtx, weights = NULL, skill.names = NULL) {
   # assert args
-  assert$valid_skill_mtx(skill_mtx)
+  skill_mtx |>
+    assert$as.skill_mtx() |>
+    t() |>
+    as.data.frame() |>
+    setNames(skill.names) -> skill_mtx
 
   stopifnot(
     "'weights' must be either NULL or a non-negative numeric vector the same length as the number of rows in 'skill_mtx'." = any(
