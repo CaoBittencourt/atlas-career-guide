@@ -6,7 +6,8 @@ modular::project.options("atlas")
 # region: imports
 box::use(
   labor = mod / labor,
-  tt = mod / compare / prod
+  tt = mod / compare / prod,
+  dplyr[...]
 )
 
 library(atlas.plot)
@@ -15,46 +16,82 @@ library(atlas.plot)
 # region: data
 # skill set matrix
 getOption("atlas.skills_mtx") |> readRDS() -> df_occupations
-
 getOption("atlas.labor") |> readRDS() -> df_labor
+
+# endregion
+# wrang
+# region: sample data
+df_occupations |> select(2) -> df_from
+df_occupations |> select(2:19) -> df_to
+df_labor |> filter(occupation %in% names(df_to)) -> df_labor
 
 # endregion
 # model
 # region: employability
-df_occupations[1:2] |> tt$productivity(df_occupations[1:19]) -> ttilde
-
-box::use(
-  # mod / labor / employability / misc / pec_recursive[...],
-  mod / labor / employability / misc / pec[...],
-  mod / labor / employability / misc / ta[...]
-)
-wtilde.mls <- function(w) {
-  round(w) |> pmax(1) -> w
-  return(rep(1 / w, w))
-}
-
-df_labor$
-  employment_norm[2] |>
-  wtilde.mls() |>
-  pec(exp)
-
-library(stats)
-library(cubature)
-
-labor$employability(
-  hk = 1,
-  Tk = ttilde$`Accountants and Auditors`,
-  ttc = exp,
-  w = df_labor$employment_norm[seq_along(ttilde$`Accountants and Auditors`)],
-  # p = Inf,
-  p = df_labor$employment_norm[seq_along(ttilde$`Accountants and Auditors`)],
-  agg = F
-)
+df_from |>
+  tt$productivity(df_to) |>
+  pull(names(df_from)) |>
+  labor$employability(
+    hk = 1,
+    ttc = exp,
+    w = df_labor$employment_norm,
+    agg = F
+  )
 
 # endregion
 # region: competitiveness
+df_to |>
+  as.matrix() |>
+  tt$productivity(df_from) |>
+  select(!1:2) |>
+  as.numeric() |>
+  labor$competitiveness(
+    h_q = 1,
+    u_qk = 1,
+    u_qq = 1,
+    ttc = exp,
+    w = df_labor$employment_norm,
+    agg = F
+  )
+
+df_to |>
+  as.matrix() |>
+  tt$productivity(df_from) |>
+  select(!1:2) |>
+  as.numeric() |>
+  labor$competitiveness(
+    h_q = 1,
+    u_qk = 1,
+    u_qq = 1,
+    ttc = exp,
+    w = df_labor$employment_variants,
+    agg = T
+  )
 
 # endregion
 # region: vulnerability
+df_to |>
+  as.matrix() |>
+  tt$productivity(df_from) |>
+  select(!1:2) |>
+  as.numeric() |>
+  labor$vulnerability(
+    h_q = 1,
+    ttc = exp,
+    w = df_labor$employment_norm,
+    agg = F
+  )
+
+df_to |>
+  as.matrix() |>
+  tt$productivity(df_from) |>
+  select(!1:2) |>
+  as.numeric() |>
+  labor$vulnerability(
+    h_q = 1,
+    ttc = exp,
+    w = df_labor$employment_variants,
+    agg = T
+  )
 
 # endregion

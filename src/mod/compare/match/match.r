@@ -88,7 +88,7 @@ s.vec <- function(ak, A, Ä, match_method = c("euclidean", "bvls", "logit", "pro
   if (bind) {
     match.results |>
       bind_rows(
-        .id = "match_method"
+        .id = "method"
       ) ->
     match.results
   }
@@ -140,7 +140,7 @@ similarity <- function(skill_set, skill_mtx, match_method = c("euclidean", "bvls
             # note: vectorize aeq
             aeq = A |> vapply(eq$aeq, numeric(nrow(A)))
           ),
-          match_method =
+          method =
             match_method |>
               setNames(match_method) |>
               rbind()

@@ -8,10 +8,10 @@ box::use(
 
 # endregion
 # region: employability
-employability <- function(hk, Tk, ttc, w, p = w, agg = T) {
+employability <- function(Tk, hk, ttc, w, agg = T) {
   # assert args
   stopifnot(
-    "'hk' must be a hireability vector in the unit interval the same length as 'Tk', 'w' and 'p'." = all(
+    "'hk' must be a hireability vector in the unit interval the same length as 'Tk' and 'w'." = all(
       hk |> is.numeric(),
       hk >= 0, hk <= 1
       # ,
@@ -22,7 +22,7 @@ employability <- function(hk, Tk, ttc, w, p = w, agg = T) {
   )
 
   stopifnot(
-    "'Tk' must be a productivity vector in the unit interval the same length as 'hk', 'w' and 'p'." = all(
+    "'Tk' must be a productivity vector in the unit interval the same length as 'hk' and 'w'." = all(
       Tk |> is.numeric(),
       Tk >= 0, Tk <= 1
       # ,
@@ -43,27 +43,13 @@ employability <- function(hk, Tk, ttc, w, p = w, agg = T) {
   )
 
   stopifnot(
-    "'w' must be a vector of employment levels the same length as 'hk', 'Tk' and 'p'." = all(
+    "'w' must be a vector of employment levels the same length as 'hk' and 'Tk'." = all(
       w |> is.numeric(),
       w > 0
       # ,
       # length(w) == length(hk),
       # length(w) == length(Tk),
       # length(w) == length(p)
-    )
-  )
-
-  stopifnot(
-    "'p' must be a vector of number of positions (job subtypes) the same length as 'hk', 'Tk' and 'p'." = all(
-      p |> is.numeric(),
-      any(
-        all(p >= 1, p <= w),
-        all(p >= 1, is.infinite(p))
-      )
-      # ,
-      # length(p) == length(hk),
-      # length(p) == length(Tk),
-      # length(p) == length(w)
     )
   )
 
@@ -80,7 +66,6 @@ employability <- function(hk, Tk, ttc, w, p = w, agg = T) {
 
   # employability in infinitely stratified labor market
   # employability in maximally stratified labor markets
-  # Tk[p != Inf] <- Tkappa(Tk)
   hk * Omega(0, Tk, ttc) -> employability
 
   # aggregate employability

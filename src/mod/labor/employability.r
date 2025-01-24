@@ -1,6 +1,7 @@
 #' @export
 box::use(
-  w = mod / labor / employability / employability[...],
-  vs = mod / labor / employability / competitiveness[...],
-  vu = mod / labor / employability / vulnerability[...]
+  mod / labor / employability / employability[...],
+  mod / labor / employability / competitiveness[...],
+  mod / labor / employability / vulnerability[...],
+  misc = mod / labor / employability / misc
 )

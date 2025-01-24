@@ -1,10 +1,18 @@
-# employment level proportion in maximum labor stratification
+# region: imports
+box::use(
+  mod / labor / employability / misc / pec[...]
+)
+
+# endregion
+# region: relative employment levels in maximum labor stratification
 wtilde.mls <- function(w) {
   round(w) |> pmax(1) -> w
   return(rep(1 / w, w))
 }
 
-l.kde <- function(wq = 1024, ttc, reps = 100) {
+# endregion
+# region: kernel density approaximation of optimal responsibility bounds
+l.kde <- function(wq.proxy = 1024, wq, ttc) {
   # assert args
   stopifnot(
     "'wq' must be a non-negative integer indicating the workforce size." = is.numeric(wq)
@@ -15,7 +23,7 @@ l.kde <- function(wq = 1024, ttc, reps = 100) {
     pmax(1) ->
   wq
 
-  wq |> wtilde.mls(reps) -> wtilde
+  wq.proxy |> wtilde.mls() -> wtilde
 
   # return kernel density estimation of productivity requirements
   return(
@@ -31,3 +39,9 @@ l.kde <- function(wq = 1024, ttc, reps = 100) {
     )$x
   )
 }
+
+# endregion
+# region: exports
+box::export(l.kde)
+
+# endregion

@@ -26,7 +26,9 @@ conform.x <- function(x, A) {
       lapply(cbind) |>
       lapply(
         function(mtx) {
-          mtx[, reps] -> mtx
+          mtx[, reps] |>
+            cbind() ->
+          mtx
 
           mtx.names ->
           colnames(mtx)
@@ -69,7 +71,9 @@ conform.rep <- function(x, A) {
           lapply(cbind) |>
           lapply(
             function(mtx) {
-              mtx[, reps] -> mtx
+              mtx[, reps] |>
+                cbind() ->
+              mtx
 
               mtx.names ->
               colnames(mtx)

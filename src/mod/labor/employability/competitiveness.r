@@ -6,7 +6,7 @@ box::use(
 
 # endregion
 # region: competitiveness
-competitiveness <- function(h_q, T_q, u_qk, u_qq, ttc, w, agg = T) {
+competitiveness <- function(T_q, h_q, u_qk, u_qq, ttc, w, agg = T) {
   if (is.function(ttc)) {
     list(ttc) -> ttc
   }
