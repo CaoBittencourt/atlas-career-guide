@@ -15,7 +15,8 @@ microflex <- function(skill_mtx, weights = NULL, skill.names = NULL) {
     assert$as.skill_mtx() |>
     t() |>
     as.data.frame() |>
-    setNames(skill.names) -> skill_mtx
+    setNames(skill.names) ->
+  skill_mtx
 
   stopifnot(
     "'weights' must be either NULL or a non-negative numeric vector the same length as the number of rows in 'skill_mtx'." = any(
@@ -86,9 +87,9 @@ microflex <- function(skill_mtx, weights = NULL, skill.names = NULL) {
 
 # endregion
 # region: attribute dominance
-attribute.dominance <- function(skill_mtx, weights = NULL, aggregate = T) {
+attribute.dominance <- function(skill_mtx, weights = NULL, skill.names = NULL, aggregate = T) {
   # estimate capital microflexibility matrix, then pass it to the dominance function
-  return(microflex(skill_mtx, weights = NULL) |> dom$dominance(weights = NULL, aggregate))
+  return(microflex(skill_mtx, weights, skill.names) |> dom$dominance(weights = NULL, aggregate))
 }
 
 # endregion
