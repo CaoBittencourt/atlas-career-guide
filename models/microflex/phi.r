@@ -32,7 +32,7 @@ employment_levels
 # endregion
 # model
 # region: human capital microflexibility
-df_occupations[-1] |> kflex$phi(employment_levels) -> mtx_phi
+df_occupations[-1] |> kflex$microflex(employment_levels) -> mtx_microflex
 
 # endregion
 # region: attribute dominance
@@ -52,7 +52,7 @@ agg_attribute_dominance
 # endregion
 # plots
 # region: microflexibility ordered heatmap
-mtx_phi |>
+mtx_microflex |>
   as_tibble(
     rownames = "to"
   ) |>
@@ -100,17 +100,17 @@ mtx_phi |>
 
 # endregion
 # region: microflexibility clustered heatmap
-mtx_phi |>
+mtx_microflex |>
   as.dist() |>
   hclust() ->
-hclust_phi
+hclust_microflex
 
-mtx_phi |>
+mtx_microflex |>
   as_tibble(
     rownames = "to"
   ) |>
   slice(
-    hclust_phi$order
+    hclust_microflex$order
   ) |>
   mutate(
     to = factor(to)

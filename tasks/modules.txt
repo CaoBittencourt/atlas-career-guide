@@ -4,12 +4,12 @@ SOURCE CODE MODULARIZATION
 
 modularization execution (in order)
 -------------------------------------
-[ ] atlas/src/mod/labor/employability.r
+[ ] atlas/src/mod/micro/kflex/macroflex.r
+
 [ ] atlas/src/mod/compare/joy.r
 
 [ ] atlas/src/mod/compare/hire.r
 
-[ ] atlas/src/mod/micro/kflex/macroflex.r
 
 [ ] atlas/src/mod/micro/wage.r
 [ ] atlas/src/mod/micro/eta.r
@@ -32,6 +32,7 @@ modularization execution (in order)
 [ ] atlas/src/mod/labor/market.r
 [ ] atlas/src/mod/plots.r
 
+[x] atlas/src/mod/labor/employability.r
 [x] atlas/src/mod/compare/prod.r
 [x] atlas/src/mod/compare/match.r
     - [x] binary mode

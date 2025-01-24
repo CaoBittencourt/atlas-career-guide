@@ -34,15 +34,15 @@ all(rownames(skill_mtx) == df_labor$occupation)
 # endregion
 # model
 # region: human capital microflexibility matrix
-skill_mtx |> kflex$phi(df_labor$employment_norm) -> mtx_phi
+skill_mtx |> kflex$microflex(df_labor$employment_norm) -> mtx_microflex
 
 # endregion
 # region: attribute dominance matrix
-mtx_phi |> dom$dominance(aggregate = F) -> mtx_dom
+mtx_microflex |> dom$dominance(aggregate = F) -> mtx_dom
 
 # endregion
 # region: aggregate attribute dominance
-mtx_phi |> dom$dominance() -> dominance
+mtx_microflex |> dom$dominance() -> dominance
 
 dominance
 

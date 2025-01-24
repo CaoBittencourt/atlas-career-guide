@@ -8,7 +8,7 @@ box::use(
 
 # endregion
 # region: human capital microflexibility (lowercase phi)
-phi <- function(skill_mtx, weights = NULL) {
+microflex <- function(skill_mtx, weights = NULL) {
   # assert args
   assert$valid_skill_mtx(skill_mtx)
 
@@ -36,11 +36,11 @@ phi <- function(skill_mtx, weights = NULL) {
   # A matrix
   skill_mtx |> as.matrix() -> skill_mtx
 
-  # phi bounds
+  # microflex bounds
   scale_lb <- rep(0, ncol(attributes) - 1)
   scale_ub <- rep(1, ncol(attributes) - 1)
 
-  # estimate phi by means of weighted bvls
+  # estimate microflex by means of weighted bvls
   Map(
     function(a_ik, drop) {
       skill_mtx[, -drop] -> A
@@ -50,12 +50,12 @@ phi <- function(skill_mtx, weights = NULL) {
         b = a_ik,
         bl = scale_lb,
         bu = scale_ub
-      )$x -> phi_coef
+      )$x -> microflex_coef
 
       colnames(A) ->
-      names(phi_coef)
+      names(microflex_coef)
 
-      return(phi_coef)
+      return(microflex_coef)
     },
     a_ik = attributes,
     drop = 1:length(attributes)
@@ -65,15 +65,15 @@ phi <- function(skill_mtx, weights = NULL) {
       names(attributes)
     ) |>
     as.matrix() ->
-  phi_mtx
+  microflex_mtx
 
-  diag(phi_mtx) <- 1
+  diag(microflex_mtx) <- 1
 
-  colnames(phi_mtx) ->
-  rownames(phi_mtx)
+  colnames(microflex_mtx) ->
+  rownames(microflex_mtx)
 
   # human capital microflexibility matrix
-  return(phi_mtx)
+  return(microflex_mtx)
 }
 
 # endregion
@@ -83,11 +83,11 @@ phi <- function(skill_mtx, weights = NULL) {
 # region: attribute dominance
 attribute.dominance <- function(skill_mtx, weights = NULL, aggregate = T) {
   # estimate capital microflexibility matrix, then pass it to the dominance function
-  return(phi(skill_mtx, weights = NULL) |> dom$dominance(weights = NULL, aggregate))
+  return(microflex(skill_mtx, weights = NULL) |> dom$dominance(weights = NULL, aggregate))
 }
 
 # endregion
 # region: exports
-box::export(phi, attribute.dominance)
+box::export(microflex, attribute.dominance)
 
 # endregion
