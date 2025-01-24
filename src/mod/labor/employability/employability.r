@@ -1,15 +1,10 @@
 # region: imports
 box::use(
   mod / labor / employability / misc / Omega[...],
-  mod / labor / employability / misc / pec[...],
+  # mod / labor / employability / misc / pec[...],
+  # mod / labor / employability / misc / Tkappa[...],
   stats[weighted.mean]
 )
-
-# endregion
-# region: discretized productivity (Tkappa)
-Tkappa <- function(Tk) {
-  return(Tk)
-}
 
 # endregion
 # region: employability
@@ -85,7 +80,7 @@ employability <- function(hk, Tk, ttc, w, p = w, agg = T) {
 
   # employability in infinitely stratified labor market
   # employability in maximally stratified labor markets
-  Tk[p != Inf] <- Tkappa(Tk)
+  # Tk[p != Inf] <- Tkappa(Tk)
   hk * Omega(0, Tk, ttc) -> employability
 
   # aggregate employability
