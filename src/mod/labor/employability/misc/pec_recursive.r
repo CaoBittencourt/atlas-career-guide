@@ -35,6 +35,8 @@ pec.l <- function(lmin = 0, wtilde = 1, ttc) {
 # region: recursive pec
 # vectorized pec to find all optimal responsibility bounds
 pec <- function(w, ttc) {
+  options(expressions = 500000)
+
   pec.rec <- function(lmin, wtilde, w, ttc) {
     if (all(w > 0, lmin < 1)) {
       print(lmin)
