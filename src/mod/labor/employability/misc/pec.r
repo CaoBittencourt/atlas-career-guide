@@ -8,12 +8,7 @@ box::use(
 # endregion
 # region: proportional employment condition (pec)
 # given the pec and a vector of employment levels w, determine optimal responsibility bounds l
-pec.l <- function(
-    lmin = 0,
-    wtilde = 1,
-    ttc = function(l) {
-      l
-    }) {
+pec.l <- function(lmin = 0, wtilde = 1, ttc) {
   # # assert args
   # stopifnot(
   #   "'lmin' must be a lower responsability bound in the unit interval" =

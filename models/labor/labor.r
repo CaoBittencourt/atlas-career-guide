@@ -24,8 +24,16 @@ getOption("atlas.labor") |> readRDS() -> df_labor
 df_occupations[1:2] |> tt$productivity(df_occupations[1:19]) -> ttilde
 
 box::use(
-  mod / labor / employability / misc / pec[...]
+  mod / labor / employability / misc / pec_recursive[...],
+  mod / labor / employability / misc / ta[...]
 )
+
+df_labor$
+  employment_norm[1] |>
+  pec(exp)
+
+library(stats)
+library(cubature)
 
 labor$employability(
   hk = 1,
