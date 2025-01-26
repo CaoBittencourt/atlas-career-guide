@@ -4,6 +4,7 @@ ATLAS CAREER GUIDE TASKS
 
 current task
 -------------------------------------
+[ ] switch to juliaLang?
 [\] modularize / vectorize codebase
 [\] refine competence coefficient
     - shift generalist to specialist?
@@ -22,7 +23,6 @@ notes
 
 fixes
 -------------------------------------
-[ ] switch to juliaLang?
 [ ] harsher attribute equivalence?
 [ ] check if box can create R package
 
