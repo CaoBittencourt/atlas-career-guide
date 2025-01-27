@@ -7,10 +7,10 @@ box::use(
   bin = mod / compare / match / methods / bin,
   vec = mod / compare / match / methods / vec,
   stats[setNames],
+  mod / utils / bernoulli[...],
+  mod / utils / cbindmap[...],
   mod / utils / conform[...],
   dplyr[bind_rows],
-  mod / utils / bernoulli[...],
-  mod / utils / cbindmap[...]
 )
 
 # endregion
