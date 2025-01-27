@@ -20,7 +20,7 @@ comp.mean <- function(skill_set, ä) {
 }
 
 # endregion
-# region: cobb-douglas method (equivalent to weighted geometric mean)
+# region: cobb-douglas method
 comp.cobb_douglas <- function(skill_set, ä) {
   # assert args in main function
   # skill set competence as cobb-douglas production function
@@ -46,6 +46,8 @@ comp <- function(skill_set, comp_method = c("mean", "cobb-douglas")[[1]], ...) {
   comp_method[[1]] |>
     as.character() |>
     switch(
+      # "mean" = return(comp.mean(skill_set, 1 + ä)),
+      # "cobb-douglas" = return(comp.cobb_douglas(skill_set, 1 + ä))
       "mean" = return(comp.mean(skill_set, ä)),
       "cobb-douglas" = return(comp.cobb_douglas(skill_set, ä))
     )

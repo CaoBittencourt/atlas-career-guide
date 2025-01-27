@@ -4,7 +4,7 @@ SOURCE CODE MODULARIZATION
 
 modularization execution (in order)
 -------------------------------------
-[ ] atlas/src/mod/compare/joy.r
+[\] atlas/src/mod/compare/joy.r
 
 [ ] atlas/src/mod/compare/hire.r
 

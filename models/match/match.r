@@ -34,13 +34,14 @@ df_cao |>
     mode = "cbmap",
     bind = F,
     match_method = c(
-      "euclidean",
+      # "euclidean",
       "cobb-douglas",
-      "gmme",
-      "pearson",
-      "bvls",
-      "logit",
-      "probit"
+      "gmme"
+      # ,
+      # "pearson",
+      # "bvls",
+      # "logit",
+      # "probit"
     )
   ) ->
 similarity_cao
