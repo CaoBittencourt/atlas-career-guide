@@ -3,6 +3,7 @@ modular::project.options("atlas")
 box::use(
   assert = mod / utils / assert[...],
   mod / compare / joy / functions / ueq[...],
+  mod / compare / joy / functions / ugene[...],
   mod / utils / rbindmap[...],
   mod / utils / rbindmap[...],
   mod / utils / conform[...],
@@ -12,32 +13,41 @@ box::use(
 
 # endregion
 # region: CES utility aggregation
-bin.ces <- function(uk, aq, ük) {
-  uk |> ugene() -> ugenek
+bin.ces <- function(uk, aq
+                    # , ük
+) {
+  # uk |> ugene() -> ugenek
   uk / sum(uk) -> ũk
   1 / (1 - ugene(uk)) -> es
 
   # ces utility aggregator
-  sum((ũk^(1 / es)) * (aq^((es - 1) / es)))^(es / (es - 1))
+  return(
+    sum(
+      (ũk^(1 / es)) *
+        (aq^((es - 1) / es))
+    )^(
+      es / (es - 1)
+    )
+  )
   # sum((ũk^(1 / s)) * (u(uk, aq)^((s - 1) / s)))^(s / (s - 1))
 
-  # perfect substitutes when s -> Inf
-  # perfect complements when s -> 0
+  # # perfect substitutes when s -> Inf
+  # # perfect complements when s -> 0
 
-  # ugene -> 1 => utility generalist => perfect substitutes => s -> inf
-  # ugene -> 0 => utility specialist => perfect complements => s -> 0
-  s := f(ugene) | ugene -> 1 => f(ugene) -> Inf, ugene -> 0 => f(ugene) -> 0
-  1 / (1 - ugene)
-  f(1) = Inf
-  f(0) = 0
+  # # ugene -> 1 => utility generalist => perfect substitutes => s -> inf
+  # # ugene -> 0 => utility specialist => perfect complements => s -> 0
+  # s := f(ugene) | ugene -> 1 => f(ugene) -> Inf, ugene -> 0 => f(ugene) -> 0
+  # 1 / (1 - ugene)
+  # f(1) = Inf
+  # f(0) = 0
 
-  U <- (
-    sum(
-      (a^(1 / s)) * (x^((s - 1) / s))
-    )
-  )^(
-    s / (s - 1)
-  )
+  # U <- (
+  #   sum(
+  #     (a^(1 / s)) * (x^((s - 1) / s))
+  #   )
+  # )^(
+  #   s / (s - 1)
+  # )
 }
 
 # endregion
@@ -138,9 +148,28 @@ getOption("atlas.skills_mtx") |>
   dplyr::select(-1) ->
 dsds
 
+box::use(mod / utils / vmap)
+dsds |> vmap$vmap(dsds, bin.ces) -> lalala
 agg.utility(dsds[1:2], dsds[1:3], agg.method = c("linear", "concave", "convex"), util.fn = function(uk, ak) uk, bind = F) -> lalala
+library(dplyr)
+library(tidyr)
+lalala |>
+  as_tibble(
+    rownames = "to"
+  ) |>
+  pivot_longer(
+    cols = -1,
+    names_to = "from",
+    values_to = "utility"
+  ) |>
+  group_by(from) |>
+  arrange(
+    -utility,
+    .by_group = T
+  ) |>
+  group_split()
 
-lalala
+
 
 # endregion
 # # region: exports
