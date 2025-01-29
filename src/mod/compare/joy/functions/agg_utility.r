@@ -11,6 +11,36 @@ box::use(
 )
 
 # endregion
+# region: CES utility aggregation
+bin.ces <- function(uk, aq, ük) {
+  uk |> ugene() -> ugenek
+  uk / sum(uk) -> ũk
+  1 / (1 - ugene(uk)) -> es
+
+  # ces utility aggregator
+  sum((ũk^(1 / es)) * (aq^((es - 1) / es)))^(es / (es - 1))
+  # sum((ũk^(1 / s)) * (u(uk, aq)^((s - 1) / s)))^(s / (s - 1))
+
+  # perfect substitutes when s -> Inf
+  # perfect complements when s -> 0
+
+  # ugene -> 1 => utility generalist => perfect substitutes => s -> inf
+  # ugene -> 0 => utility specialist => perfect complements => s -> 0
+  s := f(ugene) | ugene -> 1 => f(ugene) -> Inf, ugene -> 0 => f(ugene) -> 0
+  1 / (1 - ugene)
+  f(1) = Inf
+  f(0) = 0
+
+  U <- (
+    sum(
+      (a^(1 / s)) * (x^((s - 1) / s))
+    )
+  )^(
+    s / (s - 1)
+  )
+}
+
+# endregion
 # region: linear utility aggregation
 agg.linear <- function(Uk, A, Ük, util.fn) {
   return(
