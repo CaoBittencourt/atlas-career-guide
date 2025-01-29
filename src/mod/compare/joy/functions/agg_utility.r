@@ -185,32 +185,40 @@ library(tidyr)
 getOption("atlas.skills_mtx") |>
   readRDS() |>
   dplyr::select(-1) ->
-dsds
+df_occupations
+
+getOption("atlas.cao") |>
+  readRDS() ->
+df_cao
+
+getOption("atlas.skills") |>
+  readRDS() |>
+  inner_join(
+    df_cao |> select(item)
+  ) |>
+  pivot_wider(
+    names_from = occupation,
+    values_from = item_score
+  ) ->
+df_occupations_cao
 
 box::use(mod / utils / logistic)
-getOption("atlas.cao") |>
-  readRDS() |>
-  select(-1) |>
+df_cao |>
   agg.utility(
-    getOption("atlas.skills") |>
-      readRDS() |>
-      inner_join(
-        getOption("atlas.cao") |>
-          readRDS() |>
-          select(item)
-      ) |>
-      pivot_wider(
-        names_from = occupation,
-        values_from = item_score
-      ),
+    df_occupations_cao,
     util.fn = function(uk, aq) {
       # 1 - (2 * aq - uk)^2
       # logistic$logistic(aq, 0, 1, 1, 1, uk, 1, 1)
-      logistic$logistic(aq, 0, uk, 1, 1, uk, 1, 1)
+      uk * aq
+      # logistic$logistic(aq, 0, uk, 1, 1, uk, 1, 1)
     }
   ) |>
-  arrange(desc(cao))
-# arrange(cao)
+  arrange(desc(cao)) |>
+  slice(
+    1:10, (ncol(df_occupations_cao) - 10):ncol(df_occupations_cao)
+  ) |>
+  group_by(row_number() > 10) |>
+  group_split(.keep = F)
 
 getOption("atlas.skills") |>
   readRDS() |>
@@ -223,7 +231,8 @@ getOption("atlas.skills") |>
   ) |>
   reframe(
     utility = bin.ces(
-      uk = cao,
+      # uk = cao,
+      uk = 1 - (2 * item_score - cao)^2,
       aq = item_score
     )
   ) |>
@@ -233,8 +242,8 @@ getOption("atlas.skills") |>
 
 
 # box::use(mod / utils / vmap)
-# dsds |> vmap$vmap(dsds, bin.ces) -> lalala
-# agg.utility(dsds[1:2], dsds[1:3], agg.method = c("linear", "concave", "convex"), util.fn = function(uk, ak) uk, bind = F) -> lalala
+# df_occupations |> vmap$vmap(df_occupations, bin.ces) -> lalala
+# agg.utility(df_occupations[1:2], df_occupations[1:3], agg.method = c("linear", "concave", "convex"), util.fn = function(uk, ak) uk, bind = F) -> lalala
 # library(dplyr)
 # library(tidyr)
 # lalala |>
