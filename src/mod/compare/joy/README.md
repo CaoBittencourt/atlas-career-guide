@@ -73,13 +73,13 @@ Or, alternatively, with geometric mean or Cobb-Douglas aggregation functions,
 \in [0,1]
 ,
 ```
-respectively.
+respectively. Note the choice of aggregation function implies certain psychological hypotheses about workers' job satisfaction (e.g. attributes are complimentary if the function is concave, but substitutes if it is linear). 
 
 ## `utility` methods
-Note the utility function $u(\upsilon_k, a_q)$ does not have to be monotonically increasing, allowing for saturation effects, such that an individual's well-being can decrease when their job requires a higher skill level than they wished to employ. The simplest example would be
+Note also the utility function $u(\upsilon_k, a_q)$ does not have to be monotonically increasing, allowing for saturation effects, such that an individual's well-being can decrease when their job requires a higher skill level than they wished to employ. The simplest example would be
 ```math
 u(\upsilon_{k}^{i}, a_{q}^{i}) :=
--(2a_{q}^{i}-\upsilon_{k}^{i})^{2}+1
+1-(2a_{q}^{i}-\upsilon_{k}^{i})^{2}
 \in
 [0,1]
 \

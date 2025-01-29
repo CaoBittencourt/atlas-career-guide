@@ -3,15 +3,36 @@ modular::project.options("atlas")
 box::use(
   assert = mod / utils / assert[...],
   mod / compare / joy / functions / ueq[...],
-  mod / utils / cbindmap[...],
+  mod / utils / rbindmap[...],
+  mod / utils / rbindmap[...],
   mod / utils / conform[...],
-  dplyr[bind_rows],
+  stats[weighted.mean],
+  dplyr[bind_rows, as_tibble],
 )
 
 # endregion
 # region: linear utility aggregation
 agg.linear <- function(Uk, A, Ük, util.fn) {
-  return("linear")
+  return(
+    mapply(
+      function(uk, ük) {
+        return(
+          uk |>
+            util.fn(A) |>
+            vapply(
+              weighted.mean,
+              w = ük,
+              numeric(1)
+            )
+        )
+      },
+      uk = Uk,
+      ük = Ük
+    ) |>
+      as_tibble(
+        rownames = "to"
+      )
+  )
 }
 
 # endregion
@@ -40,7 +61,7 @@ agg.utility <- function(pref_set, skill_mtx, agg.method = c("linear", "concave",
   )
 
   stopifnot(
-    "'util.fn' must be an utility function or a list of utility functions compatible with 'pref_set'." = any(
+    "'util.fn' must be a utility function or a list of utility functions compatible with 'pref_set'." = any(
       util.fn |> is.function(),
       all(
         util.fn |> is.list(),
@@ -51,14 +72,7 @@ agg.utility <- function(pref_set, skill_mtx, agg.method = c("linear", "concave",
   )
 
   # calculate utility equivalence
-  Uk |>
-    vapply(
-      ueq,
-      numeric(nrow(Uk)),
-      aeq_method = ueq.method[[1]]
-    ) |>
-    conform(A) ->
-  Ük
+  Uk |> lapply(ueq, aeq_method = ueq.method[[1]]) -> Ük
 
   # multiple dispatch
   Uk |> conform(A) -> Uk
@@ -69,9 +83,9 @@ agg.utility <- function(pref_set, skill_mtx, agg.method = c("linear", "concave",
     ) |>
     lapply(
       switch,
-      "linear" = Uk |> cbindmap(agg.linear, names(A), A, Ük, util.fn),
-      "concave" = Uk |> cbindmap(agg.concave, names(A), A, Ük, util.fn),
-      "convex" = Uk |> cbindmap(agg.convex, names(A), A, Ük, util.fn)
+      "linear" = Uk |> agg.linear(A, Ük, util.fn),
+      "concave" = Uk |> rbindmap(agg.concave, A, Ük, util.fn),
+      "convex" = Uk |> rbindmap(agg.convex, A, Ük, util.fn)
     ) ->
   utility.results
 
@@ -94,7 +108,9 @@ getOption("atlas.skills_mtx") |>
   dplyr::select(-1) ->
 dsds
 
-agg.utility(dsds[1:3], dsds[1:3], agg.method = c("linear", "concave", "convex"), util.fn = function(a) a)
+agg.utility(dsds[1:2], dsds[1:3], agg.method = c("linear", "concave", "convex"), util.fn = function(uk, ak) uk, bind = F) -> lalala
+
+lalala
 
 # endregion
 # # region: exports

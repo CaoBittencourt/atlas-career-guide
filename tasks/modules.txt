@@ -5,6 +5,9 @@ SOURCE CODE MODULARIZATION
 modularization execution (in order)
 -------------------------------------
 [\] atlas/src/mod/compare/joy.r
+    [ ] attribute utility
+    [ ] wage utility
+    [ ] aggregate utility
 
 [ ] atlas/src/mod/compare/hire.r
 
