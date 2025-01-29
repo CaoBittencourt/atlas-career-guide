@@ -223,22 +223,35 @@ df_cao |>
 getOption("atlas.skills") |>
   readRDS() |>
   inner_join(
-    getOption("atlas.cao") |>
-      readRDS()
+    df_cao
   ) |>
   group_by(
     occupation
   ) |>
   reframe(
     utility = bin.ces(
-      # uk = cao,
-      uk = 1 - (2 * item_score - cao)^2,
-      aq = item_score
+      uk = cao,
+      # aq = 1 - (2 * item_score - cao)^2
+      aq = item_score * ueq(cao)
+      # aq = item_score * cao
+      #   logistic$logistic(
+      #   x = item_score,
+      #   a = 0,
+      #   k = 1,
+      #   c = 1,
+      #   q = 1,
+      #   m = cao,
+      #   b = 1 / (1 - ugene(cao)),
+      #   nu = 1
+      # )
+      # 1 - (2 * item_score - cao)^2
+      # aq = item_score
     )
   ) |>
   arrange(desc(
     utility
-  ))
+  )) |>
+  print(n = 100)
 
 
 # box::use(mod / utils / vmap)
