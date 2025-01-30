@@ -2,35 +2,59 @@ modular::project.options("atlas")
 # region: imports
 box::use(
   assert = mod / utils / assert[...],
-  mod / compare / joy / functions / ueq[...],
-  mod / compare / joy / functions / ugene[...],
+  mod / compare / joy / ueq[...],
+  mod / compare / joy / ugene[...],
   mod / utils / rbindmap[...],
-  mod / utils / rbindmap[...],
+  mod / utils / cbindmap[...],
   mod / utils / conform[...],
   stats[weighted.mean],
   dplyr[bind_rows, as_tibble],
 )
 
 # endregion
+# # region: CES utility aggregation
+# bin.ces <- function(uk, aq, util.fn = NULL, ...) {
+#   # elasticity of substitution
+#   # perfect substitutes when es -> Inf
+#   # perfect complements when es -> 0
+#   # perfect substitutes <=> utility generalist <=> ugene = 1
+#   # perfect complements <=> utility specialist <=> ugene = 0
+#   1 / (1 - ugene(uk)) -> es
+
+#   # apply utility function
+#   if (length(util.fn)) {
+#     util.fn(uk, aq, ...) -> uk
+#   }
+
+#   # ces utility aggregator
+#   return(
+#     sum(
+#       ((aq / sum(aq))^(1 / es)) *
+#         (aq * uk^((es - 1) / es))
+#     )^(
+#       es / (es - 1)
+#     )
+#   )
+# }
+
+# # endregion
 # region: CES utility aggregation
-bin.ces <- function(uk, aq, util.fn = NULL) {
+agg.ces <- function(Uk, A, util.fn = NULL, ...) {
   # elasticity of substitution
   # perfect substitutes when es -> Inf
   # perfect complements when es -> 0
   # perfect substitutes <=> utility generalist <=> ugene = 1
   # perfect complements <=> utility specialist <=> ugene = 0
-  1 / (1 - ugene(uk)) -> es
+  1 / (1 - ugene(Uk[[1]])) -> es
 
   # apply utility function
-  if (length(util.fn)) {
-    util.fn(uk, aq) -> uk
-  }
+  util.fn |> mapply(Uk, A, ...) -> Uk
 
   # ces utility aggregator
   return(
-    sum(
-      ((aq / sum(aq))^(1 / es)) *
-        (aq * uk^((es - 1) / es))
+    colSums(
+      ((A / colSums(A))^(1 / es)) *
+        (A * Uk^((es - 1) / es))
     )^(
       es / (es - 1)
     )
@@ -39,13 +63,13 @@ bin.ces <- function(uk, aq, util.fn = NULL) {
 
 # endregion
 # region: linear utility aggregation
-agg.linear <- function(Uk, A, Ük, util.fn) {
+agg.linear <- function(Uk, A, Ük, util.fn, ...) {
   return(
     mapply(
       function(uk, ük) {
         return(
           uk |>
-            util.fn(A) |>
+            util.fn(A, ...) |>
             vapply(
               weighted.mean,
               w = ük,
@@ -64,19 +88,19 @@ agg.linear <- function(Uk, A, Ük, util.fn) {
 
 # endregion
 # region: convex utility aggregation
-agg.convex <- function(Uk, A, Ük, util.fn) {
+agg.convex <- function(Uk, A, Ük, util.fn, ...) {
   return("convex")
 }
 
 # endregion
 # region: concave utility aggregation
-agg.concave <- function(Uk, A, Ük, util.fn) {
+agg.concave <- function(Uk, A, Ük, util.fn, ...) {
   return("concave")
 }
 
 # endregion
 # region: job satisfaction dispatch function
-agg.utility <- function(pref_set, skill_mtx, agg.method = c("ces", "linear", "concave", "convex")[[1]], ueq.method = c("linear-logistic", "gene-root", "linear")[[1]], util.fn, bind = T) {
+agg.utility <- function(pref_set, skill_mtx, agg.method = c("ces", "linear", "concave", "convex")[[1]], ueq.method = c("linear-logistic", "gene-root", "linear")[[1]], util.fn, ..., bind = T) {
   # assert args
   assert$as.skill_mtx(pref_set) -> Uk
   assert$as.skill_mtx(skill_mtx) -> A
@@ -99,7 +123,9 @@ agg.utility <- function(pref_set, skill_mtx, agg.method = c("ces", "linear", "co
   )
 
   # calculate utility equivalence
-  Uk |> lapply(ueq, aeq_method = ueq.method[[1]]) -> Ük
+  if (any(agg.method == c("linear", "concave", "convex"))) {
+    Uk |> lapply(ueq, aeq_method = ueq.method[[1]]) -> Ük
+  }
 
   # multiple dispatch
   Uk |> conform(A) -> Uk
@@ -110,9 +136,10 @@ agg.utility <- function(pref_set, skill_mtx, agg.method = c("ces", "linear", "co
     ) |>
     lapply(
       switch,
-      "linear" = Uk |> agg.linear(A, Ük, util.fn),
-      "concave" = Uk |> rbindmap(agg.concave, A, Ük, util.fn),
-      "convex" = Uk |> rbindmap(agg.convex, A, Ük, util.fn)
+      "ces" = Uk |> cbindmap(agg.ces, names(A), A, util.fn, ...),
+      "linear" = Uk |> agg.linear(A, Ük, util.fn, ...),
+      "concave" = Uk |> rbindmap(agg.concave, A, Ük, util.fn, ...),
+      "convex" = Uk |> rbindmap(agg.convex, A, Ük, util.fn, ...)
     ) ->
   utility.results
 
@@ -239,12 +266,23 @@ df_occupations[1:3] |>
     agg.method = "linear",
     util.fn = function(uk, aq) {
       uk * aq
-    },
-    bind = T
+    }
   )
 
-# endregion
-# # region: exports
-# box::export(agg.utility)
+# df_occupations[1:3] |>
+df_cao |>
+  agg.utility(
+    # df_occupations,
+    df_occupations_cao,
+    agg.method = "ces",
+    util.fn = function(uk, aq) {
+      ueq(uk) * aq
+    }
+  ) |>
+  arrange(desc(cao))
 
-# # endregion
+# endregion
+# region: exports
+box::export(agg.utility)
+
+# endregion
