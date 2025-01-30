@@ -12,84 +12,29 @@ box::use(
 )
 
 # endregion
-# # region: CES utility aggregation
-# bin.ces <- function(uk, aq) {
-#   # uk |> ugene() -> ugenek
-#   uk / sum(uk) -> ũk
-#   1 / (1 - (1 - ugene(uk))) -> es
-
-#   # ces utility aggregator
-#   return(
-#     sum(
-#       (ũk^(1 / es)) *
-#         (aq^((es - 1) / es))
-#     )^(
-#       es / (es - 1)
-#     )
-#   )
-#   # sum((ũk^(1 / s)) * (u(uk, aq)^((s - 1) / s)))^(s / (s - 1))
-
-#   # # perfect substitutes when s -> Inf
-#   # # perfect complements when s -> 0
-
-#   # # ugene -> 1 => utility generalist => perfect substitutes => s -> inf
-#   # # ugene -> 0 => utility specialist => perfect complements => s -> 0
-#   # s := f(ugene) | ugene -> 1 => f(ugene) -> Inf, ugene -> 0 => f(ugene) -> 0
-#   # 1 / (1 - ugene)
-#   # f(1) = Inf
-#   # f(0) = 0
-
-#   # U <- (
-#   #   sum(
-#   #     (a^(1 / s)) * (x^((s - 1) / s))
-#   #   )
-#   # )^(
-#   #   s / (s - 1)
-#   # )
-# }
-
-# # endregion
 # region: CES utility aggregation
 bin.ces <- function(uk, aq, util.fn = NULL) {
-  # uk |> ugene() -> ugenek
-  # uk / sum(uk) -> ũk
+  # elasticity of substitution
+  # perfect substitutes when es -> Inf
+  # perfect complements when es -> 0
+  # perfect substitutes <=> utility generalist <=> ugene = 1
+  # perfect complements <=> utility specialist <=> ugene = 0
   1 / (1 - ugene(uk)) -> es
 
+  # apply utility function
   if (length(util.fn)) {
     util.fn(uk, aq) -> uk
   }
-  # 1 + es -> es
 
   # ces utility aggregator
   return(
     sum(
       ((aq / sum(aq))^(1 / es)) *
-        (uk^((es - 1) / es))
-      # (ũk^(1 / es)) *
-      #   (aq^((es - 1) / es))
+        (aq * uk^((es - 1) / es))
     )^(
       es / (es - 1)
     )
   )
-  # sum((ũk^(1 / s)) * (u(uk, aq)^((s - 1) / s)))^(s / (s - 1))
-
-  # # perfect substitutes when s -> Inf
-  # # perfect complements when s -> 0
-
-  # # ugene -> 1 => utility generalist => perfect substitutes => s -> inf
-  # # ugene -> 0 => utility specialist => perfect complements => s -> 0
-  # s := f(ugene) | ugene -> 1 => f(ugene) -> Inf, ugene -> 0 => f(ugene) -> 0
-  # 1 / (1 - ugene)
-  # f(1) = Inf
-  # f(0) = 0
-
-  # U <- (
-  #   sum(
-  #     (a^(1 / s)) * (x^((s - 1) / s))
-  #   )
-  # )^(
-  #   s / (s - 1)
-  # )
 }
 
 # endregion
@@ -131,14 +76,14 @@ agg.concave <- function(Uk, A, Ük, util.fn) {
 
 # endregion
 # region: job satisfaction dispatch function
-agg.utility <- function(pref_set, skill_mtx, agg.method = c("linear", "concave", "convex")[[1]], ueq.method = c("linear-logistic", "gene-root", "linear")[[1]], util.fn, bind = T) {
+agg.utility <- function(pref_set, skill_mtx, agg.method = c("ces", "linear", "concave", "convex")[[1]], ueq.method = c("linear-logistic", "gene-root", "linear")[[1]], util.fn, bind = T) {
   # assert args
   assert$as.skill_mtx(pref_set) -> Uk
   assert$as.skill_mtx(skill_mtx) -> A
 
   stopifnot(
-    "'agg.method' must be one of the following methods: 'concave', 'linear', 'convex'." = any(
-      agg.method[[1]] == c("concave", "linear", "convex")
+    "'agg.method' must be one of the following methods: 'ces', 'linear', 'concave', 'convex'." = any(
+      agg.method[[1]] == c("ces", "linear", "concave", "convex")
     )
   )
 
@@ -236,44 +181,30 @@ getOption("atlas.skills") |>
   reframe(
     utility = bin.ces(
       uk = cao,
-      # aq = 1 - (2 * item_score - cao)^2
       aq = item_score,
-      # util.fn = function(uk, aq) {
-      #   # uk
-      #   # aq
-      #   # ueq(uk)
-      #   # ueq(aq)
-      #   # ueq(uk) * ueq(aq)
-      #   # ueq(aq)^(1 / ueq(uk))
-      #   # uk * aq
-      #   # ueq(uk) * aq
-      #   # aq^(1 / ueq(uk))
-      #   # aq^(1 / uk)
+      util.fn = function(uk, aq) {
+        # uk
+        # aq
+        # ueq(uk)
+        # ueq(aq)
+        # ueq(uk) * ueq(aq)
+        # ueq(aq)^(1 / ueq(uk))
+        # uk * aq
+        # ueq(uk) * aq
+        # aq^(1 / ueq(uk))
+        # aq^(1 / uk)
 
-      #   # logistic$logistic(
-      #   #   x = aq,
-      #   #   a = 0,
-      #   #   k = uk,
-      #   #   c = 1,
-      #   #   q = 1,
-      #   #   m = uk,
-      #   #   b = 1,
-      #   #   nu = 1
-      #   # )
-      # }
-      # aq = item_score * cao
-      #   logistic$logistic(
-      #   x = item_score,
-      #   a = 0,
-      #   k = 1,
-      #   c = 1,
-      #   q = 1,
-      #   m = cao,
-      #   b = 1 / (1 - ugene(cao)),
-      #   nu = 1
-      # )
-      # 1 - (2 * item_score - cao)^2
-      # aq = item_score
+        # logistic$logistic(
+        #   x = aq,
+        #   a = 0,
+        #   k = uk,
+        #   c = 1,
+        #   q = 1,
+        #   m = uk,
+        #   b = 1,
+        #   nu = 1
+        # )
+      }
     )
   ) |>
   mutate(
