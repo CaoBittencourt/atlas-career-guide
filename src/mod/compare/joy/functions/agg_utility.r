@@ -50,11 +50,14 @@ box::use(
 
 # # endregion
 # region: CES utility aggregation
-bin.ces <- function(uk, aq) {
+bin.ces <- function(uk, aq, util.fn = NULL) {
   # uk |> ugene() -> ugenek
-  uk / sum(uk) -> ũk
+  # uk / sum(uk) -> ũk
   1 / (1 - ugene(uk)) -> es
 
+  if (length(util.fn)) {
+    util.fn(uk, aq) -> uk
+  }
   # 1 + es -> es
 
   # ces utility aggregator
@@ -184,6 +187,7 @@ agg.utility <- function(pref_set, skill_mtx, agg.method = c("linear", "concave",
 # region: tests
 library(dplyr)
 library(tidyr)
+box::use(mod / utils / logistic)
 getOption("atlas.skills_mtx") |>
   readRDS() |>
   dplyr::select(-1) ->
@@ -204,7 +208,6 @@ getOption("atlas.skills") |>
   ) ->
 df_occupations_cao
 
-box::use(mod / utils / logistic)
 df_cao |>
   agg.utility(
     df_occupations_cao,
@@ -234,7 +237,21 @@ getOption("atlas.skills") |>
     utility = bin.ces(
       uk = cao,
       # aq = 1 - (2 * item_score - cao)^2
-      aq = item_score
+      aq = item_score,
+      util.fn = function(uk, aq) {
+        # ueq(uk) * aq
+        aq^(1 / ueq(uk))
+        # logistic$logistic(
+        #   x = aq,
+        #   a = 0,
+        #   k = uk,
+        #   c = 1,
+        #   q = 1,
+        #   m = uk,
+        #   b = 1,
+        #   nu = 1
+        # )
+      }
       # aq = item_score * cao
       #   logistic$logistic(
       #   x = item_score,
@@ -249,6 +266,12 @@ getOption("atlas.skills") |>
       # 1 - (2 * item_score - cao)^2
       # aq = item_score
     )
+  ) |>
+  mutate(
+    utility.norm =
+      utility / max(
+        utility
+      )
   ) |>
   arrange(desc(
     utility
