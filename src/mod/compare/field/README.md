@@ -34,4 +34,4 @@ s_{kq}^{\theta} :=
 \end{gather}
 ```
 
-In addition, the matrix of all field similarities in the economy, $\textbf{S}_{\boldsymbol{\Theta}} \in [0,1] ^ {m \times m},$ can be employed in clustering algorithms where the level of competence is not important (e.g. to determine data-driven, instead of semantic, occupational taxonomies, see `taxa` module).
+In addition, the matrix of all field similarities in the economy, $\textbf{S}_{\boldsymbol{\Theta}} \in [0,1] ^ {n \times n},$ can be employed in clustering algorithms where the level of competence is not important (e.g. to determine data-driven, instead of semantic, occupational taxonomies, see `taxa` module).
