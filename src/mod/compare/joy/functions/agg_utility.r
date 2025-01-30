@@ -55,7 +55,7 @@ bin.ces <- function(uk, aq) {
   uk / sum(uk) -> ũk
   1 / (1 - ugene(uk)) -> es
 
-  1 + es -> es
+  # 1 + es -> es
 
   # ces utility aggregator
   return(
