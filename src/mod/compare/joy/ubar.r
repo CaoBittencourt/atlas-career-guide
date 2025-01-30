@@ -62,30 +62,24 @@ agg.ces <- function(Uk, A, util.fn = NULL, ...) {
 }
 
 # endregion
-# # region: linear utility aggregation
-# agg.linear <- function(Uk, A, Ük, util.fn, ...) {
-#   return(
-#     Map(
-#       function(uk, ük, aq) {
-#         return(
-#           weighted.mean(
-#             do.call(util.fn, list(uk,aq))
-#             # util.fn(uk, aq, ...),
-#             w = ük
-#           )
-#         )
-#       },
-#       uk = Uk,
-#       ük = Ük,
-#       aq = A
-#     ) |>
-#       as_tibble(
-#         rownames = "to"
-#       )
-#   )
-# }
+# region: linear utility aggregation
+agg.linear <- function(Uk, A, ük, util.fn, ...) {
+  return(
+    mapply(
+      function(uk, aq) {
+        return(
+          uk |>
+            util.fn(aq, ...) |>
+            weighted.mean(ük)
+        )
+      },
+      uk = Uk,
+      aq = A
+    )
+  )
+}
 
-# # endregion
+# endregion
 # # region: linear utility aggregation
 # agg.linear <- function(Uk, A, Ük, util.fn, ...) {
 #   return(
@@ -154,12 +148,6 @@ agg.utility <- function(pref_set, skill_mtx, agg.method = c("ces", "linear", "co
   # multiple dispatch
   Uk |> conform(A) -> Uk
 
-  return(list(
-    Uk = Uk,
-    Ük = Ük,
-    A = A
-  ))
-
   agg.method |>
     setNames(
       agg.method
@@ -167,14 +155,16 @@ agg.utility <- function(pref_set, skill_mtx, agg.method = c("ces", "linear", "co
     lapply(
       switch,
       "ces" = Uk |> cbindmap(agg.ces, names(A), A, util.fn, ...),
-      "linear" = Map(
-        function(U, Ü) {
-          agg.linear(U, A, Ü, util.fn)
+      "linear" = mapply(
+        function(U, ü) {
+          agg.linear(U, A, ü, util.fn, ...)
         },
-        U = Uk,
-        Ü = Ük,
-        ...
-      ),
+        Uk,
+        Ük
+      ) |>
+        as_tibble(
+          rownames = "to"
+        ),
       "concave" = Uk |> rbindmap(agg.concave, A, Ük, util.fn, ...),
       "convex" = Uk |> rbindmap(agg.convex, A, Ük, util.fn, ...)
     ) ->
@@ -220,156 +210,164 @@ getOption("atlas.skills") |>
   ) ->
 df_occupations_cao
 
-df_cao |>
-  agg.utility(
-    df_occupations_cao,
-    agg.method = "linear",
-    util.fn = function(uk, aq) {
-      # 1 - (2 * aq - uk)^2
-      # logistic$logistic(aq, 0, 1, 1, 1, uk, 1, 1)
-      uk * aq
-      # logistic$logistic(aq, 0, uk, 1, 1, uk, 1, 1)
-    }
-  ) |>
-  arrange(desc(cao)) |>
-  slice(
-    1:10, (ncol(df_occupations_cao) - 10):ncol(df_occupations_cao)
-  ) |>
-  group_by(row_number() > 10) |>
-  group_split(.keep = F)
-
-# getOption("atlas.skills") |>
-#   readRDS() |>
-#   inner_join(
-#     df_cao
-#   ) |>
-#   group_by(
-#     occupation
-#   ) |>
-#   reframe(
-#     utility = bin.ces(
-#       uk = cao,
-#       aq = item_score,
-#       util.fn = function(uk, aq) {
-#         # uk
-#         # aq
-#         # ueq(uk)
-#         # ueq(aq)
-#         # ueq(uk) * ueq(aq)
-#         # ueq(aq)^(1 / ueq(uk))
-#         # uk * aq
-#         ueq(uk) * aq
-#         # aq^(1 / ueq(uk))
-#         # aq^(1 / uk)
-
-#         # logistic$logistic(
-#         #   x = aq,
-#         #   a = 0,
-#         #   k = uk,
-#         #   c = 1,
-#         #   q = 1,
-#         #   m = uk,
-#         #   b = 1,
-#         #   nu = 1
-#         # )
-#       }
-#     )
-#   ) |>
-#   mutate(
-#     utility.norm =
-#       utility / max(
-#         utility
-#       )
-#   ) |>
-#   arrange(desc(
-#     utility
-#   )) |>
-#   print(n = 100)
-
-
-# box::use(mod / utils / vmap[...])
-# df_occupations[1:3] |>
-#   vmap(
-#     df_occupations,
-#     bin.ces
-#   ) |>
-#   as_tibble(
-#     rownames = "to"
+# df_cao |>
+#   agg.utility(
+#     df_occupations_cao,
+#     agg.method = "linear",
+#     util.fn = function(uk, aq) uk * aq
 #   )
+# # |>
+# #   arrange(desc(cao)) |>
+# #   slice(
+# #     1:10, (ncol(df_occupations_cao) - 10):ncol(df_occupations_cao)
+# #   ) |>
+# #   group_by(row_number() > 10) |>
+# #   group_split(.keep = F)
 
-# df_occupations[1:3] |>
-df_cao |>
-  agg.utility(
-    # df_occupations,
-    df_occupations_cao,
-    agg.method = c("ces", "linear"),
-    util.fn = function(uk, aq) {
-      ueq(uk) * aq
-    }
-  )
+# # getOption("atlas.skills") |>
+# #   readRDS() |>
+# #   inner_join(
+# #     df_cao
+# #   ) |>
+# #   group_by(
+# #     occupation
+# #   ) |>
+# #   reframe(
+# #     utility = bin.ces(
+# #       uk = cao,
+# #       aq = item_score,
+# #       util.fn = function(uk, aq) {
+# #         # uk
+# #         # aq
+# #         # ueq(uk)
+# #         # ueq(aq)
+# #         # ueq(uk) * ueq(aq)
+# #         # ueq(aq)^(1 / ueq(uk))
+# #         # uk * aq
+# #         ueq(uk) * aq
+# #         # aq^(1 / ueq(uk))
+# #         # aq^(1 / uk)
 
-df_occupations[1:3] |>
-  agg.utility(
-    df_occupations,
-    agg.method = "linear",
-    util.fn = function(uk, aq) {
-      uk * aq
-    }
-  )
+# #         # logistic$logistic(
+# #         #   x = aq,
+# #         #   a = 0,
+# #         #   k = uk,
+# #         #   c = 1,
+# #         #   q = 1,
+# #         #   m = uk,
+# #         #   b = 1,
+# #         #   nu = 1
+# #         # )
+# #       }
+# #     )
+# #   ) |>
+# #   mutate(
+# #     utility.norm =
+# #       utility / max(
+# #         utility
+# #       )
+# #   ) |>
+# #   arrange(desc(
+# #     utility
+# #   )) |>
+# #   print(n = 100)
+
+
+# # box::use(mod / utils / vmap[...])
+# # df_occupations[1:3] |>
+# #   vmap(
+# #     df_occupations,
+# #     bin.ces
+# #   ) |>
+# #   as_tibble(
+# #     rownames = "to"
+# #   )
+
+# # df_occupations[1:3] |>
+# df_cao |>
+#   agg.utility(
+#     # df_occupations,
+#     df_occupations_cao,
+#     agg.method = c("ces", "linear"),
+#     util.fn = function(uk, aq) {
+#       ueq(uk) * aq
+#     }
+#   )
 
 df_occupations[1:2] |>
   agg.utility(
     df_occupations[1:3],
-    agg.method = "linear",
-    util.fn = function(uk, aq) {
-      uk * aq
-    }
-  ) -> dsds
+    agg.method = c("linear", "ces"),
+    util.fn = function(uk, aq) uk * aq
+  )
 
-# Map(
-#   function(uk, ük, aq) {
-#     return(
-#       do.call(
-#         function(uk, aq) {
+# df_occupations[1:2] |>
+#   agg.utility(
+#     df_occupations[1:3],
+#     agg.method = "linear",
+#     util.fn = function(uk, aq) {
+#       uk * aq
+#     }
+#   ) -> dsds
+
+# # Map(
+# #   function(uk, ük, aq) {
+# #     return(
+# #       do.call(
+# #         function(uk, aq) {
+# #           weighted.mean(
+# #             ueq(uk) * aq,
+# #             w = ük
+# #           )
+# #         },
+# #         args = list(uk, aq)
+# #       )
+# #     )
+# #   },
+# #   uk = dsds$`Accountants and Auditors`,
+# #   ük = dsds$`Accountants and Auditors`,
+# #   aq = df_occupations[1:3]
+# # ) |>
+# #   as_tibble(
+# #     rownames = "to"
+# #   )
+
+# agg.linear <- function(Uk, A, ük, util.fn, ...) {
+#   return(
+#     Map(
+#       function(uk, aq) {
+#         util.fn(uk, aq) |>
 #           weighted.mean(
-#             ueq(uk) * aq,
 #             w = ük
 #           )
-#         },
-#         args = list(uk, aq)
-#       )
+#         # return(list(
+#         #   uk = uk,
+#         #   aq = aq
+#         # ))
+#       },
+#       uk = Uk,
+#       aq = A
 #     )
-#   },
-#   uk = dsds$`Accountants and Auditors`,
-#   ük = dsds$`Accountants and Auditors`,
-#   aq = df_occupations[1:3]
-# ) |>
-#   as_tibble(
-#     rownames = "to"
 #   )
+# }
 
-agg.linear <- function(Uk, A, Ük, util.fn, ...) {
-  return(
-    Map(
-      function(uk, ük, aq) {
-        return(list(
-          uk = uk,
-          ük = ük,
-          aq = aq
-        ))
-      },
-      uk = Uk,
-      ük = Ük,
-      aq = A
-    )
-  )
-}
+# mapply(
+#   agg.linear,
+#   Uk = dsds$Uk,
+#   ük = dsds$Ük,
+#   A = dsds$A
+#   # function(uk, aq) uk * aq
+# )
 
-agg.linear(dsds$Uk, dsds$A, dsds$Ük, function(uk, aq) uk * aq)
-
+# agg.linear(
+#   dsds$Uk$`Accountants and Auditors`,
+#   dsds$A,
+#   dsds$Ük$`Accountants and Auditors`,
+#   function(uk, aq) uk * aq
+# )
 
 # endregion
-# region: exports
-box::export(agg.utility)
+# # region: exports
+# box::export(agg.utility)
 
-# endregion
+# # endregion
