@@ -130,9 +130,12 @@ agg.utility <- function(pref_set, skill_mtx, agg.method = c("ces", "linear", "co
 
 # endregion
 # region: tests
-library(dplyr)
-library(tidyr)
-box::use(mod / utils / logistic)
+box::use(
+  mod / utils / logistic,
+  dplyr[...], ,
+  tidyr[...],
+)
+
 getOption("atlas.skills_mtx") |>
   readRDS() |>
   dplyr::select(-1) ->
@@ -156,6 +159,7 @@ df_occupations_cao
 df_cao |>
   agg.utility(
     df_occupations_cao,
+    agg.method = "linear",
     util.fn = function(uk, aq) {
       # 1 - (2 * aq - uk)^2
       # logistic$logistic(aq, 0, 1, 1, 1, uk, 1, 1)
@@ -190,7 +194,7 @@ getOption("atlas.skills") |>
         # ueq(uk) * ueq(aq)
         # ueq(aq)^(1 / ueq(uk))
         # uk * aq
-        # ueq(uk) * aq
+        ueq(uk) * aq
         # aq^(1 / ueq(uk))
         # aq^(1 / uk)
 
@@ -219,26 +223,25 @@ getOption("atlas.skills") |>
   print(n = 100)
 
 
-# box::use(mod / utils / vmap)
-# df_occupations |> vmap$vmap(df_occupations, bin.ces) -> lalala
-# agg.utility(df_occupations[1:2], df_occupations[1:3], agg.method = c("linear", "concave", "convex"), util.fn = function(uk, ak) uk, bind = F) -> lalala
-# library(dplyr)
-# library(tidyr)
-# lalala |>
-#   as_tibble(
-#     rownames = "to"
-#   ) |>
-#   pivot_longer(
-#     cols = -1,
-#     names_to = "from",
-#     values_to = "utility"
-#   ) |>
-#   group_by(from) |>
-#   arrange(
-#     -utility,
-#     .by_group = T
-#   ) |>
-#   group_split()
+box::use(mod / utils / vmap[...])
+df_occupations[1:3] |>
+  vmap(
+    df_occupations,
+    bin.ces
+  ) |>
+  as_tibble(
+    rownames = "to"
+  )
+
+df_occupations[1:3] |>
+  agg.utility(
+    df_occupations,
+    agg.method = "linear",
+    util.fn = function(uk, aq) {
+      uk * aq
+    },
+    bind = T
+  )
 
 # endregion
 # # region: exports
