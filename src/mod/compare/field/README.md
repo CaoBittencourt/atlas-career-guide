@@ -10,8 +10,8 @@ s_{kq}^{\theta} :=
 \frac{
     \boldsymbol{\ddot{a}_{k} \ \cdot \boldsymbol{\ddot{a}_{q}}}
 }{
-    \left\lvert\lvert{\boldsymbol{\ddot{a}_{k}}}\right\rvert\rvert
-    \left\lvert\lvert{\boldsymbol{\ddot{a}_{q}}}\right\rvert\rvert
+    \left\Vert{\boldsymbol{\ddot{a}_{k}}}\right\Vert
+    \left\Vert{\boldsymbol{\ddot{a}_{q}}}\right\Vert
 }
 :=
 \frac{
