@@ -238,20 +238,29 @@ getOption("atlas.skills") |>
       uk = cao,
       # aq = 1 - (2 * item_score - cao)^2
       aq = item_score,
-      util.fn = function(uk, aq) {
-        # ueq(uk) * aq
-        aq^(1 / ueq(uk))
-        # logistic$logistic(
-        #   x = aq,
-        #   a = 0,
-        #   k = uk,
-        #   c = 1,
-        #   q = 1,
-        #   m = uk,
-        #   b = 1,
-        #   nu = 1
-        # )
-      }
+      # util.fn = function(uk, aq) {
+      #   # uk
+      #   # aq
+      #   # ueq(uk)
+      #   # ueq(aq)
+      #   # ueq(uk) * ueq(aq)
+      #   # ueq(aq)^(1 / ueq(uk))
+      #   # uk * aq
+      #   # ueq(uk) * aq
+      #   # aq^(1 / ueq(uk))
+      #   # aq^(1 / uk)
+
+      #   # logistic$logistic(
+      #   #   x = aq,
+      #   #   a = 0,
+      #   #   k = uk,
+      #   #   c = 1,
+      #   #   q = 1,
+      #   #   m = uk,
+      #   #   b = 1,
+      #   #   nu = 1
+      #   # )
+      # }
       # aq = item_score * cao
       #   logistic$logistic(
       #   x = item_score,
