@@ -8,7 +8,8 @@ modularization execution (in order)
     [\] attribute utility
     [ ] wage utility
     [\] aggregate utility
-        [\] ces aggregation
+        [ ] normalize ces utility
+        [x] ces aggregation
         [x] linear aggregation
         [ ] concave aggregation
         [ ] convex aggregation

@@ -1,5 +1,7 @@
 # region: imports
-box::use()
+box::use(
+  mod / utils / logistic
+)
 
 # endregion
 # region: monotonic linear utility function
@@ -198,6 +200,8 @@ linear <- function(uk, aq) {
 
 # endregion
 # region: exports
-box::export()
+box::export(
+  mono.linear
+)
 
 # endregion

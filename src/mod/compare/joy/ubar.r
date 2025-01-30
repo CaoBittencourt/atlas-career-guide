@@ -1,4 +1,3 @@
-modular::project.options("atlas")
 # region: imports
 box::use(
   assert = mod / utils / assert[...],
@@ -8,36 +7,10 @@ box::use(
   mod / utils / cbindmap[...],
   mod / utils / conform[...],
   stats[weighted.mean],
-  dplyr[bind_rows, as_tibble],
+  dplyr[bind_rows, as_tibble, mutate],
 )
 
 # endregion
-# # region: CES utility aggregation
-# bin.ces <- function(uk, aq, util.fn = NULL, ...) {
-#   # elasticity of substitution
-#   # perfect substitutes when es -> Inf
-#   # perfect complements when es -> 0
-#   # perfect substitutes <=> utility generalist <=> ugene = 1
-#   # perfect complements <=> utility specialist <=> ugene = 0
-#   1 / (1 - ugene(uk)) -> es
-
-#   # apply utility function
-#   if (length(util.fn)) {
-#     util.fn(uk, aq, ...) -> uk
-#   }
-
-#   # ces utility aggregator
-#   return(
-#     sum(
-#       ((aq / sum(aq))^(1 / es)) *
-#         (aq * uk^((es - 1) / es))
-#     )^(
-#       es / (es - 1)
-#     )
-#   )
-# }
-
-# # endregion
 # region: CES utility aggregation
 agg.ces <- function(Uk, A, util.fn = NULL, ...) {
   # elasticity of substitution
@@ -80,31 +53,6 @@ agg.linear <- function(Uk, A, ük, util.fn, ...) {
 }
 
 # endregion
-# # region: linear utility aggregation
-# agg.linear <- function(Uk, A, Ük, util.fn, ...) {
-#   return(
-#     mapply(
-#       function(uk, ük) {
-#         return(
-#           uk |>
-#             util.fn(A, ...) |>
-#             vapply(
-#               weighted.mean,
-#               w = ük,
-#               numeric(1)
-#             )
-#         )
-#       },
-#       uk = Uk,
-#       ük = Ük
-#     ) |>
-#       as_tibble(
-#         rownames = "to"
-#       )
-#   )
-# }
-
-# # endregion
 # region: convex utility aggregation
 agg.convex <- function(Uk, A, Ük, util.fn, ...) {
   return("convex")
@@ -118,14 +66,14 @@ agg.concave <- function(Uk, A, Ük, util.fn, ...) {
 
 # endregion
 # region: job satisfaction dispatch function
-agg.utility <- function(pref_set, skill_mtx, agg.method = c("ces", "linear", "concave", "convex")[[1]], ueq.method = c("linear-logistic", "gene-root", "linear")[[1]], util.fn, ..., bind = T) {
+agg.utility <- function(pref_set, skill_mtx, agg.method = c("ces", "linear", "concave", "convex")[[1]], ueq.method = c("linear-logistic", "gene-root", "linear")[[1]], util.fn, ...) {
   # assert args
   assert$as.skill_mtx(pref_set) -> Uk
   assert$as.skill_mtx(skill_mtx) -> A
 
   stopifnot(
-    "'agg.method' must be one of the following methods: 'ces', 'linear', 'concave', 'convex'." = all(
-      agg.method %in% c("ces", "linear", "concave", "convex")
+    "'agg.method' must be one of the following methods: 'ces', 'linear', 'concave', 'convex'." = any(
+      agg.method[[1]] == c("ces", "linear", "concave", "convex")
     )
   )
 
@@ -141,233 +89,39 @@ agg.utility <- function(pref_set, skill_mtx, agg.method = c("ces", "linear", "co
   )
 
   # calculate utility equivalence
-  if (any(agg.method %in% c("linear", "concave", "convex"))) {
+  if (any(agg.method[[1]] == c("linear", "concave", "convex"))) {
     Uk |> lapply(ueq, aeq_method = ueq.method[[1]]) -> Ük
   }
 
   # multiple dispatch
   Uk |> conform(A) -> Uk
 
-  agg.method |>
-    setNames(
-      agg.method
-    ) |>
-    lapply(
-      switch,
-      "ces" = Uk |> cbindmap(agg.ces, names(A), A, util.fn, ...),
-      "linear" = mapply(
-        function(U, ü) {
-          agg.linear(U, A, ü, util.fn, ...)
-        },
-        Uk,
-        Ük
+  return(
+    agg.method[[1]] |>
+      switch(
+        "ces" = Uk |> cbindmap(agg.ces, names(A), A, util.fn, ...),
+        "linear" = mapply(
+          function(U, ü) {
+            agg.linear(U, A, ü, util.fn, ...)
+          },
+          Uk,
+          Ük
+        ) |>
+          as_tibble(
+            rownames = "to"
+          ),
+        "concave" = Uk |> rbindmap(agg.concave, A, Ük, util.fn, ...),
+        "convex" = Uk |> rbindmap(agg.convex, A, Ük, util.fn, ...)
       ) |>
-        as_tibble(
-          rownames = "to"
-        ),
-      "concave" = Uk |> rbindmap(agg.concave, A, Ük, util.fn, ...),
-      "convex" = Uk |> rbindmap(agg.convex, A, Ük, util.fn, ...)
-    ) ->
-  utility.results
-
-  # bind results into data frame
-  if (bind) {
-    utility.results |>
-      bind_rows(
-        .id = "method"
-      ) ->
-    utility.results
-  }
-
-  return(utility.results)
+      mutate(
+        .before = 1,
+        method = agg.method[[1]]
+      )
+  )
 }
 
 # endregion
-# region: tests
-box::use(
-  mod / utils / logistic,
-  dplyr[...], ,
-  tidyr[...],
-)
-
-getOption("atlas.skills_mtx") |>
-  readRDS() |>
-  dplyr::select(-1) ->
-df_occupations
-
-getOption("atlas.cao") |>
-  readRDS() ->
-df_cao
-
-getOption("atlas.skills") |>
-  readRDS() |>
-  inner_join(
-    df_cao |> select(item)
-  ) |>
-  pivot_wider(
-    names_from = occupation,
-    values_from = item_score
-  ) ->
-df_occupations_cao
-
-# df_cao |>
-#   agg.utility(
-#     df_occupations_cao,
-#     agg.method = "linear",
-#     util.fn = function(uk, aq) uk * aq
-#   )
-# # |>
-# #   arrange(desc(cao)) |>
-# #   slice(
-# #     1:10, (ncol(df_occupations_cao) - 10):ncol(df_occupations_cao)
-# #   ) |>
-# #   group_by(row_number() > 10) |>
-# #   group_split(.keep = F)
-
-# # getOption("atlas.skills") |>
-# #   readRDS() |>
-# #   inner_join(
-# #     df_cao
-# #   ) |>
-# #   group_by(
-# #     occupation
-# #   ) |>
-# #   reframe(
-# #     utility = bin.ces(
-# #       uk = cao,
-# #       aq = item_score,
-# #       util.fn = function(uk, aq) {
-# #         # uk
-# #         # aq
-# #         # ueq(uk)
-# #         # ueq(aq)
-# #         # ueq(uk) * ueq(aq)
-# #         # ueq(aq)^(1 / ueq(uk))
-# #         # uk * aq
-# #         ueq(uk) * aq
-# #         # aq^(1 / ueq(uk))
-# #         # aq^(1 / uk)
-
-# #         # logistic$logistic(
-# #         #   x = aq,
-# #         #   a = 0,
-# #         #   k = uk,
-# #         #   c = 1,
-# #         #   q = 1,
-# #         #   m = uk,
-# #         #   b = 1,
-# #         #   nu = 1
-# #         # )
-# #       }
-# #     )
-# #   ) |>
-# #   mutate(
-# #     utility.norm =
-# #       utility / max(
-# #         utility
-# #       )
-# #   ) |>
-# #   arrange(desc(
-# #     utility
-# #   )) |>
-# #   print(n = 100)
-
-
-# # box::use(mod / utils / vmap[...])
-# # df_occupations[1:3] |>
-# #   vmap(
-# #     df_occupations,
-# #     bin.ces
-# #   ) |>
-# #   as_tibble(
-# #     rownames = "to"
-# #   )
-
-# # df_occupations[1:3] |>
-# df_cao |>
-#   agg.utility(
-#     # df_occupations,
-#     df_occupations_cao,
-#     agg.method = c("ces", "linear"),
-#     util.fn = function(uk, aq) {
-#       ueq(uk) * aq
-#     }
-#   )
-
-df_occupations[1:2] |>
-  agg.utility(
-    df_occupations[1:3],
-    agg.method = c("linear", "ces"),
-    util.fn = function(uk, aq) uk * aq
-  )
-
-# df_occupations[1:2] |>
-#   agg.utility(
-#     df_occupations[1:3],
-#     agg.method = "linear",
-#     util.fn = function(uk, aq) {
-#       uk * aq
-#     }
-#   ) -> dsds
-
-# # Map(
-# #   function(uk, ük, aq) {
-# #     return(
-# #       do.call(
-# #         function(uk, aq) {
-# #           weighted.mean(
-# #             ueq(uk) * aq,
-# #             w = ük
-# #           )
-# #         },
-# #         args = list(uk, aq)
-# #       )
-# #     )
-# #   },
-# #   uk = dsds$`Accountants and Auditors`,
-# #   ük = dsds$`Accountants and Auditors`,
-# #   aq = df_occupations[1:3]
-# # ) |>
-# #   as_tibble(
-# #     rownames = "to"
-# #   )
-
-# agg.linear <- function(Uk, A, ük, util.fn, ...) {
-#   return(
-#     Map(
-#       function(uk, aq) {
-#         util.fn(uk, aq) |>
-#           weighted.mean(
-#             w = ük
-#           )
-#         # return(list(
-#         #   uk = uk,
-#         #   aq = aq
-#         # ))
-#       },
-#       uk = Uk,
-#       aq = A
-#     )
-#   )
-# }
-
-# mapply(
-#   agg.linear,
-#   Uk = dsds$Uk,
-#   ük = dsds$Ük,
-#   A = dsds$A
-#   # function(uk, aq) uk * aq
-# )
-
-# agg.linear(
-#   dsds$Uk$`Accountants and Auditors`,
-#   dsds$A,
-#   dsds$Ük$`Accountants and Auditors`,
-#   function(uk, aq) uk * aq
-# )
+# region: exports
+box::export(agg.utility)
 
 # endregion
-# # region: exports
-# box::export(agg.utility)
-
-# # endregion
