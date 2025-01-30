@@ -62,31 +62,55 @@ agg.ces <- function(Uk, A, util.fn = NULL, ...) {
 }
 
 # endregion
-# region: linear utility aggregation
-agg.linear <- function(Uk, A, Ük, util.fn, ...) {
-  return(
-    mapply(
-      function(uk, ük) {
-        return(
-          uk |>
-            util.fn(A, ...) |>
-            vapply(
-              weighted.mean,
-              w = ük,
-              numeric(1)
-            )
-        )
-      },
-      uk = Uk,
-      ük = Ük
-    ) |>
-      as_tibble(
-        rownames = "to"
-      )
-  )
-}
+# # region: linear utility aggregation
+# agg.linear <- function(Uk, A, Ük, util.fn, ...) {
+#   return(
+#     Map(
+#       function(uk, ük, aq) {
+#         return(
+#           weighted.mean(
+#             do.call(util.fn, list(uk,aq))
+#             # util.fn(uk, aq, ...),
+#             w = ük
+#           )
+#         )
+#       },
+#       uk = Uk,
+#       ük = Ük,
+#       aq = A
+#     ) |>
+#       as_tibble(
+#         rownames = "to"
+#       )
+#   )
+# }
 
-# endregion
+# # endregion
+# # region: linear utility aggregation
+# agg.linear <- function(Uk, A, Ük, util.fn, ...) {
+#   return(
+#     mapply(
+#       function(uk, ük) {
+#         return(
+#           uk |>
+#             util.fn(A, ...) |>
+#             vapply(
+#               weighted.mean,
+#               w = ük,
+#               numeric(1)
+#             )
+#         )
+#       },
+#       uk = Uk,
+#       ük = Ük
+#     ) |>
+#       as_tibble(
+#         rownames = "to"
+#       )
+#   )
+# }
+
+# # endregion
 # region: convex utility aggregation
 agg.convex <- function(Uk, A, Ük, util.fn, ...) {
   return("convex")
@@ -106,8 +130,8 @@ agg.utility <- function(pref_set, skill_mtx, agg.method = c("ces", "linear", "co
   assert$as.skill_mtx(skill_mtx) -> A
 
   stopifnot(
-    "'agg.method' must be one of the following methods: 'ces', 'linear', 'concave', 'convex'." = any(
-      agg.method[[1]] == c("ces", "linear", "concave", "convex")
+    "'agg.method' must be one of the following methods: 'ces', 'linear', 'concave', 'convex'." = all(
+      agg.method %in% c("ces", "linear", "concave", "convex")
     )
   )
 
@@ -123,12 +147,18 @@ agg.utility <- function(pref_set, skill_mtx, agg.method = c("ces", "linear", "co
   )
 
   # calculate utility equivalence
-  if (any(agg.method == c("linear", "concave", "convex"))) {
+  if (any(agg.method %in% c("linear", "concave", "convex"))) {
     Uk |> lapply(ueq, aeq_method = ueq.method[[1]]) -> Ük
   }
 
   # multiple dispatch
   Uk |> conform(A) -> Uk
+
+  return(list(
+    Uk = Uk,
+    Ük = Ük,
+    A = A
+  ))
 
   agg.method |>
     setNames(
@@ -137,7 +167,14 @@ agg.utility <- function(pref_set, skill_mtx, agg.method = c("ces", "linear", "co
     lapply(
       switch,
       "ces" = Uk |> cbindmap(agg.ces, names(A), A, util.fn, ...),
-      "linear" = Uk |> agg.linear(A, Ük, util.fn, ...),
+      "linear" = Map(
+        function(U, Ü) {
+          agg.linear(U, A, Ü, util.fn)
+        },
+        U = Uk,
+        Ü = Ük,
+        ...
+      ),
       "concave" = Uk |> rbindmap(agg.concave, A, Ük, util.fn, ...),
       "convex" = Uk |> rbindmap(agg.convex, A, Ük, util.fn, ...)
     ) ->
@@ -201,63 +238,74 @@ df_cao |>
   group_by(row_number() > 10) |>
   group_split(.keep = F)
 
-getOption("atlas.skills") |>
-  readRDS() |>
-  inner_join(
-    df_cao
-  ) |>
-  group_by(
-    occupation
-  ) |>
-  reframe(
-    utility = bin.ces(
-      uk = cao,
-      aq = item_score,
-      util.fn = function(uk, aq) {
-        # uk
-        # aq
-        # ueq(uk)
-        # ueq(aq)
-        # ueq(uk) * ueq(aq)
-        # ueq(aq)^(1 / ueq(uk))
-        # uk * aq
-        ueq(uk) * aq
-        # aq^(1 / ueq(uk))
-        # aq^(1 / uk)
+# getOption("atlas.skills") |>
+#   readRDS() |>
+#   inner_join(
+#     df_cao
+#   ) |>
+#   group_by(
+#     occupation
+#   ) |>
+#   reframe(
+#     utility = bin.ces(
+#       uk = cao,
+#       aq = item_score,
+#       util.fn = function(uk, aq) {
+#         # uk
+#         # aq
+#         # ueq(uk)
+#         # ueq(aq)
+#         # ueq(uk) * ueq(aq)
+#         # ueq(aq)^(1 / ueq(uk))
+#         # uk * aq
+#         ueq(uk) * aq
+#         # aq^(1 / ueq(uk))
+#         # aq^(1 / uk)
 
-        # logistic$logistic(
-        #   x = aq,
-        #   a = 0,
-        #   k = uk,
-        #   c = 1,
-        #   q = 1,
-        #   m = uk,
-        #   b = 1,
-        #   nu = 1
-        # )
-      }
-    )
-  ) |>
-  mutate(
-    utility.norm =
-      utility / max(
-        utility
-      )
-  ) |>
-  arrange(desc(
-    utility
-  )) |>
-  print(n = 100)
+#         # logistic$logistic(
+#         #   x = aq,
+#         #   a = 0,
+#         #   k = uk,
+#         #   c = 1,
+#         #   q = 1,
+#         #   m = uk,
+#         #   b = 1,
+#         #   nu = 1
+#         # )
+#       }
+#     )
+#   ) |>
+#   mutate(
+#     utility.norm =
+#       utility / max(
+#         utility
+#       )
+#   ) |>
+#   arrange(desc(
+#     utility
+#   )) |>
+#   print(n = 100)
 
 
-box::use(mod / utils / vmap[...])
-df_occupations[1:3] |>
-  vmap(
-    df_occupations,
-    bin.ces
-  ) |>
-  as_tibble(
-    rownames = "to"
+# box::use(mod / utils / vmap[...])
+# df_occupations[1:3] |>
+#   vmap(
+#     df_occupations,
+#     bin.ces
+#   ) |>
+#   as_tibble(
+#     rownames = "to"
+#   )
+
+# df_occupations[1:3] |>
+df_cao |>
+  agg.utility(
+    # df_occupations,
+    df_occupations_cao,
+    agg.method = c("ces", "linear"),
+    util.fn = function(uk, aq) {
+      ueq(uk) * aq
+    }
   )
 
 df_occupations[1:3] |>
@@ -269,17 +317,56 @@ df_occupations[1:3] |>
     }
   )
 
-# df_occupations[1:3] |>
-df_cao |>
+df_occupations[1:2] |>
   agg.utility(
-    # df_occupations,
-    df_occupations_cao,
-    agg.method = "ces",
+    df_occupations[1:3],
+    agg.method = "linear",
     util.fn = function(uk, aq) {
-      ueq(uk) * aq
+      uk * aq
     }
-  ) |>
-  arrange(desc(cao))
+  ) -> dsds
+
+# Map(
+#   function(uk, ük, aq) {
+#     return(
+#       do.call(
+#         function(uk, aq) {
+#           weighted.mean(
+#             ueq(uk) * aq,
+#             w = ük
+#           )
+#         },
+#         args = list(uk, aq)
+#       )
+#     )
+#   },
+#   uk = dsds$`Accountants and Auditors`,
+#   ük = dsds$`Accountants and Auditors`,
+#   aq = df_occupations[1:3]
+# ) |>
+#   as_tibble(
+#     rownames = "to"
+#   )
+
+agg.linear <- function(Uk, A, Ük, util.fn, ...) {
+  return(
+    Map(
+      function(uk, ük, aq) {
+        return(list(
+          uk = uk,
+          ük = ük,
+          aq = aq
+        ))
+      },
+      uk = Uk,
+      ük = Ük,
+      aq = A
+    )
+  )
+}
+
+agg.linear(dsds$Uk, dsds$A, dsds$Ük, function(uk, aq) uk * aq)
+
 
 # endregion
 # region: exports
