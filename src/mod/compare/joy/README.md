@@ -8,26 +8,26 @@ u(\upsilon_k, a_q) : [0,1]^{2m} \rightarrow [0,1]^{m},
 ```
 which measures an individual $k$'s satisfaction when working with skill set 
 ```math
-a_q := (a_{q}^{1}, \dots, a_{q}^{m}) \in [0,1] ^ m,
+a_q := (a_{1}^{q}, \dots, a_{m}^{q}) \in [0,1] ^ m,
 ```
 based on their preferences vector
 ```math
-\upsilon_k := (\upsilon_{k}^{1}, \dots, \upsilon_{k}^{m}) \in [0,1] ^ m,
+\upsilon_k := (\upsilon_{1}^{k}, \dots, \upsilon_{m}^{k}) \in [0,1] ^ m,
 ```
 we can write aggregate job satisfaction as
 ```math
 \bar{u}_{kq} :=
 \sum_{i=1}^{m}{
-    \ddot{\upsilon}_{k}^{i} \times
-    u(\upsilon_{k}^{i}, a_{q}^{i})
+    \ddot{\upsilon}_{i}^{k} \times
+    u(\upsilon_{i}^{k}, a_{i}^{q})
 }
 \in [0,1]
 ,
 ```
 where
 ```math
-\ddot{\upsilon}_{k}^{i} :=
-\text{ueq}(\upsilon_{k}^{i}, \upsilon_k)
+\ddot{\upsilon}_{i}^{k} :=
+\text{ueq}(\upsilon_k)
 \in
 [0,1]
 \
@@ -39,11 +39,12 @@ is "equivalent utility" and quantifies the subjective importance of attribute $i
 
 Or, alternatively, with geometric mean or Cobb-Douglas aggregation functions,
 ```math
+\begin{gather*}
 \bar{u}_{kq} :=
 \left(
     \prod_{i=1}^{m}{
-        u(\upsilon_{k}^{i}, a_{q}^{i}) ^ {
-            \ddot{\upsilon}_{k}^{i}
+        u(\upsilon_{i}^{k}, a_{i}^{q}) ^ {
+            \ddot{\upsilon}_{i}^{k}
         }
     }
 \right) ^ {
@@ -51,7 +52,7 @@ Or, alternatively, with geometric mean or Cobb-Douglas aggregation functions,
         1
     }{
         \sum_{i=1}^{m}{
-            \ddot{\upsilon}_{k}^{i}
+            \ddot{\upsilon}_{i}^{k}
         }
     }
 }
@@ -60,26 +61,27 @@ Or, alternatively, with geometric mean or Cobb-Douglas aggregation functions,
 \\
 \bar{u}_{kq} :=
 \prod_{i=1}^{m}{
-    u(\upsilon_{k}^{i}, a_{q}^{i}) ^ {
+    u(\upsilon_{i}^{k}, a_{i}^{q}) ^ {
         \frac{
-            \ddot{\upsilon}_{k}^{i}
+            \ddot{\upsilon}_{i}^{k}
         }{
             \sum_{i=1}^{m}{
-                \ddot{\upsilon}_{k}^{i}
+                \ddot{\upsilon}_{i}^{k}
             }
         }
     }
 }
 \in [0,1]
 ,
+\end{gather*}
 ```
 respectively. Note the choice of aggregation function implies certain psychological hypotheses about workers' job satisfaction (e.g. attributes are complimentary if the function is concave, but substitutes if it is linear). 
 
 ## `utility` methods
 Note also the utility function $u(\upsilon_k, a_q)$ does not have to be monotonically increasing, allowing for saturation effects, such that an individual's well-being can decrease when their job requires a higher skill level than they wished to employ. The simplest example would be
 ```math
-u(\upsilon_{k}^{i}, a_{q}^{i}) :=
-1-(2a_{q}^{i}-\upsilon_{k}^{i})^{2}
+u(\upsilon_{i}^{k}, a_{i}^{q}) :=
+1-(2a_{i}^{q})^{2}
 \in
 [0,1]
 \
