@@ -81,7 +81,7 @@ respectively. Note the choice of aggregation function implies certain psychologi
 Note also the utility function $u(\upsilon_k, a_q)$ does not have to be monotonically increasing, allowing for saturation effects, such that an individual's well-being can decrease when their job requires a higher skill level than they wished to employ. The simplest example would be
 ```math
 u(\upsilon_{i}^{k}, a_{i}^{q}) :=
-1-(2a_{i}^{q})^{2}
+1-(2a_{i}^{q} - \upsilon_{i}^{k})^{2}
 \in
 [0,1]
 \
