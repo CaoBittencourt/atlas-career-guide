@@ -8,7 +8,11 @@ This implies the appropriate mathematical matching method for this is cosine sim
 s_{kq}^{\theta} := 
 \cos\theta_{kq} := 
 \frac{
-    \boldsymbol{\ddot{a}_{k} \ \cdot \boldsymbol{\ddot{a}_{q}}}
+    \boldsymbol{\ddot{a}_{k}
+    \
+    \cdot
+    \
+    \boldsymbol{\ddot{a}_{q}}}
 }{
     \Vert{\boldsymbol{\ddot{a}_{k}}}\Vert
     \Vert{\boldsymbol{\ddot{a}_{q}}}\Vert
