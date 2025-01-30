@@ -60,8 +60,10 @@ bin.ces <- function(uk, aq) {
   # ces utility aggregator
   return(
     sum(
-      (ũk^(1 / es)) *
-        (aq^((es - 1) / es))
+      ((aq / sum(aq))^(1 / es)) *
+        (uk^((es - 1) / es))
+      # (ũk^(1 / es)) *
+      #   (aq^((es - 1) / es))
     )^(
       es / (es - 1)
     )
@@ -232,7 +234,7 @@ getOption("atlas.skills") |>
     utility = bin.ces(
       uk = cao,
       # aq = 1 - (2 * item_score - cao)^2
-      aq = item_score * ueq(cao)
+      aq = item_score
       # aq = item_score * cao
       #   logistic$logistic(
       #   x = item_score,
