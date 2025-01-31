@@ -26,31 +26,11 @@ df_occupations_cao
 # endregion
 # model
 # region: ces utility aggregator
-df_occupations[1:3] |>
-  joy$agg.utility(
-    df_occupations[1:4],
-    agg.method = "ces",
-    util.fn = function(uk, aq) uk * aq
-  )
-
-
-# endregion
-# region: linear utility aggregator
-df_occupations[1:3] |>
-  joy$agg.utility(
-    df_occupations[1:4],
-    agg.method = "linear",
-    util.fn = function(uk, aq) uk * aq
-  )
-
-
-# endregion
-# region: ces utility aggregator
 df_cao |>
   joy$agg.utility(
     df_occupations_cao,
     agg.method = "ces",
-    util.fn = joy$u$quadratic
+    util.fn = joy$u$logarithmic
   ) |>
   arrange(desc(cao))
 
@@ -63,5 +43,25 @@ df_cao |>
     util.fn = joy$u$logarithmic
   ) |>
   arrange(desc(cao))
+
+# endregion
+# region: ces utility aggregator
+df_occupations[1:3] |>
+  joy$agg.utility(
+    df_occupations[1:4],
+    agg.method = "ces",
+    util.fn = function(uk, aq) uk * aq
+  )
+
+
+# endregion
+# region: linear utility aggregator
+df_occupations[1:3] |>
+  joy$agg.utility(
+    df_occupations[1:4],
+    agg.method = "linear",
+    util.fn = function(uk, aq) uk * aq
+  )
+
 
 # endregion

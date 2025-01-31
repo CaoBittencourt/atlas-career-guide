@@ -83,47 +83,42 @@ linear.logistic <- function(uk, aq) {
 
 # endregion
 # region: shark fin utility function
+shark.fin <- function(uk, aq) {
+  return(uk)
+}
 
 # endregion
 # region: logarithmic utility function
 logarithmic <- function(uk, aq) {
-  return(uk * log(exp(aq)))
+  # return(uk * log(exp(aq)))
+  return(log(exp(uk * aq)))
 }
 
 # endregion
-# region: root utility function
-linear <- function(uk, aq) {
-  return(
-    # aq
-    # ueq(uk)
-    # ueq(aq)
-    # ueq(uk) * ueq(aq)
-    # ueq(aq)^(1 / ueq(uk))
-    # uk * aq
-    # ueq(uk) * aq
-    # aq^(1 / ueq(uk))
-    # aq^(1 / uk)
-
-    # logistic$logistic(
-    #   x = aq,
-    #   a = 0,
-    #   k = uk,
-    #   c = 1,
-    #   q = 1,
-    #   m = uk,
-    #   b = 1,
-    #   nu = 1
-    # )
-  )
-}
-
-# endregion
-# region: quadratic utility function
+# region: quadratic root utility function
 quadratic <- function(uk, aq) {
-  return(1 - 2 * (aq - uk)^2)
+  return((uk * aq)^2)
 }
 
 # endregion
+# region: ugene root utility function
+ugene.root <- function(uk, aq) {
+  return((uk * aq)^(1 / ugene(uk)))
+}
+
+# endregion
+# region: pref root utility function
+pref.root <- function(uk, aq) {
+  return(aq^(1 / uk))
+}
+
+# endregion
+# # region: quadratic utility function
+# quadratic <- function(uk, aq) {
+#   return(1 - 4 * (aq - uk)^2)
+# }
+
+# # endregion
 # region: etc utility function
 linear <- function(uk, aq) {
   return(
@@ -157,7 +152,9 @@ box::export(
   logistic,
   linear.logistic,
   logarithmic,
-  quadratic
+  quadratic,
+  ugene.root,
+  pref.root
 )
 
 # endregion
