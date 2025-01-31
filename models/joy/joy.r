@@ -50,7 +50,7 @@ df_cao |>
   joy$agg.utility(
     df_occupations_cao,
     agg.method = "ces",
-    util.fn = function(uk, aq) uk * aq
+    util.fn = joy$u$quadratic
   ) |>
   arrange(desc(cao))
 
@@ -60,7 +60,7 @@ df_cao |>
   joy$agg.utility(
     df_occupations_cao,
     agg.method = "linear",
-    util.fn = function(uk, aq) uk * aq
+    util.fn = joy$u$logarithmic
   ) |>
   arrange(desc(cao))
 
