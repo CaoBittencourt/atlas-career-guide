@@ -54,14 +54,47 @@ agg.linear <- function(Uk, A, ük, util.fn, ...) {
 
 # endregion
 # region: convex utility aggregation
-agg.convex <- function(Uk, A, Ük, util.fn, ...) {
-  return("convex")
+agg.convex <- function(Uk, A, ük, util.fn, ...) {
+  # ugene for constant convex exponents
+  ugene.root <- 1 / ugene(Uk[[1]])
+
+  return(
+    mapply(
+      function(uk, aq) {
+        return(
+          (
+            util.fn(uk, aq, ...)^ugene.root
+          ) |>
+            weighted.mean(ük)
+        )
+      },
+      uk = Uk,
+      aq = A
+    )
+  )
 }
 
 # endregion
 # region: concave utility aggregation
-agg.concave <- function(Uk, A, Ük, util.fn, ...) {
-  return("concave")
+agg.concave <- function(Uk, A, ük, util.fn, ...) {
+  # assert args in main function
+
+  # apply utility function
+  # get the geometric mean
+  üroot <- 1 / sum(ük)
+  return(
+    mapply(
+      function(uk, aq) {
+        return(
+          prod(
+            util.fn(uk, aq, ...)^ük
+          )^üroot
+        )
+      },
+      uk = Uk,
+      aq = A
+    )
+  )
 }
 
 # endregion
@@ -110,8 +143,26 @@ agg.utility <- function(pref_set, skill_mtx, agg.method = c("ces", "linear", "co
           as_tibble(
             rownames = "to"
           ),
-        "concave" = Uk |> rbindmap(agg.concave, A, Ük, util.fn, ...),
-        "convex" = Uk |> rbindmap(agg.convex, A, Ük, util.fn, ...)
+        "concave" = mapply(
+          function(U, ü) {
+            agg.concave(U, A, ü, util.fn, ...)
+          },
+          Uk,
+          Ük
+        ) |>
+          as_tibble(
+            rownames = "to"
+          ),
+        "convex" = mapply(
+          function(U, ü) {
+            agg.convex(U, A, ü, util.fn, ...)
+          },
+          Uk,
+          Ük
+        ) |>
+          as_tibble(
+            rownames = "to"
+          ),
       ) |>
       mutate(
         .before = 1,

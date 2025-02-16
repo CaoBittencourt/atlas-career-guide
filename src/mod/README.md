@@ -93,4 +93,4 @@ Modules are to be grouped in accordance with functionality and their requirement
 |39|?|factor-analytic comparative statics|$\Psi, \psi, \text{A}, w, \dots$|1|1|1|
 |40|?|atlas career type indicator (ACTI)|$a_k, \Psi, \psi$|0|0|1|
 
-### Modular Dependencies
+<!-- ### Modular Dependencies -->

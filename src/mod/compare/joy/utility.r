@@ -52,7 +52,7 @@ logistic <- function(uk, aq) {
       x = aq,
       m = 1 - uk,
       a = 0,
-      k = 1,
+      k = uk,
       c = 1,
       q = 1,
       b = 1 / (1 - ugene(uk)),

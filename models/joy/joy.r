@@ -45,6 +45,25 @@ df_cao |>
   arrange(desc(cao))
 
 # endregion
+# region: convex utility aggregator
+df_cao |>
+  joy$agg.utility(
+    df_occupations_cao,
+    agg.method = "convex",
+    util.fn = joy$u$logarithmic
+  ) |>
+  arrange(desc(cao))
+
+# endregion
+# region: concave utility aggregator
+df_cao |>
+  joy$agg.utility(
+    df_occupations_cao,
+    agg.method = "concave",
+    util.fn = joy$u$logarithmic
+  )
+
+# endregion
 # region: ces utility aggregator
 df_occupations[1:3] |>
   joy$agg.utility(
