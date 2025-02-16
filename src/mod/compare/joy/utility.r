@@ -84,7 +84,10 @@ linear.logistic <- function(uk, aq) {
 # endregion
 # region: shark fin utility function
 shark.fin <- function(uk, aq) {
-  return(uk)
+  return(
+    (uk < aq) * linear.logistic(uk, aq) +
+      (uk >= aq) * (uk >= aq) * (1 / (aq - uk))
+  )
 }
 
 # endregion
@@ -154,7 +157,8 @@ box::export(
   logarithmic,
   quadratic,
   ugene.root,
-  pref.root
+  pref.root,
+  shark.fin
 )
 
 # endregion
