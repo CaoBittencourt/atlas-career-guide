@@ -24,7 +24,7 @@ df_cao |>
 df_occupations_cao
 
 # endregion
-# model
+# model 1 (my profile)
 # region: ces utility aggregator
 df_cao |>
   joy$agg.utility(
@@ -64,23 +64,39 @@ df_cao |>
   )
 
 # endregion
+# model 2 (occupations)
 # region: ces utility aggregator
-df_occupations[1:3] |>
+df_occupations[1:4] |>
   joy$agg.utility(
-    df_occupations[1:4],
+    df_occupations,
     agg.method = "ces",
-    util.fn = function(uk, aq) uk * aq
+    util.fn = joy$u$linear.logistic
   )
-
-
 # endregion
 # region: linear utility aggregator
-df_occupations[1:3] |>
+df_occupations[1:4] |>
   joy$agg.utility(
-    df_occupations[1:4],
+    df_occupations,
     agg.method = "linear",
-    util.fn = function(uk, aq) uk * aq
+    util.fn = joy$u$linear.logistic
   )
 
+# endregion
+# region: convex utility aggregator
+df_occupations[1:4] |>
+  joy$agg.utility(
+    df_occupations,
+    agg.method = "convex",
+    util.fn = joy$u$logarithmic
+  )
+
+# endregion
+# region: concave utility aggregator
+df_occupations[1:4] |>
+  joy$agg.utility(
+    df_occupations[1:9],
+    agg.method = "concave",
+    util.fn = joy$u$logarithmic
+  )
 
 # endregion
