@@ -14,11 +14,32 @@ box::use(
 # region: CES utility aggregation
 agg.ces <- function(Uk, A, util.fn = NULL, ...) {
   # elasticity of substitution
+
   # perfect substitutes when es -> Inf
   # perfect complements when es -> 0
+
   # perfect substitutes <=> utility generalist <=> ugene = 1
   # perfect complements <=> utility specialist <=> ugene = 0
-  1 / (1 - ugene(Uk[[1]])) -> es
+
+  # therefore,
+  # ugene -> 1 <=> rho -> 1 <=> perfect substitutes
+  # ugene -> 0 <=> rho -> -Inf <=> perfect complements
+  # ugene -> ? <=> rho -> 0 <=> cobb-douglas
+  ugene(Uk[[1]]) -> upsilon.gamma
+  (4 / upsilon.gamma) * (upsilon.gamma - 0.5)^2 -> rho
+  # (1 / upsilon.gamma) -> rho
+
+  # note: the transformation function from ugene to rho must not be negative
+  # (0.5 - upsilon.gamma) / (-0.5 * upsilon.gamma) -> rho
+  # (2 - (1 / upsilon.gamma)) -> rho
+  # ((upsilon.gamma - (1 / 2))^3) / (upsilon.gamma / 8) -> rho
+  # log(2 * upsilon.gamma) * exp(
+  #   upsilon.gamma / (
+  #     1 / log(
+  #       1 / log(2)
+  #     )
+  #   )
+  # ) -> rho
 
   # apply utility function
   util.fn |> mapply(Uk, A, ...) -> Uk
@@ -26,11 +47,8 @@ agg.ces <- function(Uk, A, util.fn = NULL, ...) {
   # ces utility aggregator
   return(
     colSums(
-      ((A / colSums(A))^(1 / es)) *
-        ((A * Uk)^((es - 1) / es))
-    )^(
-      es / (es - 1)
-    )
+      (A / colSums(A)) * (Uk^rho)
+    )^(1 / rho)
   )
 }
 

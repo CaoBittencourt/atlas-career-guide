@@ -26,13 +26,49 @@ df_occupations_cao
 # endregion
 # model 1 (my profile)
 # region: ces utility aggregator
+box::use(mod / compare / joy / ugene[...])
+
 df_cao |>
+  # mutate(
+  #   # cao = c(1, rep(0, 59)),
+  #   # cao = rep(1, 60),
+  #   # cao = rep(0, 60)
+  # ) |>
   joy$agg.utility(
     df_occupations_cao,
     agg.method = "ces",
-    util.fn = joy$u$linear
+    util.fn = joy$u$quadratic
   ) |>
   arrange(desc(cao))
+
+upsilon.gamma <- ugene(df_cao$cao)
+rho <- (4 / upsilon.gamma) * (upsilon.gamma - 0.5)^2
+
+df_occupations_cao[-1] |>
+  sapply(
+    function(aq) {
+      sum(
+        (aq / sum(aq)) * (
+          mapply(
+            joy$u$quadratic,
+            # c(1, rep(0, 59)),
+            # rep(1, 60),
+            # rep(0, 60),
+            # df_cao$cao,
+            aq
+          )^rho
+        )
+      )^(1 / rho)
+    }
+  ) |>
+  as_tibble(
+    rownames = "to"
+  ) |>
+  rename(
+    cao = value
+  ) |>
+  arrange(desc(cao))
+
 
 # endregion
 # region: linear utility aggregator
