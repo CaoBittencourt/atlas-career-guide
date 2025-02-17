@@ -67,6 +67,11 @@ agg.convex <- function(Uk, A, ük, util.fn, ...) {
           ) |>
             weighted.mean(ük)
         )
+        # return(
+        #   sum((
+        #     util.fn(uk, aq, ...)
+        #   ) * ük)
+        # )
       },
       uk = Uk,
       aq = A
