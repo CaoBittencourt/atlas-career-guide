@@ -41,7 +41,7 @@ linear <- function(uk, aq) {
 # endregion
 # region: binary utility function
 binary <- function(uk, aq) {
-  return(aq >= uk)
+  return(uk >= aq)
 }
 
 # endregion

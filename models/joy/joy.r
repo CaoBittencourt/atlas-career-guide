@@ -30,7 +30,7 @@ df_cao |>
   joy$agg.utility(
     df_occupations_cao,
     agg.method = "ces",
-    util.fn = joy$u$linear.logistic
+    util.fn = joy$u$binary
   ) |>
   arrange(desc(cao))
 

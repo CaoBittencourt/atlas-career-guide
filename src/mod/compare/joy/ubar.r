@@ -27,7 +27,7 @@ agg.ces <- function(Uk, A, util.fn = NULL, ...) {
   return(
     colSums(
       ((A / colSums(A))^(1 / es)) *
-        (A * Uk^((es - 1) / es))
+        ((A * Uk)^((es - 1) / es))
     )^(
       es / (es - 1)
     )
@@ -181,3 +181,9 @@ agg.utility <- function(pref_set, skill_mtx, agg.method = c("ces", "linear", "co
 box::export(agg.utility)
 
 # endregion
+# # region: test
+# df_cao$cao^1 / (1 - df_cao$cao)
+# df_cao$cao^((1 - df_cao$cao) / df_cao$cao)
+
+
+# # endregion
