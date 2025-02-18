@@ -73,7 +73,6 @@ logarithmic <- function(uk, aq) {
 # endregion
 # region: quadratic root utility function
 quadratic <- function(uk, aq) {
-  # return((uk * aq)^2)
   return(
     ifelse(
       all(uk == 0, aq == 0),

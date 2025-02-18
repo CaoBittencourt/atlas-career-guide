@@ -12,8 +12,8 @@ box::use(
 
 # endregion
 # region: CES utility aggregation
-agg.ces <- function(Uk, A, util.fn = NULL, ...) {
-  # elasticity of substitution
+agg.ces <- function(uk, A, util.fn = NULL, ...) {
+  # elasticity of substitution (es)
 
   # perfect substitutes when es -> Inf
   # perfect complements when es -> 0
@@ -23,13 +23,10 @@ agg.ces <- function(Uk, A, util.fn = NULL, ...) {
 
   # therefore,
   # ugene -> 1 <=> rho -> 1 <=> perfect substitutes
-  # ugene -> 0 <=> rho -> -Inf <=> perfect complements
-  # ugene -> ? <=> rho -> 0 <=> cobb-douglas
-  ugene(Uk[[1]]) -> upsilon.gamma
-  (4 / upsilon.gamma) * (upsilon.gamma - 0.5)^2 -> rho
-  # (1 / upsilon.gamma) -> rho
+  # ugene -> 0 <=> rho -> Inf <=> perfect complements
+  # ugene -> 0.5 <=> rho -> 0 <=> cobb-douglas
 
-  # note: the transformation function from ugene to rho must not be negative
+  # the transformation function from ugene to rho must not be negative:
   # (0.5 - upsilon.gamma) / (-0.5 * upsilon.gamma) -> rho
   # (2 - (1 / upsilon.gamma)) -> rho
   # ((upsilon.gamma - (1 / 2))^3) / (upsilon.gamma / 8) -> rho
@@ -41,18 +38,144 @@ agg.ces <- function(Uk, A, util.fn = NULL, ...) {
   #   )
   # ) -> rho
 
-  # apply utility function
-  util.fn |> mapply(Uk, A, ...) -> Uk
+
+  # preference generality to elasticity of substitution mapper
+  # midpoint = 0.5 <=> cobb-douglas
+  ugene(uk) -> upsilon.gamma
+  (4 / upsilon.gamma) * (upsilon.gamma - 0.5)^2 -> rho
 
   # ces utility aggregator
   return(
-    colSums(
-      (A / colSums(A)) * (Uk^rho)
-    )^(1 / rho)
+    A |>
+      sapply(
+        function(aq) {
+          sum(
+            (aq / sum(aq)) * (
+              mapply(
+                util.fn,
+                uk,
+                aq
+              )^rho
+            )
+          )^(1 / rho)
+        }
+      )
   )
 }
 
 # endregion
+# # region: CES utility aggregation
+# agg.ces <- function(Uk, A, util.fn = NULL, ...) {
+#   # elasticity of substitution (es)
+
+#   # perfect substitutes when es -> Inf
+#   # perfect complements when es -> 0
+
+#   # perfect substitutes <=> utility generalist <=> ugene = 1
+#   # perfect complements <=> utility specialist <=> ugene = 0
+
+#   # therefore,
+#   # ugene -> 1 <=> rho -> 1 <=> perfect substitutes
+#   # ugene -> 0 <=> rho -> Inf <=> perfect complements
+#   # ugene -> 0.5 <=> rho -> 0 <=> cobb-douglas
+
+#   # the transformation function from ugene to rho must not be negative:
+#   # (0.5 - upsilon.gamma) / (-0.5 * upsilon.gamma) -> rho
+#   # (2 - (1 / upsilon.gamma)) -> rho
+#   # ((upsilon.gamma - (1 / 2))^3) / (upsilon.gamma / 8) -> rho
+#   # log(2 * upsilon.gamma) * exp(
+#   #   upsilon.gamma / (
+#   #     1 / log(
+#   #       1 / log(2)
+#   #     )
+#   #   )
+#   # ) -> rho
+
+
+#   # preference generality to elasticity of substitution mapper
+#   # midpoint = 0.5 <=> cobb-douglas
+#   ugene(Uk[[1]]) -> upsilon.gamma
+#   (4 / upsilon.gamma) * (upsilon.gamma - 0.5)^2 -> rho
+
+#   # ces utility aggregator
+#   return(
+#     A |>
+#       sapply(
+#         function(aq) {
+#           sum(
+#             (aq / sum(aq)) * (
+#               mapply(
+#                 util.fn,
+#                 Uk[[1]],
+#                 aq
+#               )^rho
+#             )
+#           )^(1 / rho)
+#         }
+#       )
+#     # A |>
+#     #   vapply(
+#     #     function(aq) {
+#     #       sum(
+#     #         (aq / sum(aq)) * (
+#     #           # apply utility function
+#     #           mapply(
+#     #             util.fn,
+#     #             Uk[[1]],
+#     #             aq,
+#     #             ...
+#     #           )^rho
+#     #         )
+#     #       )^(1 / rho)
+#     #     },
+#     #     numeric(1)
+#     #   )
+#   )
+# }
+
+# # endregion
+# # region: CES utility aggregation
+# agg.ces <- function(Uk, A, util.fn = NULL, ...) {
+#   # elasticity of substitution
+
+#   # perfect substitutes when es -> Inf
+#   # perfect complements when es -> 0
+
+#   # perfect substitutes <=> utility generalist <=> ugene = 1
+#   # perfect complements <=> utility specialist <=> ugene = 0
+
+#   # therefore,
+#   # ugene -> 1 <=> rho -> 1 <=> perfect substitutes
+#   # ugene -> 0 <=> rho -> Inf <=> perfect complements
+#   # ugene -> 0.5 <=> rho -> 0 <=> cobb-douglas
+#   ugene(Uk[[1]]) -> upsilon.gamma
+#   (4 / upsilon.gamma) * (upsilon.gamma - 0.5)^2 -> rho
+#   # (1 / upsilon.gamma) -> rho
+
+#   # note: the transformation function from ugene to rho must not be negative
+#   # (0.5 - upsilon.gamma) / (-0.5 * upsilon.gamma) -> rho
+#   # (2 - (1 / upsilon.gamma)) -> rho
+#   # ((upsilon.gamma - (1 / 2))^3) / (upsilon.gamma / 8) -> rho
+#   # log(2 * upsilon.gamma) * exp(
+#   #   upsilon.gamma / (
+#   #     1 / log(
+#   #       1 / log(2)
+#   #     )
+#   #   )
+#   # ) -> rho
+
+#   # apply utility function
+#   util.fn |> mapply(Uk, A, ...) -> Uk
+
+#   # ces utility aggregator
+#   return(
+#     colSums(
+#       (A / colSums(A)) * (Uk^rho)
+#     )^(1 / rho)
+#   )
+# }
+
+# # endregion
 # region: linear utility aggregation
 agg.linear <- function(Uk, A, ük, util.fn, ...) {
   return(
@@ -155,7 +278,19 @@ agg.utility <- function(pref_set, skill_mtx, agg.method = c("ces", "linear", "co
   return(
     agg.method[[1]] |>
       switch(
-        "ces" = Uk |> cbindmap(agg.ces, names(A), A, util.fn, ...),
+        "ces" = mapply(
+          function(uk) {
+            agg.ces(uk, A, util.fn, ...)
+          },
+          uk = Uk |>
+            lapply(function(x) {
+              x[[1]]
+            })
+        ) |>
+          as_tibble(
+            rownames = "to"
+          ),
+        # "ces" = Uk |> cbindmap(agg.ces, names(A), A, util.fn, ...),
         "linear" = mapply(
           function(U, ü) {
             agg.linear(U, A, ü, util.fn, ...)
