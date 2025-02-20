@@ -94,7 +94,7 @@ df_cao |>
   joy$agg.utility(
     df_occupations_cao,
     agg.method = "linear",
-    util.fn = joy$u$shark.fin
+    util.fn = joy$u$shark.linear
   ) |>
   arrange(desc(cao))
 
