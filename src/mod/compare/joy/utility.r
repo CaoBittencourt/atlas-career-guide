@@ -58,9 +58,16 @@ linear.logistic <- function(uk, aq) {
 # region: shark fin utility function
 shark.fin <- function(uk, aq) {
   return(
-    (uk < aq) * linear.logistic(uk, aq) +
-      (uk >= aq) * (uk >= aq) * (1 / (aq - uk))
+    aq / (
+      1 + exp(
+        (-40/uk) * (- aq + (1.2^aq) * uk)
+      )
+    )
   )
+  # return(
+  #   (uk < aq) * linear.logistic(uk, aq) +
+  #     (uk >= aq) * (uk >= aq) * (1 / (aq - uk))
+  # )
 }
 
 # endregion
@@ -127,7 +134,9 @@ list(
   "pref.root" = pref.root,
   "roof" = roof,
   "roof.scaled" = roof.scaled,
-  "shark.fin" = shark.fin
+  "shark.fin" = shark.fin,
+  "shark.linear" = shark.fin,
+  "shark.llogis" = shark.fin
 ) -> u
 
 box::export(u)
