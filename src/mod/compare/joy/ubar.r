@@ -64,6 +64,34 @@ agg.ces <- function(uk, A, util.fn = NULL, ...) {
 }
 
 # endregion
+# region: utility generality root aggregation
+agg.ugene.root <- function(Uk, A, ük, util.fn, ...) {
+  # preference generality
+  # midpoint = 0.5 <=> linear
+  # ugene < 0.5 <=> specialist <=> convex
+  # ugene > 0.5 <=> generalist <=> concave
+  ugene(uk) -> upsilon.gamma
+
+  return(
+    mapply(
+      function(uk, aq) {
+        return(
+          (
+            util.fn(uk, aq, ...)^
+              (
+                (1 - upsilon.gamma) / upsilon.gamma
+              )
+          ) |>
+            weighted.mean(ük)
+        )
+      },
+      uk = Uk,
+      aq = A
+    )
+  )
+}
+
+# endregion
 # # region: CES utility aggregation
 # agg.ces <- function(Uk, A, util.fn = NULL, ...) {
 #   # elasticity of substitution (es)
@@ -340,3 +368,7 @@ box::export(agg.utility)
 
 
 # # endregion
+# y <- 1 - (1 - x) / (1 + exp(-(20 / (1 - m)) * (x - m)))^(m / (1 - x))
+# y <- -1 + (1 + x) / (1 + exp(-(20 / (1 - m)) * (-x - m)))^(m / (1 + x))
+
+# y = 1 - (x - 1) / (1 + exp(- (20/(1-m)) * (x - m))) ^ (m / (1-x))

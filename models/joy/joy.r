@@ -25,76 +25,76 @@ df_occupations_cao
 
 # endregion
 # model 1 (my profile)
-# region: ces utility aggregator
-# box::use(mod / compare / joy / ugene[...])
-df_cao |>
-  mutate(
-    cao = c(1, rep(0, 59)),
-    # cao = rep(1, 60),
-    # cao = rep(0, 60)
-  ) |>
-  joy$agg.utility(
-    df_occupations_cao,
-    agg.method = "ces",
-    util.fn = joy$u$quadratic
-  ) |>
-  arrange(desc(cao))
+# # region: ces utility aggregator
+# # box::use(mod / compare / joy / ugene[...])
+# df_cao |>
+#   mutate(
+#     cao = c(1, rep(0, 59)),
+#     # cao = rep(1, 60),
+#     # cao = rep(0, 60)
+#   ) |>
+#   joy$agg.utility(
+#     df_occupations_cao,
+#     agg.method = "ces",
+#     util.fn = joy$u$quadratic
+#   ) |>
+#   arrange(desc(cao))
 
-# endregion
-# region: test
-box::use(
-  assert = mod / utils / assert[...],
-  mod / compare / joy / ugene[...],
-  mod / utils / conform[...],
-)
+# # endregion
+# # region: test
+# box::use(
+#   assert = mod / utils / assert[...],
+#   mod / compare / joy / ugene[...],
+#   mod / utils / conform[...],
+# )
 
-df_cao |> assert$as.skill_mtx() -> Uk
-df_occupations_cao |> assert$as.skill_mtx() -> A
-Uk |> conform(A) -> Uk
+# df_cao |> assert$as.skill_mtx() -> Uk
+# df_occupations_cao |> assert$as.skill_mtx() -> A
+# Uk |> conform(A) -> Uk
 
-upsilon.gamma <- ugene(Uk[[1]][[1]])
-rho <- (4 / upsilon.gamma) * (upsilon.gamma - 0.5)^2
+# upsilon.gamma <- ugene(Uk[[1]][[1]])
+# rho <- (4 / upsilon.gamma) * (upsilon.gamma - 0.5)^2
 
-# apply utility function
-joy$u$quadratic |> mapply(Uk$cao, A) -> Uk
+# # apply utility function
+# joy$u$quadratic |> mapply(Uk$cao, A) -> Uk
 
-# ces utility aggregator
-colSums(
-  (A / colSums(A)) * (Uk^rho)
-)^(1 / rho)
+# # ces utility aggregator
+# colSums(
+#   (A / colSums(A)) * (Uk^rho)
+# )^(1 / rho)
 
-df_occupations_cao[-1] |>
-  sapply(
-    function(aq) {
-      sum(
-        (aq / sum(aq)) * (
-          mapply(
-            joy$u$quadratic,
-            c(1, rep(0, 59)),
-            # rep(1, 60),
-            # rep(0, 60),
-            # df_cao$cao,
-            aq
-          )^rho
-        )
-      )^(1 / rho)
-    }
-  ) |>
-  as_tibble(
-    rownames = "to"
-  ) |>
-  rename(
-    cao = value
-  ) |>
-  arrange(desc(cao))
+# df_occupations_cao[-1] |>
+#   sapply(
+#     function(aq) {
+#       sum(
+#         (aq / sum(aq)) * (
+#           mapply(
+#             joy$u$quadratic,
+#             c(1, rep(0, 59)),
+#             # rep(1, 60),
+#             # rep(0, 60),
+#             # df_cao$cao,
+#             aq
+#           )^rho
+#         )
+#       )^(1 / rho)
+#     }
+#   ) |>
+#   as_tibble(
+#     rownames = "to"
+#   ) |>
+#   rename(
+#     cao = value
+#   ) |>
+#   arrange(desc(cao))
 
-# endregion
+# # endregion
 # region: linear utility aggregator
 df_cao |>
   joy$agg.utility(
     df_occupations_cao,
     agg.method = "linear",
-    util.fn = joy$u$linear.logistic
+    util.fn = joy$u$roof.scaled
   ) |>
   arrange(desc(cao))
 

@@ -97,6 +97,18 @@ pref.root <- function(uk, aq) {
 }
 
 # endregion
+# region: roof utility function
+roof <- function(uk, aq) {
+  return(1 - abs(uk - aq))
+}
+
+# endregion
+# region: scaled roof utility function
+roof.scaled <- function(uk, aq) {
+  return(roof(uk, aq)^(1 / ugene(uk)))
+}
+
+# endregion
 # # region: quadratic utility function
 # quadratic <- function(uk, aq) {
 #   return(1 - 4 * (aq - uk)^2)
@@ -113,6 +125,8 @@ list(
   "quadratic" = quadratic,
   "ugene.root" = ugene.root,
   "pref.root" = pref.root,
+  "roof" = roof,
+  "roof.scaled" = roof.scaled,
   "shark.fin" = shark.fin
 ) -> u
 
