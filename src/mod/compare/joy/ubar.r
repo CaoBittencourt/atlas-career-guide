@@ -23,7 +23,7 @@ agg.ces <- function(uk, A, util.fn = NULL, ...) {
 
   # therefore,
   # ugene -> 1 <=> rho -> 1 <=> perfect substitutes
-  # ugene -> 0 <=> rho -> Inf <=> perfect complements
+  # ugene -> 0 <=> rho -> Inf <=> perfect complements (removed)
   # ugene -> 0.5 <=> rho -> 0 <=> cobb-douglas
 
   # the transformation function from ugene to rho must not be negative:
@@ -42,7 +42,10 @@ agg.ces <- function(uk, A, util.fn = NULL, ...) {
   # preference generality to elasticity of substitution mapper
   # midpoint = 0.5 <=> cobb-douglas
   ugene(uk) -> upsilon.gamma
-  (4 / upsilon.gamma) * (upsilon.gamma - 0.5)^2 -> rho
+  # (4 / upsilon.gamma) * (upsilon.gamma - 0.5)^2 -> rho
+  # (2 / upsilon.gamma) * (upsilon.gamma - 1)^2 -> rho
+
+  upsilon.gamma -> rho
 
   # ces utility aggregator
   return(
@@ -64,6 +67,59 @@ agg.ces <- function(uk, A, util.fn = NULL, ...) {
 }
 
 # endregion
+# # region: CES utility aggregation
+# agg.ces <- function(uk, A, util.fn = NULL, ...) {
+#   # elasticity of substitution (es)
+
+#   # perfect substitutes when es -> Inf
+#   # perfect complements when es -> 0
+
+#   # perfect substitutes <=> utility generalist <=> ugene = 1
+#   # perfect complements <=> utility specialist <=> ugene = 0
+
+#   # therefore,
+#   # ugene -> 1 <=> rho -> 1 <=> perfect substitutes
+#   # ugene -> 0 <=> rho -> Inf <=> perfect complements
+#   # ugene -> 0.5 <=> rho -> 0 <=> cobb-douglas
+
+#   # the transformation function from ugene to rho must not be negative:
+#   # (0.5 - upsilon.gamma) / (-0.5 * upsilon.gamma) -> rho
+#   # (2 - (1 / upsilon.gamma)) -> rho
+#   # ((upsilon.gamma - (1 / 2))^3) / (upsilon.gamma / 8) -> rho
+#   # log(2 * upsilon.gamma) * exp(
+#   #   upsilon.gamma / (
+#   #     1 / log(
+#   #       1 / log(2)
+#   #     )
+#   #   )
+#   # ) -> rho
+
+
+#   # preference generality to elasticity of substitution mapper
+#   # midpoint = 0.5 <=> cobb-douglas
+#   ugene(uk) -> upsilon.gamma
+#   (4 / upsilon.gamma) * (upsilon.gamma - 0.5)^2 -> rho
+
+#   # ces utility aggregator
+#   return(
+#     A |>
+#       sapply(
+#         function(aq) {
+#           sum(
+#             (aq / sum(aq)) * (
+#               mapply(
+#                 util.fn,
+#                 uk,
+#                 aq
+#               )^rho
+#             )
+#           )^(1 / rho)
+#         }
+#       )
+#   )
+# }
+
+# # endregion
 # region: utility generality root aggregation
 agg.ugene.root <- function(Uk, A, ük, util.fn, ...) {
   # preference generality
