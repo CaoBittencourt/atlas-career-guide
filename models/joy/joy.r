@@ -94,7 +94,7 @@ df_cao |>
   joy$agg.utility(
     df_occupations_cao,
     agg.method = "ces",
-    util.fn = joy$u$roof
+    util.fn = joy$u$roof.scaled
   ) |>
   arrange(desc(cao))
 
