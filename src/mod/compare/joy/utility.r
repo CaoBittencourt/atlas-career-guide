@@ -74,11 +74,10 @@ shark.fin <- function(uk, aq) {
 shark.linear <- function(uk, aq) {
   return(
     aq / (
-      1 + exp(
-        # (-40 / uk) * (-aq + (1.2^aq) * uk)
+      1 + (1 - uk / aq) * exp(
         (-40 / uk) * (-aq + uk)
       )
-    )
+    )^(aq / uk)
   )
 }
 
