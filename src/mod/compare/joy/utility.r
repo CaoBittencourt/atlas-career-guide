@@ -62,7 +62,8 @@ shark.fin <- function(uk, aq) {
       1 + (1 - uk / aq) * exp(
         (-40 / uk) * (-aq + uk)
       )
-    )^(aq / uk)
+    )
+    # ^(aq / uk)
   )
 }
 
@@ -74,7 +75,8 @@ shark.linear <- function(uk, aq) {
       1 + (1 - uk / aq) * exp(
         (-40 / uk) * (-aq + uk)
       )
-    )^(aq / uk)
+    )
+    # ^(aq / uk)
   )
 }
 
@@ -82,11 +84,12 @@ shark.linear <- function(uk, aq) {
 # region: linear-logistic shark fin utility function
 shark.llogis <- function(uk, aq) {
   return(
-    aq / (
-      1 + exp(
-        (-40 / uk) * (-aq + (1.2^aq) * uk)
+    (aq^(uk / aq)) / (
+      1 + (1 - uk / aq) * exp(
+        (-40 / uk) * (-aq + uk)
       )
     )
+    # ^(aq / uk)
   )
 }
 
