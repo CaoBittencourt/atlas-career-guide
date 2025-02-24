@@ -58,12 +58,16 @@ linear.logistic <- function(uk, aq) {
 # region: shark fin utility function
 shark.fin <- function(uk, aq) {
   return(
-    (aq^(uk / aq)) / (
-      1 + (1 - uk / aq) * exp(
-        (-40 / uk) * (-aq + uk)
-      )
+    glogis$logistic(
+      x = aq,
+      m = uk,
+      a = 0,
+      k = aq,
+      c = 1,
+      q = 1 - uk / aq,
+      nu = 2,
+      b = -40 / uk
     )
-    # ^(aq / uk)
   )
 }
 
@@ -71,25 +75,46 @@ shark.fin <- function(uk, aq) {
 # region: linear shark fin utility function
 shark.linear <- function(uk, aq) {
   return(
-    aq / (
-      1 + (1 - uk / aq) * exp(
-        (-40 / uk) * (-aq + uk)
-      )
+    glogis$logistic(
+      x = aq,
+      m = uk,
+      a = 0,
+      k = aq,
+      c = 1,
+      q = 1 - uk / aq,
+      nu = 1,
+      b = -40 / uk
     )
-    # ^(aq / uk)
   )
 }
 
 # endregion
+# # region: linear shark fin utility function
+# shark.linear <- function(uk, aq) {
+#   return(
+#     aq / (
+#       1 + (1 - uk / aq) * exp(
+#         (-40 / uk) * (-aq + uk)
+#       )
+#     )
+#     # ^(aq / uk)
+#   )
+# }
+
+# # endregion
 # region: linear-logistic shark fin utility function
 shark.llogis <- function(uk, aq) {
   return(
-    (aq^(uk / aq)) / (
-      1 + (1 - uk / aq) * exp(
-        (-40 / uk) * (-aq + uk)
-      )
+    glogis$logistic(
+      x = aq,
+      m = uk,
+      a = 0,
+      k = aq,
+      c = 1,
+      q = 1 - uk / aq,
+      nu = 1 / 2,
+      b = -40 / uk
     )
-    # ^(aq / uk)
   )
 }
 

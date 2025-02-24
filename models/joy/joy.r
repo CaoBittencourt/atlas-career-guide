@@ -5,7 +5,8 @@ modular::project.options("atlas")
 # endregion
 # region: imports
 box::use(
-  mod / compare / joy
+  mod / compare / joy,
+  mod / compare / joy / ugene
 )
 
 library(atlas.plot)
@@ -25,22 +26,26 @@ df_occupations_cao
 
 # endregion
 # model 1 (my profile)
-# # region: ces utility aggregator
-# # box::use(mod / compare / joy / ugene[...])
-# df_cao |>
-#   mutate(
-#     cao = c(1, rep(0, 59)),
-#     # cao = rep(1, 60),
-#     # cao = rep(0, 60)
-#   ) |>
-#   joy$agg.utility(
-#     df_occupations_cao,
-#     agg.method = "ces",
-#     util.fn = joy$u$quadratic
-#   ) |>
-#   arrange(desc(cao))
+# region: ces utility aggregator
+# box::use(mod / compare / joy / ugene[...])
+df_cao |>
+  mutate(
+    # cao = c(1, rep(0, 59)),
+    cao = c(1, .00001, rep(0, 58)),
+    # cao = rep(1, 60),
+    # cao = rep(0, 60)
+  ) |>
+  # reframe(
+  #   ugene$ugene(cao)
+  # ) |>
+  joy$agg.utility(
+    df_occupations_cao,
+    agg.method = "convex",
+    util.fn = joy$u$logistic
+  ) |>
+  arrange(desc(cao))
 
-# # endregion
+# endregion
 # # region: test
 # box::use(
 #   assert = mod / utils / assert[...],
@@ -89,15 +94,24 @@ df_occupations_cao
 #   arrange(desc(cao))
 
 # # endregion
-# region: linear utility aggregator
+# region: ces utility aggregator
 df_cao |>
   joy$agg.utility(
     df_occupations_cao,
     agg.method = "ces",
-    util.fn = joy$u$leontief.scaled
+    util.fn = joy$u$leontief
   ) |>
-  arrange(desc(cao)) |>
-  summary()
+  arrange(desc(cao))
+
+# endregion
+# region: linear utility aggregator
+df_cao |>
+  joy$agg.utility(
+    df_occupations_cao,
+    agg.method = "linear",
+    util.fn = joy$u$shark.llogis
+  ) |>
+  arrange(desc(cao))
 
 # endregion
 # region: convex utility aggregator
@@ -105,7 +119,7 @@ df_cao |>
   joy$agg.utility(
     df_occupations_cao,
     agg.method = "convex",
-    util.fn = joy$u$logarithmic
+    util.fn = joy$u$shark.llogis
   ) |>
   arrange(desc(cao))
 
@@ -115,7 +129,7 @@ df_cao |>
   joy$agg.utility(
     df_occupations_cao,
     agg.method = "concave",
-    util.fn = joy$u$logarithmic
+    util.fn = joy$u$shark.llogis
   )
 
 # endregion
@@ -127,6 +141,7 @@ df_occupations[1:4] |>
     agg.method = "ces",
     util.fn = joy$u$linear.logistic
   )
+
 # endregion
 # region: linear utility aggregator
 df_occupations[1:4] |>
