@@ -89,19 +89,6 @@ shark.linear <- function(uk, aq) {
 }
 
 # endregion
-# # region: linear shark fin utility function
-# shark.linear <- function(uk, aq) {
-#   return(
-#     aq / (
-#       1 + (1 - uk / aq) * exp(
-#         (-40 / uk) * (-aq + uk)
-#       )
-#     )
-#     # ^(aq / uk)
-#   )
-# }
-
-# # endregion
 # region: linear-logistic shark fin utility function
 shark.llogis <- function(uk, aq) {
   return(
@@ -180,12 +167,6 @@ leontief.scaled <- function(uk, aq) {
 }
 
 # endregion
-# # region: quadratic utility function
-# quadratic <- function(uk, aq) {
-#   return(1 - 4 * (aq - uk)^2)
-# }
-
-# # endregion
 # region: exports
 list(
   "binary" = binary,
