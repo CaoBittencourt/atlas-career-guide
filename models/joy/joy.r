@@ -94,9 +94,10 @@ df_cao |>
   joy$agg.utility(
     df_occupations_cao,
     agg.method = "ces",
-    util.fn = joy$u$roof.scaled
+    util.fn = joy$u$leontief.scaled
   ) |>
-  arrange(desc(cao))
+  arrange(desc(cao)) |>
+  summary()
 
 # endregion
 # region: convex utility aggregator

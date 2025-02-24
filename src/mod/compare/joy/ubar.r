@@ -21,10 +21,16 @@ agg.ces <- function(uk, A, util.fn = NULL, ...) {
   # perfect substitutes <=> utility generalist <=> ugene = 1
   # perfect complements <=> utility specialist <=> ugene = 0
 
+  # rho -> 1 <=> perfect substitutes
+  # rho -> Inf <=> perfect complements (removed)
+  # rho -> 0 <=> cobb-douglas
+
   # therefore,
-  # ugene -> 1 <=> rho -> 1 <=> perfect substitutes
-  # ugene -> 0 <=> rho -> Inf <=> perfect complements (removed)
-  # ugene -> 0.5 <=> rho -> 0 <=> cobb-douglas
+  # ugene -> 1 <=> rho -> 1
+  # ugene -> 0 <=> rho -> 0
+  # # ugene -> 1 <=> rho -> 1
+  # # ugene -> 0 <=> rho -> Inf
+  # # ugene -> 0.5 <=> rho -> 0
 
   # the transformation function from ugene to rho must not be negative:
   # (0.5 - upsilon.gamma) / (-0.5 * upsilon.gamma) -> rho
@@ -41,11 +47,10 @@ agg.ces <- function(uk, A, util.fn = NULL, ...) {
 
   # preference generality to elasticity of substitution mapper
   # midpoint = 0.5 <=> cobb-douglas
-  ugene(uk) -> upsilon.gamma
+  # ugene(uk) -> upsilon.gamma
   # (4 / upsilon.gamma) * (upsilon.gamma - 0.5)^2 -> rho
   # (2 / upsilon.gamma) * (upsilon.gamma - 1)^2 -> rho
-
-  upsilon.gamma -> rho
+  ugene(uk) -> rho
 
   # ces utility aggregator
   return(

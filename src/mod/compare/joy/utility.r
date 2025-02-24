@@ -143,8 +143,8 @@ roof.scaled <- function(uk, aq) {
 # region: leontief utility function
 leontief <- function(uk, aq) {
   # return(pmin(uk, aq))
-  # return(pmin(uk * uk, uk * aq))
-  return(sqrt(pmin(uk * uk, uk * aq)))
+  return(pmin(uk * uk, uk * aq))
+  # return(sqrt(pmin(uk * uk, uk * aq)))
 }
 
 # endregion
