@@ -26,26 +26,26 @@ df_occupations_cao
 
 # endregion
 # model 1 (my profile)
-# region: ces utility aggregator
-# box::use(mod / compare / joy / ugene[...])
-df_cao |>
-  mutate(
-    # cao = c(1, rep(0, 59)),
-    cao = c(1, .00001, rep(0, 58)),
-    # cao = rep(1, 60),
-    # cao = rep(0, 60)
-  ) |>
-  # reframe(
-  #   ugene$ugene(cao)
-  # ) |>
-  joy$agg.utility(
-    df_occupations_cao,
-    agg.method = "convex",
-    util.fn = joy$u$logistic
-  ) |>
-  arrange(desc(cao))
+# # region: ces utility aggregator
+# # box::use(mod / compare / joy / ugene[...])
+# df_cao |>
+#   mutate(
+#     # cao = c(1, rep(0, 59)),
+#     cao = c(1, .00001, rep(0, 58)),
+#     # cao = rep(1, 60),
+#     # cao = rep(0, 60)
+#   ) |>
+#   # reframe(
+#   #   ugene$ugene(cao)
+#   # ) |>
+#   joy$agg.utility(
+#     df_occupations_cao,
+#     agg.method = "convex",
+#     util.fn = joy$u$logistic
+#   ) |>
+#   arrange(desc(cao))
 
-# endregion
+# # endregion
 # # region: test
 # box::use(
 #   assert = mod / utils / assert[...],
@@ -99,7 +99,7 @@ df_cao |>
   joy$agg.utility(
     df_occupations_cao,
     agg.method = "ces",
-    util.fn = joy$u$leontief
+    util.fn = joy$u$roof
   ) |>
   arrange(desc(cao))
 
@@ -109,7 +109,7 @@ df_cao |>
   joy$agg.utility(
     df_occupations_cao,
     agg.method = "linear",
-    util.fn = joy$u$shark.llogis
+    util.fn = joy$u$roof
   ) |>
   arrange(desc(cao))
 
@@ -119,7 +119,7 @@ df_cao |>
   joy$agg.utility(
     df_occupations_cao,
     agg.method = "convex",
-    util.fn = joy$u$shark.llogis
+    util.fn = joy$u$roof
   ) |>
   arrange(desc(cao))
 
@@ -129,8 +129,9 @@ df_cao |>
   joy$agg.utility(
     df_occupations_cao,
     agg.method = "concave",
-    util.fn = joy$u$shark.llogis
-  )
+    util.fn = joy$u$roof
+  ) |>
+  arrange(desc(cao))
 
 # endregion
 # model 2 (occupations)
