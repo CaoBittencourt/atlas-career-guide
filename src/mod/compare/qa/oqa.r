@@ -3,6 +3,7 @@ box::use(
   eq = mod / describe / aeq,
   assert = mod / utils / assert,
   mod / utils / gap[...],
+  mod / utils / cbindmap[...],
   dplyr[bind_rows],
   mod / utils / conform[...]
 )
