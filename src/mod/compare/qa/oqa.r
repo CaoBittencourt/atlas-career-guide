@@ -34,12 +34,22 @@ oqa <- function(skill_set, skill_mtx, aeq_method = NULL) {
   return(
     skill_set |>
       conform(skill_mtx) |>
-      lapply(
+      cbindmap(
         function(Ak) {
           colSums(weights_mtx * gap(Ak, skill_mtx)) / max.qa
-        }
+        },
+        to = names(skill_mtx)
       )
   )
+  # return(
+  #   skill_set |>
+  #     conform(skill_mtx) |>
+  #     lapply(
+  #       function(Ak) {
+  #         colSums(weights_mtx * gap(Ak, skill_mtx)) / max.qa
+  #       }
+  #     )
+  # )
 }
 
 # endregion

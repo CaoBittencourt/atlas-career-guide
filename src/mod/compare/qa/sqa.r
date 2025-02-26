@@ -1,6 +1,6 @@
 # region: imports
 box::use(
-  mod / compare / qa / uqa[...]
+  mod / compare / qa / uqa[...],
 )
 
 # endregion
@@ -8,14 +8,15 @@ box::use(
 sqa <- function(skill_set, skill_mtx, aeq_method = NULL) {
   # assert args
   # estimate (un)weighted sufficient qualification coefficient
-  return(
-    uqa(skill_set, skill_mtx, aeq_method) |>
-      lapply(
-        function(k) {
-          1 - k
-        }
-      )
-  )
+  uqa_mtx <- uqa(skill_set, skill_mtx, aeq_method)
+  1 - uqa_mtx[
+    uqa_mtx |> vapply(is.numeric, logical(1))
+  ] ->
+  uqa_mtx[
+    uqa_mtx |> vapply(is.numeric, logical(1))
+  ]
+
+  return(uqa_mtx)
 }
 
 # endregion

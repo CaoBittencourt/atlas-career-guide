@@ -3,6 +3,7 @@ box::use(
   eq = mod / describe / aeq,
   assert = mod / utils / assert,
   mod / utils / gap[...],
+  mod / utils / cbindmap[...],
   dplyr[bind_rows],
   mod / utils / conform[...]
 )
@@ -33,12 +34,22 @@ uqa <- function(skill_set, skill_mtx, aeq_method = NULL) {
   return(
     skill_set |>
       conform(skill_mtx) |>
-      lapply(
+      cbindmap(
         function(Ak) {
           colSums(weights_mtx * gap(skill_mtx, Ak)) / max.qa
-        }
+        },
+        to = names(skill_mtx)
       )
   )
+  # return(
+  #   skill_set |>
+  #     conform(skill_mtx) |>
+  #     lapply(
+  #       function(Ak) {
+  #         colSums(weights_mtx * gap(skill_mtx, Ak)) / max.qa
+  #       }
+  #     )
+  # )
   # return(colSums(weights_mtx * gap(skill_mtx, skill_set)) / colSums(weights_mtx * skill_mtx))
 }
 

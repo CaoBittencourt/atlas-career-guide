@@ -6,6 +6,7 @@ modular::project.options("atlas")
 # region: imports
 box::use(
   s = mod / compare / match,
+  qa = mod / compare / qa,
   c = mod / describe / comp,
   mod / utils / conform[...],
   vec = mod / compare / match / methods / vec,
@@ -34,14 +35,21 @@ df_occupations_long |>
   ) -> df_competence
 
 # endregion
-# region: similarity
+# region: qualification
 df_occupations |>
-  s$similarity(
-    df_occupations,
-    match_method = "cobb-douglas"
+  qa$sqa(
+    df_occupations
   ) -> df_similarity
 
 # endregion
+# # region: similarity
+# df_occupations |>
+#   s$similarity(
+#     df_occupations,
+#     match_method = "cobb-douglas"
+#   ) -> df_similarity
+
+# # endregion
 # region: evolutionary candidates
 # more competent
 df_competence$
@@ -64,7 +72,9 @@ df_competence$occupation -> colnames(evolution_mtx)
 df_competence$occupation -> rownames(evolution_mtx)
 
 evolution_mtx |>
-  as_tibble(rownames = "into") |>
+  as_tibble(
+    rownames = "into"
+  ) |>
   pivot_longer(
     cols = -1,
     names_to = "from",
