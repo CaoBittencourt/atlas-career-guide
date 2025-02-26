@@ -9,6 +9,9 @@ library(tidyr)
 
 # endregion
 # region: data
+# default discount rate
+dsds <- 0.05
+
 # rents table
 read.csv(
   url(
@@ -39,6 +42,11 @@ read.csv(
       is.na(dateSolved),
       today(),
       dateSolved
+    ),
+    discount = if_else(
+      is.na(discount),
+      dsds,
+      discount
     )
   ) ->
 hazardsRecurring
@@ -203,21 +211,35 @@ hazardsRecurring |>
     rents,
     multiple = "all"
   ) |>
-  mutate(
-    compensation =
-      rentBonified *
-        discount *
-        interestCum
-  ) |>
+  group_by(hazardId) |>
+  reframe(
+    n = n(),
+    dateMin = min(date),
+    dateMax = max(date),
+  )
+mutate(
+  compensation =
+    rentBonified *
+      discount *
+      interestCum / 30
+) |>
   select(
     -rentId,
     -rentBonified
   ) |>
-  pull(
-    interestCum
+  group_by(
+    hazardId,
+    date =
+      date |>
+        format("%Y-%m-01") |>
+        as.Date()
   ) |>
-  max()
-hazards
+  reframe(
+    compensation = sum(compensation),
+  ) |>
+  arrange(date)
+View()
+hazardsRecurring
 
 hazards
 
