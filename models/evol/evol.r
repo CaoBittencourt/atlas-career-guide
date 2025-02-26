@@ -10,7 +10,8 @@ box::use(
   c = mod / describe / comp,
   mod / utils / conform[...],
   vec = mod / compare / match / methods / vec,
-  assert = mod / utils / assert
+  assert = mod / utils / assert,
+  stats[weighted.mean]
 )
 
 library(atlas.plot)
@@ -30,26 +31,35 @@ df_occupations_long |>
     competence =
       c$comp(
         item_score,
-        comp_method = "cobb-douglas"
+        macroflex_weight = F
       )
   ) -> df_competence
 
-# endregion
-# region: qualification
-df_occupations |>
-  qa$sqa(
-    df_occupations
-  ) -> df_similarity
+df_competence |>
+  arrange(
+    competence
+  )
 
 # endregion
-# # region: similarity
+# # region: qualification
 # df_occupations |>
-#   s$similarity(
+#   qa$sqa(
 #     df_occupations,
-#     match_method = "cobb-douglas"
+#     # aeq_method = "linear-logistic"
 #   ) -> df_similarity
 
 # # endregion
+# region: similarity
+df_occupations |>
+  select(
+    Anesthesiologists
+  ) |>
+  s$similarity(
+    df_occupations,
+    match_method = "cobb-douglas"
+  ) -> df_similarity
+
+# endregion
 # region: evolutionary candidates
 # more competent
 df_competence$
@@ -57,14 +67,22 @@ df_competence$
   replicate(
     n = nrow(df_competence),
   ) |>
-  t() < df_competence$
+  t() > df_competence$
+  # t() < df_competence$
   competence ->
 evolution_mtx
 
 # all(evolution_mtx |> diag() == F)
 
 # sufficiently similar
-df_similarity[-c(1:2)]^2 -> similarity_mtx
+# df_similarity[-c(1:2)]^2 -> similarity_mtx
+df_similarity[
+  df_similarity |>
+    vapply(
+      is.numeric,
+      logical(1)
+    )
+] -> similarity_mtx
 
 similarity_mtx * (similarity_mtx >= 0.5) * evolution_mtx -> evolution_mtx
 
@@ -116,6 +134,45 @@ tibble(
   from = df_competence$occupation,
   into = df_competence$occupation[evolution_mtx |> sapply(which.max)]
 )
+
+
+df_similarity |>
+  pivot_longer(
+    cols = -c(1:2),
+    names_to = "from",
+    values_to = "similarity"
+  ) |>
+  inner_join(
+    df_competence,
+    by = c("to" = "occupation")
+  ) |>
+  inner_join(
+    df_competence |> rename(ref = competence),
+    by = c("from" = "occupation")
+  ) |>
+  rename(
+    into = to
+  ) |>
+  filter(
+    from != into
+  ) |>
+  filter(
+    competence > ref
+  ) |>
+  group_by(from) |>
+  arrange(
+    -similarity,
+    .by_group = T
+  ) |>
+  slice(1) |>
+  ungroup() |>
+  select(
+    from, into,
+    similarity,
+    competence,
+    ref
+  ) |>
+  View()
 
 
 # endregion
