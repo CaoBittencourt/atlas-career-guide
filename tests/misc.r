@@ -10,7 +10,7 @@ library(tidyr)
 # endregion
 # region: data
 # default discount rate
-dsds <- 0.05
+discountDefault <- .05
 
 # rents table
 read.csv(
@@ -20,7 +20,14 @@ read.csv(
   sep = ",",
   dec = ","
 ) |>
-  as_tibble() ->
+  as_tibble() |>
+  mutate(
+    across(
+      .cols = starts_with("date"),
+      .fns = as.Date,
+      format = "%d/%m/%Y"
+    )
+  ) ->
 rents
 
 # recurring hazards table
@@ -45,7 +52,7 @@ read.csv(
     ),
     discount = if_else(
       is.na(discount),
-      dsds,
+      discountDefault,
       discount
     )
   ) ->
@@ -77,8 +84,8 @@ hazardsLumpsum
 # tibble(
 #   "hazardId" = 1:2 |> as.factor(),
 #   "type" = c("cupim", "infiltração") |> as.factor(),
-#   "apt" = c(301, 405) |> as.factor(),
-#   "desc" = c("dsds", "lalala"),
+#   "apt" = c((5 * 4)1, 405) |> as.factor(),
+#   "desc" = c("discountDefault", "lalala"),
 #   "dateNotified" = c("2025-01-01", "2024-07-01") |> as.Date(),
 #   "dateSolved" = c("2025-03-01", "2025-03-01") |> as.Date(),
 #   "discount" = c(.05, .1),
@@ -117,6 +124,9 @@ read.csv(
     interestRate = 1 + interestRate / 100,
   ) ->
 interestRate
+
+# net condominium fee (minus baseline water expenditure = 90)
+condo.fee <- 240 - 90
 
 # interestRate |>
 #   reframe(
@@ -174,9 +184,53 @@ interestRate
 
 # endregion
 # model
+# region: illegal condominium fee compensation
+rents |>
+  filter(
+    !is.na(dateFirstCondoFee)
+  ) |>
+  mutate(
+    dateDiff = as.integer(
+      today() |>
+        format(
+          "%Y-%m-01"
+        ) |>
+        as.Date() -
+        dateFirstCondoFee
+    )
+  ) |>
+  group_by(apt) |>
+  slice(
+    rep(1, dateDiff)
+  ) |>
+  mutate(
+    date = dateFirstCondoFee + days(row_number() - 1)
+  ) |>
+  ungroup() |>
+  inner_join(
+    interestRate,
+    multiple = "all"
+  ) |>
+  group_by(apt) |>
+  mutate(
+    interestCum =
+      interestRate |>
+        rev() |>
+        cumprod() |>
+        rev(),
+    compensation =
+      condo.fee *
+        interestCum / (5 * 4)
+  )
+group_by(apt) |>
+  reframe(
+    compensation = sum(compensation),
+  )
+
+
+# endregion
 # region: recurring (discount) compensation
 hazardsRecurring |>
-  group_by(hazardId) |>
   mutate(
     dateDiff =
       as.integer(
@@ -184,10 +238,9 @@ hazardsRecurring |>
       )
   ) |>
   filter(
-    dateDiff |>
-      is.na() |>
-      isFALSE()
+    !is.na(dateDiff)
   ) |>
+  group_by(hazardId, apt) |>
   slice(
     rep(1, dateDiff)
   ) |>
@@ -199,7 +252,7 @@ hazardsRecurring |>
     interestRate,
     multiple = "all"
   ) |>
-  group_by(hazardId) |>
+  group_by(hazardId, apt) |>
   mutate(
     interestCum =
       interestRate |>
@@ -211,44 +264,31 @@ hazardsRecurring |>
     rents,
     multiple = "all"
   ) |>
-  group_by(hazardId) |>
-  reframe(
-    n = n(),
-    dateMin = min(date),
-    dateMax = max(date),
-  )
-mutate(
-  compensation =
-    rentBonified *
-      discount *
-      interestCum / 30
-) |>
+  group_by(hazardId, apt) |>
+  mutate(
+    compensation =
+      rentBonified *
+        discount *
+        interestCum / (5 * 4)
+  ) |>
   select(
-    -rentId,
-    -rentBonified
-  ) |>
-  group_by(
     hazardId,
-    date =
-      date |>
-        format("%Y-%m-01") |>
-        as.Date()
+    apt,
+    compensation
   ) |>
+  group_by(hazardId, apt) |>
   reframe(
     compensation = sum(compensation),
-  ) |>
-  arrange(date)
-View()
-hazardsRecurring
+  ) ->
+compensationRecurring
 
-hazards
-
-hazards |>
+compensationRecurring |>
   group_by(apt) |>
   reframe(
-    compensationTotal =
-      sum(compensation)
+    compensationRecurring = sum(compensation)
   )
+
+sum(compensationRecurring$compensation, 2 * 250, 2 * 500, 2 * 500, 500, (240 - 90) * 9)
 
 # endregion
 # # region: compensation
