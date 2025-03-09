@@ -126,24 +126,62 @@ dsds$valid |>
 dsds$valid |>
   mutate(
     prog = paste0(from, "=>", to)
+  ) ->
+dsds.prog
+
+dsds.prog |>
+  group_by(from) |>
+  mutate(
+    nto = n()
   ) |>
-  filter(to == dsds$order$id[1]) |>
-  inner_join(
-    dsds$valid |>
-      filter(from == dsds$order$id[1]) |>
+  ungroup() |>
+  arrange(nto) |>
+  print(n = 100)
+
+dsds.prog |> filter(from == 126)
+
+dsds.prog |>
+  filter(
+    to ==
+      dsds$order |>
+        arrange(rank) |>
+        # arrange(-rank) |>
+        slice(1) |>
+        pull(id)
+  ) |>
+  full_join(
+    dsds.prog |>
+      filter(
+        from ==
+          dsds$order |>
+            arrange(rank) |>
+            # arrange(-rank) |>
+            slice(1) |>
+            pull(id)
+      ) |>
       rename(
+        prog.to = prog,
         from.to = from,
         to.to = to
       ),
-    # suffix = c("", ".to"),
     by = c("to" = "from.to"),
     relationship = "many-to-many"
   ) |>
   mutate(
     prog = paste0(prog, "=>", to.to)
   ) |>
-  select(-to.to)
-
+  select(
+    -ends_with(".to")
+  ) |>
+  right_join(
+    dsds.prog,
+    by = c(
+      "from", "to"
+    )
+  ) |>
+  filter(
+    is.na(prog.x)
+  )
 
 dsds$order |>
   arrange(rank) |>
