@@ -79,6 +79,7 @@ recursive.join <- function(valid.prog, order) {
       valid.prog |>
         filter(to == order[1]) |>
         inner_join(
+          # left_join(
           valid.prog |>
             filter(
               from == order[1]
@@ -97,6 +98,9 @@ recursive.join <- function(valid.prog, order) {
         select(
           -ends_with(".to")
         ) |>
+        # full_join(
+        #   valid.prog
+        # ) |>
         recursive.join(
           order[-1]
         )
@@ -110,8 +114,14 @@ dsds$valid |>
   mutate(
     prog = paste0(from, "=>", to)
   ) |>
-  recursive.join(dsds$order$id[1]) ->
-dsdsds
+  recursive.join(dsds$order$id[1]) |>
+  bind_rows(
+    dsds$valid |>
+      mutate(
+        prog = paste0(from, "=>", to)
+      )
+  ) |>
+  recursive.join(dsds$order$id[27])
 
 dsds$valid |>
   mutate(
