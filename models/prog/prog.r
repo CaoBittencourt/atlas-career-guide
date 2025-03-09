@@ -24,6 +24,13 @@ getOption("atlas.skills_mtx") |> readRDS() -> df_occupations
   readRDS() ->
 mtx_similarity
 
+mtx_similarity[-c(1, 2)] |> as.matrix() -> employability_mtx
+employability_mtx |> rownames() <- mtx_similarity$to
+
+# squared similarity matrix = temp employability matrix
+employability_mtx^2 -> employability_mtx
+
+
 # labor stats
 getOption("atlas.labor") |> readRDS() -> df_labor
 
@@ -32,6 +39,76 @@ stages <- 7
 
 # endregion
 # model
+# region: morph / markov model
+prog.morph <- function(employability_mtx, criterion, employment = NULL) {
+  # assert args in main function
+
+  ncol(employability_mtx) -> n
+
+  # criterion-adjusted transition matrix
+  employability_mtx * (
+    # criterion >= (
+    criterion > (
+      criterion |>
+        matrix(n, n) |>
+        t()
+    )
+  ) -> transition_mtx
+
+  transition_mtx |> diag() <- 1
+
+  return(list(
+    probs = transition_mtx,
+    valid = which(transition_mtx > 0, arr.ind = T) |> as_tibble() |> select(from = col, to = row),
+    order = tibble(
+      id = criterion |> order(decreasing = T),
+      rank = seq_along(criterion)
+    )
+  ))
+}
+
+# endregion
+# region: test
+employability_mtx |>
+  prog.morph(df_labor$wage) ->
+dsds
+
+dsds$valid |> filter(from == 28)
+dsds$valid |> filter(from == 32)
+dsds$valid |> filter(from == 220)
+
+dsds$valid |>
+  filter(
+    from == 27
+  )
+
+dsds$valid |>
+  filter(to == 28) |>
+  inner_join(
+    dsds$valid |>
+      filter(from == 28),
+    suffix = c("", ".to"),
+    by = c("to" = "from"),
+    relationship = "many-to-many"
+  ) |>
+  mutate(
+    to = paste0(to, "=>", to.to)
+  )
+
+
+dsds$order |>
+  arrange(rank) |>
+  slice(1) |>
+  inner_join(
+    dsds$valid,
+    by = c("id" = "from")
+  ) |>
+  inner_join(
+    dsds$valid,
+    relationship = "many-to-many"
+  )
+
+# endregion
 # region: markov career progression model
 mtx_similarity[-c(1, 2)] |> as.matrix() -> transition_mtx
 transition_mtx |> rownames() <- mtx_similarity$to
