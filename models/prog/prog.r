@@ -89,6 +89,148 @@ dsds.prog |>
   arrange(nto) ->
 dsds.prog
 
+# dsds.prog |> filter(nto == 2)
+
+dsds.prog |>
+  setNames(
+    dsds.prog |>
+      names() |>
+      paste0(".to")
+  ) |>
+  inner_join(
+    dsds.prog |> filter(nto == 3),
+    by = c("from.to" = "to"),
+    keep = T,
+    relationship = "many-to-many"
+  ) |>
+  mutate(
+    prog = Map(c, prog, prog.to),
+    prog.str = Map(paste0, prog, collapse = "=>") |> unlist()
+  ) |>
+  select(
+    from, to,
+    prog, prog.str, nto
+  ) |>
+  unique()
+
+dsds.prog |>
+  setNames(
+    dsds.prog |>
+      names() |>
+      paste0(".to")
+  ) |>
+  inner_join(
+    dsds.prog |> filter(nto == 1),
+    by = c("from.to" = "to"),
+    keep = T,
+    relationship = "many-to-many"
+  ) |>
+  mutate(
+    prog = Map(c, prog, prog.to),
+    prog.str = Map(paste0, prog, collapse = "=>") |> unlist()
+  ) |>
+  select(
+    from, to,
+    prog, prog.str, nto
+  ) |>
+  unique()
+
+
+dsds.prog |>
+  setNames(
+    dsds.prog |>
+      names() |>
+      paste0(".to")
+  ) |>
+  inner_join(
+    dsds.prog |> filter(nto == 6),
+    by = c("from.to" = "to"),
+    keep = T,
+    relationship = "many-to-many"
+  ) |>
+  mutate(
+    prog = Map(c, prog, prog.to),
+    prog.str = Map(paste0, prog, collapse = "=>") |> unlist()
+  ) |>
+  select(
+    from, to,
+    prog, prog.str, nto
+  ) |>
+  unique()
+
+dsds.prog |> filter(nto == 1)
+dsds.prog |>
+  setNames(
+    dsds.prog |>
+      names() |>
+      paste0(".to")
+  ) |>
+  inner_join(
+    dsds.prog |>
+      filter(nto == 3),
+    by = c("from.to" = "to"),
+    keep = T,
+    relationship = "many-to-many"
+  ) |>
+  mutate(
+    prog = Map(c, prog, prog.to),
+    prog.str = Map(paste0, prog, collapse = "=>") |> unlist()
+  ) |>
+  mutate() |>
+  select(
+    from, to,
+    prog, prog.str, nto
+  ) |>
+  print(n = 100)
+#   unique()
+
+
+dsds.prog
+
+dsds.prog |>
+  filter(nto == 1) |>
+  setNames(
+    dsds.prog |>
+      names() |>
+      paste0(".to")
+  ) |>
+  inner_join(
+    dsds.prog |>
+      filter(nto == 3) |>
+      setNames(
+        dsds.prog |>
+          names() |>
+          paste0(".to")
+      ) |>
+      inner_join(
+        dsds.prog |> filter(nto == 3),
+        by = c("from.to" = "to"),
+        keep = T,
+        relationship = "many-to-many"
+      ) |>
+      mutate(
+        prog = Map(c, prog, prog.to)
+      ) |>
+      select(
+        from, to,
+        prog, nto
+      ) |>
+      unique(),
+    by = c("from.to" = "to"),
+    keep = T,
+    relationship = "many-to-many"
+  ) |>
+  mutate(
+    prog = Map(c, prog, prog.to)
+  ) |>
+  select(
+    from, to,
+    prog, nto
+  ) |>
+  unique()
+
+
+
 recursive.join <- function(valid.prog, nto.prog, iter = 1) {
   print(nto.prog)
 
