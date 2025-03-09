@@ -73,27 +73,66 @@ employability_mtx |>
   prog.morph(df_labor$wage) ->
 dsds
 
-dsds$valid |> filter(from == 28)
-dsds$valid |> filter(from == 32)
-dsds$valid |> filter(from == 220)
+recursive.join <- function(valid.prog, order) {
+  if (length(order)) {
+    return(
+      valid.prog |>
+        filter(to == order[1]) |>
+        inner_join(
+          valid.prog |>
+            filter(
+              from == order[1]
+            ) |>
+            rename(
+              prog.to = prog,
+              from.to = from,
+              to.to = to
+            ),
+          by = c("to" = "from.to"),
+          relationship = "many-to-many"
+        ) |>
+        mutate(
+          prog = paste0(prog, "=>", to.to)
+        ) |>
+        select(
+          -ends_with(".to")
+        ) |>
+        recursive.join(
+          order[-1]
+        )
+    )
+  }
+
+  return(valid.prog)
+}
 
 dsds$valid |>
-  filter(
-    from == 27
-  )
+  mutate(
+    prog = paste0(from, "=>", to)
+  ) |>
+  recursive.join(dsds$order$id[1]) ->
+dsdsds
 
 dsds$valid |>
-  filter(to == 28) |>
+  mutate(
+    prog = paste0(from, "=>", to)
+  ) |>
+  filter(to == dsds$order$id[1]) |>
   inner_join(
     dsds$valid |>
-      filter(from == 28),
-    suffix = c("", ".to"),
-    by = c("to" = "from"),
+      filter(from == dsds$order$id[1]) |>
+      rename(
+        from.to = from,
+        to.to = to
+      ),
+    # suffix = c("", ".to"),
+    by = c("to" = "from.to"),
     relationship = "many-to-many"
   ) |>
   mutate(
-    to = paste0(to, "=>", to.to)
-  )
+    prog = paste0(prog, "=>", to.to)
+  ) |>
+  select(-to.to)
 
 
 dsds$order |>
