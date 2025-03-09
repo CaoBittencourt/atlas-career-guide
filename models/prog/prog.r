@@ -73,7 +73,79 @@ employability_mtx |>
   prog.morph(df_labor$wage) ->
 dsds
 
+dsds$valid |>
+  mutate(
+    prog.str = paste0(from, "=>", to),
+    prog = as.list(from)
+  ) ->
+dsds.prog
+
+dsds.prog |>
+  group_by(from) |>
+  mutate(
+    nto = n()
+  ) |>
+  ungroup() |>
+  arrange(nto) ->
+dsds.prog
+
+recursive.join <- function(valid.prog, nto.prog, iter = 1) {
+  print(nto.prog)
+
+  nto.prog |>
+    setNames(
+      nto.prog |>
+        names() |>
+        paste0(".to")
+    ) |>
+    inner_join(
+      valid.prog,
+      by = c("from.to" = "to"),
+      keep = T,
+      relationship = "many-to-many"
+    ) |>
+    mutate(
+      prog = Map(c, prog, prog.to)
+    ) |>
+    select(
+      from, to,
+      prog, nto
+    ) -> nto.prog
+
+  print(nto.prog)
+
+  if (iter <= 3) {
+    return(
+      valid.prog |>
+        recursive.join(
+          nto.prog,
+          iter = iter + 1
+        )
+    )
+  }
+
+  return(
+    valid = valid.prog,
+    nto = nto.prog
+  )
+}
+
+dsds.prog |>
+  recursive.join(
+    dsds.prog |>
+      filter(
+        nto == 1
+      )
+  )
+
+
 recursive.join <- function(valid.prog, order) {
+  # note: the algorithm is the same for both "morph" and "markov" methods,
+  # but "markov" uses a constant (static) employability matrix
+  # Wk1 ... Wk1
+  # ... ... ...
+  # Wkn ... Wkn
+
   if (length(order)) {
     return(
       valid.prog |>
