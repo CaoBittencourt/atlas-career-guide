@@ -40,16 +40,32 @@ stages <- 7
 # endregion
 # model
 # region: morph / markov model
-prog.morph <- function(employability_mtx, criterion, employment = NULL) {
+prog.morph <- function(employability_mtx, criterion, employment, stages) {
   # assert args in main function
 
   ncol(employability_mtx) -> n
 
+  # brackets / career progression stages
+  findInterval(
+    criterion,
+    seq(
+      criterion |> min(),
+      criterion |> max(),
+      length.out = stages + 1
+    ),
+    left.open = T
+  ) -> bracket
+
   # criterion-adjusted transition matrix
   employability_mtx * (
-    # criterion >= (
     criterion > (
       criterion |>
+        matrix(n, n) |>
+        t()
+    )
+  ) * (
+    bracket > (
+      bracket |>
         matrix(n, n) |>
         t()
     )
@@ -57,21 +73,391 @@ prog.morph <- function(employability_mtx, criterion, employment = NULL) {
 
   transition_mtx |> diag() <- 1
 
+  which(
+    transition_mtx > 0,
+    arr.ind = T
+  ) |>
+    as_tibble() |>
+    select(
+      from = col,
+      to = row
+    ) |>
+    mutate(
+      prog = as.list(from)
+    ) |>
+    group_by(from) |>
+    mutate(n = n()) |>
+    ungroup() |>
+    inner_join(
+      tibble(
+        from = criterion |> order(decreasing = T),
+        rank = seq_along(criterion)
+      ),
+    ) |>
+    arrange(rank) ->
+  valid.prog
+
+  # which(
+  #   transition_mtx > 0,
+  #   arr.ind = T
+  # ) |>
+  #   as_tibble() |>
+  #   select(
+  #     from = col,
+  #     to = row
+  #   ) |>
+  #   mutate(
+  #     prog = as.list(to)
+  #   ) ->
+  # valid.prog
+
+  # valid.prog |>
+  #   group_by(from) |>
+  #   tally() |>
+  #   inner_join(
+  #     tibble(
+  #       from = criterion |> order(decreasing = T),
+  #       rank = seq_along(criterion)
+  #     ),
+  #   ) |>
+  #   arrange(rank) -> career.rank
+
   return(list(
     probs = transition_mtx,
-    valid = which(transition_mtx > 0, arr.ind = T) |> as_tibble() |> select(from = col, to = row),
-    order = tibble(
-      id = criterion |> order(decreasing = T),
-      rank = seq_along(criterion)
+    valid = valid.prog,
+    # order = career.rank,
+    stage = tibble(
+      id = seq_along(bracket),
+      stage = bracket
     )
   ))
 }
 
 # endregion
+# region: sketch
+employability_mtx |>
+  prog.morph(
+    df_labor$wage,
+    employment = NULL,
+    stages = 5
+  ) -> dsds
+dsds$valid -> valid.prog
+
+i <- 4
+for (i in 1:22) {
+  valid.prog |>
+    filter(rank <= i) |>
+    rename_with(
+      ~ paste0(.x, ".to")
+    ) ->
+  valid.prog.to
+
+  valid.prog |>
+    inner_join(
+      valid.prog.to
+      # |>
+      # filter(
+      #   rank.to == i
+      # ),
+      ,
+      by = c("to" = "from.to"),
+      relationship = "many-to-many"
+    ) |>
+    mutate(
+      prog = Map(c, prog, prog.to)
+      # ,
+      # prog.str = Map(paste0, prog, collapse = "=>") |> unlist()
+    ) |>
+    select(
+      rank, n,
+      from, to,
+      prog
+    ) |>
+    bind_rows(
+      valid.prog |>
+        filter(to != (
+          valid.prog |>
+            filter(rank == i) |>
+            pull(from)
+        ))
+    ) -> valid.prog
+}
+
+
+# endregion
+# region: recursive join
+recursive.join <- function(valid.prog, valid.prog.to, iter = 1) {
+  print(valid.prog)
+
+  valid.prog |>
+    inner_join(
+      valid.prog.to |>
+        filter(
+          rank.to == iter
+        ),
+      by = c("to" = "from.to")
+    ) |>
+    mutate(
+      prog = Map(c, prog, prog.to)
+      # ,
+      # prog.str = Map(paste0, prog, collapse = "=>") |> unlist()
+    ) |>
+    select(
+      rank, n,
+      from, to,
+      prog
+    ) |>
+    bind_rows(
+      valid.prog |>
+        filter(to != (
+          valid.prog |>
+            filter(rank == iter) |>
+            pull(from)
+        ))
+    ) ->
+  valid.prog.to
+
+  print(valid.prog)
+
+  if (iter < 873) {
+    return(
+      valid.prog |>
+        recursive.join(
+          valid.prog.to,
+          iter = iter + 1
+        )
+    )
+  }
+
+  return(valid.prog)
+}
+
+# 250 * 8 * 40 == 80000 hours
+# i.e. if one stays only 1 year at each job, they can have only up to 40 jobs in their working life
+# this, however, is too high of a number of career progressions
+# a more reasonable maximum parameter would be no more than 20 unique jobs with 2 years each (for job hoppers)
+# for individuals interested in building an actual career, though, ~8 jobs with 5 years on average seems more realistic
+# recursive.join <- function(valid.prog, nto.prog, iter = 1) {
+#   print(nto.prog)
+
+#   valid.prog |>
+#     setNames(
+#       valid.prog |>
+#         names() |>
+#         paste0(".to")
+#     ) |>
+#     inner_join(
+#       nto.prog,
+#       by = c("from.to" = "to"),
+#       keep = T,
+#       relationship = "many-to-many"
+#     ) |>
+#     mutate(
+#       prog = Map(c, prog, prog.to),
+#       prog.str = Map(paste0, prog, collapse = "=>") |> unlist()
+#     ) |>
+#     select(
+#       from, to,
+#       prog, prog.str, nto
+#     ) |>
+#     unique() ->
+#   nto.prog
+
+#   # nto.prog |>
+#   #   setNames(
+#   #     nto.prog |>
+#   #       names() |>
+#   #       paste0(".to")
+#   #   ) |>
+#   #   inner_join(
+#   #     valid.prog,
+#   #     by = c("from.to" = "to"),
+#   #     keep = T,
+#   #     relationship = "many-to-many"
+#   #   ) |>
+#   #   mutate(
+#   #     prog = Map(c, prog, prog.to)
+#   #   ) |>
+#   #   select(
+#   #     from, to,
+#   #     prog, nto
+#   #   ) -> nto.prog
+
+#   print(nto.prog)
+
+#   if (iter <= 3) {
+#     return(
+#       valid.prog |>
+#         recursive.join(
+#           nto.prog,
+#           iter = iter + 1
+#         )
+#     )
+#   }
+
+#   return(list(
+#     valid = valid.prog,
+#     nto = nto.prog
+#   ))
+# }
+
+# recursive.join <- function(valid.prog, valid.prog.to, iter = 1) {
+#   print(valid.prog)
+
+#   valid.prog |>
+#     inner_join(
+#       valid.prog.to |>
+#         filter(
+#           rank.to == iter
+#         ),
+#       by = c("to" = "from.to")
+#     ) |>
+#     mutate(
+#       prog = Map(c, prog, prog.to)
+#       # ,
+#       # prog.str = Map(paste0, prog, collapse = "=>") |> unlist()
+#     ) |>
+#     select(
+#       rank, n,
+#       from, to,
+#       prog
+#     ) |>
+#     bind_rows(
+#       valid.prog |>
+#         filter(to != (
+#           valid.prog |>
+#             filter(rank == iter) |>
+#             pull(from)
+#         ))
+#     ) ->
+#   valid.prog
+
+#   print(valid.prog)
+
+#   if (iter < 873) {
+#     return(
+#       valid.prog |>
+#         recursive.join(
+#           valid.prog.to,
+#           iter = iter + 1
+#         )
+#     )
+#   }
+
+#   return(valid.prog)
+# }
+
+# endregion
 # region: test
 employability_mtx |>
-  prog.morph(df_labor$wage) ->
+  prog.morph(
+    df_labor$wage,
+    employment = NULL,
+    stages = 5
+  ) ->
 dsds
+
+dsds$valid |>
+  recursive.join(
+    dsds$valid |>
+      rename_with(
+        ~ paste0(.x, ".to")
+      )
+  ) ->
+dsdsdsds
+
+
+dsds$valid
+dsds$order
+
+dsds$valid |>
+  filter(!(
+    from %in% (
+      dsds$valid |>
+        filter(
+          n == 1
+        ) |>
+        pull(from)
+    )
+  )) |>
+  inner_join(
+    dsds$valid |>
+      filter(
+        n == 1
+      ) |>
+      rename_with(
+        .fn = ~ paste0(.x, ".to"),
+      ),
+    by = c("to" = "from.to")
+  ) |>
+  mutate(
+    prog = Map(c, prog, prog.to),
+    prog.str = Map(paste0, prog, collapse = "=>") |> unlist()
+  ) |>
+  select(
+    from, to,
+    prog, prog.str, n
+  )
+
+dsds$valid |>
+  rename_with(
+    .fn = ~ paste0(.x, ".to"),
+  ) -> valid.prog.to
+
+
+dsds$valid |>
+  filter(
+    to != (dsds$valid |> filter(rank == 1) |> pull(from))
+  ) |>
+  select(
+    from, to,
+    prog, n
+  ) |>
+  bind_rows(
+    dsds$valid |>
+      # filter(
+      #   rank != 1
+      # ) |>
+      inner_join(
+        valid.prog.to |>
+          filter(
+            rank.to == 1
+          ),
+        by = c("to" = "from.to")
+      ) |>
+      mutate(
+        prog = Map(c, prog, prog.to),
+        prog.str = Map(paste0, prog, collapse = "=>") |> unlist()
+      ) |>
+      select(
+        from, to,
+        prog, n
+      )
+  )
+
+
+
+# endregion
+# region: sketch
+employability_mtx |>
+  prog.morph(
+    df_labor$wage,
+    employment = NULL,
+    stages = 5
+  ) ->
+dsds
+
+dsds$valid
+dsds$valid
+
+(dsds$probs > 0) |>
+  colSums() |>
+  sort()
+dsds$valid
+dsds$order |>
+  inner_join(dsds$stage) |>
+  group_by(stage) |>
+  group_split()
 
 dsds$valid |>
   mutate(
@@ -81,16 +467,19 @@ dsds$valid |>
 dsds.prog
 
 dsds.prog |>
+  inner_join(
+    dsds$order,
+    by = c("from" = "id")
+  ) |>
   group_by(from) |>
   mutate(
     nto = n()
   ) |>
   ungroup() |>
-  arrange(nto) ->
+  arrange(rank) ->
 dsds.prog
 
 # dsds.prog |> filter(nto == 2)
-
 dsds.prog |>
   setNames(
     dsds.prog |>
@@ -135,6 +524,27 @@ dsds.prog |>
   ) |>
   unique()
 
+dsds.prog |>
+  setNames(
+    dsds.prog |>
+      names() |>
+      paste0(".to")
+  ) |>
+  inner_join(
+    dsds.prog |> filter(nto == 6),
+    by = c("from.to" = "to"),
+    keep = T,
+    relationship = "many-to-many"
+  ) |>
+  mutate(
+    prog = Map(c, prog, prog.to),
+    prog.str = Map(paste0, prog, collapse = "=>") |> unlist()
+  ) |>
+  select(
+    from, to,
+    prog, prog.str, nto
+  ) |>
+  unique()
 
 dsds.prog |>
   setNames(
@@ -157,6 +567,62 @@ dsds.prog |>
     prog, prog.str, nto
   ) |>
   unique()
+
+dsds.prog |>
+  setNames(
+    dsds.prog |>
+      names() |>
+      paste0(".to")
+  ) |>
+  inner_join(
+    dsds.prog |> filter(rank == 1),
+    by = c("from.to" = "to"),
+    keep = T,
+    relationship = "many-to-many"
+  ) |>
+  mutate(
+    prog = Map(c, prog, prog.to),
+    prog.str = Map(paste0, prog, collapse = "=>") |> unlist()
+  ) |>
+  select(
+    from, to,
+    prog, prog.str, nto
+  ) |>
+  unique()
+
+dsds.prog |>
+  inner_join(
+    dsds$order,
+    by = c("from" = "id")
+  ) |>
+  select(
+    from, nto, rank
+  ) |>
+  unique() |>
+  arrange(rank) |>
+  mutate(
+    dsdsdsdsdds = nto <= rank
+  ) |>
+  pull(dsdsdsdsdds) |>
+  all()
+print(n = 1000)
+
+dsds.prog |>
+  inner_join(
+    dsds$order,
+    # by = c("to" = "id"),
+    by = c("from" = "id"),
+    relationship = "many-to-many"
+  ) |>
+  arrange(rank) |>
+  select(
+    from, nto, rank
+  ) |>
+  unique() |>
+  mutate(
+    nto.diff = nto - lag(nto, default = first(nto))
+  ) |>
+  print(n = 1000)
 
 dsds.prog |> filter(nto == 1)
 dsds.prog |>
@@ -230,56 +696,72 @@ dsds.prog |>
   unique()
 
 
-
-recursive.join <- function(valid.prog, nto.prog, iter = 1) {
-  print(nto.prog)
-
-  nto.prog |>
-    setNames(
-      nto.prog |>
-        names() |>
-        paste0(".to")
-    ) |>
-    inner_join(
-      valid.prog,
-      by = c("from.to" = "to"),
-      keep = T,
-      relationship = "many-to-many"
-    ) |>
-    mutate(
-      prog = Map(c, prog, prog.to)
-    ) |>
-    select(
-      from, to,
-      prog, nto
-    ) -> nto.prog
-
-  print(nto.prog)
-
-  if (iter <= 3) {
-    return(
-      valid.prog |>
-        recursive.join(
-          nto.prog,
-          iter = iter + 1
+dsds$order$rank |>
+  lapply(
+    function(rk) {
+      print(rk)
+      dsds.prog |>
+        setNames(
+          dsds.prog |>
+            names() |>
+            paste0(".to")
+        ) |>
+        inner_join(
+          dsds.prog |> filter(rank == rk),
+          by = c("from.to" = "to"),
+          keep = T,
+          relationship = "many-to-many"
+        ) |>
+        mutate(
+          prog = Map(c, prog, prog.to),
+          prog.str = Map(paste0, prog, collapse = "=>") |> unlist()
+        ) |>
+        select(
+          from, to,
+          prog, prog.str, nto
         )
-    )
-  }
+    }
+  ) ->
+lalala
 
-  return(
-    valid = valid.prog,
-    nto = nto.prog
-  )
-}
+lalala[1]
+lalala[2]
+lalala[3]
+lalala[4]
+lalala[5]
+lalala[6]
+lalala[7]
+lalala[8]
+lalala[9]
+lalala[10]
+lalala[11]
+lalala[12]
+lalala[13]
+lalala[14]
+lalala[15]
+lalala[16]
+lalala[17]
+lalala[18]
+lalala[19]
+lalala |> bind_rows() -> lalalalala
+
+lalalalala |> unique()
 
 dsds.prog |>
   recursive.join(
     dsds.prog |>
       filter(
-        nto == 1
+        rank == 19
       )
-  )
+  ) -> lalala
 
+lalala$nto
+
+
+
+dsds.prog |>
+  filter(from == 27) |>
+  pull(to) %in% (lalala$nto |> unique() |> pull(to))
 
 recursive.join <- function(valid.prog, order) {
   # note: the algorithm is the same for both "morph" and "markov" methods,
@@ -674,73 +1156,73 @@ group_by(from) |>
 
 
 # # endregion
-# # region: dsds
-# mtx_similarity |>
-#   select(
-#     to,
-#     employability = `Accountants and Auditors`
-#   ) |>
-#   mutate(
-#     employability = employability^4,
-#     employability = employability * (employability > 0.5)
-#   ) |>
-#   inner_join(
-#     df_labor |>
-#       select(
-#         to = occupation,
-#         employment.to = employment_variants,
-#         wage.to = wage,
-#         wage.bracket.to = wage.bracket
-#       )
-#   ) |>
-#   mutate(
-#     wage.from =
-#       df_labor |>
-#         filter(
-#           occupation == "Accountants and Auditors"
-#         ) |>
-#         pull(wage),
-#     wage.bracket.from =
-#       df_labor |>
-#         filter(
-#           occupation == "Accountants and Auditors"
-#         ) |>
-#         pull(wage) |>
-#         findInterval(
-#           seq(
-#             df_labor$wage |> min(),
-#             df_labor$wage |> max(),
-#             length.out = 11
-#           )
-#         )
-#   ) |>
-#   filter(
-#     wage.from <= wage.to
-#   ) |>
-#   filter(
-#     employability > 0
-#   ) |>
-#   group_by(wage.bracket.to) |>
-#   mutate(
-#     employment.bracket = sum(employment.to),
-#     prob = employability * employment.to / sum(employment.to)
-#   ) |>
-#   select(
-#     stage, from, to,
-#     prob,
-#     wage = wage.to
-#   )
-# arrange(
-#   -wage.to * prob,
-#   .by_group = T
-# ) |>
-#   slice(1) |>
-#   ungroup() |>
-#   arrange(
-#     wage.to
-#   )
+# region: dsds
+mtx_similarity |>
+  select(
+    to,
+    employability = `Accountants and Auditors`
+  ) |>
+  mutate(
+    employability = employability^4,
+    employability = employability * (employability > 0.5)
+  ) |>
+  inner_join(
+    df_labor |>
+      select(
+        to = occupation,
+        employment.to = employment_variants,
+        wage.to = wage,
+        wage.bracket.to = wage.bracket
+      )
+  ) |>
+  mutate(
+    wage.from =
+      df_labor |>
+        filter(
+          occupation == "Accountants and Auditors"
+        ) |>
+        pull(wage),
+    wage.bracket.from =
+      df_labor |>
+        filter(
+          occupation == "Accountants and Auditors"
+        ) |>
+        pull(wage) |>
+        findInterval(
+          seq(
+            df_labor$wage |> min(),
+            df_labor$wage |> max(),
+            length.out = 11
+          )
+        )
+  ) |>
+  filter(
+    wage.from <= wage.to
+  ) |>
+  filter(
+    employability > 0
+  ) |>
+  group_by(wage.bracket.to) |>
+  mutate(
+    employment.bracket = sum(employment.to),
+    prob = employability * employment.to / sum(employment.to)
+  ) |>
+  select(
+    stage, from, to,
+    prob,
+    wage = wage.to
+  )
+arrange(
+  -wage.to * prob,
+  .by_group = T
+) |>
+  slice(1) |>
+  ungroup() |>
+  arrange(
+    wage.to
+  )
 
-# # endregion
+# endregion
 # region: career progression candidates (yk <= yq)
 df_prog |>
   filter(

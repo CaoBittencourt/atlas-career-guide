@@ -28,6 +28,10 @@ fixes
 
 features
 -------------------------------------
+[ ] life expectancy of each career
+    - career depreciation coefficent
+[ ] hierarchy coefficient
+    - max wage within the same field
 [ ] vectorize aeq?
 [ ] check out ggraph package
 [ ] generality vs competence article
