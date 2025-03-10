@@ -39,6 +39,62 @@ stages <- 7
 
 # endregion
 # model
+# region: dsds
+# 1-1
+# 2-1-(1-1)
+# 3-(2-1-(1-1))
+# 4-(3-(2-1-(1-1)))
+
+1 1
+
+2 2
+
+3 3
+
+4 1
+4 2
+4 3
+
+5 1
+5 2
+5 3
+5 4 1
+5 4 2
+5 4 3
+
+6 1
+6 2
+6 3
+6 4 1
+6 4 2
+6 4 3
+6 5 1
+6 5 2
+6 5 3
+6 5 4 1
+6 5 4 2
+6 5 4 3
+
+7 1
+7 2
+7 3
+7 4 1
+7 4 2
+7 4 3
+7 5 1
+7 5 2
+7 5 3
+7 6 1
+7 6 2
+7 6 3
+7 5 4 1
+7 5 4 2
+7 5 4 3
+7 6 5 4 1
+7 6 5 4 2
+7 6 5 4 3
+
+# endregion
 # region: morph / markov model
 prog.morph <- function(employability_mtx, criterion, employment, stages) {
   # assert args in main function
