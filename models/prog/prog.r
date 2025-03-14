@@ -177,6 +177,7 @@ recursive.join <- function(probs.which.max, probs.which.max.to, iter = 1) {
 
 # endregion
 # region: test
+start <- Sys.time()
 employability_mtx |>
   prog.morph(
     criterion = df_labor$wage,
@@ -227,6 +228,9 @@ probs.which.max |>
         ".to"
       )
   ) -> dsdsds
+
+finish <- Sys.time()
+finish - start
 
 # endregion
 # region: results
