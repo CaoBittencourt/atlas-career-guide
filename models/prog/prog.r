@@ -14,6 +14,40 @@ library(atlas.plot)
 getOption("atlas.skills_mtx") |> readRDS() -> df_occupations
 
 # squared similarity matrix = temp employability matrix
+# box::use(
+#   s = mod / compare / match,
+#   mod / utils / conform[...],
+# )
+#
+# getOption("atlas.cao") |>
+#   readRDS() |>
+#   s$similarity(
+#     getOption("atlas.cao") |>
+#       readRDS() |>
+#       inner_join(
+#         getOption("atlas.skills") |>
+#           readRDS()
+#       ) |>
+#       pivot_wider(
+#         id_cols = item,
+#         values_from = item_score,
+#         names_from = occupation
+#       ),
+#     match_method = "gmme"
+#   ) ->
+# mtx_similarity
+
+# ((mtx_similarity[-c(1, 2)]) |> conform(
+#   ("atlas.root" |>
+#     getOption() |>
+#     file.path(
+#       "models",
+#       "evol",
+#       "similarity.rds"
+#     ) |>
+#     readRDS())[-c(1, 2)]
+# ))[[1]] |> as.matrix() -> employability_mtx
+
 "atlas.root" |>
   getOption() |>
   file.path(
@@ -28,7 +62,7 @@ mtx_similarity[-c(1, 2)] |> as.matrix() -> employability_mtx
 employability_mtx |> rownames() <- mtx_similarity$to
 
 # squared similarity matrix = temp employability matrix
-employability_mtx^2 -> employability_mtx
+employability_mtx^3 -> employability_mtx
 employability_mtx * (employability_mtx > 0.5) -> employability_mtx
 
 # labor stats
@@ -177,7 +211,7 @@ recursive.join <- function(probs.which.max, probs.which.max.to, iter = 1) {
 
 # endregion
 # region: test
-start <- Sys.time()
+# start <- Sys.time()
 employability_mtx |>
   prog.morph(
     criterion = df_labor$wage,
@@ -229,8 +263,8 @@ probs.which.max |>
       )
   ) -> dsdsds
 
-finish <- Sys.time()
-finish - start
+# finish <- Sys.time()
+# finish - start
 
 # endregion
 # region: results
