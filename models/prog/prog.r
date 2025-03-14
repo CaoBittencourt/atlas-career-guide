@@ -29,7 +29,7 @@ employability_mtx |> rownames() <- mtx_similarity$to
 
 # squared similarity matrix = temp employability matrix
 employability_mtx^2 -> employability_mtx
-
+employability_mtx * (employability_mtx > 0.5) -> employability_mtx
 
 # labor stats
 getOption("atlas.labor") |> readRDS() -> df_labor
@@ -39,22 +39,26 @@ stages <- 7
 
 # endregion
 # model
-# region: morph / markov model
-prog.morph <- function(employability_mtx, criterion, employment, stages) {
+# region: unidirectional utility-maximizing morph / markov model
+prog.morph <- function(employability_mtx, criterion, employment = NULL, stages = NULL) {
   # assert args in main function
 
   ncol(employability_mtx) -> n
 
   # brackets / career progression stages
-  criterion |>
-    findInterval(
-      seq(
-        criterion |> min(),
-        criterion |> max(),
-        length.out = stages + 1
-      ),
-      left.open = T
-    ) -> bracket
+  bracket <- NULL
+
+  if (length(stages)) {
+    criterion |>
+      findInterval(
+        seq(
+          criterion |> min(),
+          criterion |> max(),
+          length.out = stages + 1
+        ),
+        left.open = T
+      ) -> bracket
+  }
 
   # criterion-adjusted transition matrix
   employability_mtx * (
@@ -65,21 +69,22 @@ prog.morph <- function(employability_mtx, criterion, employment, stages) {
     )
   ) -> transition_mtx
 
-  # employability_mtx * (
-  #   criterion > (
-  #     criterion |>
-  #       matrix(n, n) |>
-  #       t()
-  #   )
-  # ) * (
-  #   bracket > (
-  #     bracket |>
-  #       matrix(n, n) |>
-  #       t()
-  #   )
-  # ) -> transition_mtx
+  if (length(bracket)) {
+    transition_mtx * (
+      bracket > (
+        bracket |>
+          matrix(n, n) |>
+          t()
+      )
+    ) -> transition_mtx
+  }
 
   transition_mtx |> diag() <- 1
+
+  # weigh by employment levels (prob = available jobs for which one is hireable)
+  if (length(employment)) {
+    transition_mtx * employment / sum(employment) -> transition_mtx
+  }
 
   which(
     transition_mtx > 0,
@@ -170,6 +175,8 @@ recursive.join <- function(probs.which.max, probs.which.max.to, iter = 1) {
   return(probs.which.max)
 }
 
+# endregion
+# region: test
 employability_mtx |>
   prog.morph(
     criterion = df_labor$wage,
@@ -221,8 +228,13 @@ probs.which.max |>
       )
   ) -> dsdsds
 
+# endregion
+# region: results
 dsdsds |>
   arrange(from) |>
+  slice(
+    df_labor$wage |> which.min()
+  ) |>
   pull(prog) |>
   unlist() |>
   unique() |>
@@ -233,7 +245,63 @@ dsdsds |>
       mutate(id = row_number())
   )
 
-dsdsds |> mutate(prog.str = Map(paste0, prog, collapse = "=>") |> unlist())
+dsdsds |>
+  arrange(from) |>
+  slice(1) |>
+  pull(prog) |>
+  unlist() |>
+  unique() |>
+  as_tibble() |>
+  rename(id = 1) |>
+  inner_join(
+    df_labor |>
+      mutate(id = row_number())
+  )
+
+dsdsds |>
+  arrange(from) |>
+  slice(
+    which(df_labor$occupation == "Economists")
+  ) |>
+  pull(prog) |>
+  unlist() |>
+  unique() |>
+  as_tibble() |>
+  rename(id = 1) |>
+  inner_join(
+    df_labor |>
+      mutate(id = row_number())
+  )
+
+dsdsds |>
+  arrange(from) |>
+  slice(
+    which(df_labor$occupation == "Statisticians")
+  ) |>
+  pull(prog) |>
+  unlist() |>
+  unique() |>
+  as_tibble() |>
+  rename(id = 1) |>
+  inner_join(
+    df_labor |>
+      mutate(id = row_number())
+  )
+
+dsdsds |>
+  arrange(from) |>
+  slice(
+    df_labor$wage |> which.max()
+  ) |>
+  pull(prog) |>
+  unlist() |>
+  unique() |>
+  as_tibble() |>
+  rename(id = 1) |>
+  inner_join(
+    df_labor |>
+      mutate(id = row_number())
+  )
 
 # endregion
 # region: dsds
