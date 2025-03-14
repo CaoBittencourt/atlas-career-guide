@@ -39,6 +39,203 @@ stages <- 7
 
 # endregion
 # model
+# region: morph / markov model
+prog.morph <- function(employability_mtx, criterion, employment, stages) {
+  # assert args in main function
+
+  ncol(employability_mtx) -> n
+
+  # brackets / career progression stages
+  criterion |>
+    findInterval(
+      seq(
+        criterion |> min(),
+        criterion |> max(),
+        length.out = stages + 1
+      ),
+      left.open = T
+    ) -> bracket
+
+  # criterion-adjusted transition matrix
+  employability_mtx * (
+    criterion > (
+      criterion |>
+        matrix(n, n) |>
+        t()
+    )
+  ) -> transition_mtx
+
+  # employability_mtx * (
+  #   criterion > (
+  #     criterion |>
+  #       matrix(n, n) |>
+  #       t()
+  #   )
+  # ) * (
+  #   bracket > (
+  #     bracket |>
+  #       matrix(n, n) |>
+  #       t()
+  #   )
+  # ) -> transition_mtx
+
+  transition_mtx |> diag() <- 1
+
+  which(
+    transition_mtx > 0,
+    arr.ind = T
+  ) |>
+    as_tibble() |>
+    select(
+      from = col,
+      to = row
+    ) |>
+    mutate(
+      prog = as.list(from)
+    ) |>
+    group_by(from) |>
+    mutate(n = n()) |>
+    ungroup() |>
+    inner_join(
+      tibble(
+        from = criterion |> order(decreasing = T),
+        rank = seq_along(criterion)
+      ),
+    ) |>
+    arrange(rank) ->
+  valid.prog
+
+  # which(
+  #   transition_mtx > 0,
+  #   arr.ind = T
+  # ) |>
+  #   as_tibble() |>
+  #   select(
+  #     from = col,
+  #     to = row
+  #   ) |>
+  #   mutate(
+  #     prog = as.list(to)
+  #   ) ->
+  # valid.prog
+
+  # valid.prog |>
+  #   group_by(from) |>
+  #   tally() |>
+  #   inner_join(
+  #     tibble(
+  #       from = criterion |> order(decreasing = T),
+  #       rank = seq_along(criterion)
+  #     ),
+  #   ) |>
+  #   arrange(rank) -> career.rank
+
+  return(list(
+    probs = transition_mtx,
+    valid = valid.prog,
+    # order = career.rank,
+    stage = tibble(
+      id = seq_along(bracket),
+      stage = bracket
+    )
+  ))
+}
+
+recursive.join <- function(probs.which.max, probs.which.max.to, iter = 1) {
+  print(iter)
+  probs.which.max |>
+    inner_join(
+      probs.which.max.to,
+      by = c("prog.last" = "from.to"),
+      relationship = "many-to-many"
+    ) |>
+    mutate(
+      prog = Map(c, prog, prog.to),
+      prog.last = to.to
+    ) |>
+    select(
+      from, to, prog, prog.last
+    ) -> probs.which.max
+
+  if (iter < 873) {
+    return(
+      probs.which.max |>
+        recursive.join(
+          probs.which.max.to,
+          iter = iter + 1
+        )
+    )
+  }
+
+  return(probs.which.max)
+}
+
+employability_mtx |>
+  prog.morph(
+    criterion = df_labor$wage,
+    employment = df_labor$employment_variants,
+    stages = 7
+  ) -> dsds
+
+dsds$probs |> diag() <- 0
+dsds$probs[dsds$probs == 0] <- NA
+dsds$probs |>
+  apply(2, function(x) {
+    x == max(x, na.rm = T)
+  }) |>
+  which(arr.ind = T) |>
+  as_tibble() |>
+  select(
+    from = col,
+    to = row
+  ) -> probs.which.max
+
+probs.which.max |>
+  bind_rows(
+    which(!(
+      1:nrow(dsds$probs) %in%
+        probs.which.max$from
+    )) |>
+      as_tibble() |>
+      select(
+        from = 1,
+        to = 1
+      )
+  ) -> probs.which.max
+
+probs.which.max |>
+  mutate(
+    prog = as.list(from),
+    prog.last = from
+  ) |>
+  recursive.join(
+    probs.which.max |>
+      mutate(
+        prog = as.list(from),
+        prog.last = from
+      ) |>
+      rename_with(
+        .fn = paste0,
+        .cols = everything(),
+        ".to"
+      )
+  ) -> dsdsds
+
+dsdsds |>
+  arrange(from) |>
+  pull(prog) |>
+  unlist() |>
+  unique() |>
+  as_tibble() |>
+  rename(id = 1) |>
+  inner_join(
+    df_labor |>
+      mutate(id = row_number())
+  )
+
+dsdsds |> mutate(prog.str = Map(paste0, prog, collapse = "=>") |> unlist())
+
+# endregion
 # region: dsds
 # 1-1
 # 2-1-(1-1)
@@ -101,39 +298,30 @@ c(7, 6, 5, 4, 3)
 # 3-(2-1-(1-1))
 # 4-(3-(2-1-(1-1)))
 
-c(1, 1)
-
-c(2, 2)
-
-c(3, 3)
-
+c(1)
+c(2)
+c(3)
 c(4, 1)
 c(4, 2)
 c(4, 3)
-
 c(5, 1)
 c(5, 2)
 c(5, 3)
-c(5, 4, 1)
-c(5, 4, 2)
-c(5, 4, 3)
-
 c(6, 1)
 c(6, 2)
 c(6, 3)
+c(7, 1)
+c(7, 2)
+c(7, 3)
+c(5, 4, 1)
+c(5, 4, 2)
+c(5, 4, 3)
 c(6, 4, 1)
 c(6, 4, 2)
 c(6, 4, 3)
 c(6, 5, 1)
 c(6, 5, 2)
 c(6, 5, 3)
-c(6, 5, 4, 1)
-c(6, 5, 4, 2)
-c(6, 5, 4, 3)
-
-c(7, 1)
-c(7, 2)
-c(7, 3)
 c(7, 4, 1)
 c(7, 4, 2)
 c(7, 4, 3)
@@ -143,6 +331,9 @@ c(7, 5, 3)
 c(7, 6, 1)
 c(7, 6, 2)
 c(7, 6, 3)
+c(6, 5, 4, 1)
+c(6, 5, 4, 2)
+c(6, 5, 4, 3)
 c(7, 5, 4, 1)
 c(7, 5, 4, 2)
 c(7, 5, 4, 3)
