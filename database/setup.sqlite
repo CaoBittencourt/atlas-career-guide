@@ -6,26 +6,26 @@
 PRAGMA foreign_keys = ON;
 
 -- create tables
-.read tables/occupations.sqlite
-.read tables/attributes.sqlite
-.read tables/education.sqlite
+.read tables/occupations.sql
+.read tables/attributes.sql
+.read tables/education.sql
 
-.read tables/competencies.sqlite
-.read tables/activities.sqlite
-.read tables/contexts.sqlite
-.read tables/styles.sqlite
+.read tables/competencies.sql
+.read tables/activities.sql
+.read tables/contexts.sql
+.read tables/styles.sql
 
-.read tables/required_education.sqlite
-.read tables/labor.sqlite
+.read tables/required_education.sql
+.read tables/labor.sql
 
 -- create views
-.read views/soc_variants.sqlite
-.read views/occupations_education.sqlite
-.read views/occupations_labor.sqlite
-.read views/occupations_skills.sqlite
+.read views/soc_variants.sql
+.read views/occupations_education.sql
+.read views/occupations_labor.sql
+.read views/occupations_skills.sql
 
 -- -- create indexes
--- .read tables/indexes.sqlite
+-- .read tables/indexes.sql
 
 -- populate database
 .mode csv
@@ -43,5 +43,5 @@ PRAGMA foreign_keys = ON;
 .import --skip 1 data/required_education.csv required_education
 .import --skip 1 data/labor.csv labor
 
--- exit sqlite
+-- exit sql
 .exit

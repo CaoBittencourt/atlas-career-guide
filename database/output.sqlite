@@ -4,12 +4,12 @@
 
 -- output educational requirements csv
 .output output/education.csv
-.read queries/occupations_education.sqlite
+.read queries/occupations_education.sql
 
 -- output labor statistics csv
 .output output/labor.csv
-.read queries/occupations_labor.sqlite
+.read queries/occupations_labor.sql
 
 -- output skill set matrix csv
 .output output/skill_sets.csv
-.read queries/occupations_skills.sqlite
+.read queries/occupations_skills.sql

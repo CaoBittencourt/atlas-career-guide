@@ -4,6 +4,7 @@ ATLAS CAREER GUIDE TASKS
 
 current task
 -------------------------------------
+[ ] database
 [ ] switch to juliaLang?
 [\] modularize / vectorize codebase
 [\] refine competence coefficient
