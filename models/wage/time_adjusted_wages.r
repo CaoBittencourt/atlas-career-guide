@@ -33,8 +33,8 @@ getOption("atlas.labor") |> readRDS() -> df_labor
 # region: parameters
 # interest rate (monthly continuously compounded)
 # r <- .1 / 12
-# r <- .07 / 12
-r <- .05 / 12
+r <- .07 / 12
+# r <- .05 / 12
 
 # retirement age
 t <- 65
