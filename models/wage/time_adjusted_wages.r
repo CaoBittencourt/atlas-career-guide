@@ -33,7 +33,8 @@ getOption("atlas.labor") |> readRDS() -> df_labor
 # region: parameters
 # interest rate (monthly continuously compounded)
 # r <- .1 / 12
-r <- .07 / 12
+# r <- .07 / 12
+r <- .05 / 12
 
 # retirement age
 t <- 65
@@ -100,9 +101,13 @@ df_lifetime |>
     wage,
     lifetime.earnings
   ) |>
-  arrange(
-    -lifetime.earnings
-  ) |>
-  print(n = 20)
+  mutate(
+    wage.adjusted =
+      lifetime.earnings *
+        exp(
+          -12 * (retirement - min(education_years)) * r
+        ) / 12
+  ) ->
+df_lifetime
 
 # endregion
