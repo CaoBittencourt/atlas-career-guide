@@ -73,7 +73,7 @@ stages <- 7
 
 # endregion
 # model
-# region: unidirectional utility-maximizing morph / markov model
+# region: unidirectional utility-maximizing morphing model
 prog.morph <- function(employability_mtx, criterion, employment = NULL, stages = NULL) {
   # assert args in main function
 
@@ -181,7 +181,7 @@ prog.morph <- function(employability_mtx, criterion, employment = NULL, stages =
 }
 
 recursive.join <- function(probs.which.max, probs.which.max.to, iter = 1) {
-  print(iter)
+  # print(iter)
   probs.which.max |>
     inner_join(
       probs.which.max.to,
@@ -211,7 +211,7 @@ recursive.join <- function(probs.which.max, probs.which.max.to, iter = 1) {
 
 # endregion
 # region: test
-# start <- Sys.time()
+start <- Sys.time()
 employability_mtx |>
   prog.morph(
     criterion = df_labor$wage,
@@ -263,8 +263,8 @@ probs.which.max |>
       )
   ) -> dsdsds
 
-# finish <- Sys.time()
-# finish - start
+finish <- Sys.time()
+finish - start
 
 # endregion
 # region: results
@@ -280,12 +280,18 @@ dsdsds |>
   rename(id = 1) |>
   inner_join(
     df_labor |>
-      mutate(id = row_number())
+      mutate(id = row_number()) |>
+      select(
+        id,
+        occupation,
+        employment = employment_variants,
+        wage
+      )
   )
 
 dsdsds |>
   arrange(from) |>
-  slice(1) |>
+  slice(28) |>
   pull(prog) |>
   unlist() |>
   unique() |>
@@ -293,7 +299,13 @@ dsdsds |>
   rename(id = 1) |>
   inner_join(
     df_labor |>
-      mutate(id = row_number())
+      mutate(id = row_number()) |>
+      select(
+        id,
+        occupation,
+        employment = employment_variants,
+        wage
+      )
   )
 
 dsdsds |>
@@ -308,7 +320,13 @@ dsdsds |>
   rename(id = 1) |>
   inner_join(
     df_labor |>
-      mutate(id = row_number())
+      mutate(id = row_number()) |>
+      select(
+        id,
+        occupation,
+        employment = employment_variants,
+        wage
+      )
   )
 
 dsdsds |>
@@ -323,7 +341,13 @@ dsdsds |>
   rename(id = 1) |>
   inner_join(
     df_labor |>
-      mutate(id = row_number())
+      mutate(id = row_number()) |>
+      select(
+        id,
+        occupation,
+        employment = employment_variants,
+        wage
+      )
   )
 
 dsdsds |>
@@ -338,10 +362,17 @@ dsdsds |>
   rename(id = 1) |>
   inner_join(
     df_labor |>
-      mutate(id = row_number())
+      mutate(id = row_number()) |>
+      select(
+        id,
+        occupation,
+        employment = employment_variants,
+        wage
+      )
   )
 
 # endregion
+# region: sketches
 # region: dsds
 # 1-1
 # 2-1-(1-1)
@@ -1654,5 +1685,7 @@ df_prog |>
 
 # endregion
 # region: expected payoff overall
+
+# endregion
 
 # endregion
