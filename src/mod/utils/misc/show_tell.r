@@ -1,3 +1,8 @@
+box::use(
+  clipr[...],
+  dplyr[...]
+)
+
 sample(
   c(
     "Caike Ferreira",
@@ -14,4 +19,22 @@ sample(
     "Joao Lima",
     "Leticia Scalioni"
   )
-)
+) |>
+  as_tibble() |>
+  rename(
+    name = 1
+  ) |>
+  mutate(
+    order = paste0(
+      row_number(),
+      ". ",
+      name
+    )
+  ) |>
+  reframe(
+    order |>
+      paste0(
+        collapse = "\n"
+      )
+  ) |>
+  write_clip()
