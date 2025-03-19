@@ -7,7 +7,7 @@ box::use(
 # region: skill set generality
 gene <- function(skill_set) {
   # assert args
-  assert$valid_skill_set(skill_set)
+  assert$models$validate.skill.set(skill_set)
 
   # generality is the adjusted mean of maxima-normalized attributes
   return(

@@ -33,8 +33,8 @@ list(
 # region: generic function
 comp <- function(skill_set, comp_method = comp.methods[[1]], ...) {
   # assert args
-  assert$valid_skill_set(skill_set)
-  assert$valid_method(comp_method, comp.methods, "comp_method")
+  assert$models$validate.skill.set(skill_set)
+  assert$base$validate.method(comp_method, "comp_method", comp.methods)
 
   # estimate attribute equivalence
   if (comp_method[[1]] == comp.methods$expertise) {
@@ -42,11 +42,13 @@ comp <- function(skill_set, comp_method = comp.methods[[1]], ...) {
   }
 
   # multiple dispatch
-  comp_method[[1]] |>
-    switch(
-      "general" = return(comp.general(skill_set)),
-      "expertise" = return(comp.expertise(skill_set, äk))
-    )
+  if (comp_method[[1]] == comp.methods$expertise) {
+    return(comp.expertise(skill_set, äk))
+  }
+
+  if (comp_method[[1]] == comp.methods$general) {
+    return(comp.general(skill_set))
+  }
 }
 
 # endregion
