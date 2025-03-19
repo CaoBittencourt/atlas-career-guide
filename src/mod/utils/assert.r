@@ -4,6 +4,31 @@ box::use(
 )
 
 # endregion
+# region: assert methods
+valid_method <- function(x, methods, arg.name) {
+  if (!any(x == methods)) {
+    stop(
+      paste0(
+        "'",
+        arg.name,
+        "'",
+        " must be one of following methods: ",
+        methods |>
+          sapply(
+            function(x) {
+              paste0('"', x, '"')
+            }
+          ) |>
+          paste0(
+            collapse = ", "
+          ),
+        "."
+      )
+    )
+  }
+}
+
+# endregion
 # region: assert skill set
 valid_skill_set <- function(skill_set) {
   stopifnot(
@@ -60,6 +85,7 @@ valid_generality <- function(generality) {
 # endregion
 # region: exports
 box::export(
+  valid_method,
   valid_skill_set,
   valid_skill_mtx,
   as.skill_mtx,

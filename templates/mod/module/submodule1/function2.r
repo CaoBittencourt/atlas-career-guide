@@ -18,12 +18,19 @@ function2.method2 <- function() {
 }
 
 # endregion
+# region: list of methods
+list(
+  "method1",
+  "method2"
+) -> function2.methods
+
+# endregion
 # region: generic function
-function2 <- function(function2_method = c("method1", "method2")[[1]], ...) {
+function2 <- function(function2_method = function2.methods[[1]], ...) {
   # assert args
   stopifnot(
     "'function2_method' must be one of the following methods: 'method1', 'method2'." = any(
-      function2_method == c("method1", "method2")
+      function2_method == function2.methods
     )
   )
 
@@ -38,6 +45,6 @@ function2 <- function(function2_method = c("method1", "method2")[[1]], ...) {
 
 # endregion
 # region: exports
-box::export(function2)
+box::export(function2, function2.methods)
 
 # endregion
