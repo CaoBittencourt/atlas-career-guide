@@ -6,71 +6,89 @@ box::use(
 )
 
 # endregion
-# region: linear_logistic method
-aeq.linear_logistic <- function(ã, gammak) {
+# region: linear method
+aeq.linear <- function(ã) {
+  # assert args in main function
+  # linear attribute equivalence
+  return(ã)
+}
+
+# endregion
+# region: gene-root method
+aeq.gene_root <- function(ã, generality) {
+  # assert args in main function
+  # take the root of skill set with respect to generality
+  return(ã^(1 / generality))
+}
+
+# endregion
+# region: linear-logistic method
+aeq.linear_logistic <- function(ã, generality) {
   # assert args in main function
 
+  # variable
+  x <- ã
+
   # midpoint
-  m <- 1 - gammak
+  m <- 1 - generality
 
   # apply generalized logistic function with parameters
   return(
     glogis$logistic(
-      x = ã,
+      x = x,
       m = m,
       a = 0,
-      k = ã,
+      k = x,
       c = 1,
-      q = m * (1 - ã),
-      nu = ã / (m * (ã != 1)),
-      # nu = ã / m,
+      q = m * (1 - x),
+      nu = x / (m * (x != 1)),
+      # nu = x / m,
       b = 1 / (1 - m)
     )
   )
 }
 
 # endregion
-# region: gene_root method
-aeq.gene_root <- function(ãk, gammak) {
-  # assert args in main function
-  # take the root of skill set with respect to generality
-  return(ãk^(1 / gammak))
-}
-
-# endregion
-# region: linear method
-aeq.linear <- function(ãk) {
-  # assert args in main function
-  # linear attribute equivalence
-  return(ãk)
-}
-
-# endregion
-# region: list of methods
-list(
-  'linear_logistic' = 'linear_logistic',
-  'gene_root' = 'gene_root',
-  'linear' = 'linear'
-) -> aeq.methods
-
-# endregion
-# region: aeq generic function
-aeq <- function(skill_set, generality = NULL, aeq_method = aeq.methods[[1]], ...) {
+# region: attribute equivalence generic
+aeq <- function(skill_set, generality = NULL, aeq_method = c("linear-logistic", "gene-root", "linear")[[1]]) {
   # assert args
   assert$valid_skill_set(skill_set)
-  assert$valid_method(aeq_method, aeq.methods, 'aeq_method')
+  assert$valid_generality(generality)
+
+  stopifnot(
+    "'aeq_method' must be one of the following methods: 'linear-logistic', 'gene-root', 'linear'." = any(
+      aeq_method == c("linear-logistic", "gene-root", "linear")
+    )
+  )
+
+  # estimate skill set generality
+  if (all(
+    aeq_method != "linear",
+    is.null(generality[[1]])
+  )) {
+    gn$gene(skill_set) -> generality
+  }
+
+  # maxima-normalized attributes
+  ã <- skill_set / max(skill_set)
+
+  # edge-case: a == null vector
+  if (all(is.na(ã))) {
+    ã <- rep(1, length(ã))
+  }
 
   # multiple dispatch
   aeq_method[[1]] |>
+    as.character() |>
     switch(
-      aeq.methods$linear_logistic = return(aeq.linear_logistic()),
-      aeq.methods$gene_root = return(aeq.gene_root()),
-      aeq.methods$linear = return(aeq.linear())
+      "linear-logistic" = return(aeq.linear_logistic(ã, generality[[1]])),
+      "gene-root" = return(aeq.gene_root(ã, generality[[1]])),
+      "linear" = return(aeq.linear(ã))
     )
 }
 
 # endregion
 # region: exports
-box::export(aeq, aeq.methods)
+box::export(aeq)
 
 # endregion

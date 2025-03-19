@@ -1,5 +1,5 @@
 #' @export
 box::use(
-  mod / utils / assert / base[...],
-  mod / utils / assert / models[...],
+  base = mod / utils / assert / base,
+  models = mod / utils / assert / models,
 )
