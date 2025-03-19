@@ -25,8 +25,8 @@ comp.expertise <- function(ak, äk) {
 # endregion
 # region: list of methods
 list(
-  "general" = "general",
-  "expertise" = "expertise"
+  "expertise" = "expertise",
+  "general" = "general"
 ) -> comp.methods
 
 # endregion
