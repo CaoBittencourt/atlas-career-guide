@@ -1,3 +1,10 @@
+# generic types
+# region: proper list
+is.proper.list <- function(x) {
+  return(all(is.list(x), !is.data.frame(x)))
+}
+
+# endregion
 # numeric types
 # region: unit type
 is.unit <- function(x) {

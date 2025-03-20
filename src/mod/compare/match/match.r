@@ -1,6 +1,7 @@
 # region: imports
 box::use(
   assert = mod / utils / assert,
+  mod / compare / similarity[similarity.methods],
   mod / utils / egmap[...],
   mod / utils / vmap[...],
   eq = mod / describe / aeq,
@@ -100,19 +101,9 @@ s.vec <- function(ak, A, Ä, match_method = c("euclidean", "bvls", "logit", "pro
 # region: generic function
 similarity <- function(skill_set, skill_mtx, match_method = c("euclidean", "bvls", "logit", "probit", "cobb-douglas", "gmme", "pearson")[[1]], mode = c("cbmap", "egmap")[[1]], bind = T, ...) {
   # assert args
-  assert$as.skill_mtx(skill_set) -> Ak
-  assert$as.skill_mtx(skill_mtx) -> A
-
-  stopifnot(
-    "'match_method' must be one of the following methods: 'euclidean', 'bvls', 'logit', 'probit', 'cobb-douglas', 'gmme', 'pearson'." = all(
-      match_method |> vapply(
-        function(method) {
-          all(any(method == c("euclidean", "bvls", "logit", "probit", "cobb-douglas", "gmme", "pearson")))
-        },
-        logical(1)
-      )
-    )
-  )
+  assert$base$validate.method(match_method, "match_method", similarity.methods)
+  assert$models$as.skill.set.matrix(skill_set, arg.name = "skill_set") -> Ak
+  assert$models$as.skill.set.matrix(skill_mtx, arg.name = "skill_mtx") -> A
 
   stopifnot(
     "'mode' must be either 'cbmap' or 'egmap'." = any(

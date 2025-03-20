@@ -7,6 +7,21 @@ box::use(
 
 # endregion
 # type asserts
+# generic types
+# region: proper list
+validate.proper.list <- function(x, arg.name = NULL, nullable = F) {
+  return(
+    x |> 
+      utils$validate(
+        type = types$is.proper.list,
+        nullable = nullable,
+        arg.name = arg.name,
+        type.def = "a proper list."
+      )
+  )
+}
+
+#endregion
 # numeric types
 # region: unit type
 validate.unit <- function(x, arg.name = NULL, nullable = F) {
@@ -68,7 +83,7 @@ validate.unit.signed.matrix <- function(x, arg.name = NULL, nullable = F) {
 # misc asserts
 # region: assert methods
 validate.method <- function(x, arg.name = NULL, methods) {
-  if (!any(x == methods)) {
+  if (!any(x %in% methods)) {
     stop(
       paste0(
         "'", arg.name, "'",
@@ -92,10 +107,15 @@ validate.method <- function(x, arg.name = NULL, methods) {
 # export
 # region: exports
 box::export(
+  # generic types
+  validate.proper.list,
+  # numeric types
   validate.unit,
   validate.unit.signed,
+  # numeric matrix types
   validate.unit.matrix,
   validate.unit.signed.matrix,
+  # misc
   validate.method
 )
 

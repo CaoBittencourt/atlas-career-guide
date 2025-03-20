@@ -6,6 +6,7 @@ modular::project.options("atlas")
 # region: imports
 box::use(
   s = mod / compare / match,
+  S = mod / compare / similarity,
   mod / utils / conform[...],
   vec = mod / compare / match / methods / vec,
   assert = mod / utils / assert
@@ -44,13 +45,13 @@ df_cao |>
       # "probit"
     )
   ) ->
-similarity_cao
+similarity_cao.cbmap
 
-similarity_cao |>
+similarity_cao.cbmap |>
   lapply(arrange, desc(cao)) |>
   lapply(head, 10)
 
-similarity_cao |>
+similarity_cao.cbmap |>
   lapply(arrange, desc(cao)) |>
   lapply(tail, 10)
 
@@ -72,6 +73,36 @@ df_occupations |>
       # "logit",
       # "probit"
     )
+  ) ->
+similarity.cbmap
+
+# endregion
+# region: new dispatch (my matches)
+# note: is from/to inverted?
+df_cao |>
+  S$similarity(
+    df_occupations_cao,
+    S$similarity.methods$euclidean,
+    bind = T
+  ) ->
+similarity_cao
+
+similarity_cao |>
+  arrange(desc(cao)) |>
+  head(10)
+
+similarity_cao |>
+  arrange(desc(cao)) |>
+  tail(10)
+
+# endregion
+# region: new dispatch (occupations)
+# note: is from/to inverted?
+df_occupations |>
+  S$similarity(
+    df_occupations,
+    S$similarity.methods$euclidean,
+    bind = T
   ) ->
 similarity
 
