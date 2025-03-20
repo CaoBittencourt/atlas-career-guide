@@ -42,7 +42,7 @@ validate.numeric <- function(x, arg.name = NULL, nullable = F) {
   return(
     x |>
       utils$validate(
-        type = is.numeric,
+        type = types$is.numeric.vector,
         nullable = nullable,
         arg.name = arg.name,
         type.def = "numeric."

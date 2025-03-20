@@ -12,6 +12,12 @@ is.matrix.like <- function(x) {
 
 # endregion
 # numeric types
+# region: basic numeric type
+is.numeric.vector <- function(x) {
+  return(x |> vapply(is.numeric, logical(1)) |> all())
+}
+
+# endregion
 # region: unit type
 is.unit <- function(x) {
   return(

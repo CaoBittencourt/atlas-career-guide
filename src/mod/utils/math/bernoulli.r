@@ -9,43 +9,24 @@ box::use(
 # region: numeric method
 as.bernoulli.numeric <- function(x, ub, lb, scaling) {
   # assert args in main function
-
   # apply scaling factor
-  if (length(scaling)) {
-    x * scaling[[1]] -> x
-  }
-
-  # repeats 1 for every "point" of ak above lb
-  # repeats 0 for every "point" of ak below ub
+  # repeat 1 for every "point" of ak above lb
+  # repeat 0 for every "point" of ak below ub
   return(
     c(
-      as.integer(x) |>
+      as.integer(scaling[[1]] * x) |>
         vapply(
           function(a) {
             rep(
               c(1L, 0L),
               times = ceiling(
-                c(a, (ub[[1]] - lb[[1]]) - a)
+                c(a, scaling[[1]] * (ub[[1]] - lb[[1]]) - a)
               )
             )
           },
-          numeric(ub[[1]])
+          numeric(scaling[[1]] * ub[[1]])
         )
     )
-    # c(
-    #   as.integer(ub[[1]] * x) |>
-    #     vapply(
-    #       function(a) {
-    #         rep(
-    #           c(1L, 0L),
-    #           times = ceiling(
-    #             c(a, (ub[[1]] - lb[[1]]) - a)
-    #           )
-    #         )
-    #       },
-    #       numeric(ub[[1]])
-    #     )
-    # )
   )
 }
 
@@ -54,33 +35,29 @@ as.bernoulli.numeric <- function(x, ub, lb, scaling) {
 # region: matrix method
 as.bernoulli.matrix <- function(x, ub, lb, scaling) {
   # assert args in main function
-
-  # apply scaling factor
-  if (length(scaling)) {
-    x * scaling[[1]] -> x
-  }
-
   # apply bernoulli function
   return(
-    x |> vapply(
-      as.bernoulli.numeric,
-      numeric(nrow(x) * ub[[1]]),
-      ub = ub[[1]],
-      lb = lb[[1]],
-      scaling = scaling[[1]]
-    )
+    x |>
+      as.data.frame() |>
+      vapply(
+        as.bernoulli.numeric,
+        numeric(nrow(x) * ub[[1]] * scaling[[1]]),
+        ub = ub[[1]],
+        lb = lb[[1]],
+        scaling = scaling[[1]]
+      )
   )
 }
 
 # endregion
 # dispatch
 # region: bernoulli generic function
-as.bernoulli <- function(x, ub, lb, scaling = NULL) {
+as.bernoulli <- function(x, ub, lb, scaling = 1) {
   # assert args
   assert$base$validate.numeric(x, "x", F)
-  assert$base$validate.numeric(ub, "ub", F)
-  assert$base$validate.numeric(lb, "lb", F)
-  assert$base$validate.numeric(scaling, "scaling", T)
+  assert$base$validate.numeric(ub[[1]], "ub", F)
+  assert$base$validate.numeric(lb[[1]], "lb", F)
+  assert$base$validate.numeric(scaling[[1]], "scaling", F)
 
   stopifnot(
     "'x' must be between 'ub' and 'lb'." =
