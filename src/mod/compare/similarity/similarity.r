@@ -43,16 +43,18 @@ similarity.dispatch <- function(ak, A, Ä, similarity_method, bind, ...) {
     Ak |>
       lapply(
         as.bernoulli,
-        ub = 100,
-        lb = 0
+        ub = 1,
+        lb = 0,
+        scaling = 100
       ) |>
       lapply(as.data.frame) ->
     bernoulliAk
 
     A |>
       as.bernoulli(
-        ub = 100,
-        lb = 0
+        ub = 1,
+        lb = 0,
+        scaling = 100
       ) |>
       as.data.frame() ->
     bernoulliA
@@ -79,7 +81,7 @@ similarity.dispatch <- function(ak, A, Ä, similarity_method, bind, ...) {
       "gmme" = Ak |> cbindmap(similarity.gmme, names(A), A, Ä),
       "logit" = bernoulliAk |> cbindmap(similarity.logit, names(A), bernoulliA, repsÄ, link = "logit"),
       "pearson" = Ak |> cbindmap(similarity.pearson, names(A), A, Ä),
-      "logit" = bernoulliAk |> cbindmap(similarity.logit, names(A), bernoulliA, repsÄ, link = "probit")
+      "probit" = bernoulliAk |> cbindmap(similarity.logit, names(A), bernoulliA, repsÄ, link = "probit")
     ) ->
   similarity.results
 

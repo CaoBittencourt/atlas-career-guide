@@ -58,22 +58,24 @@ similarity_cao.cbmap |>
 # endregion
 # region: cbmap mode (occupations)
 # note: is from/to inverted?
-df_occupations |>
+df_occupations[1:19] |>
   s$similarity(
-    df_occupations,
+    df_occupations[1:19],
     mode = "cbmap",
     bind = F,
     match_method = c(
-      "euclidean"
+      # "euclidean"
       # ,
       # "cobb-douglas",
       # "gmme",
       # "pearson",
       # "bvls",
-      # "logit",
+      "logit"
+      # ,
       # "probit"
     )
   ) ->
+similarity.cbmap
 similarity.cbmap
 
 # endregion
@@ -82,7 +84,7 @@ similarity.cbmap
 df_cao |>
   S$similarity(
     df_occupations_cao,
-    S$similarity.methods$logit,
+    S$similarity.methods$probit,
     bind = T
   ) ->
 similarity_cao
@@ -98,12 +100,13 @@ similarity_cao |>
 # endregion
 # region: new dispatch (occupations)
 # note: is from/to inverted?
-df_occupations |>
+df_occupations[1:19] |>
   S$similarity(
-    df_occupations,
+    df_occupations[1:19],
     S$similarity.methods$euclidean,
     bind = T
   ) ->
+similarity
 similarity
 
 # endregion
