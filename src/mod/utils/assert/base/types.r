@@ -4,8 +4,7 @@ is.unit <- function(x) {
   return(
     all(
       is.numeric(x),
-      x >= 0,
-      x <= 1
+      x >= 0, x <= 1
     )
   )
 }
@@ -16,8 +15,7 @@ is.unit.signed <- function(x) {
   return(
     all(
       is.numeric(x),
-      x >= -1,
-      x <= 1
+      x >= -1, x <= 1
     )
   )
 }

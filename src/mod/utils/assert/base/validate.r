@@ -9,7 +9,7 @@ box::use(
 # type asserts
 # numeric types
 # region: unit type
-validate.unit <- function(x, arg.name, nullable = F) {
+validate.unit <- function(x, arg.name = NULL, nullable = F) {
   return(
     x |>
       utils$validate(
@@ -23,7 +23,7 @@ validate.unit <- function(x, arg.name, nullable = F) {
 
 # endregion
 # region: signed unit type
-validate.unit.signed <- function(x, arg.name, nullable = F) {
+validate.unit.signed <- function(x, arg.name = NULL, nullable = F) {
   return(
     x |>
       utils$validate(
@@ -38,7 +38,7 @@ validate.unit.signed <- function(x, arg.name, nullable = F) {
 # endregion
 # numeric matrix types
 # region: unit matrix type
-validate.unit.matrix <- function(x, arg.name, nullable = F) {
+validate.unit.matrix <- function(x, arg.name = NULL, nullable = F) {
   return(
     x |>
       utils$validate(
@@ -52,7 +52,7 @@ validate.unit.matrix <- function(x, arg.name, nullable = F) {
 
 # endregion
 # region: signed unit matrix type
-validate.unit.signed.matrix <- function(x, arg.name, nullable = F) {
+validate.unit.signed.matrix <- function(x, arg.name = NULL, nullable = F) {
   return(
     x |>
       utils$validate(
@@ -67,7 +67,7 @@ validate.unit.signed.matrix <- function(x, arg.name, nullable = F) {
 # endregion
 # misc asserts
 # region: assert methods
-validate.method <- function(x, arg.name, methods) {
+validate.method <- function(x, arg.name = NULL, methods) {
   if (!any(x == methods)) {
     stop(
       paste0(

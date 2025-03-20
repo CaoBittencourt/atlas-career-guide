@@ -9,28 +9,28 @@ box::use(
 # vectors
 # region: skill set
 # a skill set is a vector in the unit interval
-validate.skill.set <- function(x, arg.name, nullable = F) {
+validate.skill.set <- function(x, arg.name = NULL, nullable = F) {
   return(types$validate.unit(x, arg.name, nullable))
 }
 
 # endregion
 # region: attribute equivalence
 # attribute equivalence is just a scaled skill set (in the unit interval)
-validate.aeq <- function(x, arg.name, nullable = F) {
+validate.aeq <- function(x, arg.name = NULL, nullable = F) {
   return(types$validate.unit(x, arg.name, nullable))
 }
 
 # endregion
 # region: skill set generality
 # skill set generality is a percentage
-validate.gene <- function(x, arg.name, nullable = F) {
+validate.gene <- function(x, arg.name = NULL, nullable = F) {
   return(types$validate.unit(x, arg.name, nullable))
 }
 
 # endregion
 # region: skill set competence
 # skill set competence is a percentage
-validate.comp <- function(x, arg.name, nullable = F) {
+validate.comp <- function(x, arg.name = NULL, nullable = F) {
   return(types$validate.unit(x, arg.name, nullable))
 }
 
@@ -44,14 +44,14 @@ validate.comp <- function(x, arg.name, nullable = F) {
 # matrices
 # region: skill set matrix
 # a skill set matrix is a vector in the unit interval
-validate.skill.set.matrix <- function(x, arg.name, nullable = F) {
+validate.skill.set.matrix <- function(x, arg.name = NULL, nullable = F) {
   return(types$validate.unit.matrix(x, arg.name, nullable))
 }
 
 # endregion
 # region: attribute equivalence matrix
 # a attribute equivalence matrix is a vector in the unit interval
-validate.aeq.matrix <- function(x, arg.name, nullable = F) {
+validate.aeq.matrix <- function(x, arg.name = NULL, nullable = F) {
   return(types$validate.unit.matrix(x, arg.name, nullable))
 }
 
