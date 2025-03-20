@@ -21,11 +21,29 @@ getOption("atlas.skills_mtx") |> readRDS() -> df_occupations
 df_occupations[1:20] |>
   tt$productivity(
     df_occupations[1:20],
-    prod_method = c(
-      "cobb-douglas",
-      "gmme"
-    ),
+    tt$productivity.methods,
+    bind = T
+  )
+
+df_occupations[1:20] |>
+  tt$productivity(
+    df_occupations[1:20],
+    tt$productivity.methods,
     bind = F
-  ) -> productivity
+  )
+
+df_occupations[1:20] |>
+  tt$productivity(
+    df_occupations[1:20],
+    tt$productivity.methods$cobb_douglas,
+    bind = F
+  )
+
+df_occupations[1:20] |>
+  tt$productivity(
+    df_occupations[1:20],
+    tt$productivity.methods$gmme,
+    bind = T
+  )
 
 # endregion

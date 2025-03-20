@@ -1,45 +1,36 @@
+# setup
 # region: imports
 box::use(
-  s = mod / compare / match,
-  assert = mod / utils / assert
+  assert = mod / utils / assert,
+  s = mod / compare / similarity
 )
 
 # endregion
-# region: productivity function
-productivity <- function(skill_set, skill_mtx, prod_method = c("cobb-douglas", "gmme")[[1]], bind = T, ...) {
-  # assert args
-  assert$as.skill_mtx(skill_set) -> Ak
-  assert$as.skill_mtx(skill_mtx) -> A
+# methods
+# region: list of methods
+s$similarity.methods[
+  c("cobb_douglas", "gmme")
+] -> productivity.methods
 
-  stopifnot(
-    "'prod_method' must be one of the following methods: 'cobb-douglas', 'gmme'." = all(
-      prod_method |> vapply(
-        function(method) {
-          all(any(method == c("cobb-douglas", "gmme")))
-        },
-        logical(1)
+# endregion
+# dispatch
+# region: productivity generic function
+productivity <- function(skill_set, skill_mtx, productivity_method = productivity.methods[[1]], ...) {
+  # assert args in similarity function
+  # multiple dispatch in similarity function
+  return(
+    skill_set |>
+      s$similarity(
+        skill_mtx,
+        productivity_method,
+        ...
       )
-    )
   )
-
-  # multiple dispatch
-  if (
-    any(prod_method %in% c("cobb-douglas", "gmme"))
-  ) {
-    return(
-      skill_set |>
-        s$similarity(
-          skill_mtx,
-          prod_method,
-          bind = bind,
-          ...
-        )
-    )
-  }
 }
 
 # endregion
+# exports
 # region: exports
-box::export(productivity)
+box::export(productivity, productivity.methods)
 
 # endregion
