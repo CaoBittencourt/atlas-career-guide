@@ -8,7 +8,7 @@ box::use(
 # endregion
 # type asserts
 # generic types
-# region: proper list type
+# region: proper list
 validate.proper.list <- function(x, arg.name = NULL, nullable = F) {
   return(
     x |>
@@ -22,22 +22,22 @@ validate.proper.list <- function(x, arg.name = NULL, nullable = F) {
 }
 
 # endregion
-# region: matrix-like type
-validate.matrix.like <- function(x, arg.name = NULL, nullable = F) {
+# region: boolean
+validate.bool <- function(x, arg.name = NULL, nullable = F) {
   return(
     x |>
       utils$validate(
-        type = types$is.matrix.like,
+        type = types$is.bool,
         nullable = nullable,
         arg.name = arg.name,
-        type.def = "a data frame or matrix."
+        type.def = "TRUE or FALSE."
       )
   )
 }
 
 # endregion
 # numeric types
-# region: basic numeric type
+# region: basic numeric
 validate.numeric <- function(x, arg.name = NULL, nullable = F) {
   return(
     x |>
@@ -51,7 +51,7 @@ validate.numeric <- function(x, arg.name = NULL, nullable = F) {
 }
 
 # endregion
-# region: unit type
+# region: unit
 validate.unit <- function(x, arg.name = NULL, nullable = F) {
   return(
     x |>
@@ -65,7 +65,7 @@ validate.unit <- function(x, arg.name = NULL, nullable = F) {
 }
 
 # endregion
-# region: signed unit type
+# region: signed unit
 validate.unit.signed <- function(x, arg.name = NULL, nullable = F) {
   return(
     x |>
@@ -79,7 +79,7 @@ validate.unit.signed <- function(x, arg.name = NULL, nullable = F) {
 }
 
 # endregion
-# region: bernoulli type
+# region: bernoulli
 validate.bernoulli <- function(x, arg.name = NULL, nullable = F) {
   return(
     x |>
@@ -94,7 +94,7 @@ validate.bernoulli <- function(x, arg.name = NULL, nullable = F) {
 
 # endregion
 # numeric matrix types
-# region: unit matrix type
+# region: unit matrix
 validate.unit.matrix <- function(x, arg.name = NULL, nullable = F) {
   return(
     x |>
@@ -108,7 +108,7 @@ validate.unit.matrix <- function(x, arg.name = NULL, nullable = F) {
 }
 
 # endregion
-# region: signed unit matrix type
+# region: signed unit matrix
 validate.unit.signed.matrix <- function(x, arg.name = NULL, nullable = F) {
   return(
     x |>
@@ -122,7 +122,7 @@ validate.unit.signed.matrix <- function(x, arg.name = NULL, nullable = F) {
 }
 
 # endregion
-# region: bernoulli matrix type
+# region: bernoulli matrix
 validate.bernoulli.matrix <- function(x, arg.name = NULL, nullable = F) {
   return(
     x |>
@@ -131,6 +131,34 @@ validate.bernoulli.matrix <- function(x, arg.name = NULL, nullable = F) {
         nullable = nullable,
         arg.name = arg.name,
         type.def = "a numeric matrix where all values are either 0 or 1."
+      )
+  )
+}
+
+# endregion
+# region: matrix-like
+validate.matrix.like <- function(x, arg.name = NULL, nullable = F) {
+  return(
+    x |>
+      utils$validate(
+        type = types$is.matrix.like,
+        nullable = nullable,
+        arg.name = arg.name,
+        type.def = "a data frame or matrix."
+      )
+  )
+}
+
+# endregion
+# region: square matrix
+validate.square <- function(x, arg.name = NULL, nullable = F) {
+  return(
+    x |>
+      utils$validate(
+        type = types$is.square,
+        nullable = nullable,
+        arg.name = arg.name,
+        type.def = "have the same number of rows and columns."
       )
   )
 }
@@ -165,7 +193,7 @@ validate.method <- function(x, arg.name = NULL, methods) {
 box::export(
   # generic types
   validate.proper.list,
-  validate.matrix.like,
+  validate.bool,
   # numeric types
   validate.numeric,
   validate.unit,
@@ -175,6 +203,8 @@ box::export(
   validate.unit.matrix,
   validate.unit.signed.matrix,
   validate.bernoulli.matrix,
+  validate.matrix.like,
+  validate.square,
   # misc
   validate.method
 )

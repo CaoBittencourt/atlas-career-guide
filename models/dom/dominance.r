@@ -6,7 +6,7 @@ modular::project.options("atlas")
 # region: imports
 box::use(
   dom = mod / compare / dom,
-  kflex = mod / micro / kflex,
+  # kflex = mod / micro / kflex,
   dplyr[...],
   tidyr[...],
   tibble[column_to_rownames]
@@ -16,12 +16,8 @@ library(atlas.plot)
 
 # endregion
 # region: data
-# skill set matrix
-getOption("atlas.skills_mtx") |>
-  readRDS() |>
-  column_to_rownames("occupation") |>
-  as.matrix() ->
-skill_mtx
+# similarity matrix
+getOption()
 
 # labor statistics
 getOption("atlas.labor") |>

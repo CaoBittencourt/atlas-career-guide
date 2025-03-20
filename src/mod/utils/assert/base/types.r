@@ -1,82 +1,87 @@
 # generic types
-# region: proper list type
+# region: proper list
 is.proper.list <- function(x) {
   return(all(is.list(x), !is.data.frame(x)))
 }
 
 # endregion
-# region: matrix-like type
-is.matrix.like <- function(x) {
-  return(as.logical(length(dim(x))))
+# region: boolean
+is.bool <- function(x) {
+  return(all(
+    is.logical(x),
+    !is.na(x)
+  ))
 }
 
 # endregion
 # numeric types
-# region: basic numeric type
+# region: basic numeric
 is.numeric.vector <- function(x) {
   return(x |> vapply(is.numeric, logical(1)) |> all())
 }
 
 # endregion
-# region: unit type
+# region: unit
 is.unit <- function(x) {
-  return(
-    all(
-      is.numeric(x),
-      x >= 0, x <= 1
-    )
-  )
+  return(all(
+    is.numeric(x),
+    x >= 0, x <= 1
+  ))
 }
 
 # endregion
-# region: signed unit type
+# region: signed unit
 is.unit.signed <- function(x) {
-  return(
-    all(
-      is.numeric(x),
-      x >= -1, x <= 1
-    )
-  )
+  return(all(
+    is.numeric(x),
+    x >= -1, x <= 1
+  ))
 }
 
 # endregion
-# region: bernoulli type
+# region: bernoulli
 is.bernoulli <- function(x) {
   return(any(x == 0, x == 1))
 }
 
 # endregion
 # numeric matrix types
-# region: unit matrix type
+# region: unit matrix
 is.unit.matrix <- function(x) {
-  return(
-    all(
-      is.matrix(x),
-      is.unit(x)
-    )
-  )
+  return(all(
+    is.matrix(x),
+    is.unit(x)
+  ))
 }
 
 # endregion
-# region: unit signed matrix type
+# region: unit signed matrix
 is.unit.signed.matrix <- function(x) {
-  return(
-    all(
-      is.matrix(x),
-      is.unit.signed(x)
-    )
-  )
+  return(all(
+    is.matrix(x),
+    is.unit.signed(x)
+  ))
 }
 
 # endregion
-# region: bernoulli matrix type
+# region: bernoulli matrix
 is.bernoulli.matrix <- function(x) {
-  return(
-    all(
-      is.matrix(x),
-      is.bernoulli(x)
-    )
-  )
+  return(all(
+    is.matrix(x),
+    is.bernoulli(x)
+  ))
+}
+
+# endregion
+# region: matrix-like
+is.matrix.like <- function(x) {
+  return(as.logical(length(dim(x))))
+}
+
+# endregion
+# region: square matrix
+is.square <- function(x) {
+  return(nrow(x) == ncol(x))
 }
 
 # endregion

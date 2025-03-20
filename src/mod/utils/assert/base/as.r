@@ -8,7 +8,7 @@ box::use(
 
 # endregion
 # numeric matrix types
-# region: unit matrix type
+# region: unit matrix
 as.unit.matrix <- function(x, arg.name = NULL) {
   x |>
     as.data.frame() |>
@@ -23,7 +23,7 @@ as.unit.matrix <- function(x, arg.name = NULL) {
 }
 
 # endregion
-# region: unit signed matrix type
+# region: unit signed matrix
 as.unit.signed.matrix <- function(x, arg.name = NULL) {
   x |>
     as.data.frame() |>

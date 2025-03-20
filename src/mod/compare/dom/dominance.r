@@ -1,21 +1,17 @@
+# setup
 # region: imports
+box::use(
+  assert = mod / utils / assert,
+)
 
 # endregion
+# dispatch
 # region: dominance
 dominance <- function(sqr_unit_mtx, weights = NULL, aggregate = T) {
   # assert args
-  stopifnot(
-    "'sqr_unit_mtx' must be a square numeric matrix in the unit interval." = all(
-      any(
-        sqr_unit_mtx |> is.matrix(),
-        sqr_unit_mtx |> is.data.frame()
-      ),
-      nrow(sqr_unit_mtx) == ncol(sqr_unit_mtx),
-      sqr_unit_mtx |> sapply(is.numeric) |> all(),
-      all(sqr_unit_mtx >= 0),
-      all(sqr_unit_mtx <= 1)
-    )
-  )
+  assert$base$validate.unit.matrix(sqr_unit_mtx, "sqr_unit_mtx", F)
+  assert$base$validate.square(sqr_unit_mtx, "sqr_unit_mtx", F)
+  assert$base$validate.bool(aggregate, "aggregate", F)
 
   stopifnot(
     "'weights' must either be NULL or a numeric vector the same length as the number of rows and columns in 'sqr_unit_mtx'." = any(
@@ -24,13 +20,6 @@ dominance <- function(sqr_unit_mtx, weights = NULL, aggregate = T) {
         weights |> is.numeric(),
         length(weights) == nrow(sqr_unit_mtx)
       )
-    )
-  )
-
-  stopifnot(
-    "'aggregate' must be either TRUE or FALSE." = all(
-      is.logical(aggregate),
-      !is.na(aggregate)
     )
   )
 
@@ -53,6 +42,7 @@ dominance <- function(sqr_unit_mtx, weights = NULL, aggregate = T) {
 }
 
 # endregion
+# exports
 # region: exports
 box::export(dominance)
 
