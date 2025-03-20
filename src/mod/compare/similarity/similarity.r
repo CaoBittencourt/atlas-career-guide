@@ -6,7 +6,7 @@ box::use(
   mod / utils / vmap[...],
   eq = mod / describe / aeq,
   stats[setNames],
-  mod / utils / bernoulli[...],
+  mod / utils / math[as.bernoulli],
   mod / utils / cbindmap[...],
   mod / utils / conform[...],
   dplyr[bind_rows],

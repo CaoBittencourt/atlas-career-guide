@@ -2,6 +2,7 @@
 # region: imports
 box::use(
   assert = mod / utils / assert / base / validate[...],
+  mod / utils / math[as.bernoulli],
   dplyr[select]
 )
 
@@ -40,6 +41,7 @@ as.unit.signed.matrix <- function(x, arg.name = NULL) {
 # exports
 # region: exports
 box::export(
+  as.bernoulli,
   as.unit.matrix,
   as.unit.signed.matrix
 )

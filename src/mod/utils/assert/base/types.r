@@ -1,7 +1,13 @@
 # generic types
-# region: proper list
+# region: proper list type
 is.proper.list <- function(x) {
   return(all(is.list(x), !is.data.frame(x)))
+}
+
+# endregion
+# region: matrix-like type
+is.matrix.like <- function(x) {
+  return(as.logical(length(dim(x))))
 }
 
 # endregion
@@ -28,6 +34,12 @@ is.unit.signed <- function(x) {
 }
 
 # endregion
+# region: bernoulli type
+is.bernoulli <- function(x) {
+  return(any(x == 0, x == 1))
+}
+
+# endregion
 # numeric matrix types
 # region: unit matrix type
 is.unit.matrix <- function(x) {
@@ -46,6 +58,17 @@ is.unit.signed.matrix <- function(x) {
     all(
       is.matrix(x),
       is.unit.signed(x)
+    )
+  )
+}
+
+# endregion
+# region: bernoulli matrix type
+is.bernoulli.matrix <- function(x) {
+  return(
+    all(
+      is.matrix(x),
+      is.bernoulli(x)
     )
   )
 }

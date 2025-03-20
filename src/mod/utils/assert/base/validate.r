@@ -8,10 +8,10 @@ box::use(
 # endregion
 # type asserts
 # generic types
-# region: proper list
+# region: proper list type
 validate.proper.list <- function(x, arg.name = NULL, nullable = F) {
   return(
-    x |> 
+    x |>
       utils$validate(
         type = types$is.proper.list,
         nullable = nullable,
@@ -21,8 +21,36 @@ validate.proper.list <- function(x, arg.name = NULL, nullable = F) {
   )
 }
 
-#endregion
+# endregion
+# region: matrix-like type
+validate.matrix.like <- function(x, arg.name = NULL, nullable = F) {
+  return(
+    x |>
+      utils$validate(
+        type = types$is.matrix.like,
+        nullable = nullable,
+        arg.name = arg.name,
+        type.def = "a data frame or matrix."
+      )
+  )
+}
+
+# endregion
 # numeric types
+# region: basic numeric type
+validate.numeric <- function(x, arg.name = NULL, nullable = F) {
+  return(
+    x |>
+      utils$validate(
+        type = is.numeric,
+        nullable = nullable,
+        arg.name = arg.name,
+        type.def = "numeric."
+      )
+  )
+}
+
+# endregion
 # region: unit type
 validate.unit <- function(x, arg.name = NULL, nullable = F) {
   return(
@@ -46,6 +74,20 @@ validate.unit.signed <- function(x, arg.name = NULL, nullable = F) {
         nullable = nullable,
         arg.name = arg.name,
         type.def = "numeric with absolute value in the unit interval."
+      )
+  )
+}
+
+# endregion
+# region: bernoulli type
+validate.bernoulli <- function(x, arg.name = NULL, nullable = F) {
+  return(
+    x |>
+      utils$validate(
+        type = types$is.bernoulli,
+        nullable = nullable,
+        arg.name = arg.name,
+        type.def = "either 0 or 1."
       )
   )
 }
@@ -80,6 +122,20 @@ validate.unit.signed.matrix <- function(x, arg.name = NULL, nullable = F) {
 }
 
 # endregion
+# region: bernoulli matrix type
+validate.bernoulli.matrix <- function(x, arg.name = NULL, nullable = F) {
+  return(
+    x |>
+      utils$validate(
+        type = types$is.bernoulli.matrix,
+        nullable = nullable,
+        arg.name = arg.name,
+        type.def = "a numeric matrix where all values are either 0 or 1."
+      )
+  )
+}
+
+# endregion
 # misc asserts
 # region: assert methods
 validate.method <- function(x, arg.name = NULL, methods) {
@@ -109,12 +165,16 @@ validate.method <- function(x, arg.name = NULL, methods) {
 box::export(
   # generic types
   validate.proper.list,
+  validate.matrix.like,
   # numeric types
+  validate.numeric,
   validate.unit,
   validate.unit.signed,
+  validate.bernoulli,
   # numeric matrix types
   validate.unit.matrix,
   validate.unit.signed.matrix,
+  validate.bernoulli.matrix,
   # misc
   validate.method
 )

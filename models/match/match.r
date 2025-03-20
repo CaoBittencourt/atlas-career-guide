@@ -82,7 +82,7 @@ similarity.cbmap
 df_cao |>
   S$similarity(
     df_occupations_cao,
-    S$similarity.methods$euclidean,
+    S$similarity.methods$logit,
     bind = T
   ) ->
 similarity_cao
