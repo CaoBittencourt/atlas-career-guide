@@ -6,7 +6,7 @@ box::use(
   mod / utils / math[as.bernoulli],
   eq = mod / describe / aeq,
   stats[setNames],
-  dplyr[bind_rows],
+  dplyr[bind_rows, as_tibble],
 )
 
 # endregion
@@ -85,6 +85,10 @@ similarity.dispatch <- function(ak, A, Ä, similarity_method, bind, ...) {
   # bind results into data frame
   if (bind) {
     similarity.results |>
+      lapply(
+        as_tibble,
+        rownames = "to"
+      ) |>
       bind_rows(
         .id = "method"
       ) ->
