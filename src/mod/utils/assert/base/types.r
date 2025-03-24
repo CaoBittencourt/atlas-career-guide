@@ -46,12 +46,12 @@ is.bernoulli <- function(x) {
 
 # endregion
 # region: bounded numeric
-is.numeric.bounded <- function(x, lb = NULL, ub = NULL) {
+is.numeric.bounded <- function(x, lb = NULL, ub = NULL, lc = T, rc = T) {
   return(
     all(
       is.numeric.vector(x),
-      ifelse(length(lb), x >= lb, T),
-      ifelse(length(ub), x <= ub, T)
+      ifelse(length(lb), do.call(ifelse(lc, `>=`, `>`), args = list(x, lb)), T),
+      ifelse(length(ub), do.call(ifelse(rc, `<=`, `<`), args = list(x, ub)), T)
     )
   )
 }

@@ -7,18 +7,16 @@ box::use(
 # endregion
 # methods
 # region: binary method
-eeq.binary <- function() {
+eeq.binary <- function(tauk, tauq) {
   # assert args in main function
-  # description
-  return("binary")
+  return(as.numeric(years >= min_years))
 }
 
 # endregion
 # region: linear method
 eeq.linear <- function() {
   # assert args in main function
-  # description
-  return("linear")
+  return(pmin(years / min_years, 1))
 }
 
 # endregion
@@ -62,6 +60,14 @@ eeq <- function(years, min_years, eeq_method = eeq.methods$linear_logistic, ...)
 
   if (eeq_method[[1]] == eeq.methods$logistic) {
     return(eeq.logistic())
+  }
+
+  if (eeq_method[[1]] == eeq.methods$linear) {
+    return(eeq.linear())
+  }
+
+  if (eeq_method[[1]] == eeq.methods$linear_logistic) {
+    return(eeq.linear_logistic())
   }
 }
 
