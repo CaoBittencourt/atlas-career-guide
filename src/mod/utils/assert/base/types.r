@@ -45,6 +45,18 @@ is.bernoulli <- function(x) {
 }
 
 # endregion
+# region: bounded numeric
+is.numeric.bounded <- function(x, lb = NULL, ub = NULL) {
+  return(
+    all(
+      is.numeric.vector(x),
+      ifelse(length(lb), x >= lb, T),
+      ifelse(length(ub), x <= ub, T)
+    )
+  )
+}
+
+# endregion
 # numeric matrix types
 # region: unit matrix
 is.unit.matrix <- function(x) {

@@ -1,101 +1,74 @@
+modular::project.options("atlas")
+# setup
 # region: imports
 box::use(
-  glogis = mod / utils / logistic
+  assert = mod / utils / assert,
 )
 
 # endregion
+# methods
 # region: binary method
-eeq.bin <- function(years, min_years) {
+eeq.binary <- function() {
   # assert args in main function
-  return(as.numeric(years >= min_years))
+  # description
+  return("binary")
 }
 
 # endregion
 # region: linear method
-eeq.lin <- function(years, min_years) {
+eeq.linear <- function() {
   # assert args in main function
-  return(pmin(years / min_years, 1))
+  # description
+  return("linear")
 }
 
 # endregion
 # region: logistic method
-eeq.log <- function(years, min_years) {
+eeq.logistic <- function() {
   # assert args in main function
-  return(
-    glogis$logistic(
-      # x = 1 + years,
-      x = years,
-      a = 0,
-      k = 1,
-      c = 1,
-      q = 1,
-      m = min_years,
-      b = 1,
-      nu = 1
-    )
-  )
+  # description
+  return("logistic")
 }
 
 # endregion
-# region: linear-logistic method
-eeq.llo <- function(years, min_years) {
+# region: linear_logistic method
+eeq.linear_logistic <- function() {
   # assert args in main function
-  return(
-    glogis$logistic(
-      x = years,
-      a = 0,
-      k = 1,
-      # k = min(years / min_years, 1),
-      c = 1,
-      q = 1/min_years,
-      m = min_years,
-      # b = 1,
-      # b = min_years / years,
-      b = min_years,
-      nu = 1
-    )
-  )
+  # description
+  return("linear_logistic")
 }
 
 # endregion
-# region: generic function
-# midpoint, scale parameter?
-eeq <- function(years, min_years, eeq_method = c("linear-logistic", "logistic", "binary", "linear")[[1]]) {
+# region: list of methods
+list(
+  "binary" = "binary",
+  "linear" = "linear",
+  "logistic" = "logistic",
+  "linear_logistic" = "linear-logistic"
+) -> eeq.methods
+
+# endregion
+# dispatch
+# region: eeq generic function
+eeq <- function(years, min_years, eeq_method = eeq.methods$linear_logistic, ...) {
   # assert args
-  stopifnot(
-    "'years' must be a non-negative number." = all(
-      years |> is.numeric(),
-      years >= 0
-    )
-  )
-  stopifnot(
-    "'min_years' must be a non-negative numeric vector." = all(
-      min_years |> is.numeric(),
-      min_years >= 0
-    )
-  )
+  assert$base$validate.numeric
 
-  stopifnot(
-    "'eeq_method' must be one of the following methods: 'linear-logistic', 'logistic', 'binary', 'linear'." = any(
-      eeq_method == c("linear-logistic", "logistic", "binary", "linear")
-    )
-  )
 
-  # edge-cases
 
   # multiple dispatch
-  eeq_method[[1]] |>
-    as.character() |>
-    switch(
-      "linear-logistic" = return(eeq.llo(years, min_years)),
-      "logistic" = return(eeq.log(years, min_years)),
-      "binary" = return(eeq.bin(years, min_years)),
-      "linear" = return(eeq.lin(years, min_years))
-    )
+  if (eeq_method[[1]] == eeq.methods$binary) {
+    return(eeq.binary())
+  }
+
+  if (eeq_method[[1]] == eeq.methods$logistic) {
+    return(eeq.logistic())
+  }
 }
 
 # endregion
+# exports
 # region: exports
-box::export(eeq)
+box::export(eeq, eeq.methods)
 
 # endregion

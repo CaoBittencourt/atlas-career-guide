@@ -16,7 +16,9 @@ validate.proper.list <- function(x, arg.name = NULL, nullable = F) {
         type = types$is.proper.list,
         nullable = nullable,
         arg.name = arg.name,
-        type.def = "a proper list."
+        type.def = function() {
+          "a proper list."
+        }
       )
   )
 }
@@ -30,7 +32,9 @@ validate.bool <- function(x, arg.name = NULL, nullable = F) {
         type = types$is.bool,
         nullable = nullable,
         arg.name = arg.name,
-        type.def = "TRUE or FALSE."
+        type.def = function() {
+          "TRUE or FALSE."
+        }
       )
   )
 }
@@ -45,7 +49,9 @@ validate.numeric <- function(x, arg.name = NULL, nullable = F) {
         type = types$is.numeric.vector,
         nullable = nullable,
         arg.name = arg.name,
-        type.def = "numeric."
+        type.def = function() {
+          "numeric."
+        }
       )
   )
 }
@@ -59,7 +65,9 @@ validate.unit <- function(x, arg.name = NULL, nullable = F) {
         type = types$is.unit,
         nullable = nullable,
         arg.name = arg.name,
-        type.def = "numeric and in the unit interval."
+        type.def = function() {
+          "numeric and in the unit interval."
+        }
       )
   )
 }
@@ -73,7 +81,9 @@ validate.unit.signed <- function(x, arg.name = NULL, nullable = F) {
         type = types$is.unit.signed,
         nullable = nullable,
         arg.name = arg.name,
-        type.def = "numeric with absolute value in the unit interval."
+        type.def = function() {
+          "numeric with absolute value in the unit interval."
+        }
       )
   )
 }
@@ -87,8 +97,43 @@ validate.bernoulli <- function(x, arg.name = NULL, nullable = F) {
         type = types$is.bernoulli,
         nullable = nullable,
         arg.name = arg.name,
-        type.def = "either 0 or 1."
+        type.def = function() {
+          "either 0 or 1."
+        }
       )
+  )
+}
+
+# endregion
+# region: bounded numeric
+validate.numeric.bounded <- function(x, arg.name = NULL, nullable = F, ...) {
+  return(
+    x |>
+      utils$validate(
+        type = types$is.numeric.bounded, args = list(lb = lb, ub = ub)
+      ),
+    nullable = nullable,
+    arg.name = arg.name,
+    type.def = function() {
+      msg <- "numeric"
+
+      if (length(lb) & !length(ub)) {
+        paste(msg, "and greater or equal to", lb) -> msg
+      }
+
+      if (!length(lb) & length(ub)) {
+        paste(msg, "and less or equal to", ub) -> msg
+      }
+
+      if (length(lb) & length(ub)) {
+        paste(msg, "and between", lb, "and", ub) -> msg
+      }
+
+      paste0(msg, ".") -> msg
+
+      return(msg)
+    },
+    ...
   )
 }
 
@@ -102,7 +147,9 @@ validate.unit.matrix <- function(x, arg.name = NULL, nullable = F) {
         type = types$is.unit.matrix,
         nullable = nullable,
         arg.name = arg.name,
-        type.def = "a numeric matrix in the unit interval."
+        type.def = function() {
+          "a numeric matrix in the unit interval."
+        }
       )
   )
 }
@@ -116,7 +163,9 @@ validate.unit.signed.matrix <- function(x, arg.name = NULL, nullable = F) {
         type = types$is.unit.signed.matrix,
         nullable = nullable,
         arg.name = arg.name,
-        type.def = "a numeric matrix with absolute value in the unit interval."
+        type.def = function() {
+          "a numeric matrix with absolute value in the unit interval."
+        }
       )
   )
 }
@@ -130,7 +179,9 @@ validate.bernoulli.matrix <- function(x, arg.name = NULL, nullable = F) {
         type = types$is.bernoulli.matrix,
         nullable = nullable,
         arg.name = arg.name,
-        type.def = "a numeric matrix where all values are either 0 or 1."
+        type.def = function() {
+          "a numeric matrix where all values are either 0 or 1."
+        }
       )
   )
 }
@@ -144,7 +195,9 @@ validate.matrix.like <- function(x, arg.name = NULL, nullable = F) {
         type = types$is.matrix.like,
         nullable = nullable,
         arg.name = arg.name,
-        type.def = "a data frame or matrix."
+        type.def = function() {
+          "a data frame or matrix."
+        }
       )
   )
 }
@@ -158,7 +211,9 @@ validate.square <- function(x, arg.name = NULL, nullable = F) {
         type = types$is.square,
         nullable = nullable,
         arg.name = arg.name,
-        type.def = "have the same number of rows and columns."
+        type.def = function() {
+          "have the same number of rows and columns."
+        }
       )
   )
 }
@@ -199,6 +254,7 @@ box::export(
   validate.unit,
   validate.unit.signed,
   validate.bernoulli,
+  validate.numeric.bounded,
   # numeric matrix types
   validate.unit.matrix,
   validate.unit.signed.matrix,
