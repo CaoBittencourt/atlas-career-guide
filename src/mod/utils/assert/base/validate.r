@@ -9,7 +9,7 @@ box::use(
 # type asserts
 # generic types
 # region: proper list
-validate.proper.list <- function(x, arg.name = NULL, nullable = F) {
+validate.proper.list <- function(x, arg.name = NULL, nullable = F, ...) {
   return(
     x |>
       utils$validate(
@@ -18,14 +18,15 @@ validate.proper.list <- function(x, arg.name = NULL, nullable = F) {
         arg.name = arg.name,
         type.def = function() {
           "a proper list."
-        }
+        },
+        ...
       )
   )
 }
 
 # endregion
 # region: boolean
-validate.bool <- function(x, arg.name = NULL, nullable = F) {
+validate.bool <- function(x, arg.name = NULL, nullable = F, ...) {
   return(
     x |>
       utils$validate(
@@ -34,7 +35,8 @@ validate.bool <- function(x, arg.name = NULL, nullable = F) {
         arg.name = arg.name,
         type.def = function() {
           "TRUE or FALSE."
-        }
+        },
+        ...
       )
   )
 }
@@ -42,7 +44,7 @@ validate.bool <- function(x, arg.name = NULL, nullable = F) {
 # endregion
 # numeric types
 # region: basic numeric
-validate.numeric <- function(x, arg.name = NULL, nullable = F) {
+validate.numeric <- function(x, arg.name = NULL, nullable = F, ...) {
   return(
     x |>
       utils$validate(
@@ -51,14 +53,15 @@ validate.numeric <- function(x, arg.name = NULL, nullable = F) {
         arg.name = arg.name,
         type.def = function() {
           "numeric."
-        }
+        },
+        ...
       )
   )
 }
 
 # endregion
 # region: unit
-validate.unit <- function(x, arg.name = NULL, nullable = F) {
+validate.unit <- function(x, arg.name = NULL, nullable = F, ...) {
   return(
     x |>
       utils$validate(
@@ -67,14 +70,15 @@ validate.unit <- function(x, arg.name = NULL, nullable = F) {
         arg.name = arg.name,
         type.def = function() {
           "numeric and in the unit interval."
-        }
+        },
+        ...
       )
   )
 }
 
 # endregion
 # region: signed unit
-validate.unit.signed <- function(x, arg.name = NULL, nullable = F) {
+validate.unit.signed <- function(x, arg.name = NULL, nullable = F, ...) {
   return(
     x |>
       utils$validate(
@@ -83,14 +87,15 @@ validate.unit.signed <- function(x, arg.name = NULL, nullable = F) {
         arg.name = arg.name,
         type.def = function() {
           "numeric with absolute value in the unit interval."
-        }
+        },
+        ...
       )
   )
 }
 
 # endregion
 # region: bernoulli
-validate.bernoulli <- function(x, arg.name = NULL, nullable = F) {
+validate.bernoulli <- function(x, arg.name = NULL, nullable = F, ...) {
   return(
     x |>
       utils$validate(
@@ -99,35 +104,70 @@ validate.bernoulli <- function(x, arg.name = NULL, nullable = F) {
         arg.name = arg.name,
         type.def = function() {
           "either 0 or 1."
-        }
+        },
+        ...
       )
   )
 }
 
 # endregion
 # region: bounded numeric
-validate.numeric.bounded <- function(x, arg.name = NULL, nullable = F, ...) {
+validate.numeric.bounded <- function(x, arg.name = NULL, nullable = F, lb = NULL, ub = NULL, lc = T, rc = T, ...) {
   return(
     x |>
       utils$validate(
-        type = types$is.numeric.bounded,
+        type = function(x) {
+          types$is.numeric.bounded(x, lb, ub, lc, rc)
+        },
         nullable = nullable,
         arg.name = arg.name,
-        type.def = function(...) {
-          list(...) -> dot.args
-
+        type.def = function() {
           msg <- "numeric"
 
-          if (length(dot.args$lb) & !length(dot.args$ub)) {
-            paste(msg, "and greater or equal to", dot.args$lb) -> msg
+          if (length(lb) & !length(ub)) {
+            msg |>
+              paste(
+                "and greater than",
+                ifelse(
+                    lc,
+                    "or equal to",
+                    ""
+                ),
+                lb
+              ) -> msg
           }
 
-          if (!length(dot.args$lb) & length(dot.args$ub)) {
-            paste(msg, "and less or equal to", dot.args$ub) -> msg
+          if (!length(lb) & length(ub)) {
+            msg |>
+              paste(
+                "and less than",
+                ifelse(
+                    rc,
+                    "or equal to",
+                    ""
+                ),
+                ub
+              ) -> msg
           }
 
-          if (length(dot.args$lb) & length(dot.args$ub)) {
-            paste(msg, "and between", dot.args$lb, "and", dot.args$ub) -> msg
+          if (length(lb) & length(ub)) {
+            msg |>
+              paste(
+                "and between",
+                lb,
+                ifelse(
+                  lc,
+                  "(inclusive)",
+                  "(exclusive)"
+                ),
+                "and",
+                ub,
+                ifelse(
+                  rc,
+                  "(inclusive)",
+                  "(exclusive)"
+                )
+              ) -> msg
           }
 
           paste0(msg, ".") -> msg
@@ -142,7 +182,7 @@ validate.numeric.bounded <- function(x, arg.name = NULL, nullable = F, ...) {
 # endregion
 # numeric matrix types
 # region: unit matrix
-validate.unit.matrix <- function(x, arg.name = NULL, nullable = F) {
+validate.unit.matrix <- function(x, arg.name = NULL, nullable = F, ...) {
   return(
     x |>
       utils$validate(
@@ -151,14 +191,15 @@ validate.unit.matrix <- function(x, arg.name = NULL, nullable = F) {
         arg.name = arg.name,
         type.def = function() {
           "a numeric matrix in the unit interval."
-        }
+        },
+        ...
       )
   )
 }
 
 # endregion
 # region: signed unit matrix
-validate.unit.signed.matrix <- function(x, arg.name = NULL, nullable = F) {
+validate.unit.signed.matrix <- function(x, arg.name = NULL, nullable = F, ...) {
   return(
     x |>
       utils$validate(
@@ -167,14 +208,15 @@ validate.unit.signed.matrix <- function(x, arg.name = NULL, nullable = F) {
         arg.name = arg.name,
         type.def = function() {
           "a numeric matrix with absolute value in the unit interval."
-        }
+        },
+        ...
       )
   )
 }
 
 # endregion
 # region: bernoulli matrix
-validate.bernoulli.matrix <- function(x, arg.name = NULL, nullable = F) {
+validate.bernoulli.matrix <- function(x, arg.name = NULL, nullable = F, ...) {
   return(
     x |>
       utils$validate(
@@ -183,14 +225,15 @@ validate.bernoulli.matrix <- function(x, arg.name = NULL, nullable = F) {
         arg.name = arg.name,
         type.def = function() {
           "a numeric matrix where all values are either 0 or 1."
-        }
+        },
+        ...
       )
   )
 }
 
 # endregion
 # region: matrix-like
-validate.matrix.like <- function(x, arg.name = NULL, nullable = F) {
+validate.matrix.like <- function(x, arg.name = NULL, nullable = F, ...) {
   return(
     x |>
       utils$validate(
@@ -199,14 +242,15 @@ validate.matrix.like <- function(x, arg.name = NULL, nullable = F) {
         arg.name = arg.name,
         type.def = function() {
           "a data frame or matrix."
-        }
+        },
+        ...
       )
   )
 }
 
 # endregion
 # region: square matrix
-validate.square <- function(x, arg.name = NULL, nullable = F) {
+validate.square <- function(x, arg.name = NULL, nullable = F, ...) {
   return(
     x |>
       utils$validate(
@@ -215,7 +259,8 @@ validate.square <- function(x, arg.name = NULL, nullable = F) {
         arg.name = arg.name,
         type.def = function() {
           "have the same number of rows and columns."
-        }
+        },
+        ...
       )
   )
 }
@@ -223,7 +268,7 @@ validate.square <- function(x, arg.name = NULL, nullable = F) {
 # endregion
 # misc asserts
 # region: assert methods
-validate.method <- function(x, arg.name = NULL, methods) {
+validate.method <- function(x, arg.name = NULL, methods, ...) {
   if (!any(x %in% methods)) {
     stop(
       paste0(

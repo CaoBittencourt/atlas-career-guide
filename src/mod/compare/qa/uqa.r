@@ -10,20 +10,22 @@ box::use(
 
 # endregion
 # region: underqualification
-uqa <- function(skill_set, skill_mtx, aeq_method = NULL) {
+uqa <- function(skill_set, skill_mtx, ...) {
   # assert args
   # assert$valid_skill_set(skill_set)
-  assert$as.skill_mtx(skill_set) -> skill_set
-  assert$as.skill_mtx(skill_mtx) -> skill_mtx
+  assert$models$as.skill.set.matrix(skill_set, "skill_set") -> skill_set
+  assert$models$as.skill.set.matrix(skill_mtx, "skill_mtx") -> skill_mtx
 
   # default to unweighted
   weights_mtx <- 1
 
   # if attribute equivalence method is provided,
   # estimate attribute equivalence matrix
-  if (length(aeq_method)) {
+  list(...) -> dots
+
+  if (length(dots$aeq_method)) {
     skill_mtx |>
-      lapply(eq$aeq, aeq_method = aeq_method) |>
+      lapply(eq$aeq, aeq_method = dots$aeq_method) |>
       bind_rows() ->
     weights_mtx
   }
