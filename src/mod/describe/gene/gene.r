@@ -1,9 +1,11 @@
+# setup
 # region: imports
 box::use(
   assert = mod / utils / assert
 )
 
 # endregion
+# dispatch
 # region: skill set generality
 gene <- function(skill_set) {
   # assert args
@@ -24,6 +26,7 @@ gene <- function(skill_set) {
 }
 
 # endregion
+# exports
 # region: exports
 box::export(gene)
 

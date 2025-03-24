@@ -2,13 +2,10 @@
 # region: imports
 box::use(
   assert = mod / utils / assert,
-  mod / utils / egmap[...],
-  mod / utils / vmap[...],
+  mod / utils / data[cbindmap, conform],
+  mod / utils / math[as.bernoulli],
   eq = mod / describe / aeq,
   stats[setNames],
-  mod / utils / math[as.bernoulli],
-  mod / utils / cbindmap[...],
-  mod / utils / conform[...],
   dplyr[bind_rows],
 )
 

@@ -1,6 +1,8 @@
 #' @export
 box::use(
-  assert = mod / utils / assert,
-  logis = mod / utils / logistic,
-  test = mod / utils / test
+  mod / utils / assert,
+  mod / utils / data,
+  mod / utils / math,
+  mod / utils / misc,
+  mod / utils / plots,
 )

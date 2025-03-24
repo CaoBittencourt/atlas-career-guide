@@ -1,3 +1,4 @@
+# setup
 # region: imports
 box::use(
   reg.bvls = bvls,
@@ -5,6 +6,7 @@ box::use(
 )
 
 # endregion
+# dispatch
 # region: bvls matching method
 similarity.bvls <- function(Ak, A, sqrtÄ) {
   # assert args in main function
@@ -26,6 +28,7 @@ similarity.bvls <- function(Ak, A, sqrtÄ) {
 }
 
 # endregion
+# exports
 # region: exports
 box::export(similarity.bvls)
 

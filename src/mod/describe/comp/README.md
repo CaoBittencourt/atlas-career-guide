@@ -20,7 +20,7 @@ a_{i}^{k}
 In other words, we estimate *competence* by aggregating all *competencies* into a single value which best represents them. This  is the expected value of one's attributes and so, it is a reliable estimate of their overall performance in any given task, hence their competence.
 
 ## Equivalent Competence Coefficient (Expertise)
-However, real labor markets are often stratified (i.e. not everyone does everything) and efficient economies very much depend on Smithian growth and similar phenomena for their prosperity. Furthermore, we have already quantified skill set's generality and noted some occupations are, indeed, more specialized than others. Therefore, it doesn't seem "fair" to judge their competence based solely on coefficient (1); we should account for each attributes' importance for each skill set in order to properly understand them: 
+However, real labor markets are often stratified (i.e. not everyone does everything) and efficient economies very much depend on Smithian growth and similar phenomena for their prosperity. Furthermore, we have already quantified skill set generality and noted some occupations are, indeed, more specialized than others. Therefore, it doesn't seem "fair" to judge their competence based solely on coefficient (1); we should account for each attributes' importance for each skill set in order to properly understand them: 
 
 ```math
 \begin{gather}

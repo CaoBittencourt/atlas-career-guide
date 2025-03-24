@@ -1,3 +1,4 @@
+# setup
 # region: imports
 box::use(
   assert = mod / utils / assert,
@@ -7,6 +8,7 @@ box::use(
 )
 
 # endregion
+# methods
 # region: linear_logistic method
 aeq.linear_logistic <- function(ãk, gammak) {
   # assert args in main function
@@ -55,6 +57,7 @@ list(
 ) -> aeq.methods
 
 # endregion
+# dispatch
 # region: aeq generic function
 aeq <- function(skill_set, generality = NULL, aeq_method = aeq.methods[[1]], ...) {
   # assert args
@@ -82,6 +85,7 @@ aeq <- function(skill_set, generality = NULL, aeq_method = aeq.methods[[1]], ...
 }
 
 # endregion
+# exports
 # region: exports
 box::export(aeq, aeq.methods)
 

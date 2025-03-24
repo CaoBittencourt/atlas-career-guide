@@ -1,9 +1,11 @@
+# setup
 # region: imports
 box::use(
   weights[wtd.cors]
 )
 
 # endregion
+# dispatch
 # region: pearson correlation matching method
 similarity.pearson <- function(ak, A, Ä) {
   # assert args in main function
@@ -21,6 +23,7 @@ similarity.pearson <- function(ak, A, Ä) {
 }
 
 # endregion
+# exports
 # region: exports
 box::export(similarity.pearson)
 

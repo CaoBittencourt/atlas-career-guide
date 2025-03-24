@@ -28,7 +28,7 @@ df_occupations_cao
 df_cao |>
   s$similarity(
     df_occupations_cao,
-    s$similarity.methods$probit,
+    s$similarity.methods$euclidean,
     bind = T
   ) ->
 similarity_cao

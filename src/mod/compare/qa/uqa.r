@@ -1,3 +1,4 @@
+# setup
 # region: imports
 box::use(
   eq = mod / describe / aeq,
@@ -9,6 +10,7 @@ box::use(
 )
 
 # endregion
+# dispatch
 # region: underqualification
 uqa <- function(skill_set, skill_mtx, ...) {
   # assert args
@@ -56,6 +58,7 @@ uqa <- function(skill_set, skill_mtx, ...) {
 }
 
 # endregion
+# exports
 # region: exports
 box::export(uqa)
 

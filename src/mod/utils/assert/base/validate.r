@@ -129,9 +129,9 @@ validate.numeric.bounded <- function(x, arg.name = NULL, nullable = F, lb = NULL
               paste(
                 "and greater than",
                 ifelse(
-                    lc,
-                    "or equal to",
-                    ""
+                  lc,
+                  "or equal to",
+                  ""
                 ),
                 lb
               ) -> msg
@@ -142,9 +142,9 @@ validate.numeric.bounded <- function(x, arg.name = NULL, nullable = F, lb = NULL
               paste(
                 "and less than",
                 ifelse(
-                    rc,
-                    "or equal to",
-                    ""
+                  rc,
+                  "or equal to",
+                  ""
                 ),
                 ub
               ) -> msg
@@ -268,26 +268,54 @@ validate.square <- function(x, arg.name = NULL, nullable = F, ...) {
 # endregion
 # misc asserts
 # region: assert methods
-validate.method <- function(x, arg.name = NULL, methods, ...) {
-  if (!any(x %in% methods)) {
-    stop(
-      paste0(
-        "'", arg.name, "'",
-        " must be one of following methods: ",
-        methods |>
-          sapply(
-            function(x) {
-              paste0('"', x, '"')
-            }
-          ) |>
+validate.method <- function(x, arg.name = NULL, methods, nullable = F, ...) {
+  return(
+    x |>
+      utils$validate(
+        type = function(x) {
+          all(x %in% methods)
+        },
+        nullable = nullable,
+        arg.name = arg.name,
+        type.def = function() {
           paste0(
-            collapse = ", "
-          ),
-        "."
+            "must be one of following methods: ",
+            methods |>
+              sapply(
+                function(m) {
+                  paste0('"', m, '"')
+                }
+              ) |>
+              paste0(
+                collapse = ", "
+              ),
+            "."
+          )
+        }
       )
-    )
-  }
+  )
 }
+
+# validate.method <- function(x, arg.name = NULL, methods, ...) {
+#   if (!any(x %in% methods)) {
+#     stop(
+#       paste0(
+#         "'", arg.name, "'",
+#         " must be one of following methods: ",
+#         methods |>
+#           sapply(
+#             function(x) {
+#               paste0('"', x, '"')
+#             }
+#           ) |>
+#           paste0(
+#             collapse = ", "
+#           ),
+#         "."
+#       )
+#     )
+#   }
+# }
 
 # endregion
 # export

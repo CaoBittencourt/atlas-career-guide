@@ -18,16 +18,16 @@ library(atlas.plot)
 # endregion
 # region: data
 # skill set matrix
-getOption("atlas.skills_mtx") |> readRDS() -> df_occupations
+(getOption("atlas.skills_mtx") |> readRDS())[2:8] -> df_occupations
+df_occupations |> sapply(eq$aeq, aeq_method = "linear-logistic") -> aeq_occupations
 
 # endregion
 # model
-# region: equivalent field similarity model
-# attribute equivalence
-df_occupations[-1] |> sapply(eq$aeq, aeq_method = "linear-logistic") -> aeq_occupations
-
+# region: cosine equivalent field similarity model
 # calculate equivalent field similarity matrix
-aeq_occupations |> fs$field(aeq_occupations) -> aeq_field_mtx
+aeq_occupations |> fs$field(aeq_occupations, fs$field.methods$cosine) -> aeq_field_mtx
+
+aeq_field_mtx
 
 # note: field similarity is symmetric
 all((aeq_field_mtx |> lower.tri()) == t(aeq_field_mtx |> upper.tri()))
@@ -35,26 +35,71 @@ all((aeq_field_mtx |> lower.tri()) == t(aeq_field_mtx |> upper.tri()))
 # note: field similarity is really quite high
 aeq_field_mtx[aeq_field_mtx |> lower.tri(diag = F)] |> summary()
 
-getOption("atlas.oldata") |>
-  read.csv() |>
-  pull(career_cluster) |>
-  unique() |>
-  length() ->
-nclusters
+# getOption("atlas.oldata") |>
+#   read.csv() |>
+#   pull(career_cluster) |>
+#   unique() |>
+#   length() ->
+# nclusters
 
-aeq_field_mtx |> kmeans(nclusters) -> kmeans_field
+# aeq_field_mtx |> kmeans(nclusters) -> kmeans_field
 
-tibble(
-  occupation = kmeans_field$cluster |> names(),
-  cluster = kmeans_field$cluster |> factor(levels = seq_len(nclusters))
-) |>
-  group_by(cluster) |>
-  group_split()
+# tibble(
+#   occupation = kmeans_field$cluster |> names(),
+#   cluster = kmeans_field$cluster |> factor(levels = seq_len(nclusters))
+# ) |>
+#   group_by(cluster) |>
+#   group_split()
 
 # endregion
-# region: field similarity model without aeq
+# region: cosine field similarity model without aeq
 # note: attribute equivalence helps to differentiate occupations' fields
-df_occupations[-1] |> fs$field(df_occupations[-1]) -> field_mtx
+df_occupations |> fs$field(df_occupations, fs$field.methods$cosine) -> field_mtx
+
+field_mtx
+
+sum(field_mtx >= aeq_field_mtx) / length(field_mtx)
+mean(field_mtx - aeq_field_mtx)
+max(field_mtx - aeq_field_mtx)
+min(field_mtx - aeq_field_mtx)
+
+# endregion
+# region: cobb-douglas equivalent field similarity model
+# attribute equivalence
+# calculate equivalent field similarity matrix
+aeq_occupations |> fs$field(aeq_occupations, fs$field.methods$cobb_douglas) -> aeq_field_mtx
+
+aeq_field_mtx
+
+# note: field similarity is symmetric
+all((aeq_field_mtx |> lower.tri()) == t(aeq_field_mtx |> upper.tri()))
+
+# note: field similarity is really quite high
+aeq_field_mtx[aeq_field_mtx |> lower.tri(diag = F)] |> summary()
+
+# getOption("atlas.oldata") |>
+#   read.csv() |>
+#   pull(career_cluster) |>
+#   unique() |>
+#   length() ->
+# nclusters
+
+# aeq_field_mtx |> kmeans(nclusters) -> kmeans_field
+
+# tibble(
+#   occupation = kmeans_field$cluster |> names(),
+#   cluster = kmeans_field$cluster |> factor(levels = seq_len(nclusters))
+# ) |>
+#   group_by(cluster) |>
+#   group_split()
+
+# endregion
+# region: cobb-douglas field similarity model without aeq
+# note: attribute equivalence helps to differentiate occupations' fields
+df_occupations |> fs$field(df_occupations, fs$field.methods$cobb_douglas) -> field_mtx
+
+field_mtx
+
 sum(field_mtx >= aeq_field_mtx) / length(field_mtx)
 mean(field_mtx - aeq_field_mtx)
 max(field_mtx - aeq_field_mtx)

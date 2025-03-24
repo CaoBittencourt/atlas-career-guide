@@ -1,3 +1,4 @@
+# setup
 # region: imports
 box::use(
   fastglm[fastglmPure],
@@ -6,6 +7,7 @@ box::use(
 )
 
 # endregion
+# dispatch
 # region: logit / probit matching method
 similarity.logit <- function(bernoulliAk, bernoulliA, repsÄ, link = c("logit", "probit")[[1]]) {
   # assert args in main function
@@ -33,6 +35,7 @@ similarity.logit <- function(bernoulliAk, bernoulliA, repsÄ, link = c("logit", 
 }
 
 # endregion
+# exports
 # region: exports
 box::export(similarity.logit)
 

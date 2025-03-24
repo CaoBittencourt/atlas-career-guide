@@ -1,9 +1,11 @@
+# setup
 # region: imports
 box::use(
   mod / compare / qa / uqa[...],
 )
 
 # endregion
+# dispatch
 # region: sufficient qualification
 sqa <- function(skill_set, skill_mtx, aeq_method = NULL) {
   # assert args
@@ -20,6 +22,7 @@ sqa <- function(skill_set, skill_mtx, aeq_method = NULL) {
 }
 
 # endregion
+# exports
 # region: exports
 box::export(sqa)
 
