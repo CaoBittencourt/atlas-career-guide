@@ -110,30 +110,32 @@ validate.numeric.bounded <- function(x, arg.name = NULL, nullable = F, ...) {
   return(
     x |>
       utils$validate(
-        type = types$is.numeric.bounded, args = list(lb = lb, ub = ub)
-      ),
-    nullable = nullable,
-    arg.name = arg.name,
-    type.def = function() {
-      msg <- "numeric"
+        type = types$is.numeric.bounded,
+        nullable = nullable,
+        arg.name = arg.name,
+        type.def = function(...) {
+          list(...) -> dot.args
 
-      if (length(lb) & !length(ub)) {
-        paste(msg, "and greater or equal to", lb) -> msg
-      }
+          msg <- "numeric"
 
-      if (!length(lb) & length(ub)) {
-        paste(msg, "and less or equal to", ub) -> msg
-      }
+          if (length(dot.args$lb) & !length(dot.args$ub)) {
+            paste(msg, "and greater or equal to", dot.args$lb) -> msg
+          }
 
-      if (length(lb) & length(ub)) {
-        paste(msg, "and between", lb, "and", ub) -> msg
-      }
+          if (!length(dot.args$lb) & length(dot.args$ub)) {
+            paste(msg, "and less or equal to", dot.args$ub) -> msg
+          }
 
-      paste0(msg, ".") -> msg
+          if (length(dot.args$lb) & length(dot.args$ub)) {
+            paste(msg, "and between", dot.args$lb, "and", dot.args$ub) -> msg
+          }
 
-      return(msg)
-    },
-    ...
+          paste0(msg, ".") -> msg
+
+          return(msg)
+        },
+        ...
+      )
   )
 }
 

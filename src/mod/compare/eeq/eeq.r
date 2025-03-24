@@ -1,4 +1,3 @@
-modular::project.options("atlas")
 # setup
 # region: imports
 box::use(
