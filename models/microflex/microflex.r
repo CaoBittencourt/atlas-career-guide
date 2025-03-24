@@ -8,7 +8,7 @@ box::use(
   stats[...],
   dplyr[...],
   tidyr[...],
-  kflex = mod / micro / kflex / microflex,
+  mod / micro / kflex,
 )
 
 library(atlas.plot)
@@ -19,33 +19,27 @@ library(atlas.plot)
 getOption("atlas.skills_mtx") |> readRDS() -> df_occupations
 
 # labor statistics
-getOption("atlas.labor") |>
-  readRDS() |>
-  inner_join(
-    df_occupations
-  ) -> df_labor
-
-df_labor$employment_norm |>
-  setNames(df_labor$occupation) ->
-employment_levels
+(getOption("atlas.labor") |> readRDS())$employment_variants -> employment
 
 # endregion
 # model
 # region: human capital microflexibility
-df_occupations[-1] |> kflex$microflex(employment_levels) -> mtx_microflex
+df_occupations |> kflex$microflex(employment, df_occupations$item) -> mtx_microflex
 
 # endregion
 # region: attribute dominance
-df_occupations[-1] |>
-  kflex$attribute.dominance(
-    employment_levels,
+df_occupations |>
+  kflex$dominance.skill(
+    employment,
+    df_occupations$item,
     aggregate = F
   ) ->
 mtx_attribute_dominance
 
-df_occupations[-1] |>
-  kflex$attribute.dominance(
-    employment_levels
+df_occupations |>
+  kflex$dominance.skill(
+    employment,
+    df_occupations$item
   ) ->
 agg_attribute_dominance
 

@@ -1,3 +1,4 @@
+# setup
 # region: imports
 box::use(
   mod / labor / employability / misc / ta[...],
@@ -5,6 +6,7 @@ box::use(
 )
 
 # endregion
+# dispatch
 # region: Omega (aggregate time allocation)
 Omega.bin <- function(lmin = 0, lmax = 1, ttc) {
   # # assert args
@@ -33,6 +35,7 @@ Omega.bin <- function(lmin = 0, lmax = 1, ttc) {
 Omega <- Vectorize(Omega.bin, vectorize.args = c("lmin", "lmax", "ttc"))
 
 # endregion
+# exports
 # region: exports
 box::export(Omega)
 

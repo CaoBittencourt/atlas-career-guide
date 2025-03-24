@@ -35,10 +35,28 @@ validate.comp <- function(x, arg.name = NULL, nullable = F) {
 }
 
 # endregion
+# region: attribute macroflexibility
+validate.macroflex <- function(x, arg.name = NULL, nullable = F) {
+  return(types$validate.unit(x))
+}
+
+# endregion
+# region: attribute microflexibility
+validate.microflex <- function(x, arg.name = NULL, nullable = F) {
+  return(types$validate.unit(x))
+}
+
+# endregion
 # region: employment levels
+validate.employment <- function(x, arg.name = NULL, nullable = F) {
+  return(types$validate.numeric.bounded(x, arg.name, nullable, 0, lc = F))
+}
 
 # endregion
 # region: wages
+validate.wage <- function(x, arg.name = NULL, nullable = F) {
+  return(types$validate.numeric.bounded(x, arg.name, nullable, 0, lc = F))
+}
 
 # endregion
 # matrices
@@ -56,6 +74,12 @@ validate.aeq.matrix <- function(x, arg.name = NULL, nullable = F) {
 }
 
 # endregion
+# region: attribute microflexibility
+validate.microflex.matrix <- function(x, arg.name = NULL, nullable = F) {
+  return(types$validate.unit.matrix(x))
+}
+
+# endregion
 # exports
 # region: exports
 box::export(
@@ -63,8 +87,13 @@ box::export(
   validate.aeq,
   validate.gene,
   validate.comp,
+  validate.macroflex,
+  validate.microflex,
+  validate.employment,
+  validate.wage,
   validate.skill.set.matrix,
-  validate.aeq.matrix
+  validate.aeq.matrix,
+  validate.microflex.matrix
 )
 
 # endregion

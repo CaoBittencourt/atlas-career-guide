@@ -1,3 +1,4 @@
+# setup
 # region: imports
 box::use(
   mod / labor / employability / misc / Omega[...],
@@ -5,6 +6,7 @@ box::use(
 )
 
 # endregion
+# dispatch
 # region: competitiveness
 competitiveness <- function(T_q, h_q, u_qk, u_qq, ttc, w, agg = T) {
   if (is.function(ttc)) {
@@ -27,6 +29,7 @@ competitiveness <- function(T_q, h_q, u_qk, u_qq, ttc, w, agg = T) {
 }
 
 # endregion
+# exports
 # region: exports
 box::export(competitiveness)
 

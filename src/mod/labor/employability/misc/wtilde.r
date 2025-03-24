@@ -1,3 +1,4 @@
+# setup
 # region: imports
 box::use(
   mod / labor / employability / misc / pec[...],
@@ -5,6 +6,7 @@ box::use(
 )
 
 # endregion
+# dispatch
 # region: relative employment levels in maximum labor stratification
 wtilde.mls <- function(w) {
   round(w) |> pmax(1) -> w
@@ -40,6 +42,7 @@ l.kde <- function(wq.proxy = 1024, wq, ttc) {
 }
 
 # endregion
+# exports
 # region: exports
 box::export(l.kde)
 

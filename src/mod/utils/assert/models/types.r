@@ -34,10 +34,28 @@ is.comp <- function(x) {
 }
 
 # endregion
+# region: attribute macroflexibility
+is.macroflex <- function(x) {
+  return(types$is.unit(x))
+}
+
+# endregion
+# region: attribute microflexibility
+is.microflex <- function(x) {
+  return(types$is.unit(x))
+}
+
+# endregion
 # region: employment levels
+is.employment <- function(x) {
+  return(types$is.numeric.bounded(x, 0, lc = F))
+}
 
 # endregion
 # region: wages
+is.wage <- function(x) {
+  return(types$is.numeric.bounded(x, 0, lc = F))
+}
 
 # endregion
 # matrices
@@ -53,6 +71,12 @@ is.aeq.matrix <- function(x) {
 }
 
 # endregion
+# region: attribute microflexibility
+is.microflex.matrix <- function(x) {
+  return(types$is.unit.matrix(x))
+}
+
+# endregion
 # exports
 # region: exports
 box::export(
@@ -60,8 +84,13 @@ box::export(
   is.aeq,
   is.gene,
   is.comp,
+  is.macroflex,
+  is.microflex,
+  is.employment,
+  is.wage,
   is.skill.set.matrix,
-  is.aeq.matrix
+  is.aeq.matrix,
+  is.microflex.matrix
 )
 
 # endregion

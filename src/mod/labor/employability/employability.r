@@ -1,3 +1,4 @@
+# setup
 # region: imports
 box::use(
   assert = mod / utils / assert,
@@ -8,6 +9,7 @@ box::use(
 )
 
 # endregion
+# dispatch
 # region: employability
 employability <- function(Tk, hk, ttc, w, agg = T) {
   # assert args
@@ -47,6 +49,7 @@ employability <- function(Tk, hk, ttc, w, agg = T) {
 }
 
 # endregion
+# exports
 # region: exports
 box::export(employability)
 

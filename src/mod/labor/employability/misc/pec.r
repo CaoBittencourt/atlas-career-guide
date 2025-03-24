@@ -1,3 +1,4 @@
+# setup
 # region: imports
 box::use(
   cubature[cubintegrate],
@@ -6,6 +7,7 @@ box::use(
 )
 
 # endregion
+# dispatch
 # region: proportional employment condition (pec)
 # given the pec and a vector of employment levels w, determine optimal responsibility bounds l
 pec.l <- function(lmin = 0, wtilde = 1, ttc) {
@@ -82,6 +84,7 @@ pec <- function(wtilde, ttc) {
 }
 
 # endregion
+# exports
 # region: exports
 box::export(pec)
 
