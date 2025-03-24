@@ -1,6 +1,7 @@
 # region: imports
 box::use(
-  mod / labor / employability / misc / pec[...]
+  mod / labor / employability / misc / pec[...],
+  assert = mod / utils / assert
 )
 
 # endregion
@@ -14,9 +15,7 @@ wtilde.mls <- function(w) {
 # region: kernel density approaximation of optimal responsibility bounds
 l.kde <- function(wq.proxy = 1024, wq, ttc) {
   # assert args
-  stopifnot(
-    "'wq' must be a non-negative integer indicating the workforce size." = is.numeric(wq)
-  )
+  assert$base$validate.numeric.bounded(wq, "wq", F, 0, lc = F)
 
   wq |>
     ceiling() |>

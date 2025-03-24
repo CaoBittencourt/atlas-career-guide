@@ -4,8 +4,9 @@ ATLAS CAREER GUIDE TASKS
 
 current task
 -------------------------------------
-[ ] REPLACE ASSERT STATEMENTS!
+[\] REPLACE ASSERT STATEMENTS!
 [\] modularize / vectorize codebase
+[ ] taxonomy => evol and/or prog?
 [\] standardize notation
 [ ] switch to juliaLang?
 

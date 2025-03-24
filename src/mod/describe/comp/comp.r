@@ -1,3 +1,4 @@
+# setup
 # region: imports
 box::use(
   gn = mod / describe / gene,
@@ -7,7 +8,8 @@ box::use(
 )
 
 # endregion
-# region: general competence coefficient
+# methods
+# region: general method
 comp.general <- function(ak) {
   # assert args in main function
   # expected value of all competencies
@@ -15,7 +17,7 @@ comp.general <- function(ak) {
 }
 
 # endregion
-# region: equivalent competence coefficient (expertise)
+# region: expertise method
 comp.expertise <- function(ak, äk) {
   # assert args in main function
   # expected value of actual competencies
@@ -25,13 +27,14 @@ comp.expertise <- function(ak, äk) {
 # endregion
 # region: list of methods
 list(
-  "expertise" = "expertise",
-  "general" = "general"
+  "general" = "general",
+  "expertise" = "expertise"
 ) -> comp.methods
 
 # endregion
-# region: generic function
-comp <- function(skill_set, comp_method = comp.methods[[1]], ...) {
+# dispatch
+# region: comp generic function
+comp <- function(skill_set, comp_method = comp.methods$expertise, ...) {
   # assert args
   assert$models$validate.skill.set(skill_set)
   assert$base$validate.method(comp_method, "comp_method", comp.methods)
@@ -52,6 +55,7 @@ comp <- function(skill_set, comp_method = comp.methods[[1]], ...) {
 }
 
 # endregion
+# exports
 # region: exports
 box::export(comp, comp.methods)
 

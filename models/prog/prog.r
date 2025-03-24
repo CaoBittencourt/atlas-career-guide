@@ -15,7 +15,7 @@ getOption("atlas.skills_mtx") |> readRDS() -> df_occupations
 
 # squared similarity matrix = temp employability matrix
 # box::use(
-#   s = mod / compare / match,
+#   s = mod / compare / similarity,
 #   mod / utils / conform[...],
 # )
 #
@@ -33,7 +33,7 @@ getOption("atlas.skills_mtx") |> readRDS() -> df_occupations
 #         values_from = item_score,
 #         names_from = occupation
 #       ),
-#     match_method = "gmme"
+#     similarity_method = "gmme"
 #   ) ->
 # mtx_similarity
 

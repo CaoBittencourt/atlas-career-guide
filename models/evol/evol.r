@@ -5,11 +5,10 @@ modular::project.options("atlas")
 # endregion
 # region: imports
 box::use(
-  s = mod / compare / match,
+  s = mod / compare / similarity,
   qa = mod / compare / qa,
   c = mod / describe / comp,
   mod / utils / conform[...],
-  vec = mod / compare / match / methods / vec,
   assert = mod / utils / assert,
   stats[weighted.mean]
 )
@@ -31,7 +30,7 @@ df_occupations_long |>
     competence =
       c$comp(
         item_score,
-        macroflex_weight = F
+        c$comp.methods$expertise
       )
   ) -> df_competence
 
