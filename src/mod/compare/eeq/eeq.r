@@ -51,9 +51,9 @@ list(
 # region: eeq generic function
 eeq <- function(years, min_years, eeq_method = eeq.methods$linear_logistic, ...) {
   # assert args
-  assert$base$validate.numeric
-
-
+  assert$base$validate.numeric.bounded(years, "years", F, lb = 0)
+  assert$base$validate.numeric.bounded(min_years, "min_years", F, lb = 0)
+  assert$base$validate.method(eeq_method, "eeq_method", eeq.methods)
 
   # multiple dispatch
   if (eeq_method[[1]] == eeq.methods$binary) {
