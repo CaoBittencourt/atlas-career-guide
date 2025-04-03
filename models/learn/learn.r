@@ -18,9 +18,9 @@ getOption("atlas.skills_mtx") |> readRDS() -> df_occupations
 retirement.age <- 65
 starting.age <- 14
 
-learn <- function(ak, aq, years) {
+# learn <- function(ak, aq, years) {
 
-}
+# }
 
 # t = time iterator
 # isEducation = 1 - isWork
