@@ -140,44 +140,52 @@ path.optimize <- function(ẍkz, ẗkz, uk, S, S.eq.geq, x, t, Bk.star, Bk, is.e
   # (S[Bk.star, ] * !is.education) * (seq_along(is.education) != Bk.star)
   # (1) persue Bk.star, then segway into Bk.star from another role
   # (2) persue other education, then segway into Bk.star from another role
-  
+
   S[Bk.star, ] * (seq_along(is.education) != Bk.star)
   S[, Bk.star] * (seq_along(is.education) != Bk.star)
-   
-  
-  
-  
-# 1   2   3   4   5   6   (( 7))  8   9   10  11  12  13 (14) # id
-# .21 .23 .45 .66 .11 .11 (( 1)) .21 .23 .45 .66 .11 .11 ( 1) # S[, Bk.star]
-# .14 .65 .66 .44 .62 .55 (( 1)) .14 .65 .66 .44 .62 .55 ( 1) # S[Bk.star, ]
-# 0   0   0   7   0   2   (( 7)) 0   0   0   0   0   0   ( 0) # x
-# 19  28  26  14  18  23  ((26)) 0   0   0   0   0   0   ( 0) # t
 
-S
-# S[, Bk.star]
-S[Bk.star, ]
-x
-t
-((x - ẍkz) + (t - ẗkz)) * ((x == 0) ^ (x[Bk.star] > 0)) / S[Bk.star,]
-((x - ẍkz) + (t - ẗkz)) * ((seq_along(is.education) != Bk.star) ^ (x[Bk.star] > 0)) / S[Bk.star,]
-(x - ẍkz) / S
-  
-(x[Bk.star] > 0) * S[Bk.star, ] * (seq_along(is.education) != Bk.star)
-((x - ẍkz) + (t - ẗkz)) / S[Bk.star,]  
 
-  
+
+
+  # 1   2   3   4   5   6   (( 7))  8   9   10  11  12  13 (14) # id
+  # .21 .23 .45 .66 .11 .11 (( 1)) .21 .23 .45 .66 .11 .11 ( 1) # S[, Bk.star]
+  # .14 .65 .66 .44 .62 .55 (( 1)) .14 .65 .66 .44 .62 .55 ( 1) # S[Bk.star, ]
+  # 0   0   0   7   0   2   (( 7)) 0   0   0   0   0   0   ( 0) # x
+  # 19  28  26  14  18  23  ((26)) 0   0   0   0   0   0   ( 0) # t
+
+  S
+  # S[, Bk.star]
+  S[Bk.star, ]
+  x
+  t
+  ((t - ẗkz)) * ((x == 0)^(x[Bk.star] > 0)) / S[, Bk.star]
+  ((t - ẗkz)) * ((x == 0)^(x[Bk.star] > 0)) / S[Bk.star, ]
+
+  S[Bk.star, ] * ((t - ẗkz)) * ((x == 0)^(x[Bk.star] > 0)) / S[, Bk.star]
+  S[Bk.star, ] * ((t - ẗkz)) * ((x == 0)^(x[Bk.star] > 0)) / S[Bk.star, ]
+
+  ((x - ẍkz) + (t - ẗkz)) * ((x == 0)^(x[Bk.star] > 0)) / S[Bk.star, ]
+  ((x - ẍkz) + (t - ẗkz)) * ((x == 0)^(x[Bk.star] > 0)) / S[Bk.star, ]
+  ((x - ẍkz) + (t - ẗkz)) * ((x == 0)^(x[Bk.star] > 0)) / S[Bk.star, ]
+  ((x - ẍkz) + (t - ẗkz)) * ((seq_along(is.education) != Bk.star)^(x[Bk.star] > 0)) / S[Bk.star, ]
+  (x - ẍkz) / S
+
+  (x[Bk.star] > 0) * S[Bk.star, ] * (seq_along(is.education) != Bk.star)
+  ((x - ẍkz) + (t - ẗkz)) / S[Bk.star, ]
+
+
   # (x - ẍkz) / S[,Bk.star]
   # (t - ẗkz) / S[,Bk.star]
-  
-  (x - ẍkz) / S[Bk.star,]
-  (t - ẗkz) / S[Bk.star,]
-  
+
+  (x - ẍkz) / S[Bk.star, ]
+  (t - ẗkz) / S[Bk.star, ]
+
   (x - ẍkz) / rowMeans(S)
   (t - ẗkz) / rowMeans(S)
-  
+
   (x - ẍkz) / colMeans(S)
   (t - ẗkz) / colMeans(S)
-  
+
   # ẍkz - x
   # ẗkz - t
   x - ẍkz
@@ -272,27 +280,27 @@ path.recursive <- function(ẍkz, ẗkz, uk, S, S.eq.geq, x, t, Bk.star, Bk, is.
   )
 }
 
-# replicate(7, runif(7)) -> S
-# diag(S) <- 1
-# rep(F, ncol(S)) -> is.education
-# c(is.education, !is.education) -> is.education
-# S |> cbind(S) -> S
-# S |> rbind(S) -> S
+replicate(7, runif(7)) -> S
+diag(S) <- 1
+rep(F, ncol(S)) -> is.education
+c(is.education, !is.education) -> is.education
+S |> cbind(S) -> S
+S |> rbind(S) -> S
 
-# (S^2) > 0.5 -> S.eq.geq
+(S^2) > 0.5 -> S.eq.geq
 
-# x <- c(runif(7, -5, 10) |> round(), rep(0, 7)) |> pmax(0)
-# t <- c(runif(7, 14, 28) |> round(), rep(0, 7))
+x <- c(runif(7, -5, 10) |> round(), rep(0, 7)) |> pmax(0)
+t <- c(runif(7, 14, 28) |> round(), rep(0, 7))
 
-# ẍkz <- rep(0, 7 + 7)
-# ẗkz <- rep(0, 7 + 7)
+ẍkz <- rep(0, 7 + 7)
+ẗkz <- rep(0, 7 + 7)
 
-# uk <- rep(1:7 * runif(7), 2)
-# Bk.star <- 7
-# Bk <- c()
+uk <- rep(1:7 * runif(7), 2)
+Bk.star <- 7
+Bk <- c()
 
-# zmax <- 65
-# z <- 0
+zmax <- 65
+z <- 0
 
 path.recursive(
   ẍkz = ẍkz,
