@@ -12,6 +12,15 @@ morph <- function(akz, A, Bkz, fn = mean, ...) {
   return(fn |> mapply(akz, A[, Bkz], ...))
 }
 
+route.duration <- function() {
+  # optimize which route to take, given
+  # 1. minimum experience requirements
+  # 2. minimum education requirements
+  # 3. experience and education carryover
+  # 4. minimum total years to reach the goal
+  return(0)
+}
+
 learn <- function(ẍkz, ẗkz, S, S.eq.geq, Bkz, is.education) {
   # increment experience and education vectors
   # ẍkz is the equivalent experience of person k at time z
@@ -153,11 +162,23 @@ path.optimize <- function(ẍkz, ẗkz, uk, S, S.eq.geq, x, t, Bk.star, Bk, is.e
   # 0   0   0   7   0   2   (( 7)) 0   0   0   0   0   0   ( 0) # x
   # 19  28  26  14  18  23  ((26)) 0   0   0   0   0   0   ( 0) # t
 
+  # 1. if no experience is required, persue most efficient education
+  # 2. if experience is required, choose first occupation
+  # 2.1. first occupation, by definition, cannot have experience requirements
+  # 2.2. optimize educational attainment for first occupation while also minimizing
+  # time to arrive at stationary (goal) career
+  # repeat (non recursively?)
+  # the education choosen for the first occupation should be that which minimizes the total cost in years, not only the immediate cost of arriving at the first occupation itself
+  # i.e. the economic agent should not "shoot too far" on their first occupation
+  # assuming, of course, they already attained any presupposed education
+
   S
-  # S[, Bk.star]
-  S[Bk.star, ]
-  x
-  t
+  data.frame(
+    Sk.star_q = S[, Bk.star],
+    Sq_k.star = S[Bk.star, ],
+    x,
+    t
+  )
   ((t - ẗkz)) * ((x == 0)^(x[Bk.star] > 0)) / S[, Bk.star]
   ((t - ẗkz)) * ((x == 0)^(x[Bk.star] > 0)) / S[Bk.star, ]
 
