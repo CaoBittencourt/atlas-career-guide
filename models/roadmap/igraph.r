@@ -19,12 +19,17 @@ list(
 ) -> education
 
 # required experience
+# list(
+#   entry.level = 0,
+#   low.level = 1,
+#   mid.level = 3,
+#   high.level = 5,
+#   top.level = 10
+# ) -> experience
 list(
   entry.level = 0,
-  low.level = 1,
   mid.level = 3,
-  high.level = 5,
-  top.level = 10
+  high.level = 7
 ) -> experience
 
 # career progression map for one occupation (experience vs education 2d grid)
