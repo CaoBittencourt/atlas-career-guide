@@ -88,7 +88,7 @@ career.grid |>
   ) ->
 career.grids
 
-career.grids[1]
+career.grids[[1]]
 
 # similarity matrix
 career.req |>
@@ -112,6 +112,12 @@ career.req |>
         career.req$
           occupation
       )
+  ) |>
+  mutate(
+    across(
+      .cols = where(is.numeric),
+      .fns = ~ .x^2
+    )
   ) ->
 mtx_similarity
 
@@ -126,12 +132,9 @@ career.move <- function(skq, xk, xq, tk, tq) {
 
   tk <- tk - tbase
   tq <- tq - tbase
-  print(tk)
-  print(tq)
+
   # equivalent similarity
   skq.eq <- (skq >= 0.5) * skq
-  print(skq)
-  print(skq.eq)
 
   # xp and edu requirements
   (xq - xk * skq.eq) -> req.x
@@ -141,7 +144,6 @@ career.move <- function(skq, xk, xq, tk, tq) {
   (req.t > 0) * req.t -> req.t
 
   # career move duration in years
-  print((req.x + req.t) / skq.eq)
   return((req.x + req.t) / skq.eq)
 }
 
@@ -157,24 +159,10 @@ career.move(1, from$x, to$x, from$t, to$t)
 
 # example: career switch
 career.grids[[1]][1, ] -> from
-career.grids[[2]][1, ] -> to
+career.grids[[3]][1, ] -> to
 mtx_similarity |>
   select(-1) |>
-  slice(2) |>
-  pull(1) |>
-  career.move(
-    from$x,
-    to$x,
-    from$t,
-    to$t
-  )
-
-# example: career switch
-career.grids[[1]][1, ] -> from
-career.grids[[2]][10, ] -> to
-mtx_similarity |>
-  select(-1) |>
-  slice(2) |>
+  slice(3) |>
   pull(1) |>
   career.move(
     from$x,
@@ -191,8 +179,8 @@ mtx_similarity |>
   slice(2) |>
   pull(1) |>
   career.move(
-    from$x[[1]],
-    to$x[[1]],
+    from$x,
+    to$x,
     from$t,
     to$t
   )
