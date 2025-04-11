@@ -204,7 +204,8 @@ mtx_similarity |>
 
 career.grids |>
   bind_rows() |>
-  nrow()
+  nrow() |>
+  choose(2)
 
 # adjency matrix
 cbind(
