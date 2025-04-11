@@ -212,6 +212,47 @@ career.grids |>
   nrow() |>
   choose(2)
 
+career.grids |>
+  bind_rows(
+    .id = "occupation"
+  ) |>
+  mutate(
+    .before = 1,
+    vertex = row_number()
+  ) ->
+vertices
+
+expand.grid(
+  from = vertices$vertex,
+  to = vertices$vertex
+) |>
+  filter(from != to) ->
+vertices.combn
+
+vertices -> vertices.from
+vertices -> vertices.to
+
+names(vertices.from) |> paste0(".from") -> names(vertices.from)
+names(vertices.to) |> paste0(".to") -> names(vertices.to)
+
+vertices.combn |>
+  inner_join(
+    vertices.from,
+    by = c("from" = "vertex.from")
+  ) |>
+  inner_join(
+    vertices.to,
+    by = c("to" = "vertex.to")
+  ) ->
+vertices.combn
+
+vertices.combn |>
+  filter(!(
+    occupation.from == occupation.to &
+      x.from >= x.to & t.from >= t.to
+  )) ->
+vertices.combn
+
 # adjency matrix
 cbind(
   a = c(0, 19, 1, 9),
