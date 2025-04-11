@@ -12,14 +12,14 @@ morph <- function(akz, A, Bkz, fn = mean, ...) {
   return(fn |> mapply(akz, A[, Bkz], ...))
 }
 
-route.duration <- function() {
-  # optimize which route to take, given
-  # 1. minimum experience requirements
-  # 2. minimum education requirements
-  # 3. experience and education carryover
-  # 4. minimum total years to reach the goal
-  return(0)
-}
+# route.duration <- function() {
+#   # optimize which route to take, given
+#   # 1. minimum experience requirements
+#   # 2. minimum education requirements
+#   # 3. experience and education carryover
+#   # 4. minimum total years to reach the goal
+#   return(0)
+# }
 
 learn <- function(ẍkz, ẗkz, S, S.eq.geq, Bkz, is.education) {
   # increment experience and education vectors
@@ -81,8 +81,8 @@ path.optimize <- function(ẍkz, ẗkz, uk, S, S.eq.geq, x, t, Bk.star, Bk, is.e
   (ẍkz[Bk.star] >= x[Bk.star]) -> attained.xp
   (ẗkz[Bk.star] >= t[Bk.star]) -> attained.edu
 
-  print(paste("attained.xp:", attained.xp))
-  print(paste("attained.edu:", attained.edu))
+  # print(paste("attained.xp:", attained.xp))
+  # print(paste("attained.edu:", attained.edu))
 
   # k is ready for their career goal
   if (all(attained.xp, attained.edu)) {
@@ -90,20 +90,20 @@ path.optimize <- function(ẍkz, ẗkz, uk, S, S.eq.geq, x, t, Bk.star, Bk, is.e
   }
 
   # k is not ready for their career goal
-  print("argmax:")
-  print(
-    (
-      (ẍkz >= x) * (ẗkz >= t) * (
-        !attained.xp * !is.education +
-          !attained.edu * is.education
-      ) * S[Bk.star, ] * uk
-    )
-  )
+  # print("argmax:")
+  # print(
+  #   (
+  #     (ẍkz >= x) * (ẗkz >= t) * (
+  #       !attained.xp * !is.education +
+  #         !attained.edu * is.education
+  #     ) * S[Bk.star, ] * uk
+  #   )
+  # )
 
   (ẍkz >= x) * (ẗkz >= t) * S[Bk.star, ] * uk -> utility
 
-  print("utility:")
-  print(utility)
+  # print("utility:")
+  # print(utility)
 
 
   # (ẍkz >= x) * (ẗkz >= t) * (
@@ -117,7 +117,7 @@ path.optimize <- function(ẍkz, ẗkz, uk, S, S.eq.geq, x, t, Bk.star, Bk, is.e
   # ) * S[Bk.star, ] * uk -> utility
 
   if (all(utility == 0)) {
-    return(S[Bk.star, ] * uk)
+    return(which.max(S[Bk.star, ] * uk))
   }
 
   return(which.max(utility))
@@ -145,16 +145,13 @@ path.optimize <- function(ẍkz, ẗkz, uk, S, S.eq.geq, x, t, Bk.star, Bk, is.e
   # missing edu & xp not required => go get edu => go to labor market
   # missing edu & xp required => go get edu which maximizes xp carryover
 
-  x[Bk.star] > 0
+  # x[Bk.star] > 0
   # (S[Bk.star, ] * !is.education) * (seq_along(is.education) != Bk.star)
   # (1) persue Bk.star, then segway into Bk.star from another role
   # (2) persue other education, then segway into Bk.star from another role
 
-  S[Bk.star, ] * (seq_along(is.education) != Bk.star)
-  S[, Bk.star] * (seq_along(is.education) != Bk.star)
-
-
-
+  # S[Bk.star, ] * (seq_along(is.education) != Bk.star)
+  # S[, Bk.star] * (seq_along(is.education) != Bk.star)
 
   # 1   2   3   4   5   6   (( 7))  8   9   10  11  12  13 (14) # id
   # .21 .23 .45 .66 .11 .11 (( 1)) .21 .23 .45 .66 .11 .11 ( 1) # S[, Bk.star]
@@ -172,45 +169,45 @@ path.optimize <- function(ẍkz, ẗkz, uk, S, S.eq.geq, x, t, Bk.star, Bk, is.e
   # i.e. the economic agent should not "shoot too far" on their first occupation
   # assuming, of course, they already attained any presupposed education
 
-  S
-  data.frame(
-    Sk.star_q = S[, Bk.star],
-    Sq_k.star = S[Bk.star, ],
-    x,
-    t
-  )
-  ((t - ẗkz)) * ((x == 0)^(x[Bk.star] > 0)) / S[, Bk.star]
-  ((t - ẗkz)) * ((x == 0)^(x[Bk.star] > 0)) / S[Bk.star, ]
+  # S
+  # data.frame(
+  #   Sk.star_q = S[, Bk.star],
+  #   Sq_k.star = S[Bk.star, ],
+  #   x,
+  #   t
+  # )
+  # ((t - ẗkz)) * ((x == 0)^(x[Bk.star] > 0)) / S[, Bk.star]
+  # ((t - ẗkz)) * ((x == 0)^(x[Bk.star] > 0)) / S[Bk.star, ]
 
-  S[Bk.star, ] * ((t - ẗkz)) * ((x == 0)^(x[Bk.star] > 0)) / S[, Bk.star]
-  S[Bk.star, ] * ((t - ẗkz)) * ((x == 0)^(x[Bk.star] > 0)) / S[Bk.star, ]
+  # S[Bk.star, ] * ((t - ẗkz)) * ((x == 0)^(x[Bk.star] > 0)) / S[, Bk.star]
+  # S[Bk.star, ] * ((t - ẗkz)) * ((x == 0)^(x[Bk.star] > 0)) / S[Bk.star, ]
 
-  ((x - ẍkz) + (t - ẗkz)) * ((x == 0)^(x[Bk.star] > 0)) / S[Bk.star, ]
-  ((x - ẍkz) + (t - ẗkz)) * ((x == 0)^(x[Bk.star] > 0)) / S[Bk.star, ]
-  ((x - ẍkz) + (t - ẗkz)) * ((x == 0)^(x[Bk.star] > 0)) / S[Bk.star, ]
-  ((x - ẍkz) + (t - ẗkz)) * ((seq_along(is.education) != Bk.star)^(x[Bk.star] > 0)) / S[Bk.star, ]
-  (x - ẍkz) / S
+  # ((x - ẍkz) + (t - ẗkz)) * ((x == 0)^(x[Bk.star] > 0)) / S[Bk.star, ]
+  # ((x - ẍkz) + (t - ẗkz)) * ((x == 0)^(x[Bk.star] > 0)) / S[Bk.star, ]
+  # ((x - ẍkz) + (t - ẗkz)) * ((x == 0)^(x[Bk.star] > 0)) / S[Bk.star, ]
+  # ((x - ẍkz) + (t - ẗkz)) * ((seq_along(is.education) != Bk.star)^(x[Bk.star] > 0)) / S[Bk.star, ]
+  # (x - ẍkz) / S
 
-  (x[Bk.star] > 0) * S[Bk.star, ] * (seq_along(is.education) != Bk.star)
-  ((x - ẍkz) + (t - ẗkz)) / S[Bk.star, ]
+  # (x[Bk.star] > 0) * S[Bk.star, ] * (seq_along(is.education) != Bk.star)
+  # ((x - ẍkz) + (t - ẗkz)) / S[Bk.star, ]
 
 
-  # (x - ẍkz) / S[,Bk.star]
-  # (t - ẗkz) / S[,Bk.star]
+  # # (x - ẍkz) / S[,Bk.star]
+  # # (t - ẗkz) / S[,Bk.star]
 
-  (x - ẍkz) / S[Bk.star, ]
-  (t - ẗkz) / S[Bk.star, ]
+  # (x - ẍkz) / S[Bk.star, ]
+  # (t - ẗkz) / S[Bk.star, ]
 
-  (x - ẍkz) / rowMeans(S)
-  (t - ẗkz) / rowMeans(S)
+  # (x - ẍkz) / rowMeans(S)
+  # (t - ẗkz) / rowMeans(S)
 
-  (x - ẍkz) / colMeans(S)
-  (t - ẗkz) / colMeans(S)
+  # (x - ẍkz) / colMeans(S)
+  # (t - ẗkz) / colMeans(S)
 
-  # ẍkz - x
-  # ẗkz - t
-  x - ẍkz
-  t - ẗkz
+  # # ẍkz - x
+  # # ẗkz - t
+  # x - ẍkz
+  # t - ẗkz
 
   # alternative (stupid):
   #   if majored in the wrong thing, go back to school
@@ -307,7 +304,6 @@ rep(F, ncol(S)) -> is.education
 c(is.education, !is.education) -> is.education
 S |> cbind(S) -> S
 S |> rbind(S) -> S
-
 (S^2) > 0.5 -> S.eq.geq
 
 x <- c(runif(7, -5, 10) |> round(), rep(0, 7)) |> pmax(0)
@@ -340,11 +336,8 @@ path.recursive(
 ) -> dsds
 
 dsds
-paste("sum(dsds$path == 14):", sum(dsds$path == 14))
 x
 t
-1 * S.eq.geq[Bk.star, ]
-S[Bk.star, ]
 
 # path <- function() {
 #   # assert args
