@@ -3,10 +3,10 @@ modular::project.options("atlas")
 box::use(
   gr = igraph,
   mod / utils / data[sublist],
+  readr[...],
   dplyr[...],
   tidyr[...],
 )
-
 
 # required education
 list(
@@ -70,6 +70,7 @@ min.edu
   ) ->
 min.xp
 
+# career requirements data frame
 min.edu |>
   inner_join(
     min.xp,
@@ -79,6 +80,7 @@ min.edu |>
   ) ->
 career.req
 
+# career grids
 career.grid |>
   Map(
     career.req$xmin,
@@ -88,25 +90,112 @@ career.grids
 
 career.grids[1]
 
+# similarity matrix
+career.req |>
+  select(
+    to = occupation
+  ) |>
+  inner_join(
+    "atlas.root" |>
+      getOption() |>
+      file.path(
+        "articles",
+        "1.introduction-matching",
+        "output",
+        "similarity_matrix.csv"
+      ) |>
+      read_csv() |>
+      rename(
+        to = 1
+      ) |>
+      relocate(
+        career.req$
+          occupation
+      )
+  ) ->
+mtx_similarity
+
 # career move (note: movement within the same career uses this function as well)
 career.move <- function(skq, xk, xq, tk, tq) {
-  # career move duration in years
-  (xq - xk * skq) -> req.x
-  (tq - tk * skq) -> req.t
+  # remove baseline education
+  ifelse(
+    tq >= education$high.school,
+    education$high.school,
+    education$elementary
+  ) -> tbase
+
+  tk <- tk - tbase
+  tq <- tq - tbase
+  print(tk)
+  print(tq)
+  # equivalent similarity
+  skq.eq <- (skq >= 0.5) * skq
+  print(skq)
+  print(skq.eq)
+
+  # xp and edu requirements
+  (xq - xk * skq.eq) -> req.x
+  (tq - tk * skq.eq) -> req.t
 
   (req.x > 0) * req.x -> req.x
   (req.t > 0) * req.t -> req.t
 
-  return((req.x + req.t) / skq)
+  # career move duration in years
+  print((req.x + req.t) / skq.eq)
+  return((req.x + req.t) / skq.eq)
 }
 
 # example: movement within the same occupation
 career.grids[[1]][1, ] -> from
 career.grids[[1]][2, ] -> to
-career.move(1, from$x[[1]], to$x[[1]], from$t, to$t)
+career.move(1, from$x, to$x, from$t, to$t)
+
+# example: movement within the same occupation
+career.grids[[1]][1, ] -> from
+career.grids[[1]][3, ] -> to
+career.move(1, from$x, to$x, from$t, to$t)
 
 # example: career switch
+career.grids[[1]][1, ] -> from
+career.grids[[2]][1, ] -> to
+mtx_similarity |>
+  select(-1) |>
+  slice(2) |>
+  pull(1) |>
+  career.move(
+    from$x,
+    to$x,
+    from$t,
+    to$t
+  )
 
+# example: career switch
+career.grids[[1]][1, ] -> from
+career.grids[[2]][10, ] -> to
+mtx_similarity |>
+  select(-1) |>
+  slice(2) |>
+  pull(1) |>
+  career.move(
+    from$x,
+    to$x,
+    from$t,
+    to$t
+  )
+
+# example: career switch
+career.grids[[1]][1, ] -> from
+career.grids[[2]][1, ] -> to
+mtx_similarity |>
+  select(-1) |>
+  slice(2) |>
+  pull(1) |>
+  career.move(
+    from$x[[1]],
+    to$x[[1]],
+    from$t,
+    to$t
+  )
 
 # adjency matrix
 cbind(
