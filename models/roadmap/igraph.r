@@ -88,7 +88,13 @@ career.grid |>
   ) ->
 career.grids
 
+c(
+  career.grids,
+  list(basic.education)
+) -> career.grids
+
 career.grids[[1]]
+career.grids[[length(career.grids)]]
 
 # similarity matrix
 career.req |>
@@ -158,6 +164,17 @@ career.grids[[1]][3, ] -> to
 career.move(1, from$x, to$x, from$t, to$t)
 
 # example: career switch
+career.grids[[length(career.grids)]][2, ] -> from
+career.grids[[1]][1, ] -> to
+career.move(
+  1,
+  from$x,
+  to$x,
+  from$t,
+  to$t
+)
+
+# example: career switch
 career.grids[[1]][1, ] -> from
 career.grids[[3]][1, ] -> to
 mtx_similarity |>
@@ -184,6 +201,10 @@ mtx_similarity |>
     from$t,
     to$t
   )
+
+career.grids |>
+  bind_rows() |>
+  nrow()
 
 # adjency matrix
 cbind(
