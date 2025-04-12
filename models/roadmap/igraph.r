@@ -40,8 +40,6 @@ career.grid <- function(xmin, tmin, xmax = NULL, tmax = education$doctorate) {
 # basic education
 career.grid(0, 0, education$high.school, xmax = 0) -> basic.education
 
-# basic.education
-
 # minimum required education
 "atlas.education" |>
   getOption() |>
@@ -463,6 +461,37 @@ paths |>
     gr$shortest_paths(
       from = 7,
       to = 4,
+      output = "vpath",
+      algorithm = "dijkstra"
+    )
+)$vpath |>
+  unlist()
+
+career.graph |>
+  gr$edge.attributes()
+
+career.graph |>
+  gr$get.edge.attribute(
+    "weight",
+    unlist(
+      (
+        career.graph |>
+          gr$shortest_paths(
+            from = 7,
+            to = 4,
+            output = "epath",
+            algorithm = "dijkstra"
+          )
+      )$epath
+    )
+  )
+
+
+(
+  career.graph |>
+    gr$shortest_paths(
+      from = 23,
+      to = 1,
       output = "vpath"
     )
 )$vpath |>
