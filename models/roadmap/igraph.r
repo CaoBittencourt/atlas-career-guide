@@ -17,6 +17,14 @@ list(
   doctorate = 28
 ) -> education
 
+education |>
+  lapply(
+    function(t) {
+      t - education$high.school
+    }
+  ) ->
+restart
+
 # required experience
 list(
   intern = 0,
@@ -158,9 +166,66 @@ career.move <- function(skq, xk, xq, tk, tq) {
   (req.x > 0) * req.x -> req.x
   (req.t > 0) * req.t -> req.t
 
+  # # allow for educational restart (via education "occupation")
+  # # for the first levels of education
+  # # e.g. start new major from scratch
+  # ifelse(
+  #   xq == education$associate & req.t > restart$associate,
+  #   restart$associate,
+  #   req.t
+  # ) ->
+  # req.t
+
+  # ifelse(
+  #   xq == education$bachelor & req.t > restart$bachelor,
+  #   restart$bachelor,
+  #   req.t
+  # ) ->
+  # req.t
+
   # career move duration in years
   return((req.x + req.t) / skq)
 }
+
+# career.move <- function(skq, xk, xq, tk, tq) {
+#   # # remove baseline education
+#   # tk <- tk - education$high.school
+#   # tq <- tq - education$high.school
+
+#   # equivalent similarity
+#   skq.eq <- ((skq^2) >= 0.5) * skq
+#   # skq.eq <- (skq >= 0.5) * skq
+
+#   # xp and edu requirements
+#   (xq - xk * skq.eq) -> req.x
+#   (tq - tk * skq.eq) -> req.t
+
+#   (req.x > 0) * req.x -> req.x
+#   (req.t > 0) * req.t -> req.t
+
+#   req.x / skq -> req.x
+#   req.t / skq -> req.t
+
+#   # allow for educational restart
+#   # for the first levels of education
+#   # e.g. start new major from scratch
+#   ifelse(
+#     xq == education$associate & req.t > restart$associate,
+#     restart$associate,
+#     req.t
+#   ) ->
+#   req.t
+
+#   ifelse(
+#     xq == education$bachelor & req.t > restart$bachelor,
+#     restart$bachelor,
+#     req.t
+#   ) ->
+#   req.t
+
+#   # total career move duration
+#   return(req.x + req.t)
+# }
 
 # vertices
 career.grids |>
@@ -455,6 +520,22 @@ paths |>
   filter(occupation == 2) |>
   filter(occupation.to != occupation) |>
   arrange(cost)
+
+career.graph |>
+  gr$shortest_paths(
+    from = 7,
+    to = 4,
+    output = "vpath",
+    algorithm = "dijkstra"
+  )
+
+career.graph |>
+  gr$shortest_paths(
+    from = 23,
+    to = 6,
+    output = "vpath",
+    algorithm = "dijkstra"
+  )
 
 (
   career.graph |>
