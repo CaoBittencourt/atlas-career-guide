@@ -93,6 +93,8 @@ career.grid |>
   ) ->
 career.grids
 
+career.grids[1]
+
 # c(
 #   career.grids,
 #   list(basic.education)
@@ -537,16 +539,20 @@ career.graph |>
     algorithm = "dijkstra"
   )
 
-(
-  career.graph |>
-    gr$shortest_paths(
-      from = 7,
-      to = 4,
-      output = "vpath",
-      algorithm = "dijkstra"
-    )
-)$vpath |>
-  unlist()
+vertices |>
+  filter(
+    vertex %in% ((
+      career.graph |>
+        gr$shortest_paths(
+          from = 7,
+          to = 4,
+          output = "vpath",
+          algorithm = "dijkstra"
+        )
+    )$vpath |>
+      unlist())
+  )
+
 
 career.graph |>
   gr$edge.attributes()
@@ -567,16 +573,27 @@ career.graph |>
     )
   )
 
+career.graph |>
+  gr$shortest_paths(
+    from = 33,
+    to = 280,
+    output = "vpath"
+  )
 
-(
-  career.graph |>
-    gr$shortest_paths(
-      from = 23,
-      to = 1,
-      output = "vpath"
+career.graph |>
+  gr$get.edge.attribute(
+    "weight",
+    unlist(
+      (
+        career.graph |>
+          gr$shortest_paths(
+            from = 33,
+            to = 280,
+            output = "epath"
+          )
+      )$epath
     )
-)$vpath |>
-  unlist()
+  )
 
 # mtx_similarity |>
 #   pivot_longer(

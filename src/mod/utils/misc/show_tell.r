@@ -37,4 +37,5 @@ sample(
         collapse = "\n"
       )
   ) |>
+  pull() |>
   write_clip()
