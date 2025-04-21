@@ -35,7 +35,8 @@ list(
   readRDS() |>
   mutate(
     id = row_number(),
-    tmin = education_years - min(education_years)
+    tmin = education_years - 17,
+    tmin = pmax(tmin, 0)
   ) |>
   select(
     id,

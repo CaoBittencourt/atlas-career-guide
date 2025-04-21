@@ -530,7 +530,7 @@ career.graph |>
   gr$shortest_paths(
     from = 7,
     to = 4,
-    output = "vpath",
+    output = "epath",
     algorithm = "dijkstra"
   )
 
@@ -542,18 +542,20 @@ career.graph |>
     algorithm = "dijkstra"
   )
 
-vertices |>
+paths |>
   filter(
-    vertex %in% ((
-      career.graph |>
-        gr$shortest_paths(
-          from = 7,
-          to = 4,
-          output = "vpath",
-          algorithm = "dijkstra"
-        )
-    )$vpath |>
-      unlist())
+    vertex %in% (
+      (
+        career.graph |>
+          gr$shortest_paths(
+            from = 7,
+            to = 4,
+            output = "vpath",
+            algorithm = "dijkstra"
+          )
+      )$vpath |>
+        unlist()
+    )
   )
 
 

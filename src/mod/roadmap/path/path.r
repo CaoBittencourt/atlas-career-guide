@@ -1,4 +1,3 @@
-modular::project.options("atlas")
 # setup
 # region: imports
 box::use(
@@ -6,45 +5,66 @@ box::use(
   gr = igraph,
   mod / roadmap / path / data / graph[...],
   mod / roadmap / path / data / req[...],
-  dplyr[...]
+  mod / roadmap / path / functions / cost_util[...],
+  mod / roadmap / path / functions / path_cost[...],
+  mod / roadmap / path / functions / path_util[...],
+  dplyr[...],
 )
 
 # endregion
-# dispatch
-# region: sketch
-paths$
-  table |>
-  select(
-    occupation
-  ) |>
-  unique() |>
-  mutate(
-    util = 0.19 # one non-negative number for each occupation
-  ) |>
-  inner_join(
-    paths$table,
-    by = c("occupation" = "occupation")
-  ) |>
-  mutate(
-    cost_util = cost / util
+# methods
+# region: dijkstra method
+path.dijkstra <- function(graph, from, to) {
+  # assert args in main function
+  # dijkstra algorithm
+  return(
+    unlist(
+      (
+        graph |>
+          gr$shortest_paths(
+            from = from,
+            to = to,
+            output = "epath",
+            algorithm = "dijkstra"
+          )
+      )$epath
+    )
   )
-
-# endregion
-# region: path cost
-path.cost <- function(prog, paths.table) {
-
 }
 
 # endregion
-# region: path util
-path.util <- function(prog, util) {
-
-}
+# region: list of methods
+list(
+  "dijkstra" = "dijkstra"
+) -> path.methods
 
 # endregion
+# dispatch
 # region: path generic function
-path <- function(from, to, util = rep(1, length(unique(paths$table$occupation))), graph = paths$graph) {
+path <- function(from, to, util = NULL, graph = paths$graph, path_method = path.methods[[1]], ...) {
   # assert args
+  # paths$table$vertex |> min() -> vertex.min
+  # paths$table$vertex |> max() -> vertex.max
+  # assert$base$validate.numeric.bounded(from, "from", F, vertex.min, vertex.max)
+  # assert$base$validate.numeric.bounded(to, "to", F, vertex.min, vertex.max)
+  stopifnot(is.integer(from))
+  stopifnot(is.integer(to))
+  assert$base$validate.numeric.bounded(util, "util", T, 0)
+  # stopifnot(
+  #   length(util) == paths$table$occupation |> unique() |> length()
+  # )
+  stopifnot(gr$is.igraph(graph))
+  assert$base$validate.method(path_method, "path_method", path.methods, F)
+
+  # utility-adjusted weights
+  if (length(util)) {
+    graph |> set.path.util(util) -> graph
+  }
+
+  # multiple dispatch
+  if (path_method[[1]] == path.methods$dijkstra) {
+    return(path.dijkstra(graph, from, to))
+  }
 }
 
 # endregion

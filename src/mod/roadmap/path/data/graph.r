@@ -228,6 +228,22 @@ paths |>
   gr$set.edge.attribute(
     "weight",
     value = paths$cost
+  ) |>
+  gr$set.edge.attribute(
+    "cost",
+    value = paths$cost
+  ) |>
+  gr$set.edge.attribute(
+    "occupation.from",
+    value = paths$occupation
+  ) |>
+  gr$set.edge.attribute(
+    "occupation.to",
+    value = paths$occupation.to
+  ) |>
+  gr$set.edge.attribute(
+    "util",
+    value = 1
   ) ->
 paths.graph
 
