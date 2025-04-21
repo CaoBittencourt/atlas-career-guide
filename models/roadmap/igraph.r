@@ -168,22 +168,25 @@ career.move <- function(skq, xk, xq, tk, tq) {
   (req.x > 0) * req.x -> req.x
   (req.t > 0) * req.t -> req.t
 
-  # # allow for educational restart (via education "occupation")
-  # # for the first levels of education
-  # # e.g. start new major from scratch
-  # ifelse(
-  #   xq == education$associate & req.t > restart$associate,
-  #   restart$associate,
-  #   req.t
-  # ) ->
-  # req.t
+  # allow for educational restart (via education "occupation")
+  # for the first levels of education
+  # e.g. start new major from scratch
+  # carry-over education and experience: req.t and req.x
+  # carry-over experience, restart education: tq - restart and req.x
+  # full restart: tq - restart and xq
+  ifelse(
+    xq == education$associate & req.t > restart$associate,
+    restart$associate,
+    req.t
+  ) ->
+  req.t
 
-  # ifelse(
-  #   xq == education$bachelor & req.t > restart$bachelor,
-  #   restart$bachelor,
-  #   req.t
-  # ) ->
-  # req.t
+  ifelse(
+    xq == education$bachelor & req.t > restart$bachelor,
+    restart$bachelor,
+    req.t
+  ) ->
+  req.t
 
   # career move duration in years
   return((req.x + req.t) / skq)
@@ -573,10 +576,23 @@ career.graph |>
     )
   )
 
+paths
+
+vertex.from <- vertices |>
+  filter(occupation == 5) |>
+  slice(1) |>
+  pull(vertex)
+vertex.to <- vertices |>
+  filter(occupation == 28) |>
+  slice(1) |>
+  pull(vertex)
+
+ids |> slice(5, 28)
+
 career.graph |>
   gr$shortest_paths(
-    from = 33,
-    to = 280,
+    from = vertex.from,
+    to = vertex.to,
     output = "vpath"
   )
 
@@ -587,13 +603,16 @@ career.graph |>
       (
         career.graph |>
           gr$shortest_paths(
-            from = 33,
-            to = 280,
+            from = vertex.from,
+            to = vertex.to,
             output = "epath"
           )
       )$epath
     )
-  )
+  ) ->
+move.cost
+
+move.cost |> sum()
 
 # mtx_similarity |>
 #   pivot_longer(
