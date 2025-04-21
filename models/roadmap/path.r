@@ -32,6 +32,48 @@ pa$path(1L, 6L) -> epath
 
 epath
 
+pa$paths$graph |>
+  gr$get.edge.attribute(
+    "t.from", epath
+  )
+
+pa$paths$graph |>
+  gr$get.edge.attribute(
+    "t.to", epath
+  )
+
+pa$paths$graph |>
+  gr$get.edge.attribute(
+    "x.from", epath
+  )
+
+pa$paths$graph |>
+  gr$get.edge.attribute(
+    "x.to", epath
+  )
+
+pa$paths$graph |>
+  gr$get.edge.attribute(
+    "vertex.from", epath
+  )
+
+pa$paths$graph |>
+  gr$get.edge.attribute(
+    "vertex.to", epath
+  )
+
+pa$paths$graph |>
+  gr$get.edge.attribute(
+    "table.id", epath
+  )
+
+pa$paths$graph |>
+  gr$get.edge.attribute(
+    "t.to", epath
+  )
+
+pa$paths$table
+
 df_occupations[-1][
   pa$paths$graph |>
     gr$get.edge.attribute(
@@ -46,9 +88,9 @@ epath |>
   pa$path.cost() |>
   sum()
 
-pa$paths$graph
-pa$path.util
-pa$path.cost
-
+epath |> pa$path.util()
+epath |>
+  pa$path.util() |>
+  sum()
 
 # endregion

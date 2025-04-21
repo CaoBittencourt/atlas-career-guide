@@ -212,6 +212,10 @@ paths
 paths |>
   filter(
     !is.infinite(cost)
+  ) |>
+  mutate(
+    .before = 1,
+    id = row_number()
   ) ->
 paths
 
@@ -240,6 +244,34 @@ paths |>
   gr$set.edge.attribute(
     "occupation.to",
     value = paths$occupation.to
+  ) |>
+  gr$set.edge.attribute(
+    "vertex.from",
+    value = paths$vertex
+  ) |>
+  gr$set.edge.attribute(
+    "vertex.to",
+    value = paths$vertex.to
+  ) |>
+  gr$set.edge.attribute(
+    "x.from",
+    value = paths$x
+  ) |>
+  gr$set.edge.attribute(
+    "x.to",
+    value = paths$x.to
+  ) |>
+  gr$set.edge.attribute(
+    "t.from",
+    value = paths$t
+  ) |>
+  gr$set.edge.attribute(
+    "t.to",
+    value = paths$t.to
+  ) |>
+  gr$set.edge.attribute(
+    "table.id",
+    value = paths$id
   ) |>
   gr$set.edge.attribute(
     "util",
