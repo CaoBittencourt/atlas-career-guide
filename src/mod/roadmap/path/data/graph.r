@@ -27,7 +27,6 @@ career.grid |>
   ) ->
 career.grids
 
-
 # endregion
 # region: vertices
 career.grids |>
@@ -40,7 +39,6 @@ career.grids |>
     vertex = row_number()
   ) ->
 vertices
-
 
 # endregion
 # region: movement types
@@ -236,6 +234,12 @@ paths.graph
 # endregion
 # exports
 # region: exports
-box::export(paths, paths.graph)
+# paths list
+list(
+  graph = paths.graph,
+  table = paths
+) -> paths
+
+box::export(paths)
 
 # endregion

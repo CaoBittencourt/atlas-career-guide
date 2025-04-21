@@ -10,13 +10,6 @@ box::use(
 )
 
 # endregion
-# region: data
-list(
-  graph = paths.graph,
-  table = paths
-) -> paths
-
-# endregion
 # dispatch
 # region: sketch
 paths$

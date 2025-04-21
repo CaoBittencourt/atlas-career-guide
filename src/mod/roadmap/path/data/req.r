@@ -10,20 +10,12 @@ box::use(
 # data
 # region: required education
 list(
-  high.school = 17,
-  associate = 19,
-  bachelor = 21,
-  master = 23,
-  doctorate = 28
+  high.school = 17 - 17,
+  associate = 19 - 17,
+  bachelor = 21 - 17,
+  master = 23 - 17,
+  doctorate = 28 - 17
 ) -> education
-
-education |>
-  lapply(
-    function(t) {
-      t - education$high.school
-    }
-  ) ->
-restart
 
 # endregion
 # region: required experience
@@ -42,12 +34,13 @@ list(
   getOption() |>
   readRDS() |>
   mutate(
-    id = row_number()
+    id = row_number(),
+    tmin = education_years - min(education_years)
   ) |>
   select(
     id,
     occupation,
-    tmin = education_years
+    tmin
   ) ->
 careers.edu
 
@@ -79,7 +72,6 @@ career.req
 # region: exports
 box::export(
   education,
-  restart,
   experience,
   career.req
 )
