@@ -78,6 +78,98 @@ if (
 }
 
 # endregion
+# region: actor => musician
+# occupations
+occupation.from <- occupations$Actors
+occupation.to <- occupations$`Musicians and Singers`
+
+# vertices
+occupation.from |> pa$match.vertex() -> vertex.from
+occupation.to |> pa$match.vertex() -> vertex.to
+
+# find path
+vertex.to |> pa$path(vertex.from) -> path.actor_musician
+
+# career path
+occupations[path.actor_musician |> pa$which.path()]
+
+# path cost
+pa$path.cost(path.actor_musician) |> sum()
+
+# base cost
+vertex.to |> pa$vertex.cost()
+
+# path efficiency
+path.actor_musician |> pa$path.efficiency()
+
+# verify path is optimal
+if (
+  pa$path.efficiency(path.actor_musician) >= 0
+) {
+  print(
+    paste0(
+      "Path is optimal and ",
+      round(100 * pa$path.efficiency(path.actor_musician), 2),
+      "% faster than starting from scratch."
+    )
+  )
+} else {
+  print(
+    paste0(
+      "Path is suboptimal and ",
+      -round(100 * pa$path.efficiency(path.actor_musician), 2),
+      "% slower than starting from scratch."
+    )
+  )
+}
+
+# endregion
+# region: actor => art director
+# occupations
+occupation.from <- occupations$Actors
+occupation.to <- occupations$`Art Directors`
+
+# vertices
+occupation.from |> pa$match.vertex() -> vertex.from
+occupation.to |> pa$match.vertex() -> vertex.to
+
+# find path
+vertex.to |> pa$path(vertex.from) -> path.actor_art_director
+
+# career path
+occupations[path.actor_art_director |> pa$which.path()]
+
+# path cost
+pa$path.cost(path.actor_art_director) |> sum()
+
+# base cost
+vertex.to |> pa$vertex.cost()
+
+# path efficiency
+path.actor_art_director |> pa$path.efficiency()
+
+# verify path is optimal
+if (
+  pa$path.efficiency(path.actor_art_director) >= 0
+) {
+  print(
+    paste0(
+      "Path is optimal and ",
+      round(100 * pa$path.efficiency(path.actor_art_director), 2),
+      "% faster than starting from scratch."
+    )
+  )
+} else {
+  print(
+    paste0(
+      "Path is suboptimal and ",
+      -round(100 * pa$path.efficiency(path.actor_art_director), 2),
+      "% slower than starting from scratch."
+    )
+  )
+}
+
+# endregion
 # region: accountant => accountant
 # occupations
 occupation.from <- occupations$`Accountants and Auditors`
