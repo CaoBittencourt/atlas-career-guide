@@ -64,7 +64,7 @@ if (
     paste0(
       "Path is optimal and ",
       round(100 * pa$path.efficiency(path.actor_accountant), 2),
-      "% faster than the standard route."
+      "% faster than starting from scratch."
     )
   )
 } else {
@@ -72,7 +72,53 @@ if (
     paste0(
       "Path is suboptimal and ",
       -round(100 * pa$path.efficiency(path.actor_accountant), 2),
-      "% slower than the standard route."
+      "% slower than starting from scratch."
+    )
+  )
+}
+
+# endregion
+# region: accountant => accountant
+# occupations
+occupation.from <- occupations$`Accountants and Auditors`
+occupation.to <- occupations$`Accountants and Auditors`
+
+# vertices
+occupation.from |> pa$match.vertex() -> vertex.from
+occupation.to |> pa$which.vertex("max") -> vertex.to
+
+# find path
+vertex.to |> pa$path(vertex.from) -> path.accountant_accountant
+
+# career path
+occupations[path.accountant_accountant |> pa$which.path()]
+
+# path cost
+pa$path.cost(path.accountant_accountant) |> sum()
+
+# base cost
+vertex.to |> pa$vertex.cost()
+
+# path efficiency
+path.accountant_accountant |> pa$path.efficiency()
+
+# verify path is optimal
+if (
+  pa$path.efficiency(path.accountant_accountant) >= 0
+) {
+  print(
+    paste0(
+      "Path is optimal and ",
+      round(100 * pa$path.efficiency(path.accountant_accountant), 2),
+      "% faster than starting from scratch."
+    )
+  )
+} else {
+  print(
+    paste0(
+      "Path is suboptimal and ",
+      -round(100 * pa$path.efficiency(path.accountant_accountant), 2),
+      "% slower than starting from scratch."
     )
   )
 }
@@ -110,7 +156,7 @@ if (
     paste0(
       "Path is optimal and ",
       round(100 * pa$path.efficiency(path.actor_actuary), 2),
-      "% faster than the standard route."
+      "% faster than starting from scratch."
     )
   )
 } else {
@@ -118,7 +164,7 @@ if (
     paste0(
       "Path is suboptimal and ",
       -round(100 * pa$path.efficiency(path.actor_actuary), 2),
-      "% slower than the standard route."
+      "% slower than starting from scratch."
     )
   )
 }
