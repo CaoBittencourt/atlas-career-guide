@@ -42,28 +42,28 @@ occupation.from |> pa$match.vertex() -> vertex.from
 occupation.to |> pa$match.vertex() -> vertex.to
 
 # find path
-vertex.to |> pa$path(vertex.from) -> path.actor_accountant
+vertex.to |> pa$path(vertex.from) -> epath
 
 # career path
-occupations[path.actor_accountant |> pa$which.path()]
+occupations[epath |> pa$which.path()]
 
 # path cost
-pa$path.cost(path.actor_accountant) |> sum()
+pa$path.cost(epath) |> sum()
 
 # base cost
 vertex.to |> pa$vertex.cost()
 
 # path efficiency
-path.actor_accountant |> pa$path.efficiency()
+epath |> pa$path.efficiency()
 
 # verify path is optimal
 if (
-  pa$path.efficiency(path.actor_accountant) >= 0
+  pa$path.efficiency(epath) >= 0
 ) {
   print(
     paste0(
       "Path is optimal and ",
-      round(100 * pa$path.efficiency(path.actor_accountant), 2),
+      round(100 * pa$path.efficiency(epath), 2),
       "% faster than starting from scratch."
     )
   )
@@ -71,7 +71,53 @@ if (
   print(
     paste0(
       "Path is suboptimal and ",
-      -round(100 * pa$path.efficiency(path.actor_accountant), 2),
+      -round(100 * pa$path.efficiency(epath), 2),
+      "% slower than starting from scratch."
+    )
+  )
+}
+
+# endregion
+# region: accountant => financial managers
+# occupations
+occupation.from <- occupations$`Accountants and Auditors`
+occupation.to <- occupations$`Financial Managers`
+
+# vertices
+occupation.from |> pa$match.vertex() -> vertex.from
+occupation.to |> pa$match.vertex() -> vertex.to
+
+# find path
+vertex.to |> pa$path(vertex.from) -> epath
+
+# career path
+occupations[epath |> pa$which.path()]
+
+# path cost
+pa$path.cost(epath) |> sum()
+
+# base cost
+vertex.to |> pa$vertex.cost()
+
+# path efficiency
+epath |> pa$path.efficiency()
+
+# verify path is optimal
+if (
+  pa$path.efficiency(epath) >= 0
+) {
+  print(
+    paste0(
+      "Path is optimal and ",
+      round(100 * pa$path.efficiency(epath), 2),
+      "% faster than starting from scratch."
+    )
+  )
+} else {
+  print(
+    paste0(
+      "Path is suboptimal and ",
+      -round(100 * pa$path.efficiency(epath), 2),
       "% slower than starting from scratch."
     )
   )
@@ -88,28 +134,28 @@ occupation.from |> pa$match.vertex() -> vertex.from
 occupation.to |> pa$match.vertex() -> vertex.to
 
 # find path
-vertex.to |> pa$path(vertex.from) -> path.actor_musician
+vertex.to |> pa$path(vertex.from) -> epath
 
 # career path
-occupations[path.actor_musician |> pa$which.path()]
+occupations[epath |> pa$which.path()]
 
 # path cost
-pa$path.cost(path.actor_musician) |> sum()
+pa$path.cost(epath) |> sum()
 
 # base cost
 vertex.to |> pa$vertex.cost()
 
 # path efficiency
-path.actor_musician |> pa$path.efficiency()
+epath |> pa$path.efficiency()
 
 # verify path is optimal
 if (
-  pa$path.efficiency(path.actor_musician) >= 0
+  pa$path.efficiency(epath) >= 0
 ) {
   print(
     paste0(
       "Path is optimal and ",
-      round(100 * pa$path.efficiency(path.actor_musician), 2),
+      round(100 * pa$path.efficiency(epath), 2),
       "% faster than starting from scratch."
     )
   )
@@ -117,7 +163,7 @@ if (
   print(
     paste0(
       "Path is suboptimal and ",
-      -round(100 * pa$path.efficiency(path.actor_musician), 2),
+      -round(100 * pa$path.efficiency(epath), 2),
       "% slower than starting from scratch."
     )
   )
@@ -134,28 +180,28 @@ occupation.from |> pa$match.vertex() -> vertex.from
 occupation.to |> pa$match.vertex() -> vertex.to
 
 # find path
-vertex.to |> pa$path(vertex.from) -> path.actor_art_director
+vertex.to |> pa$path(vertex.from) -> epath
 
 # career path
-occupations[path.actor_art_director |> pa$which.path()]
+occupations[epath |> pa$which.path()]
 
 # path cost
-pa$path.cost(path.actor_art_director) |> sum()
+pa$path.cost(epath) |> sum()
 
 # base cost
 vertex.to |> pa$vertex.cost()
 
 # path efficiency
-path.actor_art_director |> pa$path.efficiency()
+epath |> pa$path.efficiency()
 
 # verify path is optimal
 if (
-  pa$path.efficiency(path.actor_art_director) >= 0
+  pa$path.efficiency(epath) >= 0
 ) {
   print(
     paste0(
       "Path is optimal and ",
-      round(100 * pa$path.efficiency(path.actor_art_director), 2),
+      round(100 * pa$path.efficiency(epath), 2),
       "% faster than starting from scratch."
     )
   )
@@ -163,7 +209,7 @@ if (
   print(
     paste0(
       "Path is suboptimal and ",
-      -round(100 * pa$path.efficiency(path.actor_art_director), 2),
+      -round(100 * pa$path.efficiency(epath), 2),
       "% slower than starting from scratch."
     )
   )
@@ -180,28 +226,28 @@ occupation.from |> pa$match.vertex() -> vertex.from
 occupation.to |> pa$which.vertex("max") -> vertex.to
 
 # find path
-vertex.to |> pa$path(vertex.from) -> path.accountant_accountant
+vertex.to |> pa$path(vertex.from) -> epath
 
 # career path
-occupations[path.accountant_accountant |> pa$which.path()]
+occupations[epath |> pa$which.path()]
 
 # path cost
-pa$path.cost(path.accountant_accountant) |> sum()
+pa$path.cost(epath) |> sum()
 
 # base cost
 vertex.to |> pa$vertex.cost()
 
 # path efficiency
-path.accountant_accountant |> pa$path.efficiency()
+epath |> pa$path.efficiency()
 
 # verify path is optimal
 if (
-  pa$path.efficiency(path.accountant_accountant) >= 0
+  pa$path.efficiency(epath) >= 0
 ) {
   print(
     paste0(
       "Path is optimal and ",
-      round(100 * pa$path.efficiency(path.accountant_accountant), 2),
+      round(100 * pa$path.efficiency(epath), 2),
       "% faster than starting from scratch."
     )
   )
@@ -209,7 +255,7 @@ if (
   print(
     paste0(
       "Path is suboptimal and ",
-      -round(100 * pa$path.efficiency(path.accountant_accountant), 2),
+      -round(100 * pa$path.efficiency(epath), 2),
       "% slower than starting from scratch."
     )
   )
@@ -226,28 +272,28 @@ occupation.from |> pa$match.vertex() -> vertex.from
 occupation.to |> pa$match.vertex() -> vertex.to
 
 # find path
-vertex.to |> pa$path(vertex.from) -> path.actor_actuary
+vertex.to |> pa$path(vertex.from) -> epath
 
 # career path
-occupations[path.actor_actuary |> pa$which.path()]
+occupations[epath |> pa$which.path()]
 
 # path cost
-pa$path.cost(path.actor_actuary) |> sum()
+pa$path.cost(epath) |> sum()
 
 # base cost
 vertex.to |> pa$vertex.cost()
 
 # path efficiency
-path.actor_actuary |> pa$path.efficiency()
+epath |> pa$path.efficiency()
 
 # verify path is optimal
 if (
-  pa$path.efficiency(path.actor_actuary) >= 0
+  pa$path.efficiency(epath) >= 0
 ) {
   print(
     paste0(
       "Path is optimal and ",
-      round(100 * pa$path.efficiency(path.actor_actuary), 2),
+      round(100 * pa$path.efficiency(epath), 2),
       "% faster than starting from scratch."
     )
   )
@@ -255,7 +301,99 @@ if (
   print(
     paste0(
       "Path is suboptimal and ",
-      -round(100 * pa$path.efficiency(path.actor_actuary), 2),
+      -round(100 * pa$path.efficiency(epath), 2),
+      "% slower than starting from scratch."
+    )
+  )
+}
+
+# endregion
+# region: economists => statisticians
+# occupations
+occupation.from <- occupations$Economists
+occupation.to <- occupations$Statisticians
+
+# vertices
+occupation.from |> pa$match.vertex() -> vertex.from
+occupation.to |> pa$match.vertex() -> vertex.to
+
+# find path
+vertex.to |> pa$path(vertex.from) -> epath
+
+# career path
+occupations[epath |> pa$which.path()]
+
+# path cost
+pa$path.cost(epath) |> sum()
+
+# base cost
+vertex.to |> pa$vertex.cost()
+
+# path efficiency
+epath |> pa$path.efficiency()
+
+# verify path is optimal
+if (
+  pa$path.efficiency(epath) >= 0
+) {
+  print(
+    paste0(
+      "Path is optimal and ",
+      round(100 * pa$path.efficiency(epath), 2),
+      "% faster than starting from scratch."
+    )
+  )
+} else {
+  print(
+    paste0(
+      "Path is suboptimal and ",
+      -round(100 * pa$path.efficiency(epath), 2),
+      "% slower than starting from scratch."
+    )
+  )
+}
+
+# endregion
+# region: statisticians => economists
+# occupations
+occupation.from <- occupations$Statisticians
+occupation.to <- occupations$Economists
+
+# vertices
+occupation.from |> pa$match.vertex() -> vertex.from
+occupation.to |> pa$match.vertex() -> vertex.to
+
+# find path
+vertex.to |> pa$path(vertex.from) -> epath
+
+# career path
+occupations[epath |> pa$which.path()]
+
+# path cost
+pa$path.cost(epath) |> sum()
+
+# base cost
+vertex.to |> pa$vertex.cost()
+
+# path efficiency
+epath |> pa$path.efficiency()
+
+# verify path is optimal
+if (
+  pa$path.efficiency(epath) >= 0
+) {
+  print(
+    paste0(
+      "Path is optimal and ",
+      round(100 * pa$path.efficiency(epath), 2),
+      "% faster than starting from scratch."
+    )
+  )
+} else {
+  print(
+    paste0(
+      "Path is suboptimal and ",
+      -round(100 * pa$path.efficiency(epath), 2),
       "% slower than starting from scratch."
     )
   )
