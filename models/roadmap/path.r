@@ -41,14 +41,6 @@ occupations$`Accountants and Auditors` |>
   ) ->
 path.actor_accountant
 
-pa$paths$graph |> gr$get.edge.attribute("occupation.from", path.actor_accountant)
-pa$paths$graph |> gr$get.edge.attribute("occupation.to", path.actor_accountant)
-
-box::use(mod / roadmap / path / functions / base_cost[...])
-1 - (path.actor_accountant |> pa$path.cost() |> sum()) / (occupations$`Accountants and Auditors` |> pa$match.vertex() |> vertex.cost())
-
-pa$paths$vertices |> filter(occupation == 2)
-
 # # career path
 # occupations[
 #   pa$paths$table |>
@@ -59,30 +51,27 @@ pa$paths$vertices |> filter(occupation == 2)
 #     pull(occupation)
 # ]
 
-# verify path is optimal
-if (
-  path.actor_accountant |>
-    pa$path.cost() |>
-    sum() <=
-    sum(
-      pa$paths$vertices[
-        pa$paths$vertices$vertex == pa$match.vertex(occupations$`Accountants and Auditors`),
-        c("x", "t")
-      ]
-    )
-) {
-  print("Path is optimal.")
-} else {
-  print("Path is not optimal.")
-}
-
 # path cost
 path.actor_accountant |>
   pa$path.cost() |>
   sum()
 
+# base cost
+occupations$`Accountants and Auditors` |>
+  pa$match.vertex() |>
+  pa$vertex.cost()
+
 # path efficiency
 path.actor_accountant |> pa$path.efficiency()
+
+# verify path is optimal
+if (
+  pa$path.efficiency(path.actor_accountant) >= 0
+) {
+  print("Path is optimal.")
+} else {
+  print("Path is not optimal.")
+}
 
 # endregion
 # region: accountant => actor

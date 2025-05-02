@@ -18,7 +18,15 @@ path.efficiency <- function(epath, graph = paths$graph, vertices = paths$vertice
       (
         epath |> path.cost(graph) |> sum()
       ) / (
-        epath |> last() |> vertex.cost(vertices)
+        graph |>
+          gr$get.edge.attribute(
+            "occupation.to",
+            epath
+          ) |>
+          last() |>
+          vertex.cost(
+            vertices
+          )
       )
     )
   )
