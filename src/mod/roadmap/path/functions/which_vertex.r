@@ -1,26 +1,42 @@
-modular::project.options("atlas")
 # setup
 # region: imports
 box::use(
   assert = mod / utils / assert,
-  mod/roadmap/path/data/vertices[...]
+  mod / roadmap / path / data / vertices[...],
+  dplyr[...]
 )
 
 # endregion
 # methods
 # region: min method
-which.vertex.min <- function() {
+which.vertex.min <- function(id) {
   # assert args in main function
-  # description
-  return("min")
+  # get occupation's vertex with min requirements
+  return(
+    vertices |>
+      filter(
+        occupation == id
+      ) |>
+      arrange(x, t) |>
+      slice(1) |>
+      pull(vertex)
+  )
 }
 
 # endregion
 # region: max method
-which.vertex.max <- function() {
+which.vertex.max <- function(id) {
   # assert args in main function
-  # description
-  return("max")
+  # get occupation's vertex with max requirements
+  return(
+    vertices |>
+      filter(
+        occupation == id
+      ) |>
+      arrange(-x, -t) |>
+      slice(1) |>
+      pull(vertex)
+  )
 }
 
 # endregion
@@ -36,16 +52,15 @@ list(
 which.vertex <- function(occupation, which.vertex_method = which.vertex.methods[[1]], ...) {
   # assert args
   stopifnot(is.integer(occupation))
-  assert$base$validate.method(which.vertex_method, "which.vertex_method", which.vertex.method)
-
+  assert$base$validate.method(which.vertex_method, "which.vertex_method", which.vertex.methods)
 
   # multiple dispatch
   if (which.vertex_method[[1]] == which.vertex.methods$min) {
-    return(which.vertex.min())
+    return(which.vertex.min(occupation))
   }
 
   if (which.vertex_method[[1]] == which.vertex.methods$max) {
-    return(which.vertex.max())
+    return(which.vertex.max(occupation))
   }
 }
 
