@@ -33,33 +33,25 @@ occupations
 # endregion
 # model
 # region: actor => accountant
-# find path
-occupations$`Accountants and Auditors` |>
-  pa$match.vertex() |>
-  pa$path(
-    from = occupations$Actors |> pa$match.vertex()
-  ) ->
-path.actor_accountant
+# occupations
+occupation.from <- occupations$Actors
+occupation.to <- occupations$`Accountants and Auditors`
 
-# # career path
-# occupations[
-#   pa$paths$table |>
-#     filter(
-#       vertex %in%
-#         path.actor_accountant
-#     ) |>
-#     pull(occupation)
-# ]
+# vertices
+occupation.from |> pa$match.vertex() -> vertex.from
+occupation.to |> pa$match.vertex() -> vertex.to
+
+# find path
+vertex.to |> pa$path(vertex.from) -> path.actor_accountant
+
+# career path
+occupations[path.actor_accountant |> pa$which.path()]
 
 # path cost
-path.actor_accountant |>
-  pa$path.cost() |>
-  sum()
+pa$path.cost(path.actor_accountant) |> sum()
 
 # base cost
-occupations$`Accountants and Auditors` |>
-  pa$match.vertex() |>
-  pa$vertex.cost()
+vertex.to |> pa$vertex.cost()
 
 # path efficiency
 path.actor_accountant |> pa$path.efficiency()
@@ -68,75 +60,67 @@ path.actor_accountant |> pa$path.efficiency()
 if (
   pa$path.efficiency(path.actor_accountant) >= 0
 ) {
-  print("Path is optimal.")
+  print(
+    paste0(
+      "Path is optimal and ",
+      round(100 * pa$path.efficiency(path.actor_accountant), 2),
+      "% faster than the standard route."
+    )
+  )
 } else {
-  print("Path is not optimal.")
+  print(
+    paste0(
+      "Path is suboptimal and ",
+      -round(100 * pa$path.efficiency(path.actor_accountant), 2),
+      "% slower than the standard route."
+    )
+  )
 }
 
 # endregion
-# region: accountant => actor
-# get vertices
-pa$paths$table |>
-  filter(
-    occupation ==
-      occupations$`Accountants and Auditors`
-  ) |>
-  select(
-    occupation,
-    vertex,
-    x,
-    t
-  ) |>
-  unique() |>
-  arrange(x, t) ->
-vertices.from
+# region: actor => actuary
+# occupations
+occupation.from <- occupations$Actors
+occupation.to <- occupations$Actuaries
 
-pa$paths$table |>
-  filter(
-    occupation ==
-      occupations$Actors
-  ) |>
-  select(
-    occupation,
-    vertex,
-    x,
-    t
-  ) |>
-  unique() |>
-  arrange(x, t) ->
-vertices.to
-
-index.from <- 1
-index.to <- 10
+# vertices
+occupation.from |> pa$match.vertex() -> vertex.from
+occupation.to |> pa$match.vertex() -> vertex.to
 
 # find path
-pa$path(
-  to = vertices.to$vertex[index.to],
-  from = vertices.from$vertex[index.from]
-) -> path.actor_accountant
+vertex.to |> pa$path(vertex.from) -> path.actor_actuary
 
 # career path
-occupations[
-  pa$paths$table |>
-    slice(
-      path.actor_accountant
-    ) |>
-    pull(occupation)
-]
+occupations[path.actor_actuary |> pa$which.path()]
+
+# path cost
+pa$path.cost(path.actor_actuary) |> sum()
+
+# base cost
+vertex.to |> pa$vertex.cost()
+
+# path efficiency
+path.actor_actuary |> pa$path.efficiency()
 
 # verify path is optimal
 if (
-  path.actor_accountant |>
-    pa$path.cost() |>
-    sum() <=
-    sum(
-      vertices.to$x[index.to],
-      vertices.to$t[index.to]
-    )
+  pa$path.efficiency(path.actor_actuary) >= 0
 ) {
-  print("Path is optimal.")
+  print(
+    paste0(
+      "Path is optimal and ",
+      round(100 * pa$path.efficiency(path.actor_actuary), 2),
+      "% faster than the standard route."
+    )
+  )
 } else {
-  print("Path is not optimal.")
+  print(
+    paste0(
+      "Path is suboptimal and ",
+      -round(100 * pa$path.efficiency(path.actor_actuary), 2),
+      "% slower than the standard route."
+    )
+  )
 }
 
 # endregion

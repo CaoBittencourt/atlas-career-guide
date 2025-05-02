@@ -13,23 +13,25 @@ box::use(
 # region: get path efficiency (as a percentage of base cost)
 path.efficiency <- function(epath, graph = paths$graph, vertices = paths$vertices) {
   # assert args in main function
-  return(
-    1 - (
-      (
-        epath |> path.cost(graph) |> sum()
-      ) / (
-        graph |>
-          gr$get.edge.attribute(
-            "occupation.to",
-            epath
-          ) |>
-          last() |>
-          vertex.cost(
-            vertices
-          )
-      )
-    )
-  )
+  # calculate path costs
+  graph |>
+    gr$get.edge.attribute(
+      "vertex.to",
+      epath
+    ) |>
+    last() |>
+    vertex.cost(
+      vertices
+    ) ->
+  base.cost
+
+  epath |>
+    path.cost(graph) |>
+    sum() ->
+  epath.cost
+
+  return(1 - (epath.cost / base.cost))
+  # return((base.cost - epath.cost) / base.cost)
 }
 
 # endregion
