@@ -41,13 +41,13 @@ list(
 # endregion
 # dispatch
 # region: path generic function
-path <- function(from, to, util = NULL, graph = paths$graph, path_method = path.methods[[1]], ...) {
+path <- function(to, from = NULL, util = NULL, graph = paths$graph, path_method = path.methods[[1]], ...) {
   # assert args
   # paths$table$vertex |> min() -> vertex.min
   # paths$table$vertex |> max() -> vertex.max
   # assert$base$validate.numeric.bounded(from, "from", F, vertex.min, vertex.max)
   # assert$base$validate.numeric.bounded(to, "to", F, vertex.min, vertex.max)
-  stopifnot(is.integer(from))
+  stopifnot(any(is.integer(from), is.null(from)))
   stopifnot(is.integer(to))
   assert$base$validate.numeric.bounded(util, "util", T, 0)
   # stopifnot(

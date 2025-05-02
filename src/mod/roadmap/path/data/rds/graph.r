@@ -299,6 +299,19 @@ paths.graph
 # endregion
 # exports
 # region: exports
+# vertices
+vertices |>
+  saveRDS(
+    getOption("atlas.mod") |>
+      file.path(
+        "roadmap",
+        "path",
+        "data",
+        "rds",
+        "vertices.rds"
+      )
+  )
+
 # paths list
 list(
   graph = paths.graph,
