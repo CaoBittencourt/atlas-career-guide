@@ -1,348 +1,96 @@
+# setup
+# region: modules
 modular::project.options("atlas")
+
+# endregion
+# region: imports
 box::use(
-  mod / utils / data[last]
+  pa = mod / roadmap / path,
+  # gr = igraph,
+  dplyr[...],
+  tidyr[...],
 )
 
-morph <- function(akz, A, Bkz, fn = mean, ...) {
-  # morph a skill set into another skill set
-  # akz is the skill set of person k at time z
-  # A is the skill set (column vector) matrix
-  # Bkz is the "point B" to which k is morphing
-  # fn is the morphing function with (...) args
-  return(fn |> mapply(akz, A[, Bkz], ...))
-}
+# library(atlas.plot)
 
-# route.duration <- function() {
-#   # optimize which route to take, given
-#   # 1. minimum experience requirements
-#   # 2. minimum education requirements
-#   # 3. experience and education carryover
-#   # 4. minimum total years to reach the goal
-#   return(0)
-# }
+# endregion
+# region: data
+# skill set matrix
+getOption("atlas.skills_mtx") |> readRDS() -> df_occupations
 
-learn <- function(ẍkz, ẗkz, S, S.eq.geq, Bkz, is.education) {
-  # increment experience and education vectors
-  # ẍkz is the equivalent experience of person k at time z
-  # ẗkz is the equivalent education of person k at time z
-  # S is a (column vector) similarity matrix (e.g. field similarity)
-  # Bkz is the "point B" to which k is morphing
-  # is.education indicates whether each q is a kind of job or education
+# endregion
+# model
+# region: sketch
+pa$paths$table |>
+  filter(
+    occupation == 1,
+    occupation.to == 1
+  ) ->
+vertices
 
-  if (is.education) {
-    return(
-      list(
-        "xp" = ẍkz,
-        "edu" = S[, Bkz] + ẗkz
-        # "edu" = S.eq.geq[, Bkz] * S[, Bkz] + ẗkz
-      )
-    )
-  }
+pa$path(1L, 6L) -> epath
 
-  return(
-    list(
-      "xp" = S[, Bkz] + ẍkz,
-      # "xp" = S.eq.geq[, Bkz] * S[, Bkz] + ẍkz,
-      "edu" = ẗkz
-    )
+epath
+
+pa$paths$graph |>
+  gr$get.edge.attribute(
+    "t.from", epath
   )
-  # return(
-  #   list(
-  #     "xp" = S[, Bkz] + ẍkz,
-  #     # "xp" = S.eq.geq[, Bkz] * S[, Bkz] + ẍkz,
-  #     "edu" = ẗkz
-  #   )
-  # )
-}
 
-path.optimize <- function(ẍkz, ẗkz, uk, S, S.eq.geq, x, t, Bk.star, Bk, is.education) {
-  # choose next "point B" in the career progression
-  # ẍkz is the equivalent experience of person k at time z
-  # ẗkz is the equivalent education of person k at time z
-  # uk is the vector of person k's evaluated utility for each q
-  # S is a (column vector) similarity matrix (e.g. field similarity)
-  # S.eq.geq is a (column vector) evaluated equivalent similarity matrix (e.g. field similarity)
-  # x is the vector of experience requirements for all q in 1:2n
-  # t is the vector of educational requirements for all q in 1:2n
-  # Bk is the vector of all previous "point B's" (i.e. the career path)
-  # Bk.star is the optimal or stationary "point B" (i.e. the career goal)
-  # is.education indicates whether each q is a job or a kind of education
-
-  # if person k has reached their career goal, stay at the current job
-  last(Bk) -> Bkz
-
-  if (!is.null(Bkz)) {
-    if (Bkz == Bk.star) {
-      return(Bk.star)
-    }
-  }
-
-  # assess person k's attainment
-  (ẍkz[Bk.star] >= x[Bk.star]) -> attained.xp
-  (ẗkz[Bk.star] >= t[Bk.star]) -> attained.edu
-
-  # print(paste("attained.xp:", attained.xp))
-  # print(paste("attained.edu:", attained.edu))
-
-  # k is ready for their career goal
-  if (all(attained.xp, attained.edu)) {
-    return(Bk.star)
-  }
-
-  # k is not ready for their career goal
-  # print("argmax:")
-  # print(
-  #   (
-  #     (ẍkz >= x) * (ẗkz >= t) * (
-  #       !attained.xp * !is.education +
-  #         !attained.edu * is.education
-  #     ) * S[Bk.star, ] * uk
-  #   )
-  # )
-
-  (ẍkz >= x) * (ẗkz >= t) * S[Bk.star, ] * uk -> utility
-
-  # print("utility:")
-  # print(utility)
-
-
-  # (ẍkz >= x) * (ẗkz >= t) * (
-  #   !attained.xp * !is.education +
-  #     !attained.edu * is.education
-  # ) * S[Bk.star, ] * uk -> utility
-
-  # (ẍkz >= x) * (ẗkz >= t) * (
-  #   !attained.xp * !is.education +
-  #     !attained.edu * is.education
-  # ) * S[Bk.star, ] * uk -> utility
-
-  if (all(utility == 0)) {
-    return(which.max(S[Bk.star, ] * uk))
-  }
-
-  return(which.max(utility))
-
-  # return(
-  #   which.max(
-  #     (ẍkz >= x) * (ẗkz >= t) * (
-  #       !attained.xp * !is.education +
-  #         !attained.edu * is.education
-  #     ) * S[Bk.star, ] * uk
-  #   )
-  # )
-
-  # (x[Bk.star] > 0)
-
-  # (x[Bk.star] > 0)
-  # S[Bk.star, ]
-
-
-  # (x[Bk.star] > 0)
-  # S[Bk.star, ] == 0
-
-  # missing xp => go get xp
-  #   cannot get xp if majored in the wrong thing
-  # missing edu & xp not required => go get edu => go to labor market
-  # missing edu & xp required => go get edu which maximizes xp carryover
-
-  # x[Bk.star] > 0
-  # (S[Bk.star, ] * !is.education) * (seq_along(is.education) != Bk.star)
-  # (1) persue Bk.star, then segway into Bk.star from another role
-  # (2) persue other education, then segway into Bk.star from another role
-
-  # S[Bk.star, ] * (seq_along(is.education) != Bk.star)
-  # S[, Bk.star] * (seq_along(is.education) != Bk.star)
-
-  # 1   2   3   4   5   6   (( 7))  8   9   10  11  12  13 (14) # id
-  # .21 .23 .45 .66 .11 .11 (( 1)) .21 .23 .45 .66 .11 .11 ( 1) # S[, Bk.star]
-  # .14 .65 .66 .44 .62 .55 (( 1)) .14 .65 .66 .44 .62 .55 ( 1) # S[Bk.star, ]
-  # 0   0   0   7   0   2   (( 7)) 0   0   0   0   0   0   ( 0) # x
-  # 19  28  26  14  18  23  ((26)) 0   0   0   0   0   0   ( 0) # t
-
-  # 1. if no experience is required, persue most efficient education
-  # 2. if experience is required, choose first occupation
-  # 2.1. first occupation, by definition, cannot have experience requirements
-  # 2.2. optimize educational attainment for first occupation while also minimizing
-  # time to arrive at stationary (goal) career
-  # repeat (non recursively?)
-  # the education choosen for the first occupation should be that which minimizes the total cost in years, not only the immediate cost of arriving at the first occupation itself
-  # i.e. the economic agent should not "shoot too far" on their first occupation
-  # assuming, of course, they already attained any presupposed education
-
-  # S
-  # data.frame(
-  #   Sk.star_q = S[, Bk.star],
-  #   Sq_k.star = S[Bk.star, ],
-  #   x,
-  #   t
-  # )
-  # ((t - ẗkz)) * ((x == 0)^(x[Bk.star] > 0)) / S[, Bk.star]
-  # ((t - ẗkz)) * ((x == 0)^(x[Bk.star] > 0)) / S[Bk.star, ]
-
-  # S[Bk.star, ] * ((t - ẗkz)) * ((x == 0)^(x[Bk.star] > 0)) / S[, Bk.star]
-  # S[Bk.star, ] * ((t - ẗkz)) * ((x == 0)^(x[Bk.star] > 0)) / S[Bk.star, ]
-
-  # ((x - ẍkz) + (t - ẗkz)) * ((x == 0)^(x[Bk.star] > 0)) / S[Bk.star, ]
-  # ((x - ẍkz) + (t - ẗkz)) * ((x == 0)^(x[Bk.star] > 0)) / S[Bk.star, ]
-  # ((x - ẍkz) + (t - ẗkz)) * ((x == 0)^(x[Bk.star] > 0)) / S[Bk.star, ]
-  # ((x - ẍkz) + (t - ẗkz)) * ((seq_along(is.education) != Bk.star)^(x[Bk.star] > 0)) / S[Bk.star, ]
-  # (x - ẍkz) / S
-
-  # (x[Bk.star] > 0) * S[Bk.star, ] * (seq_along(is.education) != Bk.star)
-  # ((x - ẍkz) + (t - ẗkz)) / S[Bk.star, ]
-
-
-  # # (x - ẍkz) / S[,Bk.star]
-  # # (t - ẗkz) / S[,Bk.star]
-
-  # (x - ẍkz) / S[Bk.star, ]
-  # (t - ẗkz) / S[Bk.star, ]
-
-  # (x - ẍkz) / rowMeans(S)
-  # (t - ẗkz) / rowMeans(S)
-
-  # (x - ẍkz) / colMeans(S)
-  # (t - ẗkz) / colMeans(S)
-
-  # # ẍkz - x
-  # # ẗkz - t
-  # x - ẍkz
-  # t - ẗkz
-
-  # alternative (stupid):
-  #   if majored in the wrong thing, go back to school
-
-
-  # return(
-  #   which.max(
-  #     (ẍkz >= x) * (ẗkz >= t) * (
-  #       !attained.xp * !is.education +
-  #         !attained.edu * is.education
-  #     ) * S[Bk.star, ] * uk
-  #   )
-  # )
-}
-
-path.recursive <- function(ẍkz, ẗkz, uk, S, S.eq.geq, x, t, Bk.star, Bk, is.education, zmax, z) {
-  # assert args in main function
-  # recursively optimize career path
-  if (z < zmax) {
-    path.optimize(
-      ẍkz = ẍkz,
-      ẗkz = ẗkz,
-      uk = uk,
-      S = S,
-      S.eq.geq = S.eq.geq,
-      x = x,
-      t = t,
-      Bk.star = Bk.star,
-      Bk = Bk,
-      is.education = is.education
-    ) -> Bkz
-
-    print(paste("z:", z))
-    print(
-      list(
-        "xp" = ẍkz,
-        "edu" = ẗkz,
-        "goal" = Bk.star,
-        "path" = Bk
-      )
-    )
-    print(
-      paste(
-        ifelse(
-          is.education[Bkz],
-          "studying",
-          "working"
-        ),
-        Bkz
-      )
-    )
-
-    learn(
-      ẍkz = ẍkz,
-      ẗkz = ẗkz,
-      S = S,
-      S.eq.geq = S.eq.geq,
-      Bkz = Bkz,
-      is.education = is.education[Bkz]
-    ) -> ẍẗkz.next
-
-    return(
-      path.recursive(
-        ẍkz = ẍẗkz.next[[1]],
-        ẗkz = ẍẗkz.next[[2]],
-        uk = uk,
-        S = S,
-        S.eq.geq = S.eq.geq,
-        x = x,
-        t = t,
-        Bk.star = Bk.star,
-        Bk = c(Bk, Bkz),
-        is.education = is.education,
-        zmax = zmax,
-        z = z + 1
-      )
-    )
-  }
-
-  # return career path when the model has reached the maximum number of iterations (years)
-  return(
-    list(
-      "xp" = ẍkz,
-      "edu" = ẗkz,
-      "goal" = Bk.star,
-      "path" = Bk
-    )
+pa$paths$graph |>
+  gr$get.edge.attribute(
+    "t.to", epath
   )
-}
 
-replicate(7, runif(7)) -> S
-diag(S) <- 1
-rep(F, ncol(S)) -> is.education
-c(is.education, !is.education) -> is.education
-S |> cbind(S) -> S
-S |> rbind(S) -> S
-(S^2) > 0.5 -> S.eq.geq
+pa$paths$graph |>
+  gr$get.edge.attribute(
+    "x.from", epath
+  )
 
-x <- c(runif(7, -5, 10) |> round(), rep(0, 7)) |> pmax(0)
-t <- c(runif(7, 14, 28) |> round(), rep(0, 7))
+pa$paths$graph |>
+  gr$get.edge.attribute(
+    "x.to", epath
+  )
 
-ẍkz <- rep(0, 7 + 7)
-ẗkz <- rep(0, 7 + 7)
+pa$paths$graph |>
+  gr$get.edge.attribute(
+    "vertex.from", epath
+  )
 
-uk <- rep(1:7 * runif(7), 2)
-Bk.star <- 7
-Bk <- c()
+pa$paths$graph |>
+  gr$get.edge.attribute(
+    "vertex.to", epath
+  )
 
-zmax <- 65
-z <- 0
+pa$paths$graph |>
+  gr$get.edge.attribute(
+    "table.id", epath
+  )
 
-path.recursive(
-  ẍkz = ẍkz,
-  ẗkz = ẗkz,
-  uk = rep(1, 14),
-  # uk = uk,
-  S = S,
-  S.eq.geq = S.eq.geq,
-  x = x,
-  t = t,
-  Bk.star = Bk.star,
-  Bk = Bk,
-  is.education = is.education,
-  zmax = zmax,
-  z = z
-) -> dsds
+pa$paths$graph |>
+  gr$get.edge.attribute(
+    "t.to", epath
+  )
 
-dsds
-x
-t
+pa$paths$table
 
-# path <- function() {
-#   # assert args
+df_occupations[-1][
+  pa$paths$graph |>
+    gr$get.edge.attribute(
+      "occupation.to",
+      epath
+    )
+]
 
-#   # calculate is.education
-#   # calculate S.eq.geq
-#   # (S >= 0.5) -> S.eq.geq
-# }
+epath |> pa$path.cost()
+
+epath |>
+  pa$path.cost() |>
+  sum()
+
+epath |> pa$path.util()
+epath |>
+  pa$path.util() |>
+  sum()
+
+# endregion

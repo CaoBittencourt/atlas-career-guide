@@ -1,8 +1,6 @@
 # setup
 # region: imports
 box::use(
-  assert = mod / utils / assert,
-  req = mod / roadmap / path / data / req,
   mod / roadmap / path / functions / restart[...],
 )
 
@@ -10,6 +8,7 @@ box::use(
 # dispatch
 # region: movement cost
 move.cost <- function(skq, xk, xq, tk, tq) {
+  # assert args in main function
   # equivalent similarity
   # skq.eq <- (skq >= 0.5) * skq
   skq.eq <- ((skq^2) >= 0.5) * skq

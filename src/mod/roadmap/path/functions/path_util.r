@@ -12,7 +12,7 @@ box::use(
 # region: set path utility
 # match each utility to an occupation
 # assume vector is in the same order as occupation's indexes
-set.path.util <- function(graph, util) {
+set.path.util <- function(graph = paths$graph, util) {
   # assert args in main function
   return(
     graph |>

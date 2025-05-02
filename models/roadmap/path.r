@@ -6,9 +6,8 @@ modular::project.options("atlas")
 # region: imports
 box::use(
   pa = mod / roadmap / path,
-  gr = igraph,
   dplyr[...],
-  tidyr[...],
+  stats[setNames]
 )
 
 # library(atlas.plot)
@@ -16,81 +15,66 @@ box::use(
 # endregion
 # region: data
 # skill set matrix
-getOption("atlas.skills_mtx") |> readRDS() -> df_occupations
+getOption("atlas.skills_mtx") |>
+  readRDS() |>
+  select(-1) |>
+  names() ->
+occupations
+
+occupations |>
+  seq_along() |>
+  as.list() |>
+  setNames(
+    occupations
+  ) ->
+occupations
 
 # endregion
 # model
-# region: sketch
+# region: actor => accountant
+# get vertices
 pa$paths$table |>
   filter(
-    occupation == 1,
-    occupation.to == 1
-  ) ->
-vertices
+    occupation ==
+      occupations$Actors
+  ) |>
+  select(
+    occupation,
+    vertex,
+    x,
+    t
+  ) |>
+  unique() |>
+  arrange(x, t) ->
+vertices.from
 
-pa$path(1L, 6L) -> epath
+pa$paths$table |>
+  filter(
+    occupation ==
+      occupations$`Accountants and Auditors`
+  ) |>
+  select(
+    occupation,
+    vertex,
+    x,
+    t
+  ) |>
+  unique() |>
+  arrange(x, t) ->
+vertices.to
 
-epath
+# find path
+pa$path(
+  from = vertices.from$vertex[1],
+  to = vertices.to$vertex[1]
+) -> path.actor_accountant
 
-pa$paths$graph |>
-  gr$get.edge.attribute(
-    "t.from", epath
-  )
-
-pa$paths$graph |>
-  gr$get.edge.attribute(
-    "t.to", epath
-  )
-
-pa$paths$graph |>
-  gr$get.edge.attribute(
-    "x.from", epath
-  )
-
-pa$paths$graph |>
-  gr$get.edge.attribute(
-    "x.to", epath
-  )
-
-pa$paths$graph |>
-  gr$get.edge.attribute(
-    "vertex.from", epath
-  )
-
-pa$paths$graph |>
-  gr$get.edge.attribute(
-    "vertex.to", epath
-  )
-
-pa$paths$graph |>
-  gr$get.edge.attribute(
-    "table.id", epath
-  )
-
-pa$paths$graph |>
-  gr$get.edge.attribute(
-    "t.to", epath
-  )
-
-pa$paths$table
-
-df_occupations[-1][
-  pa$paths$graph |>
-    gr$get.edge.attribute(
-      "occupation.to",
-      epath
-    )
+occupations[
+  pa$paths$table |>
+    slice(
+      path.actor_accountant
+    ) |>
+    pull(occupation)
 ]
-
-epath |> pa$path.cost()
-
-epath |>
-  pa$path.cost() |>
-  sum()
-
-epath |> pa$path.util()
-epath |>
-  pa$path.util() |>
-  sum()
 
 # endregion

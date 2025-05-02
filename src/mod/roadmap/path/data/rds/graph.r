@@ -1,0 +1,318 @@
+# setup
+# region: modular
+modular::project.options("atlas")
+
+# endregion
+# region: imports
+box::use(
+  assert = mod / utils / assert,
+  mod / roadmap / path / functions / cost[...],
+  mod / roadmap / path / data / similarity[...],
+  req = mod / roadmap / path / data / req,
+  mod / utils / data[sublist],
+  stats[na.omit],
+  gr = igraph,
+  readr[...],
+  dplyr[...],
+  tidyr[...],
+)
+
+# endregion
+# implementation
+# region: career grid
+career.grid <- function(xmin, tmin, xmax = NULL, tmax = req$education$doctorate) {
+  # assert args in main function
+  # generate valid career progressions on a 2d experience vs education grid
+  return(
+    expand.grid(
+      x = req$experience |> sublist(function(x) ifelse(!length(xmax), x >= xmin, x >= xmin & x <= xmax)) |> as.numeric(),
+      t = req$education |> sublist(function(t) (t >= tmin) & (t <= tmax)) |> as.numeric()
+    )
+  )
+}
+
+# endregion
+# region: basic education
+career.grid(0, 0, req$education$high.school, xmax = 0) -> basic.education
+
+# endregion
+# region: career progressions
+career.grid |>
+  Map(
+    req$career.req$xmin,
+    req$career.req$tmin
+  ) ->
+career.grids
+
+# endregion
+# region: vertices
+career.grids |>
+  bind_rows(
+    .id = "occupation"
+  ) |>
+  mutate(
+    .before = 1,
+    occupation = as.integer(occupation),
+    vertex = row_number()
+  ) ->
+vertices
+
+# endregion
+# region: movement types
+# 1. "teleport" vertically to another occupation at a parallel vertex (same x,t)
+vertices |>
+  inner_join(
+    vertices,
+    suffix = c("", ".to"),
+    by = c("x" = "x", "t" = "t"),
+    relationship = "many-to-many"
+  ) ->
+paths.switch
+
+# 2. or increment either experience or education within the same occupation
+# with only direct (adjacent) movement, i.e.
+
+# valid education movements
+# high.school -> associate
+# associate -> bachelor
+# bachelor -> master
+# master -> doctorate
+req$education |>
+  unlist() |>
+  as_tibble() |>
+  rename(t = 1) |>
+  # as_tibble(
+  #   rownames = "education"
+  # ) |>
+  # rename(t = 2) |>
+  mutate(
+    t.to = dplyr::lead(t, 1)
+  ) ->
+education.move
+
+# valid experience movements
+# intern -> junior
+# junior -> associate
+# associate -> mid.level
+# mid.level -> senior
+req$experience |>
+  unlist() |>
+  as_tibble() |>
+  rename(x = 1) |>
+  # as_tibble(
+  #   rownames = "experience"
+  # ) |>
+  # rename(x = 2) |>
+  mutate(
+    x.to = dplyr::lead(x, 1)
+  ) ->
+experience.move
+
+# increase education
+vertices |>
+  inner_join(
+    education.move,
+    by = c("t" = "t"),
+  ) |>
+  na.omit() ->
+paths.study
+
+# increase experience
+vertices |>
+  inner_join(
+    experience.move,
+    by = c("x" = "x")
+  ) |>
+  na.omit() ->
+paths.work
+
+# all valid paths
+bind_rows(
+  paths.switch |>
+    mutate(
+      x.to = x,
+      t.to = t
+    ),
+  paths.work |>
+    inner_join(
+      vertices,
+      suffix = c("", ".to"),
+      by = c(
+        "x.to" = "x",
+        "t" = "t",
+        "occupation" = "occupation"
+      )
+    ) |>
+    mutate(
+      occupation.to = occupation,
+      t.to = t
+    ),
+  paths.study |>
+    inner_join(
+      vertices,
+      suffix = c("", ".to"),
+      by = c(
+        "x" = "x",
+        "t.to" = "t",
+        "occupation" = "occupation"
+      )
+    ) |>
+    mutate(
+      occupation.to = occupation,
+      x.to = x
+    )
+) |>
+  filter(
+    vertex != vertex.to
+  ) |>
+  relocate(
+    starts_with("vertex"),
+    starts_with("occupation"),
+    starts_with("x"),
+    starts_with("t")
+  ) ->
+paths
+
+# endregion
+# region: movement cost
+mtx_similarity |>
+  mutate(
+    id = row_number(),
+    occupation = to
+  ) |>
+  select(
+    id,
+    occupation
+  ) ->
+ids
+
+mtx_similarity |>
+  pivot_longer(
+    cols = -1,
+    names_to = "from",
+    values_to = "similarity"
+  ) |>
+  inner_join(
+    ids |> rename(id.to = id),
+    by = c(
+      "to" = "occupation"
+    )
+  ) |>
+  inner_join(
+    ids |> rename(id.from = id),
+    by = c(
+      "from" = "occupation"
+    )
+  ) |>
+  select(
+    occupation = id.from,
+    occupation.to = id.to,
+    similarity
+  ) |>
+  inner_join(
+    paths
+  ) |>
+  mutate(
+    cost = move.cost(
+      skq = similarity,
+      xk = x,
+      xq = x.to,
+      tk = t,
+      tq = t.to
+    )
+  ) ->
+paths
+
+# endregion
+# region: movement graph
+# feasible paths
+paths |>
+  filter(
+    !is.infinite(cost)
+  ) |>
+  mutate(
+    .before = 1,
+    id = row_number()
+  ) ->
+paths
+
+# graph
+paths |>
+  select(
+    vertex,
+    vertex.to
+  ) |>
+  as.matrix() |>
+  gr$graph.edgelist(
+    directed = T
+  ) |>
+  gr$set.edge.attribute(
+    "weight",
+    value = paths$cost
+  ) |>
+  gr$set.edge.attribute(
+    "cost",
+    value = paths$cost
+  ) |>
+  gr$set.edge.attribute(
+    "occupation.from",
+    value = paths$occupation
+  ) |>
+  gr$set.edge.attribute(
+    "occupation.to",
+    value = paths$occupation.to
+  ) |>
+  gr$set.edge.attribute(
+    "vertex.from",
+    value = paths$vertex
+  ) |>
+  gr$set.edge.attribute(
+    "vertex.to",
+    value = paths$vertex.to
+  ) |>
+  gr$set.edge.attribute(
+    "x.from",
+    value = paths$x
+  ) |>
+  gr$set.edge.attribute(
+    "x.to",
+    value = paths$x.to
+  ) |>
+  gr$set.edge.attribute(
+    "t.from",
+    value = paths$t
+  ) |>
+  gr$set.edge.attribute(
+    "t.to",
+    value = paths$t.to
+  ) |>
+  gr$set.edge.attribute(
+    "table.id",
+    value = paths$id
+  ) |>
+  gr$set.edge.attribute(
+    "util",
+    value = 1
+  ) ->
+paths.graph
+
+# endregion
+# exports
+# region: exports
+# paths list
+list(
+  graph = paths.graph,
+  table = paths
+) |>
+  saveRDS(
+    getOption("atlas.mod") |>
+      file.path(
+        "roadmap",
+        "path",
+        "data",
+        "rds",
+        "paths.rds"
+      )
+  )
+
+# endregion
