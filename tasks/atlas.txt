@@ -4,7 +4,9 @@ ATLAS CAREER GUIDE TASKS
 
 current task
 -------------------------------------
-[*] path: allow for regressive paths?
+[*] path submoule
+    [*] allow for regressive paths?
+    [*] add restart layer?
 [\] REPLACE ASSERT STATEMENTS!
 [\] modularize / vectorize codebase
 [ ] taxonomy => evol and/or prog?
