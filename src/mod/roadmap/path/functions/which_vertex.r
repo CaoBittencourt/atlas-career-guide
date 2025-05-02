@@ -51,7 +51,7 @@ list(
 # region: which.vertex generic function
 which.vertex <- function(occupation, which.vertex_method = which.vertex.methods[[1]], ...) {
   # assert args
-  stopifnot(is.integer(occupation))
+  stopifnot(round(occupation) == occupation)
   assert$base$validate.method(which.vertex_method, "which.vertex_method", which.vertex.methods)
 
   # multiple dispatch
