@@ -3,11 +3,9 @@
 box::use(
   assert = mod / utils / assert,
   gr = igraph,
-  mod / roadmap / path / data / graph[...],
   mod / roadmap / path / data / req[...],
-  mod / roadmap / path / functions / cost_util[...],
-  mod / roadmap / path / functions / path_cost[...],
   mod / roadmap / path / functions / path_util[...],
+  mod / roadmap / path / data / graph[...],
   dplyr[...],
 )
 
@@ -70,11 +68,6 @@ path <- function(to, from = NULL, util = NULL, graph = paths$graph, path_method 
 # endregion
 # exports
 # region: exports
-box::export(
-  path,
-  path.cost,
-  path.util,
-  paths
-)
+box::export(path)
 
 # endregion

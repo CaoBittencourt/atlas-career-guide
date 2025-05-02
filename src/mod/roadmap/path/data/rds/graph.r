@@ -315,7 +315,8 @@ vertices |>
 # paths list
 list(
   graph = paths.graph,
-  table = paths
+  table = paths,
+  vertices = vertices
 ) |>
   saveRDS(
     getOption("atlas.mod") |>

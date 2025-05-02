@@ -9,7 +9,7 @@ box::use(
 # endregion
 # dispatch
 # region: match.vertex generic function
-match.vertex <- function(occupation.from, x.from, t.from) {
+match.vertex <- function(occupation.from, x.from = 0, t.from = 0) {
   # assert args
   stopifnot(round(occupation.from) == occupation.from)
   assert$base$validate.numeric.bounded(x.from, "x.from", F, 0)
