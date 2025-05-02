@@ -1,5 +1,5 @@
 #' @export
 box::use(
-  goal = mod / module / goal[...],
-  path = mod / module / path[...]
+  go = mod / module / goal[...],
+  pa = mod / module / path[...]
 )

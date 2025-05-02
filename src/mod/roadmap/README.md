@@ -1,77 +1,32 @@
-# `roadmap` module
-Helps individuals in all steps of their career journey.
+# `roadmap`: career roadmap utilities
+## `goal`
+The `goal` submodule helps users find out the optimal end-goal for their careers according to their own criteria.
 
-## `goal` submodule
-Helps individuals choose their career, given their macro-strategy.
+## `path`
+The `path` submodule optimizes career tracjectory to get the quickest and most optimal path towards an end-goal (often defined with the `goal` submodule).
 
-```math
-\begin{gather}
-B_{k}^{*} = 
-\argmax_{
-    q \ \in \ \{1, \ \dots, \ n\}
-}{
-    U_{kq}^{*}
-},
-\\
-B_{k}^{t} = B_{k}^{*}
-\implies
-B_{k}^{z} = B_{k}^{*}
-\
-\forall
-\
-z \geq t \in \{1, \dots, \bar{\tau}\}
-\end{gather}
-```
+## `plot`
+The `path` submodule takes as input a career trajectory and outputs a plot to visualize one's professional journey.
 
-## `path` submodule
-Helps individuals optimize training, given their micro-strategy.
+## Example
+One can combine these three modules to fully optimize their career as follows:
+```r
+# import roadmap module
+box::use(roa = mod / roadmap[...])
 
-```math
-\begin{gather}
-\ddot{x}_{kq}^{z}
-=
-\sum_{t=1}^{z}{
-    \left[B_{k}^{t} \in \{1, \dots, n\}\right]
-    \left[s_{B_{k}^{t}q}^{\theta} \geq \frac{1}{2}\right]
-    s_{B_{k}^{t}q}^{\theta}
-}
-,
-\\
-\ddot{\tau}_{kq}^{z}
-=
-\sum_{t=1}^{z}{
-    \left[B_{k}^{t} \in \{n+1, \dots, 2n\}\right]
-    \left[s_{B_{k}^{t}q}^{\theta} \geq \frac{1}{2}\right]
-    s_{B_{k}^{t}q}^{\theta}
-}
-,
-\\
-B_{k}^{z}
-=
-B_{k}^{*}
-[\ddot{\tau}_{kB_{k}^{*}}^{z} \geq \tau_{B_{k}^{*}}]
-[\ddot{x}_{kB_{k}^{*}}^{z} \geq x_{B_{k}^{*}}]
-+ 
-\left(
-    1 - 
-[\ddot{\tau}_{kB_{k}^{*}}^{z} \geq \tau_{B_{k}^{*}}]
-[\ddot{x}_{kB_{k}^{*}}^{z} \geq x_{B_{k}^{*}}]
-\right)
-\argmax_{q \ \in \ \{1, \ \dots, \ 2n\}}{
-    \left(
-        [\ddot{\tau}_{kq}^{z} \geq \tau_{q}]
-        [\ddot{x}_{kq}^{z} \geq x_{q}]
-        \left(
-            [\ddot{x}_{kB_{k}^{*}}^{z} < x_{B_{k}^{*}}]
-            [q \in \{1, \dots, n\}] 
-            +
-            [\ddot{\tau}_{kB_{k}^{*}}^{z} < \tau_{B_{k}^{*}}]
-            [q \in \{n+1, \dots, 2n\}]
-        \right)
-        % \left[s_{qB_{k}^{*}}^{\theta} \geq \frac{1}{2}\right]
-        s_{qB_{k}^{*}}^{\theta}
-        U_{kq}
-    \right)
-}
-\end{gather}
+# read user's skills, preferences and strategies
+read.csv('skill_set.csv') -> skill
+read.csv('pref_set.csv') -> pref
+read.csv('macro_strategy.csv') -> macro.str
+read.csv('micro_strategy.csv') -> micro.str
+
+# career roadmap
+skill |> 
+    roa$go$goal(
+        prefs = pref,
+        strategy = macro.str
+    ) |> # user's optimal career (end-goal)
+    roa$pa$which.vertex() |> 
+    roa$pa$path() |> # user's optimal trajectory (path)
+    roa$pl$plot.path() # plot user's career progression
 ```

@@ -30,7 +30,7 @@ modularization execution (in order)
 [ ] atlas/src/mod/macro/taxa.r
 
 [ ] atlas/src/mod/roadmap/goal.r
-[ ] atlas/src/mod/roadmap/path.r
+[x] atlas/src/mod/roadmap/path.r
 
 [ ] atlas/src/mod/macro/evol.r
 
