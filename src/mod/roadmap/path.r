@@ -9,4 +9,5 @@ box::use(
   mod / roadmap / path / functions / path_cost[...],
   mod / roadmap / path / functions / path_util[...],
   mod / roadmap / path / functions / path_efficiency[...],
+  mod / roadmap / path / functions / path_timeline[...],
 )

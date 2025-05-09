@@ -45,21 +45,16 @@ occupation.to |> pa$match.vertex() -> vertex.to
 # find path
 vertex.to |> pa$path(vertex.from) -> epath
 
-
 # career path
-tibble(
-  year = c(0, pa$path.cost(epath) |> cumsum()),
-  duration = c(0, pa$path.cost(epath)),
-  movement.type = c("start", pa$paths$graph |> gr$get.edge.attribute("type", epath)),
-  occupation = names(occupations)[epath |> pa$which.path()],
-  description = c(
-    "start as an actor",
-    "carry-over experience and education to get a job as a desk clerk",
-    "work as a desk clerk for an additional year",
-    "carry-over experience and education to get a job as a loan clerk",
-    "get a bachelor's in Accounting, then carry-over experience to get a job as an accountant"
+epath |>
+  pa$path.timeline() |>
+  mutate(
+    occupation = names(
+      occupations
+    )[
+      occupation
+    ]
   )
-)
 
 # path cost
 pa$path.cost(epath) |> sum()
@@ -105,13 +100,15 @@ occupation.to |> pa$match.vertex() -> vertex.to
 vertex.to |> pa$path(vertex.from) -> epath
 
 # career path
-tibble(
-  year = c(0, pa$path.cost(epath) |> cumsum()),
-  duration = c(0, pa$path.cost(epath)),
-  movement.type = c("start", pa$paths$graph |> gr$get.edge.attribute("type", epath)),
-  occupation = names(occupations)[epath |> pa$which.path()],
-  description = ""
-)
+epath |>
+  pa$path.timeline() |>
+  mutate(
+    occupation = names(
+      occupations
+    )[
+      occupation
+    ]
+  )
 
 # path cost
 pa$path.cost(epath) |> sum()
@@ -157,13 +154,15 @@ occupation.to |> pa$match.vertex() -> vertex.to
 vertex.to |> pa$path(vertex.from) -> epath
 
 # career path
-tibble(
-  year = c(0, pa$path.cost(epath) |> cumsum()),
-  duration = c(0, pa$path.cost(epath)),
-  movement.type = c("start", pa$paths$graph |> gr$get.edge.attribute("type", epath)),
-  occupation = names(occupations)[epath |> pa$which.path()],
-  description = ""
-)
+epath |>
+  pa$path.timeline() |>
+  mutate(
+    occupation = names(
+      occupations
+    )[
+      occupation
+    ]
+  )
 
 # path cost
 pa$path.cost(epath) |> sum()
@@ -209,13 +208,15 @@ occupation.to |> pa$match.vertex() -> vertex.to
 vertex.to |> pa$path(vertex.from) -> epath
 
 # career path
-tibble(
-  year = c(0, pa$path.cost(epath) |> cumsum()),
-  duration = c(0, pa$path.cost(epath)),
-  movement.type = c("start", pa$paths$graph |> gr$get.edge.attribute("type", epath)),
-  occupation = names(occupations)[epath |> pa$which.path()],
-  description = ""
-)
+epath |>
+  pa$path.timeline() |>
+  mutate(
+    occupation = names(
+      occupations
+    )[
+      occupation
+    ]
+  )
 
 # path cost
 pa$path.cost(epath) |> sum()
@@ -261,13 +262,15 @@ occupation.to |> pa$which.vertex("max") -> vertex.to
 vertex.to |> pa$path(vertex.from) -> epath
 
 # career path
-tibble(
-  year = c(0, pa$path.cost(epath) |> cumsum()),
-  duration = c(0, pa$path.cost(epath)),
-  movement.type = c("start", pa$paths$graph |> gr$get.edge.attribute("type", epath)),
-  occupation = names(occupations)[epath |> pa$which.path()],
-  description = ""
-)
+epath |>
+  pa$path.timeline() |>
+  mutate(
+    occupation = names(
+      occupations
+    )[
+      occupation
+    ]
+  )
 
 # path cost
 pa$path.cost(epath) |> sum()
@@ -313,13 +316,15 @@ occupation.to |> pa$match.vertex() -> vertex.to
 vertex.to |> pa$path(vertex.from) -> epath
 
 # career path
-tibble(
-  year = c(0, pa$path.cost(epath) |> cumsum()),
-  duration = c(0, pa$path.cost(epath)),
-  movement.type = c("start", pa$paths$graph |> gr$get.edge.attribute("type", epath)),
-  occupation = names(occupations)[epath |> pa$which.path()],
-  description = ""
-)
+epath |>
+  pa$path.timeline() |>
+  mutate(
+    occupation = names(
+      occupations
+    )[
+      occupation
+    ]
+  )
 
 # path cost
 pa$path.cost(epath) |> sum()
@@ -365,13 +370,15 @@ occupation.to |> pa$match.vertex() -> vertex.to
 vertex.to |> pa$path(vertex.from) -> epath
 
 # career path
-tibble(
-  year = c(0, pa$path.cost(epath) |> cumsum()),
-  duration = c(0, pa$path.cost(epath)),
-  movement.type = c("start", pa$paths$graph |> gr$get.edge.attribute("type", epath)),
-  occupation = names(occupations)[epath |> pa$which.path()],
-  description = ""
-)
+epath |>
+  pa$path.timeline() |>
+  mutate(
+    occupation = names(
+      occupations
+    )[
+      occupation
+    ]
+  )
 
 # path cost
 pa$path.cost(epath) |> sum()
@@ -417,13 +424,15 @@ occupation.to |> pa$match.vertex() -> vertex.to
 vertex.to |> pa$path(vertex.from) -> epath
 
 # career path
-tibble(
-  year = c(0, pa$path.cost(epath) |> cumsum()),
-  duration = c(0, pa$path.cost(epath)),
-  movement.type = c("start", pa$paths$graph |> gr$get.edge.attribute("type", epath)),
-  occupation = names(occupations)[epath |> pa$which.path()],
-  description = ""
-)
+epath |>
+  pa$path.timeline() |>
+  mutate(
+    occupation = names(
+      occupations
+    )[
+      occupation
+    ]
+  )
 
 # path cost
 pa$path.cost(epath) |> sum()
