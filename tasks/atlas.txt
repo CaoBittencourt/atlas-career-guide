@@ -8,6 +8,7 @@ current task
     [x] allow for regressive paths?
     [x] add restart layer?
     [x] allowing for more paths probably solves both issues
+    [*] tests / model
 [\] REPLACE ASSERT STATEMENTS!
 [\] modularize / vectorize codebase
 [ ] taxonomy => evol and/or prog?

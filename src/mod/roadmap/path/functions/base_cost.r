@@ -18,10 +18,10 @@ vertex.cost <- function(vertex, vertices = paths$vertices) {
     vertices[
       vertex,
     ] |>
-      select(
-        x, t
+      mutate(
+        cost = x + t
       ) |>
-      sum()
+      pull(cost)
   )
 }
 

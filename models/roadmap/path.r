@@ -11,7 +11,7 @@ box::use(
   stats[setNames]
 )
 
-# library(atlas.plot)
+library(atlas.plot)
 
 # endregion
 # region: data
@@ -398,5 +398,72 @@ if (
     )
   )
 }
+
+# endregion
+# tests
+# region: vertices
+tibble(
+  id =
+    occupations |>
+      c(
+        c("Basic Education" = 874)
+      ) |>
+      seq_along()
+) |>
+  mutate(
+    vertex = pa$match.vertex(id)
+  ) |>
+  mutate(
+    default.cost =
+      pa$vertex.cost(vertex)
+  ) ->
+initial.vertices
+
+expand.grid(
+  from = seq_along(occupations |> c(c("Basic Education" = 874))),
+  to = seq_along(occupations |> c(c("Basic Education" = 874)))
+) |>
+  filter(from != to) |>
+  inner_join(
+    initial.vertices |> select(-default.cost),
+    by = c("from" = "id"),
+    relationship = "many-to-many"
+  ) |>
+  inner_join(
+    initial.vertices,
+    suffix = c("", ".to"),
+    by = c("to" = "id"),
+    relationship = "many-to-many"
+  ) -> from.to.vertices
+
+from.to.vertices |> slice_sample(n = 100) -> from.to.vertices
+
+# endregion
+# region: model
+mapply(
+  function(from, to) {
+    to |>
+      pa$path(from) |>
+      pa$path.cost() |>
+      sum()
+  },
+  from = from.to.vertices$vertex,
+  to = from.to.vertices$vertex.to
+) -> from.to.vertices$cost
+from.to.vertices
+
+from.to.vertices
+from.to.vertices |>
+  reframe(
+    all(
+      (cost - default.cost) <= 0
+    )
+  )
+
+# endregion
+# plots
+# region: cost vs default cost
+from.to.vertices |> 
+
 
 # endregion
