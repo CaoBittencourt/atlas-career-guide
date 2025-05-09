@@ -93,6 +93,9 @@ vertices |>
     suffix = c("", ".to"),
     by = c("x" = "x", "t" = "t"),
     relationship = "many-to-many"
+  ) |>
+  mutate(
+    type = "switch"
   ) ->
 paths.switch
 
@@ -132,6 +135,9 @@ education.move |>
         t = t.to
       ) |>
       na.omit()
+  ) |>
+  mutate(
+    type = "study"
   ) ->
 education.move
 
@@ -166,6 +172,9 @@ experience.move |>
         x = x.to
       ) |>
       na.omit()
+  ) |>
+  mutate(
+    type = "work"
   ) ->
 experience.move
 
@@ -214,6 +223,9 @@ expand.grid(
   ) |>
   filter(
     occupation != occupation.to
+  ) |>
+  mutate(
+    type = "reset"
   ) ->
 paths.restart
 
@@ -361,6 +373,10 @@ paths |>
   as.matrix() |>
   gr$graph.edgelist(
     directed = T
+  ) |>
+  gr$set.edge.attribute(
+    "type",
+    value = paths$type
   ) |>
   gr$set.edge.attribute(
     "weight",
