@@ -7,6 +7,7 @@ current task
 [*] path submoule
     [*] allow for regressive paths?
     [*] add restart layer?
+    [ ] allowing for more paths probably solves both issues
 [\] REPLACE ASSERT STATEMENTS!
 [\] modularize / vectorize codebase
 [ ] taxonomy => evol and/or prog?

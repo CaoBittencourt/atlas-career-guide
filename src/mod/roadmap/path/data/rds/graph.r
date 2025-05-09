@@ -32,6 +32,13 @@ career.grid <- function(xmin, tmin, xmax = NULL, tmax = req$education$doctorate)
 }
 
 # endregion
+# # region: restart layer
+# career.restart <- function() {
+
+# }
+
+
+# # endregion
 # region: basic education
 career.grid(0, 0, req$education$high.school, xmax = 0) -> basic.education
 
@@ -69,14 +76,21 @@ vertices |>
   ) ->
 paths.switch
 
-# 2. or increment either experience or education within the same occupation
+# 2. increment either experience or education within the same occupation
 # with only direct (adjacent) movement, i.e.
+# or decrement either experience or education within the same occupation
+# with only direct (adjacent) movement and zero cost, i.e.
 
 # valid education movements
 # high.school -> associate
 # associate -> bachelor
 # bachelor -> master
 # master -> doctorate
+
+# high.school <- associate
+# associate <- bachelor
+# bachelor <- master
+# master <- doctorate
 req$education |>
   unlist() |>
   as_tibble() |>
@@ -90,11 +104,27 @@ req$education |>
   ) ->
 education.move
 
+education.move |>
+  bind_rows(
+    education.move |>
+      rename(
+        t.to = t,
+        t = t.to
+      ) |>
+      na.omit()
+  ) ->
+education.move
+
 # valid experience movements
 # intern -> junior
 # junior -> associate
 # associate -> mid.level
 # mid.level -> senior
+
+# intern <- junior
+# junior <- associate
+# associate <- mid.level
+# mid.level <- senior
 req$experience |>
   unlist() |>
   as_tibble() |>
@@ -108,20 +138,33 @@ req$experience |>
   ) ->
 experience.move
 
-# increase education
+experience.move |>
+  bind_rows(
+    experience.move |>
+      rename(
+        x.to = x,
+        x = x.to
+      ) |>
+      na.omit()
+  ) ->
+experience.move
+
+# education move
 vertices |>
   inner_join(
     education.move,
     by = c("t" = "t"),
+    relationship = "many-to-many"
   ) |>
   na.omit() ->
 paths.study
 
-# increase experience
+# experience move
 vertices |>
   inner_join(
     experience.move,
-    by = c("x" = "x")
+    by = c("x" = "x"),
+    relationship = "many-to-many"
   ) |>
   na.omit() ->
 paths.work
