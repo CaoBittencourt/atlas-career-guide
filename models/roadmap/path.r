@@ -11,7 +11,7 @@ box::use(
   stats[setNames]
 )
 
-library(atlas.plot)
+# library(atlas.plot)
 
 # endregion
 # region: data
@@ -19,7 +19,8 @@ library(atlas.plot)
 getOption("atlas.skills_mtx") |>
   readRDS() |>
   select(-1) |>
-  names() ->
+  names() |>
+  c("Basic Education") ->
 occupations
 
 occupations |>
@@ -403,12 +404,7 @@ if (
 # tests
 # region: vertices
 tibble(
-  id =
-    occupations |>
-      c(
-        c("Basic Education" = 874)
-      ) |>
-      seq_along()
+  id = occupations |> unlist()
 ) |>
   mutate(
     vertex = pa$match.vertex(id)
@@ -420,8 +416,8 @@ tibble(
 initial.vertices
 
 expand.grid(
-  from = seq_along(occupations |> c(c("Basic Education" = 874))),
-  to = seq_along(occupations |> c(c("Basic Education" = 874)))
+  from = occupations |> unlist(),
+  to = occupations |> unlist()
 ) |>
   filter(from != to) |>
   inner_join(
@@ -436,24 +432,37 @@ expand.grid(
     relationship = "many-to-many"
   ) -> from.to.vertices
 
-from.to.vertices |> slice_sample(n = 100) -> from.to.vertices
-
 # endregion
-# region: model
-mapply(
-  function(from, to) {
-    to |>
-      pa$path(from) |>
-      pa$path.cost() |>
-      sum()
-  },
-  from = from.to.vertices$vertex,
-  to = from.to.vertices$vertex.to
-) -> from.to.vertices$cost
-from.to.vertices
-
-from.to.vertices
+# region: sampling
 from.to.vertices |>
+  slice_sample(n = 20) |>
+  mutate(
+    cost =
+      mapply(
+        function(from, to) {
+          to |>
+            pa$path(from) |>
+            pa$path.cost() |>
+            sum()
+        },
+        from = vertex,
+        to = vertex.to
+      )
+  ) |>
+  mutate(
+    from = names(occupations)[from] |> substring(1, 50),
+    to = names(occupations)[to] |> substring(1, 50),
+    years.saved = default.cost - cost
+  ) |>
+  select(
+    -starts_with("vertex")
+  ) |>
+  arrange(-years.saved) ->
+from.to.model
+
+from.to.model
+
+from.to.model |>
   reframe(
     all(
       (cost - default.cost) <= 0
@@ -461,9 +470,45 @@ from.to.vertices |>
   )
 
 # endregion
+# # region: from scratch (basic education)
+# from.to.vertices |>
+#   filter(from == 874) |>
+#   slice_sample(n = 20) |>
+#   mutate(
+#     cost =
+#       mapply(
+#         function(from, to) {
+#           to |>
+#             pa$path(from) |>
+#             pa$path.cost() |>
+#             sum()
+#         },
+#         from = vertex,
+#         to = vertex.to
+#       )
+#   ) |>
+#   mutate(
+#     from = names(occupations)[from] |> substring(1, 50),
+#     to = names(occupations)[to] |> substring(1, 50),
+#     years.saved = default.cost - cost
+#   ) |>
+#   select(
+#     -starts_with("vertex")
+#   ) |>
+#   arrange(-years.saved) ->
+# from.to.model
+
+# from.to.model
+
+# from.to.model |>
+#   reframe(
+#     all(
+#       (cost - default.cost) <= 0
+#     )
+#   )
+
+# # endregion
 # plots
 # region: cost vs default cost
-from.to.vertices |> 
-
 
 # endregion
