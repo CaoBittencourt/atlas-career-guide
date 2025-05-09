@@ -8,6 +8,7 @@ box::use(
   assert = mod / utils / assert,
   mod / roadmap / path / functions / cost[...],
   mod / roadmap / path / data / similarity[...],
+  mod / roadmap / path / functions / restart[...],
   req = mod / roadmap / path / data / req,
   mod / utils / data[sublist],
   stats[na.omit],
@@ -32,13 +33,6 @@ career.grid <- function(xmin, tmin, xmax = NULL, tmax = req$education$doctorate)
 }
 
 # endregion
-# # region: restart layer
-# career.restart <- function() {
-
-# }
-
-
-# # endregion
 # region: basic education
 career.grid(0, 0, req$education$high.school, xmax = 0) -> basic.education
 
@@ -48,6 +42,9 @@ career.grid |>
   Map(
     req$career.req$xmin,
     req$career.req$tmin
+  ) |>
+  c(
+    list(basic.education)
   ) ->
 career.grids
 
@@ -67,6 +64,29 @@ vertices
 # endregion
 # region: movement types
 # 1. "teleport" vertically to another occupation at a parallel vertex (same x,t)
+# expand.grid(
+#   vertex = vertices$vertex,
+#   vertex.to = vertices$vertex
+# ) ->
+# vertices.comb
+
+# vertices.comb |>
+#   inner_join(
+#     vertices,
+#     by = c("vertex.to" = "vertex"),
+#     relationship = "many-to-many"
+#   ) |>
+#   rename_with(
+#     .cols = -starts_with("vertex"),
+#     .fn = ~ .x |> paste0(".to")
+#   ) |>
+#   inner_join(
+#     vertices,
+#     by = c("vertex" = "vertex"),
+#     relationship = "many-to-many"
+#   ) ->
+# paths.switch
+
 vertices |>
   inner_join(
     vertices,
@@ -169,13 +189,45 @@ vertices |>
   na.omit() ->
 paths.work
 
+# 3. teleport to first vertex of any occupation at full (x.to + t.to) cost? (hard reset)
+expand.grid(
+  vertex = vertices$vertex,
+  vertex.to =
+    vertices |>
+      group_by(
+        occupation
+      ) |>
+      slice(1) |>
+      ungroup() |>
+      pull(vertex)
+) |>
+  inner_join(
+    vertices,
+    by = c("vertex" = "vertex"),
+    relationship = "many-to-many"
+  ) |>
+  inner_join(
+    vertices,
+    suffix = c("", ".to"),
+    by = c("vertex.to" = "vertex"),
+    relationship = "many-to-many"
+  ) |>
+  filter(
+    occupation != occupation.to
+  ) ->
+paths.restart
+
 # all valid paths
 bind_rows(
+  # switch careers
   paths.switch |>
     mutate(
       x.to = x,
       t.to = t
     ),
+  # restart career
+  paths.restart,
+  # move experience
   paths.work |>
     inner_join(
       vertices,
@@ -190,6 +242,7 @@ bind_rows(
       occupation.to = occupation,
       t.to = t
     ),
+  # move education
   paths.study |>
     inner_join(
       vertices,
@@ -218,6 +271,26 @@ paths
 
 # endregion
 # region: movement cost
+mtx_similarity |>
+  mutate(
+    `Basic Education` = 1
+  ) ->
+mtx_similarity
+
+mtx_similarity |>
+  bind_rows(
+    c(
+      "Basic Education",
+      rep(1, 874) |> as.list()
+    ) |>
+      setNames(
+        mtx_similarity |>
+          names()
+      ) |>
+      as_tibble()
+  ) ->
+mtx_similarity
+
 mtx_similarity |>
   mutate(
     id = row_number(),

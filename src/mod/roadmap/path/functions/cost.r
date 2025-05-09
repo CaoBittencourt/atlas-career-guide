@@ -17,15 +17,6 @@ move.cost <- function(skq, xk, xq, tk, tq) {
   pmax((xq - xk * skq.eq), 0) / skq -> req.x
   pmax((tq - tk * skq.eq), 0) / skq -> req.t
 
-  # (xq - xk * skq.eq) -> req.x
-  # (tq - tk * skq.eq) -> req.t
-
-  # (req.x > 0) * req.x -> req.x
-  # (req.t > 0) * req.t -> req.t
-
-  # req.x / skq -> req.x
-  # req.t / skq -> req.t
-
   # career move duration in years
   # restart if inefficient carry-over
   return(restart(xq, tq, req.x, req.t))
