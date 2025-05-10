@@ -33,114 +33,6 @@ occupations
 
 # endregion
 # model
-# region: actor => accountant
-# occupations
-occupation.from <- occupations$Actors
-occupation.to <- occupations$`Accountants and Auditors`
-
-# vertices
-occupation.from |> pa$match.vertex() -> vertex.from
-occupation.to |> pa$match.vertex() -> vertex.to
-
-# find path
-vertex.to |> pa$path(vertex.from) -> epath
-
-# career path
-epath |>
-  pa$path.timeline() |>
-  mutate(
-    occupation = names(
-      occupations
-    )[
-      occupation
-    ]
-  )
-
-# path cost
-pa$path.cost(epath) |> sum()
-
-# base cost
-vertex.to |> pa$vertex.cost()
-
-# path efficiency
-epath |> pa$path.efficiency()
-
-# verify path is optimal
-if (
-  pa$path.efficiency(epath) >= 0
-) {
-  print(
-    paste0(
-      "Path is optimal and ",
-      round(100 * pa$path.efficiency(epath), 2),
-      "% faster than starting from scratch."
-    )
-  )
-} else {
-  print(
-    paste0(
-      "Path is suboptimal and ",
-      -round(100 * pa$path.efficiency(epath), 2),
-      "% slower than starting from scratch."
-    )
-  )
-}
-
-# endregion
-# region: accountant => financial managers
-# occupations
-occupation.from <- occupations$`Accountants and Auditors`
-occupation.to <- occupations$`Financial Managers`
-
-# vertices
-occupation.from |> pa$match.vertex() -> vertex.from
-occupation.to |> pa$match.vertex() -> vertex.to
-
-# find path
-vertex.to |> pa$path(vertex.from) -> epath
-
-# career path
-epath |>
-  pa$path.timeline() |>
-  mutate(
-    occupation = names(
-      occupations
-    )[
-      occupation
-    ]
-  )
-
-# path cost
-pa$path.cost(epath) |> sum()
-
-# base cost
-vertex.to |> pa$vertex.cost()
-
-# path efficiency
-epath |> pa$path.efficiency()
-
-# verify path is optimal
-if (
-  pa$path.efficiency(epath) >= 0
-) {
-  print(
-    paste0(
-      "Path is optimal and ",
-      round(100 * pa$path.efficiency(epath), 2),
-      "% faster than starting from scratch."
-    )
-  )
-} else {
-  print(
-    paste0(
-      "Path is suboptimal and ",
-      -round(100 * pa$path.efficiency(epath), 2),
-      "% slower than starting from scratch."
-    )
-  )
-}
-
-# endregion
 # region: actor => musician
 # occupations
 occupation.from <- occupations$Actors
@@ -249,14 +141,14 @@ if (
 }
 
 # endregion
-# region: accountant => accountant
+# region: actor => accountant
 # occupations
-occupation.from <- occupations$`Accountants and Auditors`
+occupation.from <- occupations$Actors
 occupation.to <- occupations$`Accountants and Auditors`
 
 # vertices
 occupation.from |> pa$match.vertex() -> vertex.from
-occupation.to |> pa$which.vertex("max") -> vertex.to
+occupation.to |> pa$match.vertex() -> vertex.to
 
 # find path
 vertex.to |> pa$path(vertex.from) -> epath
@@ -303,14 +195,68 @@ if (
 }
 
 # endregion
-# region: actor => actuary
+# region: accountant => financial managers
 # occupations
-occupation.from <- occupations$Actors
-occupation.to <- occupations$Actuaries
+occupation.from <- occupations$`Accountants and Auditors`
+occupation.to <- occupations$`Financial Managers`
 
 # vertices
 occupation.from |> pa$match.vertex() -> vertex.from
 occupation.to |> pa$match.vertex() -> vertex.to
+
+# find path
+vertex.to |> pa$path(vertex.from) -> epath
+
+# career path
+epath |>
+  pa$path.timeline() |>
+  mutate(
+    occupation = names(
+      occupations
+    )[
+      occupation
+    ]
+  )
+
+# path cost
+pa$path.cost(epath) |> sum()
+
+# base cost
+vertex.to |> pa$vertex.cost()
+
+# path efficiency
+epath |> pa$path.efficiency()
+
+# verify path is optimal
+if (
+  pa$path.efficiency(epath) >= 0
+) {
+  print(
+    paste0(
+      "Path is optimal and ",
+      round(100 * pa$path.efficiency(epath), 2),
+      "% faster than starting from scratch."
+    )
+  )
+} else {
+  print(
+    paste0(
+      "Path is suboptimal and ",
+      -round(100 * pa$path.efficiency(epath), 2),
+      "% slower than starting from scratch."
+    )
+  )
+}
+
+# endregion
+# region: accountant => accountant
+# occupations
+occupation.from <- occupations$`Accountants and Auditors`
+occupation.to <- occupations$`Accountants and Auditors`
+
+# vertices
+occupation.from |> pa$match.vertex() -> vertex.from
+occupation.to |> pa$which.vertex("max") -> vertex.to
 
 # find path
 vertex.to |> pa$path(vertex.from) -> epath
@@ -411,60 +357,6 @@ if (
 }
 
 # endregion
-# region: statisticians => economists
-# occupations
-occupation.from <- occupations$Statisticians
-occupation.to <- occupations$Economists
-
-# vertices
-occupation.from |> pa$match.vertex() -> vertex.from
-occupation.to |> pa$match.vertex() -> vertex.to
-
-# find path
-vertex.to |> pa$path(vertex.from) -> epath
-
-# career path
-epath |>
-  pa$path.timeline() |>
-  mutate(
-    occupation = names(
-      occupations
-    )[
-      occupation
-    ]
-  )
-
-# path cost
-pa$path.cost(epath) |> sum()
-
-# base cost
-vertex.to |> pa$vertex.cost()
-
-# path efficiency
-epath |> pa$path.efficiency()
-
-# verify path is optimal
-if (
-  pa$path.efficiency(epath) >= 0
-) {
-  print(
-    paste0(
-      "Path is optimal and ",
-      round(100 * pa$path.efficiency(epath), 2),
-      "% faster than starting from scratch."
-    )
-  )
-} else {
-  print(
-    paste0(
-      "Path is suboptimal and ",
-      -round(100 * pa$path.efficiency(epath), 2),
-      "% slower than starting from scratch."
-    )
-  )
-}
-
-# endregion
 # tests
 # region: vertices
 tibble(
@@ -499,7 +391,10 @@ expand.grid(
 # endregion
 # region: sampling
 from.to.vertices |>
-  slice_sample(n = 20) |>
+  slice_sample(n = 20) ->
+from.to.vertices.sample
+
+from.to.vertices.sample |>
   mutate(
     cost =
       mapply(
@@ -527,14 +422,7 @@ from.to.vertices |>
   ) ->
 from.to.model
 
-from.to.model
-
-from.to.model |>
-  reframe(
-    all(
-      (cost - default.cost) <= 0
-    )
-  )
+from.to.model |> print(width = 1000)
 
 # endregion
 # # region: from scratch (basic education)
@@ -575,7 +463,3 @@ from.to.model |>
 #   )
 
 # # endregion
-# plots
-# region: cost vs default cost
-
-# endregion

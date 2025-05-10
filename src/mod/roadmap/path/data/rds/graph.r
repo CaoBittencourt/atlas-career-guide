@@ -198,16 +198,15 @@ vertices |>
   na.omit() ->
 paths.work
 
-# 3. teleport to first vertex of any occupation at full (x.to + t.to) cost? (hard reset)
+# 3. teleport back to basic education (hard reset)
 expand.grid(
   vertex = vertices$vertex,
   vertex.to =
     vertices |>
-      group_by(
-        occupation
+      filter(
+        occupation == 874
       ) |>
       slice(1) |>
-      ungroup() |>
       pull(vertex)
 ) |>
   inner_join(
@@ -227,7 +226,38 @@ expand.grid(
   mutate(
     type = "reset"
   ) ->
-paths.restart
+paths.reset
+
+# # 3. teleport to first vertex of any occupation at full (x.to + t.to) cost? (hard reset)
+# expand.grid(
+#   vertex = vertices$vertex,
+#   vertex.to =
+#     vertices |>
+#       group_by(
+#         occupation
+#       ) |>
+#       slice(1) |>
+#       ungroup() |>
+#       pull(vertex)
+# ) |>
+#   inner_join(
+#     vertices,
+#     by = c("vertex" = "vertex"),
+#     relationship = "many-to-many"
+#   ) |>
+#   inner_join(
+#     vertices,
+#     suffix = c("", ".to"),
+#     by = c("vertex.to" = "vertex"),
+#     relationship = "many-to-many"
+#   ) |>
+#   filter(
+#     occupation != occupation.to
+#   ) |>
+#   mutate(
+#     type = "reset"
+#   ) ->
+# paths.restart
 
 # all valid paths
 bind_rows(
@@ -237,8 +267,8 @@ bind_rows(
       x.to = x,
       t.to = t
     ),
-  # restart career
-  paths.restart,
+  # reset career
+  paths.reset,
   # move experience
   paths.work |>
     inner_join(
