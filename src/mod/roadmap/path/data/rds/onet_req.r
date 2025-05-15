@@ -9,8 +9,12 @@ box::use(
   dplyr[...],
   tidyr[...],
   stringr[...],
+  stats[...],
+  km = flexclust,
   readxl[read_excel],
 )
+
+dplyr::filter -> filter
 
 # endregion
 # data
@@ -84,10 +88,13 @@ getOption("atlas.data") |>
     "Education, Training, and Experience.xlsx"
   ) |>
   read_excel() |>
-  filter(
+  dplyr::filter(
     `Scale ID` %in% c("RW", "RL")
   ) ->
 df_req
+
+# # (Category, `O*NET-SOC Code`, `Scale ID`) are the composite primary key
+# all(df_req |> group_by(Category, `O*NET-SOC Code`, `Scale ID`) |> tally() |> pull(n) == 1)
 
 getOption("atlas.data") |>
   file.path(
@@ -95,7 +102,7 @@ getOption("atlas.data") |>
     "Education, Training, and Experience Categories.xlsx"
   ) |>
   read_excel() |>
-  filter(
+  dplyr::filter(
     `Scale ID` %in% c("RW", "RL")
   ) ->
 df_req_cat
@@ -167,35 +174,98 @@ df_req |>
       `O*NET-SOC Code` |>
         str_sub(1, -4)
   ) |>
-  filter(
-    `Scale ID` %in% c("RL", "RW")
-    # `Scale ID` %in% c("RL", "RW")
+  mutate(
+    pct = `Data Value` / 100
   ) |>
-  filter(
-    `Data Value` > 0
-  ) |>
-  filter(
-    `Recommend Suppress` != "Y"
-  ) |>
+  # dplyr::filter(
+  #   pct > 0
+  # ) |>
+  # dplyr::filter(
+  #   `Recommend Suppress` != "Y"
+  # ) |>
   inner_join(
-    df_req_cat
-  ) |> 
-  transmute(
-    id_soc_code = id_soc_code,
-    id_scale = `Scale ID`,
-    years = years * 
+    df_req_cat,
+    relationship = "many-to-many"
+  ) |>
+  select(
+    `Scale ID`,
+    id_soc_code,
+    `O*NET-SOC Code`,
+    pct,
+    years
+  ) |>
+  group_by(
+    `O*NET-SOC Code`
+  ) |>
+  group_split() ->
+list_req
+
+list_req[[1]] |>
+  group_by(`Scale ID`) |>
+  reframe(
+    kde = list(
+      density(
+        years,
+        weights = pct,
+        from = 0
+      )
+    )
+    # kde = list(
+    #   ks$kde(
+    #     years,
+    #     w = pct,
+    #     xmin = 0
+    #   )
+    # )
+  ) ->
+dsds
+
+dsds$kde[[1]] |> plot()
+
+km$bclust(
+  x = as.data.frame() dsds$kde[[1]]$x,
+  k = 2,
+  weights = dsds$kde[[1]]$y
+)
+
+km$cclust(
+  dsds$kde[[1]]$x,
+  k = 5,
+  weights = dsds$kde[[1]]$y,
+)
+
+
+
+list_req[1] |>
+  lapply(
+    function(df) {
+      df |>
+        group_by(`Scale ID`) |>
+        reframe(
+          kde = list(
+            density(
+              years,
+              weights = pct,
+              from = 0
+            )
+          )
+        )
+    }
+  ) ->
+list_kde
+
+list_kde[[1]]$kde[[1]] |> plot()
+list_kde[[1]]$kde[[2]] |> plot()
+
+list_req |>
+  sum(dsds$pct)
+
+reframe(
+  kde = mapply(
+    density,
+    x = years,
+    weights = pct
   )
-
-# group_by(
-#   id_soc_code,
-#   `Scale ID`,
-#   `Data Value`
-# )
-tally()
-# |>
-#   inner_join(
-#     df_ids
-#   )
-
+)
 
 # endregion

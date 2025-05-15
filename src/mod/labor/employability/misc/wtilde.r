@@ -14,7 +14,7 @@ wtilde.mls <- function(w) {
 }
 
 # endregion
-# region: kernel density approaximation of optimal responsibility bounds
+# region: kernel density approximation of optimal responsibility bounds
 l.kde <- function(wq.proxy = 1024, wq, ttc) {
   # assert args
   assert$base$validate.numeric.bounded(wq, "wq", F, 0, lc = F)
