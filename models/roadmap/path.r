@@ -31,6 +31,15 @@ occupations |>
   ) ->
 occupations
 
+getOption("atlas.root") |>
+  file.path(
+    "models",
+    "roadmap",
+    "vertices.rds"
+  ) |>
+  readRDS() ->
+from.to.vertices
+
 # endregion
 # model
 # region: actor => musician
@@ -44,6 +53,7 @@ occupation.to |> pa$match.vertex() -> vertex.to
 
 # find path
 vertex.to |> pa$path(vertex.from) -> epath
+epath
 
 # career path
 epath |>
@@ -98,6 +108,7 @@ occupation.to |> pa$match.vertex() -> vertex.to
 
 # find path
 vertex.to |> pa$path(vertex.from) -> epath
+epath
 
 # career path
 epath |>
@@ -152,6 +163,7 @@ occupation.to |> pa$match.vertex() -> vertex.to
 
 # find path
 vertex.to |> pa$path(vertex.from) -> epath
+epath
 
 # career path
 epath |>
@@ -206,6 +218,7 @@ occupation.to |> pa$match.vertex() -> vertex.to
 
 # find path
 vertex.to |> pa$path(vertex.from) -> epath
+epath
 
 # career path
 epath |>
@@ -260,6 +273,7 @@ occupation.to |> pa$which.vertex("max") -> vertex.to
 
 # find path
 vertex.to |> pa$path(vertex.from) -> epath
+epath
 
 # career path
 epath |>
@@ -314,6 +328,7 @@ occupation.to |> pa$match.vertex() -> vertex.to
 
 # find path
 vertex.to |> pa$path(vertex.from) -> epath
+epath
 
 # career path
 epath |>
@@ -358,37 +373,6 @@ if (
 
 # endregion
 # tests
-# region: vertices
-tibble(
-  id = occupations |> unlist()
-) |>
-  mutate(
-    vertex = pa$match.vertex(id)
-  ) |>
-  mutate(
-    default.cost =
-      pa$vertex.cost(vertex)
-  ) ->
-initial.vertices
-
-expand.grid(
-  from = occupations |> unlist(),
-  to = occupations |> unlist()
-) |>
-  filter(from != to) |>
-  inner_join(
-    initial.vertices |> select(-default.cost),
-    by = c("from" = "id"),
-    relationship = "many-to-many"
-  ) |>
-  inner_join(
-    initial.vertices,
-    suffix = c("", ".to"),
-    by = c("to" = "id"),
-    relationship = "many-to-many"
-  ) -> from.to.vertices
-
-# endregion
 # region: sampling
 from.to.vertices |>
   slice_sample(n = 20) ->

@@ -5,3 +5,9 @@
 
 # nested git repos
 packages/
+
+# onet 27.3 database
+database/data/db_27_3_excel
+
+# temporarily remove rds files
+*.rds
