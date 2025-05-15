@@ -1,0 +1,201 @@
+# setup
+# region: modules
+modular::project.options("atlas")
+
+# endregion
+# region: imports
+box::use(
+  readr[...],
+  dplyr[...],
+  tidyr[...],
+  stringr[...],
+  readxl[read_excel],
+)
+
+# endregion
+# data
+# region: required education
+list(
+  high.school = 17 - 17,
+  associate = 19 - 17,
+  bachelor = 21 - 17,
+  master = 23 - 17,
+  doctorate = 28 - 17
+) -> education
+
+# endregion
+# region: required experience
+list(
+  intern = 0,
+  junior = 2,
+  associate = 3,
+  mid.level = 5,
+  senior = 10
+) -> experience
+
+# endregion
+# region: onet data
+# similarity matrix
+getOption("atlas.mod") |>
+  file.path(
+    "roadmap",
+    "path",
+    "data",
+    "rds",
+    "similarity.rds"
+  ) |>
+  readRDS() ->
+df_similarity
+
+# occupations' ids and soc codes
+df_similarity$to |>
+  as_tibble() |>
+  rename(
+    occupation = 1
+  ) |>
+  mutate(
+    .before = 1,
+    id = row_number()
+  ) |>
+  inner_join(
+    getOption("atlas.oldata") |>
+      read.csv() |>
+      select(
+        id_soc_code,
+        occupation
+      ) |>
+      arrange(
+        occupation
+      ) |>
+      mutate(
+        .before = 1,
+        id = row_number()
+      )
+  ) |>
+  relocate(
+    -occupation
+  ) ->
+df_ids
+
+# requirements
+getOption("atlas.data") |>
+  file.path(
+    "db_27_3_excel",
+    "Education, Training, and Experience.xlsx"
+  ) |>
+  read_excel() |>
+  filter(
+    `Scale ID` %in% c("RW", "RL")
+  ) ->
+df_req
+
+getOption("atlas.data") |>
+  file.path(
+    "db_27_3_excel",
+    "Education, Training, and Experience Categories.xlsx"
+  ) |>
+  read_excel() |>
+  filter(
+    `Scale ID` %in% c("RW", "RL")
+  ) ->
+df_req_cat
+
+tribble(
+  ~`Scale ID`, ~`Category`, ~`Category Description`, ~`years`,
+  "RL", 1, "Less than a High School Diploma", education$high.school,
+  "RL", 2, "High School Diploma - or the equivalent (for example, GED)", education$high.school,
+  "RL", 3, "Post-Secondary Certificate - awarded for training completed after high school (for example, in agriculture or natural resources, computer services, personal or culinary services, engineering technologies, healthcare, construction trades, mechanic and repair technologies, or precision production)", education$associate,
+  "RL", 4, "Some College Courses", education$associate,
+  "RL", 5, "Associate's Degree (or other 2-year degree)", education$associate,
+  "RL", 6, "Bachelor's Degree", education$bachelor,
+  "RL", 7, "Post-Baccalaureate Certificate - awarded for completion of an organized program of study; designed for people who have completed a Baccalaureate degree but do not meet the requirements of academic degrees carrying the title of Master.", education$master,
+  "RL", 8, "Master's Degree", education$master,
+  "RL", 9, "Post-Master's Certificate - awarded for completion of an organized program of study; designed for people who have completed a Master's degree but do not meet the requirements of academic degrees at the doctoral level.", education$doctorate,
+  "RL", 10, "First Professional Degree - awarded for completion of a program that: requires at least 2 years of college work before entrance into the program, includes a total of at least 6 academic years of work to complete, and provides all remaining academic requirements to begin practice in a profession.", education$doctorate,
+  "RL", 11, "Doctoral Degree", education$doctorate,
+  "RL", 12, "Post-Doctoral Training", education$doctorate,
+  "RW", 1, "None", experience$intern,
+  "RW", 2, "Up to and including 1 month", 1 / 12,
+  "RW", 3, "Over 1 month, up to and including 3 months", mean(c(1, 3)) / 12,
+  "RW", 4, "Over 3 months, up to and including 6 months", mean(c(3, 6)) / 12,
+  "RW", 5, "Over 6 months, up to and including 1 year", mean(c(6, 12)) / 12,
+  "RW", 6, "Over 1 year, up to and including 2 years", mean(c(1, 2)),
+  "RW", 7, "Over 2 years, up to and including 4 years", mean(c(2, 4)),
+  "RW", 8, "Over 4 years, up to and including 6 years", mean(c(4, 6)),
+  "RW", 9, "Over 6 years, up to and including 8 years", mean(c(6, 8)),
+  "RW", 10, "Over 8 years, up to and including 10 years", mean(c(8, 10)),
+  "RW", 11, "Over 10 years", mean(c(10, 30)),
+) ->
+df_req_cat
+
+# endregion
+# model
+# region: dsds
+# get closest match
+df_similarity |>
+  pivot_longer(
+    cols = -1,
+    names_to = "from",
+    values_to = "similarity"
+  ) |>
+  group_by(from) |>
+  arrange(
+    -similarity,
+    .by_group = T
+  ) |>
+  slice(-1) |>
+  slice(1) |>
+  ungroup() |>
+  inner_join(
+    df_ids |> rename_with(.fn = ~ .x |> paste0(".to")),
+    by = c(
+      "to" = "occupation.to"
+    )
+  ) |>
+  inner_join(
+    df_ids |> rename_with(.fn = ~ .x |> paste0(".from")),
+    by = c(
+      "from" = "occupation.from"
+    )
+  ) ->
+df_closest_match
+
+df_req |>
+  mutate(
+    .before = 1,
+    id_soc_code =
+      `O*NET-SOC Code` |>
+        str_sub(1, -4)
+  ) |>
+  filter(
+    `Scale ID` %in% c("RL", "RW")
+    # `Scale ID` %in% c("RL", "RW")
+  ) |>
+  filter(
+    `Data Value` > 0
+  ) |>
+  filter(
+    `Recommend Suppress` != "Y"
+  ) |>
+  inner_join(
+    df_req_cat
+  ) |> 
+  transmute(
+    id_soc_code = id_soc_code,
+    id_scale = `Scale ID`,
+    years = years * 
+  )
+
+# group_by(
+#   id_soc_code,
+#   `Scale ID`,
+#   `Data Value`
+# )
+tally()
+# |>
+#   inner_join(
+#     df_ids
+#   )
+
+
+# endregion
