@@ -138,35 +138,6 @@ df_req_cat
 # endregion
 # model
 # region: dsds
-# get closest match
-df_similarity |>
-  pivot_longer(
-    cols = -1,
-    names_to = "from",
-    values_to = "similarity"
-  ) |>
-  group_by(from) |>
-  arrange(
-    -similarity,
-    .by_group = T
-  ) |>
-  slice(-1) |>
-  slice(1) |>
-  ungroup() |>
-  inner_join(
-    df_ids |> rename_with(.fn = ~ .x |> paste0(".to")),
-    by = c(
-      "to" = "occupation.to"
-    )
-  ) |>
-  inner_join(
-    df_ids |> rename_with(.fn = ~ .x |> paste0(".from")),
-    by = c(
-      "from" = "occupation.from"
-    )
-  ) ->
-df_closest_match
-
 df_req |>
   mutate(
     .before = 1,
@@ -188,12 +159,83 @@ df_req |>
     relationship = "many-to-many"
   ) |>
   select(
-    `Scale ID`,
+    scaleId = `Scale ID`,
     id_soc_code,
-    `O*NET-SOC Code`,
+    onet_soc_code = `O*NET-SOC Code`,
     pct,
     years
+  ) ->
+onet_req
+
+# get closest match
+df_similarity |>
+  pivot_longer(
+    cols = -1,
+    names_to = "from",
+    values_to = "similarity"
   ) |>
+  inner_join(
+    df_ids |> rename_with(.fn = ~ .x |> paste0(".to")),
+    by = c(
+      "to" = "occupation.to"
+    )
+  ) |>
+  filter(
+    id_soc_code.to %in% onet_req$id_soc_code
+  ) |>
+  group_by(from) |>
+  arrange(
+    -similarity,
+    .by_group = T
+  ) |>
+  slice(-1) |>
+  slice(1) |>
+  ungroup() |>
+  inner_join(
+    df_ids |> rename_with(.fn = ~ .x |> paste0(".from")),
+    by = c(
+      "from" = "occupation.from"
+    )
+  ) ->
+df_closest_match
+
+all(
+  df_closest_match |>
+    filter(
+      id.from %in% (df_ids |>
+        filter(
+          !(id_soc_code %in% onet_req$id_soc_code)
+        ) |>
+        pull(id))
+    ) |>
+    pull(id_soc_code.to) %in%
+    onet_req$id_soc_code
+)
+
+df_closest_match |>
+  transmute(
+    id = id.from,
+    occupation = from,
+    id_soc_code = if_else(
+      id_soc_code.from %in%
+        onet_req$id_soc_code,
+      id_soc_code.from,
+      id_soc_code.to
+    )
+  ) ->
+df_ids
+
+df_ids |>
+  inner_join(
+    onet_req,
+    relationship = "many-to-many"
+  ) |>
+  filter(
+    onet_soc_code |>
+      stringr::str_sub(-2) == "00"
+  )
+
+onet_req |>
   group_by(
     `O*NET-SOC Code`
   ) |>
@@ -222,17 +264,18 @@ dsds
 
 dsds$kde[[1]] |> plot()
 
-km$bclust(
-  x = as.data.frame() dsds$kde[[1]]$x,
-  k = 2,
-  weights = dsds$kde[[1]]$y
-)
+# km$bclust(
+#   x = as.data.frame()
+#    dsds$kde[[1]]$x,
+#   k = 2,
+#   weights = dsds$kde[[1]]$y
+# )
 
-km$cclust(
-  dsds$kde[[1]]$x,
-  k = 5,
-  weights = dsds$kde[[1]]$y,
-)
+# km$cclust(
+#   dsds$kde[[1]]$x,
+#   k = 5,
+#   weights = dsds$kde[[1]]$y,
+# )
 
 
 
