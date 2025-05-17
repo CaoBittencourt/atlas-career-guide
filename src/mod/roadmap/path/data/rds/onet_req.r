@@ -242,7 +242,8 @@ onet_req |>
   group_split() ->
 list_req
 
-list_req[[1]] |> filter(scaleId == first(scaleId)) -> dsds
+list_req[[239]] |> filter(scaleId == "RW") -> dsds
+
 density(
   dsds$years,
   weights = dsds$pct,
@@ -258,6 +259,51 @@ kde$x |>
   ) ->
 dsdsds
 
+dsdsds |> kmeans(5) -> kme
+
+tibble(
+  xp = kme$centers |> as.numeric(),
+  pct = kme$size / sum(kme$size)
+) |>
+  arrange(xp) |>
+  mutate(
+    .before = 1,
+    type = experience |> names()
+  )
+
+kde |> plot(from = 0)
+
+list_req[[239]] |> filter(scaleId == "RL") -> dsds
+
+density(
+  dsds$years,
+  weights = dsds$pct,
+  n = 1024,
+  from = 0
+) -> kde
+
+kde$x |>
+  sample(
+    size = 1024,
+    replace = T,
+    prob = kde$y
+  ) ->
+dsdsds
+
+dsdsds |> kmeans(5) -> kme
+
+tibble(
+  years = kme$centers |> as.numeric(),
+  pct = kme$size / sum(kme$size)
+  # years = education |> as.numeric(),
+  # pct = (dsdsds |> findInterval(education |> as.numeric()) |> table() |> as.numeric()) / length(dsdsds)
+) |>
+  arrange(years)
+
+kde |> plot(from = 0)
+
+kme$centers |> sort()
+
 kde |> plot()
 dsdsds |>
   density() |>
@@ -265,8 +311,8 @@ dsdsds |>
 kde.pdf(1:1024) |>
   density() |>
   lines(col = "blue")
-dsdsds |> approxfun() -> kde.pdf
 
+dsdsds |> approxfun() -> kde.pdf
 
 list_req[[1]] |>
   group_by(scaleId) |>
