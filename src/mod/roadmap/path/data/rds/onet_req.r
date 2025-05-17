@@ -273,6 +273,10 @@ tibble(
 
 kde |> plot(from = 0)
 
+#                | high experience      | low experience      |
+# high education | rocket science       | education-intensive |
+# low education  | experience-intensive | entry level         |
+
 list_req[[239]] |> filter(scaleId == "RL") -> dsds
 
 density(
