@@ -237,13 +237,39 @@ df_ids |>
 
 onet_req |>
   group_by(
-    `O*NET-SOC Code`
+    onet_soc_code
   ) |>
   group_split() ->
 list_req
 
+list_req[[1]] |> filter(scaleId == first(scaleId)) -> dsds
+density(
+  dsds$years,
+  weights = dsds$pct,
+  n = 1024,
+  from = 0
+) -> kde
+
+kde$x |>
+  sample(
+    size = 1024,
+    replace = T,
+    prob = kde$y
+  ) ->
+dsdsds
+
+kde |> plot()
+dsdsds |>
+  density() |>
+  lines(col = "red")
+kde.pdf(1:1024) |>
+  density() |>
+  lines(col = "blue")
+dsdsds |> approxfun() -> kde.pdf
+
+
 list_req[[1]] |>
-  group_by(`Scale ID`) |>
+  group_by(scaleId) |>
   reframe(
     kde = list(
       density(
