@@ -242,7 +242,32 @@ onet_req |>
   group_split() ->
 list_req
 
-list_req[[239]] |> filter(scaleId == "RW") -> dsds
+list_req[[28]] |> print(n = Inf)
+list_req[[28]] |> filter(scaleId == "RW") -> dsds
+
+dsds
+
+as.pdf <- function(x, prob, n = 1024) {
+  # assert args
+  # approximate a probability density function from data
+  return(
+    density(
+      x = x,
+      weights = prob,
+      n = n
+    ) |>
+      approxfun(
+        yleft = 0,
+        yright = 1
+      )
+  )
+}
+
+dsds$years |> as.pdf(dsds$pct) -> dsds.pdf
+dsds$years |>
+  density(weights = dsds$pct) |>
+  plot(xlim = c(0, 25))
+dsds.pdf |> plot(xlim = c(0, 25))
 
 density(
   dsds$years,
@@ -273,6 +298,8 @@ tibble(
 
 kde |> plot(from = 0)
 
+# new coefficients: experience vs education relative importance
+# note: compare with all careers and weigh by employment levels
 #                | high experience      | low experience      |
 # high education | rocket science       | education-intensive |
 # low education  | experience-intensive | entry level         |
