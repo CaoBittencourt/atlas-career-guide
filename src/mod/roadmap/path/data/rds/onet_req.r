@@ -244,7 +244,7 @@ onet_req
 
 # endregion
 # region: kernel density estimation
-as.kde <- function(x, prob, lb = NULL, ub = NULL, n = 1024) {
+as.kde <- function(x, prob, lb = NULL, ub = NULL, n = 1024, ...) {
   # assert args
   # approximate a probability density function from data
   if (all(length(lb), !length(ub))) {
@@ -252,7 +252,8 @@ as.kde <- function(x, prob, lb = NULL, ub = NULL, n = 1024) {
       x = x,
       n = n,
       weights = prob,
-      from = lb
+      from = lb,
+      ...
     ) ->
     kde
   }
@@ -262,7 +263,8 @@ as.kde <- function(x, prob, lb = NULL, ub = NULL, n = 1024) {
       x = x,
       n = n,
       weights = prob,
-      to = ub
+      to = ub,
+      ...
     ) ->
     kde
   }
@@ -273,7 +275,8 @@ as.kde <- function(x, prob, lb = NULL, ub = NULL, n = 1024) {
       n = n,
       weights = prob,
       from = lb,
-      to = ub
+      to = ub,
+      ...
     ) ->
     kde
   }
@@ -281,7 +284,8 @@ as.kde <- function(x, prob, lb = NULL, ub = NULL, n = 1024) {
   density(
     x = x,
     n = n,
-    weights = prob
+    weights = prob,
+    ...
   ) ->
   kde
 
@@ -325,9 +329,26 @@ df_kde
 #     xlim = c(0, 50)
 #   )
 
+onet_req |>
+  filter(
+    id == 1
+  ) |>
+  filter(
+    scaleId == "RW"
+  ) ->
+dsds
+
+dsds$years |> as.kde(dsds$pct)
+
+df_kde |>
+  slice(1) |>
+  pull(x) |>
+  purrr::pluck(1)
+
+
 # endregion
 # region: probability distribution function
-as.pdf <- function(kde) {
+as.pdf <- function(kde, ...) {
   # assert args
   # normalize pdf
   # const.norm <- integrate(approx.pdf,-Inf,Inf)
@@ -340,9 +361,9 @@ as.pdf <- function(kde) {
   return(
     kde |>
       approxfun(
-        # rule = 1,
         yleft = 0,
-        yright = 0
+        yright = 0,
+        ...
       )
   )
 }
@@ -381,38 +402,69 @@ df_pdf
 
 # endregion
 # region: kde => kmeans numeric requirement bins
-density(
-  dsds$years,
-  weights = dsds$pct,
-  n = 1024,
-  from = 0
-) -> kde
+kmeans.kde <- function(kde, k, n = NULL, ...) {
+  if (is.null(n)) {
+    kde$n -> n
+  }
 
-mapply(
-  function(t, id) {
-
-  },
-  id = df_pdfs$id,
-  t = df_pdfs$t
-)
-
-kde$x |>
-  sample(
-    size = 1024,
-    replace = T,
-    prob = kde$y
-  ) |>
-  kmeans(5) ->
-kme
-
-tibble(
-  xp = kme$centers |> as.numeric(),
-  pct = kme$size / sum(kme$size)
-) |>
-  arrange(xp) |>
-  mutate(
-    .before = 1,
-    type = experience |> names()
+  return(
+    kde$x |>
+      sample(
+        size = n,
+        replace = T,
+        prob = kde$y
+      ) |>
+      kmeans(k, ...)
   )
+}
+
+as.grid <- function(kmeans, types = NULL) {
+  if (is.null(types)) {
+    dsds$
+      centers |>
+      seq_along() ->
+    types
+  }
+
+  return(
+    tibble(
+      var = kmeans$centers |> as.numeric(),
+      pct = kmeans$size / sum(kmeans$size)
+    ) |>
+      arrange(var) |>
+      mutate(
+        .before = 1,
+        type = types |> as.factor()
+      )
+  )
+}
+
+df_kde |>
+  group_by(id) |>
+  reframe(
+    x = x |> lapply(kmeans.kde, k = length(experience)) |> lapply(as.grid, types = names(experience)) |> lapply(rename, x = 2),
+    t = t |> lapply(kmeans.kde, k = length(education)) |> lapply(as.grid, types = names(education)) |> lapply(rename, t = 2)
+  ) ->
+df_grid
+
+df_pdf |>
+  slice(1) |>
+  pull(x) |>
+  purrr::pluck(1) ->
+dsds
+
+df_grid |>
+  slice(1) |>
+  pull(x)
+df_grid |>
+  slice(1) |>
+  pull(t)
+
+
+df_grid$x |> bind_rows() -> x
+x$var |> ggplot2::qplot(geom = "density", weight = x$pct)
+
+df_grid$t |> bind_rows() -> t
+t$var |> ggplot2::qplot(geom = "density", weight = t$pct)
 
 # endregion
