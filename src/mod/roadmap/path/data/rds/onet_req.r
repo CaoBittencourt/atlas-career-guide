@@ -95,7 +95,6 @@ df_req
 
 # # (Category, `O*NET-SOC Code`, `Scale ID`) are the composite primary key
 # all(df_req |> group_by(Category, `O*NET-SOC Code`, `Scale ID`) |> tally() |> pull(n) == 1)
-
 getOption("atlas.data") |>
   file.path(
     "db_27_3_excel",
@@ -137,7 +136,7 @@ df_req_cat
 
 # endregion
 # model
-# region: dsds
+# region: data wrangling
 df_req |>
   mutate(
     .before = 1,
@@ -148,12 +147,6 @@ df_req |>
   mutate(
     pct = `Data Value` / 100
   ) |>
-  # dplyr::filter(
-  #   pct > 0
-  # ) |>
-  # dplyr::filter(
-  #   `Recommend Suppress` != "Y"
-  # ) |>
   inner_join(
     df_req_cat,
     relationship = "many-to-many"
@@ -213,9 +206,21 @@ all(
 )
 
 df_closest_match |>
+  select(
+    id.from,
+    id.to,
+    id_soc_code.from,
+    id_soc_code.to
+  ) |>
+  inner_join(
+    df_ids,
+    by = c(
+      "id.from" = "id"
+    )
+  ) |>
   transmute(
     id = id.from,
-    occupation = from,
+    occupation = occupation,
     id_soc_code = if_else(
       id_soc_code.from %in%
         onet_req$id_soc_code,
@@ -225,16 +230,6 @@ df_closest_match |>
   ) ->
 df_ids
 
-df_ids |>
-  inner_join(
-    onet_req,
-    relationship = "many-to-many"
-  ) |>
-  filter(
-    onet_soc_code |>
-      stringr::str_sub(-2) == "00"
-  )
-
 onet_req |>
   group_by(
     onet_soc_code
@@ -242,69 +237,170 @@ onet_req |>
   group_split() ->
 list_req
 
-list_req[[28]] |> print(n = Inf)
-list_req[[28]] |> filter(scaleId == "RW") -> dsds
-
-dsds
-
-as.pdf <- function(x, prob, n = 1024) {
+# endregion
+# region: kde approximation
+as.pdf <- function(x, prob, lb = NULL, ub = NULL, n = 1024) {
   # assert args
   # approximate a probability density function from data
-  return(
+  if (all(length(lb), !length(ub))) {
     density(
       x = x,
+      n = n,
       weights = prob,
-      n = n
+      from = lb
     ) |>
       approxfun(
+        # rule = 1,
         yleft = 0,
-        yright = 1
-      )
-  )
+        yright = 0
+      ) ->
+    approx.pdf
+  }
+
+  if (all(!length(lb), length(ub))) {
+    density(
+      x = x,
+      n = n,
+      weights = prob,
+      to = ub
+    ) |>
+      approxfun(
+        # rule = 1,
+        yleft = 0,
+        yright = 0
+      ) ->
+    approx.pdf
+  }
+
+  if (all(length(lb), length(ub))) {
+    density(
+      x = x,
+      n = n,
+      weights = prob,
+      from = lb,
+      to = ub
+    ) |>
+      approxfun(
+        # rule = 1,
+        yleft = 0,
+        yright = 0
+      ) ->
+    approx.pdf
+  }
+
+  density(
+    x = x,
+    n = n,
+    weights = prob
+  ) |>
+    approxfun(
+      # rule = 1,
+      yleft = 0,
+      yright = 0
+    ) ->
+  approx.pdf
+
+  # normalize pdf
+  # const.norm <- integrate(approx.pdf,-Inf,Inf)
+  # return(
+  #   function(x) {
+  #     approx.pdf(x) / const.norm
+
+  #   }
+  # )
+  return(approx.pdf)
 }
 
-dsds$years |> as.pdf(dsds$pct) -> dsds.pdf
+# as.pdf <- function(x, prob, lb = NULL, ub = NULL, n = 1024) {
+#   # assert args
+#   # approximate a probability density function from data
+#   if (all(length(lb), !length(ub))) {
+#     density(
+#       x = x,
+#       n = n,
+#       weights = prob,
+#       from = lb
+#     ) |>
+#       approxfun(
+# rule = 1,
+#         yleft = 0,
+#         yright = 0
+#       ) ->
+#     approx.pdf
+#   }
+
+#   if (all(!length(lb), length(ub))) {
+#     density(
+#       x = x,
+#       n = n,
+#       weights = prob,
+#       to = ub
+#     ) |>
+#       approxfun(
+# rule = 1,
+#         yleft = 0,
+#         yright = 0
+#       ) ->
+#     approx.pdf
+#   }
+
+#   if (all(length(lb), length(ub))) {
+#     density(
+#       x = x,
+#       n = n,
+#       weights = prob,
+#       from = lb,
+#       to = ub
+#     ) |>
+#       approxfun(
+# rule = 1,
+#         yleft = 0,
+#         yright = 0
+#       ) ->
+#     approx.pdf
+#   }
+
+#   density(
+#     x = x,
+#     n = n,
+#     weights = prob
+#   ) |>
+#     approxfun(
+# rule = 1,
+#       yleft = 0,
+#       yright = 0
+#     ) ->
+#   approx.pdf
+
+#   # normalize pdf
+#   # const.norm <- integrate(approx.pdf,-Inf,Inf)
+#   # return(
+#   #   function(x) {
+#   #     approx.pdf(x) / const.norm
+
+#   #   }
+#   # )
+#   return(approx.pdf)
+# }
+
+
+# experience
+list_req[[1]] |> filter(scaleId == "RL") -> dsds
+dsds$years |> as.pdf(dsds$pct, 0, 11) -> dsds.pdf
+dsds
+dsds.pdf |> plot(xlim = c(0, 40))
+dsds.pdf |> integrate(-Inf, Inf)
+dsds.pdf |> integrate(0, 100)
+dsds.pdf |> integrate(0, 30)
+
+
 dsds$years |>
   density(weights = dsds$pct) |>
   plot(xlim = c(0, 25))
 dsds.pdf |> plot(xlim = c(0, 25))
 
-density(
-  dsds$years,
-  weights = dsds$pct,
-  n = 1024,
-  from = 0
-) -> kde
-
-kde$x |>
-  sample(
-    size = 1024,
-    replace = T,
-    prob = kde$y
-  ) ->
-dsdsds
-
-dsdsds |> kmeans(5) -> kme
-
-tibble(
-  xp = kme$centers |> as.numeric(),
-  pct = kme$size / sum(kme$size)
-) |>
-  arrange(xp) |>
-  mutate(
-    .before = 1,
-    type = experience |> names()
-  )
-
-kde |> plot(from = 0)
-
-# new coefficients: experience vs education relative importance
-# note: compare with all careers and weigh by employment levels
-#                | high experience      | low experience      |
-# high education | rocket science       | education-intensive |
-# low education  | experience-intensive | entry level         |
-
-list_req[[239]] |> filter(scaleId == "RL") -> dsds
+# education
+list_req[[28]] |> filter(scaleId == "RL") -> dsds
 
 density(
   dsds$years,
@@ -343,8 +439,11 @@ kde.pdf(1:1024) |>
   density() |>
   lines(col = "blue")
 
-dsdsds |> approxfun() -> kde.pdf
-
+dsdsds |> approxfun(
+  # rule = 1,
+  yleft = 0,
+  yright = 0
+) -> kde.pdf
 list_req[[1]] |>
   group_by(scaleId) |>
   reframe(
@@ -413,5 +512,41 @@ reframe(
     weights = pct
   )
 )
+
+# endregion
+# region: kde => education-experience requirement types
+# new coefficients: experience vs education relative importance
+# note: compare with all careers and weigh by employment levels
+#                | high experience      | low experience      |
+# high education | rocket science       | education-intensive |
+# low education  | experience-intensive | entry level         |
+
+# endregion
+# region: kde => kmeans numeric requirement bins
+density(
+  dsds$years,
+  weights = dsds$pct,
+  n = 1024,
+  from = 0
+) -> kde
+
+kde$x |>
+  sample(
+    size = 1024,
+    replace = T,
+    prob = kde$y
+  ) |>
+  kmeans(5) ->
+kme
+
+tibble(
+  xp = kme$centers |> as.numeric(),
+  pct = kme$size / sum(kme$size)
+) |>
+  arrange(xp) |>
+  mutate(
+    .before = 1,
+    type = experience |> names()
+  )
 
 # endregion
