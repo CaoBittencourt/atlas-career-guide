@@ -311,6 +311,7 @@ onet_req |>
   ) ->
 df_kde
 
+
 # df_kde |>
 #   slice(1) |>
 #   pull(t) |>
@@ -329,21 +330,21 @@ df_kde
 #     xlim = c(0, 50)
 #   )
 
-onet_req |>
-  filter(
-    id == 1
-  ) |>
-  filter(
-    scaleId == "RW"
-  ) ->
-dsds
+# onet_req |>
+#   filter(
+#     id == 1
+#   ) |>
+#   filter(
+#     scaleId == "RW"
+#   ) ->
+# dsds
 
-dsds$years |> as.kde(dsds$pct)
+# dsds$years |> as.kde(dsds$pct)
 
-df_kde |>
-  slice(1) |>
-  pull(x) |>
-  purrr::pluck(1)
+# df_kde |>
+#   slice(1) |>
+#   pull(x) |>
+#   purrr::pluck(1)
 
 
 # endregion
@@ -375,6 +376,20 @@ df_kde |>
     t = t |> lapply(as.pdf)
   ) ->
 df_pdf
+
+library(bda)
+
+onet_req |>
+  filter(id == 1) |>
+  filter(scaleId == "RW") -> dsds
+epsilon <- 0.0000000000000000000000000000000000000000000000001
+dsds$years |> bda::wkde(dsds$pct + epsilon, range.x = c(0, max(dsds$years)), bandwidth = "wmise") -> dsds.kde
+
+
+dsds$years |> density(weights = dsds$pct, bw = dsds.kde$bw, from = 0, to = max(dsds$years)) -> dsdsds
+
+dsds.kde |> plot(xlim = c(-10, 30), type = "line")
+dsdsds |> plot(xlim = c(-10, 30))
 
 # df_pdf |>
 #   slice(1) |>
@@ -461,10 +476,10 @@ df_grid |>
   pull(t)
 
 
-df_grid$x |> bind_rows() -> x
-x$var |> ggplot2::qplot(geom = "density", weight = x$pct)
+# df_grid$x |> bind_rows() -> x
+# x$x |> ggplot2::qplot(geom = "density", weight = x$pct)
 
-df_grid$t |> bind_rows() -> t
-t$var |> ggplot2::qplot(geom = "density", weight = t$pct)
+# df_grid$t |> bind_rows() -> t
+# t$t |> ggplot2::qplot(geom = "density", weight = t$pct)
 
 # endregion

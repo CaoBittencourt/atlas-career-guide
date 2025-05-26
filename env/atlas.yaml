@@ -12,5 +12,6 @@ dependencies:
   - r-mgsub
   - r-cubature
   - r-Rsolnp
+  - r-bda
   # - r-ks
   # - r-flexclust
