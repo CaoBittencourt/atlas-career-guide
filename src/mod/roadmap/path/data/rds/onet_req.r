@@ -296,9 +296,6 @@ as.kde <- function(x, prob, lb = NULL, ub = NULL, n = 1024, ...) {
 }
 
 onet_req |>
-  filter(
-    id == 1
-  ) |>
   group_by(
     scaleId,
     id
@@ -317,11 +314,11 @@ onet_req |>
   ) ->
 df_kde
 
-df_kde |>
-  slice(1) |>
-  pull(x) |>
-  purrr::pluck(1) |>
-  plot()
+# df_kde |>
+#   slice(1) |>
+#   pull(x) |>
+#   purrr::pluck(1) |>
+#   plot()
 
 # df_kde |>
 #   slice(1) |>
@@ -378,35 +375,6 @@ df_kde |>
     t = t |> lapply(as.pdf)
   ) ->
 df_pdf
-
-library(bda)
-
-onet_req |>
-  filter(id == 1) |>
-  filter(scaleId == "RL") ->
-dsds
-
-
-# filter(scaleId == "RW") -> dsds
-epsilon <- 0.0000000000000000000000000000000000000000000000001
-dsds$years |> bda::wkde(dsds$pct + epsilon, range.x = c(0, max(dsds$years))) -> dsds.kde
-
-density(
-  x = dsds$years,
-  n = 2^10,
-  weights = dsds$pct,
-  from = 0,
-  to = max(dsds$years),
-  bw = dsds$years |> bda::bw.wnrd0(dsds$years + exp(-23))
-)
-dsds$years |> bda::bw.blscv(dsds$pct + epsilon)
-dsds$years |> bda::bw.wnrd(dsds$pct + epsilon)
-dsds$years |> bda::bw.wnrd0(dsds$pct + epsilon)
-dsds.kde$bw
-dsds$years |> density(weights = dsds$pct, bw = dsds.kde$bw, from = 0, to = max(dsds$years)) -> dsdsds
-
-dsds.kde |> plot(xlim = c(-10, 30), type = "line")
-dsdsds |> plot(xlim = c(-10, 30))
 
 # df_pdf |>
 #   slice(1) |>
@@ -479,24 +447,40 @@ df_kde |>
   ) ->
 df_grid
 
-df_pdf |>
-  slice(1) |>
-  pull(x) |>
-  purrr::pluck(1) ->
-dsds
+# df_grid$x |>
+#   sapply(function(df) df$x) |>
+#   c() |>
+#   summary()
 
-df_grid |>
-  slice(1) |>
-  pull(x)
-df_grid |>
-  slice(1) |>
-  pull(t)
+# df_grid$t |>
+#   sapply(function(df) df$t) |>
+#   c() |>
+#   summary()
+
+# sum((df_grid$x |> sapply(function(df) df$x) |> c()) == 0)
+# sum((df_grid$t |> sapply(function(df) df$t) |> c()) == 0)
+
+# df_pdf |>
+#   slice(1) |>
+#   pull(x) |>
+#   purrr::pluck(1) ->
+# dsds
+
+# df_grid |>
+#   slice(1) |>
+#   pull(x)
+
+# df_grid |>
+#   slice(1) |>
+#   pull(t)
 
 
 # df_grid$x |> bind_rows() -> x
+# all(x$x >= 0)
 # x$x |> ggplot2::qplot(geom = "density", weight = x$pct)
 
 # df_grid$t |> bind_rows() -> t
+# all(t$t >= 0)
 # t$t |> ggplot2::qplot(geom = "density", weight = t$pct)
 
 # endregion
