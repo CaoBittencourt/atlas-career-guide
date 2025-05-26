@@ -249,48 +249,50 @@ as.kde <- function(x, prob, lb = NULL, ub = NULL, n = 1024, ...) {
   # assert args
   # approximate a probability density function from data
   if (all(length(lb), !length(ub))) {
-    density(
-      x = x,
-      n = n,
-      weights = prob,
-      from = lb,
-      bw = x |> bda::bw.wnrd0(prob + exp(-23))
-    ) ->
-    kde
+    return(
+      density(
+        x = x,
+        n = n,
+        weights = prob,
+        from = lb,
+        ... # bw = x |> bda::bw.wnrd0(prob + exp(-23))
+      )
+    )
   }
 
   if (all(!length(lb), length(ub))) {
-    density(
-      x = x,
-      n = n,
-      weights = prob,
-      to = ub,
-      bw = x |> bda::bw.wnrd0(prob + exp(-23))
-    ) ->
-    kde
+    return(
+      density(
+        x = x,
+        n = n,
+        weights = prob,
+        to = ub,
+        ... # bw = x |> bda::bw.wnrd0(prob + exp(-23))
+      )
+    )
   }
 
   if (all(length(lb), length(ub))) {
+    return(
+      density(
+        x = x,
+        n = n,
+        weights = prob,
+        from = lb,
+        to = ub,
+        ... # bw = x |> bda::bw.wnrd0(prob + exp(-23))
+      )
+    )
+  }
+
+  return(
     density(
       x = x,
       n = n,
       weights = prob,
-      from = lb,
-      to = ub,
-      bw = x |> bda::bw.wnrd0(prob + exp(-23))
-    ) ->
-    kde
-  }
-
-  density(
-    x = x,
-    n = n,
-    weights = prob,
-    bw = x |> bda::bw.wnrd0(prob + exp(-23))
-  ) ->
-  kde
-
-  return(kde)
+      ... # bw = x |> bda::bw.wnrd0(prob + exp(-23))
+    )
+  )
 }
 
 onet_req |>
@@ -319,10 +321,7 @@ df_kde |>
   slice(1) |>
   pull(x) |>
   purrr::pluck(1) |>
-  as.pdf() |>
-  plot(
-    xlim = c(0, 50)
-  )
+  plot()
 
 # df_kde |>
 #   slice(1) |>
