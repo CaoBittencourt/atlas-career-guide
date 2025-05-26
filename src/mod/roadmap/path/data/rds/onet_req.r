@@ -12,6 +12,7 @@ box::use(
   stats[...],
   km = flexclust,
   readxl[read_excel],
+  bda = bda,
 )
 
 dplyr::filter -> filter
@@ -253,7 +254,7 @@ as.kde <- function(x, prob, lb = NULL, ub = NULL, n = 1024, ...) {
       n = n,
       weights = prob,
       from = lb,
-      ...
+      bw = x |> bda::bw.wnrd0(prob + exp(-23))
     ) ->
     kde
   }
@@ -264,7 +265,7 @@ as.kde <- function(x, prob, lb = NULL, ub = NULL, n = 1024, ...) {
       n = n,
       weights = prob,
       to = ub,
-      ...
+      bw = x |> bda::bw.wnrd0(prob + exp(-23))
     ) ->
     kde
   }
@@ -276,7 +277,7 @@ as.kde <- function(x, prob, lb = NULL, ub = NULL, n = 1024, ...) {
       weights = prob,
       from = lb,
       to = ub,
-      ...
+      bw = x |> bda::bw.wnrd0(prob + exp(-23))
     ) ->
     kde
   }
@@ -285,7 +286,7 @@ as.kde <- function(x, prob, lb = NULL, ub = NULL, n = 1024, ...) {
     x = x,
     n = n,
     weights = prob,
-    ...
+    bw = x |> bda::bw.wnrd0(prob + exp(-23))
   ) ->
   kde
 
@@ -293,6 +294,9 @@ as.kde <- function(x, prob, lb = NULL, ub = NULL, n = 1024, ...) {
 }
 
 onet_req |>
+  filter(
+    id == 1
+  ) |>
   group_by(
     scaleId,
     id
@@ -311,15 +315,14 @@ onet_req |>
   ) ->
 df_kde
 
-
-# df_kde |>
-#   slice(1) |>
-#   pull(t) |>
-#   purrr::pluck(1) |>
-#   as.pdf() |>
-#   plot(
-#     xlim = c(0, 50)
-#   )
+df_kde |>
+  slice(1) |>
+  pull(x) |>
+  purrr::pluck(1) |>
+  as.pdf() |>
+  plot(
+    xlim = c(0, 50)
+  )
 
 # df_kde |>
 #   slice(1) |>
@@ -381,11 +384,26 @@ library(bda)
 
 onet_req |>
   filter(id == 1) |>
-  filter(scaleId == "RW") -> dsds
+  filter(scaleId == "RL") ->
+dsds
+
+
+# filter(scaleId == "RW") -> dsds
 epsilon <- 0.0000000000000000000000000000000000000000000000001
-dsds$years |> bda::wkde(dsds$pct + epsilon, range.x = c(0, max(dsds$years)), bandwidth = "wmise") -> dsds.kde
+dsds$years |> bda::wkde(dsds$pct + epsilon, range.x = c(0, max(dsds$years))) -> dsds.kde
 
-
+density(
+  x = dsds$years,
+  n = 2^10,
+  weights = dsds$pct,
+  from = 0,
+  to = max(dsds$years),
+  bw = dsds$years |> bda::bw.wnrd0(dsds$years + exp(-23))
+)
+dsds$years |> bda::bw.blscv(dsds$pct + epsilon)
+dsds$years |> bda::bw.wnrd(dsds$pct + epsilon)
+dsds$years |> bda::bw.wnrd0(dsds$pct + epsilon)
+dsds.kde$bw
 dsds$years |> density(weights = dsds$pct, bw = dsds.kde$bw, from = 0, to = max(dsds$years)) -> dsdsds
 
 dsds.kde |> plot(xlim = c(-10, 30), type = "line")
