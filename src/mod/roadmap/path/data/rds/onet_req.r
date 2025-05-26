@@ -231,15 +231,20 @@ df_closest_match |>
 df_ids
 
 onet_req |>
-  group_by(
-    onet_soc_code
+  inner_join(
+    df_ids,
+    relationship = "many-to-many"
   ) |>
-  group_split() ->
-list_req
+  arrange(
+    id,
+    scaleId,
+    years
+  ) ->
+onet_req
 
 # endregion
-# region: kde approximation
-as.pdf <- function(x, prob, lb = NULL, ub = NULL, n = 1024) {
+# region: kernel density estimation
+as.kde <- function(x, prob, lb = NULL, ub = NULL, n = 1024) {
   # assert args
   # approximate a probability density function from data
   if (all(length(lb), !length(ub))) {
@@ -248,13 +253,8 @@ as.pdf <- function(x, prob, lb = NULL, ub = NULL, n = 1024) {
       n = n,
       weights = prob,
       from = lb
-    ) |>
-      approxfun(
-        # rule = 1,
-        yleft = 0,
-        yright = 0
-      ) ->
-    approx.pdf
+    ) ->
+    kde
   }
 
   if (all(!length(lb), length(ub))) {
@@ -263,13 +263,8 @@ as.pdf <- function(x, prob, lb = NULL, ub = NULL, n = 1024) {
       n = n,
       weights = prob,
       to = ub
-    ) |>
-      approxfun(
-        # rule = 1,
-        yleft = 0,
-        yright = 0
-      ) ->
-    approx.pdf
+    ) ->
+    kde
   }
 
   if (all(length(lb), length(ub))) {
@@ -279,27 +274,61 @@ as.pdf <- function(x, prob, lb = NULL, ub = NULL, n = 1024) {
       weights = prob,
       from = lb,
       to = ub
-    ) |>
-      approxfun(
-        # rule = 1,
-        yleft = 0,
-        yright = 0
-      ) ->
-    approx.pdf
+    ) ->
+    kde
   }
 
   density(
     x = x,
     n = n,
     weights = prob
-  ) |>
-    approxfun(
-      # rule = 1,
-      yleft = 0,
-      yright = 0
-    ) ->
-  approx.pdf
+  ) ->
+  kde
 
+  return(kde)
+}
+
+onet_req |>
+  group_by(
+    scaleId,
+    id
+  ) |>
+  reframe(
+    years = years |> as.kde(pct, 0, max(years)) |> list()
+  ) |>
+  pivot_wider(
+    id_cols = id,
+    names_from = scaleId,
+    values_from = years
+  ) |>
+  rename(
+    t = RL,
+    x = RW
+  ) ->
+df_kde
+
+# df_kde |>
+#   slice(1) |>
+#   pull(t) |>
+#   purrr::pluck(1) |>
+#   as.pdf() |>
+#   plot(
+#     xlim = c(0, 50)
+#   )
+
+# df_kde |>
+#   slice(1) |>
+#   pull(x) |>
+#   purrr::pluck(1) |>
+#   as.pdf() |>
+#   plot(
+#     xlim = c(0, 50)
+#   )
+
+# endregion
+# region: probability distribution function
+as.pdf <- function(kde) {
+  # assert args
   # normalize pdf
   # const.norm <- integrate(approx.pdf,-Inf,Inf)
   # return(
@@ -308,210 +337,39 @@ as.pdf <- function(x, prob, lb = NULL, ub = NULL, n = 1024) {
 
   #   }
   # )
-  return(approx.pdf)
+  return(
+    kde |>
+      approxfun(
+        # rule = 1,
+        yleft = 0,
+        yright = 0
+      )
+  )
 }
 
-# as.pdf <- function(x, prob, lb = NULL, ub = NULL, n = 1024) {
-#   # assert args
-#   # approximate a probability density function from data
-#   if (all(length(lb), !length(ub))) {
-#     density(
-#       x = x,
-#       n = n,
-#       weights = prob,
-#       from = lb
-#     ) |>
-#       approxfun(
-# rule = 1,
-#         yleft = 0,
-#         yright = 0
-#       ) ->
-#     approx.pdf
-#   }
-
-#   if (all(!length(lb), length(ub))) {
-#     density(
-#       x = x,
-#       n = n,
-#       weights = prob,
-#       to = ub
-#     ) |>
-#       approxfun(
-# rule = 1,
-#         yleft = 0,
-#         yright = 0
-#       ) ->
-#     approx.pdf
-#   }
-
-#   if (all(length(lb), length(ub))) {
-#     density(
-#       x = x,
-#       n = n,
-#       weights = prob,
-#       from = lb,
-#       to = ub
-#     ) |>
-#       approxfun(
-# rule = 1,
-#         yleft = 0,
-#         yright = 0
-#       ) ->
-#     approx.pdf
-#   }
-
-#   density(
-#     x = x,
-#     n = n,
-#     weights = prob
-#   ) |>
-#     approxfun(
-# rule = 1,
-#       yleft = 0,
-#       yright = 0
-#     ) ->
-#   approx.pdf
-
-#   # normalize pdf
-#   # const.norm <- integrate(approx.pdf,-Inf,Inf)
-#   # return(
-#   #   function(x) {
-#   #     approx.pdf(x) / const.norm
-
-#   #   }
-#   # )
-#   return(approx.pdf)
-# }
-
-
-# experience
-list_req[[1]] |> filter(scaleId == "RL") -> dsds
-dsds$years |> as.pdf(dsds$pct, 0, 11) -> dsds.pdf
-dsds
-dsds.pdf |> plot(xlim = c(0, 40))
-dsds.pdf |> integrate(-Inf, Inf)
-dsds.pdf |> integrate(0, 100)
-dsds.pdf |> integrate(0, 30)
-
-
-dsds$years |>
-  density(weights = dsds$pct) |>
-  plot(xlim = c(0, 25))
-dsds.pdf |> plot(xlim = c(0, 25))
-
-# education
-list_req[[28]] |> filter(scaleId == "RL") -> dsds
-
-density(
-  dsds$years,
-  weights = dsds$pct,
-  n = 1024,
-  from = 0
-) -> kde
-
-kde$x |>
-  sample(
-    size = 1024,
-    replace = T,
-    prob = kde$y
-  ) ->
-dsdsds
-
-dsdsds |> kmeans(5) -> kme
-
-tibble(
-  years = kme$centers |> as.numeric(),
-  pct = kme$size / sum(kme$size)
-  # years = education |> as.numeric(),
-  # pct = (dsdsds |> findInterval(education |> as.numeric()) |> table() |> as.numeric()) / length(dsdsds)
-) |>
-  arrange(years)
-
-kde |> plot(from = 0)
-
-kme$centers |> sort()
-
-kde |> plot()
-dsdsds |>
-  density() |>
-  lines(col = "red")
-kde.pdf(1:1024) |>
-  density() |>
-  lines(col = "blue")
-
-dsdsds |> approxfun(
-  # rule = 1,
-  yleft = 0,
-  yright = 0
-) -> kde.pdf
-list_req[[1]] |>
-  group_by(scaleId) |>
+df_kde |>
+  group_by(id) |>
   reframe(
-    kde = list(
-      density(
-        years,
-        weights = pct,
-        from = 0
-      )
-    )
-    # kde = list(
-    #   ks$kde(
-    #     years,
-    #     w = pct,
-    #     xmin = 0
-    #   )
-    # )
+    x = x |> lapply(as.pdf),
+    t = t |> lapply(as.pdf)
   ) ->
-dsds
+df_pdf
 
-dsds$kde[[1]] |> plot()
+# df_pdf |>
+#   slice(1) |>
+#   pull(t) |>
+#   purrr::pluck(1) |>
+#   plot(
+#     xlim = c(0, 50)
+#   )
 
-# km$bclust(
-#   x = as.data.frame()
-#    dsds$kde[[1]]$x,
-#   k = 2,
-#   weights = dsds$kde[[1]]$y
-# )
-
-# km$cclust(
-#   dsds$kde[[1]]$x,
-#   k = 5,
-#   weights = dsds$kde[[1]]$y,
-# )
-
-
-
-list_req[1] |>
-  lapply(
-    function(df) {
-      df |>
-        group_by(`Scale ID`) |>
-        reframe(
-          kde = list(
-            density(
-              years,
-              weights = pct,
-              from = 0
-            )
-          )
-        )
-    }
-  ) ->
-list_kde
-
-list_kde[[1]]$kde[[1]] |> plot()
-list_kde[[1]]$kde[[2]] |> plot()
-
-list_req |>
-  sum(dsds$pct)
-
-reframe(
-  kde = mapply(
-    density,
-    x = years,
-    weights = pct
-  )
-)
+# df_pdf |>
+#   slice(1) |>
+#   pull(x) |>
+#   purrr::pluck(1) |>
+#   plot(
+#     xlim = c(0, 50)
+#   )
 
 # endregion
 # region: kde => education-experience requirement types
@@ -529,6 +387,14 @@ density(
   n = 1024,
   from = 0
 ) -> kde
+
+mapply(
+  function(t, id) {
+
+  },
+  id = df_pdfs$id,
+  t = df_pdfs$t
+)
 
 kde$x |>
   sample(
