@@ -2,30 +2,52 @@
 # region: imports
 box::use(
   assert = mod / utils / assert,
+  mod / utils / bin / interval[...],
+  dplyr[...],
 )
 
 # endregion
 # methods
+# region: make bins helper
+bins_ <- function(x, nbins) {
+
+}
+
+# endregion
 # region: pdf method
-bin.pdf <- function(x, bins, ...) {
+bin.pdf <- function(pdf, bins, ...) {
   # assert args in main function
-  # description
+  # binned data from probability density function
   return("pdf")
 }
 
 # endregion
 # region: kde method
-bin.kde <- function(x, bins, ...) {
+bin.kde <- function(kde, bins, ...) {
   # assert args in main function
-  # description
-  return("kde")
+  # binned data from kernel density estimation
+  return(
+    data.frame(
+      id = kde$x |> findInterval(bins),
+      pct = kde$y / sum(kde$y)
+    ) |>
+      inner_join(
+        bins |> interval()
+      ) |>
+      group_by(id) |>
+      reframe(
+        from = first(from),
+        to = first(to),
+        pct = sum(pct)
+      )
+  )
 }
 
 # endregion
 # region: default method
 bin.default <- function(x, bins, ...) {
   # assert args in main function
-  # description
+  # binned data from regular data
   return("default")
 }
 
@@ -50,6 +72,6 @@ bin <- function(x, bins, ...) {
 # endregion
 # exports
 # region: exports
-box::export(bin, bin.methods)
+box::export(bin)
 
 # endregion
