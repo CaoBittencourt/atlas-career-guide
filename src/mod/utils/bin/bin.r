@@ -20,13 +20,13 @@ bin.bin <- function(x, pct, bins, ...) {
   # binned data from binned data
   return(
     data.frame(
-      id = x |> findInterval(bins),
+      binId = x |> findInterval(bins),
       pct = pct
     ) |>
       inner_join(
         bins |> interval()
       ) |>
-      group_by(id) |>
+      group_by(binId) |>
       reframe(
         from = first(from),
         to = first(to),
@@ -50,13 +50,13 @@ bin.kde <- function(kde, bins, ...) {
   # binned data from kernel density estimation
   return(
     data.frame(
-      id = kde$x |> findInterval(bins),
+      binId = kde$x |> findInterval(bins),
       pct = kde$y / sum(kde$y)
     ) |>
       inner_join(
         bins |> interval()
       ) |>
-      group_by(id) |>
+      group_by(binId) |>
       reframe(
         from = first(from),
         to = first(to),
@@ -76,8 +76,11 @@ bin.default <- function(x, bins, ...) {
 # endregion
 # dispatch
 # region: bin generic function
-bin <- function(x, bins, ...) {
+bin <- function(x, bins, pct = NULL, ...) {
   # assert args
+
+  # bins
+  bins |> as.numeric() -> bins
 
   # multiple dispatch
   if (x |> is.function()) {
@@ -86,6 +89,10 @@ bin <- function(x, bins, ...) {
 
   if (class(x) == "density") {
     return(bin.kde(x, bins, ...))
+  }
+
+  if (list(x, pct) |> vapply(is.numeric, FUN.VALUE = logical(1)) |> all()) {
+    return(bin.bin(x, pct, bins, ...))
   }
 
   return(bin.default(x, bins, ...))

@@ -245,6 +245,53 @@ onet_req |>
 onet_req
 
 # endregion
+# region: onet binned data => standard numeric requirement bins
+Map(
+  function(df, bins) {
+    df |>
+      group_by(id) |>
+      reframe(
+        years |>
+          bin(
+            bins,
+            pct
+          )
+      )
+  },
+  df =
+    onet_req |>
+      group_by(scaleId) |>
+      group_split(),
+  bins = list(
+    as.numeric(education),
+    as.numeric(experience)
+  )
+) -> onet.bin
+
+onet.bin |> names() <- c("t", "x")
+
+onet.bin$t |>
+  inner_join(
+    tibble(
+      binId = education |> seq_along(),
+      type = education |> names()
+    )
+  ) ->
+onet.bin$t
+
+onet.bin$x |>
+  inner_join(
+    tibble(
+      binId = experience |> seq_along(),
+      type = experience |> names()
+    )
+  ) ->
+onet.bin$x
+
+onet.bin$x |> filter(id == 1)
+
+# endregion
+
 # region: kde approximation
 onet_req |>
   group_by(
@@ -345,6 +392,24 @@ df_grid
 # t$t |> ggplot2::qplot(geom = "density", weight = t$pct)
 
 # endregion
+
+# region: kde bins vs onet bins
+df_grid |>
+  select(-t) |>
+  unnest(x) |>
+  rename(
+    pct.kde = pct
+  ) |>
+  full_join(
+    onet.bin$x
+  )
+group_by(binId) |>
+  reframe(
+    diff.kde.mean = mean(pct.kde - pct)
+  )
+
+# endregion
+
 
 # # region: pdf approximation
 # df_kde |>
