@@ -14,6 +14,28 @@ bins_ <- function(x, nbins) {
 }
 
 # endregion
+# region: bin method
+bin.bin <- function(x, pct, bins, ...) {
+  # assert args in main function
+  # binned data from binned data
+  return(
+    data.frame(
+      id = x |> findInterval(bins),
+      pct = pct
+    ) |>
+      inner_join(
+        bins |> interval()
+      ) |>
+      group_by(id) |>
+      reframe(
+        from = first(from),
+        to = first(to),
+        pct = sum(pct)
+      )
+  )
+}
+
+# endregion
 # region: pdf method
 bin.pdf <- function(pdf, bins, ...) {
   # assert args in main function

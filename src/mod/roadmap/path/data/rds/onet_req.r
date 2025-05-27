@@ -302,9 +302,6 @@ df_kde
 # endregion
 # region: kde => standard numeric requirement bins
 df_kde |>
-  filter(
-    id == 1
-  ) |>
   group_by(id) |>
   reframe(
     x = x |> lapply(bin, bins = as.numeric(experience)) |> lapply(mutate, .after = 1, type = names(experience)),
