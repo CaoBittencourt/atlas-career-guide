@@ -33,7 +33,8 @@ list(
 # region: required experience
 list(
   intern = 0,
-  junior = 2,
+  junior = 1,
+  # junior = 2,
   associate = 3,
   mid.level = 5,
   senior = 10
@@ -288,10 +289,7 @@ onet.bin$x |>
   ) ->
 onet.bin$x
 
-onet.bin$x |> filter(id == 1)
-
 # endregion
-
 # region: kde approximation
 onet_req |>
   group_by(
@@ -392,7 +390,6 @@ df_grid
 # t$t |> ggplot2::qplot(geom = "density", weight = t$pct)
 
 # endregion
-
 # region: kde bins vs onet bins
 df_grid |>
   select(-t) |>
@@ -402,14 +399,13 @@ df_grid |>
   ) |>
   full_join(
     onet.bin$x
-  )
-group_by(binId) |>
+  ) |>
+  group_by(binId) |>
   reframe(
-    diff.kde.mean = mean(pct.kde - pct)
+    `mean(kde - onet)` = mean(pct.kde - pct)
   )
 
 # endregion
-
 
 # # region: pdf approximation
 # df_kde |>
