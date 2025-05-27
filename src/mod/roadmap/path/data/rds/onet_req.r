@@ -13,6 +13,7 @@ box::use(
   km = flexclust,
   readxl[read_excel],
   bda = bda,
+  mod / utils / bin[...],
 )
 
 dplyr::filter -> filter
@@ -244,57 +245,7 @@ onet_req |>
 onet_req
 
 # endregion
-# region: kernel density estimation
-as.kde <- function(x, prob, lb = NULL, ub = NULL, n = 1024, ...) {
-  # assert args
-  # approximate a probability density function from data
-  if (all(length(lb), !length(ub))) {
-    return(
-      density(
-        x = x,
-        n = n,
-        weights = prob,
-        from = lb,
-        ... # bw = x |> bda::bw.wnrd0(prob + exp(-23))
-      )
-    )
-  }
-
-  if (all(!length(lb), length(ub))) {
-    return(
-      density(
-        x = x,
-        n = n,
-        weights = prob,
-        to = ub,
-        ... # bw = x |> bda::bw.wnrd0(prob + exp(-23))
-      )
-    )
-  }
-
-  if (all(length(lb), length(ub))) {
-    return(
-      density(
-        x = x,
-        n = n,
-        weights = prob,
-        from = lb,
-        to = ub,
-        ... # bw = x |> bda::bw.wnrd0(prob + exp(-23))
-      )
-    )
-  }
-
-  return(
-    density(
-      x = x,
-      n = n,
-      weights = prob,
-      ... # bw = x |> bda::bw.wnrd0(prob + exp(-23))
-    )
-  )
-}
-
+# region: kde approximation
 onet_req |>
   group_by(
     scaleId,
@@ -318,7 +269,9 @@ df_kde
 #   slice(1) |>
 #   pull(x) |>
 #   purrr::pluck(1) |>
-#   plot()
+#   plot(
+#     xlim = c(-10, 30)
+#   )
 
 # df_kde |>
 #   slice(1) |>
@@ -347,27 +300,7 @@ df_kde
 
 
 # endregion
-# region: probability distribution function
-as.pdf <- function(kde, ...) {
-  # assert args
-  # normalize pdf
-  # const.norm <- integrate(approx.pdf,-Inf,Inf)
-  # return(
-  #   function(x) {
-  #     approx.pdf(x) / const.norm
-
-  #   }
-  # )
-  return(
-    kde |>
-      approxfun(
-        yleft = 0,
-        yright = 0,
-        ...
-      )
-  )
-}
-
+# region: pdf approximation
 df_kde |>
   group_by(id) |>
   reframe(
@@ -378,10 +311,10 @@ df_pdf
 
 # df_pdf |>
 #   slice(1) |>
-#   pull(t) |>
+#   pull(x) |>
 #   purrr::pluck(1) |>
 #   plot(
-#     xlim = c(0, 50)
+#     xlim = c(-10, 30)
 #   )
 
 # df_pdf |>
@@ -402,43 +335,6 @@ df_pdf
 
 # endregion
 # region: kde => kmeans numeric requirement bins
-kmeans.kde <- function(kde, k, n = NULL, ...) {
-  if (is.null(n)) {
-    kde$n -> n
-  }
-
-  return(
-    kde$x |>
-      sample(
-        size = n,
-        replace = T,
-        prob = kde$y
-      ) |>
-      kmeans(k, ...)
-  )
-}
-
-as.grid <- function(kmeans, types = NULL) {
-  if (is.null(types)) {
-    dsds$
-      centers |>
-      seq_along() ->
-    types
-  }
-
-  return(
-    tibble(
-      var = kmeans$centers |> as.numeric(),
-      pct = kmeans$size / sum(kmeans$size)
-    ) |>
-      arrange(var) |>
-      mutate(
-        .before = 1,
-        type = types |> as.factor()
-      )
-  )
-}
-
 df_kde |>
   group_by(id) |>
   reframe(
@@ -473,7 +369,6 @@ df_grid
 # df_grid |>
 #   slice(1) |>
 #   pull(t)
-
 
 # df_grid$x |> bind_rows() -> x
 # all(x$x >= 0)
