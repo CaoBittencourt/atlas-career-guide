@@ -138,7 +138,6 @@ tribble(
 df_req_cat
 
 # endregion
-# model
 # region: data wrangling
 df_req |>
   mutate(
@@ -246,6 +245,7 @@ onet_req |>
 onet_req
 
 # endregion
+# model
 # region: onet binned data => standard numeric requirement bins
 Map(
   function(df, bins) {
@@ -288,6 +288,30 @@ onet.bin$x |>
     )
   ) ->
 onet.bin$x
+
+# endregion
+# region: requirements data frame
+onet.bin |>
+  bind_rows(
+    .id = "var"
+  ) |>
+  group_by(id) |>
+  filter(
+    pct > 0
+  ) |>
+  group_by(id, var) |>
+  reframe(
+    from = min(from)
+  ) |>
+  pivot_wider(
+    id_cols = id,
+    names_from = var,
+    values_from = from
+  ) |>
+  inner_join(
+    df_ids
+  ) ->
+career.req
 
 # endregion
 # region: kde approximation
@@ -406,83 +430,82 @@ df_grid |>
   )
 
 # endregion
+# region: pdf approximation
+df_kde |>
+  group_by(id) |>
+  reframe(
+    x = x |> lapply(as.pdf),
+    t = t |> lapply(as.pdf)
+  ) ->
+df_pdf
 
-# # region: pdf approximation
-# df_kde |>
-#   group_by(id) |>
-#   reframe(
-#     x = x |> lapply(as.pdf),
-#     t = t |> lapply(as.pdf)
-#   ) ->
-# df_pdf
+# df_pdf |>
+#   slice(1) |>
+#   pull(x) |>
+#   purrr::pluck(1) |>
+#   plot(
+#     xlim = c(-10, 30)
+#   )
 
-# # df_pdf |>
-# #   slice(1) |>
-# #   pull(x) |>
-# #   purrr::pluck(1) |>
-# #   plot(
-# #     xlim = c(-10, 30)
-# #   )
+# df_pdf |>
+#   slice(1) |>
+#   pull(x) |>
+#   purrr::pluck(1) |>
+#   plot(
+#     xlim = c(0, 50)
+#   )
 
-# # df_pdf |>
-# #   slice(1) |>
-# #   pull(x) |>
-# #   purrr::pluck(1) |>
-# #   plot(
-# #     xlim = c(0, 50)
-# #   )
+# endregion
+# region: kde => education-experience requirement types
+# new coefficients: experience vs education relative importance
+# note: compare with all careers and weigh by employment levels
+#                | high experience      | low experience      |
+# high education | rocket science       | education-intensive |
+# low education  | experience-intensive | entry level         |
 
-# # endregion
-# # region: kde => education-experience requirement types
-# # new coefficients: experience vs education relative importance
-# # note: compare with all careers and weigh by employment levels
-# #                | high experience      | low experience      |
-# # high education | rocket science       | education-intensive |
-# # low education  | experience-intensive | entry level         |
+# endregion
+# region: kde => kmeans numeric requirement bins
+df_kde |>
+  group_by(id) |>
+  reframe(
+    x = x |> lapply(kmeans.kde, k = length(experience)) |> lapply(as.grid, types = names(experience)) |> lapply(rename, x = 2),
+    t = t |> lapply(kmeans.kde, k = length(education)) |> lapply(as.grid, types = names(education)) |> lapply(rename, t = 2)
+  ) ->
+df_grid
 
-# # endregion
-# # region: kde => kmeans numeric requirement bins
-# df_kde |>
-#   group_by(id) |>
-#   reframe(
-#     x = x |> lapply(kmeans.kde, k = length(experience)) |> lapply(as.grid, types = names(experience)) |> lapply(rename, x = 2),
-#     t = t |> lapply(kmeans.kde, k = length(education)) |> lapply(as.grid, types = names(education)) |> lapply(rename, t = 2)
-#   ) ->
-# df_grid
+# df_grid$x |>
+#   sapply(function(df) df$x) |>
+#   c() |>
+#   summary()
 
-# # df_grid$x |>
-# #   sapply(function(df) df$x) |>
-# #   c() |>
-# #   summary()
+# df_grid$t |>
+#   sapply(function(df) df$t) |>
+#   c() |>
+#   summary()
 
-# # df_grid$t |>
-# #   sapply(function(df) df$t) |>
-# #   c() |>
-# #   summary()
+# sum((df_grid$x |> sapply(function(df) df$x) |> c()) == 0)
+# sum((df_grid$t |> sapply(function(df) df$t) |> c()) == 0)
 
-# # sum((df_grid$x |> sapply(function(df) df$x) |> c()) == 0)
-# # sum((df_grid$t |> sapply(function(df) df$t) |> c()) == 0)
+# df_pdf |>
+#   slice(1) |>
+#   pull(x) |>
+#   purrr::pluck(1) ->
+# dsds
 
-# # df_pdf |>
-# #   slice(1) |>
-# #   pull(x) |>
-# #   purrr::pluck(1) ->
-# # dsds
+# df_grid |>
+#   slice(1) |>
+#   pull(x)
 
-# # df_grid |>
-# #   slice(1) |>
-# #   pull(x)
+# df_grid |>
+#   slice(1) |>
+#   pull(t)
 
-# # df_grid |>
-# #   slice(1) |>
-# #   pull(t)
+# df_grid$x |> bind_rows() -> x
+# all(x$x >= 0)
+# x$x |> ggplot2::qplot(geom = "density", weight = x$pct)
 
-# # df_grid$x |> bind_rows() -> x
-# # all(x$x >= 0)
-# # x$x |> ggplot2::qplot(geom = "density", weight = x$pct)
+# df_grid$t |> bind_rows() -> t
+# all(t$t >= 0)
+# t$t |> ggplot2::qplot(geom = "density", weight = t$pct)
 
-# # df_grid$t |> bind_rows() -> t
-# # all(t$t >= 0)
-# # t$t |> ggplot2::qplot(geom = "density", weight = t$pct)
-
-# # endregion
+# endregion

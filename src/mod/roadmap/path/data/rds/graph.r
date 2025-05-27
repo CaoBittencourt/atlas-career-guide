@@ -40,8 +40,8 @@ career.grid(0, 0, req$education$high.school, xmax = 0) -> basic.education
 # region: career progressions
 career.grid |>
   Map(
-    req$career.req$xmin,
-    req$career.req$tmin
+    req$career.req$x,
+    req$career.req$t
   ) |>
   c(
     list(basic.education)
