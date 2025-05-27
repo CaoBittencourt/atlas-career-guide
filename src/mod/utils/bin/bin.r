@@ -14,6 +14,14 @@ bin.pdf <- function(x, bins, ...) {
 }
 
 # endregion
+# region: kde method
+bin.kde <- function(x, bins, ...) {
+  # assert args in main function
+  # description
+  return("kde")
+}
+
+# endregion
 # region: default method
 bin.default <- function(x, bins, ...) {
   # assert args in main function
@@ -30,6 +38,10 @@ bin <- function(x, bins, ...) {
   # multiple dispatch
   if (x |> is.function()) {
     return(bin.pdf(x, bins, ...))
+  }
+
+  if (class(x) == "density") {
+    return(bin.kde(x, bins, ...))
   }
 
   return(bin.default(x, bins, ...))
