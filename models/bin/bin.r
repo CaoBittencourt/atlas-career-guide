@@ -415,6 +415,9 @@ df_grid
 
 # endregion
 # region: kde bins vs onet bins
+# experience requirements difference
+onet.bin$x |> filter(from == 0)
+
 df_grid |>
   select(-t) |>
   unnest(x) |>
@@ -423,6 +426,21 @@ df_grid |>
   ) |>
   full_join(
     onet.bin$x
+  ) |>
+  group_by(binId) |>
+  reframe(
+    `mean(kde - onet)` = mean(pct.kde - pct)
+  )
+
+# education requirements difference
+df_grid |>
+  select(-x) |>
+  unnest(t) |>
+  rename(
+    pct.kde = pct
+  ) |>
+  full_join(
+    onet.bin$t
   ) |>
   group_by(binId) |>
   reframe(

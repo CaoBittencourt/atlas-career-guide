@@ -373,42 +373,42 @@ if (
 
 # endregion
 # tests
-# region: sampling
-from.to.vertices |>
-  slice_sample(n = 20) ->
-from.to.vertices.sample
+# # region: sampling
+# from.to.vertices |>
+#   slice_sample(n = 20) ->
+# from.to.vertices.sample
 
-from.to.vertices.sample |>
-  mutate(
-    cost =
-      mapply(
-        function(from, to) {
-          to |>
-            pa$path(from) |>
-            pa$path.cost() |>
-            sum()
-        },
-        from = vertex,
-        to = vertex.to
-      )
-  ) |>
-  mutate(
-    from = names(occupations)[from] |> substring(1, 50),
-    to = names(occupations)[to] |> substring(1, 50),
-    years.saved = default.cost - cost
-  ) |>
-  select(
-    -starts_with("vertex")
-  ) |>
-  arrange(
-    -years.saved,
-    -default.cost
-  ) ->
-from.to.model
+# from.to.vertices.sample |>
+#   mutate(
+#     cost =
+#       mapply(
+#         function(from, to) {
+#           to |>
+#             pa$path(from) |>
+#             pa$path.cost() |>
+#             sum()
+#         },
+#         from = vertex,
+#         to = vertex.to
+#       )
+#   ) |>
+#   mutate(
+#     from = names(occupations)[from] |> substring(1, 50),
+#     to = names(occupations)[to] |> substring(1, 50),
+#     years.saved = default.cost - cost
+#   ) |>
+#   select(
+#     -starts_with("vertex")
+#   ) |>
+#   arrange(
+#     -years.saved,
+#     -default.cost
+#   ) ->
+# from.to.model
 
-from.to.model |> print(width = 1000)
+# from.to.model |> print(width = 1000)
 
-# endregion
+# # endregion
 # # region: from scratch (basic education)
 # from.to.vertices |>
 #   filter(from == 874) |>

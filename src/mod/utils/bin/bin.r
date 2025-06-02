@@ -21,7 +21,7 @@ bin.bin <- function(x, pct, bins, ...) {
   return(
     data.frame(
       binId = x |> findInterval(bins),
-      pct = pct
+      pct = pct / sum(pct)
     ) |>
       inner_join(
         bins |> interval()
@@ -44,7 +44,7 @@ bin.pdf <- function(pdf, bins, ...) {
 }
 
 # endregion
-# region: kde method
+# region: kde standard method
 bin.kde <- function(kde, bins, ...) {
   # assert args in main function
   # binned data from kernel density estimation
@@ -64,6 +64,12 @@ bin.kde <- function(kde, bins, ...) {
       )
   )
 }
+
+# endregion
+# region: kde local minima method
+
+# endregion
+# region: kde kmeans method
 
 # endregion
 # region: default method

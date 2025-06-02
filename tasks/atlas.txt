@@ -4,12 +4,16 @@ ATLAS CAREER GUIDE TASKS
 
 current task
 -------------------------------------
-[x] path submoule
-    [x] allow for regressive paths?
-    [x] add restart layer?
-    [x] allowing for more paths probably solves both issues
-    [*] tests / model
-[\] REPLACE ASSERT STATEMENTS!
+[\] path module: expected payoff
+    - weight := f(E[U(u(v1),u(v2), cost(v1,v2))]) >= 0
+        - E[U] = Pr[v2 | v1] * u(v2) = ((w(v2) / w) * s(v1, v2) * [s(v1, v2) >= 0.5]) * u(v2) >= 0
+        - cost(v1,v2)
+        - weight := cost * ((1 - E[u]) ^ !is.infinity(cost))
+            - 
+    >= 0
+    - weight is not cost, but inverse expected utility
+    - weigh utilities by probability of job post
+[\] replace assert statements
 [\] modularize / vectorize codebase
 [ ] taxonomy => evol and/or prog?
 [\] standardize notation
@@ -41,6 +45,11 @@ features
 
 finished
 -------------------------------------
+[x] path submoule
+    [x] allow for regressive paths?
+    [x] add restart layer?
+    [x] allowing for more paths probably solves both issues
+    [x] tests / model
 [x] refine competence coefficient
     - shift generalist to specialist?
         - calculate a generalist's 
