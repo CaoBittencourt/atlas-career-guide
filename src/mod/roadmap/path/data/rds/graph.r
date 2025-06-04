@@ -9,7 +9,9 @@ box::use(
   mod / roadmap / path / functions / cost[...],
   mod / roadmap / path / data / similarity[...],
   mod / roadmap / path / functions / restart[...],
+  mod / roadmap / path / functions / prob[...],
   req = mod / roadmap / path / data / req,
+  lab = mod / roadmap / path / data / labor,
   mod / utils / data[sublist],
   stats[na.omit],
   gr = igraph,
@@ -313,39 +315,7 @@ bind_rows(
 paths
 
 # endregion
-# region: movement prob
-paths |>
-  inner_join(
-    req$onet.bin$x |>
-      select(
-        x.to = to,
-        occupation.to = id,
-        x.pct = pct
-      ),
-    relationship = "many-to-many"
-  ) |>
-  inner_join(
-    req$onet.bin$t |>
-      select(
-        t.to = to,
-        occupation.to = id,
-        t.pct = pct
-      ),
-    relationship = "many-to-many"
-  ) ->
-paths
-
-paths
-
-req$onet.bin$x |> filter(id == 7)
-req$onet.bin$t |> filter(id == 7)
-
-# - E[U] = Pr[v2 | v1] * u(v2) = ((w(v2) / w) * s(v1, v2) * [s(v1, v2) >= 0.5]) * u(v2) >= 0
-#         - cost(v1,v2)
-#         - weight := cost * ((1 - E[u]) ^ !is.infinity(cost))
-
-# endregion
-# region: movement cost
+# region: movement similarity
 mtx_similarity |>
   mutate(
     `Basic Education` = 1
@@ -402,7 +372,55 @@ mtx_similarity |>
   ) |>
   inner_join(
     paths
+  ) ->
+paths
+
+# endregion
+# region: movement prob
+paths |>
+  inner_join(
+    req$onet.bin$x |>
+      select(
+        x.to = to,
+        occupation.to = id,
+        x.pct = pct
+      ),
+    relationship = "many-to-many"
   ) |>
+  inner_join(
+    req$onet.bin$t |>
+      select(
+        t.to = to,
+        occupation.to = id,
+        t.pct = pct
+      ),
+    relationship = "many-to-many"
+  ) ->
+paths
+
+paths |>
+  inner_join(
+    lab$labor,
+    by = c(
+      "occupation.to" = "id"
+    )
+  ) |>
+  mutate(
+    prob = similarity |> prob(wtilde)
+  )
+
+paths
+
+req$onet.bin$x |> filter(id == 7)
+req$onet.bin$t |> filter(id == 7)
+
+# - E[U] = Pr[v2 | v1] * u(v2) = ((w(v2) / w) * s(v1, v2) * [s(v1, v2) >= 0.5]) * u(v2) >= 0
+#         - cost(v1,v2)
+#         - weight := cost * ((1 - E[u]) ^ !is.infinity(cost))
+
+# endregion
+# region: movement cost
+paths |>
   mutate(
     cost = move.cost(
       skq = similarity,
