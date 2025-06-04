@@ -322,5 +322,6 @@ education |> saveRDS(getOption("atlas.mod") |> file.path("roadmap", "path", "dat
 experience |> saveRDS(getOption("atlas.mod") |> file.path("roadmap", "path", "data", "rds", "experience.rds"))
 df_similarity |> saveRDS(getOption("atlas.mod") |> file.path("roadmap", "path", "data", "rds", "similarity.rds"))
 career.req |> saveRDS(getOption("atlas.mod") |> file.path("roadmap", "path", "data", "rds", "career_req.rds"))
+onet.bin |> saveRDS(getOption("atlas.mod") |> file.path("roadmap", "path", "data", "rds", "onet_bin.rds"))
 
 # endregion

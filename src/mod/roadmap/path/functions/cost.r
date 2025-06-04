@@ -11,7 +11,7 @@ move.cost <- function(skq, xk, xq, tk, tq) {
   # assert args in main function
   # equivalent similarity
   # skq.eq <- (skq >= 0.5) * skq
-  skq.eq <- ((skq^2) >= 0.5) * skq
+  skq.eq <- (skq >= 0.5) * skq
 
   # xp and edu requirements
   pmax((xq - xk * skq.eq), 0) / skq -> req.x

@@ -33,13 +33,25 @@ readRDS(
   )
 ) -> career.req
 
+readRDS(
+  file.path(
+    getOption("atlas.mod"),
+    "roadmap",
+    "path",
+    "data",
+    "rds",
+    "onet_bin.rds"
+  )
+) -> onet.bin
+
 # endregion
 # exports
 # region: exports
 box::export(
   education,
   experience,
-  career.req
+  career.req,
+  onet.bin
 )
 
 # endregion

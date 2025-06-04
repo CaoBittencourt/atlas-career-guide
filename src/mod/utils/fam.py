@@ -3,9 +3,12 @@
 from numbers import Number
 
 
-class Is:
+class ist:
     def __new__(cls, x):
-        return not Is.null(x)
+        return not ist.null(x)
+
+    def __init__():
+        pass
 
     @staticmethod
     def null(x):
@@ -28,23 +31,23 @@ class Is:
         return isinstance(x, Number)
 
 
-Is("dsds")
-Is(None)
+ist("dsds")
+ist(None)
 
-Is.null("dsds")
-Is.null(None)
+ist.null("dsds")
+ist.null(None)
 
-Is.double(None)
-Is.double("dsds")
-Is.double(19)
-Is.double(19.0)
+ist.double(None)
+ist.double("dsds")
+ist.double(19)
+ist.double(19.0)
 
-Is.integer(None)
-Is.integer("dsds")
-Is.integer(19)
-Is.integer(19.0)
+ist.integer(None)
+ist.integer("dsds")
+ist.integer(19)
+ist.integer(19.0)
 
-Is.numeric(None)
-Is.numeric("dsds")
-Is.numeric(19)
-Is.numeric(19.0)
+ist.numeric(None)
+ist.numeric("dsds")
+ist.numeric(19)
+ist.numeric(19.0)

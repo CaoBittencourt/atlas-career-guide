@@ -19,7 +19,7 @@ box::use(
 )
 
 # endregion
-# implementation
+# model
 # region: career grid
 career.grid <- function(xmin, tmin, xmax = NULL, tmax = req$education$doctorate) {
   # assert args in main function
@@ -306,10 +306,43 @@ bind_rows(
   relocate(
     starts_with("vertex"),
     starts_with("occupation"),
+    type,
     starts_with("x"),
     starts_with("t")
   ) ->
 paths
+
+# endregion
+# region: movement prob
+paths |>
+  inner_join(
+    req$onet.bin$x |>
+      select(
+        x.to = to,
+        occupation.to = id,
+        x.pct = pct
+      ),
+    relationship = "many-to-many"
+  ) |>
+  inner_join(
+    req$onet.bin$t |>
+      select(
+        t.to = to,
+        occupation.to = id,
+        t.pct = pct
+      ),
+    relationship = "many-to-many"
+  ) ->
+paths
+
+paths
+
+req$onet.bin$x |> filter(id == 7)
+req$onet.bin$t |> filter(id == 7)
+
+# - E[U] = Pr[v2 | v1] * u(v2) = ((w(v2) / w) * s(v1, v2) * [s(v1, v2) >= 0.5]) * u(v2) >= 0
+#         - cost(v1,v2)
+#         - weight := cost * ((1 - E[u]) ^ !is.infinity(cost))
 
 # endregion
 # region: movement cost
@@ -380,6 +413,12 @@ mtx_similarity |>
     )
   ) ->
 paths
+
+# endregion
+# region: movement payoff
+# - E[U] = Pr[v2 | v1] * u(v2) = ((w(v2) / w) * s(v1, v2) * [s(v1, v2) >= 0.5]) * u(v2) >= 0
+#         - cost(v1,v2)
+#         - weight := cost * ((1 - E[u]) ^ !is.infinity(cost))
 
 # endregion
 # region: movement graph
