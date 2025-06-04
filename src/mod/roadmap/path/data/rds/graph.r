@@ -10,6 +10,7 @@ box::use(
   mod / roadmap / path / data / similarity[...],
   mod / roadmap / path / functions / restart[...],
   mod / roadmap / path / functions / prob[...],
+  mod / roadmap / path / functions / employment[...],
   req = mod / roadmap / path / data / req,
   lab = mod / roadmap / path / data / labor,
   mod / utils / data[sublist],
@@ -22,6 +23,7 @@ box::use(
 
 # endregion
 # model
+# # grid
 # region: career grid
 career.grid <- function(xmin, tmin, xmax = NULL, tmax = req$education$doctorate) {
   # assert args in main function
@@ -51,6 +53,7 @@ career.grid |>
 career.grids
 
 # endregion
+# # vertices
 # region: vertices
 career.grids |>
   bind_rows(
@@ -64,6 +67,47 @@ career.grids |>
 vertices
 
 # endregion
+# region: vertices prob
+vertices |>
+  inner_join(
+    req$onet.bin$x |>
+      select(
+        x = from,
+        occupation = id,
+        x.pct = pct
+      ),
+    relationship = "many-to-many"
+  ) |>
+  inner_join(
+    req$onet.bin$t |>
+      select(
+        t = to,
+        occupation = id,
+        t.pct = pct
+      ),
+    relationship = "many-to-many"
+  ) ->
+vertices
+
+# endregion
+# region: vertices jobs
+vertices |>
+  inner_join(
+    lab$labor |> select(-occupation),
+    by = c(
+      "occupation" = "id"
+    )
+  ) |>
+  # temp model
+  group_by(occupation) |>
+  mutate(
+    wtilde = employment() / n()
+  ) |>
+  ungroup() ->
+vertices
+
+# endregion
+# # movement
 # region: movement types
 # 1. "teleport" vertically to another occupation at a parallel vertex (same x,t)
 # expand.grid(
@@ -378,41 +422,10 @@ paths
 # endregion
 # region: movement prob
 paths |>
-  inner_join(
-    req$onet.bin$x |>
-      select(
-        x.to = to,
-        occupation.to = id,
-        x.pct = pct
-      ),
-    relationship = "many-to-many"
-  ) |>
-  inner_join(
-    req$onet.bin$t |>
-      select(
-        t.to = to,
-        occupation.to = id,
-        t.pct = pct
-      ),
-    relationship = "many-to-many"
+  mutate(
+    prob = similarity |> prob(wtilde.to)
   ) ->
 paths
-
-paths |>
-  inner_join(
-    lab$labor,
-    by = c(
-      "occupation.to" = "id"
-    )
-  ) |>
-  mutate(
-    prob = similarity |> prob(wtilde)
-  )
-
-paths
-
-req$onet.bin$x |> filter(id == 7)
-req$onet.bin$t |> filter(id == 7)
 
 # - E[U] = Pr[v2 | v1] * u(v2) = ((w(v2) / w) * s(v1, v2) * [s(v1, v2) >= 0.5]) * u(v2) >= 0
 #         - cost(v1,v2)
