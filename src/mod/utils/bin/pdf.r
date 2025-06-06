@@ -1,5 +1,5 @@
 box::use(
-  stats[approxfun],
+  stats[approxfun, integrate],
 )
 
 # kde to probability distribution function
@@ -10,20 +10,26 @@ as.pdf <- function(kde, ...) {
       class(kde) == "density"
   )
 
-  # normalize pdf
-  # const.norm <- integrate(approx.pdf,-Inf,Inf)
-  # return(
-  #   function(x) {
-  #     approx.pdf(x) / const.norm
+  # approximate pdf
+  kde |>
+    approxfun(
+      yleft = 0,
+      yright = 0,
+      ...
+    ) ->
+  pdf.approx
 
-  #   }
-  # )
+  # normalize pdf
+  (
+    pdf.approx |>
+      integrate(-Inf, Inf)
+  )[[1]] -> const.norm
+
   return(
-    kde |>
-      approxfun(
-        yleft = 0,
-        yright = 0,
-        ...
-      )
+    function(x) {
+      pdf.approx(x) / const.norm
+    }
   )
 }
+
+box::export(as.pdf)

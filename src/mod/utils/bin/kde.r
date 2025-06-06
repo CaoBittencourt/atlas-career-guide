@@ -63,3 +63,6 @@ as.kde <- function(x, prob, lb = NULL, ub = NULL, n = 1024, ...) {
     )
   )
 }
+
+
+box::export(as.kde)

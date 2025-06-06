@@ -91,6 +91,42 @@ vertices
 
 # endregion
 # region: vertices jobs
+vertices |> filter(occupation == 1) -> dsds
+
+bayes <- function(pba, pa, pb) {
+  return((pba * pa) / pb)
+}
+
+dsds |>
+  mutate(
+    px = x.pct,
+    pt = t.pct,
+    # product rule
+    pxt = px * pt
+  ) |>
+  arrange(x, t) ->
+dsdsds
+
+box::use(
+  bin = mod / utils / bin
+)
+
+dsds$x |> bin$as.kde(dsds$x.pct, 0, 20) |> bin$as.pdf() -> pdf.x
+dsds$t |> bin$as.kde(dsds$t.pct, 0, 20) |> bin$as.pdf() -> pdf.t
+
+seq(0, 20, length.out = 1000) -> x
+seq(0, 20, length.out = 1000) -> t
+
+library(plot3D)
+persp3D(
+  x,t,
+  matrix(
+    pdf.x(x) * pdf.t(t),
+    length(x),
+    length(t)
+  )
+)
+
 vertices |>
   inner_join(
     lab$labor |> select(-occupation),

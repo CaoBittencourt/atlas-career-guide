@@ -33,3 +33,6 @@ kmeans.kde <- function(kde, k, n = NULL, ...) {
       kmeans(k, ...)
   )
 }
+
+
+box::export(kmeans.kde)
