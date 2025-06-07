@@ -14,5 +14,6 @@ dependencies:
   - r-Rsolnp
   - r-bda
   - r-plotly
+  - r-betareg
   # - r-ks
   # - r-flexclust
