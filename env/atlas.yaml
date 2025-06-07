@@ -16,5 +16,7 @@ dependencies:
   - r-plotly
   - r-betareg
   - r-VGAM
+  - r-rstanarm
+  - r-bayesplot
   # - r-ks
   # - r-flexclust
