@@ -1,6 +1,7 @@
 box::use(
   assert = mod / utils / assert,
   stats[kmeans],
+  mod / utils / bin / sample[...],
 )
 
 # kmeans clusters from kde
@@ -24,12 +25,8 @@ kmeans.kde <- function(kde, k, n = NULL, ...) {
   }
 
   return(
-    kde$x |>
-      sample(
-        size = n,
-        replace = T,
-        prob = kde$y
-      ) |>
+    kde |>
+      sample.kde(n) |>
       kmeans(k, ...)
   )
 }
