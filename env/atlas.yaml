@@ -15,5 +15,6 @@ dependencies:
   - r-bda
   - r-plotly
   - r-betareg
+  - r-VGAM
   # - r-ks
   # - r-flexclust
