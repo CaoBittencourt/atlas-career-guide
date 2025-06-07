@@ -13,6 +13,7 @@ box::use(
   mod / roadmap / path / functions / employment[...],
   req = mod / roadmap / path / data / req,
   lab = mod / roadmap / path / data / labor,
+  mod / roadmap / path / data / vertices[...],
   mod / utils / data[sublist],
   stats[na.omit],
   gr = igraph,
@@ -23,73 +24,6 @@ box::use(
 
 # endregion
 # model
-# # grid
-# region: career grid
-career.grid <- function(xmin, tmin, xmax = NULL, tmax = req$education$doctorate) {
-  # assert args in main function
-  # generate valid career progressions on a 2d experience vs education grid
-  return(
-    expand.grid(
-      x = req$experience |> sublist(function(x) ifelse(!length(xmax), x >= xmin, x >= xmin & x <= xmax)) |> as.numeric(),
-      t = req$education |> sublist(function(t) (t >= tmin) & (t <= tmax)) |> as.numeric()
-    )
-  )
-}
-
-# endregion
-# region: basic education
-career.grid(0, 0, req$education$high.school, xmax = 0) -> basic.education
-
-# endregion
-# region: career progressions
-career.grid |>
-  Map(
-    req$career.req$x,
-    req$career.req$t
-  ) |>
-  c(
-    list(basic.education)
-  ) ->
-career.grids
-
-# endregion
-# # vertices
-# region: vertices
-career.grids |>
-  bind_rows(
-    .id = "occupation"
-  ) |>
-  mutate(
-    .before = 1,
-    occupation = as.integer(occupation),
-    vertex = row_number()
-  ) ->
-vertices
-
-# endregion
-# region: vertices prob
-vertices |>
-  inner_join(
-    req$onet.bin$x |>
-      select(
-        x = from,
-        occupation = id,
-        x.pct = pct
-      ),
-    relationship = "many-to-many"
-  ) |>
-  inner_join(
-    req$onet.bin$t |>
-      select(
-        t = to,
-        occupation = id,
-        t.pct = pct
-      ),
-    relationship = "many-to-many"
-  ) ->
-vertices
-
-# endregion
 # region: vertices jobs
 vertices |> filter(occupation == 1) -> dsds
 
@@ -111,15 +45,19 @@ box::use(
   bin = mod / utils / bin
 )
 
-dsds$x |> bin$as.kde(dsds$x.pct, 0, 20) |> bin$as.pdf() -> pdf.x
-dsds$t |> bin$as.kde(dsds$t.pct, 0, 20) |> bin$as.pdf() -> pdf.t
+dsds$x |>
+  bin$as.kde(dsds$x.pct, 0, 20) |>
+  bin$as.pdf() -> pdf.x
+dsds$t |>
+  bin$as.kde(dsds$t.pct, 0, 20) |>
+  bin$as.pdf() -> pdf.t
 
 seq(0, 20, length.out = 1000) -> x
 seq(0, 20, length.out = 1000) -> t
 
 library(plot3D)
 persp3D(
-  x,t,
+  x, t,
   matrix(
     pdf.x(x) * pdf.t(t),
     length(x),
@@ -143,7 +81,6 @@ vertices |>
 vertices
 
 # endregion
-# # movement
 # region: movement types
 # 1. "teleport" vertically to another occupation at a parallel vertex (same x,t)
 # expand.grid(
@@ -310,7 +247,7 @@ expand.grid(
   ) ->
 paths.reset
 
-# # 3. teleport to first vertex of any occupation at full (x.to + t.to) cost? (hard reset)
+# 3. teleport to first vertex of any occupation at full (x.to + t.to) cost? (hard reset)
 # expand.grid(
 #   vertex = vertices$vertex,
 #   vertex.to =

@@ -3,19 +3,20 @@ modular::project.options("atlas")
 box::use(
   req = mod / roadmap / path / data / req,
   lab = mod / roadmap / path / data / labor,
+  mod / roadmap / path / data / vertices[...],
   bin = mod / utils / bin,
   weights[wtd.cors],
   gg = ggplot2,
   plt = plotly,
-  veg = VGAM,
+  # veg = VGAM,
   stats[...],
   dplyr[...],
   tidyr[...],
-  str = stringr,
-  br = betareg,
-  st = rstanarm,
-  bayesplot[...],
-  np = np,
+  # str = stringr,
+  # br = betareg,
+  # st = rstanarm,
+  # bayesplot[...],
+  # np = np,
 )
 
 req$experience$senior -> xmax
@@ -40,6 +41,11 @@ t.kde |> plot(xlim = c(0, 20))
 
 x.kde |> bin$sample.kde() -> x.kde.sample
 t.kde |> bin$sample.kde() -> t.kde.sample
+
+# note experience and education are not uncorrelated
+# therefore, we shouldn't assume the distributions are independent
+# i.e. P(t|x) = P(t), P(x|t) = P(x) => P(x,t) = P(t|x) * P(x) = P(t) * P(x)
+# thus, we need a theoritical model of how education related to experience
 
 seq(tmin, tmax, .01) -> tseq
 
@@ -69,7 +75,7 @@ plot.kde <- function(df) {
   )
 }
 
-(x.sample$from + .1) |>
+(x.sample$from + .01) |>
   setNames(
     x.sample$type
   ) |>
@@ -109,6 +115,16 @@ prob.pdf <- function(pdf, lb = -Inf, ub = Inf, ...) {
   return(integrate(pdf, lb, ub, ...)[[1]])
 }
 
+# prob.pdf |>
+#   Vectorize(c("lb", "ub")) ->
+# prob.pdf.vec
+
+pdf.t_x |>
+  prob.pdf(
+    xmean = x.kde.sample |> mean(),
+    tsd = t.kde.sample |> sd()
+  )
+
 pdf.t_x |>
   prob.pdf(
     req$education$high.school,
@@ -117,10 +133,46 @@ pdf.t_x |>
     tsd = t.kde.sample |> sd()
   )
 
-# tseq |>
-#   dlnorm(
-#     (0.5 * (x.kde.sample |> mean()) |> log()),
-#     t.kde.sample |> sd() |> log()
+vertices |>
+  filter(
+    occupation == sample.id
+  ) |>
+  inner_join(
+    t.sample |> select(t = from, t.to = to)
+  ) |>
+  mutate(
+    t.to = replace_na(t.to, Inf)
+  ) ->
+vertices.sample
+
+vertices.sample |>
+  group_by(vertex) |>
+  mutate(
+    prob =
+      x.pct * (
+        pdf.t_x |>
+          prob.pdf(
+            t, t.to,
+            xmean = x,
+            tsd = sd(t.kde.sample)
+          )
+
+      )
+  ) |>
+  ungroup() ->
+vertices.sample
+
+vertices.sample$prob |> sum()
+
+# vertices |>
+#   filter(
+#     occupation == sample.id
 #   ) |>
-#   tidy(tseq) |>
-#   plot.kde()
+#   inner_join(
+#     t.sample |> select(t = from, t.to = to)
+#   ) |>
+#   mutate(
+#     t.to = replace_na(t.to, Inf),
+#     prob = prob.pdf.vec(pdf.t_x, t, t.to, xmean = x, tds = t.kde.sample |> sd())
+#     # prob = prob.pdf(pdf.t_x, t, t.to, xmean = x, tds = t.kde.sample |> sd())
+#   )
