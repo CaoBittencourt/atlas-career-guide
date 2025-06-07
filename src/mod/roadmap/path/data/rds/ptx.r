@@ -131,24 +131,6 @@ prob.pdf <- function(pdf, lb = -Inf, ub = Inf, ...) {
   return(integrate(pdf, lb, ub, ...)[[1]])
 }
 
-# prob.pdf |>
-#   Vectorize(c("lb", "ub")) ->
-# prob.pdf.vec
-
-pdf.t_x |>
-  prob.pdf(
-    xmean = x.kde.sample |> mean(),
-    tsd = t.kde.sample |> sd()
-  )
-
-pdf.t_x |>
-  prob.pdf(
-    req$education$high.school,
-    req$education$associate,
-    xmean = x.kde.sample |> mean(),
-    tsd = t.kde.sample |> sd()
-  )
-
 vertices |>
   filter(
     occupation == sample.id
@@ -161,10 +143,14 @@ vertices |>
   ) ->
 vertices.sample
 
+vertices.sample
+
 vertices.sample |>
   group_by(vertex) |>
   mutate(
     prob =
+    # joint probability dist
+    # P(x,t) = P(t|x) * P(x)
       x.pct * (
         pdf.t_x |>
           prob.pdf(
@@ -172,13 +158,14 @@ vertices.sample |>
             xmean = x + .01,
             tsd = sd(t.kde.sample)
           )
-
       )
   ) |>
   ungroup() ->
 vertices.sample
 
-vertices.sample$prob |> sum()
+vertices.sample$prob |>
+  sum() |>
+  round(4)
 
 # vertices |>
 #   filter(
