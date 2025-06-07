@@ -42,11 +42,27 @@ t.kde |> plot(xlim = c(0, 20))
 x.kde |> bin$sample.kde() -> x.kde.sample
 t.kde |> bin$sample.kde() -> t.kde.sample
 
-# note experience and education are not uncorrelated
+# notice experience and education are not uncorrelated:
+inner_join(
+  x |> group_by(id) |> reframe(xmean = from |> bin$as.kde(pct, 0) |> bin$mean.kde()),
+  t |> group_by(id) |> reframe(tmean = from |> bin$as.kde(pct, 0) |> bin$mean.kde())
+) |>
+  inner_join(
+    lab$labor
+  ) |>
+  reframe(
+    xt.corr =
+      wtd.cors(
+        xmean,
+        tmean,
+        weight = w
+      ) |>
+        as.numeric()
+  )
+
 # therefore, we shouldn't assume the distributions are independent
 # i.e. P(t|x) = P(t), P(x|t) = P(x) => P(x,t) = P(t|x) * P(x) = P(t) * P(x)
-# thus, we need a theoritical model of how education related to experience
-
+# thus, we need a theoretical model of how education relates to experience
 seq(tmin, tmax, .01) -> tseq
 
 tidy <- function(d, xseq) {
@@ -153,7 +169,7 @@ vertices.sample |>
         pdf.t_x |>
           prob.pdf(
             t, t.to,
-            xmean = x,
+            xmean = x + .01,
             tsd = sd(t.kde.sample)
           )
 
