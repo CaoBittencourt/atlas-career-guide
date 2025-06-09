@@ -5,6 +5,7 @@ nestmap <- function(x, fn, ...) {
   }
   return(fn(x, ...))
 }
+
 # nestmap <- function(l, fn) {
 #   return(
 #     l |>

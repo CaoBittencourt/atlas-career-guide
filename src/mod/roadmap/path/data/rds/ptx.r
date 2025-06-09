@@ -8,15 +8,15 @@ box::use(
   weights[wtd.cors],
   gg = ggplot2,
   plt = plotly,
-  # veg = VGAM,
+  # veg = VGAM, # tobit regression
   stats[...],
   dplyr[...],
   tidyr[...],
   # str = stringr,
-  # br = betareg,
-  # st = rstanarm,
-  # bayesplot[...],
-  # np = np,
+  # br = betareg, # reparametrized beta regression
+  # st = rstanarm, # bayesian regression
+  # bayesplot[...], # bayesian regression
+  # np = np, # non parametric (kernel) regression
 )
 
 req$experience$senior -> xmax
@@ -63,6 +63,54 @@ inner_join(
 # therefore, we shouldn't assume the distributions are independent
 # i.e. P(t|x) = P(t), P(x|t) = P(x) => P(x,t) = P(t|x) * P(x) = P(t) * P(x)
 # thus, we need a theoretical model of how education relates to experience
+
+# if distributions were independent, this is what they would look like
+x$from |>
+  bin$as.kde(x$pct, 0, 20) |>
+  bin$as.pdf() ->
+pdf.x
+
+t$from |>
+  bin$as.kde(t$pct, 0, 20) |>
+  bin$as.pdf() ->
+pdf.t
+
+expand.grid(
+  x.id = x.sample$binId,
+  t.id = t.sample$binId
+) |>
+  inner_join(
+    x.sample |>
+      rename_with(
+        ~ paste0("x.", .x)
+      )
+  ) |>
+  inner_join(
+    t.sample |>
+      rename_with(
+        ~ paste0("t.", .x)
+      )
+  ) |>
+  group_by(row_number()) |>
+  mutate(
+    prob.x = (pdf.x |> integrate(x.from, x.to |> replace_na(Inf)))[[1]],
+    prob.t = (pdf.t |> integrate(t.from, t.to |> replace_na(Inf)))[[1]],
+    pxt = prob.x * prob.t
+  ) |>
+  rename(
+    experience = x.from,
+    education = t.from
+  ) |>
+  ungroup() |>
+  plt$plot_ly(
+    x = ~experience,
+    y = ~education,
+    z = ~pxt,
+    type = "mesh3d",
+    intensity = ~pxt
+  )
+
+
 seq(tmin, tmax, .01) -> tseq
 
 tidy <- function(d, xseq) {
