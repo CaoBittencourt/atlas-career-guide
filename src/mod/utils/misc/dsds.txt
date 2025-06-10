@@ -1,0 +1,14 @@
+career progression
+    analytic method
+        recursive career progression: postponed
+    dijkstra method
+        path module
+            movement types
+                switch: 1
+                work: 1
+                study: 1
+                reset: 1
+            movement prob
+                independent distribution: 1
+                joint distribution: 0.5
+dsds
