@@ -5,9 +5,12 @@ box::use(
   tidyr[...],
   str = stringr,
   ig = igraph,
-  gg = ggraph,
+  # tidygraph[...],
   vctrs[new_data_frame],
 )
+
+# library(ggraph)
+# library(tidygraph)
 
 parse.tasks <- function(path) {
   path |>
@@ -102,6 +105,26 @@ graph.tasks <- function(tasks) {
 
 "/home/Cao/storage/github/atlas/src/mod/utils/misc/dsds.txt" |> parse.tasks() -> tasks
 
+# tasks |>
+#   group_by(from) |>
+#   reframe(
+#     dsds = mean(status, na.rm = T)
+#   ) |>
+#   right_join(
+#     tasks,
+#     by = c(
+#       "from" = "task"
+#     ),
+#   )
+
 tasks |>
   graph.tasks() |>
-  ig$plot.igraph()
+  as_tbl_graph() |>
+  ggraph() +
+  geom_edge_fan() +
+  geom_node_point(
+    aes(
+      color = tasks$status
+    ),
+    size = 23
+  )
