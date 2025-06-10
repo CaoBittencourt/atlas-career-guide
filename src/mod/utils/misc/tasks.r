@@ -12,11 +12,13 @@ box::use(
 # library(ggraph)
 # library(tidygraph)
 
-parse.tasks <- function(path) {
+read.tasks <- function(path) {
   path |>
     readLines(warn = F) |>
     str$str_trim("right") ->
   tasks
+
+  tasks[tasks != ""] -> tasks
 
   tasks |> str$str_count("  ") -> indentation
   indentation / ifelse(all((indentation %% 2) == 0), 2, 1) -> indentation
@@ -103,7 +105,7 @@ graph.tasks <- function(tasks) {
   )
 }
 
-"/home/Cao/storage/github/atlas/src/mod/utils/misc/dsds.txt" |> parse.tasks() -> tasks
+"/home/Cao/storage/github/atlas/src/mod/utils/misc/dsds.tasks" |> read.tasks() -> tasks
 
 # tasks |>
 #   group_by(from) |>
@@ -116,15 +118,58 @@ graph.tasks <- function(tasks) {
 #       "from" = "task"
 #     ),
 #   )
+library(ggraph)
+library(tidygraph)
 
 tasks |>
   graph.tasks() |>
   as_tbl_graph() |>
   ggraph() +
-  geom_edge_fan() +
+  geom_edge_link(
+    aes(
+      edge_linetype = tasks$nest
+    ),
+    alpha = 0.5
+  ) +
   geom_node_point(
     aes(
-      color = tasks$status
+      fill = tasks$status,
+      size = max(tasks$nest) - tasks$nest,
+      color = tasks$nest |> factor(),
     ),
-    size = 23
+    stroke = 4,
+    shape = 21,
+  ) +
+  scale_size(
+    range = c(20, 40)
+  ) +
+  geom_node_text(
+    aes(
+      label = tasks$title |> str$str_wrap(10)
+    )
+  ) +
+  scale_edge_linetype_binned() +
+  scale_color_manual(
+    values = c("purple", "darkblue", rep("white", tasks$nest |> unique() |> length() - 2)) |> setNames(tasks$nest |> unique()),
+  ) +
+  scale_fill_gradient(
+    low = "lightgrey",
+    high = "green",
+    na.value = "red"
+  ) +
+  labs(
+    title = "Task Roadmap",
+    subtitle = "Current status as of" |> paste(Sys.Date() |> format(format = "%m-%d-%Y")),
+  ) +
+  guides(
+    fill = F,
+    color = F,
+    shape = F,
+    stroke = F,
+    size = F,
+    edge_linetype = F
+  ) +
+  theme_graph(
+    title_size = 40,
+    subtitle_size = 20,
   )
