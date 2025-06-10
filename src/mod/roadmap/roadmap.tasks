@@ -1,13 +1,14 @@
-career progression
+roadmap models: 0.7
     goal: postponed
     path: 0.5
         analytic method: postponed
-            recursive career progression: postponed
+            arg max util: postponed
+            recursive career prog: postponed
         dijkstra method: 0.5
             movement types: 1
-                switch: 1
                 work: 1
                 study: 1
+                switch: 1
                 reset: 1
             movement cost: 1
             movement prob: 0.5
@@ -18,13 +19,3 @@ career progression
                 cost-util: 1
                 default path: 1
             path timeline: 1
-
-descriptive models: 1
-    skill set generality: 1
-    attribute equivalence: 1
-        linear method: 1
-        linear-logistic: 1
-        generality root: 1
-    skill set competence: 1
-        general competence: 1
-        expertise: 1

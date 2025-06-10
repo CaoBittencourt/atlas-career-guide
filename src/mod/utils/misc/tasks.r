@@ -1,16 +1,16 @@
-modular::project.options("atlas")
-
 box::use(
   dplyr[...],
   tidyr[...],
   str = stringr,
   ig = igraph,
+  stats[setNames],
+  ggplot2[...],
+  ggraph[...],
+  tidygraph[...],
   # tidygraph[...],
   vctrs[new_data_frame],
 )
 
-# library(ggraph)
-# library(tidygraph)
 
 read.tasks <- function(path) {
   path |>
@@ -105,8 +105,6 @@ graph.tasks <- function(tasks) {
   )
 }
 
-"/home/Cao/storage/github/atlas/src/mod/utils/misc/dsds.tasks" |> read.tasks() -> tasks
-
 # tasks |>
 #   group_by(from) |>
 #   reframe(
@@ -121,55 +119,67 @@ graph.tasks <- function(tasks) {
 library(ggraph)
 library(tidygraph)
 
-tasks |>
-  graph.tasks() |>
-  as_tbl_graph() |>
-  ggraph() +
-  geom_edge_link(
-    aes(
-      edge_linetype = tasks$nest
-    ),
-    alpha = 0.5
-  ) +
-  geom_node_point(
-    aes(
-      fill = tasks$status,
-      size = max(tasks$nest) - tasks$nest,
-      color = tasks$nest |> factor(),
-    ),
-    stroke = 4,
-    shape = 21,
-  ) +
-  scale_size(
-    range = c(20, 40)
-  ) +
-  geom_node_text(
-    aes(
-      label = tasks$title |> str$str_wrap(10)
-    )
-  ) +
-  scale_edge_linetype_binned() +
-  scale_color_manual(
-    values = c("purple", "darkblue", rep("white", tasks$nest |> unique() |> length() - 2)) |> setNames(tasks$nest |> unique()),
-  ) +
-  scale_fill_gradient(
-    low = "lightgrey",
-    high = "green",
-    na.value = "red"
-  ) +
-  labs(
-    title = "Task Roadmap",
-    subtitle = "Current status as of" |> paste(Sys.Date() |> format(format = "%m-%d-%Y")),
-  ) +
-  guides(
-    fill = F,
-    color = F,
-    shape = F,
-    stroke = F,
-    size = F,
-    edge_linetype = F
-  ) +
-  theme_graph(
-    title_size = 40,
-    subtitle_size = 20,
+plot.tasks <- function(tasks) {
+  return(
+    tasks |>
+      graph.tasks() |>
+      as_tbl_graph() |>
+      ggraph() +
+      geom_edge_link(
+        aes(
+          edge_linetype = tasks$nest
+        ),
+        alpha = 0.5
+      ) +
+      geom_node_point(
+        aes(
+          fill = tasks$status,
+          size = max(tasks$nest) - tasks$nest,
+          color = tasks$nest |> factor(),
+        ),
+        stroke = 4,
+        shape = 21,
+      ) +
+      scale_size(
+        range = c(20, 40)
+      ) +
+      geom_node_text(
+        aes(
+          label = tasks$title |> str$str_wrap(10)
+        )
+      ) +
+      scale_edge_linetype_binned() +
+      scale_color_manual(
+        values = c("purple", "darkblue", rep("white", tasks$nest |> unique() |> length() - 2)) |> setNames(tasks$nest |> unique()),
+      ) +
+      scale_fill_gradientn(
+        colors = c("lightgrey", "lightgreen", "green", "green"),
+        breaks = seq(0, 1, length.out = 4),
+        limits = c(0, 1),
+        na.value = "red"
+      ) +
+      labs(
+        title = "Task Roadmap",
+        subtitle = "Current status as of" |> paste(Sys.Date() |> format(format = "%m-%d-%Y")),
+      ) +
+      guides(
+        fill = F,
+        color = F,
+        shape = F,
+        stroke = F,
+        size = F,
+        edge_linetype = F
+      ) +
+      theme_graph(
+        title_size = 40,
+        subtitle_size = 20,
+      )
   )
+}
+
+
+box::export(
+  read.tasks,
+  graph.tasks,
+  plot.tasks
+)
