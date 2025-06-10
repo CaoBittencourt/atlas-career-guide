@@ -5,6 +5,7 @@ box::use(
   tidyr[...],
   str = stringr,
   ig = igraph,
+  vctrs[new_data_frame],
 )
 
 parse.tasks <- function(path) {
@@ -70,9 +71,40 @@ parse.tasks <- function(path) {
   tasks.lines
 
   return(
-    tasks.lines
+    tasks.lines |>
+      new_data_frame(
+        class = c(
+          class(tasks.lines),
+          "tasks"
+        )
+      )
+  )
+}
+
+graph.tasks <- function(tasks) {
+  stopifnot(
+    "'tasks' must be a data frame with the 'tasks' subclass." = all(
+      is.data.frame(tasks),
+      any("tasks" %in% class(tasks))
+    )
+  )
+
+  return(
+    tasks |> relocate(task, from) |> 
+      ig$graph_from_data_frame() |> 
+      ig$set.edge.attribute(
+        'status',
+        value = tasks$status
+      )
   )
 }
 
 
-parse.tasks("/home/Cao/storage/github/atlas/src/mod/utils/misc/dsds.txt")
+ig$plot.igraph()
+
+"/home/Cao/storage/github/atlas/src/mod/utils/misc/dsds.txt" |>
+  parse.tasks() ->
+dsds
+
+dsds |>
+  relocate(task, from) |>
