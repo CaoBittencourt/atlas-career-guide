@@ -7,6 +7,8 @@ dependencies:
   - r-tidyverse
   - r-devtools
   - r-psych
+  - r-igraph
+  - r-ggraph
   - r-box
   - r-styler
   - r-mgsub

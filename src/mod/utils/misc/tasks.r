@@ -5,6 +5,7 @@ box::use(
   tidyr[...],
   str = stringr,
   ig = igraph,
+  gg = ggraph,
   vctrs[new_data_frame],
 )
 
@@ -90,21 +91,17 @@ graph.tasks <- function(tasks) {
   )
 
   return(
-    tasks |> relocate(task, from) |> 
-      ig$graph_from_data_frame() |> 
+    tasks |> relocate(task, from) |>
+      ig$graph_from_data_frame() |>
       ig$set.edge.attribute(
-        'status',
+        "status",
         value = tasks$status
       )
   )
 }
 
+"/home/Cao/storage/github/atlas/src/mod/utils/misc/dsds.txt" |> parse.tasks() -> tasks
 
-ig$plot.igraph()
-
-"/home/Cao/storage/github/atlas/src/mod/utils/misc/dsds.txt" |>
-  parse.tasks() ->
-dsds
-
-dsds |>
-  relocate(task, from) |>
+tasks |>
+  graph.tasks() |>
+  ig$plot.igraph()

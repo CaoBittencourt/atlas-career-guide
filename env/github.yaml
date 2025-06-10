@@ -1,0 +1,19 @@
+name: atlas
+github:
+  CaoBittencourt:
+    modular
+    atlas.plot
+    atlas.labor
+    atlas.letters
+    atlas.efa
+    atlas.aeq
+    atlas.taxa
+    atlas.intc
+    atlas.gene
+    atlas.eqvl
+    atlas.econ
+    atlas.comp
+    atlas.acti
+    atlas.match
+    atlas.class
+    atlas.qua
