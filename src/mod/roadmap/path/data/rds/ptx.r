@@ -1,10 +1,12 @@
 modular::project.options("atlas")
 
+
 box::use(
   req = mod / roadmap / path / data / req,
   lab = mod / roadmap / path / data / labor,
   mod / roadmap / path / data / vertices[...],
   bin = mod / utils / bin,
+  pro = mod / utils / probs,
   weights[wtd.cors],
   gg = ggplot2,
   plt = plotly,
@@ -164,101 +166,23 @@ plot.kde <- function(df) {
 # plots$mid.level
 # plots$senior
 
-prob.y_x <- function(pdf.y_x, x.from, x.to, y.from, y.to, ...) {
-  return(
-    integrate(
-      function(x) {
-        integrate(
-          pdf.y_x,
-          y.from,
-          y.to,
-          ...
-        )[[1]]
-      },
-      x.from,
-      x.to
-    )[[1]]
-  )
-}
 
-prob.xy <- function(px, pdf.y_x, x.from, x.to, y.from, y.to, ...) {
-  return(
-    prob.y_x(
-      pdf.y_x,
-      x.from,
-      x.to,
-      y.from,
-      y.to,
-      ...
-    ) * px
-  )
-}
+
+
+
+# sum(
+#   (x.kde |> bin$as.pdf() |> integrate(req$experience$intern, req$experience$junior))[[1]],
+#   (x.kde |> bin$as.pdf() |> integrate(req$experience$junior, req$experience$associate))[[1]],
+#   (x.kde |> bin$as.pdf() |> integrate(req$experience$associate, req$experience$mid.level))[[1]],
+#   (x.kde |> bin$as.pdf() |> integrate(req$experience$mid.level, req$experience$senior))[[1]],
+#   (x.kde |> bin$as.pdf() |> integrate(req$experience$senior, Inf))[[1]]
+# )
 
 pdf.t_x <- function(t, xmean, tsd) {
   return(
     t |> dlnorm(xmean, tsd)
   )
 }
-pdf.t_x(5, 5, 2)
-pdf.t_x(10, 10, 2)
-
-prob.pdf <- function(pdf, lb = -Inf, ub = Inf, ...) {
-  return(integrate(pdf, lb, ub, ...)[[1]])
-}
-
-prob.pdf.joint <- function(pdf, lb = -Inf, ub = Inf, ...) {
-  return(integrate(pdf, lb, ub, ...)[[1]])
-}
-
-
-dsds <- function(x, t.from, t.to, tsd) {
-  integrate(pdf.t_x, t.from, t.to, xmean = x, tsd = tsd)[[1]]
-}
-
-prob.t_x <- function(x.from, x.to, t.from, t.to, tsd) {
-  integrate(
-    function(x) {
-      integrate(
-        pdf.t_x,
-        t.from,
-        t.to,
-        xmean = x,
-        tsd = tsd
-      )[[1]]
-    },
-    x.from,
-    x.to
-  )[[1]]
-}
-
-vertices.sample |> slice(1) -> lalala
-integrate(
-  function(x) {
-    integrate(
-      pdf.t_x,
-      lalala$t,
-      lalala$t.to,
-      xmean = x,
-      tsd = t.kde.sample[t.kde.sample |> between(lalala$t, lalala$t.to)] |> log() |> sd() |> replace_na(0)
-    )[[1]]
-  },
-  0,
-  1
-)
-
-vertices.sample |>
-  group_by(vertex) |>
-  reframe(
-    tsd = t.kde.sample[t.kde.sample |> between(t, t.to)] |> log() |> sd() |> replace_na(0)
-  )
-
-
-
-prob.pdf |> Vectorize(c("lb", "ub")) -> prob.pdf
-
-prob.pdf(pdf.t_x, c(0, 5), c(5, 10), xmean = c(5, 10), tsd = c(2.5, 5))
-
-pdf.t_x |> prob.pdf(lb = 0, ub = Inf, xmean = 5, tsd = 1)
 
 vertices |>
   filter(
@@ -267,12 +191,33 @@ vertices |>
   inner_join(
     t.sample |> select(t = from, t.to = to)
   ) |>
+  inner_join(
+    x.sample |> select(x = from, x.to = to)
+  ) |>
   mutate(
-    t.to = replace_na(t.to, Inf)
+    t.to = replace_na(t.to, Inf),
+    x.to = replace_na(x.to, Inf)
   ) ->
 vertices.sample
-
 vertices.sample
+
+vertices.sample |>
+  group_by(vertex) |>
+  mutate(
+    prob =
+      x.kde |>
+        bin$as.pdf() |>
+        pro$prob.xy(
+          pdf.t_x,
+          x.from = x,
+          x.to = x.to,
+          y.from = t,
+          y.to = t.to,
+          xmean = x,
+          tsd = 5
+        )
+  )
+
 
 # t.pct(t.lb, t.ub, x) = \int_{t.lb}^{t.ub} pdf(t|x) dt \forall x
 # t.pct(t.lb, t.ub) = \int_{-inf}^{+inf} (\int_{t.lb}^{t.ub} pdf(t|x) dt)dx #\forall x
