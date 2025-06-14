@@ -164,6 +164,36 @@ plot.kde <- function(df) {
 # plots$mid.level
 # plots$senior
 
+prob.y_x <- function(pdf.y_x, x.from, x.to, y.from, y.to, ...) {
+  return(
+    integrate(
+      function(x) {
+        integrate(
+          pdf.y_x,
+          y.from,
+          y.to,
+          ...
+        )[[1]]
+      },
+      x.from,
+      x.to
+    )[[1]]
+  )
+}
+
+prob.xy <- function(px, pdf.y_x, x.from, x.to, y.from, y.to, ...) {
+  return(
+    prob.y_x(
+      pdf.y_x,
+      x.from,
+      x.to,
+      y.from,
+      y.to,
+      ...
+    ) * px
+  )
+}
+
 pdf.t_x <- function(t, xmean, tsd) {
   return(
     t |> dlnorm(xmean, tsd)
@@ -209,12 +239,18 @@ integrate(
       lalala$t,
       lalala$t.to,
       xmean = x,
-      tsd = t.kde.sample[t.kde.sample |> between(lalala$t, lalala$t.to)] |> log() |> sd()
+      tsd = t.kde.sample[t.kde.sample |> between(lalala$t, lalala$t.to)] |> log() |> sd() |> replace_na(0)
     )[[1]]
   },
-  -Inf,
-  Inf
+  0,
+  1
 )
+
+vertices.sample |>
+  group_by(vertex) |>
+  reframe(
+    tsd = t.kde.sample[t.kde.sample |> between(t, t.to)] |> log() |> sd() |> replace_na(0)
+  )
 
 
 
