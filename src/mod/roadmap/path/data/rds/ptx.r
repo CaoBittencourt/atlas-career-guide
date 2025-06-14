@@ -178,6 +178,16 @@ plot.kde <- function(df) {
 #   (x.kde |> bin$as.pdf() |> integrate(req$experience$senior, Inf))[[1]]
 # )
 
+x.kde |>
+  bin$as.pdf() |>
+  pro$prob.xy(
+    function(x) x,
+    x.from = 0,
+    x.to = 5,
+    y.from = 0,
+    y.to = 5
+  )
+
 pdf.t_x <- function(t, xmean, tsd) {
   return(
     t |> dlnorm(xmean, tsd)
