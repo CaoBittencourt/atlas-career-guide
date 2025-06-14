@@ -13,7 +13,9 @@ roadmap models: 0.7
             movement cost: 1
             movement prob: 0.5
                 independent distribution: 1
-                joint distribution: 0.5
+                joint distribution: 0.75
+                    prob module: 0.9
+                    norm consts
             path util: 1
             path efficiency: 1
                 cost-util: 1
