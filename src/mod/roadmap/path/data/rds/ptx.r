@@ -43,17 +43,9 @@ tibble(
 
 sample.id <- c(1, 2)
 
-x |>
-  filter(
-    id == sample.id
-  ) ->
-x.sample
+x |> filter(id == sample.id) -> x.sample
 
-t |>
-  filter(
-    id == sample.id
-  ) ->
-t.sample
+t |> filter(id == sample.id) -> t.sample
 
 x.sample |>
   group_by(id) |>
@@ -95,8 +87,6 @@ vertices |>
   ) ->
 vertices.sample
 
-vertices.sample
-
 pdf.t_x <- function(x, t) {
   return(dnorm(t, x))
 }
@@ -104,9 +94,9 @@ pdf.t_x <- function(x, t) {
 vertices.sample |>
   inner_join(
     vertices.sample |>
-      filter(x.pct > 0) |>
-      filter(t.pct > 0) |>
-      group_by(occupation) |>
+      # filter(x.pct > 0) |>
+      # filter(t.pct > 0) |>
+      group_by(occupation, vertex) |>
       reframe(
         xmin = min(x),
         tmin = min(t),
@@ -122,22 +112,23 @@ vertices.sample |>
               tmin,
               tmax
             )
+      ) |>
+      select(
+        occupation,
+        vertex,
+        const
       )
   ) |>
-  group_by(occupation) |>
-  mutate(
-    prob =
+  group_by(occupation, vertex) |>
+    mutate(
+  prob =
+    x.pct *
       pro$prob.y_x(
-        pdf.t_x,
-        x, x.to,
-        t, t.to
-      ) / const
-  ) |>
-  reframe(
-    prob = sum(prob)
+    pdf.t_x,
+    x, x.to,
+          t, t.to
+        ) / const
   )
-
-
 # t.pct(t.lb, t.ub, x) = \int_{t.lb}^{t.ub} pdf(t|x) dt \forall x
 # t.pct(t.lb, t.ub) = \int_{-inf}^{+inf} (\int_{t.lb}^{t.ub} pdf(t|x) dt)dx #\forall x
 
