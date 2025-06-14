@@ -88,82 +88,112 @@ vertices |>
 vertices.sample
 
 pdf.t_x <- function(x, t) {
-  return(dnorm(t, x))
+  return(
+    # t |> dnorm(mean(c(x, t)))
+    t |>
+      dnorm(x, t) |>
+      pmax(0)
+  )
 }
 
 vertices.sample |>
-  inner_join(
-    vertices.sample |>
-      # filter(x.pct > 0) |>
-      # filter(t.pct > 0) |>
-      group_by(occupation, vertex) |>
-      reframe(
-        xmin = min(x),
-        tmin = min(t),
-        xmax = max(x.to),
-        tmax = max(t.to)
-      ) |>
-      mutate(
-        const =
-          pdf.t_x |>
-            pro$norm.const(
-              xmin,
-              xmax,
-              tmin,
-              tmax
-            )
-      ) |>
-      select(
-        occupation,
-        vertex,
-        const
-      )
-  ) |>
-  group_by(occupation, vertex) |>
-    mutate(
-  prob =
-    x.pct *
-      pro$prob.y_x(
-    pdf.t_x,
-    x, x.to,
+  mutate(
+    const =
+      pdf.t_x |>
+        pro$norm.const(
+          x, x.to,
+          t, t.to
+        ),
+    prob =
+      x.pct *
+        pro$prob.y_x(
+          pdf.t_x,
+          x, x.to,
           t, t.to
         ) / const
-  )
-# t.pct(t.lb, t.ub, x) = \int_{t.lb}^{t.ub} pdf(t|x) dt \forall x
-# t.pct(t.lb, t.ub) = \int_{-inf}^{+inf} (\int_{t.lb}^{t.ub} pdf(t|x) dt)dx #\forall x
-
-vertices.sample |>
-  group_by(x) |>
-  # group_by(vertex) |>
-  mutate(
-    prob =
-    # joint probability dist
-    # P(x,t) = P(t|x) * P(x)
-      x.pct * (
-        pdf.t_x |>
-          prob.pdf(
-            t, t.to,
-            xmean = x + .01,
-            tsd = sd(t.kde.sample)
-          )
-      )
   ) |>
-  ungroup()
+  select(
+    occupation,
+    vertex,
+    x, t,
+    prob
+  ) ->
 vertices.sample
 
-vertices.sample$prob |>
-  sum() |>
-  round(4)
+vertices.sample |>
+  group_by(occupation) |>
+  group_split() |>
+  lapply(
+    function(df) {
+      df |>
+        plt$plot_ly(
+          x = ~x,
+          y = ~t,
+          z = ~prob,
+          intensity = ~prob,
+          type = "mesh3d"
+        )
+    }
+  ) ->
+plots
 
-# vertices |>
-#   filter(
-#     occupation == sample.id
-#   ) |>
-#   inner_join(
-#     t.sample |> select(t = from, t.to = to)
-#   ) |>
-#   mutate(
-#     t.to = replace_na(t.to, Inf),
-#     prob = prob.pdf.vec(pdf.t_x, t, t.to, xmean = x, tsd = t.kde.sample |> sd())
-#     # prob = prob.pdf(pdf.t_x, t, t.to, xmean = x, tsd = t.kde.sample |> sd())
-#   )
+plots[[1]]
+plots[[2]]
+
+x.seq <- seq(xmin, xmax, length.out = 25)
+t.seq <- seq(tmin, tmax, length.out = 25)
+
+tibble(
+  x = x.seq,
+  x.to = x.seq |> lead() |> replace_na(20)
+) -> x.move
+
+tibble(
+  t = t.seq,
+  t.to = t.seq |> lead() |> replace_na(20)
+) -> t.move
+
+expand.grid(
+  x = x.seq,
+  t = t.seq
+) -> xt.grid
+
+x.kde[1, ]$kde[[1]] |> bin$as.pdf() -> x.pdf
+t.kde[1, ]$kde[[1]] |> bin$as.pdf() -> t.pdf
+
+pdf.t_x <- function(x, t) {
+  return(
+    # t |> dnorm(mean(c(x, t)))
+    t |> dbeta(mean(c(x, t)), x)
+  )
+}
+
+xt.grid |>
+  inner_join(x.move) |>
+  inner_join(t.move) |>
+  mutate(
+    const = pdf.t_x |>
+      pro$norm.const(
+        x, x.to,
+        t, t.to
+      ),
+    prob =
+      x.pdf |>
+        pro$prob.xy(
+          pdf.t_x,
+          x, x.to,
+          t, t.to
+        )
+  ) |>
+  # ->
+  # xt.grid
+  # xt.grid |>
+  plt$plot_ly(
+    x = ~x,
+    y = ~t,
+    z = ~prob,
+    intensity = ~prob,
+    type = "mesh3d"
+  )
+
+xt.grid$prob |> sum()
