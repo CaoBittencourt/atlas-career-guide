@@ -214,63 +214,27 @@ vertices.sample
 
 vertices.sample
 
-pdf.t_x.unnorm <- function(x, t) {
+pdf.t_x <- function(x, t) {
   return(dnorm(t, x))
 }
 
-pracma::integral2(
-  pdf.t_x.unnorm,
-  min(vertices.sample$x), max(vertices.sample$x.to),
-  min(vertices.sample$t), max(vertices.sample$t.to)
-)[[1]] -> const
-
-pdf.t_x <- function(x, t) {
-  return(
-    pdf.t_x.unnorm(x, t) / const
-  )
-}
-
-x.kde |> bin$as.pdf() -> x.pdf
-pdf.t_x |> pro$prob.y_x(0, 45, 0, 45)
-sum(
-  pdf.t_x.unnorm |>
-    pro$prob.y_x(
-      vertices.sample$x,
-      vertices.sample$x.to,
-      vertices.sample$t,
-      vertices.sample$t.to
-    ) / const
-)
-
 vertices.sample |>
+  group_by(occupation) |>
   mutate(
     prob =
       pro$prob.y_x(
-        pdf.t_x.unnorm,
+        pdf.t_x,
         x, x.to,
         t, t.to
-      ) / (
-        pracma::integral2(
-          pdf.t_x.unnorm,
-          min(x), max(x.to),
-          min(t), min(t.to)
-        )[[1]]
+      ) / pro$norm.const(
+        pdf.t_x,
+        min(x), max(x.to),
+        min(t), max(t.to)
       )
-    # x.kde |>
-    #   bin$as.pdf() |>
-    #   pro$prob.xy(
-    #     pdf.t_x,
-    #     x.from = x,
-    #     x.to = x.to,
-    #     y.from = t,
-    #     y.to = t.to
-    #     # xmean = x,
-    #     # tsd = 5
-    #   )
   ) |>
-  pull(prob) |>
-  sum() |>
-  round(4)
+  reframe(
+    prob = sum(prob)
+  )
 
 
 # t.pct(t.lb, t.ub, x) = \int_{t.lb}^{t.ub} pdf(t|x) dt \forall x

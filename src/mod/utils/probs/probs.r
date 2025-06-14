@@ -26,24 +26,16 @@ prob.y_x <- function(pdf.y_x, x.from, x.to, y.from, y.to, ...) {
 
 prob.y_x |> Vectorize(c("x.from", "x.to", "y.from", "y.to")) -> prob.y_x
 
-# prob.y_x <- function(pdf.y_x, x.from, x.to, y.from, y.to, ...) {
-#   return(
-#     integrate(
-#       Vectorize(
-#         function(x) {
-#           integrate(
-#             pdf.y_x,
-#             y.from,
-#             y.to,
-#             ...
-#           )[[1]]
-#         }
-#       ),
-#       x.from,
-#       x.to
-#     )[[1]]
-#   )
-# }
+# conditional probability normalizing constant
+norm.const <- function(pdf.y_x, xmin, xmax, ymin, ymax, ...) {
+  return(
+    integral2(
+      pdf.y_x,
+      xmin, xmax,
+      ymin, ymax
+    )[[1]]
+  )
+}
 
 # joint probability
 prob.xy <- function(pdf.x, pdf.y_x, x.from, x.to, y.from, y.to, ...) {
@@ -67,5 +59,6 @@ prob.xy <- function(pdf.x, pdf.y_x, x.from, x.to, y.from, y.to, ...) {
 box::export(
   prob.x,
   prob.y_x,
+  norm.const,
   prob.xy
 )
