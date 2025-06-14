@@ -37,6 +37,8 @@ norm.const <- function(pdf.y_x, xmin, xmax, ymin, ymax, ...) {
   )
 }
 
+norm.const |> Vectorize(c("xmin", "xmax", "ymin", "ymax")) -> norm.const
+
 # joint probability
 prob.xy <- function(pdf.x, pdf.y_x, x.from, x.to, y.from, y.to, ...) {
   return(

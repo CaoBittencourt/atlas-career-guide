@@ -1,6 +1,5 @@
 modular::project.options("atlas")
 
-
 box::use(
   req = mod / roadmap / path / data / req,
   lab = mod / roadmap / path / data / labor,
@@ -22,7 +21,7 @@ box::use(
 )
 
 req$experience$senior -> xmax
-req$experience$junior -> xmin
+req$experience$intern -> xmin
 
 req$education$doctorate -> tmax
 req$education$high.school -> tmin
@@ -30,185 +29,69 @@ req$education$high.school -> tmin
 req$onet.bin$x -> x
 req$onet.bin$t -> t
 
-sample.id <- 1
+tibble(
+  type = req$experience |> names(),
+  x = req$experience |> as.numeric(),
+  x.to = req$experience |> as.numeric() |> lead() |> replace_na(45)
+) -> x.move
 
-x |> filter(id == sample.id) -> x.sample
-t |> filter(id == sample.id) -> t.sample
+tibble(
+  type = req$education |> names(),
+  t = req$education |> as.numeric(),
+  t.to = req$education |> as.numeric() |> lead() |> replace_na(45)
+) -> t.move
 
-x.sample$from |> bin$as.kde(x.sample$pct, 0) -> x.kde
-t.sample$from |> bin$as.kde(t.sample$pct, 0) -> t.kde
+sample.id <- c(1, 2)
 
-# x.kde |> plot(xlim = c(0, 20))
-# t.kde |> plot(xlim = c(0, 20))
+x |>
+  filter(
+    id == sample.id
+  ) ->
+x.sample
 
-x.kde |> bin$sample.kde() -> x.kde.sample
-t.kde |> bin$sample.kde() -> t.kde.sample
+t |>
+  filter(
+    id == sample.id
+  ) ->
+t.sample
 
-# # notice experience and education are not uncorrelated:
-# inner_join(
-#   x |> group_by(id) |> reframe(xmean = from |> bin$as.kde(pct, 0) |> bin$mean.kde()),
-#   t |> group_by(id) |> reframe(tmean = from |> bin$as.kde(pct, 0) |> bin$mean.kde())
-# ) |>
-#   inner_join(
-#     lab$labor
-#   ) |>
-#   reframe(
-#     xt.corr =
-#       wtd.cors(
-#         xmean,
-#         tmean,
-#         weight = w
-#       ) |>
-#         as.numeric()
-#   )
+x.sample |>
+  group_by(id) |>
+  reframe(
+    kde =
+      from |>
+        bin$as.kde(
+          pct,
+          xmin,
+          xmax
+        ) |>
+        list()
+  ) ->
+x.kde
 
-# # therefore, we shouldn't assume the distributions are independent
-# # i.e. P(t|x) = P(t), P(x|t) = P(x) => P(x,t) = P(t|x) * P(x) = P(t) * P(x)
-# # thus, we need a theoretical model of how education relates to experience
-
-# # if distributions were independent, this is what they would look like
-# x$from |>
-#   bin$as.kde(x$pct, 0, 20) |>
-#   bin$as.pdf() ->
-# pdf.x
-
-# t$from |>
-#   bin$as.kde(t$pct, 0, 20) |>
-#   bin$as.pdf() ->
-# pdf.t
-
-# expand.grid(
-#   x.id = x.sample$binId,
-#   t.id = t.sample$binId
-# ) |>
-#   inner_join(
-#     x.sample |>
-#       rename_with(
-#         ~ paste0("x.", .x)
-#       )
-#   ) |>
-#   inner_join(
-#     t.sample |>
-#       rename_with(
-#         ~ paste0("t.", .x)
-#       )
-#   ) |>
-#   group_by(row_number()) |>
-#   mutate(
-#     prob.x = (pdf.x |> integrate(x.from, x.to |> replace_na(Inf)))[[1]],
-#     prob.t = (pdf.t |> integrate(t.from, t.to |> replace_na(Inf)))[[1]],
-#     pxt = prob.x * prob.t
-#   ) |>
-#   rename(
-#     experience = x.from,
-#     education = t.from
-#   ) |>
-#   ungroup() |>
-#   plt$plot_ly(
-#     x = ~experience,
-#     y = ~education,
-#     z = ~pxt,
-#     type = "mesh3d",
-#     intensity = ~pxt
-#   )
-
-seq(tmin, tmax, .01) -> tseq
-
-tidy <- function(d, xseq) {
-  return(
-    d |>
-      as_tibble() |>
-      rename(density = 1) |>
-      mutate(value = xseq)
-  )
-}
-
-plot.kde <- function(df) {
-  return(
-    df |>
-      gg$ggplot(
-        gg$aes(
-          x = value,
-          y = density
-        )
-      ) +
-      gg$geom_area(
-        alpha = 0.7,
-        fill = "red",
-        color = "black"
-      )
-  )
-}
-
-# (x.sample$from + .01) |>
-#   setNames(
-#     x.sample$type
-#   ) |>
-#   lapply(
-#     function(xmean) {
-#       tseq |>
-#         dlnorm(
-#           xmean |> log(),
-#           # (0.5 * xmean) |> log(),
-#           t.kde.sample |>
-#             sd() |>
-#             log()
-#         ) |>
-#         tidy(tseq) |>
-#         plot.kde()
-#     }
-#   ) ->
-# plots
-
-# plots$intern
-# plots$junior
-# plots$associate
-# plots$mid.level
-# plots$senior
-
-
-
-
-
-# sum(
-#   (x.kde |> bin$as.pdf() |> integrate(req$experience$intern, req$experience$junior))[[1]],
-#   (x.kde |> bin$as.pdf() |> integrate(req$experience$junior, req$experience$associate))[[1]],
-#   (x.kde |> bin$as.pdf() |> integrate(req$experience$associate, req$experience$mid.level))[[1]],
-#   (x.kde |> bin$as.pdf() |> integrate(req$experience$mid.level, req$experience$senior))[[1]],
-#   (x.kde |> bin$as.pdf() |> integrate(req$experience$senior, Inf))[[1]]
-# )
-
-
-# x.kde |>
-#   bin$as.pdf() |>
-#   pro$prob.xy(
-#     function(x, t) dnorm(t, x),
-#     # function(x, y) mean(c(x, y)),
-#     x.from = 0,
-#     x.to = 5,
-#     y.from = 0,
-#     y.to = 5
-#   )
-
-# pdf.t_x <- function(t, xmean, tsd) {
-#   return(
-#     t |> dlnorm(xmean, tsd)
-#   )
-# }
+t.sample |>
+  group_by(id) |>
+  reframe(
+    kde =
+      from |>
+        bin$as.kde(
+          pct,
+          tmin,
+          tmax
+        ) |>
+        list()
+  ) ->
+t.kde
 
 vertices |>
   filter(
     occupation == sample.id
   ) |>
   inner_join(
-    t.sample |> select(t = from, t.to = to)
+    x.move |> select(-type)
   ) |>
   inner_join(
-    x.sample |> select(x = from, x.to = to)
-  ) |>
-  mutate(
-    t.to = replace_na(t.to, 45),
-    x.to = replace_na(x.to, 45)
+    t.move |> select(-type)
   ) ->
 vertices.sample
 
@@ -219,6 +102,28 @@ pdf.t_x <- function(x, t) {
 }
 
 vertices.sample |>
+  inner_join(
+    vertices.sample |>
+      filter(x.pct > 0) |>
+      filter(t.pct > 0) |>
+      group_by(occupation) |>
+      reframe(
+        xmin = min(x),
+        tmin = min(t),
+        xmax = max(x.to),
+        tmax = max(t.to)
+      ) |>
+      mutate(
+        const =
+          pdf.t_x |>
+            pro$norm.const(
+              xmin,
+              xmax,
+              tmin,
+              tmax
+            )
+      )
+  ) |>
   group_by(occupation) |>
   mutate(
     prob =
@@ -226,11 +131,7 @@ vertices.sample |>
         pdf.t_x,
         x, x.to,
         t, t.to
-      ) / pro$norm.const(
-        pdf.t_x,
-        min(x), max(x.to),
-        min(t), max(t.to)
-      )
+      ) / const
   ) |>
   reframe(
     prob = sum(prob)
