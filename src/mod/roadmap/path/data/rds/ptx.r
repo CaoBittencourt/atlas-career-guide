@@ -178,21 +178,23 @@ plot.kde <- function(df) {
 #   (x.kde |> bin$as.pdf() |> integrate(req$experience$senior, Inf))[[1]]
 # )
 
-x.kde |>
-  bin$as.pdf() |>
-  pro$prob.xy(
-    function(x) x,
-    x.from = 0,
-    x.to = 5,
-    y.from = 0,
-    y.to = 5
-  )
 
-pdf.t_x <- function(t, xmean, tsd) {
-  return(
-    t |> dlnorm(xmean, tsd)
-  )
-}
+# x.kde |>
+#   bin$as.pdf() |>
+#   pro$prob.xy(
+#     function(x, t) dnorm(t, x),
+#     # function(x, y) mean(c(x, y)),
+#     x.from = 0,
+#     x.to = 5,
+#     y.from = 0,
+#     y.to = 5
+#   )
+
+# pdf.t_x <- function(t, xmean, tsd) {
+#   return(
+#     t |> dlnorm(xmean, tsd)
+#   )
+# }
 
 vertices |>
   filter(
@@ -205,28 +207,54 @@ vertices |>
     x.sample |> select(x = from, x.to = to)
   ) |>
   mutate(
-    t.to = replace_na(t.to, Inf),
-    x.to = replace_na(x.to, Inf)
+    t.to = replace_na(t.to, 45),
+    x.to = replace_na(x.to, 45)
   ) ->
 vertices.sample
+
 vertices.sample
 
+pdf.t_x.unnorm <- function(x, t) {
+  return(dnorm(t, x))
+}
+
+pracma::integral2(
+  pdf.t_x.unnorm,
+  -10000000000000000, 10000000000000000,
+  -10000000000000000, 10000000000000000
+)[[1]] -> const
+
+pdf.t_x <- function(x, t) {
+  return(
+    pdf.t_x.unnorm(x, t) / const
+  )
+}
+
+x.kde |> bin$as.pdf() -> x.pdf
+pdf.t_x |> pro$prob.y_x(-10000000000000000, 10000000000000000, -10000000000000000, 10000000000000000)
 vertices.sample |>
-  group_by(vertex) |>
   mutate(
     prob =
-      x.kde |>
-        bin$as.pdf() |>
-        pro$prob.xy(
-          pdf.t_x,
-          x.from = x,
-          x.to = x.to,
-          y.from = t,
-          y.to = t.to,
-          xmean = x,
-          tsd = 5
-        )
-  )
+      pro$prob.y_x(
+        pdf.t_x,
+        x, x.to,
+        t, t.to
+      )
+    # x.kde |>
+    #   bin$as.pdf() |>
+    #   pro$prob.xy(
+    #     pdf.t_x,
+    #     x.from = x,
+    #     x.to = x.to,
+    #     y.from = t,
+    #     y.to = t.to
+    #     # xmean = x,
+    #     # tsd = 5
+    #   )
+  ) |>
+  pull(prob) |>
+  sum() |>
+  round(4)
 
 
 # t.pct(t.lb, t.ub, x) = \int_{t.lb}^{t.ub} pdf(t|x) dt \forall x
