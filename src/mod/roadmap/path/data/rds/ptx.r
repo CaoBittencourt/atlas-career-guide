@@ -220,8 +220,8 @@ pdf.t_x.unnorm <- function(x, t) {
 
 pracma::integral2(
   pdf.t_x.unnorm,
-  -10000000000000000, 10000000000000000,
-  -10000000000000000, 10000000000000000
+  min(vertices.sample$x), max(vertices.sample$x.to),
+  min(vertices.sample$t), max(vertices.sample$t.to)
 )[[1]] -> const
 
 pdf.t_x <- function(x, t) {
@@ -231,14 +231,30 @@ pdf.t_x <- function(x, t) {
 }
 
 x.kde |> bin$as.pdf() -> x.pdf
-pdf.t_x |> pro$prob.y_x(-10000000000000000, 10000000000000000, -10000000000000000, 10000000000000000)
+pdf.t_x |> pro$prob.y_x(0, 45, 0, 45)
+sum(
+  pdf.t_x.unnorm |>
+    pro$prob.y_x(
+      vertices.sample$x,
+      vertices.sample$x.to,
+      vertices.sample$t,
+      vertices.sample$t.to
+    ) / const
+)
+
 vertices.sample |>
   mutate(
     prob =
       pro$prob.y_x(
-        pdf.t_x,
+        pdf.t_x.unnorm,
         x, x.to,
         t, t.to
+      ) / (
+        pracma::integral2(
+          pdf.t_x.unnorm,
+          min(x), max(x.to),
+          min(t), min(t.to)
+        )[[1]]
       )
     # x.kde |>
     #   bin$as.pdf() |>
