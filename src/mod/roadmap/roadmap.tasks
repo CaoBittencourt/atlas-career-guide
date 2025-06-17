@@ -11,11 +11,13 @@ roadmap models: 0.5
                 switch: 1
                 reset: 1
             movement cost: 1
-            movement prob: 0.5
+            movement prob: 0.75
                 independent distribution: 1
                 joint distribution: 0.75
-                    prob module: 0.9
-                    norm consts: 0.5
+                    prob module: 1
+                    norm consts: 1
+                    choose dist: 0.5
+                expected payoff
             path util: 1
             path efficiency: 1
                 cost-util: 1
