@@ -90,9 +90,7 @@ vertices.sample
 pdf.t_x <- function(x, t) {
   return(
     # t |> dnorm(mean(c(x, t)))
-    t |>
-      dnorm(x, t) |>
-      pmax(0)
+    t |> dnorm(x, t)
   )
 }
 
@@ -110,7 +108,10 @@ vertices.sample |>
           pdf.t_x,
           x, x.to,
           t, t.to
-        ) / const
+        ) / pro$norm.const(
+          x, x.to,
+          t, t.to
+        )
   ) |>
   select(
     occupation,
@@ -119,6 +120,12 @@ vertices.sample |>
     prob
   ) ->
 vertices.sample
+
+vertices.sample |>
+  group_by(occupation) |>
+  reframe(
+    prob = sum(prob)
+  )
 
 vertices.sample |>
   group_by(occupation) |>
@@ -140,60 +147,60 @@ plots
 plots[[1]]
 plots[[2]]
 
-x.seq <- seq(xmin, xmax, length.out = 25)
-t.seq <- seq(tmin, tmax, length.out = 25)
+# x.seq <- seq(xmin, xmax, length.out = 25)
+# t.seq <- seq(tmin, tmax, length.out = 25)
 
-tibble(
-  x = x.seq,
-  x.to = x.seq |> lead() |> replace_na(20)
-) -> x.move
+# tibble(
+#   x = x.seq,
+#   x.to = x.seq |> lead() |> replace_na(20)
+# ) -> x.move
 
-tibble(
-  t = t.seq,
-  t.to = t.seq |> lead() |> replace_na(20)
-) -> t.move
+# tibble(
+#   t = t.seq,
+#   t.to = t.seq |> lead() |> replace_na(20)
+# ) -> t.move
 
-expand.grid(
-  x = x.seq,
-  t = t.seq
-) -> xt.grid
+# expand.grid(
+#   x = x.seq,
+#   t = t.seq
+# ) -> xt.grid
 
-x.kde[1, ]$kde[[1]] |> bin$as.pdf() -> x.pdf
-t.kde[1, ]$kde[[1]] |> bin$as.pdf() -> t.pdf
+# x.kde[1, ]$kde[[1]] |> bin$as.pdf() -> x.pdf
+# t.kde[1, ]$kde[[1]] |> bin$as.pdf() -> t.pdf
 
-pdf.t_x <- function(x, t) {
-  return(
-    # t |> dnorm(mean(c(x, t)))
-    t |> dbeta(mean(c(x, t)), x)
-  )
-}
+# # pdf.t_x <- function(x, t) {
+# #   return(
+# #     t |> dnorm(mean(c(x, t)))
+# #     # t |> dbeta(mean(c(x, t)), x)
+# #   )
+# # }
 
-xt.grid |>
-  inner_join(x.move) |>
-  inner_join(t.move) |>
-  mutate(
-    const = pdf.t_x |>
-      pro$norm.const(
-        x, x.to,
-        t, t.to
-      ),
-    prob =
-      x.pdf |>
-        pro$prob.xy(
-          pdf.t_x,
-          x, x.to,
-          t, t.to
-        )
-  ) |>
-  # ->
-  # xt.grid
-  # xt.grid |>
-  plt$plot_ly(
-    x = ~x,
-    y = ~t,
-    z = ~prob,
-    intensity = ~prob,
-    type = "mesh3d"
-  )
+# xt.grid |>
+#   inner_join(x.move) |>
+#   inner_join(t.move) |>
+#   mutate(
+#     const = pdf.t_x |>
+#       pro$norm.const(
+#         x, x.to,
+#         t, t.to
+#       ),
+#     prob =
+#       x.pdf |>
+#         pro$prob.xy(
+#           pdf.t_x,
+#           x, x.to,
+#           t, t.to
+#         )
+#   )
+# # ->
+# # xt.grid
+# # xt.grid |>
+# plt$plot_ly(
+#   x = ~x,
+#   y = ~t,
+#   z = ~prob,
+#   intensity = ~prob,
+#   type = "mesh3d"
+# )
 
-xt.grid$prob |> sum()
+# xt.grid$prob |> sum()

@@ -48,8 +48,8 @@ readRDS(
 # exports
 # region: exports
 box::export(
-  education,
   experience,
+  education,
   career.req,
   onet.bin
 )

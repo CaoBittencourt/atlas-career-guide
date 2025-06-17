@@ -27,6 +27,8 @@ list(
   doctorate = 28 - 17
 ) -> education
 
+tmax <- 20
+
 # endregion
 # region: required experience
 list(
@@ -37,6 +39,8 @@ list(
   mid.level = 5,
   senior = 10
 ) -> experience
+
+xmax <- 60
 
 # endregion
 # region: onet data
@@ -279,6 +283,9 @@ onet.bin$t |>
       binId = education |> seq_along(),
       type = education |> names()
     )
+  ) |>
+  mutate(
+    to = replace_na(to, tmax)
   ) ->
 onet.bin$t
 
@@ -288,6 +295,9 @@ onet.bin$x |>
       binId = experience |> seq_along(),
       type = experience |> names()
     )
+  ) |>
+  mutate(
+    to = replace_na(to, xmax)
   ) ->
 onet.bin$x
 

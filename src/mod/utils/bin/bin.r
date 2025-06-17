@@ -24,7 +24,7 @@ bin.bin <- function(x, pct, bins, ...) {
       pct = pct / sum(pct)
     ) |>
       inner_join(
-        bins |> interval()
+        bins |> interval(...)
       ) |>
       group_by(binId) |>
       reframe(

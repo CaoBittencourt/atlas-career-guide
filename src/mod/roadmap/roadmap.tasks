@@ -1,4 +1,4 @@
-roadmap models: 0.7
+roadmap models: 0.5
     goal: postponed
     path: 0.5
         analytic method: postponed
@@ -15,7 +15,7 @@ roadmap models: 0.7
                 independent distribution: 1
                 joint distribution: 0.75
                     prob module: 0.9
-                    norm consts
+                    norm consts: 0.5
             path util: 1
             path efficiency: 1
                 cost-util: 1

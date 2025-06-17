@@ -13,6 +13,8 @@ box::use(
   mod / roadmap / path / functions / employment[...],
   req = mod / roadmap / path / data / req,
   lab = mod / roadmap / path / data / labor,
+  mod / roadmap / path / data / pdf[...],
+  pro = mod / utils / probs,
   mod / utils / data[sublist],
   stats[na.omit],
   gr = igraph,
@@ -67,12 +69,13 @@ career.grids |>
 vertices
 
 # endregion
-# region: vertices prob
+# region: vertices indie prob
 vertices |>
   inner_join(
     req$onet.bin$x |>
       select(
         x = from,
+        x.ub = to,
         occupation = id,
         x.pct = pct
       ),
@@ -81,13 +84,94 @@ vertices |>
   inner_join(
     req$onet.bin$t |>
       select(
-        t = to,
+        t = from,
+        t.ub = to,
         occupation = id,
         t.pct = pct
       ),
     relationship = "many-to-many"
+  ) |>
+  relocate(
+    vertex,
+    occupation,
+    x.lb = x, x.ub,
+    t.lb = t, t.ub
   ) ->
 vertices
+
+# endregion
+# region: vertices joint prob
+vertices |>
+  filter(
+    occupation == c(1, 2)
+  ) ->
+dsds
+
+dsds |>
+  group_by(occupation) |>
+  # group_by(occupation, x.lb) |>
+  mutate(
+    const =
+      pdf.t_x$norm |>
+        pro$norm.const(
+          pmin(x.lb), pmax(x.ub),
+          pmin(t.lb), pmax(t.ub)
+        )
+  ) |>
+  ungroup() |>
+  print(
+    n = Inf
+  ) |>
+  mutate(
+    prob = x.pct *
+      pro$prob.y_x(
+        pdf.t_x$norm,
+        x.lb, x.ub,
+        t.lb, t.ub
+      ) / const
+  ) |>
+  group_by(occupation) |>
+  reframe(
+    prob = sum(prob)
+  )
+
+vertices |>
+  mutate(
+    prob =
+      x.pct *
+        pro$prob.y_x(
+          pdf.t_x$norm,
+          x.lb, x.ub,
+          t.lb, t.ub
+        ) / pro$norm.const(
+          pdf.t_x$norm,
+          x.lb, x.ub,
+          t.lb, t.ub
+        )
+  ) |>
+  select(
+    occupation,
+    vertex,
+    x.lb, x.ub,
+    t.lb, t.ub,
+    prob
+  ) ->
+dsds
+
+dsds |>
+  filter(
+    occupation == c(1, 2)
+  ) |>
+  group_by(occupation) |>
+  reframe(
+    prob = sum(prob)
+  )
+
+vertices
+
+# - E[U] = Pr[v2 | v1] * u(v2) = ((w(v2) / w) * s(v1, v2) * [s(v1, v2) >= 0.5]) * u(v2) >= 0
+#         - cost(v1,v2)
+#         - weight := cost * ((1 - E[u]) ^ !is.infinity(cost))
 
 # endregion
 # exports

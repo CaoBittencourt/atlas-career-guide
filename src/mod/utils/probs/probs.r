@@ -29,10 +29,11 @@ prob.y_x |> Vectorize(c("x.from", "x.to", "y.from", "y.to")) -> prob.y_x
 # conditional probability normalizing constant
 norm.const <- function(pdf.y_x, xmin, xmax, ymin, ymax, ...) {
   return(
-    2 * integral2(
+    integral2(
       pdf.y_x,
       xmin, xmax,
-      ymin, ymax
+      ymin, ymax,
+      ...
     )[[1]]
   )
 }
