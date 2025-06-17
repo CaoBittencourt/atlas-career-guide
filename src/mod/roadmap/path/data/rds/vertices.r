@@ -13,7 +13,6 @@ box::use(
   mod / roadmap / path / functions / employment[...],
   req = mod / roadmap / path / data / req,
   lab = mod / roadmap / path / data / labor,
-  mod / roadmap / path / data / pdf[...],
   pro = mod / utils / probs,
   mod / utils / data[sublist],
   stats[na.omit],
@@ -100,90 +99,47 @@ vertices |>
 vertices
 
 # endregion
+# region: conditional prob dist
+# conditional probability distribution
+# of education given experience level
+list(
+  "norm" = function(x, t) {
+    return(
+      t |> dnorm(x, t)
+    )
+  }
+) -> pdf.t_x
+
+# endregion
 # region: vertices joint prob
 vertices |>
-  filter(
-    occupation %in% c(1, 2)
-  ) ->
-dsds
-
-vertices |>
-  filter(
-    occupation %in% c(1, 2, 19)
-  ) |>
-  filter(x.pct > 0) |>
-  filter(t.pct > 0) |>
   group_by(occupation) |>
   mutate(
-    n = sum(x.pct * 1)
-  ) |>
-  group_by(occupation, t.lb, t.ub) |>
-  mutate(
     const =
-      pdf.t_x$norm |>
+      pdf.t_x[[1]] |>
         pro$norm.const(
-          # min(x.lb), max(x.ub),
-          # min(t.lb), max(t.ub)
           pmin(x.lb), pmax(x.ub),
           pmin(t.lb), pmax(t.ub)
         )
   ) |>
   ungroup() |>
   mutate(
-    prob = x.pct *
-      pro$prob.y_x(
-        pdf.t_x$norm,
-        x.lb, x.ub,
-        t.lb, t.ub
-      ) / (n * const)
-  ) |>
-  filter(
-    occupation == 19
-  ) |>
-  plotly::plot_ly(
-    x = ~x.lb,
-    y = ~t.lb,
-    z = ~prob,
-    intensity = ~prob,
-    type = "mesh3d"
-  )
-group_by(occupation) |>
-  reframe(
-    prob = sum(prob)
-  )
-
-vertices |>
-  mutate(
     prob =
       x.pct *
+        t.pct *
         pro$prob.y_x(
-          pdf.t_x$norm,
+          pdf.t_x[[1]],
           x.lb, x.ub,
           t.lb, t.ub
-        ) / pro$norm.const(
-          pdf.t_x$norm,
-          x.lb, x.ub,
-          t.lb, t.ub
-        )
+        ) / const
   ) |>
   select(
     occupation,
     vertex,
-    x.lb, x.ub,
-    t.lb, t.ub,
+    x = x.lb,
+    t = t.lb,
     prob
   ) ->
-dsds
-
-dsds |>
-  filter(
-    occupation == c(1, 2)
-  ) |>
-  group_by(occupation) |>
-  reframe(
-    prob = sum(prob)
-  )
-
 vertices
 
 # - E[U] = Pr[v2 | v1] * u(v2) = ((w(v2) / w) * s(v1, v2) * [s(v1, v2) >= 0.5]) * u(v2) >= 0

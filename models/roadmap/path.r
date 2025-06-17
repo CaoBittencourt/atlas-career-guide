@@ -31,10 +31,12 @@ occupations |>
   ) ->
 occupations
 
-getOption("atlas.root") |>
+getOption("atlas.mod") |>
   file.path(
-    "models",
     "roadmap",
+    "path",
+    "data",
+    "rds",
     "vertices.rds"
   ) |>
   readRDS() ->

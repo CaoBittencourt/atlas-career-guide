@@ -14,6 +14,7 @@ box::use(
   req = mod / roadmap / path / data / req,
   lab = mod / roadmap / path / data / labor,
   mod / roadmap / path / data / vertices[...],
+  pay = mod / roadmap / path / functions / payoff,
   mod / utils / data[sublist],
   stats[na.omit],
   gr = igraph,
@@ -354,12 +355,6 @@ paths
 
 # endregion
 # region: movement payoff
-# - E[U] = Pr[v2 | v1] * u(v2) = ((w(v2) / w) * s(v1, v2) * [s(v1, v2) >= 0.5]) * u(v2) >= 0
-#         - cost(v1,v2)
-#         - weight := cost * ((1 - E[u]) ^ !is.infinity(cost))
-
-# endregion
-# region: movement graph
 # feasible paths
 paths |>
   filter(
@@ -368,9 +363,32 @@ paths |>
   mutate(
     .before = 1,
     id = row_number()
+  ) |>
+  select(-prob) |>
+  rename(
+    prob = prob.to
   ) ->
 paths
 
+# inverse expected payoff
+paths |>
+  filter(
+    prob > 0
+  ) |>
+  mutate(
+    expected.payoff =
+      pay$payoff(
+        prob,
+        cost
+      ),
+    inverse.payoff =
+      -(expected.payoff -
+        max(expected.payoff)) / expected.payoff
+  ) ->
+paths
+
+# endregion
+# region: movement graph
 # graph
 paths |>
   select(
@@ -387,7 +405,7 @@ paths |>
   ) |>
   gr$set.edge.attribute(
     "weight",
-    value = paths$cost
+    value = paths$inverse.payoff
   ) |>
   gr$set.edge.attribute(
     "cost",
