@@ -103,34 +103,51 @@ vertices
 # region: vertices joint prob
 vertices |>
   filter(
-    occupation == c(1, 2)
+    occupation %in% c(1, 2)
   ) ->
 dsds
 
-dsds |>
+vertices |>
+  filter(
+    occupation %in% c(1, 2, 19)
+  ) |>
+  filter(x.pct > 0) |>
+  filter(t.pct > 0) |>
   group_by(occupation) |>
-  # group_by(occupation, x.lb) |>
+  mutate(
+    n = sum(x.pct * 1)
+  ) |>
+  group_by(occupation, t.lb, t.ub) |>
   mutate(
     const =
       pdf.t_x$norm |>
         pro$norm.const(
+          # min(x.lb), max(x.ub),
+          # min(t.lb), max(t.ub)
           pmin(x.lb), pmax(x.ub),
           pmin(t.lb), pmax(t.ub)
         )
   ) |>
   ungroup() |>
-  print(
-    n = Inf
-  ) |>
   mutate(
     prob = x.pct *
       pro$prob.y_x(
         pdf.t_x$norm,
         x.lb, x.ub,
         t.lb, t.ub
-      ) / const
+      ) / (n * const)
   ) |>
-  group_by(occupation) |>
+  filter(
+    occupation == 19
+  ) |>
+  plotly::plot_ly(
+    x = ~x.lb,
+    y = ~t.lb,
+    z = ~prob,
+    intensity = ~prob,
+    type = "mesh3d"
+  )
+group_by(occupation) |>
   reframe(
     prob = sum(prob)
   )
