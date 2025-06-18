@@ -15,6 +15,7 @@ box::use(
   lab = mod / roadmap / path / data / labor,
   mod / roadmap / path / data / vertices[...],
   pay = mod / roadmap / path / functions / payoff,
+  yap = mod / roadmap / path / functions / payoff_inverse,
   mod / utils / data[sublist],
   stats[na.omit],
   gr = igraph,
@@ -367,23 +368,22 @@ paths |>
   select(-prob) |>
   rename(
     prob = prob.to
+  ) |>
+  filter(
+    prob > 0
   ) ->
 paths
 
 # inverse expected payoff
 paths |>
-  filter(
-    prob > 0
-  ) |>
   mutate(
-    expected.payoff =
-      pay$payoff(
-        prob,
-        cost
-      ),
     inverse.payoff =
-      -(expected.payoff -
-        max(expected.payoff)) / expected.payoff
+      yap$inverse.payoff(
+        pay$payoff(
+          prob,
+          cost
+        )
+      )
   ) ->
 paths
 

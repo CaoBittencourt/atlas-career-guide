@@ -161,7 +161,7 @@ occupation.to <- occupations$`Accountants and Auditors`
 
 # vertices
 occupation.from |> pa$match.vertex() -> vertex.from
-occupation.to |> pa$match.vertex() -> vertex.to
+occupation.to |> pa$match.vertex(4, 4) -> vertex.to
 
 # find path
 vertex.to |> pa$path(vertex.from) -> epath

@@ -15,7 +15,7 @@ payoff.default <- function(prob, cost, util) {
   #         - cost(v1,v2)
   #         - weight := cost * ((1 - E[u]) ^ !is.infinity(cost))
   return(
-    (prob * util / cost)^(cost != 0)
+    prob * (util / cost)^(cost != 0)
   )
 }
 
