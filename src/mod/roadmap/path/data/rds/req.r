@@ -302,6 +302,45 @@ onet.bin$x |>
 onet.bin$x
 
 # endregion
+# region: basic education
+basic.education.id <- max(df_ids$id) + 1
+
+df_ids |>
+  bind_rows(
+    tibble(
+      id = basic.education.id,
+      occupation = "Basic Education"
+    )
+  ) ->
+df_ids
+
+onet.bin$t |>
+  bind_rows(
+    tibble(
+      id = basic.education.id,
+      binId = 1,
+      from = 0,
+      to = education$high.school,
+      pct = 1,
+      type = "high.school"
+    )
+  ) ->
+onet.bin$t
+
+onet.bin$x |>
+  bind_rows(
+    tibble(
+      id = basic.education.id,
+      binId = 1,
+      from = 0,
+      to = 0,
+      pct = 1,
+      type = "intern"
+    )
+  ) ->
+onet.bin$x
+
+# endregion
 # region: requirements data frame
 onet.bin |>
   bind_rows(
@@ -326,12 +365,57 @@ onet.bin |>
 career.req
 
 # endregion
+# region: similarity matrix
+df_similarity |>
+  mutate(
+    `Basic Education` = 1
+  ) ->
+df_similarity
+
+df_similarity |>
+  bind_rows(
+    c(
+      "Basic Education",
+      rep(1, 874) |> as.list()
+    ) |>
+      setNames(
+        df_similarity |>
+          names()
+      ) |>
+      as_tibble()
+  ) ->
+df_similarity
+
+# endregion
 # exports
 # region: exports
-education |> saveRDS(getOption("atlas.mod") |> file.path("roadmap", "path", "data", "rds", "education.rds"))
-experience |> saveRDS(getOption("atlas.mod") |> file.path("roadmap", "path", "data", "rds", "experience.rds"))
-df_similarity |> saveRDS(getOption("atlas.mod") |> file.path("roadmap", "path", "data", "rds", "similarity.rds"))
-career.req |> saveRDS(getOption("atlas.mod") |> file.path("roadmap", "path", "data", "rds", "career_req.rds"))
-onet.bin |> saveRDS(getOption("atlas.mod") |> file.path("roadmap", "path", "data", "rds", "onet_bin.rds"))
+saveRDS(
+  df_similarity,
+  getOption("atlas.mod") |>
+    file.path(
+      "roadmap",
+      "path",
+      "data",
+      "rds",
+      "similarity.rds"
+    )
+)
+
+save(
+  df_ids,
+  education,
+  experience,
+  career.req,
+  onet.bin,
+  file =
+    getOption("atlas.mod") |>
+      file.path(
+        "roadmap",
+        "path",
+        "data",
+        "rds",
+        "req.rdata"
+      )
+)
 
 # endregion

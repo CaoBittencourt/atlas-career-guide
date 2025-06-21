@@ -1,5 +1,9 @@
 roadmap models: 0.5
     goal: postponed
+        occupation:
+        vertex:
+            which.vertex: 0.75
+            match.vertex: 0.75
     path: 0.5
         analytic method: postponed
             arg max util: postponed

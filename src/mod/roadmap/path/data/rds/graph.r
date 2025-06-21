@@ -7,10 +7,10 @@ modular::project.options("atlas")
 box::use(
   assert = mod / utils / assert,
   mod / roadmap / path / functions / cost[...],
-  mod / roadmap / path / data / similarity[...],
   mod / roadmap / path / functions / restart[...],
   mod / roadmap / path / functions / prob[...],
   mod / roadmap / path / functions / employment[...],
+  mod / roadmap / path / data / similarity[...],
   req = mod / roadmap / path / data / req,
   lab = mod / roadmap / path / data / labor,
   mod / roadmap / path / data / vertices[...],
@@ -164,14 +164,8 @@ paths.work
 
 # 3. teleport back to basic education (hard reset)
 expand.grid(
-  vertex = vertices$vertex,
-  vertex.to =
-    vertices |>
-      filter(
-        occupation == 874
-      ) |>
-      slice(1) |>
-      pull(vertex)
+  vertex = vertices |> filter(occupation != (req$df_ids |> filter(occupation == "Basic Education") |> pull(id))) |> pull(vertex),
+  vertex.to = vertices |> filter(occupation == (req$df_ids |> filter(occupation == "Basic Education") |> pull(id))) |> pull(vertex)
 ) |>
   inner_join(
     vertices,
@@ -192,7 +186,7 @@ expand.grid(
   ) ->
 paths.reset
 
-# 3. teleport to first vertex of any occupation at full (x.to + t.to) cost? (hard reset)
+# # 3. teleport to first vertex of any occupation at full (x.to + t.to) cost? (hard reset)
 # expand.grid(
 #   vertex = vertices$vertex,
 #   vertex.to =
@@ -233,6 +227,8 @@ bind_rows(
     ),
   # reset career
   paths.reset,
+  # # restart career
+  # paths.restart,
   # move experience
   paths.work |>
     inner_join(
@@ -282,50 +278,19 @@ paths
 # endregion
 # region: movement similarity
 mtx_similarity |>
-  mutate(
-    `Basic Education` = 1
-  ) ->
-mtx_similarity
-
-mtx_similarity |>
-  bind_rows(
-    c(
-      "Basic Education",
-      rep(1, 874) |> as.list()
-    ) |>
-      setNames(
-        mtx_similarity |>
-          names()
-      ) |>
-      as_tibble()
-  ) ->
-mtx_similarity
-
-mtx_similarity |>
-  mutate(
-    id = row_number(),
-    occupation = to
-  ) |>
-  select(
-    id,
-    occupation
-  ) ->
-ids
-
-mtx_similarity |>
   pivot_longer(
     cols = -1,
     names_to = "from",
     values_to = "similarity"
   ) |>
   inner_join(
-    ids |> rename(id.to = id),
+    req$df_ids |> rename(id.to = id),
     by = c(
       "to" = "occupation"
     )
   ) |>
   inner_join(
-    ids |> rename(id.from = id),
+    req$df_ids |> rename(id.from = id),
     by = c(
       "from" = "occupation"
     )
@@ -373,6 +338,31 @@ paths |>
     prob > 0
   ) ->
 paths
+
+# paths |>
+#   filter(
+#     occupation == 2
+#   ) |>
+#   filter(
+#     occupation.to == 2
+#   ) |>
+#   arrange(-prob) ->
+# dsds
+
+# dsds |>
+#   # paths |>
+#   mutate(
+#     inverse.payoff =
+#       yap$inverse.payoff(
+#         pay$payoff(
+#           prob,
+#           cost
+#         )
+#       )
+#   ) |>
+#   select(-id, -starts_with("vertex")) |>
+#   arrange(inverse.payoff) |>
+#   print(n = Inf)
 
 # inverse expected payoff
 paths |>
@@ -456,20 +446,7 @@ paths.graph
 # endregion
 # exports
 # region: exports
-# vertices
-vertices |>
-  saveRDS(
-    getOption("atlas.mod") |>
-      file.path(
-        "roadmap",
-        "path",
-        "data",
-        "rds",
-        "vertices.rds"
-      )
-  )
-
-# paths list
+# path list
 list(
   graph = paths.graph,
   table = paths,

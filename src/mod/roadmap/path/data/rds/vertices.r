@@ -7,7 +7,6 @@ modular::project.options("atlas")
 box::use(
   assert = mod / utils / assert,
   mod / roadmap / path / functions / cost[...],
-  mod / roadmap / path / data / similarity[...],
   mod / roadmap / path / functions / restart[...],
   mod / roadmap / path / functions / prob[...],
   mod / roadmap / path / functions / employment[...],
@@ -39,17 +38,31 @@ career.grid <- function(xmin, tmin, xmax = NULL, tmax = req$education$doctorate)
 
 # endregion
 # region: basic education
-career.grid(0, 0, req$education$high.school, xmax = 0) -> basic.education
+req$df_ids |>
+  filter(occupation == "Basic Education") |>
+  pull(id) ->
+basic.education.id
+
+career.grid(
+  xmin = req$onet.bin$x |> filter(id == basic.education.id) |> pull(from),
+  tmin = req$onet.bin$t |> filter(id == basic.education.id) |> pull(from),
+  xmax = req$onet.bin$x |> filter(id == basic.education.id) |> pull(to),
+  tmax = req$onet.bin$t |> filter(id == basic.education.id) |> pull(to)
+) -> basic.education
+
+basic.education |>
+  mutate(
+    .before = 1,
+    occupation = basic.education.id
+  ) ->
+basic.education
 
 # endregion
 # region: career progressions
 career.grid |>
   Map(
-    req$career.req$x,
-    req$career.req$t
-  ) |>
-  c(
-    list(basic.education)
+    req$career.req |> filter(id != basic.education.id) |> pull(x),
+    req$career.req |> filter(id != basic.education.id) |> pull(t)
   ) ->
 career.grids
 
@@ -70,7 +83,7 @@ vertices
 # endregion
 # region: vertices indie prob
 vertices |>
-  inner_join(
+  left_join(
     req$onet.bin$x |>
       select(
         x = from,
@@ -80,7 +93,7 @@ vertices |>
       ),
     relationship = "many-to-many"
   ) |>
-  inner_join(
+  left_join(
     req$onet.bin$t |>
       select(
         t = from,
@@ -113,6 +126,9 @@ list(
 # endregion
 # region: vertices joint prob
 vertices |>
+  filter(
+    occupation != basic.education.id
+  ) |>
   group_by(occupation) |>
   mutate(
     const =
@@ -139,6 +155,13 @@ vertices |>
     x = x.lb,
     t = t.lb,
     prob
+  ) |>
+  bind_rows(
+    basic.education |>
+      mutate(
+        vertex = 1L + max(vertices$vertex),
+        prob = 1
+      )
   ) ->
 vertices
 

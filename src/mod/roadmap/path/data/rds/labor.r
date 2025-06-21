@@ -5,26 +5,15 @@ modular::project.options("atlas")
 # endregion
 # region: imports
 box::use(
-  dplyr[...]
+  dplyr[...],
+  mod / roadmap / path / data / req[df_ids]
 )
 
 # endregion
 # region: data
 # ids
-getOption("atlas.oldata") |>
-  read.csv() |>
-  select(
-    id_soc_code,
-    occupation
-  ) |>
-  arrange(
-    occupation
-  ) |>
-  mutate(
-    .before = 1,
-    id = row_number()
-  ) |>
-  inner_join(
+df_ids |>
+  left_join(
     # labor statistics
     getOption("atlas.labor") |>
       readRDS()
