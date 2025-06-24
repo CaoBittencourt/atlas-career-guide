@@ -12,6 +12,7 @@ dependencies:
     - numpy
     - matplotlib
     - plotly
+    - mcts
     - mcts-simple
   - r-base
   - r-essentials
