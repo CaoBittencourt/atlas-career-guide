@@ -2,6 +2,17 @@ name: atlas
 channels:
   - conda-forge
 dependencies:
+  - python
+  - pip
+  - pip:
+    - jupyter
+    - pandas
+    - polars
+    - scikit-learn
+    - numpy
+    - matplotlib
+    - plotly
+    - mcts-simple
   - r-base
   - r-essentials
   - r-tidyverse

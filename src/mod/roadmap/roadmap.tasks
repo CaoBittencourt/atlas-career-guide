@@ -8,7 +8,9 @@ roadmap models: 0.5
         analytic method: postponed
             arg max util: postponed
             recursive career prog: postponed
-        mcts (uct)
+        mcts (uct):
+            python (lambda):
+            julia (cont. + lambda):
         dijkstra method: postponed
             movement types: 1
                 work: 1
