@@ -1,6 +1,7 @@
 # families of functions using classes
 
 from numbers import Number
+from python.utils import ignore_unmatched_kwargs
 
 
 class fam:
@@ -13,7 +14,7 @@ class fam:
 
     # return default method
     def __call__(self, *args, **kwargs):
-        return next(iter(self.__dict__.values()))
+        return ignore_unmatched_kwargs(next(iter(self.__dict__.values())))(args, kwargs)
 
     # don't instantiate the class
     def __init__(self, **kwargs):
@@ -33,7 +34,7 @@ ist = fam(
         int=lambda x: isinstance(x, int),
     ),
 )
-
+ist(19)
 ist.num.dbl.pct(19)
 ist.num.dbl.pct(1.0)
 ist.num.dbl.pct(0.0)
