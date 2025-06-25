@@ -1,4 +1,4 @@
-from python.utils import ignore_unmatched_kwargs
+from python.utils import do_call
 
 
 # families of functions using classes
@@ -12,7 +12,15 @@ class fam:
 
     # return default method
     def __call__(self, *args, **kwargs):
-        return ignore_unmatched_kwargs(next(iter(self.__dict__.values())))(args, kwargs)
+        return do_call(
+            next(
+                iter(
+                    self.__dict__.values(),
+                ),
+            ),
+            args,
+            kwargs,
+        )
 
     # don't instantiate the class
     def __init__(self, *args, **kwargs):
