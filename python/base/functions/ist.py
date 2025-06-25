@@ -1,5 +1,5 @@
 from python.base import fam
-from numbers import Number
+import python.base.type as types
 
 
 # default method
@@ -12,14 +12,7 @@ def _ist(x, t: type):
 # the "is" family of functions
 ist = fam(
     type=_ist,
-    null=lambda x: x is None,
-    str=lambda x: isinstance(x, str),
-    num=fam(
-        any=lambda x: isinstance(x, Number),
-        dbl=fam(
-            any=lambda x: isinstance(x, float),
-            pct=lambda x: all([isinstance(x, float), x >= 0, x <= 1]),
-        ),
-        int=lambda x: isinstance(x, int),
-    ),
+    null=types._null,
+    chr=types.chr,
+    num=types.num,
 )
