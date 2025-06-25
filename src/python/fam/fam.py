@@ -23,14 +23,22 @@ class fam:
 ist = fam(
     any=lambda x: x is not None,
     null=lambda x: x is None,
-    string=lambda x: isinstance(x, str),
-    double=lambda x: isinstance(x, float),
-    integer=lambda x: isinstance(x, int),
-    numeric=lambda x: isinstance(x, Number),
+    str=lambda x: isinstance(x, str),
+    dbl=lambda x: isinstance(x, float),
+    int=lambda x: isinstance(x, int),
+    num=lambda x: isinstance(x, Number),
 )
 
-ist()(19)
-ist()(None)
+ist.dbl(19)
+ist.dbl(19.0)
+ist.dbl("19.0")
+ist.int(19)
+ist.int(19.0)
+ist.int("19")
+ist.str(19)
+ist.str("19")
+ist.null(19)
+ist.null(None)
 
 
 class ist:
