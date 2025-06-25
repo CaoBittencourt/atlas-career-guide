@@ -20,21 +20,17 @@ class fam:
         pass
 
 
-dsds = fam(
+ist = fam(
+    any=lambda x: x is not None,
     null=lambda x: x is None,
-    numeric=(lambda x: isinstance(x, Number)),
+    string=lambda x: isinstance(x, str),
+    double=lambda x: isinstance(x, float),
+    integer=lambda x: isinstance(x, int),
+    numeric=lambda x: isinstance(x, Number),
 )
 
-
-dsds()(19)
-dsds()
-dsds()
-dsds
-dsds(19)
-dsds("19")
-dsds(None)
-dsds.numeric(19)
-dsds.numeric("19")
+ist()(19)
+ist()(None)
 
 
 class ist:
