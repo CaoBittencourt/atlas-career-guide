@@ -9,6 +9,11 @@ def contains_var_kwarg(f):
     )
 
 
+# contains_var_kwarg(lambda x: 19)
+# contains_var_kwarg(_ist)
+# contains_var_kwarg(fam)
+
+
 def is_kwarg_of(key, f):
     param = inspect.signature(f).parameters.get(key, False)
     return param and (
