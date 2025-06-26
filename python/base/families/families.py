@@ -1,7 +1,3 @@
-from python.utils import do_call
-
-
-# families of functions using classes
 class fam:
     # define static methods
     def __new__(cls, **kwargs):
@@ -10,18 +6,14 @@ class fam:
             setattr(inst, k, v)
         return inst
 
-    # return default method
-    def __call__(self, *args, **kwargs):
-        return do_call(
-            next(
-                iter(
-                    self.__dict__.values(),
-                ),
-            ),
-            args,
-            kwargs,
-        )
-
     # don't instantiate the class
     def __init__(self, *args, **kwargs):
         pass
+
+    # return default method
+    def __call__(self, *args, **kwargs):
+        return next(
+            iter(
+                self.__dict__.values(),
+            ),
+        )(*args, **kwargs)

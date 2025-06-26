@@ -5,7 +5,6 @@ import python.base.type as types
 # default method
 def _ist(x, t: type):
     assert isinstance(t, type)
-
     return isinstance(x, t)
 
 
