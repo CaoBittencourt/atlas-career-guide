@@ -1,5 +1,5 @@
 # `families`: polymorphic families of functions (ironically, using classes)
-This module defines the `fam` type, which essentially a (potentially nested) named list of callable objects, usually functions. The `fam` object is itself callable, dispatching a default method (viz. the first on the list of methods provided). But it is also subsettable. Therefore, one can define polymorphic generic functions with default methods.
+This module defines the `fam` type, which is essentially a (potentially nested) named list of callable objects, usually functions. The `fam` object is itself callable, dispatching a default method (viz. the first on the list of methods provided). But it is also subsettable. Therefore, one can define polymorphic generic functions with default methods.
 
 # Usage
 To create a family of functions, one starts by writing its methods. These can, but do not have to, be defined for each data type. After this, just create a `fam` object with all methods.
@@ -12,7 +12,6 @@ from numbers import Number
 # default method
 def _ist(x, t: type):
     assert isinstance(t, type)
-
     return isinstance(x, t)
 
 
