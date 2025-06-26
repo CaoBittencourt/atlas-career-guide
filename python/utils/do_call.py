@@ -19,8 +19,8 @@ def dsds(x):
 
 
 def lalala(*args, **kwargs):
-    return kwargs.items()
+    return args[0] if not len(kwargs) else kwargs
 
 
 (do_call(dsds, x=19))
-(do_call(lalala, "dsds", x=19, a=19))
+(do_call(lalala, "dsds", x=19))
