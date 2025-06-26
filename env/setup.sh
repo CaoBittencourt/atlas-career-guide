@@ -30,6 +30,9 @@ bash atlas.sh
 #     conda env create -f atlas.yaml
 # fi
 
+# set environment variables
+# from .env file
+
 # # activate the environment
 # source activate base
 # conda activate $ENV_NAME
