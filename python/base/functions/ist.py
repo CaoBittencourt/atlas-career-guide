@@ -1,4 +1,4 @@
-from python.base import fam
+from python.base.families import fam
 import python.base.type as types
 
 
@@ -11,12 +11,14 @@ def _ist(x, t: type):
 # the "is" family of functions
 ist = fam(
     type=_ist,
-    bool=types._bool,
+    bool=types.boolean.bool,
+    true=types.boolean.true,  # unnested for convenience
+    false=types.boolean.false,  # unnested for convenience
     chr=types.chr,
     num=types.num,
     callable=types._callable,
     collection=types.collection,
-    missing=types._missing,
-    null=types._null,
-    na=types._na,
+    missing=types.missing.missing,
+    null=types.missing.null,  # unnested for convenience
+    na=types.missing.na,  # unnested for convenience
 )

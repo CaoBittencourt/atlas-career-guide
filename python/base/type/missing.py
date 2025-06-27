@@ -1,3 +1,4 @@
+from python.base.families import fam
 from math import isnan
 
 
@@ -11,3 +12,10 @@ def _na(x):
 
 def _missing(x):
     return any([_null(x), _na(x)])
+
+
+missing = fam(
+    missing=_missing,
+    null=_null,
+    na=_na,
+)

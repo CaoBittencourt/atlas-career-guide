@@ -1,5 +1,5 @@
+from python.base.families import fam
 from numpy.typing import ArrayLike
-from python.base.families.families import fam
 from pandas import DataFrame
 
 
