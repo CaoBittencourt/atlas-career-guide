@@ -22,23 +22,31 @@ def _ascii(x):
 
 def _url(x):
     return (
-        True
-        if fullmatch(
-            r"(https?:\/\/(?:www\.|(?!www))[a-zA-Z0-9][a-zA-Z0-9-]+[a-zA-Z0-9]\.[^\s]{2,}|www\.[a-zA-Z0-9][a-zA-Z0-9-]+[a-zA-Z0-9]\.[^\s]{2,}|https?:\/\/(?:www\.|(?!www))[a-zA-Z0-9]+\.[^\s]{2,}|www\.[a-zA-Z0-9]+\.[^\s]{2,})",
-            x,
+        False
+        if not _chr(x)
+        else (
+            True
+            if fullmatch(
+                r"(https?:\/\/(?:www\.|(?!www))[a-zA-Z0-9][a-zA-Z0-9-]+[a-zA-Z0-9]\.[^\s]{2,}|www\.[a-zA-Z0-9][a-zA-Z0-9-]+[a-zA-Z0-9]\.[^\s]{2,}|https?:\/\/(?:www\.|(?!www))[a-zA-Z0-9]+\.[^\s]{2,}|www\.[a-zA-Z0-9]+\.[^\s]{2,})",
+                x,
+            )
+            else False
         )
-        else False
     )
 
 
 def _path(x):
     return (
-        True
-        if fullmatch(
-            r"^(.+)\/([^\/]+)$",
-            x,
+        False
+        if not _chr(x)
+        else (
+            True
+            if fullmatch(
+                r"^(.+)\/([^\/]+)$",
+                x,
+            )
+            else False
         )
-        else False
     )
 
 

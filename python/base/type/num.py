@@ -25,7 +25,7 @@ def _pct(x):
 
 
 def _prop(x):
-    return all([_pct(x), sum(x) == 1])
+    return all([_pct(x), sum(x) <= 1])
 
 
 # numeric family type definitions

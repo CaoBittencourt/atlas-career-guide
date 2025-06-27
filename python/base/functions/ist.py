@@ -11,7 +11,12 @@ def _ist(x, t: type):
 # the "is" family of functions
 ist = fam(
     type=_ist,
-    null=types._null,
+    bool=types._bool,
     chr=types.chr,
     num=types.num,
+    callable=types._callable,
+    collection=types.collection,
+    missing=types._missing,
+    null=types._null,
+    na=types._na,
 )
