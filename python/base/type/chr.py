@@ -31,10 +31,35 @@ def _url(x):
     )
 
 
+def _path(x):
+    return (
+        True
+        if fullmatch(
+            r"^(.+)\/([^\/]+)$",
+            x,
+        )
+        else False
+    )
+
+
+def _file(x):
+    # task: define a file
+    return all([_path(x)])
+
+
+def _dir(x):
+    return all([_path(x), not _file(x)])
+
+
 # character string family type definitions
 chr = fam(
     chr=_chr,
-    url=_url,
+    path=fam(
+        path=_path,
+        dir=_dir,
+        file=_file,
+        url=_url,
+    ),
     digit=_digit,
     letter=fam(
         letter=_letter,
