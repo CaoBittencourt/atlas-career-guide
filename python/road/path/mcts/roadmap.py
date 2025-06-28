@@ -68,7 +68,8 @@ class Pathfinder:
     def getPossibleActions(self):
         # randomly select a vertex
         return np.random.choice(
-            self.paths["vertex.to"],
+            a=self.paths["vertex.to"],
+            size=1,
             p=self.paths["prob"] / self.paths["prob"].sum(),
         ).item()
 
@@ -105,26 +106,29 @@ class Pathfinder:
 
     def getReward(self):
         # the smaller the cost, the higher the reward
-        return 1 / self.cost
+        return -self.cost
 
-
-# endregion
-pathfinder = Pathfinder(1, 19, graph)
-pathfinder.vertex
-pathfinder.goal
-pathfinder.paths
-pathfinder.graph
-pathfinder.cost
-pathfinder.takeAction(pathfinder.getPossibleActions()).cost
 
 # endregion
 # example
-# region: 2 occupations
-
-# endregion
-# region: 20 occupations
-
-# endregion
 # region: all occupations
+pathfinder = Pathfinder(
+    start=graph["vertex"].sample(1).item(),
+    goal=graph["vertex"].sample(1).item(),
+    graph=graph,
+)
+
+pathfinder.vertex
+pathfinder.goal
+pathfinder.cost
+pathfinder.paths
+pathfinder.graph
+pathfinder.isTerminal()
+pathfinder.getReward()
+
+while not pathfinder.isTerminal():
+    print(f"current vertex: {pathfinder.vertex}")
+    print(f"current cost: {pathfinder.cost}")
+    pathfinder = pathfinder.takeAction(pathfinder.getPossibleActions())
 
 # endregion
