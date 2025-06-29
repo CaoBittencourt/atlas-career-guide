@@ -10,21 +10,29 @@ box::use(
 )
 
 # data
-getOption("atlas.mod") |> list.files(recursive = T, full.names = T) -> task.files
-task.files[task.files |> st$str_ends(".tasks")] -> task.files
+getOption("atlas.mod") |>
+  list.files(
+    recursive = T,
+    full.names = T
+  ) -> task.files
+
+task.files[
+  task.files |>
+    st$str_ends(".tasks")
+] -> task.files
 
 task.files |>
   lapply(tt$read.tasks) |>
   setNames(
     task.files |>
-      st$str_remove_all(".tasks") |>
+      st$str_remove_all(
+        ".tasks"
+      ) |>
       basename()
-  ) ->
-tasks
+  ) -> tasks
 
 # plot
 tasks |>
-  lapply(tt$plot.tasks) ->
-tasks.plots
+  lapply(tt$plot.tasks) -> tasks.plots
 
 tasks.plots$roadmap

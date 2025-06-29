@@ -7,18 +7,17 @@ box::use(
   ggplot2[...],
   ggraph[...],
   tidygraph[...],
-  # tidygraph[...],
   vctrs[new_data_frame],
 )
-
 
 read.tasks <- function(path) {
   path |>
     readLines(warn = F) |>
-    str$str_trim("right") ->
-  tasks
+    str$str_trim("right") -> tasks
 
-  tasks[tasks != ""] -> tasks
+  tasks |>
+    str$str_subset('^*#', T) |>
+    str$str_subset('^$', T) -> tasks
 
   tasks |> str$str_count("  ") -> indentation
   indentation / ifelse(all((indentation %% 2) == 0), 2, 1) -> indentation
@@ -28,8 +27,7 @@ read.tasks <- function(path) {
     title = tasks |> str$str_trim(),
     task = indentation |> seq_along(),
     nest = indentation
-  ) ->
-  tasks.lines
+  ) -> tasks.lines
 
   tasks.lines$title |> str$str_split(":", 2, T) -> tasks
 
@@ -45,12 +43,13 @@ read.tasks <- function(path) {
     function(n, l) {
       max(
         tasks.lines$task[
-          (
-            tasks.lines$nest + ifelse(
-              tasks.lines$task < n, 0, Inf
-            )
-          )
-          < l
+          (tasks.lines$nest +
+            ifelse(
+              tasks.lines$task < n,
+              0,
+              Inf
+            )) <
+            l
         ]
       ) -> id
 
@@ -61,8 +60,7 @@ read.tasks <- function(path) {
     n = tasks.lines$task,
     l = tasks.lines$nest
   ) |>
-    as.numeric() ->
-  tasks.lines$from
+    as.numeric() -> tasks.lines$from
 
   tasks.lines[
     c(
@@ -73,8 +71,7 @@ read.tasks <- function(path) {
       "nest",
       "status"
     )
-  ] ->
-  tasks.lines
+  ] -> tasks.lines
 
   return(
     tasks.lines |>
@@ -96,7 +93,8 @@ graph.tasks <- function(tasks) {
   )
 
   return(
-    tasks |> relocate(task, from) |>
+    tasks |>
+      relocate(task, from) |>
       ig$graph_from_data_frame() |>
       ig$set.edge.attribute(
         "status",
@@ -150,7 +148,12 @@ plot.tasks <- function(tasks) {
       ) +
       scale_edge_linetype_binned() +
       scale_color_manual(
-        values = c("purple", "darkblue", rep("white", tasks$nest |> unique() |> length() - 2)) |> setNames(tasks$nest |> unique()),
+        values = c(
+          "purple",
+          "darkblue",
+          rep("white", tasks$nest |> unique() |> length() - 2)
+        ) |>
+          setNames(tasks$nest |> unique()),
       ) +
       scale_fill_gradientn(
         colors = c("lightgrey", "lightgreen", "green", "green"),
@@ -160,7 +163,8 @@ plot.tasks <- function(tasks) {
       ) +
       labs(
         title = "Task Roadmap",
-        subtitle = "Current status as of" |> paste(Sys.Date() |> format(format = "%m-%d-%Y")),
+        subtitle = "Current status as of" |>
+          paste(Sys.Date() |> format(format = "%m-%d-%Y")),
       ) +
       guides(
         fill = F,

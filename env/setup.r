@@ -38,29 +38,28 @@ project.options(
   end.path = "."
 )
 
-# environment vars
-if(list.files(pattern = '*.env$') |> length()){
-  list.files(pattern = '*.env$') |> 
-    lapply(function(file){
-      file |> 
-    })
-    Sys.setenv()
-}
+# # environment vars
+# if(list.files(pattern = '*.env$') |> length()){
+#   list.files(pattern = '*.env$') |>
+#     lapply(function(file){
+#       file |>
+#     })
+#     Sys.setenv()
+# }
 
-list.files(pattern = '*.env$') |> 
-  readLines() |>
-  str_subset('^#', T) |>
-  str_subset('^$', T) |>
-  str_replace_all(' = ', '=') |>
-  str_split('=', n = 2, T) ->
-vars
+# list.files(pattern = '*.env$') |>
+#   readLines() |>
+#   str_subset('^#', T) |>
+#   str_subset('^$', T) |>
+#   str_replace_all(' = ', '=') |>
+#   str_split('=', n = 2, T) ->
+# vars
 
-do.call(
-  Sys.getenv,
-  args = list(
-    vars[,2] |> stats::setNames(vars[,1])
-  )
-)
+# do.call(
+#   Sys.getenv,
+#   args = list(
+#     vars[,2] |> stats::setNames(vars[,1])
+#   )
+# )
 
-  
-  Sys.getenv('ATLAS.SRC')
+#   Sys.getenv('ATLAS.SRC')
