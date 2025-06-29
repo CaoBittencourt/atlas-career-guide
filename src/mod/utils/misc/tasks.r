@@ -15,9 +15,19 @@ read.tasks <- function(path) {
     readLines(warn = F) |>
     str$str_trim("right") -> tasks
 
+  # remove comments and empty lines
   tasks |>
     str$str_subset('^*#', T) |>
     str$str_subset('^$', T) -> tasks
+
+  # # fold truncated lines
+  # tasks |>
+  #   str$str_replace_all(
+  #     '^*\\.\\.\\.',
+  #     '[truncated]'
+  #   ) -> tasks
+
+  # tasks
 
   tasks |> str$str_count("  ") -> indentation
   indentation / ifelse(all((indentation %% 2) == 0), 2, 1) -> indentation

@@ -7,29 +7,29 @@ roadmap models: 0.5
     path: 0.5
         analytic method: postponed
             [truncated]: postponed
-            # arg max util: postponed
-            # recursive career prog: postponed
+            # ... arg max util: postponed
+            # ... recursive career prog: postponed
         mcts (uct): 0.5
             python (lambda): 0.60
                 mvp: 0.70
             julia (cont. + lambda):
         dijkstra method: postponed
             [truncated]: postponed
-        #    movement types: 1
-        #        work: 1
-        #        study: 1
-        #        switch: 1
-        #        reset: 1
-        #    movement cost: 1
-        #    movement prob: postponed
-        #        independent distribution: 1
-        #        joint distribution: 0.75
-        #            prob module: 1
-        #            norm consts: 1
-        #            choose dist: 0.75
-        #        expected payoff: 0.75
-        #    path util: 1
-        #    path efficiency: 1
-        #        cost-util: 1
-        #        default path: 1
-        #    path timeline: 1
+            # ... movement types: 1
+            # ...     work: 1
+            # ...     study: 1
+            # ...     switch: 1
+            # ...     reset: 1
+            # ... movement cost: 1
+            # ... movement prob: postponed
+            # ...     independent distribution: 1
+            # ...     joint distribution: 0.75
+            # ...         prob module: 1
+            # ...         norm consts: 1
+            # ...         choose dist: 0.75
+            # ...     expected payoff: 0.75
+            # ... path util: 1
+            # ... path efficiency: 1
+            # ...     cost-util: 1
+            # ...     default path: 1
+            # ... path timeline: 1
