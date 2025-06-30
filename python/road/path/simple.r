@@ -8,14 +8,18 @@ options(box.path = Sys.getenv("ATLAS_MOD"))
 # relax morphing with mcts later
 move.cost <- function(ßkq, xk, xq, tk, tq) {
   # assert args in main function
-  # equivalent similarity
+
   ßkq.eq <- ßkq * (ßkq >= 0.5)
+  # equivalent similarity
 
-  # experience gap
-  # education gap
   pmax(xq - xk * ßkq.eq, 0) / ßkq -> req.x
-  pmax(tq - tk * ßkq.eq, 0) / ßkq -> req.t
+  # experience gap
 
+  pmax(tq - tk * ßkq.eq, 0) / ßkq -> req.t
+  # education gap
+
+  pmin(xq, req.x) -> req.x
+  pmin(tq, req.t) -> req.t
   # assume one must have all equivalent years
   # before attempting to switch careers
   # assume order of study and work doesn't matter
@@ -25,8 +29,6 @@ move.cost <- function(ßkq, xk, xq, tk, tq) {
   # - restart t, recycle x
   # - restart t, restart x
   # - recycle t, recycle x
-  pmin(xq, req.x) -> req.x
-  pmin(tq, req.t) -> req.t
 
   return(list(
     work = req.x,
@@ -35,7 +37,7 @@ move.cost <- function(ßkq, xk, xq, tk, tq) {
   ))
 }
 
-move.cost(0.4, 3, 5, 4, 4)
-move.cost(0.8, 3, 5, 4, 4)
-move.cost(0, 3, 5, 4, 4)
-move.cost(0, 1000, 5, 1000, 4)
+# move.cost(0.4, 3, 5, 4, 4)
+# move.cost(0.8, 3, 5, 4, 4)
+# move.cost(0, 3, 5, 4, 4)
+# move.cost(0, 1000, 5, 1000, 4)
