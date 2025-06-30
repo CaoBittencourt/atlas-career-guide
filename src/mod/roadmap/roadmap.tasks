@@ -9,10 +9,12 @@ roadmap models: 0.5
             [truncated]: postponed
             # ... arg max util: postponed
             # ... recursive career prog: postponed
-        mcts (uct): 0.5
-            python (lambda): 0.60
-                mvp: 0.70
-            julia (cont. + lambda):
+        mcts (uct): 0.4
+            python: 0.60
+                iteratively find path: 0.70
+                    simplify grid:
+                optimize path:
+            julia:
         dijkstra method: postponed
             [truncated]: postponed
             # ... movement types: 1

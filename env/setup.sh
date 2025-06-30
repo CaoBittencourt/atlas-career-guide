@@ -1,50 +1,41 @@
 #!/bin/sh
 
 # script path
-SCRIPT_PATH=$(
+script=$(
     cd -- "$(
         dirname -- "${BASH_SOURCE[0]}"
     )" &>/dev/null && pwd
 )
 
-cd $SCRIPT_PATH
+cd $script
 
-# setup/update conda environment
-bash atlas.sh
-
-# # install miniconda if not installed
-# if ! command -v conda &>/dev/null; then
-#     bash ./miniconda.sh
-# fi
-
-# # environment specifications
-# ENV_NAME="atlas"
-# ENV_FILE="atlas.yaml"
-
-# # create or update conda environment
-# if conda info --envs | grep -q "^$ENV_NAME\s"; then
-#     echo "$ENV_NAME already exists. Updating environment with "$ENV_FILE"."
-#     conda env update --name $ENV_NAME --file $ENV_FILE
-# else
-#     echo "Creating $ENV_NAME environment with "$ENV_FILE"."
-#     conda env create -f atlas.yaml
-# fi
-
-# set environment variables
-# from .env file
-
-# # activate the environment
-# source activate base
-# conda activate $ENV_NAME
-
-# # install github packages
-# Rscript ./github.r
-
-# setup project root
-cd ..
-Rscript env/setup.r
-
-# create database
-if ! test -f database/atlas.db; then
-    bash database/setup.sh
+# install conda if not installed
+if ! command -v &>/dev/null; then
+    bash ./miniconda.sh
 fi
+
+# environment spec
+envFile="atlas.yaml"
+envName=$(head -n 1 $envFile)
+envName="${envName#*: }"
+
+# create or update environment
+if conda env list | grep -q "$envName"; then
+    echo "Updating the "\""$envName"\"" environment."
+    conda env update -n $envName -f $envFile
+else
+    echo "Creating the "\""$envName"\"" environment."
+    conda env create -f $envFile
+fi
+
+# activate environment
+source activate base
+conda activate $envName
+
+# root file
+echo "$script/.." >.root
+
+# environment variables
+Rscript setup.r
+
+rm .root

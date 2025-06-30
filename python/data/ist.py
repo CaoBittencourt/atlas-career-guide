@@ -1,5 +1,5 @@
-from python.base.families import fam
 import python.base.type as types
+from python.base import fam
 
 
 # default method

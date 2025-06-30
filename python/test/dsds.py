@@ -1,4 +1,4 @@
-from python.base import ist
+from python.data import ist
 from os import getcwd
 from numpy import nan, array
 from pandas import DataFrame

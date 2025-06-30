@@ -9,11 +9,11 @@ from numbers import Number
 
 # endregion
 # region: data
-graph = pl.read_csv("/home/Cao/storage/github/atlas/database/data/graph.csv")
+graph = pl.read_csv(os.path.join(os.getenv("ATLAS_DATA"), "graph.csv"))
 
 # endregion
 # model
-# region: required functions
+# region: requirements
 # In order to run MCTS, you must implement a State class which can fully describe the state of the world. It must also implement four methods:
 
 # getPossibleActions(): Returns an iterable of all actions which can be taken from this state
