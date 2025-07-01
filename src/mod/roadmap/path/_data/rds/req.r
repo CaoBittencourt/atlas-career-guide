@@ -1,6 +1,6 @@
 # setup
 # region: modular
-options(box.path = Sys.getenv("ATLAS_MOD"))
+modular::project.options("atlas")
 
 # endregion
 # region: imports
@@ -57,7 +57,8 @@ getOption("atlas.oldata") |>
   mutate(
     .before = 1,
     id = row_number()
-  ) -> df_ids
+  ) ->
+df_ids
 
 # requirements
 getOption("atlas.data") |>
@@ -68,7 +69,8 @@ getOption("atlas.data") |>
   read_excel() |>
   dplyr::filter(
     `Scale ID` %in% c("RW", "RL")
-  ) -> df_req
+  ) ->
+df_req
 
 # # (Category, `O*NET-SOC Code`, `Scale ID`) are the composite primary key
 # all(df_req |> group_by(Category, `O*NET-SOC Code`, `Scale ID`) |> tally() |> pull(n) == 1)
@@ -80,114 +82,45 @@ getOption("atlas.data") |>
   read_excel() |>
   dplyr::filter(
     `Scale ID` %in% c("RW", "RL")
-  ) -> df_req_cat
+  ) ->
+df_req_cat
 
 tribble(
-  ~`Scale ID`,
-  ~`Category`,
-  ~`Category Description`,
-  ~`years`,
-  "RL",
-  1,
-  "Less than a High School Diploma",
-  education$high.school,
-  "RL",
-  2,
-  "High School Diploma - or the equivalent (for example, GED)",
-  education$high.school,
-  "RL",
-  3,
-  "Post-Secondary Certificate - awarded for training completed after high school (for example, in agriculture or natural resources, computer services, personal or culinary services, engineering technologies, healthcare, construction trades, mechanic and repair technologies, or precision production)",
-  education$associate,
-  "RL",
-  4,
-  "Some College Courses",
-  education$associate,
-  "RL",
-  5,
-  "Associate's Degree (or other 2-year degree)",
-  education$associate,
-  "RL",
-  6,
-  "Bachelor's Degree",
-  education$bachelor,
-  "RL",
-  7,
-  "Post-Baccalaureate Certificate - awarded for completion of an organized program of study; designed for people who have completed a Baccalaureate degree but do not meet the requirements of academic degrees carrying the title of Master.",
-  education$master,
-  "RL",
-  8,
-  "Master's Degree",
-  education$master,
-  "RL",
-  9,
-  "Post-Master's Certificate - awarded for completion of an organized program of study; designed for people who have completed a Master's degree but do not meet the requirements of academic degrees at the doctoral level.",
-  education$doctorate,
-  "RL",
-  10,
-  "First Professional Degree - awarded for completion of a program that: requires at least 2 years of college work before entrance into the program, includes a total of at least 6 academic years of work to complete, and provides all remaining academic requirements to begin practice in a profession.",
-  education$doctorate,
-  "RL",
-  11,
-  "Doctoral Degree",
-  education$doctorate,
-  "RL",
-  12,
-  "Post-Doctoral Training",
-  education$doctorate,
-  "RW",
-  1,
-  "None",
-  experience$intern,
-  "RW",
-  2,
-  "Up to and including 1 month",
-  1 / 12,
-  "RW",
-  3,
-  "Over 1 month, up to and including 3 months",
-  mean(c(1, 3)) / 12,
-  "RW",
-  4,
-  "Over 3 months, up to and including 6 months",
-  mean(c(3, 6)) / 12,
-  "RW",
-  5,
-  "Over 6 months, up to and including 1 year",
-  mean(c(6, 12)) / 12,
-  "RW",
-  6,
-  "Over 1 year, up to and including 2 years",
-  mean(c(1, 2)),
-  "RW",
-  7,
-  "Over 2 years, up to and including 4 years",
-  mean(c(2, 4)),
-  "RW",
-  8,
-  "Over 4 years, up to and including 6 years",
-  mean(c(4, 6)),
-  "RW",
-  9,
-  "Over 6 years, up to and including 8 years",
-  mean(c(6, 8)),
-  "RW",
-  10,
-  "Over 8 years, up to and including 10 years",
-  mean(c(8, 10)),
-  "RW",
-  11,
-  "Over 10 years",
-  mean(c(10, 30)),
-) -> df_req_cat
+  ~`Scale ID`, ~`Category`, ~`Category Description`, ~`years`,
+  "RL", 1, "Less than a High School Diploma", education$high.school,
+  "RL", 2, "High School Diploma - or the equivalent (for example, GED)", education$high.school,
+  "RL", 3, "Post-Secondary Certificate - awarded for training completed after high school (for example, in agriculture or natural resources, computer services, personal or culinary services, engineering technologies, healthcare, construction trades, mechanic and repair technologies, or precision production)", education$associate,
+  "RL", 4, "Some College Courses", education$associate,
+  "RL", 5, "Associate's Degree (or other 2-year degree)", education$associate,
+  "RL", 6, "Bachelor's Degree", education$bachelor,
+  "RL", 7, "Post-Baccalaureate Certificate - awarded for completion of an organized program of study; designed for people who have completed a Baccalaureate degree but do not meet the requirements of academic degrees carrying the title of Master.", education$master,
+  "RL", 8, "Master's Degree", education$master,
+  "RL", 9, "Post-Master's Certificate - awarded for completion of an organized program of study; designed for people who have completed a Master's degree but do not meet the requirements of academic degrees at the doctoral level.", education$doctorate,
+  "RL", 10, "First Professional Degree - awarded for completion of a program that: requires at least 2 years of college work before entrance into the program, includes a total of at least 6 academic years of work to complete, and provides all remaining academic requirements to begin practice in a profession.", education$doctorate,
+  "RL", 11, "Doctoral Degree", education$doctorate,
+  "RL", 12, "Post-Doctoral Training", education$doctorate,
+  "RW", 1, "None", experience$intern,
+  "RW", 2, "Up to and including 1 month", 1 / 12,
+  "RW", 3, "Over 1 month, up to and including 3 months", mean(c(1, 3)) / 12,
+  "RW", 4, "Over 3 months, up to and including 6 months", mean(c(3, 6)) / 12,
+  "RW", 5, "Over 6 months, up to and including 1 year", mean(c(6, 12)) / 12,
+  "RW", 6, "Over 1 year, up to and including 2 years", mean(c(1, 2)),
+  "RW", 7, "Over 2 years, up to and including 4 years", mean(c(2, 4)),
+  "RW", 8, "Over 4 years, up to and including 6 years", mean(c(4, 6)),
+  "RW", 9, "Over 6 years, up to and including 8 years", mean(c(6, 8)),
+  "RW", 10, "Over 8 years, up to and including 10 years", mean(c(8, 10)),
+  "RW", 11, "Over 10 years", mean(c(10, 30)),
+) ->
+df_req_cat
 
 # endregion
 # region: data wrangling
 df_req |>
   mutate(
     .before = 1,
-    id_soc_code = `O*NET-SOC Code` |>
-      str_sub(1, -4)
+    id_soc_code =
+      `O*NET-SOC Code` |>
+        str_sub(1, -4)
   ) |>
   mutate(
     pct = `Data Value` / 100
@@ -202,7 +135,8 @@ df_req |>
     onet_soc_code = `O*NET-SOC Code`,
     pct,
     years
-  ) -> onet_req
+  ) ->
+onet_req
 
 # endregion
 # region: similarity matrix
@@ -233,7 +167,8 @@ df_ids |>
       .fns = ~.x
       # .fns = ~ .x^2
     )
-  ) -> df_similarity
+  ) ->
+df_similarity
 
 # endregion
 # region: closest matches
@@ -266,17 +201,17 @@ df_similarity |>
     by = c(
       "from" = "occupation.from"
     )
-  ) -> df_closest_match
+  ) ->
+df_closest_match
 
 all(
   df_closest_match |>
     filter(
-      id.from %in%
-        (df_ids |>
-          filter(
-            !(id_soc_code %in% df_ids$id_soc_code)
-          ) |>
-          pull(id))
+      id.from %in% (df_ids |>
+        filter(
+          !(id_soc_code %in% df_ids$id_soc_code)
+        ) |>
+        pull(id))
     ) |>
     pull(id_soc_code.to) %in%
     df_ids$id_soc_code
@@ -298,8 +233,10 @@ onet_req |>
         id = id,
         occupation = occupation,
         id_soc_code = if_else(
-          !(id_soc_code %in%
-            onet_req$id_soc_code),
+          !(
+            id_soc_code %in%
+              onet_req$id_soc_code
+          ),
           id_soc_code.replace,
           id_soc_code
         )
@@ -310,7 +247,8 @@ onet_req |>
     id,
     scaleId,
     years
-  ) -> onet_req
+  ) ->
+onet_req
 
 # endregion
 # model
@@ -327,9 +265,10 @@ Map(
           )
       )
   },
-  df = onet_req |>
-    group_by(scaleId) |>
-    group_split(),
+  df =
+    onet_req |>
+      group_by(scaleId) |>
+      group_split(),
   bins = list(
     as.numeric(education),
     as.numeric(experience)
@@ -347,7 +286,8 @@ onet.bin$t |>
   ) |>
   mutate(
     to = replace_na(to, tmax)
-  ) -> onet.bin$t
+  ) ->
+onet.bin$t
 
 onet.bin$x |>
   inner_join(
@@ -358,7 +298,8 @@ onet.bin$x |>
   ) |>
   mutate(
     to = replace_na(to, xmax)
-  ) -> onet.bin$x
+  ) ->
+onet.bin$x
 
 # endregion
 # region: basic education
@@ -370,7 +311,8 @@ df_ids |>
       id = basic.education.id,
       occupation = "Basic Education"
     )
-  ) -> df_ids
+  ) ->
+df_ids
 
 onet.bin$t |>
   bind_rows(
@@ -382,7 +324,8 @@ onet.bin$t |>
       pct = 1,
       type = "high.school"
     )
-  ) -> onet.bin$t
+  ) ->
+onet.bin$t
 
 onet.bin$x |>
   bind_rows(
@@ -394,7 +337,8 @@ onet.bin$x |>
       pct = 1,
       type = "intern"
     )
-  ) -> onet.bin$x
+  ) ->
+onet.bin$x
 
 # endregion
 # region: requirements data frame
@@ -417,14 +361,16 @@ onet.bin |>
   ) |>
   inner_join(
     df_ids
-  ) -> career.req
+  ) ->
+career.req
 
 # endregion
 # region: similarity matrix
 df_similarity |>
   mutate(
     `Basic Education` = 1
-  ) -> df_similarity
+  ) ->
+df_similarity
 
 df_similarity |>
   bind_rows(
@@ -437,7 +383,8 @@ df_similarity |>
           names()
       ) |>
       as_tibble()
-  ) -> df_similarity
+  ) ->
+df_similarity
 
 # endregion
 # exports
@@ -460,14 +407,15 @@ save(
   experience,
   career.req,
   onet.bin,
-  file = getOption("atlas.mod") |>
-    file.path(
-      "roadmap",
-      "path",
-      "data",
-      "rds",
-      "req.rdata"
-    )
+  file =
+    getOption("atlas.mod") |>
+      file.path(
+        "roadmap",
+        "path",
+        "data",
+        "rds",
+        "req.rdata"
+      )
 )
 
 # endregion

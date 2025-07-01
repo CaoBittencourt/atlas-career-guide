@@ -12,7 +12,7 @@ The `path` submodule takes as input a career trajectory and outputs a plot to vi
 One can combine these three modules to fully optimize their career as follows:
 ```r
 # import roadmap module
-box::use(roa = mod / roadmap[...])
+box::use(roa = roadmap[...])
 
 # read user's skills, preferences and strategies
 read.csv('skill_set.csv') -> skill

@@ -13,7 +13,7 @@ and, also, a `paths` object with the default vertex table and graph (as implemen
 An example usage of this module is:
 ```r
 # import path module
-box::use(pa = mod / roadmap / path)
+box::use(pa = roadmap / path)
 
 # read occupations data
 getOptions('atlas.ids') |> 
@@ -37,7 +37,7 @@ prog |> pa$path.util() |> sum()
 If the user already has some experience, then this workflow is more appropriate:
 ```r
 # import path module
-box::use(pa = mod / roadmap / path)
+box::use(pa = roadmap / path)
 
 # user's data
 list(
