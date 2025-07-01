@@ -20,7 +20,7 @@ box::use(
 getOption("atlas.skills") |> readRDS() -> df_occupations
 
 # labor statistics
-getOption("atlas.labor") |> readRDS() -> df_labor
+Sys.getenv("ATLAS_LABOR") |> readRDS() -> df_labor
 
 # my preference-adjusted skill set
 Sys.getenv("ATLAS_DATA") |>

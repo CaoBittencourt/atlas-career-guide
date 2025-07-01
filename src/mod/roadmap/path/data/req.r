@@ -2,7 +2,7 @@
 # region: data
 load(
   file.path(
-    getOption("atlas.mod"),
+    Sys.getenv("ATLAS_MOD"),
     "roadmap",
     "path",
     "data",

@@ -3,7 +3,7 @@ box::use(stringr[str_subset])
 options(box.path = Sys.getenv("ATLAS_MOD"))
 
 # run all test files
-getOption("atlas.root") |>
+Sys.getenv("ATLAS_ROOT") |>
   file.path("tests", "test-files") |>
   list.files(full.names = T) |>
   str_subset(".r$") |>

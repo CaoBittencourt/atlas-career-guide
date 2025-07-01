@@ -15,7 +15,7 @@ box::use(
 df_ids |>
   left_join(
     # labor statistics
-    getOption("atlas.labor") |>
+    Sys.getenv("ATLAS_LABOR") |>
       readRDS()
   ) |>
   select(
@@ -29,6 +29,6 @@ df_labor
 # endregion
 # export
 # region: exports
-df_labor |> saveRDS(getOption("atlas.mod") |> file.path("roadmap", "path", "data", "rds", "labor.rds"))
+df_labor |> saveRDS(Sys.getenv("ATLAS_MOD") |> file.path("roadmap", "path", "data", "rds", "labor.rds"))
 
 # endregion

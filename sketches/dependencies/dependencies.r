@@ -30,7 +30,7 @@ library(dplyr)
 
 # endregion
 # region: data
-getOption("atlas.mod") |>
+Sys.getenv("ATLAS_MOD") |>
   file.path("dependencies.csv") |>
   read.csv() |>
   as_tibble() ->

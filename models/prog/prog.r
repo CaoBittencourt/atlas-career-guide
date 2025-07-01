@@ -66,7 +66,7 @@ employability_mtx^3 -> employability_mtx
 employability_mtx * (employability_mtx > 0.5) -> employability_mtx
 
 # labor stats
-getOption("atlas.labor") |> readRDS() -> df_labor
+Sys.getenv("ATLAS_LABOR") |> readRDS() -> df_labor
 
 # max number of job progressions
 stages <- 7

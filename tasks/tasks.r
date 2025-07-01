@@ -10,7 +10,7 @@ box::use(
 )
 
 # data
-getOption("atlas.mod") |>
+Sys.getenv("ATLAS_MOD") |>
   list.files(
     recursive = T,
     full.names = T

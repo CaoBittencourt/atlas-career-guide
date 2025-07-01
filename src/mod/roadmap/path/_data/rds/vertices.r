@@ -174,7 +174,7 @@ vertices
 # region: exports
 vertices |>
   saveRDS(
-    getOption("atlas.mod") |>
+    Sys.getenv("ATLAS_MOD") |>
       file.path(
         "roadmap",
         "path",

@@ -211,9 +211,8 @@ df_ids |>
     to = occupation
   ) |>
   inner_join(
-    getOption("atlas.root") |>
+    Sys.getenv("ATLAS_ARTICLES") |>
       file.path(
-        "articles",
         "1.introduction-matching",
         "output",
         "similarity_matrix.csv"
@@ -444,7 +443,7 @@ df_similarity |>
 # region: exports
 saveRDS(
   df_similarity,
-  getOption("atlas.mod") |>
+  Sys.getenv("ATLAS_MOD") |>
     file.path(
       "roadmap",
       "path",
@@ -460,7 +459,7 @@ save(
   experience,
   career.req,
   onet.bin,
-  file = getOption("atlas.mod") |>
+  file = Sys.getenv("ATLAS_MOD") |>
     file.path(
       "roadmap",
       "path",

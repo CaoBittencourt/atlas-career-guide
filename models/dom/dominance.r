@@ -17,7 +17,7 @@ library(atlas.plot)
 # endregion
 # region: data
 # similarity matrix
-# getOption("atlas.root") |>
+# Sys.getenv("ATLAS_ROOT") |>
 #   file.path(
 #     "articles",
 #     "1.introduction-matching",
@@ -28,7 +28,7 @@ library(atlas.plot)
 # skill_mtx
 
 # labor statistics
-getOption("atlas.labor") |>
+Sys.getenv("ATLAS_LABOR") |>
   readRDS() ->
 df_labor
 

@@ -43,7 +43,7 @@ list(
 # endregion
 # region: onet data
 # similarity matrix
-getOption("atlas.mod") |>
+Sys.getenv("ATLAS_MOD") |>
   file.path(
     "roadmap",
     "path",

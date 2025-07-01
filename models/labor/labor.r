@@ -16,7 +16,7 @@ library(atlas.plot)
 # region: data
 # skill set matrix
 getOption("atlas.skills_mtx") |> readRDS() -> df_occupations
-getOption("atlas.labor") |> readRDS() -> df_labor
+Sys.getenv("ATLAS_LABOR") |> readRDS() -> df_labor
 
 # endregion
 # wrang

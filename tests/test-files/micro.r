@@ -41,7 +41,7 @@ box::use(
 getOption("atlas.skills_mtx") |> readRDS() -> df_skill_mtx
 
 # labor statistics
-getOption("atlas.labor") |> readRDS() -> df_labor
+Sys.getenv("ATLAS_LABOR") |> readRDS() -> df_labor
 
 # non-numeric data
 df_skill_mtx |>

@@ -19,7 +19,7 @@ library(atlas.plot)
 getOption("atlas.skills_mtx") |> readRDS() -> df_occupations
 
 # labor statistics
-(getOption("atlas.labor") |> readRDS())$employment_variants -> employment
+(Sys.getenv("ATLAS_LABOR") |> readRDS())$employment_variants -> employment
 
 # endregion
 # model

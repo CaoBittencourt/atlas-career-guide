@@ -26,7 +26,7 @@ getOption("atlas.education") |>
   ) -> df_edu
 
 # labor stats
-getOption("atlas.labor") |>
+Sys.getenv("ATLAS_LABOR") |>
   readRDS() |>
   inner_join(
     # bls clusters

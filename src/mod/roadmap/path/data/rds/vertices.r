@@ -13,6 +13,7 @@ box::use(
   req = roadmap / path / data / req,
   lab = roadmap / path / data / labor,
   pro = utils / probs,
+  roadmap / path / data / similarity[...],
   utils / data[sublist],
   stats[na.omit],
   gr = igraph,
@@ -24,14 +25,91 @@ box::use(
 # endregion
 # model
 # # grid
-# region: career grid
-career.grid <- function(xmin, tmin, xmax = NULL, tmax = req$education$doctorate) {
+# region: career progression grid
+# career progressions and similarity
+mtx_similarity |>
+  rename(
+    careerTo = 1
+  ) |>
+  pivot_longer(
+    cols = -1,
+    names_to = 'career',
+    values_to = 'similarity'
+  ) |>
+  filter(
+    career != careerTo
+  ) |>
+  inner_join(
+    req$df_ids |>
+      select(
+        -id_soc_code
+      ) |>
+      rename(
+        careerTo = occupation,
+        idTo = id
+      ),
+  ) |>
+  inner_join(
+    req$df_ids |>
+      select(
+        -id_soc_code
+      ) |>
+      rename(
+        career = occupation,
+        id = id
+      ),
+  ) |>
+  select(
+    -starts_with('career')
+  ) |>
+  rename_with(
+    ~ gsub(
+      'id',
+      'career',
+      .x
+    )
+  ) |>
+  relocate(
+    career,
+    careerTo
+  ) -> careerGrid
+
+# career progressions and similarity
+careerGrid |>
+  inner_join(
+    lab$labor |>
+      select(-occupation) |>
+      mutate(
+        wTotal = sum(w, na.rm = T)
+      ),
+    by = c('careerTo' = 'id'),
+    multiple = 'all'
+  ) |>
+  mutate(
+    prob = (w / wTotal) * similarity * (similarity >= 0.5)
+  ) -> careerGrid
+
+# endregion
+
+# region: vertex grid
+career.grid <- function(
+  xmin,
+  tmin,
+  xmax = NULL,
+  tmax = req$education$doctorate
+) {
   # assert args in main function
   # generate valid career progressions on a 2d experience vs education grid
   return(
     expand.grid(
-      x = req$experience |> sublist(function(x) ifelse(!length(xmax), x >= xmin, x >= xmin & x <= xmax)) |> as.numeric(),
-      t = req$education |> sublist(function(t) (t >= tmin) & (t <= tmax)) |> as.numeric()
+      x = req$experience |>
+        sublist(function(x) {
+          ifelse(!length(xmax), x >= xmin, x >= xmin & x <= xmax)
+        }) |>
+        as.numeric(),
+      t = req$education |>
+        sublist(function(t) (t >= tmin) & (t <= tmax)) |>
+        as.numeric()
     )
   )
 }
@@ -40,8 +118,7 @@ career.grid <- function(xmin, tmin, xmax = NULL, tmax = req$education$doctorate)
 # region: basic education
 req$df_ids |>
   filter(occupation == "Basic Education") |>
-  pull(id) ->
-basic.education.id
+  pull(id) -> basic.education.id
 
 career.grid(
   xmin = req$onet.bin$x |> filter(id == basic.education.id) |> pull(from),
@@ -54,8 +131,7 @@ basic.education |>
   mutate(
     .before = 1,
     occupation = basic.education.id
-  ) ->
-basic.education
+  ) -> basic.education
 
 # endregion
 # region: career progressions
@@ -63,8 +139,7 @@ career.grid |>
   Map(
     req$career.req |> filter(id != basic.education.id) |> pull(x),
     req$career.req |> filter(id != basic.education.id) |> pull(t)
-  ) ->
-career.grids
+  ) -> career.grids
 
 # endregion
 # # vertices
@@ -77,8 +152,7 @@ career.grids |>
     .before = 1,
     occupation = as.integer(occupation),
     vertex = row_number()
-  ) ->
-vertices
+  ) -> vertices
 
 # endregion
 # region: vertices indie prob
@@ -106,10 +180,11 @@ vertices |>
   relocate(
     vertex,
     occupation,
-    x.lb = x, x.ub,
-    t.lb = t, t.ub
-  ) ->
-vertices
+    x.lb = x,
+    x.ub,
+    t.lb = t,
+    t.ub
+  ) -> vertices
 
 # endregion
 # region: conditional prob dist
@@ -131,23 +206,26 @@ vertices |>
   ) |>
   group_by(occupation) |>
   mutate(
-    const =
-      pdf.t_x[[1]] |>
-        pro$norm.const(
-          pmin(x.lb), pmax(x.ub),
-          pmin(t.lb), pmax(t.ub)
-        )
+    const = pdf.t_x[[1]] |>
+      pro$norm.const(
+        pmin(x.lb),
+        pmax(x.ub),
+        pmin(t.lb),
+        pmax(t.ub)
+      )
   ) |>
   ungroup() |>
   mutate(
-    prob =
-      x.pct *
-        t.pct *
-        pro$prob.y_x(
-          pdf.t_x[[1]],
-          x.lb, x.ub,
-          t.lb, t.ub
-        ) / const
+    prob = x.pct *
+      t.pct *
+      pro$prob.y_x(
+        pdf.t_x[[1]],
+        x.lb,
+        x.ub,
+        t.lb,
+        t.ub
+      ) /
+      const
   ) |>
   select(
     occupation,
@@ -162,8 +240,7 @@ vertices |>
         vertex = 1L + max(vertices$vertex),
         prob = 1
       )
-  ) ->
-vertices
+  ) -> vertices
 
 # - E[U] = Pr[v2 | v1] * u(v2) = ((w(v2) / w) * s(v1, v2) * [s(v1, v2) >= 0.5]) * u(v2) >= 0
 #         - cost(v1,v2)
@@ -174,7 +251,7 @@ vertices
 # region: exports
 vertices |>
   saveRDS(
-    getOption("atlas.mod") |>
+    Sys.getenv("ATLAS_MOD") |>
       file.path(
         "roadmap",
         "path",
