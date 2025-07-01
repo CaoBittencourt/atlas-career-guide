@@ -87,6 +87,9 @@ careerGrid |>
   ) |>
   mutate(
     prob = (w / wTotal) * similarity * (similarity >= 0.5)
+  ) |> 
+  filter(
+    prob > 0
   ) -> careerGrid
 
 # endregion
