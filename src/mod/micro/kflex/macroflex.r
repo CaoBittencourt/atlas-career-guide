@@ -1,5 +1,5 @@
 #' @export
 box::use(
-  mod / micro / kflex / macroflex / macroflex[...],
-  mod / micro / kflex / macroflex / versatility[...],
+  micro / kflex / macroflex / macroflex[...],
+  micro / kflex / macroflex / versatility[...],
 )

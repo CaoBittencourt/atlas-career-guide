@@ -1,11 +1,11 @@
 # setup
 # region: modules
-modular::project.options("atlas")
+options(box.path = Sys.getenv("ATLAS_MOD"))
 
 # endregion
 # region: imports
 box::use(
-  s = mod / compare / similarity,
+  s = compare / similarity,
 )
 
 library(atlas.plot)

@@ -1,6 +1,6 @@
 #' @export
 box::use(
-  mod / micro / kflex / microflex / dominance[...],
-  mod / micro / kflex / microflex / leverage[...],
-  mod / micro / kflex / microflex / microflex[...],
+  micro / kflex / microflex / dominance[...],
+  micro / kflex / microflex / leverage[...],
+  micro / kflex / microflex / microflex[...],
 )

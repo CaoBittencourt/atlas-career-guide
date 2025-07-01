@@ -1,6 +1,6 @@
-modular::project.options("atlas")
+options(box.path = Sys.getenv("ATLAS_MOD"))
 box::use(
-  mod / utils / data[last]
+  utils / data[last]
 )
 
 morph <- function(akz, A, Bkz, fn = mean, ...) {

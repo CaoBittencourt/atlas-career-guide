@@ -28,8 +28,8 @@ project.options(
 # endregion
 # region: imports
 box::use(
-  desc = mod / describe,
-  util = mod / utils
+  desc = describe,
+  util = utils
 )
 
 # endregion

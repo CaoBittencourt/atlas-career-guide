@@ -1,6 +1,6 @@
 box::use(
   stats[density],
-  assert = mod / utils / assert,
+  assert = utils / assert,
 )
 
 # discrete data to kernel density estimation

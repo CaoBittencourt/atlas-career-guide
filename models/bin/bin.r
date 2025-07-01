@@ -1,6 +1,6 @@
 # setup
 # region: modules
-modular::project.options("atlas")
+options(box.path = Sys.getenv("ATLAS_MOD"))
 
 # endregion
 # region: imports
@@ -13,7 +13,7 @@ box::use(
   km = flexclust,
   readxl[read_excel],
   bda = bda,
-  mod / utils / bin[...],
+  utils / bin[...],
 )
 
 dplyr::filter -> filter

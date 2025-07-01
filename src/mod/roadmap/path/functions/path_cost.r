@@ -2,7 +2,7 @@
 # region: imports
 box::use(
   gr = igraph,
-  mod / roadmap / path / data / graph[...],
+  roadmap / path / data / graph[...],
 )
 
 # endregion

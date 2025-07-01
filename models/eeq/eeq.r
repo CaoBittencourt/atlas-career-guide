@@ -1,11 +1,11 @@
 # setup
 # region: modules
-modular::project.options("atlas")
+options(box.path = Sys.getenv("ATLAS_MOD"))
 
 # endregion
 # region: imports
 box::use(
-  eee = mod / compare / eeq,
+  eee = compare / eeq,
   dplyr[...],
   tidyr[...],
 )

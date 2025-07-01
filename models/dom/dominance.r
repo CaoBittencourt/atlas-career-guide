@@ -1,12 +1,12 @@
 # setup
 # region: modules
-modular::project.options("atlas")
+options(box.path = Sys.getenv("ATLAS_MOD"))
 
 # endregion
 # region: imports
 box::use(
-  dom = mod / compare / dom,
-  # kflex = mod / micro / kflex,
+  dom = compare / dom,
+  # kflex = micro / kflex,
   dplyr[...],
   tidyr[...],
   tibble[column_to_rownames]

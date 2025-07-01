@@ -1,9 +1,9 @@
 #' @export
 box::use(
-  mod / compare / similarity / methods / bvls[...],
-  mod / compare / similarity / methods / cobb_douglas[...],
-  mod / compare / similarity / methods / euclidean[...],
-  mod / compare / similarity / methods / gmme[...],
-  mod / compare / similarity / methods / logit[...],
-  mod / compare / similarity / methods / pearson[...],
+  compare / similarity / methods / bvls[...],
+  compare / similarity / methods / cobb_douglas[...],
+  compare / similarity / methods / euclidean[...],
+  compare / similarity / methods / gmme[...],
+  compare / similarity / methods / logit[...],
+  compare / similarity / methods / pearson[...],
 )

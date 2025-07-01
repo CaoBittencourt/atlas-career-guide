@@ -1,11 +1,11 @@
-modular::project.options("atlas")
+options(box.path = Sys.getenv("ATLAS_MOD"))
 
 box::use(
-  req = mod / roadmap / path / data / req,
-  lab = mod / roadmap / path / data / labor,
-  mod / roadmap / path / data / vertices[...],
-  bin = mod / utils / bin,
-  pro = mod / utils / probs,
+  req = roadmap / path / data / req,
+  lab = roadmap / path / data / labor,
+  roadmap / path / data / vertices[...],
+  bin = utils / bin,
+  pro = utils / probs,
   weights[wtd.cors],
   gg = ggplot2,
   plt = plotly,

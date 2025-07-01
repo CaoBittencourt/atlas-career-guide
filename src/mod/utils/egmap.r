@@ -1,10 +1,10 @@
 # region: imports
 box::use(
-  mod / utils / depth[...],
-  mod / utils / sublist[...],
-  mod / utils / nestmap[...],
-  mod / utils / proper_list[...],
-  mod / utils / name[...],
+  utils / depth[...],
+  utils / sublist[...],
+  utils / nestmap[...],
+  utils / proper_list[...],
+  utils / name[...],
   stats[setNames],
   purrr[list_flatten, map_if],
   tidyr[as_tibble],

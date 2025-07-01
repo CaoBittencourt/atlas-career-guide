@@ -1,9 +1,9 @@
 # setup
 # region: imports
 box::use(
-  gn = mod / describe / gene,
-  eq = mod / describe / aeq,
-  assert = mod / utils / assert,
+  gn = describe / gene,
+  eq = describe / aeq,
+  assert = utils / assert,
   stats[weighted.mean]
 )
 

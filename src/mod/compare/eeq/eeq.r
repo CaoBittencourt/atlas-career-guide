@@ -1,8 +1,8 @@
 # setup
 # region: imports
 box::use(
-  assert = mod / utils / assert,
-  glogis = mod / utils / logistic
+  assert = utils / assert,
+  glogis = utils / logistic
 )
 
 # endregion

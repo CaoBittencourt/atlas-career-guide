@@ -3,7 +3,7 @@
 box::use(
   fastglm[fastglmPure],
   stats[binomial, coef],
-  mod / utils / prob[...]
+  utils / prob[...]
 )
 
 # endregion

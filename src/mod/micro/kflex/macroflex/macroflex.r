@@ -1,7 +1,7 @@
 # setup
 # region: imports
 box::use(
-  assert = mod / utils / assert,
+  assert = utils / assert,
   stats[weighted.mean, setNames]
 )
 

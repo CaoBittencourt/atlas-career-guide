@@ -28,8 +28,8 @@ project.options(
 # endregion
 # region: imports
 box::use(
-  micro = mod / micro,
-  util = mod / utils,
+  micro = micro,
+  util = utils,
   dplyr[...]
 )
 

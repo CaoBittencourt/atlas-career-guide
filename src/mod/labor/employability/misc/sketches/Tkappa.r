@@ -1,6 +1,6 @@
 # region: imports
 box::use(
-  mod / labor / employability / misc / pec[...]
+  labor / employability / misc / pec[...]
 )
 
 # endregion

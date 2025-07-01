@@ -1,8 +1,8 @@
 # setup
 # region: imports
 box::use(
-  assert = mod / utils / assert / base / validate[...],
-  mod / utils / math[as.bernoulli],
+  assert = utils / assert / base / validate[...],
+  utils / math[as.bernoulli],
   dplyr[select]
 )
 

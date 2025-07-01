@@ -1,8 +1,8 @@
 # setup
 # region: imports
 box::use(
-  assert = mod / utils / assert,
-  s = mod / compare / similarity
+  assert = utils / assert,
+  s = compare / similarity
 )
 
 # endregion

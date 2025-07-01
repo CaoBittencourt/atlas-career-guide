@@ -1,11 +1,11 @@
 # setup
 # region: imports
 box::use(
-  mod / utils / assert,
-  mod / utils / math[cosine.similarity],
-  s = mod / compare / similarity,
-  # mod / compare / similarity / methods / cobb_douglas,
-  mod / utils / data[vmap, conform],
+  utils / assert,
+  utils / math[cosine.similarity],
+  s = compare / similarity,
+  # compare / similarity / methods / cobb_douglas,
+  utils / data[vmap, conform],
 )
 
 # endregion

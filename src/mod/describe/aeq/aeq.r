@@ -1,9 +1,9 @@
 # setup
 # region: imports
 box::use(
-  assert = mod / utils / assert,
-  gn = mod / describe / gene,
-  glogis = mod / utils / logistic,
+  assert = utils / assert,
+  gn = describe / gene,
+  glogis = utils / logistic,
   stats[setNames]
 )
 

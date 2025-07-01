@@ -1,7 +1,7 @@
 #' @export
 box::use(
-  mod / labor / employability / misc / Omega[...],
-  mod / labor / employability / misc / pec[...],
-  mod / labor / employability / misc / ta[...],
-  mod / labor / employability / misc / wtilde[...],
+  labor / employability / misc / Omega[...],
+  labor / employability / misc / pec[...],
+  labor / employability / misc / ta[...],
+  labor / employability / misc / wtilde[...],
 )

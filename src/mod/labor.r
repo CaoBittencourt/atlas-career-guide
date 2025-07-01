@@ -1,4 +1,4 @@
 #' @export
 box::use(
-  mod / labor / employability[...]
+  labor / employability[...]
 )

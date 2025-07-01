@@ -1,7 +1,7 @@
 box::use(
-  assert = mod / utils / assert,
+  assert = utils / assert,
   stats[kmeans],
-  mod / utils / bin / sample[...],
+  utils / bin / sample[...],
 )
 
 # kmeans clusters from kde

@@ -1,4 +1,4 @@
 #' @export
 box::use(
-  mod / utils / probs / probs[...]
+  utils / probs / probs[...]
 )

@@ -1,10 +1,10 @@
 # setup
 # region: imports
 box::use(
-  assert = mod / utils / assert,
-  mod / labor / employability / misc / Omega[...],
-  # mod / labor / employability / misc / pec[...],
-  # mod / labor / employability / misc / Tkappa[...],
+  assert = utils / assert,
+  labor / employability / misc / Omega[...],
+  # labor / employability / misc / pec[...],
+  # labor / employability / misc / Tkappa[...],
   stats[weighted.mean]
 )
 

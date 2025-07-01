@@ -1,7 +1,7 @@
 # setup
 # region: imports
 box::use(
-  mod / compare / qa / uqa[...],
+  compare / qa / uqa[...],
 )
 
 # endregion

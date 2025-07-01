@@ -1,8 +1,8 @@
 # setup
 # region: imports
 box::use(
-  assert = mod / utils / assert,
-  mod / roadmap / path / functions / prob[...],
+  assert = utils / assert,
+  roadmap / path / functions / prob[...],
 )
 
 # endregion

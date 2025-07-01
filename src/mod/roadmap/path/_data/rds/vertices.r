@@ -1,19 +1,19 @@
 # setup
 # region: modular
-modular::project.options("atlas")
+options(box.path = Sys.getenv("ATLAS_MOD"))
 
 # endregion
 # region: imports
 box::use(
-  assert = mod / utils / assert,
-  mod / roadmap / path / functions / cost[...],
-  mod / roadmap / path / functions / restart[...],
-  mod / roadmap / path / functions / prob[...],
-  mod / roadmap / path / functions / employment[...],
-  req = mod / roadmap / path / data / req,
-  lab = mod / roadmap / path / data / labor,
-  pro = mod / utils / probs,
-  mod / utils / data[sublist],
+  assert = utils / assert,
+  roadmap / path / functions / cost[...],
+  roadmap / path / functions / restart[...],
+  roadmap / path / functions / prob[...],
+  roadmap / path / functions / employment[...],
+  req = roadmap / path / data / req,
+  lab = roadmap / path / data / labor,
+  pro = utils / probs,
+  utils / data[sublist],
   stats[na.omit],
   gr = igraph,
   readr[...],

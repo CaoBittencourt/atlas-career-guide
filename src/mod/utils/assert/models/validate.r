@@ -1,8 +1,8 @@
 # setup
 # region: imports
 box::use(
-  models = mod / utils / assert / models / types[...],
-  types = mod / utils / assert / base[...],
+  models = utils / assert / models / types[...],
+  types = utils / assert / base[...],
 )
 
 # endregion

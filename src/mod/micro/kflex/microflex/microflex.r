@@ -1,7 +1,7 @@
 # setup
 # region: imports
 box::use(
-  assert = mod / utils / assert,
+  assert = utils / assert,
   bvls[bvls],
   dplyr[bind_rows, select],
   stats[setNames]

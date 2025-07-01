@@ -1,10 +1,10 @@
 # setup
 # modules
-modular::project.options("atlas")
+options(box.path = Sys.getenv("ATLAS_MOD"))
 
 # imports
 box::use(
-  tt = mod / utils / misc / tasks,
+  tt = utils / misc / tasks,
   st = stringr,
   stats[setNames],
 )

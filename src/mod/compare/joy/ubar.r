@@ -1,11 +1,11 @@
 # region: imports
 box::use(
-  assert = mod / utils / assert[...],
-  mod / compare / joy / ueq[...],
-  mod / compare / joy / ugene[...],
-  mod / utils / rbindmap[...],
-  mod / utils / cbindmap[...],
-  mod / utils / conform[...],
+  assert = utils / assert[...],
+  compare / joy / ueq[...],
+  compare / joy / ugene[...],
+  utils / rbindmap[...],
+  utils / cbindmap[...],
+  utils / conform[...],
   stats[weighted.mean],
   dplyr[bind_rows, as_tibble, mutate],
 )

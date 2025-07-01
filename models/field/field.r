@@ -1,16 +1,16 @@
 # setup
 # region: modules
-modular::project.options("atlas")
+options(box.path = Sys.getenv("ATLAS_MOD"))
 
 # endregion
 # region: imports
 box::use(
-  fs = mod / compare / field,
-  eq = mod / describe / aeq,
+  fs = compare / field,
+  eq = describe / aeq,
   dplyr[...],
   tidyr[...],
   tibble[column_to_rownames],
-  mod / utils / egmap[...]
+  utils / egmap[...]
 )
 
 library(atlas.plot)

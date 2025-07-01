@@ -1,17 +1,17 @@
 #' @export
 box::use(
-  mod / utils / assert,
-  mod / utils / data,
-  mod / utils / math,
-  # mod / utils / misc,
-  mod / utils / plots,
+  utils / assert,
+  utils / data,
+  utils / math,
+  # utils / misc,
+  utils / plots,
 )
 
 
 # box::use(
-#   assert = mod / utils / assert,
-#   data = mod / utils / data,
-#   math = mod / utils / math,
-#   misc = mod / utils / misc,
-#   plots = mod / utils / plots,
+#   assert = utils / assert,
+#   data = utils / data,
+#   math = utils / math,
+#   misc = utils / misc,
+#   plots = utils / plots,
 # )

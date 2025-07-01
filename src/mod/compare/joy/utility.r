@@ -1,8 +1,8 @@
-# modular::project.options("atlas")
+# options(box.path = Sys.getenv("ATLAS_MOD"))
 # region: imports
 box::use(
-  glogis = mod / utils / logistic,
-  mod / compare / joy / ugene[...]
+  glogis = utils / logistic,
+  compare / joy / ugene[...]
 )
 
 # endregion

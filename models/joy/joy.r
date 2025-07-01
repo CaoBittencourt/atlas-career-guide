@@ -1,12 +1,12 @@
 # setup
 # region: modules
-modular::project.options("atlas")
+options(box.path = Sys.getenv("ATLAS_MOD"))
 
 # endregion
 # region: imports
 box::use(
-  mod / compare / joy,
-  mod / compare / joy / ugene
+  compare / joy,
+  compare / joy / ugene
 )
 
 library(atlas.plot)
@@ -27,7 +27,7 @@ df_occupations_cao
 # endregion
 # model 1 (my profile)
 # # region: ces utility aggregator
-# # box::use(mod / compare / joy / ugene[...])
+# # box::use(compare / joy / ugene[...])
 # df_cao |>
 #   mutate(
 #     # cao = c(1, rep(0, 59)),
@@ -48,9 +48,9 @@ df_occupations_cao
 # # endregion
 # # region: test
 # box::use(
-#   assert = mod / utils / assert[...],
-#   mod / compare / joy / ugene[...],
-#   mod / utils / conform[...],
+#   assert = utils / assert[...],
+#   compare / joy / ugene[...],
+#   utils / conform[...],
 # )
 
 # df_cao |> assert$as.skill_mtx() -> Uk

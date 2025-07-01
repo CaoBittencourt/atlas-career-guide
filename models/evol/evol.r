@@ -1,15 +1,15 @@
 # setup
 # region: modules
-modular::project.options("atlas")
+options(box.path = Sys.getenv("ATLAS_MOD"))
 
 # endregion
 # region: imports
 box::use(
-  s = mod / compare / similarity,
-  qa = mod / compare / qa,
-  c = mod / describe / comp,
-  mod / utils / conform[...],
-  assert = mod / utils / assert,
+  s = compare / similarity,
+  qa = compare / qa,
+  c = describe / comp,
+  utils / conform[...],
+  assert = utils / assert,
   stats[weighted.mean]
 )
 

@@ -1,4 +1,4 @@
-box::use(mod / utils / proper_list[...])
+box::use(utils / proper_list[...])
 nestmap <- function(x, fn, ...) {
   if (is.proper.list(x)) {
     return(lapply(x, fn, ...))

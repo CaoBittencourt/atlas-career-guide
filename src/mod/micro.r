@@ -1,4 +1,4 @@
 #' @export
 box::use(
-  kflex = mod / micro / kflex
+  kflex = micro / kflex
 )

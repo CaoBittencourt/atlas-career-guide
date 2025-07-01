@@ -1,6 +1,6 @@
 # region: imports
 box::use(
-  eq = mod / describe / aeq
+  eq = describe / aeq
 )
 
 # endregion

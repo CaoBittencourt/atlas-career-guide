@@ -1,10 +1,10 @@
 #' @export
 box::use(
-  mod / utils / bin / bin[...],
-  mod / utils / bin / grid[...],
-  mod / utils / bin / kde[...],
-  mod / utils / bin / kmeans[...],
-  mod / utils / bin / pdf[...],
-  mod / utils / bin / sample[...],
-  mod / utils / bin / stats[...],
+  utils / bin / bin[...],
+  utils / bin / grid[...],
+  utils / bin / kde[...],
+  utils / bin / kmeans[...],
+  utils / bin / pdf[...],
+  utils / bin / sample[...],
+  utils / bin / stats[...],
 )

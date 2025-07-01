@@ -1,12 +1,12 @@
 # setup
 # region: modules
-modular::project.options("atlas")
+options(box.path = Sys.getenv("ATLAS_MOD"))
 
 # endregion
 # region: imports
 box::use(
-  labor = mod / labor,
-  tt = mod / compare / prod,
+  labor = labor,
+  tt = compare / prod,
   dplyr[...]
 )
 

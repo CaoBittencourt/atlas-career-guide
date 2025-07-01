@@ -1,10 +1,10 @@
-modular::project.options("atlas")
+options(box.path = Sys.getenv("ATLAS_MOD"))
 
 box::use(
-  emp = mod / labor / employability,
-  req = mod / roadmap / path / data / req,
-  lab = mod / roadmap / path / data / labor,
-  bin = mod / utils / bin,
+  emp = labor / employability,
+  req = roadmap / path / data / req,
+  lab = roadmap / path / data / labor,
+  bin = utils / bin,
   gg = ggplot2,
   ddd = plot3D,
   veg = VGAM,

@@ -3,7 +3,7 @@
 box::use(
   cubature[cubintegrate],
   stats[uniroot],
-  mod / labor / employability / misc / ta[...]
+  labor / employability / misc / ta[...]
 )
 
 # endregion

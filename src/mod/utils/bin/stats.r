@@ -1,5 +1,5 @@
 box::use(
-  mod / utils / bin / sample[...],
+  utils / bin / sample[...],
   stats[sd],
 )
 

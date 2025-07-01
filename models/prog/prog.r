@@ -1,6 +1,6 @@
 # setup
 # region: modules
-modular::project.options("atlas")
+options(box.path = Sys.getenv("ATLAS_MOD"))
 
 # endregion
 # region: imports
@@ -15,8 +15,8 @@ getOption("atlas.skills_mtx") |> readRDS() -> df_occupations
 
 # squared similarity matrix = temp employability matrix
 # box::use(
-#   s = mod / compare / similarity,
-#   mod / utils / conform[...],
+#   s = compare / similarity,
+#   utils / conform[...],
 # )
 #
 # getOption("atlas.cao") |>

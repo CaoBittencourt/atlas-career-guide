@@ -2,9 +2,9 @@
 # region: imports
 box::use(
   gr = igraph,
-  mod / roadmap / path / data / graph[...],
-  mod / roadmap / path / functions / path_cost[...],
-  mod / roadmap / path / functions / which_path[...],
+  roadmap / path / data / graph[...],
+  roadmap / path / functions / path_cost[...],
+  roadmap / path / functions / which_path[...],
 )
 
 # endregion

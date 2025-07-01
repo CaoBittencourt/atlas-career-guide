@@ -1,6 +1,6 @@
 # setup
 # region: modules
-modular::project.options("atlas")
+options(box.path = Sys.getenv("ATLAS_MOD"))
 
 # endregion
 # region: imports
@@ -8,7 +8,7 @@ box::use(
   stats[...],
   dplyr[...],
   tidyr[...],
-  mod / micro / kflex,
+  micro / kflex,
 )
 
 library(atlas.plot)

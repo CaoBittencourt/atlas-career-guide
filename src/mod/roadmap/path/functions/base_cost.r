@@ -1,10 +1,10 @@
 # setup
 # region: imports
 box::use(
-  assert = mod / utils / assert,
-  mod / roadmap / path / data / graph[...],
-  mod / roadmap / path / functions / path_cost[...],
-  mod / roadmap / path / path[...],
+  assert = utils / assert,
+  roadmap / path / data / graph[...],
+  roadmap / path / functions / path_cost[...],
+  roadmap / path / path[...],
   dplyr[...]
 )
 

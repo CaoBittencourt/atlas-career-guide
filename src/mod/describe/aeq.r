@@ -1,4 +1,4 @@
 #' @export
 box::use(
-  mod / describe / aeq / aeq[...]
+  describe / aeq / aeq[...]
 )

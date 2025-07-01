@@ -1,6 +1,6 @@
 #' @export
 box::use(
-  mod / utils / assert / models / as[...],
-  mod / utils / assert / models / types[...],
-  mod / utils / assert / models / validate[...],
+  utils / assert / models / as[...],
+  utils / assert / models / types[...],
+  utils / assert / models / validate[...],
 )

@@ -1,6 +1,6 @@
 # imports
 box::use(stringr[str_subset])
-modular::project.options("atlas")
+options(box.path = Sys.getenv("ATLAS_MOD"))
 
 # run all test files
 getOption("atlas.root") |>

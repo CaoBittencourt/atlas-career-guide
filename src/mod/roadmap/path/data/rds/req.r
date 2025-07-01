@@ -11,7 +11,7 @@ box::use(
   stringr[...],
   stats[...],
   readxl[read_excel],
-  mod / utils / bin[...],
+  utils / bin[...],
 )
 
 dplyr::filter -> filter

@@ -1,6 +1,6 @@
 # region: imports
 box::use(
-  mod / describe / gene[...]
+  describe / gene[...]
 )
 
 # endregion

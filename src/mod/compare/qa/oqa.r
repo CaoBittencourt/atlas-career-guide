@@ -1,12 +1,12 @@
 # setup
 # region: imports
 box::use(
-  eq = mod / describe / aeq,
-  assert = mod / utils / assert,
-  mod / utils / gap[...],
-  mod / utils / cbindmap[...],
+  eq = describe / aeq,
+  assert = utils / assert,
+  utils / gap[...],
+  utils / cbindmap[...],
   dplyr[bind_rows],
-  mod / utils / conform[...]
+  utils / conform[...]
 )
 
 # endregion

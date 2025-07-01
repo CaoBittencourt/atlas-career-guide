@@ -1,7 +1,7 @@
 # setup
 # region: imports
 box::use(
-  mod / labor / employability / misc / Omega[...],
+  labor / employability / misc / Omega[...],
   stats[weighted.mean]
 )
 

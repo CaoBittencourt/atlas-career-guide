@@ -1,10 +1,10 @@
 # setup
 # region: imports
 box::use(
-  assert = mod / utils / assert,
-  mod / utils / data[cbindmap, conform],
-  mod / utils / math[as.bernoulli],
-  eq = mod / describe / aeq,
+  assert = utils / assert,
+  utils / data[cbindmap, conform],
+  utils / math[as.bernoulli],
+  eq = describe / aeq,
   stats[setNames],
   dplyr[bind_rows, as_tibble],
 )
@@ -13,7 +13,7 @@ box::use(
 # methods
 # region: similarity methods
 box::use(
-  mod / compare / similarity / methods[...]
+  compare / similarity / methods[...]
 )
 
 # endregion

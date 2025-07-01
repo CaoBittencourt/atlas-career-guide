@@ -1,8 +1,8 @@
-modular::project.options("atlas")
+options(box.path = Sys.getenv("ATLAS_MOD"))
 
 box::use(
   gr = igraph,
-  mod / utils / data[sublist],
+  utils / data[sublist],
   readr[...],
   dplyr[...],
   tidyr[...],

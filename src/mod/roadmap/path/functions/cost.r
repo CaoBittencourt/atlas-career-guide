@@ -1,7 +1,7 @@
 # setup
 # region: imports
 box::use(
-  mod / roadmap / path / functions / restart[...],
+  roadmap / path / functions / restart[...],
 )
 
 # endregion

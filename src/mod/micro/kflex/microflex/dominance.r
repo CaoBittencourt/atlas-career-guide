@@ -1,9 +1,9 @@
 # setup
 # region: imports
 box::use(
-  assert = mod / utils / assert,
-  dom = mod / compare / dom,
-  mod / micro / kflex / microflex / microflex[...],
+  assert = utils / assert,
+  dom = compare / dom,
+  micro / kflex / microflex / microflex[...],
 )
 
 # endregion

@@ -1,8 +1,8 @@
 # setup
 # region: imports
 box::use(
-  assert = mod / utils / assert,
-  mod / utils / bin / interval[...],
+  assert = utils / assert,
+  utils / bin / interval[...],
   dplyr[...],
 )
 

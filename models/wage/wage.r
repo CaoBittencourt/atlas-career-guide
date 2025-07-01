@@ -1,5 +1,5 @@
-modular::project.options("atlas")
-box::use(mod / utils[logis])
+options(box.path = Sys.getenv("ATLAS_MOD"))
+box::use(utils[logis])
 library(stringr)
 library(dplyr)
 
