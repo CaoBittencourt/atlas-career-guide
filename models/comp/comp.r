@@ -23,7 +23,7 @@ getOption("atlas.skills") |> readRDS() -> df_occupations
 getOption("atlas.labor") |> readRDS() -> df_labor
 
 # my preference-adjusted skill set
-getOption("atlas.data") |>
+Sys.getenv("ATLAS_DATA") |>
   file.path(
     "old",
     "questionnaires",

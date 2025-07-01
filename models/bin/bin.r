@@ -65,7 +65,7 @@ df_similarity$to |>
     id = row_number()
   ) |>
   inner_join(
-    getOption("atlas.oldata") |>
+    Sys.getenv("ATLAS_OLD_DATA") |>
       read.csv() |>
       select(
         id_soc_code,
@@ -85,7 +85,7 @@ df_similarity$to |>
 df_ids
 
 # requirements
-getOption("atlas.data") |>
+Sys.getenv("ATLAS_DATA") |>
   file.path(
     "db_27_3_excel",
     "Education, Training, and Experience.xlsx"
@@ -98,7 +98,7 @@ df_req
 
 # # (Category, `O*NET-SOC Code`, `Scale ID`) are the composite primary key
 # all(df_req |> group_by(Category, `O*NET-SOC Code`, `Scale ID`) |> tally() |> pull(n) == 1)
-getOption("atlas.data") |>
+Sys.getenv("ATLAS_DATA") |>
   file.path(
     "db_27_3_excel",
     "Education, Training, and Experience Categories.xlsx"

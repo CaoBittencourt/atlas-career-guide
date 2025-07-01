@@ -35,7 +35,7 @@ all((aeq_field_mtx |> lower.tri()) == t(aeq_field_mtx |> upper.tri()))
 # note: field similarity is really quite high
 aeq_field_mtx[aeq_field_mtx |> lower.tri(diag = F)] |> summary()
 
-# getOption("atlas.oldata") |>
+# Sys.getenv("ATLAS_OLD_DATA") |>
 #   read.csv() |>
 #   pull(career_cluster) |>
 #   unique() |>
@@ -77,7 +77,7 @@ all((aeq_field_mtx |> lower.tri()) == t(aeq_field_mtx |> upper.tri()))
 # note: field similarity is really quite high
 aeq_field_mtx[aeq_field_mtx |> lower.tri(diag = F)] |> summary()
 
-# getOption("atlas.oldata") |>
+# Sys.getenv("ATLAS_OLD_DATA") |>
 #   read.csv() |>
 #   pull(career_cluster) |>
 #   unique() |>

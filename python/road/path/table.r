@@ -13,7 +13,7 @@ box::use(
 paths$table |> 
   write.csv(
     file.path(
-      getOption("atlas.data"),
+      Sys.getenv("ATLAS_DATA"),
       'graph.csv'
     )
   )

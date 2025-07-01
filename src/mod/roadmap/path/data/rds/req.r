@@ -45,7 +45,7 @@ xmax <- 60
 # endregion
 # region: onet data
 # ids
-getOption("atlas.oldata") |>
+Sys.getenv("ATLAS_OLD_DATA") |>
   read.csv() |>
   select(
     id_soc_code,
@@ -60,7 +60,7 @@ getOption("atlas.oldata") |>
   ) -> df_ids
 
 # requirements
-getOption("atlas.data") |>
+Sys.getenv("ATLAS_DATA") |>
   file.path(
     "db_27_3_excel",
     "Education, Training, and Experience.xlsx"
@@ -72,7 +72,7 @@ getOption("atlas.data") |>
 
 # # (Category, `O*NET-SOC Code`, `Scale ID`) are the composite primary key
 # all(df_req |> group_by(Category, `O*NET-SOC Code`, `Scale ID`) |> tally() |> pull(n) == 1)
-getOption("atlas.data") |>
+Sys.getenv("ATLAS_DATA") |>
   file.path(
     "db_27_3_excel",
     "Education, Training, and Experience Categories.xlsx"

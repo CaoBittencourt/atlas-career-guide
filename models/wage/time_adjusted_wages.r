@@ -30,7 +30,7 @@ getOption("atlas.labor") |>
   readRDS() |>
   inner_join(
     # bls clusters
-    getOption("atlas.oldata") |>
+    Sys.getenv("ATLAS_OLD_DATA") |>
       read.csv() |>
       select(
         occupation,

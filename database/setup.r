@@ -13,11 +13,11 @@ box::use(
 
 # endregion
 # region: working directory
-setwd(getOption("atlas.data"))
+setwd(Sys.getenv("ATLAS_DATA"))
 
 # endregion
 # region: data
-getOption("atlas.oldata") |>
+Sys.getenv("ATLAS_OLD_DATA") |>
   read.csv() |>
   as_tibble() ->
 df_occupations

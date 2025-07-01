@@ -27,7 +27,7 @@ skill_set_mtx |>
   as_tibble() ->
 occupations
 
-getOption("atlas.oldata") |>
+Sys.getenv("ATLAS_OLD_DATA") |>
   read.csv() |>
   as_tibble() ->
 df_occupations

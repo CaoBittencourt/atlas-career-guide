@@ -47,7 +47,7 @@ getOption("atlas.labor") |> readRDS() -> df_labor
 df_skill_mtx |>
   select(occupation) |>
   inner_join(
-    getOption("atlas.oldata") |>
+    Sys.getenv("ATLAS_OLD_DATA") |>
       read.csv() |>
       as_tibble()
   ) -> df_occupations
