@@ -13,7 +13,6 @@ box::use(
   req = roadmap / path / data / req,
   lab = roadmap / path / data / labor,
   pro = utils / probs,
-  roadmap / path / data / similarity[...],
   utils / data[sublist],
   stats[na.omit],
   gr = igraph,
@@ -25,25 +24,14 @@ box::use(
 # endregion
 # model
 # # grid
-# region: vertex grid
-vertex.grid <- function(
-  xmin,
-  tmin,
-  xmax = NULL,
-  tmax = req$education$doctorate
-) {
+# region: career grid
+career.grid <- function(xmin, tmin, xmax = NULL, tmax = req$education$doctorate) {
   # assert args in main function
   # generate valid career progressions on a 2d experience vs education grid
   return(
     expand.grid(
-      x = req$experience |>
-        sublist(function(x) {
-          ifelse(!length(xmax), x >= xmin, x >= xmin & x <= xmax)
-        }) |>
-        as.numeric(),
-      t = req$education |>
-        sublist(function(t) (t >= tmin) & (t <= tmax)) |>
-        as.numeric()
+      x = req$experience |> sublist(function(x) ifelse(!length(xmax), x >= xmin, x >= xmin & x <= xmax)) |> as.numeric(),
+      t = req$education |> sublist(function(t) (t >= tmin) & (t <= tmax)) |> as.numeric()
     )
   )
 }
@@ -52,9 +40,10 @@ vertex.grid <- function(
 # region: basic education
 req$df_ids |>
   filter(occupation == "Basic Education") |>
-  pull(id) -> basic.education.id
+  pull(id) ->
+basic.education.id
 
-vertex.grid(
+career.grid(
   xmin = req$onet.bin$x |> filter(id == basic.education.id) |> pull(from),
   tmin = req$onet.bin$t |> filter(id == basic.education.id) |> pull(from),
   xmax = req$onet.bin$x |> filter(id == basic.education.id) |> pull(to),
@@ -64,106 +53,32 @@ vertex.grid(
 basic.education |>
   mutate(
     .before = 1,
-    career = basic.education.id
-  ) -> basic.education
+    occupation = basic.education.id
+  ) ->
+basic.education
 
 # endregion
-# region: career grid
-# career and similarity
-mtx_similarity |>
-  rename(
-    careerTo = 1
-  ) |>
-  pivot_longer(
-    cols = -1,
-    names_to = 'career',
-    values_to = 'similarity'
-  ) |>
-  filter(
-    career != careerTo
-  ) |>
-  inner_join(
-    req$df_ids |>
-      select(
-        -id_soc_code
-      ) |>
-      rename(
-        careerTo = occupation,
-        idTo = id
-      ),
-  ) |>
-  inner_join(
-    req$df_ids |>
-      select(
-        -id_soc_code
-      ) |>
-      rename(
-        career = occupation,
-        id = id
-      ),
-  ) |>
-  select(
-    -starts_with('career')
-  ) |>
-  rename_with(
-    ~ gsub(
-      'id',
-      'career',
-      .x
-    )
-  ) |>
-  relocate(
-    career,
-    careerTo
-  ) -> careerGrid
-
-# career progressions and similarity
-careerGrid |>
-  inner_join(
-    lab$labor |>
-      select(-occupation) |>
-      mutate(
-        wTotal = sum(w, na.rm = T),
-        wTilde = (w / wTotal)
-      ),
-    by = c('careerTo' = 'id'),
-    multiple = 'all'
-  ) |>
-  filter(
-    careerTo != basic.education.id
-  ) |>
-  filter(
-    similarity >= 0.5
-  ) |>
-  mutate(
-    prob = similarity * wTilde
-  ) |>
-  group_by(career) |>
-  mutate(
-    prob = prob / sum(prob)
-  ) |>
-  ungroup() -> careerGrid
-
-# endregion
-# region: vertex grid
-vertex.grid |>
+# region: career progressions
+career.grid |>
   Map(
     req$career.req |> filter(id != basic.education.id) |> pull(x),
     req$career.req |> filter(id != basic.education.id) |> pull(t)
-  ) -> vertexGrids
+  ) ->
+career.grids
 
 # endregion
 # # vertices
 # region: vertices
-vertexGrids |>
+career.grids |>
   bind_rows(
-    .id = "career"
+    .id = "occupation"
   ) |>
   mutate(
     .before = 1,
-    career = as.integer(career),
+    occupation = as.integer(occupation),
     vertex = row_number()
-  ) -> vertices
+  ) ->
+vertices
 
 # endregion
 # region: vertices indie prob
@@ -173,7 +88,7 @@ vertices |>
       select(
         x = from,
         x.ub = to,
-        career = id,
+        occupation = id,
         x.pct = pct
       ),
     relationship = "many-to-many"
@@ -183,19 +98,18 @@ vertices |>
       select(
         t = from,
         t.ub = to,
-        career = id,
+        occupation = id,
         t.pct = pct
       ),
     relationship = "many-to-many"
   ) |>
   relocate(
     vertex,
-    career,
-    x.lb = x,
-    x.ub,
-    t.lb = t,
-    t.ub
-  ) -> vertices
+    occupation,
+    x.lb = x, x.ub,
+    t.lb = t, t.ub
+  ) ->
+vertices
 
 # endregion
 # region: conditional prob dist
@@ -213,33 +127,30 @@ list(
 # region: vertices joint prob
 vertices |>
   filter(
-    career != basic.education.id
+    occupation != basic.education.id
   ) |>
-  group_by(career) |>
+  group_by(occupation) |>
   mutate(
-    const = pdf.t_x[[1]] |>
-      pro$norm.const(
-        pmin(x.lb),
-        pmax(x.ub),
-        pmin(t.lb),
-        pmax(t.ub)
-      )
+    const =
+      pdf.t_x[[1]] |>
+        pro$norm.const(
+          pmin(x.lb), pmax(x.ub),
+          pmin(t.lb), pmax(t.ub)
+        )
   ) |>
   ungroup() |>
   mutate(
-    prob = x.pct *
-      t.pct *
-      pro$prob.y_x(
-        pdf.t_x[[1]],
-        x.lb,
-        x.ub,
-        t.lb,
-        t.ub
-      ) /
-      const
+    prob =
+      x.pct *
+        t.pct *
+        pro$prob.y_x(
+          pdf.t_x[[1]],
+          x.lb, x.ub,
+          t.lb, t.ub
+        ) / const
   ) |>
   select(
-    career,
+    occupation,
     vertex,
     x = x.lb,
     t = t.lb,
@@ -251,23 +162,16 @@ vertices |>
         vertex = 1L + max(vertices$vertex),
         prob = 1
       )
-  ) -> vertices
+  ) ->
+vertices
+
+# - E[U] = Pr[v2 | v1] * u(v2) = ((w(v2) / w) * s(v1, v2) * [s(v1, v2) >= 0.5]) * u(v2) >= 0
+#         - cost(v1,v2)
+#         - weight := cost * ((1 - E[u]) ^ !is.infinity(cost))
 
 # endregion
 # exports
 # region: exports
-careerGrid |>
-  saveRDS(
-    Sys.getenv("ATLAS_MOD") |>
-      file.path(
-        "roadmap",
-        "path",
-        "data",
-        "rds",
-        "careers.rds"
-      )
-  )
-
 vertices |>
   saveRDS(
     Sys.getenv("ATLAS_MOD") |>

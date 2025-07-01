@@ -26,46 +26,6 @@ box::use(
 
 # endregion
 # model
-# region: vertex progressions
-# all career progressions are career switches
-# the vertex at which one "lands" is random
-# the cost of switching is pre-calculated
-vertices |>
-  rename_with(
-    ~ .x |> paste0('To')
-  ) |>
-  inner_join(
-    careers,
-    relationship = 'many-to-many'
-  ) |> 
-  inner_join(
-    vertices |> select(-prob),
-    relationship = 'many-to-many'
-  ) -> dsds
-
-dsds |>
-  relocate(
-    -ends_with('To')
-  )
-
-expand.grid(
-  vertex = vertices$vertex,
-  vertexTo = vertices$vertex
-) |>
-  filter(
-    vertex != vertexTo
-  ) -> vertexGrid
-
-vertexGrid |>
-  inner_join(
-    vertices,
-    relationship = 'many-to-many'
-  ) -> vertexGrid
-
-# careers
-
-# endregion
-
 # region: movement types
 # 1. "teleport" vertically to another occupation at a parallel vertex (same x,t)
 # expand.grid(
@@ -100,7 +60,8 @@ vertices |>
   ) |>
   mutate(
     type = "switch"
-  ) -> paths.switch
+  ) ->
+paths.switch
 
 # 2. increment either experience or education within the same occupation
 # with only direct (adjacent) movement, i.e.
@@ -127,7 +88,8 @@ req$education |>
   # rename(t = 2) |>
   mutate(
     t.to = dplyr::lead(t, 1)
-  ) -> education.move
+  ) ->
+education.move
 
 education.move |>
   bind_rows(
@@ -140,7 +102,8 @@ education.move |>
   ) |>
   mutate(
     type = "study"
-  ) -> education.move
+  ) ->
+education.move
 
 # valid experience movements
 # intern -> junior
@@ -162,7 +125,8 @@ req$experience |>
   # rename(x = 2) |>
   mutate(
     x.to = dplyr::lead(x, 1)
-  ) -> experience.move
+  ) ->
+experience.move
 
 experience.move |>
   bind_rows(
@@ -175,7 +139,8 @@ experience.move |>
   ) |>
   mutate(
     type = "work"
-  ) -> experience.move
+  ) ->
+experience.move
 
 # education move
 vertices |>
@@ -184,7 +149,8 @@ vertices |>
     by = c("t" = "t"),
     relationship = "many-to-many"
   ) |>
-  na.omit() -> paths.study
+  na.omit() ->
+paths.study
 
 # experience move
 vertices |>
@@ -193,22 +159,13 @@ vertices |>
     by = c("x" = "x"),
     relationship = "many-to-many"
   ) |>
-  na.omit() -> paths.work
+  na.omit() ->
+paths.work
 
 # 3. teleport back to basic education (hard reset)
 expand.grid(
-  vertex = vertices |>
-    filter(
-      occupation !=
-        (req$df_ids |> filter(occupation == "Basic Education") |> pull(id))
-    ) |>
-    pull(vertex),
-  vertex.to = vertices |>
-    filter(
-      occupation ==
-        (req$df_ids |> filter(occupation == "Basic Education") |> pull(id))
-    ) |>
-    pull(vertex)
+  vertex = vertices |> filter(occupation != (req$df_ids |> filter(occupation == "Basic Education") |> pull(id))) |> pull(vertex),
+  vertex.to = vertices |> filter(occupation == (req$df_ids |> filter(occupation == "Basic Education") |> pull(id))) |> pull(vertex)
 ) |>
   inner_join(
     vertices,
@@ -226,7 +183,8 @@ expand.grid(
   ) |>
   mutate(
     type = "reset"
-  ) -> paths.reset
+  ) ->
+paths.reset
 
 # # 3. teleport to first vertex of any occupation at full (x.to + t.to) cost? (hard reset)
 # expand.grid(
@@ -314,7 +272,8 @@ bind_rows(
     type,
     starts_with("x"),
     starts_with("t")
-  ) -> paths
+  ) ->
+paths
 
 # endregion
 # region: movement similarity
@@ -343,7 +302,8 @@ mtx_similarity |>
   ) |>
   inner_join(
     paths
-  ) -> paths
+  ) ->
+paths
 
 # endregion
 # region: movement cost
@@ -356,7 +316,8 @@ paths |>
       tk = t,
       tq = t.to
     )
-  ) -> paths
+  ) ->
+paths
 
 # endregion
 # region: movement payoff
@@ -375,7 +336,8 @@ paths |>
   ) |>
   filter(
     prob > 0
-  ) -> paths
+  ) ->
+paths
 
 # paths |>
 #   filter(
@@ -405,13 +367,15 @@ paths |>
 # inverse expected payoff
 paths |>
   mutate(
-    inverse.payoff = yap$inverse.payoff(
-      pay$payoff(
-        prob,
-        cost
+    inverse.payoff =
+      yap$inverse.payoff(
+        pay$payoff(
+          prob,
+          cost
+        )
       )
-    )
-  ) -> paths
+  ) ->
+paths
 
 # endregion
 # region: movement graph
@@ -476,7 +440,8 @@ paths |>
   gr$set.edge.attribute(
     "util",
     value = 1
-  ) -> paths.graph
+  ) ->
+paths.graph
 
 # endregion
 # exports

@@ -7,6 +7,17 @@ readRDS(
     "path",
     "data",
     "rds",
+    "careers.rds"
+  )
+) -> careers
+
+readRDS(
+  file.path(
+    Sys.getenv("ATLAS_MOD"),
+    "roadmap",
+    "path",
+    "data",
+    "rds",
     "vertices.rds"
   )
 ) -> vertices
@@ -14,6 +25,6 @@ readRDS(
 # endregion
 # exports
 # region: exports
-box::export(vertices)
+box::export(vertices, careers)
 
 # endregion
