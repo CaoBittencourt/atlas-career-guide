@@ -13,6 +13,7 @@ box::use(
   roadmap / path / data / similarity[...],
   req = roadmap / path / data / req,
   lab = roadmap / path / data / labor,
+  dt = dtplyr,
   roadmap / path / data / vertices[...],
   pay = roadmap / path / functions / payoff,
   yap = roadmap / path / functions / payoff_inverse,
@@ -30,23 +31,23 @@ box::use(
 # all career progressions are career switches
 # the vertex at which one "lands" is random
 # the cost of switching is pre-calculated
-vertices |>
-  rename_with(
-    ~ .x |> paste0('To')
-  ) |>
-  inner_join(
-    careers,
-    relationship = 'many-to-many'
-  ) |> 
-  inner_join(
-    vertices |> select(-prob),
-    relationship = 'many-to-many'
-  ) -> dsds
+# vertices |>
+#   rename_with(
+#     ~ .x |> paste0('To')
+#   ) |>
+#   inner_join(
+#     careers,
+#     relationship = 'many-to-many'
+#   ) |>
+#   inner_join(
+#     vertices |> select(-prob),
+#     relationship = 'many-to-many'
+#   ) -> dsds
 
-dsds |>
-  relocate(
-    -ends_with('To')
-  )
+# dsds |>
+#   relocate(
+#     -ends_with('To')
+#   )
 
 expand.grid(
   vertex = vertices$vertex,
@@ -56,11 +57,20 @@ expand.grid(
     vertex != vertexTo
   ) -> vertexGrid
 
+# vertexGrid |>
+#   inner_join(
+#     vertices,
+#     relationship = 'many-to-many'
+#   ) -> vertexGrid
+
 vertexGrid |>
+  dt$lazy_dt() |>
   inner_join(
-    vertices,
+    vertices |> dt$lazy_dt(),
     relationship = 'many-to-many'
-  ) -> vertexGrid
+  ) -> dsds
+
+# vertexGrid |> db$join_query(vertices, select = c('vertex', 'vertexTo')) -> dsds
 
 # careers
 
