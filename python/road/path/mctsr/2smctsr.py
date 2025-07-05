@@ -37,6 +37,39 @@ vertices = pl.read_parquet(
 
 
 # endregion
+# region: movement cost
+def _cost(ßkq: float, xk: float, xq: float, tk: float, tq: float):
+    # equivalent similarity
+    ßkqEq = ßkq * (ßkq >= 0.5)
+
+    # experience gap
+    xReq = np.maximum(xq - xk * ßkqEq, 0) / ßkq
+
+    # education gap
+    tReq = np.maximum(tq - tk * ßkqEq, 0) / ßkq
+
+    xReq = np.minimum(xq, xReq)
+    tReq = np.minimum(tq, tReq)
+    # assume one must have all equivalent years
+    # before attempting to switch careers
+    # assume order of study and work doesn't matter
+    # assume reset cost is zero
+    # movement types:
+    # - restart x, recycle t
+    # - restart t, recycle x
+    # - restart t, restart x
+    # - recycle t, recycle x
+
+    return {
+        "work": xReq,
+        "study": tReq,
+        "total": xReq + tReq,
+        "xReset": xReq == xq,
+        "tReset": tReq == tq,
+    }
+
+
+# endregion
 # region: two-stage monte carlo tree search roadmap
 class Pathfinder:
     def __init__(
@@ -98,14 +131,11 @@ class Pathfinder:
 
         self.career = _start.select(pl.col.career).item()
 
-        # all (feasible) careers progs
-        self.careers = careers.filter(pl.col.careerTo != self.career)
+        # all careers progs
+        self.careers = careers
 
-        # all (feasible) vertex progs
-        self.vertices = vertices.filter(pl.col.career != self.career)
-
-        # currently feasible career progs
-        self.progs = self.careers.filter(pl.col.career == self.career)
+        # all vertex progs
+        self.vertices = vertices
 
         # career progression log
         self.path = pl.DataFrame(
@@ -115,35 +145,31 @@ class Pathfinder:
                 "t": _start.select(pl.col.t).item(),
                 "xReset": False,
                 "tReset": False,
-                "cost": 0,
+                "cost": 0.0,
             }
         )
 
     def getPossibleActions(self):
-        # remove current career
-        # select next career
-        # filter next vertices
-        # select next vertex
-
         # first stage:
-        # remove current career
-        self.careers = self.careers.filter(pl.col.careerTo != self.career)
-        self.vertices = self.vertices.filter(pl.col.career != self.career)
-        self.progs = self.careers.filter(pl.col.career == self.career)
+        # feasible career progressions
+        _careerProgs = self.careers.filter(pl.col.careerTo != self.career).filter(
+            pl.col.career == self.career
+        )
 
         # randomly select a career
-        _career = np.random.choice(
-            a=self.progs.select(pl.col.careerTo).to_series(),
+        _careerTo = np.random.choice(
+            a=_careerProgs.select(pl.col.careerTo).to_series(),
             size=1,
-            p=self.progs.select(pl.col.prob).to_series()
-            / self.progs.select(pl.col.prob).sum().item(),
+            p=_careerProgs.select(pl.col.prob).to_series()
+            / _careerProgs.select(pl.col.prob).sum().item(),
         ).item()
 
         # second stage:
-        # randomly select a vertex
-        _vertexProgs = self.vertices.filter(pl.col.career == _career)
+        # feasible vertex progressions
+        _vertexProgs = self.vertices.filter(pl.col.career == _careerTo)
 
-        _vertex = np.random.choice(
+        # randomly select a vertex
+        _vertexTo = np.random.choice(
             a=_vertexProgs.select(pl.col.vertex).to_series(),
             size=1,
             p=_vertexProgs.select(pl.col.prob).to_series()
@@ -151,38 +177,8 @@ class Pathfinder:
         ).item()
 
         return {
-            "careerTo": _career,
-            "vertexTo": _vertex,
-        }
-
-    def _cost(ßkq, xk, xq, tk, tq):
-        # equivalent similarity
-        ßkqEq = ßkq * (ßkq >= 0.5)
-
-        # experience gap
-        xReq = np.maximum(xq - xk * ßkqEq, 0) / ßkq
-
-        # education gap
-        tReq = np.maximum(tq - tk * ßkqEq, 0) / ßkq
-
-        xReq = np.minimum(xq, xReq)
-        tReq = np.minimum(tq, tReq)
-        # assume one must have all equivalent years
-        # before attempting to switch careers
-        # assume order of study and work doesn't matter
-        # assume reset cost is zero
-        # movement types:
-        # - restart x, recycle t
-        # - restart t, recycle x
-        # - restart t, restart x
-        # - recycle t, recycle x
-
-        return {
-            "work": xReq,
-            "study": tReq,
-            "total": xReq + tReq,
-            "xReset": xReq == xq,
-            "tReset": tReq == tq,
+            "careerTo": _careerTo,
+            "vertexTo": _vertexTo,
         }
 
     def cost(self, careerTo: int, vertexTo: int):
@@ -193,7 +189,8 @@ class Pathfinder:
         _vertex = self.vertices.filter(pl.col.vertex == self.vertex)
         _vertexTo = self.vertices.filter(pl.col.vertex == vertexTo)
 
-        return self._cost(
+        return _cost(
+            ßkq=_careers["similarity"].item(),
             xk=_vertex.select(pl.col.x).item(),
             xq=_vertexTo.select(pl.col.x).item(),
             tk=_vertex.select(pl.col.t).item(),
@@ -202,7 +199,7 @@ class Pathfinder:
 
     def takeAction(self, careerTo: int, vertexTo: int):
         # update timeline
-        _vertex = self.vertices.filter(pl.col.vertex == vertexTo)
+        _vertexTo = self.vertices.filter(pl.col.vertex == vertexTo)
         _cost = self.cost(careerTo, vertexTo)
 
         self.path = pl.concat(
@@ -211,8 +208,8 @@ class Pathfinder:
                 pl.DataFrame(
                     {
                         "career": self.career,
-                        "x": _vertex.select(pl.col.x).item(),
-                        "t": _vertex.select(pl.col.t).item(),
+                        "x": _vertexTo.select(pl.col.x).item(),
+                        "t": _vertexTo.select(pl.col.t).item(),
                         "xReset": _cost["xReset"],
                         "tReset": _cost["tReset"],
                         "cost": _cost["total"],
@@ -222,6 +219,16 @@ class Pathfinder:
         )
 
         # update state
+        self.careers = (
+            self.careers.filter(pl.col.career != self.career)
+            .filter(pl.col.careerTo != self.career)
+            .filter(pl.col.careerTo != careerTo)
+        )
+
+        self.vertices = self.vertices.filter(pl.col.career != self.career).filter(
+            pl.col.career != careerTo
+        )
+
         self.career = careerTo
         self.vertex = vertexTo
 
