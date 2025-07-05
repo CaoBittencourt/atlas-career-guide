@@ -109,14 +109,9 @@ class Pathfinder:
         )
 
         # currently feasible career progs
-        self.careerProgs = self.careers.filter(
+        self.progs = self.careers.filter(
             pl.col.career == self.career,
         )
-
-        # # currently feasible vertex progs
-        # self.vertexProgs = self.vertices.filter(
-        #     pl.col.career != self.career,
-        # )
 
         # career progression log
         # self.path = pl.DataFrame(
@@ -133,6 +128,65 @@ class Pathfinder:
         #     }
         # )
 
+    # def getPossibleActions(self):
+    #     # remove current career
+    #     # select next career
+    #     # filter next vertices
+    #     # select next vertex
+
+    #     # first stage:
+    #     # remove current career
+    #     self.careers = self.careers.filter(pl.col.careerTo != self.career)
+    #     self.vertices = self.vertices.filter(pl.col.career != self.career)
+
+    #     self.progs = self.careers.filter(pl.col.career == self.career)
+
+    #     # randomly select a career
+    #     self.career = np.random.choice(
+    #         a=self.progs.select(pl.col.careerTo).to_series(),
+    #         size=1,
+    #         p=self.progs.select(pl.col.prob).to_series()
+    #         / self.progs.select(pl.col.prob).sum().item(),
+    #     ).item()
+
+    #     # second stage:
+    #     # randomly select a vertex
+    #     _vertexProgs = self.vertices.filter(pl.col.career == self.career)
+
+    #     self.vertex = np.random.choice(
+    #         a=_vertexProgs.select(pl.col.vertex).to_series(),
+    #         size=1,
+    #         p=_vertexProgs.select(pl.col.prob).to_series()
+    #         / _vertexProgs.select(pl.col.prob).sum().item(),
+    #     ).item()
+
+    #     return self
+    # def takeAction(self):
+    #     # update timeline
+    #     # _vertex = self.vertices.filter(pl.col.vertex == vertexTo)
+    #     # pl.concat(
+    #     #     [
+    #     #         self.path,
+    #     #         pl.DataFrame(
+    #     #             {
+    #     #                 "year": 0,
+    #     #                 "career": self.career,
+    #     #                 "x": _vertex.select(pl.col.x).item(),
+    #     #                 "t": _vertex.select(pl.col.t).item(),
+    #     #                 "xCum": self.path.select(pl.col.xCum).tail(1).item()
+    #     #                 + _vertex.select(pl.col.x).item(),
+    #     #                 "tCum": self.path.select(pl.col.tCum).tail(1).item()
+    #     #                 + _vertex.select(pl.col.t).item(),
+    #     #                 "xReset": False,
+    #     #                 "tReset": False,
+    #     #                 "cost": 1,
+    #     #             }
+    #     #         ),
+    #     #     ]
+    #     # )
+
+    #     return self
+
     def getPossibleActions(self):
         # remove current career
         # select next career
@@ -143,59 +197,37 @@ class Pathfinder:
         # remove current career
         self.careers = self.careers.filter(pl.col.careerTo != self.career)
         self.vertices = self.vertices.filter(pl.col.career != self.career)
-
-        self.careerProgs = self.careers.filter(pl.col.career == self.career)
+        self.progs = self.careers.filter(pl.col.career == self.career)
 
         # randomly select a career
-        self.career = np.random.choice(
-            a=self.careerProgs.select(pl.col.careerTo).to_series(),
+        _career = np.random.choice(
+            a=self.progs.select(pl.col.careerTo).to_series(),
             size=1,
-            p=self.careerProgs.select(pl.col.prob).to_series()
-            / self.careerProgs.select(pl.col.prob).sum().item(),
+            p=self.progs.select(pl.col.prob).to_series()
+            / self.progs.select(pl.col.prob).sum().item(),
         ).item()
 
         # second stage:
         # randomly select a vertex
-        _vertexProgs = self.vertices.filter(pl.col.career == self.career)
+        _vertexProgs = self.vertices.filter(pl.col.career == _career)
 
-        self.vertex = np.random.choice(
+        _vertex = np.random.choice(
             a=_vertexProgs.select(pl.col.vertex).to_series(),
             size=1,
             p=_vertexProgs.select(pl.col.prob).to_series()
             / _vertexProgs.select(pl.col.prob).sum().item(),
         ).item()
 
-        return self
+        return {
+            "careerTo": _career,
+            "vertexTo": _vertex,
+        }
 
-    # def getPossibleActions(self):
-    #     # first stage:
-    #     # randomly select a career
-    #     _careerTo = np.random.choice(
-    #         a=self.careers.select(pl.col.careerTo).to_series(),
-    #         size=1,
-    #         p=self.careers.select(pl.col.prob).to_series()
-    #         / self.careers.select(pl.col.prob).sum().item(),
-    #     ).item()
+    def takeAction(self, careerTo: int, vertexTo: int):
+        # update state
+        self.career = careerTo
+        self.vertex = vertexTo
 
-    #     # second stage:
-    #     # randomly select a vertex
-    #     _vertexProgs = self.vertexProgs.filter(
-    #         pl.col.career == _careerTo,
-    #     )
-
-    #     _vertexTo = np.random.choice(
-    #         a=_vertexProgs.select(pl.col.vertex).to_series(),
-    #         size=1,
-    #         p=_vertexProgs.select(pl.col.prob).to_series()
-    #         / _vertexProgs.select(pl.col.prob).sum().item(),
-    #     ).item()
-
-    #     return {
-    #         "careerTo": _careerTo,
-    #         "vertexTo": _vertexTo,
-    #     }
-
-    def takeAction(self):
         # update timeline
         # _vertex = self.vertices.filter(pl.col.vertex == vertexTo)
         # pl.concat(
@@ -218,11 +250,6 @@ class Pathfinder:
         #         ),
         #     ]
         # )
-
-        # self.careerProgs = self.careers.filter(pl.col.career == self.career)
-
-        # self.careers = self.careers.filter(pl.col.career != self.career)
-        # self.vertices = self.vertices.filter(pl.col.career != self.career)
 
         return self
 
@@ -253,8 +280,7 @@ pathfinder = Pathfinder(
 
 while not pathfinder.isTerminal():
     print(f"current vertex: {pathfinder.vertex}")
-    pathfinder = pathfinder.getPossibleActions()
-    pathfinder = pathfinder.takeAction()
+    pathfinder = pathfinder.takeAction(**pathfinder.getPossibleActions())
     # print(f"current cost: {pathfinder.path}")
 
 # endregion
