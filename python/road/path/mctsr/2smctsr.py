@@ -4,7 +4,9 @@ from mcts import mcts
 import polars as pl
 import numpy as np
 import os
+from types import NoneType
 from numbers import Number
+from python.data import ist
 
 # endregion
 # region: data
@@ -64,8 +66,8 @@ def _cost(ßkq: float, xk: float, xq: float, tk: float, tq: float):
         "work": xReq,
         "study": tReq,
         "total": xReq + tReq,
-        "xReset": xReq == xq,
-        "tReset": tReq == tq,
+        "xReset": xReq > xq and xq != 0,
+        "tReset": tReq > tq and tq != 0,
     }
 
 
@@ -78,6 +80,7 @@ class Pathfinder:
         goal: int,  # target career
         careers: pl.DataFrame,  # career probabilities (stage 1)
         vertices: pl.DataFrame,  # vertex probabilities and costs (stage 2)
+        yearsMax: [float | int | NoneType] = None,
     ):
         assert all(
             np.isin(
@@ -137,6 +140,17 @@ class Pathfinder:
         # all vertex progs
         self.vertices = vertices
 
+        # time limit
+        self.yearsMax = (
+            self.vertices.filter(pl.col.career == self.goal)
+            .select(pl.col.x, pl.col.t)
+            .max()
+            .sum_horizontal()
+            .item()
+            if ist.null(yearsMax)
+            else yearsMax
+        )
+
         # career progression log
         self.path = pl.DataFrame(
             {
@@ -152,9 +166,7 @@ class Pathfinder:
     def getPossibleActions(self):
         # first stage:
         # feasible career progressions
-        _careerProgs = self.careers.filter(pl.col.careerTo != self.career).filter(
-            pl.col.career == self.career
-        )
+        _careerProgs = self.careers.filter(pl.col.career == self.career)
 
         # randomly select a career
         _careerTo = np.random.choice(
@@ -200,19 +212,19 @@ class Pathfinder:
     def takeAction(self, careerTo: int, vertexTo: int):
         # update timeline
         _vertexTo = self.vertices.filter(pl.col.vertex == vertexTo)
-        _cost = self.cost(careerTo, vertexTo)
+        _moveCost = self.cost(careerTo, vertexTo)
 
         self.path = pl.concat(
             [
                 self.path,
                 pl.DataFrame(
                     {
-                        "career": self.career,
+                        "career": careerTo,
                         "x": _vertexTo.select(pl.col.x).item(),
                         "t": _vertexTo.select(pl.col.t).item(),
-                        "xReset": _cost["xReset"],
-                        "tReset": _cost["tReset"],
-                        "cost": _cost["total"],
+                        "xReset": _moveCost["xReset"],
+                        "tReset": _moveCost["tReset"],
+                        "cost": _moveCost["total"],
                     }
                 ),
             ]
@@ -225,9 +237,9 @@ class Pathfinder:
             .filter(pl.col.careerTo != careerTo)
         )
 
-        self.vertices = self.vertices.filter(pl.col.career != self.career).filter(
-            pl.col.career != careerTo
-        )
+        # self.vertices = self.vertices.filter(pl.col.career != self.career).filter(
+        #     pl.col.career != careerTo
+        # )
 
         self.career = careerTo
         self.vertex = vertexTo
@@ -236,18 +248,27 @@ class Pathfinder:
 
     def isTerminal(self):
         # game ends when the target career is reached
-        return self.career == self.goal
+        return (
+            self.career == self.goal
+            or self.yearsMax <= self.path.select(pl.col.cost).sum().item()
+        )
 
     def getReward(self):
+        # only reward if the target career is reached
         # the smaller the cost, the higher the reward
-        return -self.path.select(pl.col.cost).sum().item()
+        return (
+            -np.inf
+            if self.career != self.goal
+            else -self.path.select(pl.col.cost).sum().item()
+        )
 
 
 # endregion
 # example
 # region: all careers
-k = 1
-q = 2
+Lambda = careers.select(pl.col.career).unique().to_series()
+k = np.random.choice(Lambda)
+q = np.random.choice(Lambda)
 
 pathfinder = Pathfinder(
     start=np.random.choice(
@@ -260,9 +281,41 @@ pathfinder = Pathfinder(
     vertices=vertices,
 )
 
+# dsds = pathfinder.getPossibleActions()
+
+# _careers = pathfinder.careers.filter(pl.col.career == pathfinder.career).filter(
+#     pl.col.careerTo == dsds["careerTo"]
+# )
+
+# _vertex = pathfinder.vertices.filter(pl.col.vertex == pathfinder.vertex)
+# _vertexTo = pathfinder.vertices.filter(pl.col.vertex == dsds["vertexTo"])
+
+# lalala = _cost(
+#     ßkq=_careers["similarity"].item(),
+#     xk=_vertex.select(pl.col.x).item(),
+#     xq=_vertexTo.select(pl.col.x).item(),
+#     tk=_vertex.select(pl.col.t).item(),
+#     tq=_vertexTo.select(pl.col.t).item(),
+# )
+
+# lalala == pathfinder.cost(**dsds)
+
+# pathfinder = pathfinder.takeAction(**dsds)
+
+# pathfinder.career
+# pathfinder.careers
+# pathfinder.path
+# pathfinder.vertex
+# pathfinder.vertices
+
 while not pathfinder.isTerminal():
     print(f"current vertex: {pathfinder.vertex}")
-    pathfinder = pathfinder.takeAction(**pathfinder.getPossibleActions())
+    dsds = pathfinder.getPossibleActions()
+    pathfinder = pathfinder.takeAction(
+        careerTo=dsds["careerTo"],
+        vertexTo=dsds["vertexTo"],
+    )
+    # pathfinder = pathfinder.takeAction(**pathfinder.getPossibleActions())
     # print(f"current cost: {pathfinder.path}")
 
 # endregion
