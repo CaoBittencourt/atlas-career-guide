@@ -35,5 +35,6 @@ dependencies:
   - r-bayesplot
   - r-np
   - r-pracma
+  - r-arrow
   # - r-ks
   # - r-flexclust

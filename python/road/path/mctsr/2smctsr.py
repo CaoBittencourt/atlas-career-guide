@@ -4,12 +4,13 @@ from mcts import mcts
 import polars as pl
 import numpy as np
 import os
-from pyreadr import read_r
 from numbers import Number
 
 # endregion
 # region: data
-graph = pl.read_csv(os.path.join(os.getenv("ATLAS_DATA"), "graph.csv"))
+careers = pl.read_parquet(os.path.join(os.getenv("ATLAS_DATA"), "careers.parquet"))
+vertices = pl.read_parquet(os.path.join(os.getenv("ATLAS_DATA"), "vertices.parquet"))
+# graph = pl.read_csv(os.path.join(os.getenv("ATLAS_DATA"), "graph.csv"))
 
 # endregion
 # model
@@ -30,8 +31,8 @@ class Pathfinder:
         self,
         start: int,  # start vertex
         goal: int,  # target career
-        vertices: pl.DataFrame,  # vertex probabilities and costs
-        careers: pl.DataFrame,  # career probabilities
+        careers: pl.DataFrame,  # career probabilities (stage 1)
+        vertices: pl.DataFrame,  # vertex probabilities and costs (stage 2)
     ):
         assert all(
             np.isin(
