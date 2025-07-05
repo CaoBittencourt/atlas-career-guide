@@ -8,9 +8,21 @@ from numbers import Number
 
 # endregion
 # region: data
-careers = pl.read_parquet(os.path.join(os.getenv("ATLAS_DATA"), "careers.parquet"))
-vertices = pl.read_parquet(os.path.join(os.getenv("ATLAS_DATA"), "vertices.parquet"))
-# graph = pl.read_csv(os.path.join(os.getenv("ATLAS_DATA"), "graph.csv"))
+careers = pl.read_parquet(
+    os.path.join(
+        os.getenv("ATLAS_DATA"),
+        "road",
+        "careers.parquet",
+    )
+)
+
+vertices = pl.read_parquet(
+    os.path.join(
+        os.getenv("ATLAS_DATA"),
+        "road",
+        "vertices.parquet",
+    )
+)
 
 # endregion
 # model
@@ -38,11 +50,10 @@ class Pathfinder:
             np.isin(
                 [
                     "career",
-                    "careerTo",
                     "vertex",
-                    "vertexTo",
+                    "x",
+                    "t",
                     "prob",
-                    "cost",
                 ],
                 vertices.columns,
             )
@@ -53,14 +64,15 @@ class Pathfinder:
                 [
                     "career",
                     "careerTo",
+                    "similarity",
                     "prob",
                 ],
                 careers.columns,
             )
         )
 
-        assert np.isin(start, self.vertices.select(pl.col.vertex).unique().to_numpy())
-        assert np.isin(goal, self.careers.select(pl.col.careerTo).unique().to_numpy())
+        assert np.isin(start, vertices.select(pl.col.vertex).unique().to_numpy())
+        assert np.isin(goal, careers.select(pl.col.careerTo).unique().to_numpy())
 
         # starting vertex (not career)
         self.vertex = start
@@ -70,56 +82,36 @@ class Pathfinder:
 
         # current career (not vertex)
         self.career = (
-            self.vertices.filter(
+            vertices.filter(
                 pl.col.vertex == self.vertex,
             )
+            .slice(0, 1)
             .select(pl.col.career)
-            .unique()
             .item()
         )
 
         # all (feasible) careers progs
         self.careers = careers.filter(
             pl.col.careerTo != self.career,
-        ).select(
-            "career",
-            "careerTo",
-            "prob",
         )
 
         # all (feasible) vertex progs
         self.vertices = vertices.filter(
-            pl.col.careerTo != self.career,
-        ).select(
-            "career",
-            "careerTo",
-            "vertex",
-            "vertexTo",
-            "prob",
-            "cost",
+            pl.col.career != self.career,
         )
 
         # currently feasible career progs
         self.careerProgs = self.careers.filter(
             pl.col.career == self.career,
-        ).select(
-            pl.col.careerTo,
-            pl.col.prob,
         )
 
         # currently feasible vertex progs
         self.vertexProgs = self.vertices.filter(
-            pl.col.vertex == self.vertex,
-        ).select(
-            pl.col.career,
-            pl.col.careerTo,
-            pl.col.vertexTo,
-            pl.col.prob,
-            pl.col.cost,
+            pl.col.career != self.career,
         )
 
         # career progression log
-        self.path = pl.dataframe(
+        self.path = pl.DataFrame(
             # int career id
             # num timeline
             # num years of experience
@@ -134,21 +126,21 @@ class Pathfinder:
         # first stage:
         # randomly select a career
         _careerTo = np.random.choice(
-            a=self.careerProgs.select(pl.col.careerTo),
+            a=self.careers.select(pl.col.careerTo).to_series(),
             size=1,
-            p=self.careerProgs.select(pl.col.prob),
-        )
+            p=self.careers.select(pl.col.prob).to_series(),
+        ).item()
 
         # second stage:
         # randomly select a vertex
         _vertexProgs = self.vertexProgs.filter(
-            pl.col.careerTo == _careerTo,
+            pl.col.career == _careerTo,
         )
 
         _vertexTo = np.random.choice(
-            a=_vertexProgs.select(pl.col.vertexTo),
+            a=_vertexProgs.select(pl.col.vertex).to_series(),
             size=1,
-            p=_vertexProgs.select(pl.col.prob),
+            p=_vertexProgs.select(pl.col.prob).to_series(),
         ).item()
 
         return {
@@ -280,23 +272,32 @@ class Pathfinder:
 # # endregion
 # example
 # region: all careers
+k = 1
+q = 2
 pathfinder = Pathfinder(
-    start=graph["vertex"].sample(1).item(),
-    goal=graph["vertex"].sample(1).item(),
-    graph=graph,
+    start=np.random.choice(
+        a=vertices.filter(pl.col.career == k).select(pl.col.vertex).to_series(),
+        size=1,
+        p=vertices.filter(pl.col.career == k).select(pl.col.prob).to_series(),
+    ).item(),
+    goal=q,
+    careers=careers,
+    vertices=vertices,
 )
 
 pathfinder.career
-
-pathfinder.career
-pathfinder.careerGoal
-pathfinder.vertex
 pathfinder.goal
-pathfinder.cost
-pathfinder.paths
-pathfinder.graph
-pathfinder.isTerminal()
-pathfinder.getReward()
+pathfinder.getPossibleActions()
+# (
+#     pathfinder.vertexProgs.group_by(pl.col.career)
+#     .agg(prob=pl.col.prob.sum())
+#     .with_columns(prob_1=pl.col.prob.round(4) == 1)
+#     .select(pl.col.prob_1)
+#     .to_series()
+#     .all()
+# )
+
+pathfinder.getPossibleActions()
 
 while not pathfinder.isTerminal():
     print(f"current vertex: {pathfinder.vertex}")
