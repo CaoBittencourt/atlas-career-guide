@@ -254,7 +254,6 @@ pathfinder = Pathfinder(
 while not pathfinder.isTerminal():
     print(f"current vertex: {pathfinder.vertex}")
     pathfinder = pathfinder.getPossibleActions()
-    print(f"current vertex: {pathfinder.vertex}")
     pathfinder = pathfinder.takeAction()
     # print(f"current cost: {pathfinder.path}")
 
