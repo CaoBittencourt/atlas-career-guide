@@ -92,14 +92,11 @@ class Pathfinder:
         self.goal = goal
 
         # current career (not vertex)
-        self.career = (
-            vertices.filter(
-                pl.col.vertex == self.vertex,
-            )
-            .slice(0, 1)
-            .select(pl.col.career)
-            .item()
-        )
+        _career = vertices.filter(
+            pl.col.vertex == self.vertex,
+        ).slice(0, 1)
+
+        self.career = _career.select(pl.col.career).item()
 
         # all (feasible) careers progs
         self.careers = careers.filter(
@@ -122,16 +119,19 @@ class Pathfinder:
         )
 
         # career progression log
-        self.path = pl.DataFrame(
-            # int career id
-            # num timeline
-            # num years of experience
-            # num years of education
-            # num cumulative years of experience
-            # num cumulative years of education
-            # bool xReset
-            # bool tReset
-        )
+        # self.path = pl.DataFrame(
+        #     {
+        #         "year": 0,
+        #         "career": self.career,
+        #         "x": _career.select(pl.col.x).item(),
+        #         "t": _career.select(pl.col.t).item(),
+        #         "xCum": _career.select(pl.col.x).item(),
+        #         "tCum": _career.select(pl.col.t).item(),
+        #         "xReset": False,
+        #         "tReset": False,
+        #         "cost": 0,
+        #     }
+        # )
 
     def getPossibleActions(self):
         # first stage:
@@ -162,28 +162,38 @@ class Pathfinder:
         }
 
     def takeAction(self, careerTo: int, vertexTo: int):
-        # # update timeline
-        # self.path = pl.concat(
+        # update timeline
+        # _vertex = self.vertices.filter(pl.col.vertex == vertexTo)
+        # pl.concat(
         #     [
         #         self.path,
-        #         self.vertexProgs.filter(
-        #             pl.col.vertex == self.vertex,
-        #             pl.col.vertexTo == vertexTo,
-        #         ).select(
-        #             pl.col.career
+        #         pl.DataFrame(
+        #             {
+        #                 "year": 0,
+        #                 "career": self.career,
+        #                 "x": _vertex.select(pl.col.x).item(),
+        #                 "t": _vertex.select(pl.col.t).item(),
+        #                 "xCum": self.path.select(pl.col.xCum).tail(1).item()
+        #                 + _vertex.select(pl.col.x).item(),
+        #                 "tCum": self.path.select(pl.col.tCum).tail(1).item()
+        #                 + _vertex.select(pl.col.t).item(),
+        #                 "xReset": False,
+        #                 "tReset": False,
+        #                 "cost": 1,
+        #             }
         #         ),
         #     ]
         # )
 
         # update state
+        self.careerProgs = self.careers.filter(pl.col.career == careerTo)
+        self.vertexProgs = self.vertices.filter(pl.col.career == careerTo)
+
+        self.careers = self.careers.filter(pl.col.career != careerTo)
+        self.vertices = self.vertices.filter(pl.col.career != careerTo)
+
         self.career = careerTo
         self.vertex = vertexTo
-
-        self.careers = self.careers.filter(pl.col.careerTo != self.career)
-        self.careerProgs = self.careers.filter(pl.col.career == self.career)
-
-        self.vertices = self.vertices.filter(pl.col.careerTo != self.career)
-        self.vertexProgs = self.vertices.filter(pl.col.vertex == self.vertex)
 
         return self
 
@@ -197,92 +207,6 @@ class Pathfinder:
 
 
 # endregion
-# # region: state class
-# class Pathfinder:
-#     def __init__(
-#         self,
-#         start: int,
-#         goal: int,
-#         graph: pl.DataFrame,
-#     ):
-#         assert all(
-#             np.isin(
-#                 [
-#                     "vertex",
-#                     "vertex.to",
-#                     "prob",
-#                     "cost",
-#                     "inverse.payoff",
-#                 ],
-#                 graph.columns,
-#             )
-#         )
-
-#         self.graph = graph.select(
-#             "vertex",
-#             "vertex.to",
-#             "prob",
-#             "cost",
-#         )
-#         # normalize probs later
-
-#         self.vertex = start
-#         self.goal = goal
-#         self.cost = 0
-
-#         self.paths = self.graph.filter(
-#             pl.col("vertex") == self.vertex,
-#         ).select(
-#             pl.col("vertex.to"),
-#             pl.col("prob"),
-#             pl.col("cost"),
-#         )
-
-#     def getPossibleActions(self):
-#         # randomly select a vertex
-#         return np.random.choice(
-#             a=self.paths["vertex.to"],
-#             size=1,
-#             p=self.paths["prob"] / self.paths["prob"].sum(),
-#         ).item()
-
-#     def takeAction(self, vertexTo: int):
-#         # update total cost
-#         self.cost += (
-#             self.paths.filter(
-#                 pl.col("vertex.to") == vertexTo,
-#             )
-#             .select(pl.col("cost"))
-#             .item()
-#         )
-
-#         # update graph data frame
-#         self.graph = self.graph.filter(
-#             pl.col("vertex") != self.vertex,
-#             pl.col("vertex.to") != self.vertex,
-#             pl.col("vertex.to") != vertexTo,
-#         )
-
-#         # update paths data frame
-#         self.paths = self.graph.filter(
-#             pl.col("vertex") == vertexTo,
-#         )
-
-#         # update current vertex
-#         self.vertex = vertexTo
-
-#         return self
-
-#     def isTerminal(self):
-#         # game ends when the target vertex is reached
-#         return self.vertex == self.goal
-
-#     def getReward(self):
-#         # the smaller the cost, the higher the reward
-#         return -self.cost
-
-
-# # endregion
 # example
 # region: all careers
 k = 1
@@ -298,23 +222,9 @@ pathfinder = Pathfinder(
     vertices=vertices,
 )
 
-pathfinder.getPossibleActions()
-pathfinder.career
-pathfinder.goal
-# (
-#     pathfinder.vertexProgs.group_by(pl.col.career)
-#     .agg(prob=pl.col.prob.sum())
-#     .with_columns(prob_1=pl.col.prob.round(4) == 1)
-#     .select(pl.col.prob_1)
-#     .to_series()
-#     .all()
-# )
-
-pathfinder.getPossibleActions()
-
 while not pathfinder.isTerminal():
+    pathfinder = pathfinder.takeAction(**pathfinder.getPossibleActions())
     print(f"current vertex: {pathfinder.vertex}")
-    print(f"current cost: {pathfinder.cost}")
-    pathfinder = pathfinder.takeAction(pathfinder.getPossibleActions())
+    # print(f"current cost: {pathfinder.path}")
 
 # endregion
