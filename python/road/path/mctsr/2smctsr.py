@@ -74,6 +74,17 @@ class Pathfinder:
         assert np.isin(start, vertices.select(pl.col.vertex).unique().to_numpy())
         assert np.isin(goal, careers.select(pl.col.careerTo).unique().to_numpy())
 
+        # # normalize probs
+        # vertices = vertices.with_columns(
+        #     prob=pl.col.prob.cast(pl.Float64),
+        #     prob=pl.col.prob / pl.col.prob.sum().over(partition_by=pl.col.career)
+        # )
+
+        # careers = careers.with_columns(
+        #     prob=pl.col.prob.cast(pl.Float64),
+        #     prob=pl.col.prob / pl.col.prob.sum().over(partition_by=pl.col.career)
+        # )
+
         # starting vertex (not career)
         self.vertex = start
 
@@ -128,7 +139,8 @@ class Pathfinder:
         _careerTo = np.random.choice(
             a=self.careers.select(pl.col.careerTo).to_series(),
             size=1,
-            p=self.careers.select(pl.col.prob).to_series(),
+            p=self.careers.select(pl.col.prob).to_series()
+            / self.careers.select(pl.col.prob).sum().item(),
         ).item()
 
         # second stage:
@@ -140,7 +152,8 @@ class Pathfinder:
         _vertexTo = np.random.choice(
             a=_vertexProgs.select(pl.col.vertex).to_series(),
             size=1,
-            p=_vertexProgs.select(pl.col.prob).to_series(),
+            p=_vertexProgs.select(pl.col.prob).to_series()
+            / _vertexProgs.select(pl.col.prob).sum().item(),
         ).item()
 
         return {
@@ -285,9 +298,9 @@ pathfinder = Pathfinder(
     vertices=vertices,
 )
 
+pathfinder.getPossibleActions()
 pathfinder.career
 pathfinder.goal
-pathfinder.getPossibleActions()
 # (
 #     pathfinder.vertexProgs.group_by(pl.col.career)
 #     .agg(prob=pl.col.prob.sum())
