@@ -267,11 +267,26 @@ class Pathfinder:
 
 # endregion
 # example
-# region: all careers
+# region: select careers
 Lambda = careers.select(pl.col.career).unique().to_series()
 k = np.random.choice(Lambda)
 q = np.random.choice(Lambda)
 
+# pathfinder = Pathfinder(
+#     start=np.random.choice(
+#         a=vertices.filter(pl.col.career == k).select(pl.col.vertex).to_series(),
+#         size=1,
+#         p=vertices.filter(pl.col.career == k).select(pl.col.prob).to_series(),
+#     ).item(),
+#     goal=q,
+#     careers=careers,
+#     vertices=vertices,
+# )
+# searcher = mcts(timeLimit=1000)
+# action = searcher.search(initialState=pathfinder)
+
+# endregion
+# region: pathfinding
 pathfinder = Pathfinder(
     start=np.random.choice(
         a=vertices.filter(pl.col.career == k).select(pl.col.vertex).to_series(),
@@ -282,56 +297,15 @@ pathfinder = Pathfinder(
     careers=careers,
     vertices=vertices,
 )
-searcher = mcts(timeLimit=1000)
-action = searcher.search(initialState=pathfinder)
-
-
-pathfinder = Pathfinder(
-    start=np.random.choice(
-        a=vertices.filter(pl.col.career == k).select(pl.col.vertex).to_series(),
-        size=1,
-        p=vertices.filter(pl.col.career == k).select(pl.col.prob).to_series(),
-    ).item(),
-    goal=q,
-    careers=careers,
-    vertices=vertices,
-)
-
-# dsds = pathfinder.getPossibleActions()
-
-# _careers = pathfinder.careers.filter(pl.col.career == pathfinder.career).filter(
-#     pl.col.careerTo == dsds["careerTo"]
-# )
-
-# _vertex = pathfinder.vertices.filter(pl.col.vertex == pathfinder.vertex)
-# _vertexTo = pathfinder.vertices.filter(pl.col.vertex == dsds["vertexTo"])
-
-# lalala = _cost(
-#     ßkq=_careers["similarity"].item(),
-#     xk=_vertex.select(pl.col.x).item(),
-#     xq=_vertexTo.select(pl.col.x).item(),
-#     tk=_vertex.select(pl.col.t).item(),
-#     tq=_vertexTo.select(pl.col.t).item(),
-# )
-
-# lalala == pathfinder.cost(**dsds)
-
-# pathfinder = pathfinder.takeAction(**dsds)
-
-# pathfinder.career
-# pathfinder.careers
-# pathfinder.path
-# pathfinder.vertex
-# pathfinder.vertices
 
 while not pathfinder.isTerminal():
-    print(f"current vertex: {pathfinder.vertex}")
+    print(f"current career: {pathfinder.career}")
     dsds = pathfinder.getPossibleActions()
     pathfinder = pathfinder.takeAction(
         careerTo=dsds["careerTo"],
         vertexTo=dsds["vertexTo"],
     )
-    # pathfinder = pathfinder.takeAction(**pathfinder.getPossibleActions())
-    # print(f"current cost: {pathfinder.path}")
+
+print(f"career path: {pathfinder.path}")
 
 # endregion
