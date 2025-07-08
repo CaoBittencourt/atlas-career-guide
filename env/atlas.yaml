@@ -36,5 +36,6 @@ dependencies:
   - r-np
   - r-pracma
   - r-arrow
+  - r-gtools
   # - r-ks
   # - r-flexclust

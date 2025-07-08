@@ -27,55 +27,28 @@ box::use(
 
 # endregion
 # model
-# region: vertex progressions
-# all career progressions are career switches
-# the vertex at which one "lands" is random
-# the cost of switching is pre-calculated
-# vertices |>
-#   rename_with(
-#     ~ .x |> paste0('To')
-#   ) |>
-#   inner_join(
-#     careers,
-#     relationship = 'many-to-many'
-#   ) |>
-#   inner_join(
-#     vertices |> select(-prob),
-#     relationship = 'many-to-many'
-#   ) -> dsds
+# region: simplified model
+# only careers, not vertices
+careers |> filter(career == 1) -> career
+vertices |> filter(career != 1) -> verticesTo
+vertices |> filter(career == 1) -> verticesFrom
 
-# dsds |>
-#   relocate(
-#     -ends_with('To')
-#   )
-
-expand.grid(
-  vertex = vertices$vertex,
-  vertexTo = vertices$vertex
-) |>
-  filter(
-    vertex != vertexTo
-  ) -> vertexGrid
-
-# vertexGrid |>
-#   inner_join(
-#     vertices,
-#     relationship = 'many-to-many'
-#   ) -> vertexGrid
-
-vertexGrid |>
-  dt$lazy_dt() |>
+career |>
   inner_join(
-    vertices |> dt$lazy_dt(),
-    relationship = 'many-to-many'
-  ) -> dsds
-
-# vertexGrid |> db$join_query(vertices, select = c('vertex', 'vertexTo')) -> dsds
-
-# careers
+    verticesTo |> rename(probVertex = prob),
+    by = c('careerTo' = 'career')
+  ) |>
+  mutate(
+    prob = prob * probVertex
+  )
+# |>
+# group_by(career) |>
+# reframe(
+#   prob = prob |> sum()
+# )
+verticesFrom
 
 # endregion
-
 # region: movement types
 # 1. "teleport" vertically to another occupation at a parallel vertex (same x,t)
 # expand.grid(

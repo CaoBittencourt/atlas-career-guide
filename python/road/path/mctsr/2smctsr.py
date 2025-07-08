@@ -7,6 +7,7 @@ import os
 from types import NoneType
 from numbers import Number
 from python.data import ist
+from time import time
 
 # endregion
 # region: data
@@ -286,27 +287,44 @@ q = np.random.choice(Lambda)
 # action = searcher.search(initialState=pathfinder)
 
 # endregion
-# region: pathfinding
-pathfinder = Pathfinder(
-    start=np.random.choice(
-        a=vertices.filter(pl.col.career == k).select(pl.col.vertex).to_series(),
-        size=1,
-        p=vertices.filter(pl.col.career == k).select(pl.col.prob).to_series(),
-    ).item(),
-    goal=q,
-    careers=careers,
-    vertices=vertices,
-)
+# region: expected payoff
+payoff = pl.DataFrame()
 
-while not pathfinder.isTerminal():
-    print(f"current career: {pathfinder.career}")
-    dsds = pathfinder.getPossibleActions()
-    pathfinder = pathfinder.takeAction(
-        careerTo=dsds["careerTo"],
-        vertexTo=dsds["vertexTo"],
+# endregion
+# region: timer
+# set timer to 1 minute
+timerSeconds = 30
+startTime = time()
+
+# endregion
+# region: pathfinding
+while time() - startTime < timerSeconds:
+    pathfinder = Pathfinder(
+        start=np.random.choice(
+            a=vertices.filter(pl.col.career == k).select(pl.col.vertex).to_series(),
+            size=1,
+            p=vertices.filter(pl.col.career == k).select(pl.col.prob).to_series(),
+        ).item(),
+        goal=q,
+        careers=careers,
+        vertices=vertices,
     )
 
-print(f"career path: {pathfinder.path}")
+    while not pathfinder.isTerminal():
+        print(f"current career: {pathfinder.career}")
+        pathfinder = pathfinder.takeAction(**pathfinder.getPossibleActions())
+
+    print(f"career path: {pathfinder.path}")
+
+    payoff = pl.concat(
+        [
+            payoff,
+            pathfinder.path.with_row_index(name="order").drop(
+                pl.col.x, pl.col.t, pl.col.xReset, pl.col.tReset
+            ),
+            # .with_columns(payoff=pathfinder.getReward()),
+        ]
+    )
 
 # endregion
 # # region: dsds
