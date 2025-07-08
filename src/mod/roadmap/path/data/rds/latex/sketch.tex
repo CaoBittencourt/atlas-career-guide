@@ -13,6 +13,7 @@
 
 \newcommand{\stack}[2]{\mathbin{\mathpalette\superimpose{{#1}{#2}}}}
 \newcommand{\minuszero}{\stack{0}{-}}
+\newcommand{\Eta}{\text{H}}
 
 \title{
     Towards a Probabilistic Career Roadmap
@@ -33,23 +34,81 @@
 \end{abstract}
 
 \section{Definitions}
-Let \newline \center
-\begin{tabular}{cc}
-  Notation                  & Definition                                                                             \\
-  $\Lambda = [1 .. n]$      & Set of all $n \in \mathbb{N}$ occupations                                              \\
-  $k \in \Lambda$           & The starting occupation                                                                \\
-  $q \in \Lambda$           & The goal occupation                                                                    \\
-  $\bar{x}_q \geq 0$        & The mean expected work experience for occupation $q$                                   \\
-  $\bar{\tau}_q \geq 0$     & The mean expected years of education for occupation $q$                                \\
-  $\ddot{x}_{kq} \geq 0$    & The equivalent work experience person $k$ has of occupation $q$                        \\
-  $\ddot{\tau}_{kq} \geq 0$ & The equivalent years of education person $k$ has of occupation $q$                     \\
-  $a_{1} \minuszero a_{2}$  & The minus-or-zero operator, equivalent to $[a_{1} - a_{2} > 0] \times (a_{1} - a_{2})$ \\
+Let \newline \newline
+\begin{tabular}{ll}
+  Notation                  & Definition                                                                        \\
+  $\Lambda := [1 .. n]$     & Set of all $n \in \mathbb{N}$ occupations                                         \\
+  $k \in \Lambda$           & The starting occupation                                                           \\
+  $q \in \Lambda$           & The goal occupation                                                               \\
+  $\bar{x}_q \geq 0$        & The mean expected work experience for occupation $q$                              \\
+  $\bar{\tau}_q \geq 0$     & The mean expected years of education for occupation $q$                           \\
+  $\ddot{x}_{kq} \geq 0$    & The equivalent work experience person $k$ has of occupation $q$                   \\
+  $\ddot{\tau}_{kq} \geq 0$ & The equivalent years of education person $k$ has of occupation $q$                \\
+  $a_{1} \minuszero a_{2}$  & The minus-or-zero operator, equivalent to $[(a_{1} - a_{2}) > 0] (a_{1} - a_{2})$ \\
 \end{tabular}
 
-\section{Approach 1: }
+\section{Approach 1: Dijkstra's Algorithm}
+Assume each career $q \in \Lambda$ has a set of $v \in p_q \in [1 .. w_q]$
+unique job posts, and that each job post has its own minimum requirements in
+terms of related work experience and education, as well as a probability, given
+their rarity:
+
 \begin{gather}
-  (\bar{x}_q \minuszero \bar{x}_k)
-  +
-  (\bar{\tau}_q \minuszero \bar{\tau}_k)
+  x_{v_q} \geq 0
+  ,
+  \tau_{v_q} \geq 0
+  ,
+  P(v_q) \geq 0
+  ,
+  \sum_{v_q=1}^{p_q} P(v_q) = 1
+  , \\
+  \
+  \forall
+  \
+  v_q \in [1..p_q] \land p_q \in [1..w_q]
+  .
 \end{gather}
+
+Furthermore, for each job post in $k$ and $q$, we can estimate the baseline
+cost of a career transition as
+\begin{align}
+  \mathbb{E}[\Eta_{v_k}^{v_q}]
+   & :=
+  \frac{
+    (x_{v_q} \minuszero \ddot{x}_{v_k}^{q})
+    +
+    (\tau_{v_q} \minuszero \ddot{\tau}_{v_k}^{q})
+  }{
+    [\ddot{s}_{kq} \geq 0] s_{kq}
+  }
+  \\
+   & :=
+  \frac{
+    (x_{v_q} \minuszero x_{v_k} [\ddot{s}_{kq} \geq 0] s_{kq})
+    +
+    (\tau_{v_q} \minuszero \tau_{v_k} [\ddot{s}_{kq} \geq 0] s_{kq})
+  }{
+    [\ddot{s}_{kq} \geq 0] s_{kq}
+  }
+  \\
+   & =
+  \left(
+  \frac{x_{v_q}}{[\ddot{s}_{kq} \geq 0] s_{kq}}
+  \minuszero
+  x_{v_k}
+  \right)
+  +
+  \left(
+  \frac{x_{v_q}}{[\ddot{s}_{kq} \geq 0] s_{kq}}
+  \minuszero
+  x_{v_k}
+  \right)
+  \in
+  [0, \infty)
+  ,
+\end{align}
+such that the minimum cost, in years, to go from a job post (or vertex) $v_k$
+in occupation $k$'s grid of job posts to other such job post (or vertex) $v_q$
+is
+
 \end{document}
