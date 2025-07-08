@@ -309,3 +309,20 @@ while not pathfinder.isTerminal():
 print(f"career path: {pathfinder.path}")
 
 # endregion
+# # region: dsds
+# vertices.join(
+#     careers,
+#     left_on="career",
+#     right_on="careerTo",
+# ).rename(
+#     {
+#         "career": "careerTo",
+#         "career_right": "career",
+#     }
+# ).with_columns(
+#     prob=pl.col.prob * pl.col.prob_right,
+# ).drop(pl.col.prob_right).group_by(pl.col.career).agg(
+#     prob=pl.col.prob.sum().round(4) == 1
+# ).select(pl.col.prob).to_series().all()
+
+# # endregion
