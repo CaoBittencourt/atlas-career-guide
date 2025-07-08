@@ -99,16 +99,49 @@ cost of a career transition as
   \right)
   +
   \left(
-  \frac{x_{v_q}}{[\ddot{s}_{kq} \geq 0] s_{kq}}
+  \frac{\tau_{v_q}}{[\ddot{s}_{kq} \geq 0] s_{kq}}
   \minuszero
-  x_{v_k}
+  \tau_{v_k}
   \right)
   \in
   [0, \infty)
   ,
 \end{align}
 such that the minimum cost, in years, to go from a job post (or vertex) $v_k$
-in occupation $k$'s grid of job posts to other such job post (or vertex) $v_q$
-is
+in occupation $k$'s grid of job posts to another such job post (or vertex) $v_q$
+is proportional to the time to close any experience and education gaps after accounting for the similarity of both occupations (that is, allowing for $k$ to ``recycle'' some of their experience and education). Note, as well, that if occupations $k$ and $q$ are not sufficiently similar (i.e. $[\ddot{s}_{kq} \geq 0] s_{kq}$), the cost of career progression goes to infinity.
+
+It is also important to note the definition above [does not account for] the
+probability of person $k$, currently at vertex $v_k$, actually finding a job
+$v_q$; or, in other words, we're not assigning any cost to the probability of
+$v_q$ itself, which is, of course, unrealistic. For in the labor market, some
+opportunities are evidently easier to come by than others. [And this is not
+    even taking competition into consideration.] Thus, we should, at least add a
+term,
+\begin{gather}
+  \Eta(P(v_q))
+  :=
+  \Eta_{v_q}
+  \geq 0
+  \therefore
+  \\
+  \mathbb{E}[\Eta_{v_k}^{v_q}]
+  :=
+  \left(
+  \frac{x_{v_q}}{[\ddot{s}_{kq} \geq 0] s_{kq}}
+  \minuszero
+  x_{v_k}
+  \right)
+  +
+  \left(
+  \frac{\tau_{v_q}}{[\ddot{s}_{kq} \geq 0] s_{kq}}
+  \minuszero
+  \tau_{v_k}
+  \right)
+  +
+  \Eta_{v_q}
+  ,
+\end{gather}
+that we might call the ``inherent'' cost of $v_q$, which is the time to ``stumble upon'' such a job opportunity while actively searching in the labor market (i.e. it is the cost of waiting, or the cost of rarity).
 
 \end{document}
