@@ -48,7 +48,7 @@ Let \newline \newline
 \end{tabular}
 
 \section{Approach 1: Dijkstra's Algorithm}
-Assume each career $q \in \Lambda$ has a set of $v \in p_q \in [1 .. w_q]$
+Assume each career $q \in \Lambda$ has a set of $v_q \in p_q \in [1 .. w_q]$
 unique job posts, and that each job post has its own minimum requirements in
 terms of related work experience and education, as well as a probability, given
 their rarity:
@@ -72,34 +72,34 @@ their rarity:
 Furthermore, for each job post in $k$ and $q$, we can estimate the baseline
 cost of a career transition as
 \begin{align}
-  \mathbb{E}[\Eta_{v_k}^{v_q}]
+  \Eta_{v_k}^{v_q}
    & :=
   \frac{
     (x_{v_q} \minuszero \ddot{x}_{v_k}^{q})
     +
     (\tau_{v_q} \minuszero \ddot{\tau}_{v_k}^{q})
   }{
-    [\ddot{s}_{kq} \geq 0] s_{kq}
+    [\ddot{s}_{kq} \geq 0.5] s_{kq}
   }
   \\
    & :=
   \frac{
-    (x_{v_q} \minuszero x_{v_k} [\ddot{s}_{kq} \geq 0] s_{kq})
+    (x_{v_q} \minuszero x_{v_k} [\ddot{s}_{kq} \geq 0.5] s_{kq})
     +
-    (\tau_{v_q} \minuszero \tau_{v_k} [\ddot{s}_{kq} \geq 0] s_{kq})
+    (\tau_{v_q} \minuszero \tau_{v_k} [\ddot{s}_{kq} \geq 0.5] s_{kq})
   }{
-    [\ddot{s}_{kq} \geq 0] s_{kq}
+    [\ddot{s}_{kq} \geq 0.5] s_{kq}
   }
   \\
    & =
   \left(
-  \frac{x_{v_q}}{[\ddot{s}_{kq} \geq 0] s_{kq}}
+  \frac{x_{v_q}}{[\ddot{s}_{kq} \geq 0.5] s_{kq}}
   \minuszero
   x_{v_k}
   \right)
   +
   \left(
-  \frac{\tau_{v_q}}{[\ddot{s}_{kq} \geq 0] s_{kq}}
+  \frac{\tau_{v_q}}{[\ddot{s}_{kq} \geq 0.5] s_{kq}}
   \minuszero
   \tau_{v_k}
   \right)
@@ -109,15 +109,15 @@ cost of a career transition as
 \end{align}
 such that the minimum cost, in years, to go from a job post (or vertex) $v_k$
 in occupation $k$'s grid of job posts to another such job post (or vertex) $v_q$
-is proportional to the time to close any experience and education gaps after accounting for the similarity of both occupations (that is, allowing for $k$ to ``recycle'' some of their experience and education). Note, as well, that if occupations $k$ and $q$ are not sufficiently similar (i.e. $[\ddot{s}_{kq} \geq 0] s_{kq}$), the cost of career progression goes to infinity.
+is proportional to the time to close any experience and education gaps after accounting for the similarity of both occupations (thus, allowing for $k$ to ``recycle'' some of their experience and education). Note, as well, that if occupations $k$ and $q$ are not sufficiently similar (i.e. $[\ddot{s}_{kq} \geq 0.5] s_{kq} = 0$), the cost of a career progression goes to infinity.
 
 It is also important to note the definition above [does not account for] the
-probability of person $k$, currently at vertex $v_k$, actually finding a job
+probability of person $k$, currently at vertex $v_k$, actually finding job
 $v_q$; or, in other words, we're not assigning any cost to the probability of
 $v_q$ itself, which is, of course, unrealistic. For in the labor market, some
 opportunities are evidently easier to come by than others. [And this is not
-    even taking competition into consideration.] Thus, we should, at least add a
-term,
+    even taking competition into consideration.] Therefore, we should, at least add
+a term
 \begin{gather}
   \Eta(P(v_q))
   :=
@@ -125,16 +125,16 @@ term,
   \geq 0
   \therefore
   \\
-  \mathbb{E}[\Eta_{v_k}^{v_q}]
+  \Eta_{v_k}^{v_q}
   :=
   \left(
-  \frac{x_{v_q}}{[\ddot{s}_{kq} \geq 0] s_{kq}}
+  \frac{x_{v_q}}{[\ddot{s}_{kq} \geq 0.5] s_{kq}}
   \minuszero
   x_{v_k}
   \right)
   +
   \left(
-  \frac{\tau_{v_q}}{[\ddot{s}_{kq} \geq 0] s_{kq}}
+  \frac{\tau_{v_q}}{[\ddot{s}_{kq} \geq 0.5] s_{kq}}
   \minuszero
   \tau_{v_k}
   \right)
