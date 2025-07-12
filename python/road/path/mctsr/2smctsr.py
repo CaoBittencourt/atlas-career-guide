@@ -303,7 +303,7 @@ Lambda = careers.select(pl.col.career).unique().to_series()
 k = np.random.choice(Lambda)
 q = np.random.choice(Lambda)
 
-optimizer = mcts(timeLimit=1000)
+optimizer = mcts(timeLimit=19000)
 pathfinder = Pathfinder(
     start=np.random.choice(
         a=vertices.filter(pl.col.career == k).select(pl.col.vertex).to_series(),
