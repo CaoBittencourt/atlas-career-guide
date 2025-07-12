@@ -166,6 +166,9 @@ class Pathfinder:
 
         self.years = 0
 
+        # dead end flag
+        self.deadEnd = False
+
         # career progression log
         self.path = pl.DataFrame(
             {
@@ -197,6 +200,7 @@ class Pathfinder:
             .to_list()
         )
         print(actions)
+
         return actions
 
         # return (
@@ -212,6 +216,19 @@ class Pathfinder:
         _vertexProgs = self.vertices.filter(pl.col.career == careerTo)
 
         # randomly select a vertex
+        if _vertexProgs.is_empty():
+            self.deadEnd = True
+            return {
+                "vertexTo": _vertexProgs,
+                "cost": {
+                    "work": 0,
+                    "study": 0,
+                    "total": 0 + 0,
+                    "xReset": False,
+                    "tReset": False,
+                },
+            }
+
         _vertexTo = self.vertices.filter(
             pl.col.vertex
             == np.random.choice(
@@ -262,14 +279,16 @@ class Pathfinder:
             ]
         )
 
-        newState.careers = (
-            self.careers.filter(pl.col.career != self.career)
-            .filter(pl.col.careerTo != self.career)
-            .filter(pl.col.careerTo != action)
-        )
+        # newState.careers = (
+        #     self.careers.filter(pl.col.career != self.career)
+        #     .filter(pl.col.careerTo != self.career)
+        #     .filter(pl.col.careerTo != action)
+        # )
 
-        # newState.vertices = self.vertices.filter(pl.col.career != self.career).filter(
-        #     pl.col.career != action
+        # newState.careers = (
+        #     self.careers.filter(pl.col.career != self.career)
+        #     .filter(pl.col.careerTo != self.career)
+        #     .filter(pl.col.careerTo != action)
         # )
 
         newState.career = action
@@ -282,7 +301,13 @@ class Pathfinder:
     def isTerminal(self):
         # game ends when the target career is reached
         # or when maximum time is reached
-        return self.career == self.goal or self.years >= self.yearsMax
+        return any(
+            [
+                self.career == self.goal,
+                self.years >= self.yearsMax,
+                self.deadEnd,
+            ]
+        )
 
     # "getReward(): Returns the reward for this state. Only needed for terminal states."
     def getReward(self):
@@ -514,16 +539,13 @@ while not pathfinder.isTerminal():
         pathfinder = pathfinder.takeAction(mcts(500).search(pathfinder))
     print(len(pathfinder.getPossibleActions()))
 
-print("game ended.")
+# if len(pathfinder.getPossibleActions()):
+#     pathfinder = pathfinder.takeAction(mcts(1000).search(pathfinder))
 
-
-if len(pathfinder.getPossibleActions()):
-    pathfinder = pathfinder.takeAction(mcts(1000).search(pathfinder))
-
-print(f"career path: {pathfinder.path}")
-pathfinder.career
-pathfinder.careers
-pathfinder.getPossibleActions()
+# print(f"career path: {pathfinder.path}")
+# pathfinder.career
+# pathfinder.careers
+# pathfinder.getPossibleActions()
 
 # endregion
 # region: pathfinding
