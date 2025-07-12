@@ -64,27 +64,6 @@ def _cost(ßkq: float, xk: float, xq: float, tk: float, tq: float):
 
 
 # endregion
-# # region: hashable prog representation (action class)
-# # from the documentation
-# # "You must also choose a hashable representation for an action as used in getPossibleActions and takeAction. Typically this would be a class with a custom __hash__ method, but it could also simply be a tuple or a string."
-# class Prog:
-#     def __init__(self, careerTo: int):
-#         self.careerTo = careerTo
-
-#     def __str__(self):
-#         return str(self.careerTo)
-
-#     def __repr__(self):
-#         return str(self)
-
-#     def __eq__(self, other):
-#         return self.__class__ == other.__class__ and self.careerTo == other.careerTo
-
-#     def __hash__(self):
-#         return hash(self.careerTo)
-
-
-# # endregion
 # region: two-stage monte carlo tree search roadmap
 class Pathfinder:
     def __init__(
@@ -181,8 +160,8 @@ class Pathfinder:
             }
         )
 
-    # from the documentation:
-    # "In order to run MCTS, you must implement a State class which can fully describe the state of the world. It must also implement four methods:"
+        # from the documentation:
+        # "In order to run MCTS, you must implement a State class which can fully describe the state of the world. It must also implement four methods:"
 
     # "getPossibleActions(): Returns an iterable of all actions which can be taken from this state"
     def getPossibleActions(self):
@@ -192,16 +171,17 @@ class Pathfinder:
         # expand sample with probabilities later
         # because there is no prob parameter
         # check out rollout policy parameter ins
-        actions = (
+        return (
             careers.filter(pl.col.career == self.career)
-            # .filter(~pl.col.career.is_in(self.path.select(pl.col.career).to_series()))
+            .filter(
+                ~pl.col.careerTo.is_in(
+                    self.path.select(pl.col.career).to_series().to_list()
+                )
+            )
             .select(pl.col.careerTo)
             .to_series()
             .to_list()
         )
-        print(actions)
-
-        return actions
 
         # return (
         #     careers.filter(pl.col.career == self.career)
@@ -317,204 +297,13 @@ class Pathfinder:
 
 
 # endregion
-# # region: two-stage monte carlo tree search roadmap
-# class Pathfinder:
-#     def __init__(
-#         self,
-#         start: int,  # start vertex
-#         goal: int,  # target career
-#         careers: pl.DataFrame,  # career probabilities (stage 1)
-#         vertices: pl.DataFrame,  # vertex probabilities and costs (stage 2)
-#         yearsMax: [float | int | NoneType] = None,
-#     ):
-#         assert all(
-#             np.isin(
-#                 [
-#                     "career",
-#                     "vertex",
-#                     "x",
-#                     "t",
-#                     "prob",
-#                 ],
-#                 vertices.columns,
-#             )
-#         )
-
-#         assert all(
-#             np.isin(
-#                 [
-#                     "career",
-#                     "careerTo",
-#                     "similarity",
-#                     "prob",
-#                 ],
-#                 careers.columns,
-#             )
-#         )
-
-#         assert np.isin(start, vertices.select(pl.col.vertex).unique().to_numpy())
-#         assert np.isin(goal, careers.select(pl.col.careerTo).unique().to_numpy())
-
-#         # # normalize probs
-#         # vertices = vertices.with_columns(
-#         #     prob=pl.col.prob.cast(pl.Float64),
-#         #     prob=pl.col.prob / pl.col.prob.sum().over(partition_by=pl.col.career)
-#         # )
-
-#         # careers = careers.with_columns(
-#         #     prob=pl.col.prob.cast(pl.Float64),
-#         #     prob=pl.col.prob / pl.col.prob.sum().over(partition_by=pl.col.career)
-#         # )
-
-#         # starting vertex (not career)
-#         self.vertex = start
-
-#         # goal career (not vertex)
-#         self.goal = goal
-
-#         # current career (not vertex)
-#         _start = vertices.filter(
-#             pl.col.vertex == self.vertex,
-#         ).slice(0, 1)
-
-#         self.career = _start.select(pl.col.career).item()
-
-#         # all careers progs
-#         self.careers = careers
-
-#         # all vertex progs
-#         self.vertices = vertices
-
-#         # time limit
-#         self.yearsMax = (
-#             self.vertices.filter(pl.col.career == self.goal)
-#             .select(pl.col.x, pl.col.t)
-#             .max()
-#             .sum_horizontal()
-#             .item()
-#             if ist.null(yearsMax)
-#             else yearsMax
-#         )
-
-#         # career progression log
-#         self.path = pl.DataFrame(
-#             {
-#                 "career": self.career,
-#                 "x": _start.select(pl.col.x).item(),
-#                 "t": _start.select(pl.col.t).item(),
-#                 "xReset": False,
-#                 "tReset": False,
-#                 "cost": 0.0,
-#             }
-#         )
-
-#     # from the documentation:
-#     # "In order to run MCTS, you must implement a State class which can fully describe the state of the world. It must also implement four methods:"
-
-#     # "getPossibleActions(): Returns an iterable of all actions which can be taken from this state"
-#     def getPossibleActions(self):
-#         # first stage:
-#         # feasible career progressions
-
-#         # expand sample with probabilities later
-#         # because there is no prob parameter
-#         # check out rollout policy parameter in mcts class
-#         return (
-#             careers.filter(pl.col.career == self.career)
-#             .select(pl.col.careerTo)
-#             .to_series()
-#             .to_list()
-#         )
-
-#     def cost(self, action: Prog):
-#         print(action)
-#         print(self.career)
-#         print(action.__class__)
-#         # second stage:
-#         # feasible vertex progressions
-#         _vertexProgs = self.vertices.filter(pl.col.career == action)
-
-#         # randomly select a vertex
-#         _vertexTo = self.vertices.filter(
-#             pl.col.vertex
-#             == np.random.choice(
-#                 a=_vertexProgs.select(pl.col.vertex).to_series(),
-#                 size=1,
-#                 p=_vertexProgs.select(pl.col.prob).to_series()
-#                 / _vertexProgs.select(pl.col.prob).sum().item(),
-#             ).item()
-#         )
-
-#         _vertex = self.vertices.filter(pl.col.vertex == self.vertex)
-
-#         return {
-#             "vertexTo": _vertexTo,
-#             "cost": _cost(
-#                 ßkq=(
-#                     self.careers.filter(pl.col.career == self.career).filter(
-#                         pl.col.careerTo == action
-#                     )
-#                 )["similarity"].item(),
-#                 xk=_vertex.select(pl.col.x).item(),
-#                 xq=_vertexTo.select(pl.col.x).item(),
-#                 tk=_vertex.select(pl.col.t).item(),
-#                 tq=_vertexTo.select(pl.col.t).item(),
-#             ),
-#         }
-
-#     # "takeAction(action): Returns the state which results from taking action action"
-#     def takeAction(self, action: Prog):
-#         # update timeline
-#         _moveCost = self.cost(action)
-
-#         self.path = pl.concat(
-#             [
-#                 self.path,
-#                 pl.DataFrame(
-#                     {
-#                         "career": action,
-#                         "x": _moveCost["vertexTo"].select(pl.col.x).item(),
-#                         "t": _moveCost["vertexTo"].select(pl.col.t).item(),
-#                         "xReset": _moveCost["cost"]["xReset"],
-#                         "tReset": _moveCost["cost"]["tReset"],
-#                         "cost": _moveCost["cost"]["total"],
-#                     }
-#                 ),
-#             ]
-#         )
-
-#         # update state
-#         self.careers = (
-#             self.careers.filter(pl.col.career != self.career)
-#             .filter(pl.col.careerTo != self.career)
-#             .filter(pl.col.careerTo != action)
-#         )
-
-#         self.career = action
-#         self.vertex = _moveCost["vertexTo"]["vertex"]
-
-#         return self
-
-#     # "isTerminal(): Returns whether this state is a terminal state"
-#     def isTerminal(self):
-#         # game ends when the target career is reached
-#         return self.career == self.goal
-
-#     # "getReward(): Returns the reward for this state. Only needed for terminal states."
-#     def getReward(self):
-#         # only reward if the target career is reached
-#         # the smaller the cost, the higher the reward
-#         return -self.path.select(pl.col.cost).sum().item()
-
-
-# # endregion
 # example
 # region: select careers
 Lambda = careers.select(pl.col.career).unique().to_series()
 k = np.random.choice(Lambda)
 q = np.random.choice(Lambda)
 
-optimizer = mcts(timeLimit=100)
+optimizer = mcts(timeLimit=1000)
 pathfinder = Pathfinder(
     start=np.random.choice(
         a=vertices.filter(pl.col.career == k).select(pl.col.vertex).to_series(),
@@ -527,44 +316,26 @@ pathfinder = Pathfinder(
 )
 
 # endregion
-# region: timer
-# set timer to 1 minute
-timerSeconds = 60
-startTime = time()
-
-# endregion
 # region: pathfinding
+pathfinder = Pathfinder(
+    start=np.random.choice(
+        a=vertices.filter(pl.col.career == k).select(pl.col.vertex).to_series(),
+        size=1,
+        p=vertices.filter(pl.col.career == k).select(pl.col.prob).to_series(),
+    ).item(),
+    goal=q,
+    careers=careers,
+    vertices=vertices,
+)
+
 while not pathfinder.isTerminal():
-    if len(pathfinder.getPossibleActions()):
-        pathfinder = pathfinder.takeAction(mcts(500).search(pathfinder))
-    print(len(pathfinder.getPossibleActions()))
+    pathfinder = pathfinder.takeAction(optimizer.search(pathfinder))
 
-# if len(pathfinder.getPossibleActions()):
-#     pathfinder = pathfinder.takeAction(mcts(1000).search(pathfinder))
-
-# print(f"career path: {pathfinder.path}")
-# pathfinder.career
-# pathfinder.careers
-# pathfinder.getPossibleActions()
-
-# endregion
-# region: pathfinding
-# action = optimizer.search(pathfinder)
-# pathfinder = pathfinder.takeAction(action)
-# pathfinder.path
-# pathfinder.years
-
-while time() - startTime < timerSeconds:
-    while not pathfinder.isTerminal():
-        print(f"current career: {pathfinder.career}")
-        # action = optimizer.search(pathfinder)
-        pathfinder = pathfinder.takeAction(optimizer.search(pathfinder))
-        # pathfinder.careers = (
-        #     pathfinder.careers.filter(pl.col.career != pathfinder.careers.career)
-        #     .filter(pl.col.careerTo != pathfinder.careers.career)
-        #     .filter(pl.col.careerTo != action)
-        # )
-
-    print(f"career path: {pathfinder.path}")
+print(f"career path: {pathfinder.path}")
+print(
+    "could not reach goal career on time"
+    if pathfinder.career != q
+    else "reached goal career"
+)
 
 # endregion
