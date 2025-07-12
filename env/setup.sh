@@ -10,7 +10,7 @@ script=$(
 cd $script
 
 # install conda if not installed
-if ! command -v &>/dev/null; then
+if ! command -v conda -v &>/dev/null; then
     bash ./miniconda.sh
 fi
 
