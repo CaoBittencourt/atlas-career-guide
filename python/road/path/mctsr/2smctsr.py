@@ -32,15 +32,23 @@ vertices = pl.read_parquet(
 # endregion
 # model
 # region: movement cost
-def _cost(ßkq: float, xk: float, xq: float, tk: float, tq: float):
+def ß(skq):
+    return skq**2
+
+
+def _cost(skq: float, xk: float, xq: float, tk: float, tq: float):
     # equivalent similarity
+    ßkq = ß(skq)
     ßkqEq = ßkq * (ßkq >= 0.5)
 
     # experience gap
-    xReq = np.maximum(xq - xk * ßkqEq, 0) / ßkq
+    xReq = np.maximum(xq - xk * ßkqEq, 0) / skq
 
     # education gap
-    tReq = np.maximum(tq - tk * ßkqEq, 0) / ßkq
+    tReq = np.maximum(tq - tk * ßkqEq, 0) / skq
+
+    xReset = (xReq > xq) & (xq != 0)
+    tReset = (tReq > tq) & (tq != 0)
 
     xReq = np.minimum(xq, xReq)
     tReq = np.minimum(tq, tReq)
@@ -58,8 +66,8 @@ def _cost(ßkq: float, xk: float, xq: float, tk: float, tq: float):
         "work": xReq,
         "study": tReq,
         "total": xReq + tReq,
-        "xReset": xReq > xq and xq != 0,
-        "tReset": tReq > tq and tq != 0,
+        "xReset": xReset,
+        "tReset": tReset,
     }
 
 
@@ -217,11 +225,14 @@ class Pathfinder:
         return {
             "vertexTo": _vertexTo,
             "cost": _cost(
-                ßkq=(
-                    self.careers.filter(pl.col.career == self.career).filter(
-                        pl.col.careerTo == careerTo
-                    )
-                )["similarity"].item(),
+                skq=(
+                    (
+                        self.careers.filter(pl.col.career == self.career).filter(
+                            pl.col.careerTo == careerTo
+                        )
+                    )["similarity"].item()
+                )
+                ** 2,
                 xk=_vertex.select(pl.col.x).item(),
                 xq=_vertexTo.select(pl.col.x).item(),
                 tk=_vertex.select(pl.col.t).item(),
@@ -307,8 +318,11 @@ def _rolloutPolicy(state):
 # example
 # region: select careers
 Lambda = careers.select(pl.col.career).unique().to_series()
-k = np.random.choice(Lambda)
-q = np.random.choice(Lambda)
+# k = 2
+k = 1
+q = 239
+# k = np.random.choice(Lambda)
+# q = np.random.choice(Lambda)
 
 optimizer = mcts(
     timeLimit=60000,
