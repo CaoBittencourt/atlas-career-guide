@@ -33,7 +33,8 @@ vertices = pl.read_parquet(
 # model
 # region: movement cost
 def ß(skq):
-    return skq**2
+    return skq
+    # return skq**2
 
 
 def _cost(skq: float, xk: float, xq: float, tk: float, tq: float):
@@ -47,11 +48,13 @@ def _cost(skq: float, xk: float, xq: float, tk: float, tq: float):
     # education gap
     tReq = np.maximum(tq - tk * ßkqEq, 0) / skq
 
+    # xReset = False
+    # tReset = False
     xReset = (xReq > xq) & (xq != 0)
     tReset = (tReq > tq) & (tq != 0)
-
     xReq = np.minimum(xq, xReq)
     tReq = np.minimum(tq, tReq)
+
     # assume one must have all equivalent years
     # before attempting to switch careers
     # assume order of study and work doesn't matter
@@ -168,17 +171,14 @@ class Pathfinder:
             }
         )
 
-        # from the documentation:
-        # "In order to run MCTS, you must implement a State class which can fully describe the state of the world. It must also implement four methods:"
+    # from the documentation:
+    # "In order to run MCTS, you must implement a State class which can fully describe the state of the world. It must also implement four methods:"
 
     # "getPossibleActions(): Returns an iterable of all actions which can be taken from this state"
     def getPossibleActions(self):
         # first stage:
         # feasible career progressions
 
-        # expand sample with probabilities later
-        # because there is no prob parameter
-        # check out rollout policy parameter ins
         return (
             self.careers.filter(pl.col.career == self.career)
             .filter(
@@ -226,13 +226,10 @@ class Pathfinder:
             "vertexTo": _vertexTo,
             "cost": _cost(
                 skq=(
-                    (
-                        self.careers.filter(pl.col.career == self.career).filter(
-                            pl.col.careerTo == careerTo
-                        )
-                    )["similarity"].item()
-                )
-                ** 2,
+                    self.careers.filter(pl.col.career == self.career).filter(
+                        pl.col.careerTo == careerTo
+                    )
+                )["similarity"].item(),
                 xk=_vertex.select(pl.col.x).item(),
                 xq=_vertexTo.select(pl.col.x).item(),
                 tk=_vertex.select(pl.col.t).item(),
@@ -273,6 +270,9 @@ class Pathfinder:
     def isTerminal(self):
         # game ends when the target career is reached
         # or when maximum time is reached
+        # return bool(
+        #     self.career == self.goal + self.years >= self.yearsMax + self.deadEnd
+        # )
         return any(
             [
                 self.career == self.goal,
@@ -283,13 +283,18 @@ class Pathfinder:
 
     # "getReward(): Returns the reward for this state. Only needed for terminal states."
     def getReward(self):
-        # only reward if the target career is reached
         # the smaller the cost, the higher the reward
-        return -self.years
+        return (
+            self.path.tail(1)
+            .with_columns(years=pl.col.x + pl.col.t)
+            .select(pl.col.years)
+            .item()
+            - self.years
+        )
 
 
 # endregion
-# region: rollout policty
+# region: rollout policy
 def _rolloutPolicy(state):
     while not state.isTerminal():
         try:
@@ -318,13 +323,14 @@ def _rolloutPolicy(state):
 # example
 # region: select careers
 Lambda = careers.select(pl.col.career).unique().to_series()
-# k = 2
-k = 1
+k = 2
+# k = 1
 q = 239
 # k = np.random.choice(Lambda)
 # q = np.random.choice(Lambda)
 
 optimizer = mcts(
+    # timeLimit=5000,
     timeLimit=60000,
     rolloutPolicy=_rolloutPolicy,
 )
@@ -342,17 +348,6 @@ pathfinder = Pathfinder(
 
 # endregion
 # region: pathfinding
-pathfinder = Pathfinder(
-    start=np.random.choice(
-        a=vertices.filter(pl.col.career == k).select(pl.col.vertex).to_series(),
-        size=1,
-        p=vertices.filter(pl.col.career == k).select(pl.col.prob).to_series(),
-    ).item(),
-    goal=q,
-    careers=careers,
-    vertices=vertices,
-)
-
 while not pathfinder.isTerminal():
     pathfinder = pathfinder.takeAction(optimizer.search(pathfinder))
 
