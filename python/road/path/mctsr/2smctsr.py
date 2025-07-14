@@ -172,7 +172,7 @@ class Pathfinder:
         # because there is no prob parameter
         # check out rollout policy parameter ins
         return (
-            careers.filter(pl.col.career == self.career)
+            self.careers.filter(pl.col.career == self.career)
             .filter(
                 ~pl.col.careerTo.is_in(
                     self.path.select(pl.col.career).to_series().to_list()
@@ -278,13 +278,43 @@ class Pathfinder:
 
 
 # endregion
+# region: rollout policty
+def _rolloutPolicy(state):
+    while not state.isTerminal():
+        try:
+            # action = random.choice(state.getPossibleActions())
+            _careerProgs = state.careers.filter(pl.col.career == state.career).filter(
+                ~pl.col.careerTo.is_in(
+                    state.path.select(pl.col.career).to_series().to_list()
+                )
+            )
+
+            action = np.random.choice(
+                a=_careerProgs.select(pl.col.careerTo).to_series(),
+                size=1,
+                p=_careerProgs.select(pl.col.prob).to_series()
+                / _careerProgs.select(pl.col.prob).sum().item(),
+            ).item()
+
+        except IndexError:
+            raise Exception("Non-terminal state has no possible actions: " + str(state))
+
+        state = state.takeAction(action)
+    return state.getReward()
+
+
+# endregion
 # example
 # region: select careers
 Lambda = careers.select(pl.col.career).unique().to_series()
 k = np.random.choice(Lambda)
 q = np.random.choice(Lambda)
 
-optimizer = mcts(timeLimit=60000)
+optimizer = mcts(
+    timeLimit=60000,
+    rolloutPolicy=_rolloutPolicy,
+)
+
 pathfinder = Pathfinder(
     start=np.random.choice(
         a=vertices.filter(pl.col.career == k).select(pl.col.vertex).to_series(),
