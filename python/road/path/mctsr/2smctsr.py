@@ -183,13 +183,6 @@ class Pathfinder:
             .to_list()
         )
 
-        # return (
-        #     careers.filter(pl.col.career == self.career)
-        #     .select(pl.col.careerTo)
-        #     .to_series()
-        #     .to_list()
-        # )
-
     def cost(self, careerTo: int):
         # second stage:
         # feasible vertex progressions
@@ -258,18 +251,6 @@ class Pathfinder:
                 ),
             ]
         )
-
-        # newState.careers = (
-        #     self.careers.filter(pl.col.career != self.career)
-        #     .filter(pl.col.careerTo != self.career)
-        #     .filter(pl.col.careerTo != action)
-        # )
-
-        # newState.careers = (
-        #     self.careers.filter(pl.col.career != self.career)
-        #     .filter(pl.col.careerTo != self.career)
-        #     .filter(pl.col.careerTo != action)
-        # )
 
         newState.career = action
         newState.vertex = _moveCost["vertexTo"]["vertex"]
