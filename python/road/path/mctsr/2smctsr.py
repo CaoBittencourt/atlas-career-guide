@@ -20,6 +20,9 @@ careers = pl.read_parquet(
     )
 )
 
+careers = careers.with_columns(similarity=pl.col.similarity**2)
+careers = careers.filter(pl.col.similarity > 0)
+
 vertices = pl.read_parquet(
     os.path.join(
         os.getenv("ATLAS_DATA"),
@@ -33,8 +36,8 @@ vertices = pl.read_parquet(
 # model
 # region: movement cost
 def ß(skq):
-    return skq
-    # return skq**2
+    # return skq
+    return skq**2
 
 
 def _cost(skq: float, xk: float, xq: float, tk: float, tq: float):
@@ -48,12 +51,12 @@ def _cost(skq: float, xk: float, xq: float, tk: float, tq: float):
     # education gap
     tReq = np.maximum(tq - tk * ßkqEq, 0) / skq
 
-    # xReset = False
-    # tReset = False
-    xReset = (xReq > xq) & (xq != 0)
-    tReset = (tReq > tq) & (tq != 0)
-    xReq = np.minimum(xq, xReq)
-    tReq = np.minimum(tq, tReq)
+    xReset = False
+    tReset = False
+    # xReset = (xReq > xq) & (xq != 0)
+    # tReset = (tReq > tq) & (tq != 0)
+    # xReq = np.minimum(xq, xReq)
+    # tReq = np.minimum(tq, tReq)
 
     # assume one must have all equivalent years
     # before attempting to switch careers
@@ -145,13 +148,13 @@ class Pathfinder:
 
         # time limit
         self.yearsMax = (
-            self.vertices.filter(pl.col.career == self.goal)
+            yearsMax
+            if not ist.null(yearsMax)
+            else self.vertices.filter(pl.col.career == self.goal)
             .select(pl.col.x, pl.col.t)
             .max()
             .sum_horizontal()
             .item()
-            if ist.null(yearsMax)
-            else yearsMax
         )
 
         self.years = 0
@@ -330,7 +333,7 @@ q = 239
 # q = np.random.choice(Lambda)
 
 optimizer = mcts(
-    # timeLimit=5000,
+    # timeLimit=30000,
     timeLimit=60000,
     rolloutPolicy=_rolloutPolicy,
 )
