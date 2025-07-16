@@ -21,7 +21,7 @@ careers = pl.read_parquet(
 )
 
 careers = careers.with_columns(similarity=pl.col.similarity**2)
-careers = careers.filter(pl.col.similarity > 0)
+careers = careers.filter(pl.col.similarity > 0.5)
 
 vertices = pl.read_parquet(
     os.path.join(
@@ -36,8 +36,8 @@ vertices = pl.read_parquet(
 # model
 # region: movement cost
 def ß(skq):
-    # return skq
-    return skq**2
+    return skq
+    # return skq**2
 
 
 def _cost(skq: float, xk: float, xq: float, tk: float, tq: float):
@@ -184,11 +184,11 @@ class Pathfinder:
 
         return (
             self.careers.filter(pl.col.career == self.career)
-            .filter(
-                ~pl.col.careerTo.is_in(
-                    self.path.select(pl.col.career).to_series().to_list()
-                )
-            )
+            # .filter(
+            #     ~pl.col.careerTo.is_in(
+            #         self.path.select(pl.col.career).to_series().to_list()
+            #     )
+            # )
             .select(pl.col.careerTo)
             .to_series()
             .to_list()
@@ -279,7 +279,7 @@ class Pathfinder:
         return any(
             [
                 self.career == self.goal,
-                self.years >= self.yearsMax,
+                # self.years >= self.yearsMax,
                 self.deadEnd,
             ]
         )
@@ -333,8 +333,8 @@ q = 239
 # q = np.random.choice(Lambda)
 
 optimizer = mcts(
-    # timeLimit=30000,
-    timeLimit=60000,
+    timeLimit=5000,
+    # timeLimit=60000,
     rolloutPolicy=_rolloutPolicy,
 )
 
