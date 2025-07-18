@@ -26,7 +26,6 @@ eeq.logistic <- function(years, min_years) {
   # assert args in main function
   return(
     glogis$logistic(
-      # x = 1 + years,
       x = years,
       a = 0,
       k = 1,
@@ -43,19 +42,21 @@ eeq.logistic <- function(years, min_years) {
 # region: linear_logistic method
 eeq.linear_logistic <- function(years, min_years) {
   # assert args in main function
+
+  # apply generalized logistic function with parameters
+  x <- pmin(years / min_years, 1)
+  m <- 0.5
+
   return(
     glogis$logistic(
-      x = years,
+      x = x,
+      m = m,
       a = 0,
-      k = 1,
-      # k = min(years / min_years, 1),
+      k = x,
       c = 1,
-      q = 1 / min_years,
-      m = min_years,
-      # b = 1,
-      # b = min_years / years,
-      b = min_years,
-      nu = 1
+      q = m * (1 - x),
+      nu = x / (m * (x != 1)),
+      b = 1 / (1 - m)
     )
   )
 }
@@ -72,27 +73,40 @@ list(
 # endregion
 # dispatch
 # region: eeq generic function
-eeq <- function(years, min_years, eeq_method = eeq.methods$linear_logistic, ...) {
+eeq <- function(
+  years,
+  min_years,
+  similarity,
+  eeq_method = eeq.methods$linear_logistic,
+  ...
+) {
   # assert args
+  assert$base$validate.numeric.bounded(similarity, "similarity", F, 0, 1)
   assert$base$validate.numeric.bounded(years, "years", F, lb = 0)
-  assert$base$validate.numeric.bounded(min_years, "min_years", F, lb = 0, lc = F)
+  assert$base$validate.numeric.bounded(
+    min_years,
+    "min_years",
+    F,
+    lb = 0,
+    lc = F
+  )
   assert$base$validate.method(eeq_method, "eeq_method", eeq.methods)
 
   # multiple dispatch
   if (eeq_method[[1]] == eeq.methods$binary) {
-    return(eeq.binary(years, min_years))
+    return(eeq.binary(similarity * years, min_years))
   }
 
   if (eeq_method[[1]] == eeq.methods$logistic) {
-    return(eeq.logistic(years, min_years))
+    return(eeq.logistic(similarity * years, min_years))
   }
 
   if (eeq_method[[1]] == eeq.methods$linear) {
-    return(eeq.linear(years, min_years))
+    return(eeq.linear(similarity * years, min_years))
   }
 
   if (eeq_method[[1]] == eeq.methods$linear_logistic) {
-    return(eeq.linear_logistic(years, min_years))
+    return(eeq.linear_logistic(similarity * years, min_years))
   }
 }
 

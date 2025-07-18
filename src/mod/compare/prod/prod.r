@@ -15,7 +15,12 @@ s$similarity.methods[
 # endregion
 # dispatch
 # region: productivity generic function
-productivity <- function(skill_set, skill_mtx, productivity_method = productivity.methods[[1]], ...) {
+productivity <- function(
+  skill_set,
+  skill_mtx,
+  productivity_method = productivity.methods[[1]],
+  ...
+) {
   # assert args in similarity function
   # multiple dispatch in similarity function
   return(

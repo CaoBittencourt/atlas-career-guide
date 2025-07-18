@@ -41,6 +41,7 @@ career |>
   mutate(
     prob = prob * probVertex
   )
+
 # |>
 # group_by(career) |>
 # reframe(
