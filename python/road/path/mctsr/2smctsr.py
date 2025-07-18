@@ -20,8 +20,9 @@ careers = pl.read_parquet(
     )
 )
 
-# careers = careers.with_columns(similarity=pl.col.similarity**2)
-# careers = careers.filter(pl.col.similarity > 0.5)
+careers = careers.with_columns(ß=pl.col.ß**2)
+careers = careers.filter(pl.col.ß > 0.5)
+
 vertices = pl.read_parquet(
     os.path.join(
         os.getenv("ATLAS_OUTPUT"),
@@ -327,8 +328,8 @@ def _rolloutPolicy(state):
 # example
 # region: select careers
 Lambda = careers.select(pl.col.career).unique().to_series()
-k = 874
-# k = 2
+# k = 874
+k = 2
 # k = 1
 # q = 1
 q = 239
@@ -338,8 +339,8 @@ q = 239
 optimizer = mcts(
     # timeLimit=1000,
     # timeLimit=20000,
-    # timeLimit=30000,
-    timeLimit=60000,
+    timeLimit=30000,
+    # timeLimit=60000,
     rolloutPolicy=_rolloutPolicy,
 )
 
@@ -366,11 +367,5 @@ print(
     else "reached goal career"
 )
 
+
 # endregion
-# default time = default route = from 874 without time limit?
-# (
-#     vertices.filter(pl.col.career == q)
-#     .with_columns(years=pl.col.prob * (pl.col.x + pl.col.t))
-#     .select(pl.col.years)
-#     .sum()
-# )
