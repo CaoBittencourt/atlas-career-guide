@@ -12,11 +12,13 @@ box::use(
   roadmap / path / functions / employment[...],
   req = roadmap / path / data / req,
   lab = roadmap / path / data / labor,
+  ss = compare / seq,
   pro = utils / probs,
   roadmap / path / data / similarity[...],
   utils / data[sublist],
   stats[na.omit],
   gr = igraph,
+  arrow[write_parquet],
   readr[...],
   dplyr[...],
   tidyr[...],
@@ -82,6 +84,12 @@ mtx_similarity |>
   filter(
     career != careerTo
   ) |>
+  mutate(
+    ß = ss$ss(similarity)
+  ) |>
+  filter(
+    ß > 0.5
+  ) |>
   inner_join(
     req$df_ids |>
       select(
@@ -132,11 +140,11 @@ careerGrid |>
   filter(
     careerTo != basic.education.id
   ) |>
-  filter(
-    similarity >= 0.5
-  ) |>
   mutate(
-    prob = similarity * wTilde
+    prob = ß * wTilde
+  ) |>
+  filter(
+    prob > 0
   ) |>
   group_by(career) |>
   mutate(
@@ -255,7 +263,7 @@ vertices |>
 
 # endregion
 # exports
-# region: exports
+# region: rds
 careerGrid |>
   saveRDS(
     Sys.getenv("ATLAS_MOD") |>
@@ -277,6 +285,26 @@ vertices |>
         "data",
         "rds",
         "vertices.rds"
+      )
+  )
+
+# endregion
+# region: parquet
+careerGrid |>
+  write_parquet(
+    Sys.getenv("ATLAS_OUTPUT") |>
+      file.path(
+        "parquet",
+        "careers.parquet"
+      )
+  )
+
+vertices |>
+  write_parquet(
+    Sys.getenv("ATLAS_OUTPUT") |>
+      file.path(
+        "parquet",
+        "vertices.parquet"
       )
   )
 

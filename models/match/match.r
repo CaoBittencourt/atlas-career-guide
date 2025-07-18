@@ -6,6 +6,8 @@ options(box.path = Sys.getenv("ATLAS_MOD"))
 # region: imports
 box::use(
   s = compare / similarity,
+  readr[...],
+  arrow[write_parquet],
 )
 
 library(atlas.plot)
@@ -13,13 +15,12 @@ library(atlas.plot)
 # endregion
 # region: data
 # skill set matrix
-getOption("atlas.skills_mtx") |> readRDS() -> df_occupations
-getOption("atlas.cao") |> readRDS() -> df_cao
+Sys.getenv("ATLAS_SKILLS_MTX") |> readRDS() -> df_occupations
+Sys.getenv("ATLAS_CAO") |> readRDS() -> df_cao
 
 df_occupations |>
   inner_join(df_cao) |>
-  select(-cao) ->
-df_occupations_cao
+  select(-cao) -> df_occupations_cao
 
 # endregion
 # model
@@ -30,8 +31,7 @@ df_cao |>
     df_occupations_cao,
     s$similarity.methods$euclidean,
     bind = T
-  ) ->
-similarity_cao
+  ) -> similarity_cao
 
 similarity_cao |>
   arrange(desc(cao)) |>
@@ -44,13 +44,35 @@ similarity_cao |>
 # endregion
 # region: new dispatch (occupations)
 # note: is from/to inverted?
-df_occupations[1:19] |>
+df_occupations |>
   s$similarity(
-    df_occupations[1:19],
+    df_occupations,
     s$similarity.methods$euclidean,
     bind = T
-  ) ->
-similarity
-similarity
+  ) -> similarity
+
+# endregion
+# region: parquet
+similarity[-1] |>
+  write_parquet(
+    Sys.getenv("ATLAS_OUTPUT") |>
+      file.path("parquet", "similarity.parquet")
+  )
+
+# endregion
+# region: csv
+similarity[-1] |>
+  write_csv(
+    Sys.getenv("ATLAS_OUTPUT") |>
+      file.path("csv", "similarity.csv")
+  )
+
+# endregion
+# region: rds
+similarity[-1] |>
+  saveRDS(
+    Sys.getenv("ATLAS_OUTPUT") |>
+      file.path("rds", "similarity.rds")
+  )
 
 # endregion

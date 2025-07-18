@@ -14,19 +14,18 @@ from copy import deepcopy
 # region: data
 careers = pl.read_parquet(
     os.path.join(
-        os.getenv("ATLAS_DATA"),
-        "road",
+        os.getenv("ATLAS_OUTPUT"),
+        "parquet",
         "careers.parquet",
     )
 )
 
 # careers = careers.with_columns(similarity=pl.col.similarity**2)
 # careers = careers.filter(pl.col.similarity > 0.5)
-
 vertices = pl.read_parquet(
     os.path.join(
-        os.getenv("ATLAS_DATA"),
-        "road",
+        os.getenv("ATLAS_OUTPUT"),
+        "parquet",
         "vertices.parquet",
     )
 )
@@ -51,12 +50,12 @@ def _cost(skq: float, xk: float, xq: float, tk: float, tq: float):
     # education gap
     tReq = np.maximum(tq - tk * ßkqEq, 0) / skq
 
-    # xReset = False
-    # tReset = False
-    xReset = (xReq > xq) & (xq != 0)
-    tReset = (tReq > tq) & (tq != 0)
-    xReq = np.minimum(xq, xReq)
-    tReq = np.minimum(tq, tReq)
+    xReset = False
+    tReset = False
+    # xReset = (xReq > xq) & (xq != 0)
+    # tReset = (tReq > tq) & (tq != 0)
+    # xReq = np.minimum(xq, xReq)
+    # tReq = np.minimum(tq, tReq)
 
     # assume one must have all equivalent years
     # before attempting to switch careers
@@ -150,6 +149,13 @@ class Pathfinder:
         self.yearsMax = (
             yearsMax
             if not ist.null(yearsMax)
+            # (
+            #     self.vertices.filter(pl.col.career == self.goal)
+            #     .with_columns(years=pl.col.prob * (pl.col.x + pl.col.t))
+            #     .select(pl.col.years)
+            #     .sum()
+            #     .item()
+            # )
             else self.vertices.filter(pl.col.career == self.goal)
             .select(pl.col.x, pl.col.t)
             .max()
@@ -181,7 +187,6 @@ class Pathfinder:
     def getPossibleActions(self):
         # first stage:
         # feasible career progressions
-
         return (
             self.careers.filter(pl.col.career == self.career)
             .filter(
@@ -273,9 +278,6 @@ class Pathfinder:
     def isTerminal(self):
         # game ends when the target career is reached
         # or when maximum time is reached
-        # return bool(
-        #     self.career == self.goal + self.years >= self.yearsMax + self.deadEnd
-        # )
         return any(
             [
                 self.career == self.goal,
@@ -301,7 +303,6 @@ class Pathfinder:
 def _rolloutPolicy(state):
     while not state.isTerminal():
         try:
-            # action = random.choice(state.getPossibleActions())
             _careerProgs = state.careers.filter(pl.col.career == state.career).filter(
                 ~pl.col.careerTo.is_in(
                     state.path.select(pl.col.career).to_series().to_list()
@@ -326,14 +327,18 @@ def _rolloutPolicy(state):
 # example
 # region: select careers
 Lambda = careers.select(pl.col.career).unique().to_series()
-k = 2
+k = 874
+# k = 2
 # k = 1
+# q = 1
 q = 239
 # k = np.random.choice(Lambda)
 # q = np.random.choice(Lambda)
 
 optimizer = mcts(
     # timeLimit=1000,
+    # timeLimit=20000,
+    # timeLimit=30000,
     timeLimit=60000,
     rolloutPolicy=_rolloutPolicy,
 )
@@ -362,3 +367,10 @@ print(
 )
 
 # endregion
+# default time = default route = from 874 without time limit?
+# (
+#     vertices.filter(pl.col.career == q)
+#     .with_columns(years=pl.col.prob * (pl.col.x + pl.col.t))
+#     .select(pl.col.years)
+#     .sum()
+# )

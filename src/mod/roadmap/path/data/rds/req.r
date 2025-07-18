@@ -211,13 +211,11 @@ df_ids |>
     to = occupation
   ) |>
   inner_join(
-    Sys.getenv("ATLAS_ARTICLES") |>
+    Sys.getenv("ATLAS_RDS") |>
       file.path(
-        "1.introduction-matching",
-        "output",
-        "similarity_matrix.csv"
+        "similarity.rds"
       ) |>
-      read_csv() |>
+      readRDS() |>
       rename(
         to = 1
       ) |>
@@ -230,7 +228,6 @@ df_ids |>
     across(
       .cols = where(is.numeric),
       .fns = ~.x
-      # .fns = ~ .x^2
     )
   ) -> df_similarity
 
