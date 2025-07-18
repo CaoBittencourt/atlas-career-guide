@@ -7,7 +7,7 @@ options(box.path = Sys.getenv('ATLAS_MOD'))
 box::use(
   eee = compare / eeq,
   xeq = compare / xeq,
-  s = compare / similarity,
+  s = compare / similarity
 )
 
 # endregion

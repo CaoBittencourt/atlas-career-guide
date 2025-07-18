@@ -37,5 +37,8 @@ dependencies:
   - r-pracma
   - r-arrow
   - r-gtools
+  - r-bvls
+  - r-fastglm
+  - r-weights
   # - r-ks
   # - r-flexclust
