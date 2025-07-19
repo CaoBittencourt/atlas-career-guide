@@ -262,6 +262,30 @@ vertices |>
   ) -> vertices
 
 # endregion
+# region: split occupations into suboccupations
+vertices |>
+  group_by(career) |>
+  mutate(
+    probCum = cumsum(prob),
+    quartile = probCum |>
+      findInterval(
+        seq(0, 1, .25),
+        left.open = T
+      )
+  ) |>
+  ungroup() |>
+  filter(
+    career == 1
+  ) |>
+  mutate(
+    subcareer = paste0(career, '.', quartile) |> factor()
+  ) |>
+  print(
+    n = 100
+  )
+
+
+# endregion
 # exports
 # region: rds
 careerGrid |>
