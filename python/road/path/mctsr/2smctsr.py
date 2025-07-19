@@ -188,6 +188,8 @@ class Pathfinder:
     def getPossibleActions(self):
         # first stage:
         # feasible career progressions
+        # randomly select a vertex
+
         return (
             self.careers.filter(pl.col.career == self.career)
             .filter(
@@ -199,6 +201,17 @@ class Pathfinder:
             .to_series()
             .to_list()
         )
+        # # randomly select a vertex
+        # _careerProgs = self.careers.filter(pl.col.career == self.career).filter(
+        #     ~pl.col.careerTo.is_in(
+        #         self.path.select(pl.col.career).to_series().to_list()
+        #     )
+        # )
+
+        # if _careerProgs.shape[0] == 1:
+        #     self.deadEnd = True
+
+        # return _careerProgs.select(pl.col.careerTo).to_series().to_list()
 
     def cost(self, careerTo: int):
         # second stage:
@@ -309,6 +322,9 @@ def _rolloutPolicy(state):
                     state.path.select(pl.col.career).to_series().to_list()
                 )
             )
+
+            if _careerProgs.shape[0] == 1:
+                state.deadEnd = True
 
             action = np.random.choice(
                 a=_careerProgs.select(pl.col.careerTo).to_series(),
