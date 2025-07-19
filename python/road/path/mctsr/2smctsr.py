@@ -282,6 +282,9 @@ class Pathfinder:
             ]
         )
 
+        newState.careers = newState.careers.filter(pl.col.career != self.career).filter(
+            pl.col.careerTo != action
+        )
         newState.career = action
         newState.vertex = _moveCost["vertexTo"]["vertex"]
         newState.years = self.years + _moveCost["cost"]["total"]
@@ -358,6 +361,7 @@ optimizer = mcts(
     timeLimit=30000,
     # timeLimit=60000,
     rolloutPolicy=_rolloutPolicy,
+    explorationConstant=100,
 )
 
 pathfinder = Pathfinder(
@@ -369,6 +373,7 @@ pathfinder = Pathfinder(
     goal=q,
     careers=careers,
     vertices=vertices,
+    yearsMax=100,
 )
 
 # endregion

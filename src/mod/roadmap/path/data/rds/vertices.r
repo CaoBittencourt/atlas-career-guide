@@ -261,30 +261,87 @@ vertices |>
       )
   ) -> vertices
 
-# endregion
-# region: split occupations into suboccupations
+# region: expected cost of career
+careerGrid |> filter(career == 1) -> dsds
+
+move.cost <- function(ßkq, xk, xq, tk, tq) {
+  # assert args in main function
+
+  ßkq.eq <- ßkq * (ßkq >= 0.5)
+  # equivalent similarity
+
+  pmax(xq - xk * ßkq.eq, 0) / ßkq -> req.x
+  # experience gap
+
+  pmax(tq - tk * ßkq.eq, 0) / ßkq -> req.t
+  # education gap
+
+  return(req.x + req.t)
+  # return(
+  #   list(
+  #   work = req.x,
+  #   study = req.t,
+  #   total = req.x + req.t
+  # ))
+}
+
+# must start from a given vertex
 vertices |>
-  group_by(career) |>
+  filter(career == 1) |>
+  arrange(-prob) |>
+  slice(1) |>
+  pull(vertex) -> vertex.from
+
+dsds |>
+  inner_join(
+    vertices |> rename(careerTo = career),
+    by = c('careerTo' = 'careerTo'),
+    suffix = c('.from', '.to')
+  ) |>
+  inner_join(
+    vertices |> filter(vertex == vertex.from),
+    by = c('career' = 'career'),
+    suffix = c('', '.from')
+  ) |>
   mutate(
-    probCum = cumsum(prob),
-    quartile = probCum |>
-      findInterval(
-        seq(0, 1, .25),
-        left.open = T
-      )
+    cost = move.cost(
+      ß,
+      x.from,
+      x,
+      t.from,
+      t
+    )
   ) |>
-  ungroup() |>
-  filter(
-    career == 1
-  ) |>
-  mutate(
-    subcareer = paste0(career, '.', quartile) |> factor()
-  ) |>
-  print(
-    n = 100
+  group_by(careerTo) |>
+  reframe(
+    cost.expected = stats::weighted.mean(
+      cost,
+      prob.to
+    )
+  )
+
+group_by(career) |>
+  reframe(
+    cost.expected = move.cost(
+      similarity,
+    )
+  )
+
+dsds$careerTo |>
+  lapply(
+    function(q) {
+      vertices |>
+        filter(career == q) |>
+        inner_join(
+          dsds |> select(careerTo, similarity),
+          by = c('career' = 'careerTo')
+        ) |>
+        move.cost()
+    }
   )
 
 
+# endregion
 # endregion
 # exports
 # region: rds
