@@ -92,10 +92,19 @@ careers |>
     value = 1
   ) -> paths.graph
 
-path(to = 1L, from = 2L, graph = paths.graph) -> epath
+goal <- 239L
+# start <- 2L
+start <- 874L
+# start <- 2L
+
+path(
+  to = goal,
+  from = start,
+  graph = paths.graph
+) -> epath
 
 vertices |>
-  filter(career == 1) |>
+  filter(career == goal) |>
   reframe(
     sum(prob * (x + t))
   )
@@ -110,17 +119,7 @@ df_ids |>
       )
   )
 
-careers |>
-  slice() |>
-  inner_join(
-    df_ids
-  ) |>
-  select(
-    year,
-    duration,
-    occupation,
-    id
-  )
+careers
 
 
 # endregion
