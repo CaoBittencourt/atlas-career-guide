@@ -92,12 +92,28 @@ careers |>
     value = 1
   ) -> paths.graph
 
+path(to = 1L, from = 2L, graph = paths.graph) -> epath
+
+vertices |>
+  filter(career == 1) |>
+  reframe(
+    sum(prob * (x + t))
+  )
 
 df_ids |>
   inner_join(
-    path(1L, 2L, graph = paths.graph) |>
-      path.timeline(graph = paths.graph) |>
-      rename(id = occupation)
+    careers |>
+      slice(epath) |>
+      select(
+        id = career,
+        cost.expected
+      )
+  )
+
+careers |>
+  slice() |>
+  inner_join(
+    df_ids
   ) |>
   select(
     year,
