@@ -261,9 +261,7 @@ vertices |>
       )
   ) -> vertices
 
-# region: expected cost of career
-careerGrid |> filter(career == 1) -> dsds
-
+# region: movement cost
 move.cost <- function(ßkq, xk, xq, tk, tq) {
   # assert args in main function
 
@@ -277,71 +275,37 @@ move.cost <- function(ßkq, xk, xq, tk, tq) {
   # education gap
 
   return(req.x + req.t)
-  # return(
-  #   list(
-  #   work = req.x,
-  #   study = req.t,
-  #   total = req.x + req.t
-  # ))
 }
 
-# must start from a given vertex
+# endregion
+# region: expected movement cost heuristic
 vertices |>
-  filter(career == 1) |>
-  arrange(-prob) |>
-  slice(1) |>
-  pull(vertex) -> vertex.from
+  group_by(career) |>
+  reframe(
+    x.expected = stats::weighted.mean(x, prob),
+    t.expected = stats::weighted.mean(t, prob)
+  ) -> vertices.expected
 
-dsds |>
+careerGrid |>
   inner_join(
-    vertices |> rename(careerTo = career),
-    by = c('careerTo' = 'careerTo'),
-    suffix = c('.from', '.to')
+    vertices.expected,
+    by = c('career' = 'career')
   ) |>
   inner_join(
-    vertices |> filter(vertex == vertex.from),
-    by = c('career' = 'career'),
-    suffix = c('', '.from')
+    vertices.expected,
+    by = c('careerTo' = 'career'),
+    suffix = c('', '.to')
   ) |>
   mutate(
-    cost = move.cost(
-      ß,
-      x.from,
-      x,
-      t.from,
-      t
-    )
-  ) |>
-  group_by(careerTo) |>
-  reframe(
-    cost.expected = stats::weighted.mean(
-      cost,
-      prob.to
-    )
-  )
-
-group_by(career) |>
-  reframe(
     cost.expected = move.cost(
-      similarity,
+      ß,
+      x.expected,
+      x.expected.to,
+      t.expected,
+      t.expected.to
     )
-  )
+  ) -> careerGrid
 
-dsds$careerTo |>
-  lapply(
-    function(q) {
-      vertices |>
-        filter(career == q) |>
-        inner_join(
-          dsds |> select(careerTo, similarity),
-          by = c('career' = 'careerTo')
-        ) |>
-        move.cost()
-    }
-  )
-
-
-# endregion
 # endregion
 # exports
 # region: rds

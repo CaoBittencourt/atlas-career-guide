@@ -18,8 +18,12 @@ path.timeline <- function(epath, graph = paths$graph) {
     data.frame(
       year = years |> cumsum(),
       duration = years,
-      movement.type = c("start", graph |> gr$get.edge.attribute("type", epath)) |> as.factor(),
-      occupation = epath |> which.path()
+      movement.type = c(
+        "start",
+        graph |> gr$get.edge.attribute("type", epath)
+      ) |>
+        as.factor(),
+      occupation = epath |> which.path(graph = graph)
     )
   )
 }

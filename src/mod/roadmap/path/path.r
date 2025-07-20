@@ -17,15 +17,13 @@ path.dijkstra <- function(graph, from, to) {
   # dijkstra algorithm
   return(
     unlist(
-      (
-        graph |>
-          gr$shortest_paths(
-            from = from,
-            to = to,
-            output = "epath",
-            algorithm = "dijkstra"
-          )
-      )$epath
+      (graph |>
+        gr$shortest_paths(
+          from = from,
+          to = to,
+          output = "epath",
+          algorithm = "dijkstra"
+        ))$epath
     )
   )
 }
@@ -39,7 +37,14 @@ list(
 # endregion
 # dispatch
 # region: path generic function
-path <- function(to, from = NULL, util = NULL, graph = paths$graph, path_method = path.methods[[1]], ...) {
+path <- function(
+  to,
+  from = NULL,
+  util = NULL,
+  graph = paths$graph,
+  path_method = path.methods[[1]],
+  ...
+) {
   # assert args
   # paths$table$vertex |> min() -> vertex.min
   # paths$table$vertex |> max() -> vertex.max

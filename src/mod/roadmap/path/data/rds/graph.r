@@ -28,35 +28,92 @@ box::use(
 # endregion
 # model
 # region: simplified model
-# only careers, not vertices
-careers |> filter(career == 1) -> career
-vertices |> filter(career != 1) -> verticesTo
-vertices |> filter(career == 1) -> verticesFrom
+careers |> mutate(.before = 1, id = row_number()) -> careers
 
-career |>
-  inner_join(
-    verticesTo |> rename(probVertex = prob),
-    by = c('careerTo' = 'career')
+careers |>
+  select(
+    career,
+    careerTo
   ) |>
-  mutate(
-    prob = prob * probVertex
+  as.matrix() |>
+  gr$graph.edgelist(
+    directed = T
+  ) |>
+  gr$set.edge.attribute(
+    "type",
+    value = "switch"
+  ) |>
+  gr$set.edge.attribute(
+    "weight",
+    value = careers$cost.expected
+  ) |>
+  gr$set.edge.attribute(
+    "cost",
+    value = careers$cost.expected
+  ) |>
+  gr$set.edge.attribute(
+    "occupation.from",
+    value = careers$career
+  ) |>
+  gr$set.edge.attribute(
+    "occupation.to",
+    value = careers$careerTo
+  ) |>
+  gr$set.edge.attribute(
+    "vertex.from",
+    value = careers$career
+  ) |>
+  gr$set.edge.attribute(
+    "vertex.to",
+    value = careers$careerTo
+  ) |>
+  gr$set.edge.attribute(
+    "x.from",
+    value = careers$x.expected
+  ) |>
+  gr$set.edge.attribute(
+    "x.to",
+    value = careers$x.expected.to
+  ) |>
+  gr$set.edge.attribute(
+    "t.from",
+    value = careers$t.expected
+  ) |>
+  gr$set.edge.attribute(
+    "t.to",
+    value = careers$t.expected.to
+  ) |>
+  gr$set.edge.attribute(
+    "table.id",
+    value = careers$id
+  ) |>
+  gr$set.edge.attribute(
+    "util",
+    value = 1
+  ) -> paths.graph
+
+
+df_ids |>
+  inner_join(
+    path(1L, 2L, graph = paths.graph) |>
+      path.timeline(graph = paths.graph) |>
+      rename(id = occupation)
+  ) |>
+  select(
+    year,
+    duration,
+    occupation,
+    id
   )
 
-# |>
-# group_by(career) |>
-# reframe(
-#   prob = prob |> sum()
-# )
-verticesFrom
 
 # endregion
-# region: movement types
-# 1. "teleport" vertically to another occupation at a parallel vertex (same x,t)
+# # region: movement types
+# # 1. "teleport" vertically to another occupation at a parallel vertex (same x,t)
 # expand.grid(
 #   vertex = vertices$vertex,
 #   vertex.to = vertices$vertex
-# ) ->
-# vertices.comb
+# ) -> vertices.comb
 
 # vertices.comb |>
 #   inner_join(
@@ -72,157 +129,126 @@ verticesFrom
 #     vertices,
 #     by = c("vertex" = "vertex"),
 #     relationship = "many-to-many"
-#   ) ->
-# paths.switch
+#   ) -> paths.switch
 
-vertices |>
-  inner_join(
-    vertices,
-    suffix = c("", ".to"),
-    by = c("x" = "x", "t" = "t"),
-    relationship = "many-to-many"
-  ) |>
-  mutate(
-    type = "switch"
-  ) -> paths.switch
+# vertices |>
+#   inner_join(
+#     vertices,
+#     suffix = c("", ".to"),
+#     by = c("x" = "x", "t" = "t"),
+#     relationship = "many-to-many"
+#   ) |>
+#   mutate(
+#     type = "switch"
+#   ) -> paths.switch
 
-# 2. increment either experience or education within the same occupation
-# with only direct (adjacent) movement, i.e.
-# or decrement either experience or education within the same occupation
-# with only direct (adjacent) movement and zero cost, i.e.
+# # 2. increment either experience or education within the same occupation
+# # with only direct (adjacent) movement, i.e.
+# # or decrement either experience or education within the same occupation
+# # with only direct (adjacent) movement and zero cost, i.e.
 
-# valid education movements
-# high.school -> associate
-# associate -> bachelor
-# bachelor -> master
-# master -> doctorate
+# # valid education movements
+# # high.school -> associate
+# # associate -> bachelor
+# # bachelor -> master
+# # master -> doctorate
 
-# high.school <- associate
-# associate <- bachelor
-# bachelor <- master
-# master <- doctorate
-req$education |>
-  unlist() |>
-  as_tibble() |>
-  rename(t = 1) |>
-  # as_tibble(
-  #   rownames = "education"
-  # ) |>
-  # rename(t = 2) |>
-  mutate(
-    t.to = dplyr::lead(t, 1)
-  ) -> education.move
+# # high.school <- associate
+# # associate <- bachelor
+# # bachelor <- master
+# # master <- doctorate
+# req$education |>
+#   unlist() |>
+#   as_tibble() |>
+#   rename(t = 1) |>
+#   # as_tibble(
+#   #   rownames = "education"
+#   # ) |>
+#   # rename(t = 2) |>
+#   mutate(
+#     t.to = dplyr::lead(t, 1)
+#   ) -> education.move
 
-education.move |>
-  bind_rows(
-    education.move |>
-      rename(
-        t.to = t,
-        t = t.to
-      ) |>
-      na.omit()
-  ) |>
-  mutate(
-    type = "study"
-  ) -> education.move
-
-# valid experience movements
-# intern -> junior
-# junior -> associate
-# associate -> mid.level
-# mid.level -> senior
-
-# intern <- junior
-# junior <- associate
-# associate <- mid.level
-# mid.level <- senior
-req$experience |>
-  unlist() |>
-  as_tibble() |>
-  rename(x = 1) |>
-  # as_tibble(
-  #   rownames = "experience"
-  # ) |>
-  # rename(x = 2) |>
-  mutate(
-    x.to = dplyr::lead(x, 1)
-  ) -> experience.move
-
-experience.move |>
-  bind_rows(
-    experience.move |>
-      rename(
-        x.to = x,
-        x = x.to
-      ) |>
-      na.omit()
-  ) |>
-  mutate(
-    type = "work"
-  ) -> experience.move
-
-# education move
-vertices |>
-  inner_join(
-    education.move,
-    by = c("t" = "t"),
-    relationship = "many-to-many"
-  ) |>
-  na.omit() -> paths.study
-
-# experience move
-vertices |>
-  inner_join(
-    experience.move,
-    by = c("x" = "x"),
-    relationship = "many-to-many"
-  ) |>
-  na.omit() -> paths.work
-
-# 3. teleport back to basic education (hard reset)
-expand.grid(
-  vertex = vertices |>
-    filter(
-      occupation !=
-        (req$df_ids |> filter(occupation == "Basic Education") |> pull(id))
-    ) |>
-    pull(vertex),
-  vertex.to = vertices |>
-    filter(
-      occupation ==
-        (req$df_ids |> filter(occupation == "Basic Education") |> pull(id))
-    ) |>
-    pull(vertex)
-) |>
-  inner_join(
-    vertices,
-    by = c("vertex" = "vertex"),
-    relationship = "many-to-many"
-  ) |>
-  inner_join(
-    vertices,
-    suffix = c("", ".to"),
-    by = c("vertex.to" = "vertex"),
-    relationship = "many-to-many"
-  ) |>
-  filter(
-    occupation != occupation.to
-  ) |>
-  mutate(
-    type = "reset"
-  ) -> paths.reset
-
-# # 3. teleport to first vertex of any occupation at full (x.to + t.to) cost? (hard reset)
-# expand.grid(
-#   vertex = vertices$vertex,
-#   vertex.to =
-#     vertices |>
-#       group_by(
-#         occupation
+# education.move |>
+#   bind_rows(
+#     education.move |>
+#       rename(
+#         t.to = t,
+#         t = t.to
 #       ) |>
-#       slice(1) |>
-#       ungroup() |>
-#       pull(vertex)
+#       na.omit()
+#   ) |>
+#   mutate(
+#     type = "study"
+#   ) -> education.move
+
+# # valid experience movements
+# # intern -> junior
+# # junior -> associate
+# # associate -> mid.level
+# # mid.level -> senior
+
+# # intern <- junior
+# # junior <- associate
+# # associate <- mid.level
+# # mid.level <- senior
+# req$experience |>
+#   unlist() |>
+#   as_tibble() |>
+#   rename(x = 1) |>
+#   # as_tibble(
+#   #   rownames = "experience"
+#   # ) |>
+#   # rename(x = 2) |>
+#   mutate(
+#     x.to = dplyr::lead(x, 1)
+#   ) -> experience.move
+
+# experience.move |>
+#   bind_rows(
+#     experience.move |>
+#       rename(
+#         x.to = x,
+#         x = x.to
+#       ) |>
+#       na.omit()
+#   ) |>
+#   mutate(
+#     type = "work"
+#   ) -> experience.move
+
+# # education move
+# vertices |>
+#   inner_join(
+#     education.move,
+#     by = c("t" = "t"),
+#     relationship = "many-to-many"
+#   ) |>
+#   na.omit() -> paths.study
+
+# # experience move
+# vertices |>
+#   inner_join(
+#     experience.move,
+#     by = c("x" = "x"),
+#     relationship = "many-to-many"
+#   ) |>
+#   na.omit() -> paths.work
+
+# # 3. teleport back to basic education (hard reset)
+# expand.grid(
+#   vertex = vertices |>
+#     filter(
+#       occupation !=
+#         (req$df_ids |> filter(occupation == "Basic Education") |> pull(id))
+#     ) |>
+#     pull(vertex),
+#   vertex.to = vertices |>
+#     filter(
+#       occupation ==
+#         (req$df_ids |> filter(occupation == "Basic Education") |> pull(id))
+#     ) |>
+#     pull(vertex)
 # ) |>
 #   inner_join(
 #     vertices,
@@ -240,65 +266,95 @@ expand.grid(
 #   ) |>
 #   mutate(
 #     type = "reset"
-#   ) ->
-# paths.restart
+#   ) -> paths.reset
 
-# all valid paths
-bind_rows(
-  # switch careers
-  paths.switch |>
-    mutate(
-      x.to = x,
-      t.to = t
-    ),
-  # reset career
-  paths.reset,
-  # # restart career
-  # paths.restart,
-  # move experience
-  paths.work |>
-    inner_join(
-      vertices,
-      suffix = c("", ".to"),
-      by = c(
-        "x.to" = "x",
-        "t" = "t",
-        "occupation" = "occupation"
-      )
-    ) |>
-    mutate(
-      occupation.to = occupation,
-      t.to = t
-    ),
-  # move education
-  paths.study |>
-    inner_join(
-      vertices,
-      suffix = c("", ".to"),
-      by = c(
-        "x" = "x",
-        "t.to" = "t",
-        "occupation" = "occupation"
-      )
-    ) |>
-    mutate(
-      occupation.to = occupation,
-      x.to = x
-    )
-) |>
-  filter(
-    vertex != vertex.to
-  ) |>
-  select(
-    -ends_with("pct.to")
-  ) |>
-  relocate(
-    starts_with("vertex"),
-    starts_with("occupation"),
-    type,
-    starts_with("x"),
-    starts_with("t")
-  ) -> paths
+# # # 3. teleport to first vertex of any occupation at full (x.to + t.to) cost? (hard reset)
+# # expand.grid(
+# #   vertex = vertices$vertex,
+# #   vertex.to =
+# #     vertices |>
+# #       group_by(
+# #         occupation
+# #       ) |>
+# #       slice(1) |>
+# #       ungroup() |>
+# #       pull(vertex)
+# # ) |>
+# #   inner_join(
+# #     vertices,
+# #     by = c("vertex" = "vertex"),
+# #     relationship = "many-to-many"
+# #   ) |>
+# #   inner_join(
+# #     vertices,
+# #     suffix = c("", ".to"),
+# #     by = c("vertex.to" = "vertex"),
+# #     relationship = "many-to-many"
+# #   ) |>
+# #   filter(
+# #     occupation != occupation.to
+# #   ) |>
+# #   mutate(
+# #     type = "reset"
+# #   ) ->
+# # paths.restart
+
+# # all valid paths
+# bind_rows(
+#   # switch careers
+#   paths.switch |>
+#     mutate(
+#       x.to = x,
+#       t.to = t
+#     ),
+#   # reset career
+#   paths.reset,
+#   # # restart career
+#   # paths.restart,
+#   # move experience
+#   paths.work |>
+#     inner_join(
+#       vertices,
+#       suffix = c("", ".to"),
+#       by = c(
+#         "x.to" = "x",
+#         "t" = "t",
+#         "occupation" = "occupation"
+#       )
+#     ) |>
+#     mutate(
+#       occupation.to = occupation,
+#       t.to = t
+#     ),
+#   # move education
+#   paths.study |>
+#     inner_join(
+#       vertices,
+#       suffix = c("", ".to"),
+#       by = c(
+#         "x" = "x",
+#         "t.to" = "t",
+#         "occupation" = "occupation"
+#       )
+#     ) |>
+#     mutate(
+#       occupation.to = occupation,
+#       x.to = x
+#     )
+# ) |>
+#   filter(
+#     vertex != vertex.to
+#   ) |>
+#   select(
+#     -ends_with("pct.to")
+#   ) |>
+#   relocate(
+#     starts_with("vertex"),
+#     starts_with("occupation"),
+#     type,
+#     starts_with("x"),
+#     starts_with("t")
+#   ) -> paths
 
 # endregion
 # region: movement similarity
