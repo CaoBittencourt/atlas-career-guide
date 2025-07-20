@@ -28,7 +28,18 @@ box::use(
 # endregion
 # model
 # region: simplified model
-careers |> mutate(.before = 1, id = row_number()) -> careers
+careers |>
+  bind_rows(
+    tibble(
+      career = 1:873,
+      careerTo = 874,
+      cost.expected = 0
+    )
+  ) |>
+  mutate(
+    .before = 1,
+    id = row_number()
+  ) -> careers
 
 careers |>
   select(
@@ -94,8 +105,8 @@ careers |>
 
 goal <- 239L
 # start <- 2L
-start <- 874L
-# start <- 2L
+# start <- 874L
+start <- 2L
 
 path(
   to = goal,
