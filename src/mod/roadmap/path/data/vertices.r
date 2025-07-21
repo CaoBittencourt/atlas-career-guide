@@ -1,30 +1,56 @@
 # setup
 # region: data
-readRDS(
-  file.path(
-    Sys.getenv("ATLAS_MOD"),
-    "roadmap",
-    "path",
-    "data",
-    "rds",
-    "careers.rds"
-  )
-) -> careers
+list(
+  careers = readRDS(
+    file.path(
+      Sys.getenv("ATLAS_MOD"),
+      "roadmap",
+      "path",
+      "data",
+      "rds",
+      "careers.rds"
+    )
+  ),
 
-readRDS(
-  file.path(
-    Sys.getenv("ATLAS_MOD"),
-    "roadmap",
-    "path",
-    "data",
-    "rds",
-    "vertices.rds"
+  vertices = readRDS(
+    file.path(
+      Sys.getenv("ATLAS_MOD"),
+      "roadmap",
+      "path",
+      "data",
+      "rds",
+      "vertices.rds"
+    )
   )
-) -> vertices
+) -> detailed
+
+list(
+  careers = readRDS(
+    file.path(
+      Sys.getenv("ATLAS_MOD"),
+      "roadmap",
+      "path",
+      "data",
+      "rds",
+      "careers_expected.rds"
+    )
+  ),
+
+  vertices = readRDS(
+    file.path(
+      Sys.getenv("ATLAS_MOD"),
+      "roadmap",
+      "path",
+      "data",
+      "rds",
+      "vertices_expected.rds"
+    )
+  )
+) -> expected
 
 # endregion
 # exports
 # region: exports
-box::export(vertices, careers)
+box::export(detailed, expected)
 
 # endregion

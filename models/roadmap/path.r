@@ -16,20 +16,18 @@ box::use(
 # endregion
 # region: data
 # skill set matrix
-getOption("atlas.skills_mtx") |>
+Sys.getenv("ATLAS_SKILLS_MTX") |>
   readRDS() |>
   select(-1) |>
   names() |>
-  c("Basic Education") ->
-occupations
+  c("Basic Education") -> occupations
 
 occupations |>
   seq_along() |>
   as.list() |>
   setNames(
     occupations
-  ) ->
-occupations
+  ) -> occupations
 
 Sys.getenv("ATLAS_MOD") |>
   file.path(
@@ -39,33 +37,28 @@ Sys.getenv("ATLAS_MOD") |>
     "rds",
     "vertices.rds"
   ) |>
-  readRDS() ->
-from.to.vertices
+  readRDS() -> from.to.vertices
 
 # endregion
 # model
 # region: actor => musician
 # occupations
-occupation.from <- occupations$Actors
-occupation.to <- occupations$`Musicians and Singers`
-
-# vertices
-occupation.from |> pa$match.vertex(0, 0) -> vertex.from
-pa$paths$vertices |>
-  filter(occupation == occupation.to) |>
-  arrange(-x, -t) |>
-  slice(1) |>
-  pull(vertex) ->
-vertex.to
-# occupation.to |> pa$match.vertex(Inf, Inf) -> vertex.to
+occupations$`Basic Education` -> occupation.from
+# occupations$Actors -> occupation.from
+occupations$`Musicians and Singers` -> occupation.to
 
 # find path
-vertex.to |> pa$path(vertex.from) -> epath
-epath
+occupation.to |>
+  pa$path(
+    occupation.from,
+    graph = pa$paths$expected$graph
+  ) -> epath
 
 # career path
 epath |>
-  pa$path.timeline() |>
+  pa$path.timeline(
+    graph = pa$paths$expected$graph
+  ) |>
   mutate(
     occupation = names(
       occupations
@@ -75,7 +68,7 @@ epath |>
   )
 
 # path cost
-pa$path.cost(epath) |> sum()
+pa$path.cost(epath, pa$paths$expected$graph) |> sum()
 
 # base cost
 vertex.to |> pa$vertex.cost()
@@ -84,9 +77,7 @@ vertex.to |> pa$vertex.cost()
 epath |> pa$path.efficiency()
 
 # verify path is optimal
-if (
-  pa$path.efficiency(epath) >= 0
-) {
+if (pa$path.efficiency(epath) >= 0) {
   print(
     paste0(
       "Path is optimal and ",
@@ -117,8 +108,7 @@ pa$paths$vertices |>
   arrange(-x, -t) |>
   filter(prob > 0) |>
   slice(1) |>
-  pull(vertex) ->
-vertex.to
+  pull(vertex) -> vertex.to
 # occupation.to |> pa$match.vertex(Inf, Inf) -> vertex.to
 
 # find path
@@ -146,9 +136,7 @@ vertex.to |> pa$vertex.cost()
 epath |> pa$path.efficiency()
 
 # verify path is optimal
-if (
-  pa$path.efficiency(epath) >= 0
-) {
+if (pa$path.efficiency(epath) >= 0) {
   print(
     paste0(
       "Path is optimal and ",
@@ -179,8 +167,7 @@ pa$paths$vertices |>
   arrange(-x, -t) |>
   filter(prob > 0) |>
   slice(1) |>
-  pull(vertex) ->
-vertex.to
+  pull(vertex) -> vertex.to
 # occupation.to |> pa$match.vertex(Inf, Inf) -> vertex.to
 
 # find path
@@ -208,9 +195,7 @@ vertex.to |> pa$vertex.cost()
 epath |> pa$path.efficiency()
 
 # verify path is optimal
-if (
-  pa$path.efficiency(epath) >= 0
-) {
+if (pa$path.efficiency(epath) >= 0) {
   print(
     paste0(
       "Path is optimal and ",
@@ -270,9 +255,7 @@ vertex.to |> pa$vertex.cost()
 epath |> pa$path.efficiency()
 
 # verify path is optimal
-if (
-  pa$path.efficiency(epath) >= 0
-) {
+if (pa$path.efficiency(epath) >= 0) {
   print(
     paste0(
       "Path is optimal and ",
@@ -325,9 +308,7 @@ vertex.to |> pa$vertex.cost()
 epath |> pa$path.efficiency()
 
 # verify path is optimal
-if (
-  pa$path.efficiency(epath) >= 0
-) {
+if (pa$path.efficiency(epath) >= 0) {
   print(
     paste0(
       "Path is optimal and ",
@@ -380,9 +361,7 @@ vertex.to |> pa$vertex.cost()
 epath |> pa$path.efficiency()
 
 # verify path is optimal
-if (
-  pa$path.efficiency(epath) >= 0
-) {
+if (pa$path.efficiency(epath) >= 0) {
   print(
     paste0(
       "Path is optimal and ",
@@ -435,9 +414,7 @@ vertex.to |> pa$vertex.cost()
 epath |> pa$path.efficiency()
 
 # verify path is optimal
-if (
-  pa$path.efficiency(epath) >= 0
-) {
+if (pa$path.efficiency(epath) >= 0) {
   print(
     paste0(
       "Path is optimal and ",

@@ -137,10 +137,12 @@ careerGrid |>
     by = c('careerTo' = 'id'),
     multiple = 'all'
   ) |>
-  filter(
-    careerTo != basic.education.id
-  ) |>
   mutate(
+    wTilde = ifelse(
+      careerTo == basic.education.id,
+      1,
+      wTilde
+    ),
     prob = ß * wTilde
   ) |>
   filter(
@@ -297,6 +299,7 @@ careerGrid |>
     suffix = c('', '.to')
   ) |>
   mutate(
+    id = row_number(),
     cost.expected = move.cost(
       ß,
       x.expected,
@@ -304,7 +307,7 @@ careerGrid |>
       t.expected,
       t.expected.to
     )
-  ) -> careerGrid
+  ) -> careerGrid.expected
 
 # endregion
 # exports
@@ -333,6 +336,30 @@ vertices |>
       )
   )
 
+careerGrid.expected |>
+  saveRDS(
+    Sys.getenv("ATLAS_MOD") |>
+      file.path(
+        "roadmap",
+        "path",
+        "data",
+        "rds",
+        "careers_expected.rds"
+      )
+  )
+
+vertices.expected |>
+  saveRDS(
+    Sys.getenv("ATLAS_MOD") |>
+      file.path(
+        "roadmap",
+        "path",
+        "data",
+        "rds",
+        "vertices_expected.rds"
+      )
+  )
+
 # endregion
 # region: parquet
 careerGrid |>
@@ -350,6 +377,24 @@ vertices |>
       file.path(
         "parquet",
         "vertices.parquet"
+      )
+  )
+
+careerGrid.expected |>
+  write_parquet(
+    Sys.getenv("ATLAS_OUTPUT") |>
+      file.path(
+        "parquet",
+        "careers_expected.parquet"
+      )
+  )
+
+vertices.expected |>
+  write_parquet(
+    Sys.getenv("ATLAS_OUTPUT") |>
+      file.path(
+        "parquet",
+        "vertices_expected.parquet"
       )
   )
 

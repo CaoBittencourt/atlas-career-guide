@@ -13,8 +13,7 @@ box::use(
   roadmap / path / data / similarity[...],
   req = roadmap / path / data / req,
   lab = roadmap / path / data / labor,
-  dt = dtplyr,
-  roadmap / path / data / vertices[...],
+  data = roadmap / path / data / vertices[...],
   pay = roadmap / path / functions / payoff,
   yap = roadmap / path / functions / payoff_inverse,
   utils / data[sublist],
@@ -28,20 +27,7 @@ box::use(
 # endregion
 # model
 # region: simplified model
-careers |>
-  bind_rows(
-    tibble(
-      career = 1:873,
-      careerTo = 874,
-      cost.expected = 0
-    )
-  ) |>
-  mutate(
-    .before = 1,
-    id = row_number()
-  ) -> careers
-
-careers |>
+data$expected$careers |>
   select(
     career,
     careerTo
@@ -56,106 +42,78 @@ careers |>
   ) |>
   gr$set.edge.attribute(
     "weight",
-    value = careers$cost.expected
+    value = data$expected$careers$cost.expected
   ) |>
   gr$set.edge.attribute(
     "cost",
-    value = careers$cost.expected
+    value = data$expected$careers$cost.expected
   ) |>
   gr$set.edge.attribute(
     "occupation.from",
-    value = careers$career
+    value = data$expected$careers$career
   ) |>
   gr$set.edge.attribute(
     "occupation.to",
-    value = careers$careerTo
+    value = data$expected$careers$careerTo
   ) |>
   gr$set.edge.attribute(
     "vertex.from",
-    value = careers$career
+    value = data$expected$careers$career
   ) |>
   gr$set.edge.attribute(
     "vertex.to",
-    value = careers$careerTo
+    value = data$expected$careers$careerTo
   ) |>
   gr$set.edge.attribute(
     "x.from",
-    value = careers$x.expected
+    value = data$expected$careers$x.expected
   ) |>
   gr$set.edge.attribute(
     "x.to",
-    value = careers$x.expected.to
+    value = data$expected$careers$x.expected.to
   ) |>
   gr$set.edge.attribute(
     "t.from",
-    value = careers$t.expected
+    value = data$expected$careers$t.expected
   ) |>
   gr$set.edge.attribute(
     "t.to",
-    value = careers$t.expected.to
+    value = data$expected$careers$t.expected.to
   ) |>
   gr$set.edge.attribute(
     "table.id",
-    value = careers$id
+    value = data$expected$careers$id
   ) |>
   gr$set.edge.attribute(
     "util",
     value = 1
-  ) -> paths.graph
-
-goal <- 239L
-# start <- 2L
-# start <- 874L
-start <- 2L
-
-path(
-  to = goal,
-  from = start,
-  graph = paths.graph
-) -> epath
-
-vertices |>
-  filter(career == goal) |>
-  reframe(
-    sum(prob * (x + t))
-  )
-
-df_ids |>
-  inner_join(
-    careers |>
-      slice(epath) |>
-      select(
-        id = career,
-        cost.expected
-      )
-  )
-
-careers
-
+  ) -> paths.graph.expected
 
 # endregion
 # # region: movement types
 # # 1. "teleport" vertically to another occupation at a parallel vertex (same x,t)
-# expand.grid(
-#   vertex = vertices$vertex,
-#   vertex.to = vertices$vertex
-# ) -> vertices.comb
+# # expand.grid(
+# #   vertex = vertices$vertex,
+# #   vertex.to = vertices$vertex
+# # ) ->
+# # vertices.comb
 
-# vertices.comb |>
-#   inner_join(
-#     vertices,
-#     by = c("vertex.to" = "vertex"),
-#     relationship = "many-to-many"
-#   ) |>
-#   rename_with(
-#     .cols = -starts_with("vertex"),
-#     .fn = ~ .x |> paste0(".to")
-#   ) |>
-#   inner_join(
-#     vertices,
-#     by = c("vertex" = "vertex"),
-#     relationship = "many-to-many"
-#   ) -> paths.switch
+# # vertices.comb |>
+# #   inner_join(
+# #     vertices,
+# #     by = c("vertex.to" = "vertex"),
+# #     relationship = "many-to-many"
+# #   ) |>
+# #   rename_with(
+# #     .cols = -starts_with("vertex"),
+# #     .fn = ~ .x |> paste0(".to")
+# #   ) |>
+# #   inner_join(
+# #     vertices,
+# #     by = c("vertex" = "vertex"),
+# #     relationship = "many-to-many"
+# #   ) ->
+# # paths.switch
 
 # vertices |>
 #   inner_join(
@@ -382,176 +340,183 @@ careers
 #     starts_with("t")
 #   ) -> paths
 
-# endregion
-# region: movement similarity
-mtx_similarity |>
-  pivot_longer(
-    cols = -1,
-    names_to = "from",
-    values_to = "similarity"
-  ) |>
-  inner_join(
-    req$df_ids |> rename(id.to = id),
-    by = c(
-      "to" = "occupation"
-    )
-  ) |>
-  inner_join(
-    req$df_ids |> rename(id.from = id),
-    by = c(
-      "from" = "occupation"
-    )
-  ) |>
-  select(
-    occupation = id.from,
-    occupation.to = id.to,
-    similarity
-  ) |>
-  inner_join(
-    paths
-  ) -> paths
+# # endregion
+# # region: movement similarity
+# mtx_similarity |>
+#   pivot_longer(
+#     cols = -1,
+#     names_to = "from",
+#     values_to = "similarity"
+#   ) |>
+#   inner_join(
+#     req$df_ids |> rename(id.to = id),
+#     by = c(
+#       "to" = "occupation"
+#     )
+#   ) |>
+#   inner_join(
+#     req$df_ids |> rename(id.from = id),
+#     by = c(
+#       "from" = "occupation"
+#     )
+#   ) |>
+#   select(
+#     occupation = id.from,
+#     occupation.to = id.to,
+#     similarity
+#   ) |>
+#   inner_join(
+#     paths
+#   ) -> paths
 
-# endregion
-# region: movement cost
-paths |>
-  mutate(
-    cost = move.cost(
-      skq = similarity,
-      xk = x,
-      xq = x.to,
-      tk = t,
-      tq = t.to
-    )
-  ) -> paths
+# # endregion
+# # region: movement cost
+# paths |>
+#   mutate(
+#     cost = move.cost(
+#       skq = similarity,
+#       xk = x,
+#       xq = x.to,
+#       tk = t,
+#       tq = t.to
+#     )
+#   ) -> paths
 
-# endregion
-# region: movement payoff
-# feasible paths
-paths |>
-  filter(
-    !is.infinite(cost)
-  ) |>
-  mutate(
-    .before = 1,
-    id = row_number()
-  ) |>
-  select(-prob) |>
-  rename(
-    prob = prob.to
-  ) |>
-  filter(
-    prob > 0
-  ) -> paths
-
+# # endregion
+# # region: movement payoff
+# # feasible paths
 # paths |>
 #   filter(
-#     occupation == 2
+#     !is.infinite(cost)
+#   ) |>
+#   mutate(
+#     .before = 1,
+#     id = row_number()
+#   ) |>
+#   select(-prob) |>
+#   rename(
+#     prob = prob.to
 #   ) |>
 #   filter(
-#     occupation.to == 2
-#   ) |>
-#   arrange(-prob) ->
-# dsds
+#     prob > 0
+#   ) -> paths
 
-# dsds |>
-#   # paths |>
+# # paths |>
+# #   filter(
+# #     occupation == 2
+# #   ) |>
+# #   filter(
+# #     occupation.to == 2
+# #   ) |>
+# #   arrange(-prob) ->
+# # dsds
+
+# # dsds |>
+# #   # paths |>
+# #   mutate(
+# #     inverse.payoff =
+# #       yap$inverse.payoff(
+# #         pay$payoff(
+# #           prob,
+# #           cost
+# #         )
+# #       )
+# #   ) |>
+# #   select(-id, -starts_with("vertex")) |>
+# #   arrange(inverse.payoff) |>
+# #   print(n = Inf)
+
+# # inverse expected payoff
+# paths |>
 #   mutate(
-#     inverse.payoff =
-#       yap$inverse.payoff(
-#         pay$payoff(
-#           prob,
-#           cost
-#         )
+#     inverse.payoff = yap$inverse.payoff(
+#       pay$payoff(
+#         prob,
+#         cost
 #       )
+#     )
+#   ) -> paths
+
+# # endregion
+# # region: movement graph
+# # graph
+# paths |>
+#   select(
+#     vertex,
+#     vertex.to
 #   ) |>
-#   select(-id, -starts_with("vertex")) |>
-#   arrange(inverse.payoff) |>
-#   print(n = Inf)
+#   as.matrix() |>
+#   gr$graph.edgelist(
+#     directed = T
+#   ) |>
+#   gr$set.edge.attribute(
+#     "type",
+#     value = paths$type
+#   ) |>
+#   gr$set.edge.attribute(
+#     "weight",
+#     value = paths$inverse.payoff
+#   ) |>
+#   gr$set.edge.attribute(
+#     "cost",
+#     value = paths$cost
+#   ) |>
+#   gr$set.edge.attribute(
+#     "occupation.from",
+#     value = paths$occupation
+#   ) |>
+#   gr$set.edge.attribute(
+#     "occupation.to",
+#     value = paths$occupation.to
+#   ) |>
+#   gr$set.edge.attribute(
+#     "vertex.from",
+#     value = paths$vertex
+#   ) |>
+#   gr$set.edge.attribute(
+#     "vertex.to",
+#     value = paths$vertex.to
+#   ) |>
+#   gr$set.edge.attribute(
+#     "x.from",
+#     value = paths$x
+#   ) |>
+#   gr$set.edge.attribute(
+#     "x.to",
+#     value = paths$x.to
+#   ) |>
+#   gr$set.edge.attribute(
+#     "t.from",
+#     value = paths$t
+#   ) |>
+#   gr$set.edge.attribute(
+#     "t.to",
+#     value = paths$t.to
+#   ) |>
+#   gr$set.edge.attribute(
+#     "table.id",
+#     value = paths$id
+#   ) |>
+#   gr$set.edge.attribute(
+#     "util",
+#     value = 1
+#   ) -> paths.graph
 
-# inverse expected payoff
-paths |>
-  mutate(
-    inverse.payoff = yap$inverse.payoff(
-      pay$payoff(
-        prob,
-        cost
-      )
-    )
-  ) -> paths
-
-# endregion
-# region: movement graph
-# graph
-paths |>
-  select(
-    vertex,
-    vertex.to
-  ) |>
-  as.matrix() |>
-  gr$graph.edgelist(
-    directed = T
-  ) |>
-  gr$set.edge.attribute(
-    "type",
-    value = paths$type
-  ) |>
-  gr$set.edge.attribute(
-    "weight",
-    value = paths$inverse.payoff
-  ) |>
-  gr$set.edge.attribute(
-    "cost",
-    value = paths$cost
-  ) |>
-  gr$set.edge.attribute(
-    "occupation.from",
-    value = paths$occupation
-  ) |>
-  gr$set.edge.attribute(
-    "occupation.to",
-    value = paths$occupation.to
-  ) |>
-  gr$set.edge.attribute(
-    "vertex.from",
-    value = paths$vertex
-  ) |>
-  gr$set.edge.attribute(
-    "vertex.to",
-    value = paths$vertex.to
-  ) |>
-  gr$set.edge.attribute(
-    "x.from",
-    value = paths$x
-  ) |>
-  gr$set.edge.attribute(
-    "x.to",
-    value = paths$x.to
-  ) |>
-  gr$set.edge.attribute(
-    "t.from",
-    value = paths$t
-  ) |>
-  gr$set.edge.attribute(
-    "t.to",
-    value = paths$t.to
-  ) |>
-  gr$set.edge.attribute(
-    "table.id",
-    value = paths$id
-  ) |>
-  gr$set.edge.attribute(
-    "util",
-    value = 1
-  ) -> paths.graph
-
-# endregion
+# # endregion
 # exports
 # region: exports
 # path list
 list(
-  graph = paths.graph,
-  table = paths,
-  vertices = vertices
+  expected = list(
+    graph = paths.graph.expected,
+    careers = data$expected$careers,
+    vertices = data$expected$vertices
+  )
+  # ,detailed = list(
+  #   graph = paths.graph.detailed,
+  #   careers = data$detailed$careers,
+  #   vertices = data$detailed$vertices
+  # )
 ) |>
   saveRDS(
     Sys.getenv("ATLAS_MOD") |>

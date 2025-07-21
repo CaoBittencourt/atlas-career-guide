@@ -18,7 +18,15 @@ source(
 
 source(
   Sys.getenv("ATLAS_MOD") |>
-    file.path(file.path("roadmap", "path", "data", "rds", "graph.r"))
+    file.path(
+      file.path(
+        "roadmap",
+        "path",
+        "data",
+        "rds",
+        "graph.r"
+      )
+    )
 )
 
 source(
