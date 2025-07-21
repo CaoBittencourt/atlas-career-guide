@@ -419,7 +419,8 @@ onet.bin |>
 # region: similarity matrix
 df_similarity |>
   mutate(
-    `Basic Education` = 1
+    `Basic Education` = 0.8
+    # `Basic Education` = 1
   ) -> df_similarity
 
 df_similarity |>

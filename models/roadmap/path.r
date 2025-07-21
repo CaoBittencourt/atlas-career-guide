@@ -16,6 +16,42 @@ box::use(
 # endregion
 # region: data
 # skill set matrix
+# Sys.getenv("ATLAS_SKILLS") |>
+#   readRDS() |>
+#   filter(
+#     occupation %in%
+#       (Sys.getenv("ATLAS_EDUCATION") |>
+#         readRDS() |>
+#         filter(education_years <= 17) |>
+#         pull(occupation))
+#   ) |>
+#   inner_join(
+#     Sys.getenv("ATLAS_LABOR") |>
+#       readRDS()
+#   ) |>
+#   group_by(item) |>
+#   reframe(
+#     item_score = stats::weighted.mean(
+#       item_score,
+#       employment_norm
+#     )
+#   ) -> basicEducation
+
+# box::use(
+#   s = compare / similarity,
+# )
+
+# basicEducation |>
+#   rename(
+#     `Basic Education` = 2
+#   ) |>
+#   s$similarity(
+#     Sys.getenv("ATLAS_SKILLS_MTX") |>
+#       readRDS()
+#   ) |>
+#   arrange(
+#     -`Basic Education`
+#   )
 Sys.getenv("ATLAS_SKILLS_MTX") |>
   readRDS() |>
   select(-1) |>
@@ -29,22 +65,21 @@ occupations |>
     occupations
   ) -> occupations
 
-Sys.getenv("ATLAS_MOD") |>
-  file.path(
-    "roadmap",
-    "path",
-    "data",
-    "rds",
-    "vertices.rds"
-  ) |>
-  readRDS() -> from.to.vertices
+# Sys.getenv("ATLAS_MOD") |>
+#   file.path(
+#     "roadmap",
+#     "path",
+#     "data",
+#     "rds",
+#     "vertices.rds"
+#   ) |>
+#   readRDS() -> from.to.vertices
 
 # endregion
 # model
 # region: actor => musician
 # occupations
-occupations$`Basic Education` -> occupation.from
-# occupations$Actors -> occupation.from
+occupations$Actors -> occupation.from
 occupations$`Musicians and Singers` -> occupation.to
 
 # find path
@@ -68,20 +103,28 @@ epath |>
   )
 
 # path cost
-pa$path.cost(epath, pa$paths$expected$graph) |> sum()
+pa$path.cost(epath, pa$paths$expected$graph) |> sum() -> pathCost
 
 # base cost
-vertex.to |> pa$vertex.cost()
+occupation.to |>
+  pa$path(
+    occupations$`Basic Education`,
+    graph = pa$paths$expected$graph
+  ) |>
+  pa$path.cost(
+    pa$paths$expected$graph
+  ) -> baseCost
 
 # path efficiency
-epath |> pa$path.efficiency()
+1 - pathCost / baseCost -> pathEfficiency
+# epath |> pa$path.efficiency()
 
 # verify path is optimal
-if (pa$path.efficiency(epath) >= 0) {
+if (pathEfficiency >= 0) {
   print(
     paste0(
       "Path is optimal and ",
-      round(100 * pa$path.efficiency(epath), 2),
+      round(100 * pathEfficiency, 2),
       "% faster than starting from scratch."
     )
   )
@@ -89,7 +132,193 @@ if (pa$path.efficiency(epath) >= 0) {
   print(
     paste0(
       "Path is suboptimal and ",
-      -round(100 * pa$path.efficiency(epath), 2),
+      -round(100 * pathEfficiency, 2),
+      "% slower than starting from scratch."
+    )
+  )
+}
+
+# endregion
+# region: actor => art director
+# occupations
+occupations$Actors -> occupation.from
+occupations$`Art Directors` -> occupation.to
+
+# find path
+occupation.to |>
+  pa$path(
+    occupation.from,
+    graph = pa$paths$expected$graph
+  ) -> epath
+
+# career path
+epath |>
+  pa$path.timeline(
+    graph = pa$paths$expected$graph
+  ) |>
+  mutate(
+    occupation = names(
+      occupations
+    )[
+      occupation
+    ]
+  )
+
+# path cost
+pa$path.cost(epath, pa$paths$expected$graph) |> sum() -> pathCost
+
+# base cost
+occupation.to |>
+  pa$path(
+    occupations$`Basic Education`,
+    graph = pa$paths$expected$graph
+  ) |>
+  pa$path.cost(
+    pa$paths$expected$graph
+  ) -> baseCost
+
+# path efficiency
+1 - pathCost / baseCost -> pathEfficiency
+# epath |> pa$path.efficiency()
+
+# verify path is optimal
+if (pathEfficiency >= 0) {
+  print(
+    paste0(
+      "Path is optimal and ",
+      round(100 * pathEfficiency, 2),
+      "% faster than starting from scratch."
+    )
+  )
+} else {
+  print(
+    paste0(
+      "Path is suboptimal and ",
+      -round(100 * pathEfficiency, 2),
+      "% slower than starting from scratch."
+    )
+  )
+}
+
+# endregion
+# region: actor => accountant
+# occupations
+occupations$Actors -> occupation.from
+occupations$`Accountants and Auditors` -> occupation.to
+
+# find path
+occupation.to |>
+  pa$path(
+    occupation.from,
+    graph = pa$paths$expected$graph
+  ) -> epath
+
+# career path
+epath |>
+  pa$path.timeline(
+    graph = pa$paths$expected$graph
+  ) |>
+  mutate(
+    occupation = names(
+      occupations
+    )[
+      occupation
+    ]
+  )
+
+# path cost
+pa$path.cost(epath, pa$paths$expected$graph) |> sum() -> pathCost
+
+# base cost
+occupation.to |>
+  pa$path(
+    occupations$`Basic Education`,
+    graph = pa$paths$expected$graph
+  ) |>
+  pa$path.cost(
+    pa$paths$expected$graph
+  ) -> baseCost
+
+# path efficiency
+1 - pathCost / baseCost -> pathEfficiency
+# epath |> pa$path.efficiency()
+
+# verify path is optimal
+if (pathEfficiency >= 0) {
+  print(
+    paste0(
+      "Path is optimal and ",
+      round(100 * pathEfficiency, 2),
+      "% faster than starting from scratch."
+    )
+  )
+} else {
+  print(
+    paste0(
+      "Path is suboptimal and ",
+      -round(100 * pathEfficiency, 2),
+      "% slower than starting from scratch."
+    )
+  )
+}
+
+# endregion
+# region: financial analysts => accountant
+# occupations
+occupations$`Credit Analysts` -> occupation.from
+occupations$`Civil Engineers` -> occupation.to
+
+# find path
+occupation.to |>
+  pa$path(
+    occupation.from,
+    graph = pa$paths$expected$graph
+  ) -> epath
+
+# career path
+epath |>
+  pa$path.timeline(
+    graph = pa$paths$expected$graph
+  ) |>
+  mutate(
+    occupation = names(
+      occupations
+    )[
+      occupation
+    ]
+  )
+
+# path cost
+pa$path.cost(epath, pa$paths$expected$graph) |> sum() -> pathCost
+
+# base cost
+occupation.to |>
+  pa$path(
+    occupations$`Basic Education`,
+    graph = pa$paths$expected$graph
+  ) |>
+  pa$path.cost(
+    pa$paths$expected$graph
+  ) -> baseCost
+
+# path efficiency
+1 - pathCost / baseCost -> pathEfficiency
+# epath |> pa$path.efficiency()
+
+# verify path is optimal
+if (pathEfficiency >= 0) {
+  print(
+    paste0(
+      "Path is optimal and ",
+      round(100 * pathEfficiency, 2),
+      "% faster than starting from scratch."
+    )
+  )
+} else {
+  print(
+    paste0(
+      "Path is suboptimal and ",
+      -round(100 * pathEfficiency, 2),
       "% slower than starting from scratch."
     )
   )
