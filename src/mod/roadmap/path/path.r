@@ -49,8 +49,8 @@ path <- function(
   # paths$table$vertex |> max() -> vertex.max
   # assert$base$validate.numeric.bounded(from, "from", F, vertex.min, vertex.max)
   # assert$base$validate.numeric.bounded(to, "to", F, vertex.min, vertex.max)
-  stopifnot(any(is.integer(from), is.null(from)))
-  stopifnot(is.integer(to))
+  stopifnot(any(round(from) == from, is.null(from)))
+  stopifnot(round(to) == to)
   assert$base$validate.numeric.bounded(util, "util", T, 0)
   # stopifnot(
   #   length(util) == paths$table$occupation |> unique() |> length()

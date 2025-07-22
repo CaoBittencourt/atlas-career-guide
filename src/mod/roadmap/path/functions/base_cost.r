@@ -18,21 +18,19 @@ vertex.cost <- function(
 ) {
   # assert args
   stopifnot(round(vertex) == vertex)
-
+  vertices |>
+    filter(
+      career == 874
+    ) |>
+    slice(1) |>
+    pull(vertex) -> basic.education.id
   # dispatch
   return(
     vertex |>
       vapply(
         function(q) {
-          q |>
-            path(
-              vertices |>
-                filter(
-                  career == 874
-                ) |>
-                slice(1) |>
-                pull(vertex)
-            ) |>
+          basic.education.id |>
+            path(q) |>
             path.cost() |>
             sum()
         },

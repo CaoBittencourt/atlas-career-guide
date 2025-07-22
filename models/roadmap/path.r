@@ -81,17 +81,16 @@ occupations$`Basic Education` |>
   pa$path.cost() -> baseCost
 
 # path efficiency
-1 - pathCost / baseCost -> pathEfficiency
 epath |> pa$path.efficiency()
 
-q |>
-  path(
-    pa$paths$expected$vertices |>
-      filter(
-        career == 874
-      ) |>
-      slice(1) |>
-      pull(vertex)
+pa$paths$expected$vertices |>
+  filter(
+    career == 874
+  ) |>
+  slice(1) |>
+  pull(vertex) |>
+  pa$path(
+    epath[[1]]
   ) |>
   path.cost() |>
   sum()
