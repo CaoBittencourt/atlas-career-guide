@@ -2,7 +2,7 @@
 # region: imports
 box::use(
   gr = igraph,
-  roadmap / path / data / graph[...],
+  roadmap / path / data[...],
   roadmap / path / functions / path_cost[...],
   roadmap / path / functions / which_path[...],
 )
@@ -10,7 +10,7 @@ box::use(
 # endregion
 # dispatch
 # region: get path timeline
-path.timeline <- function(epath, graph = paths$graph) {
+path.timeline <- function(epath, graph = paths$expected$graph) {
   # assert args in main function
   years <- c(0, path.cost(epath, graph))
 

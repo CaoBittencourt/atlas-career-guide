@@ -37,21 +37,6 @@ box::use(
 #     )
 #   ) -> basicEducation
 
-# box::use(
-#   s = compare / similarity,
-# )
-
-# basicEducation |>
-#   rename(
-#     `Basic Education` = 2
-#   ) |>
-#   s$similarity(
-#     Sys.getenv("ATLAS_SKILLS_MTX") |>
-#       readRDS()
-#   ) |>
-#   arrange(
-#     -`Basic Education`
-#   )
 Sys.getenv("ATLAS_SKILLS_MTX") |>
   readRDS() |>
   select(-1) |>
@@ -65,35 +50,20 @@ occupations |>
     occupations
   ) -> occupations
 
-# Sys.getenv("ATLAS_MOD") |>
-#   file.path(
-#     "roadmap",
-#     "path",
-#     "data",
-#     "rds",
-#     "vertices.rds"
-#   ) |>
-#   readRDS() -> from.to.vertices
-
 # endregion
 # model
+# # simplified model
 # region: actor => musician
 # occupations
 occupations$Actors -> occupation.from
 occupations$`Musicians and Singers` -> occupation.to
 
 # find path
-occupation.to |>
-  pa$path(
-    occupation.from,
-    graph = pa$paths$expected$graph
-  ) -> epath
+occupation.from |> pa$path(occupation.to) -> epath
 
 # career path
 epath |>
-  pa$path.timeline(
-    graph = pa$paths$expected$graph
-  ) |>
+  pa$path.timeline() |>
   mutate(
     occupation = names(
       occupations
@@ -103,21 +73,28 @@ epath |>
   )
 
 # path cost
-pa$path.cost(epath, pa$paths$expected$graph) |> sum() -> pathCost
+pa$path.cost(epath) |> sum() -> pathCost
 
 # base cost
-occupation.to |>
-  pa$path(
-    occupations$`Basic Education`,
-    graph = pa$paths$expected$graph
-  ) |>
-  pa$path.cost(
-    pa$paths$expected$graph
-  ) -> baseCost
+occupations$`Basic Education` |>
+  pa$path(occupation.to) |>
+  pa$path.cost() -> baseCost
 
 # path efficiency
 1 - pathCost / baseCost -> pathEfficiency
-# epath |> pa$path.efficiency()
+epath |> pa$path.efficiency()
+
+q |>
+  path(
+    pa$paths$expected$vertices |>
+      filter(
+        career == 874
+      ) |>
+      slice(1) |>
+      pull(vertex)
+  ) |>
+  path.cost() |>
+  sum()
 
 # verify path is optimal
 if (pathEfficiency >= 0) {
@@ -662,78 +639,4 @@ if (pa$path.efficiency(epath) >= 0) {
 }
 
 # endregion
-# tests
-# # region: sampling
-# from.to.vertices |>
-#   slice_sample(n = 20) ->
-# from.to.vertices.sample
-
-# from.to.vertices.sample |>
-#   mutate(
-#     cost =
-#       mapply(
-#         function(from, to) {
-#           to |>
-#             pa$path(from) |>
-#             pa$path.cost() |>
-#             sum()
-#         },
-#         from = vertex,
-#         to = vertex.to
-#       )
-#   ) |>
-#   mutate(
-#     from = names(occupations)[from] |> substring(1, 50),
-#     to = names(occupations)[to] |> substring(1, 50),
-#     years.saved = default.cost - cost
-#   ) |>
-#   select(
-#     -starts_with("vertex")
-#   ) |>
-#   arrange(
-#     -years.saved,
-#     -default.cost
-#   ) ->
-# from.to.model
-
-# from.to.model |> print(width = 1000)
-
-# # endregion
-# # region: from scratch (basic education)
-# from.to.vertices |>
-#   filter(from == 874) |>
-#   slice_sample(n = 20) |>
-#   mutate(
-#     cost =
-#       mapply(
-#         function(from, to) {
-#           to |>
-#             pa$path(from) |>
-#             pa$path.cost() |>
-#             sum()
-#         },
-#         from = vertex,
-#         to = vertex.to
-#       )
-#   ) |>
-#   mutate(
-#     from = names(occupations)[from] |> substring(1, 50),
-#     to = names(occupations)[to] |> substring(1, 50),
-#     years.saved = default.cost - cost
-#   ) |>
-#   select(
-#     -starts_with("vertex")
-#   ) |>
-#   arrange(-years.saved) ->
-# from.to.model
-
-# from.to.model
-
-# from.to.model |>
-#   reframe(
-#     all(
-#       (cost - default.cost) <= 0
-#     )
-#   )
-
-# # endregion
+# # detailed model

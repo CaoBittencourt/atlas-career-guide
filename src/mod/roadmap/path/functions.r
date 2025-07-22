@@ -1,6 +1,6 @@
 #' @export
 box::use(
-  # roadmap / path / functions / base_cost[...],
+  roadmap / path / functions / base_cost[...],
   # roadmap / path / functions / cost_util[...],
   roadmap / path / functions / cost[...],
   roadmap / path / functions / employment[...],

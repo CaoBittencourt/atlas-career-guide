@@ -2,13 +2,13 @@
 # region: imports
 box::use(
   gr = igraph,
-  roadmap / path / data / graph[...],
+  roadmap / path / data[...],
 )
 
 # endregion
 # dispatch
 # region: get path cost (in years)
-path.cost <- function(epath, graph = paths$graph) {
+path.cost <- function(epath, graph = paths$expected$graph) {
   # assert args in main function
   return(
     graph |>

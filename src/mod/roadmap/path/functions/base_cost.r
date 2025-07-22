@@ -2,7 +2,7 @@
 # region: imports
 box::use(
   assert = utils / assert,
-  roadmap / path / data / graph[...],
+  roadmap / path / data[...],
   roadmap / path / functions / path_cost[...],
   roadmap / path / path[...],
   dplyr[...]
@@ -11,7 +11,11 @@ box::use(
 # endregion
 # dispatch
 # region: vertex base cost function (starting from nothing)
-vertex.cost <- function(vertex, graph = paths$graph) {
+vertex.cost <- function(
+  vertex,
+  graph = paths$expected$graph,
+  vertices = paths$expected$vertices
+) {
   # assert args
   stopifnot(round(vertex) == vertex)
 
@@ -22,9 +26,9 @@ vertex.cost <- function(vertex, graph = paths$graph) {
         function(q) {
           q |>
             path(
-              paths$vertices |>
+              vertices |>
                 filter(
-                  occupation == 874
+                  career == 874
                 ) |>
                 slice(1) |>
                 pull(vertex)
@@ -43,24 +47,6 @@ vertex.cost <- function(vertex, graph = paths$graph) {
 }
 
 # endregion
-# # region: vertex base cost function (starting from nothing)
-# vertex.cost <- function(vertex, vertices = paths$vertices) {
-#   # assert args
-#   stopifnot(round(vertex) == vertex)
-
-#   # dispatch
-#   return(
-#     vertices[
-#       vertex,
-#     ] |>
-#       mutate(
-#         cost = x + t
-#       ) |>
-#       pull(cost)
-#   )
-# }
-
-# # endregion
 # exports
 # region: exports
 box::export(vertex.cost)

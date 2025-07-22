@@ -3,13 +3,13 @@
 box::use(
   assert = utils / assert,
   gr = igraph,
-  roadmap / path / data / graph[...],
+  roadmap / path / data[...],
 )
 
 # endregion
 # dispatch
 # region: which.path generic function
-which.path <- function(epath, graph = paths$graph) {
+which.path <- function(epath, graph = paths$expected$graph) {
   # assert args in main function
 
   # get occupation id for each career progression

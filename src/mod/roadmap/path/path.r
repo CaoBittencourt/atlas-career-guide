@@ -3,9 +3,8 @@
 box::use(
   assert = utils / assert,
   gr = igraph,
-  roadmap / path / data / req[...],
-  roadmap / path / functions / path_util[...],
-  roadmap / path / data / graph[...],
+  roadmap / path / data[...],
+  # roadmap / path / functions / path_util[...],
   dplyr[...],
 )
 
@@ -38,11 +37,10 @@ list(
 # dispatch
 # region: path generic function
 path <- function(
-  to,
   from = NULL,
+  to,
   util = NULL,
-  use.vertices = F,
-  graph = paths$graph,
+  graph = paths$expected$graph,
   path_method = path.methods[[1]],
   ...
 ) {
@@ -51,7 +49,6 @@ path <- function(
   # paths$table$vertex |> max() -> vertex.max
   # assert$base$validate.numeric.bounded(from, "from", F, vertex.min, vertex.max)
   # assert$base$validate.numeric.bounded(to, "to", F, vertex.min, vertex.max)
-  assert$base$validate.bool(use.vertices, "use.vertices")
   stopifnot(any(is.integer(from), is.null(from)))
   stopifnot(is.integer(to))
   assert$base$validate.numeric.bounded(util, "util", T, 0)
@@ -60,10 +57,6 @@ path <- function(
   # )
   stopifnot(gr$is.igraph(graph))
   assert$base$validate.method(path_method, "path_method", path.methods, F)
-
-  # career-based model
-  # vertex-based model
-  if (use.vertices) {}
 
   # utility-adjusted weights
   if (length(util)) {
