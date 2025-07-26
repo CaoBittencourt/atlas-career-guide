@@ -37,8 +37,40 @@ path.efficiency <- function(
 }
 
 # endregion
+# region: path efficiency with expected graph
+path.efficiency.expected <- function(epath) {
+  # assert args in main function
+  # dispatch path.efficiency
+  return(
+    epath |>
+      path.efficiency(
+        paths$expected$graph,
+        paths$expected$vertices
+      )
+  )
+}
+
+# endregion
+# region: path efficiency with detailed graph
+path.efficiency.detailed <- function(epath) {
+  # assert args in main function
+  # dispatch path.efficiency
+  return(
+    epath |>
+      path.efficiency(
+        paths$detailed$graph,
+        paths$detailed$vertices
+      )
+  )
+}
+
+# endregion
 # exports
 # region: exports
-box::export(path.efficiency)
+box::export(
+  path.efficiency,
+  path.efficiency.expected,
+  path.efficiency.detailed
+)
 
 # endregion

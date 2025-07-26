@@ -1266,6 +1266,11 @@ list(
           graph = paths.graph.expected,
           careers = careerGrid.expected,
           vertices = vertices.expected
+        ),
+        detailed = list(
+          graph = paths.graph.expected,
+          careers = careerGrid.expected,
+          vertices = vertices.expected
         )
         # ,detailed = list(
         #   graph = paths.graph.detailed,

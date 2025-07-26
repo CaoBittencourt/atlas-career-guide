@@ -70,8 +70,57 @@ path <- function(
 }
 
 # endregion
+# region: path detailed function
+path.detailed <- function(
+  from = NULL,
+  to,
+  util = NULL,
+  path_method = path.methods[[1]],
+  ...
+) {
+  # assert args in main function
+  # dispatch with detailed graph
+  return(
+    path(
+      from,
+      to,
+      util,
+      paths$detailed$graph,
+      path_method
+    )
+  )
+}
+
+# endregion
+# region: path expected function
+path.expected <- function(
+  from = NULL,
+  to,
+  util = NULL,
+  path_method = path.methods[[1]],
+  ...
+) {
+  # assert args in main function
+  # dispatch with expected graph
+  return(
+    path(
+      from,
+      to,
+      util,
+      paths$expected$graph,
+      path_method
+    )
+  )
+}
+
+# endregion
 # exports
 # region: exports
-box::export(path)
+box::export(
+  path,
+  path.methods,
+  path.detailed,
+  path.expected
+)
 
 # endregion

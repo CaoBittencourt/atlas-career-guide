@@ -45,8 +45,40 @@ vertex.cost <- function(
 }
 
 # endregion
+# region: vertex base cost with expected graph
+vertex.cost.expected <- function(vertex) {
+  # assert args in main function
+  # dispatch
+  return(
+    vertex.cost(
+      vertex,
+      graph = paths$expected$graph,
+      vertices = paths$expected$vertices
+    )
+  )
+}
+
+# endregion
+# region: vertex base cost with detailed graph
+vertex.cost.detailed <- function(vertex) {
+  # assert args in main function
+  # dispatch
+  return(
+    vertex.cost(
+      vertex,
+      graph = paths$detailed$graph,
+      vertices = paths$detailed$vertices
+    )
+  )
+}
+
+# endregion
 # exports
 # region: exports
-box::export(vertex.cost)
+box::export(
+  vertex.cost,
+  vertex.cost.expected,
+  vertex.cost.detailed
+)
 
 # endregion

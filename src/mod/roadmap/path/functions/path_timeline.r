@@ -29,8 +29,36 @@ path.timeline <- function(epath, graph = paths$expected$graph) {
 }
 
 # endregion
+# region: path timeline with expected graph
+path.timeline.expected <- function(epath) {
+  # assert args in main function
+  return(
+    path.timeline(
+      epath,
+      paths$expected$graph
+    )
+  )
+}
+
+# endregion
+# region: path timeline with detailed graph
+path.timeline.detailed <- function(epath) {
+  # assert args in main function
+  return(
+    path.timeline(
+      epath,
+      paths$detailed$graph
+    )
+  )
+}
+
+# endregion
 # exports
 # region: exports
-box::export(path.timeline)
+box::export(
+  path.timeline,
+  path.timeline.expected,
+  path.timeline.detailed
+)
 
 # endregion

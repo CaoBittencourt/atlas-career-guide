@@ -20,8 +20,36 @@ path.cost <- function(epath, graph = paths$expected$graph) {
 }
 
 # endregion
+# region: path cost with expected graph
+path.cost.expected <- function(epath) {
+  # assert args in main function
+  return(
+    path.cost(
+      epath,
+      paths$expected$graph
+    )
+  )
+}
+
+# endregion
+# region: path cost with detailed graph
+path.cost.detailed <- function(epath) {
+  # assert args in main function
+  return(
+    path.cost(
+      epath,
+      paths$detailed$graph
+    )
+  )
+}
+
+# endregion
 # exports
 # region: exports
-box::export(path.cost)
+box::export(
+  path.cost,
+  path.cost.expected,
+  path.cost.detailed
+)
 
 # endregion
