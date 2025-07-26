@@ -407,6 +407,31 @@ onet.bin$x |>
   ) -> onet.bin$x
 
 # endregion
+# region: similarity matrix
+df_similarity |>
+  mutate(
+    # hypothesis:
+    # basic education has, say, 80%
+    # similarity with all occupations
+    `Basic Education` = 0.8
+  ) -> df_similarity
+
+df_similarity |>
+  bind_rows(
+    c(
+      "Basic Education",
+      # all occupations have perfect similiarty
+      # with basic education (i.e. cost to reset is zero)
+      rep(1, 874) |> as.list()
+    ) |>
+      setNames(
+        df_similarity |>
+          names()
+      ) |>
+      as_tibble()
+  ) -> df_similarity
+
+# endregion
 # region: requirements data frame
 onet.bin |>
   bind_rows(
@@ -428,27 +453,6 @@ onet.bin |>
   inner_join(
     df_ids
   ) -> career.req
-
-# endregion
-# region: similarity matrix
-df_similarity |>
-  mutate(
-    `Basic Education` = 0.8
-    # `Basic Education` = 1
-  ) -> df_similarity
-
-df_similarity |>
-  bind_rows(
-    c(
-      "Basic Education",
-      rep(1, 874) |> as.list()
-    ) |>
-      setNames(
-        df_similarity |>
-          names()
-      ) |>
-      as_tibble()
-  ) -> df_similarity
 
 # endregion
 # # labor statistics
@@ -725,7 +729,29 @@ move.cost <- function(ßkq, xk, xq, tk, tq) {
 # endregion
 # model
 # region: expected movement cost heuristic
+# adjusted requirements
+# if similarity of basic education is not 100%
+# adjust education and experience requirements
+# such that starting from zero (i.e. basic education)
+# takes the same amount of time as it did before
+df_similarity |>
+  select(
+    occupation = to,
+    basic.edu = `Basic Education`
+  ) |>
+  inner_join(df_ids) |>
+  select(
+    career = id,
+    basic.edu
+  ) -> df_adjust
+
 vertices |>
+  inner_join(df_adjust) |>
+  mutate(
+    x = x * basic.edu,
+    t = t * basic.edu
+  ) |>
+  select(-basic.edu) |>
   group_by(career) |>
   reframe(
     x = stats::weighted.mean(x, prob),
