@@ -3,6 +3,9 @@
 .RData
 .Ruserdata
 
+# build
+build/
+
 # nested git repos
 packages/
 
