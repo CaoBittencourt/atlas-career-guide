@@ -1,4 +1,3 @@
-// #include "include/mcts.h"
 #include "../include/mcts.h"
 
 #include <algorithm>
