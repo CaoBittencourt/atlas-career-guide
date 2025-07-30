@@ -1,0 +1,2 @@
+[requires]
+dataframe/3.5.0
