@@ -1,0 +1,175 @@
+<!--
+Copyright (c) 2019-2026, Hossein Moein
+All rights reserved.
+Redistribution and use in source and binary forms, with or without
+modification, are permitted provided that the following conditions are met:
+* Redistributions of source code must retain the above copyright
+  notice, this list of conditions and the following disclaimer.
+* Redistributions in binary form must reproduce the above copyright
+  notice, this list of conditions and the following disclaimer in the
+  documentation and/or other materials provided with the distribution.
+* Neither the name of Hossein Moein and/or the DataFrame nor the
+  names of its contributors may be used to endorse or promote products
+  derived from this software without specific prior written permission.
+THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND
+ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
+WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+DISCLAIMED. IN NO EVENT SHALL Hossein Moein BE LIABLE FOR ANY
+DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
+(INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
+LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND
+ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+(INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
+SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+-->
+<!DOCTYPE html>
+<html>
+
+<head>
+<style>
+body {
+  background-image: linear-gradient(Azure, AliceBlue, GhostWhite, WhiteSmoke);
+}
+</style>
+</head>
+
+<body style="font-family: Georgia, serif">
+  <font size="+3">&#8592;</font> <a href="https://htmlpreview.github.io/?https://github.com/hosseinmoein/DataFrame/blob/master/docs/HTML/DataFrame.html">Back to Documentations</a><BR><BR>
+  
+  <table border="1">
+
+    <tr bgcolor="lightblue">
+      <th>Signature</th> <th>Description</th>
+    </tr>
+    <tr bgcolor="Azure">
+      <td>
+<pre class="code_syntax" style="color:#000000;background:#ffffff00;"><span class="line_wrapper"><span style="color:#800000; font-weight:bold; ">enum</span> <span style="color:#800000; font-weight:bold; ">class</span> pattern_spec <span style="color:#800080; ">:</span> <span style="color:#800000; font-weight:bold; ">unsigned</span> <span style="color:#800000; font-weight:bold; ">char</span>  <span style="color:#800080; ">{</span></span>
+<span class="line_wrapper">    monotonic_increasing <span style="color:#808030; ">=</span> <span style="color:#008c00; ">1</span><span style="color:#808030; ">,</span>          <span style="color:#696969; ">// i &gt;= j</span></span>
+<span class="line_wrapper">    strictly_monotonic_increasing <span style="color:#808030; ">=</span> <span style="color:#008c00; ">2</span><span style="color:#808030; ">,</span> <span style="color:#696969; ">// i &gt; j</span></span>
+<span class="line_wrapper">    monotonic_decreasing <span style="color:#808030; ">=</span> <span style="color:#008c00; ">3</span><span style="color:#808030; ">,</span>          <span style="color:#696969; ">// i &lt;= j</span></span>
+<span class="line_wrapper">    strictly_monotonic_decreasing <span style="color:#808030; ">=</span> <span style="color:#008c00; ">4</span><span style="color:#808030; ">,</span> <span style="color:#696969; ">// i &lt; j</span></span>
+<span class="line_wrapper">    normally_distributed <span style="color:#808030; ">=</span> <span style="color:#008c00; ">6</span><span style="color:#808030; ">,</span>          <span style="color:#696969; ">// 68%-95%-99.7% 3-sigma rule to approximate</span></span>
+<span class="line_wrapper">    standard_normally_distributed <span style="color:#808030; ">=</span> <span style="color:#008c00; ">7</span><span style="color:#808030; ">,</span> <span style="color:#696969; ">// Same as normal + 0/1.0 check</span></span>
+<span class="line_wrapper">    lognormally_distributed <span style="color:#808030; ">=</span> <span style="color:#008c00; ">8</span><span style="color:#808030; ">,</span>       <span style="color:#696969; ">// Uses the above normal test on the log(x) + Skew and Kurtosis</span></span>
+<span class="line_wrapper"><span style="color:#800080; ">}</span><span style="color:#800080; ">;</span></span>
+<span class="line_wrapper"></span></pre>
+      </td>
+      <td>
+        Enumerated type to specify different patterns to detect.
+      </td>
+    </tr>
+
+  </table>
+
+  <BR><BR>
+
+  <table border="1">
+
+    <tr bgcolor="lightblue">
+        <th>Signature</th> <th>Description</th> <th>Parameters</th>
+    </tr>
+    <tr bgcolor="Azure">
+      <td>
+<pre class="code_syntax" style="color:#000000;background:#ffffff00;"><span class="line_wrapper"><span style="color:#800000; font-weight:bold; ">template</span><span style="color:#800080; ">&lt;</span><span style="color:#800000; font-weight:bold; ">typename</span> T<span style="color:#800080; ">&gt;</span></span>
+<span class="line_wrapper"><span style="color:#800000; font-weight:bold; ">bool</span></span>
+<span class="line_wrapper">pattern_match<span style="color:#808030; ">(</span><span style="color:#800000; font-weight:bold; ">const</span> <span style="color:#800000; font-weight:bold; ">char</span> <span style="color:#808030; ">*</span>col_name<span style="color:#808030; ">,</span></span>
+<span class="line_wrapper">              pattern_spec pattern<span style="color:#808030; ">,</span></span>
+<span class="line_wrapper">              <span style="color:#800000; font-weight:bold; ">double</span> epsilon <span style="color:#808030; ">=</span> <span style="color:#008000; ">0.0</span><span style="color:#808030; ">)</span> <span style="color:#800000; font-weight:bold; ">const</span><span style="color:#800080; ">;</span></span>
+<span class="line_wrapper"></span></pre>
+      </td>
+      <td>
+        This method returns true if the given column follows the given pattern, otherwise it returns false. Epsilon is used for approximation.<BR>
+        List of supported patterns are specified in pattern_spec above.
+      </td>
+      <td>
+        <b>T</b>: Type of the named column<BR>
+        <b>col_name</b>: Type of the named column<BR>
+        <b>pattern</b>: The pattern we are looking for specified in DataFrameTypes.h<BR>
+        <b>epsilon</b>: An epsilon value to use to match pattern parameters
+      </td>
+    </tr>
+
+  </table>
+
+  <pre style='color:#000000;background:#ffffff00;'><span style='color:#800000; font-weight:bold; '>static</span> <span style='color:#800000; font-weight:bold; '>void</span> test_pattern_match<span style='color:#808030; '>(</span><span style='color:#808030; '>)</span>  <span style='color:#800080; '>{</span>
+
+    <span style='color:#666616; '>std</span><span style='color:#800080; '>::</span><span style='color:#603000; '>cout</span> <span style='color:#808030; '>&lt;</span><span style='color:#808030; '>&lt;</span> <span style='color:#800000; '>"</span><span style='color:#0f69ff; '>\n</span><span style='color:#0000e6; '>Testing pattern_match( ) ...</span><span style='color:#800000; '>"</span> <span style='color:#808030; '>&lt;</span><span style='color:#808030; '>&lt;</span> <span style='color:#666616; '>std</span><span style='color:#800080; '>::</span><span style='color:#603000; '>endl</span><span style='color:#800080; '>;</span>
+
+    <span style='color:#800000; font-weight:bold; '>const</span> <span style='color:#603000; '>size_t</span>            item_cnt <span style='color:#808030; '>=</span> <span style='color:#008c00; '>8192</span><span style='color:#800080; '>;</span>
+    MyDataFrame             df<span style='color:#800080; '>;</span>
+    RandGenParams<span style='color:#800080; '>&lt;</span><span style='color:#800000; font-weight:bold; '>double</span><span style='color:#800080; '>></span>   p<span style='color:#800080; '>;</span>
+
+    p<span style='color:#808030; '>.</span>mean <span style='color:#808030; '>=</span> <span style='color:#008000; '>5.6</span><span style='color:#800080; '>;</span>
+    p<span style='color:#808030; '>.</span><span style='color:#666616; '>std</span> <span style='color:#808030; '>=</span> <span style='color:#008000; '>0.5</span><span style='color:#800080; '>;</span>
+    p<span style='color:#808030; '>.</span>seed <span style='color:#808030; '>=</span> <span style='color:#008c00; '>123</span><span style='color:#800080; '>;</span>
+    p<span style='color:#808030; '>.</span>min_value <span style='color:#808030; '>=</span> <span style='color:#008c00; '>0</span><span style='color:#800080; '>;</span>
+    p<span style='color:#808030; '>.</span>max_value <span style='color:#808030; '>=</span> <span style='color:#008c00; '>30</span><span style='color:#800080; '>;</span>
+
+    df<span style='color:#808030; '>.</span>load_data<span style='color:#808030; '>(</span>MyDataFrame<span style='color:#800080; '>::</span>gen_sequence_index<span style='color:#808030; '>(</span><span style='color:#008c00; '>0</span><span style='color:#808030; '>,</span> item_cnt<span style='color:#808030; '>,</span> <span style='color:#008c00; '>1</span><span style='color:#808030; '>)</span><span style='color:#808030; '>,</span>
+                 <span style='color:#666616; '>std</span><span style='color:#800080; '>::</span>make_pair<span style='color:#808030; '>(</span><span style='color:#800000; '>"</span><span style='color:#0000e6; '>lognormal</span><span style='color:#800000; '>"</span><span style='color:#808030; '>,</span> gen_lognormal_dist<span style='color:#800080; '>&lt;</span><span style='color:#800000; font-weight:bold; '>double</span><span style='color:#800080; '>></span><span style='color:#808030; '>(</span>item_cnt<span style='color:#808030; '>,</span> p<span style='color:#808030; '>)</span><span style='color:#808030; '>)</span><span style='color:#808030; '>,</span>
+                 <span style='color:#666616; '>std</span><span style='color:#800080; '>::</span>make_pair<span style='color:#808030; '>(</span><span style='color:#800000; '>"</span><span style='color:#0000e6; '>normal</span><span style='color:#800000; '>"</span><span style='color:#808030; '>,</span> gen_normal_dist<span style='color:#800080; '>&lt;</span><span style='color:#800000; font-weight:bold; '>double</span><span style='color:#800080; '>></span><span style='color:#808030; '>(</span>item_cnt<span style='color:#808030; '>,</span> p<span style='color:#808030; '>)</span><span style='color:#808030; '>)</span><span style='color:#808030; '>,</span>
+                 <span style='color:#666616; '>std</span><span style='color:#800080; '>::</span>make_pair<span style='color:#808030; '>(</span><span style='color:#800000; '>"</span><span style='color:#0000e6; '>uniform_real</span><span style='color:#800000; '>"</span><span style='color:#808030; '>,</span> gen_uniform_real_dist<span style='color:#800080; '>&lt;</span><span style='color:#800000; font-weight:bold; '>double</span><span style='color:#800080; '>></span><span style='color:#808030; '>(</span>item_cnt<span style='color:#808030; '>,</span> p<span style='color:#808030; '>)</span><span style='color:#808030; '>)</span><span style='color:#808030; '>)</span><span style='color:#800080; '>;</span>
+    p<span style='color:#808030; '>.</span>mean <span style='color:#808030; '>=</span> <span style='color:#008c00; '>0</span><span style='color:#800080; '>;</span>
+    p<span style='color:#808030; '>.</span><span style='color:#666616; '>std</span> <span style='color:#808030; '>=</span> <span style='color:#008000; '>1.0</span><span style='color:#800080; '>;</span>
+    p<span style='color:#808030; '>.</span>min_value <span style='color:#808030; '>=</span> <span style='color:#808030; '>-</span><span style='color:#008c00; '>30</span><span style='color:#800080; '>;</span>
+    p<span style='color:#808030; '>.</span>max_value <span style='color:#808030; '>=</span> <span style='color:#008c00; '>30</span><span style='color:#800080; '>;</span>
+    df<span style='color:#808030; '>.</span>load_column<span style='color:#808030; '>(</span><span style='color:#800000; '>"</span><span style='color:#0000e6; '>std_normal</span><span style='color:#800000; '>"</span><span style='color:#808030; '>,</span> gen_normal_dist<span style='color:#800080; '>&lt;</span><span style='color:#800000; font-weight:bold; '>double</span><span style='color:#800080; '>></span><span style='color:#808030; '>(</span>item_cnt<span style='color:#808030; '>,</span> p<span style='color:#808030; '>)</span><span style='color:#808030; '>)</span><span style='color:#800080; '>;</span>
+    df<span style='color:#808030; '>.</span>load_column<span style='color:#800080; '>&lt;</span><span style='color:#800000; font-weight:bold; '>unsigned</span> <span style='color:#800000; font-weight:bold; '>long</span><span style='color:#800080; '>></span><span style='color:#808030; '>(</span><span style='color:#800000; '>"</span><span style='color:#0000e6; '>increasing</span><span style='color:#800000; '>"</span><span style='color:#808030; '>,</span> MyDataFrame<span style='color:#800080; '>::</span>gen_sequence_index<span style='color:#808030; '>(</span><span style='color:#008c00; '>0</span><span style='color:#808030; '>,</span> item_cnt<span style='color:#808030; '>,</span> <span style='color:#008c00; '>1</span><span style='color:#808030; '>)</span><span style='color:#808030; '>)</span><span style='color:#800080; '>;</span>
+
+    <span style='color:#800000; font-weight:bold; '>bool</span>    result <span style='color:#808030; '>=</span>
+        df<span style='color:#808030; '>.</span>pattern_match<span style='color:#800080; '>&lt;</span><span style='color:#800000; font-weight:bold; '>double</span><span style='color:#800080; '>></span><span style='color:#808030; '>(</span><span style='color:#800000; '>"</span><span style='color:#0000e6; '>lognormal</span><span style='color:#800000; '>"</span><span style='color:#808030; '>,</span> pattern_spec<span style='color:#800080; '>::</span>normally_distributed<span style='color:#808030; '>,</span> <span style='color:#008000; '>0.01</span><span style='color:#808030; '>)</span><span style='color:#800080; '>;</span>
+    assert<span style='color:#808030; '>(</span>result <span style='color:#808030; '>=</span><span style='color:#808030; '>=</span> <span style='color:#800000; font-weight:bold; '>false</span><span style='color:#808030; '>)</span><span style='color:#800080; '>;</span>
+
+    result <span style='color:#808030; '>=</span> df<span style='color:#808030; '>.</span>pattern_match<span style='color:#800080; '>&lt;</span><span style='color:#800000; font-weight:bold; '>double</span><span style='color:#800080; '>></span><span style='color:#808030; '>(</span><span style='color:#800000; '>"</span><span style='color:#0000e6; '>normal</span><span style='color:#800000; '>"</span><span style='color:#808030; '>,</span> pattern_spec<span style='color:#800080; '>::</span>normally_distributed<span style='color:#808030; '>,</span> <span style='color:#008000; '>0.01</span><span style='color:#808030; '>)</span><span style='color:#800080; '>;</span>
+    assert<span style='color:#808030; '>(</span>result <span style='color:#808030; '>=</span><span style='color:#808030; '>=</span> <span style='color:#800000; font-weight:bold; '>true</span><span style='color:#808030; '>)</span><span style='color:#800080; '>;</span>
+
+    result <span style='color:#808030; '>=</span> df<span style='color:#808030; '>.</span>pattern_match<span style='color:#800080; '>&lt;</span><span style='color:#800000; font-weight:bold; '>double</span><span style='color:#800080; '>></span><span style='color:#808030; '>(</span><span style='color:#800000; '>"</span><span style='color:#0000e6; '>std_normal</span><span style='color:#800000; '>"</span><span style='color:#808030; '>,</span> pattern_spec<span style='color:#800080; '>::</span>standard_normally_distributed<span style='color:#808030; '>,</span> <span style='color:#008000; '>0.013</span><span style='color:#808030; '>)</span><span style='color:#800080; '>;</span>
+    assert<span style='color:#808030; '>(</span>result <span style='color:#808030; '>=</span><span style='color:#808030; '>=</span> <span style='color:#800000; font-weight:bold; '>true</span><span style='color:#808030; '>)</span><span style='color:#800080; '>;</span>
+
+    result <span style='color:#808030; '>=</span> df<span style='color:#808030; '>.</span>pattern_match<span style='color:#800080; '>&lt;</span><span style='color:#800000; font-weight:bold; '>double</span><span style='color:#800080; '>></span><span style='color:#808030; '>(</span><span style='color:#800000; '>"</span><span style='color:#0000e6; '>lognormal</span><span style='color:#800000; '>"</span><span style='color:#808030; '>,</span> pattern_spec<span style='color:#800080; '>::</span>lognormally_distributed<span style='color:#808030; '>,</span> <span style='color:#008000; '>0.01</span><span style='color:#808030; '>)</span><span style='color:#800080; '>;</span>
+    assert<span style='color:#808030; '>(</span>result <span style='color:#808030; '>=</span><span style='color:#808030; '>=</span> <span style='color:#800000; font-weight:bold; '>true</span><span style='color:#808030; '>)</span><span style='color:#800080; '>;</span>
+
+    result <span style='color:#808030; '>=</span> df<span style='color:#808030; '>.</span>pattern_match<span style='color:#800080; '>&lt;</span><span style='color:#800000; font-weight:bold; '>double</span><span style='color:#800080; '>></span><span style='color:#808030; '>(</span><span style='color:#800000; '>"</span><span style='color:#0000e6; '>normal</span><span style='color:#800000; '>"</span><span style='color:#808030; '>,</span> pattern_spec<span style='color:#800080; '>::</span>lognormally_distributed<span style='color:#808030; '>,</span> <span style='color:#008000; '>0.01</span><span style='color:#808030; '>)</span><span style='color:#800080; '>;</span>
+    assert<span style='color:#808030; '>(</span>result <span style='color:#808030; '>=</span><span style='color:#808030; '>=</span> <span style='color:#800000; font-weight:bold; '>false</span><span style='color:#808030; '>)</span><span style='color:#800080; '>;</span>
+
+    result <span style='color:#808030; '>=</span> df<span style='color:#808030; '>.</span>pattern_match<span style='color:#800080; '>&lt;</span><span style='color:#800000; font-weight:bold; '>double</span><span style='color:#800080; '>></span><span style='color:#808030; '>(</span><span style='color:#800000; '>"</span><span style='color:#0000e6; '>uniform_real</span><span style='color:#800000; '>"</span><span style='color:#808030; '>,</span> pattern_spec<span style='color:#800080; '>::</span>lognormally_distributed<span style='color:#808030; '>,</span> <span style='color:#008000; '>1.0</span><span style='color:#808030; '>)</span><span style='color:#800080; '>;</span>
+    assert<span style='color:#808030; '>(</span>result <span style='color:#808030; '>=</span><span style='color:#808030; '>=</span> <span style='color:#800000; font-weight:bold; '>false</span><span style='color:#808030; '>)</span><span style='color:#800080; '>;</span>
+
+    result <span style='color:#808030; '>=</span> df<span style='color:#808030; '>.</span>pattern_match<span style='color:#800080; '>&lt;</span><span style='color:#800000; font-weight:bold; '>double</span><span style='color:#800080; '>></span><span style='color:#808030; '>(</span><span style='color:#800000; '>"</span><span style='color:#0000e6; '>uniform_real</span><span style='color:#800000; '>"</span><span style='color:#808030; '>,</span> pattern_spec<span style='color:#800080; '>::</span>normally_distributed<span style='color:#808030; '>,</span> <span style='color:#008000; '>0.1</span><span style='color:#808030; '>)</span><span style='color:#800080; '>;</span>
+    assert<span style='color:#808030; '>(</span>result <span style='color:#808030; '>=</span><span style='color:#808030; '>=</span> <span style='color:#800000; font-weight:bold; '>false</span><span style='color:#808030; '>)</span><span style='color:#800080; '>;</span>
+
+    result <span style='color:#808030; '>=</span> df<span style='color:#808030; '>.</span>pattern_match<span style='color:#800080; '>&lt;</span><span style='color:#800000; font-weight:bold; '>unsigned</span> <span style='color:#800000; font-weight:bold; '>long</span><span style='color:#800080; '>></span><span style='color:#808030; '>(</span><span style='color:#800000; '>"</span><span style='color:#0000e6; '>increasing</span><span style='color:#800000; '>"</span><span style='color:#808030; '>,</span> pattern_spec<span style='color:#800080; '>::</span>monotonic_increasing<span style='color:#808030; '>)</span><span style='color:#800080; '>;</span>
+    assert<span style='color:#808030; '>(</span>result <span style='color:#808030; '>=</span><span style='color:#808030; '>=</span> <span style='color:#800000; font-weight:bold; '>true</span><span style='color:#808030; '>)</span><span style='color:#800080; '>;</span>
+    result <span style='color:#808030; '>=</span> df<span style='color:#808030; '>.</span>pattern_match<span style='color:#800080; '>&lt;</span><span style='color:#800000; font-weight:bold; '>unsigned</span> <span style='color:#800000; font-weight:bold; '>long</span><span style='color:#800080; '>></span><span style='color:#808030; '>(</span><span style='color:#800000; '>"</span><span style='color:#0000e6; '>increasing</span><span style='color:#800000; '>"</span><span style='color:#808030; '>,</span> pattern_spec<span style='color:#800080; '>::</span>strictly_monotonic_increasing<span style='color:#808030; '>)</span><span style='color:#800080; '>;</span>
+    assert<span style='color:#808030; '>(</span>result <span style='color:#808030; '>=</span><span style='color:#808030; '>=</span> <span style='color:#800000; font-weight:bold; '>true</span><span style='color:#808030; '>)</span><span style='color:#800080; '>;</span>
+
+    df<span style='color:#808030; '>.</span>get_column<span style='color:#800080; '>&lt;</span><span style='color:#800000; font-weight:bold; '>unsigned</span> <span style='color:#800000; font-weight:bold; '>long</span><span style='color:#800080; '>></span><span style='color:#808030; '>(</span><span style='color:#800000; '>"</span><span style='color:#0000e6; '>increasing</span><span style='color:#800000; '>"</span><span style='color:#808030; '>)</span><span style='color:#808030; '>[</span><span style='color:#008c00; '>10</span><span style='color:#808030; '>]</span> <span style='color:#808030; '>=</span> <span style='color:#008c00; '>9</span><span style='color:#800080; '>;</span>
+
+    result <span style='color:#808030; '>=</span> df<span style='color:#808030; '>.</span>pattern_match<span style='color:#800080; '>&lt;</span><span style='color:#800000; font-weight:bold; '>unsigned</span> <span style='color:#800000; font-weight:bold; '>long</span><span style='color:#800080; '>></span><span style='color:#808030; '>(</span><span style='color:#800000; '>"</span><span style='color:#0000e6; '>increasing</span><span style='color:#800000; '>"</span><span style='color:#808030; '>,</span> pattern_spec<span style='color:#800080; '>::</span>monotonic_increasing<span style='color:#808030; '>)</span><span style='color:#800080; '>;</span>
+    assert<span style='color:#808030; '>(</span>result <span style='color:#808030; '>=</span><span style='color:#808030; '>=</span> <span style='color:#800000; font-weight:bold; '>true</span><span style='color:#808030; '>)</span><span style='color:#800080; '>;</span>
+    result <span style='color:#808030; '>=</span> df<span style='color:#808030; '>.</span>pattern_match<span style='color:#800080; '>&lt;</span><span style='color:#800000; font-weight:bold; '>unsigned</span> <span style='color:#800000; font-weight:bold; '>long</span><span style='color:#800080; '>></span><span style='color:#808030; '>(</span><span style='color:#800000; '>"</span><span style='color:#0000e6; '>increasing</span><span style='color:#800000; '>"</span><span style='color:#808030; '>,</span> pattern_spec<span style='color:#800080; '>::</span>strictly_monotonic_increasing<span style='color:#808030; '>)</span><span style='color:#800080; '>;</span>
+    assert<span style='color:#808030; '>(</span>result <span style='color:#808030; '>=</span><span style='color:#808030; '>=</span> <span style='color:#800000; font-weight:bold; '>false</span><span style='color:#808030; '>)</span><span style='color:#800080; '>;</span>
+
+    df<span style='color:#808030; '>.</span>get_column<span style='color:#800080; '>&lt;</span><span style='color:#800000; font-weight:bold; '>unsigned</span> <span style='color:#800000; font-weight:bold; '>long</span><span style='color:#800080; '>></span><span style='color:#808030; '>(</span><span style='color:#800000; '>"</span><span style='color:#0000e6; '>increasing</span><span style='color:#800000; '>"</span><span style='color:#808030; '>)</span><span style='color:#808030; '>[</span><span style='color:#008c00; '>1000</span><span style='color:#808030; '>]</span> <span style='color:#808030; '>=</span> <span style='color:#008c00; '>988</span><span style='color:#800080; '>;</span>
+
+    result <span style='color:#808030; '>=</span> df<span style='color:#808030; '>.</span>pattern_match<span style='color:#800080; '>&lt;</span><span style='color:#800000; font-weight:bold; '>unsigned</span> <span style='color:#800000; font-weight:bold; '>long</span><span style='color:#800080; '>></span><span style='color:#808030; '>(</span><span style='color:#800000; '>"</span><span style='color:#0000e6; '>increasing</span><span style='color:#800000; '>"</span><span style='color:#808030; '>,</span> pattern_spec<span style='color:#800080; '>::</span>monotonic_increasing<span style='color:#808030; '>)</span><span style='color:#800080; '>;</span>
+    assert<span style='color:#808030; '>(</span>result <span style='color:#808030; '>=</span><span style='color:#808030; '>=</span> <span style='color:#800000; font-weight:bold; '>false</span><span style='color:#808030; '>)</span><span style='color:#800080; '>;</span>
+    result <span style='color:#808030; '>=</span> df<span style='color:#808030; '>.</span>pattern_match<span style='color:#800080; '>&lt;</span><span style='color:#800000; font-weight:bold; '>unsigned</span> <span style='color:#800000; font-weight:bold; '>long</span><span style='color:#800080; '>></span><span style='color:#808030; '>(</span><span style='color:#800000; '>"</span><span style='color:#0000e6; '>increasing</span><span style='color:#800000; '>"</span><span style='color:#808030; '>,</span> pattern_spec<span style='color:#800080; '>::</span>strictly_monotonic_increasing<span style='color:#808030; '>)</span><span style='color:#800080; '>;</span>
+    assert<span style='color:#808030; '>(</span>result <span style='color:#808030; '>=</span><span style='color:#808030; '>=</span> <span style='color:#800000; font-weight:bold; '>false</span><span style='color:#808030; '>)</span><span style='color:#800080; '>;</span>
+<span style='color:#800080; '>}</span>
+</pre>
+<!--Created using ToHtml.com on 2020-05-06 16:12:51 UTC -->
+
+  <BR><img src="https://github.com/hosseinmoein/DataFrame/blob/master/docs/LionLookingUp.jpg?raw=true" alt="C++ DataFrame"
+       width="200" height="200" style="float:right"/>
+
+</body>
+</html>
+
+<!--
+Local Variables:
+mode:HTML
+tab-width:4
+c-basic-offset:4
+End:
+-->

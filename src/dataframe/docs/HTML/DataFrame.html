@@ -1,0 +1,2201 @@
+<!--
+Copyright (c) 2019-2026, Hossein Moein
+All rights reserved<h1></h1>
+.
+Redistribution and use in source and binary forms, with or without
+modification, are permitted provided that the following conditions are met:
+* Redistributions of source code must retain the above copyright
+  notice, this list of conditions and the following disclaimer.
+* Redistributions in binary form must reproduce the above copyright
+  notice, this list of conditions and the following disclaimer in the
+  documentation and/or <h1></h1>
+  other materials provided with the distribution.
+* Neither the name of Hossein Moein and/or the DataFrame nor the
+  names of its contributors may be used to endorse or promote products
+  derived from this software without specific prior written permission.
+THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND
+ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
+WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+DISCLAIMED. IN NO EVENT SHALL Hossein Moein BE LIABLE FOR ANY
+DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
+(INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
+LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND
+ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+(INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
+SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+-->
+<!DOCTYPE html>
+<html>
+<head>
+
+<style>
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  background-image: linear-gradient(Azure, AliceBlue, GhostWhite, WhiteSmoke, SeaShell);
+}
+
+.row {
+  margin-left:-5px;
+  margin-right:-5px;
+}
+
+.column {
+  float: left;
+  padding: 2px;
+  width: 16.6667%;
+}
+
+.row::after {
+  content: "";
+  clear: both;
+  display: table;
+}
+
+table {
+  border-collapse: collapse;
+  border-spacing: 0;
+  width: 100%;
+  border: 1px solid #ddd;
+}
+
+.content-wrapper {
+  display: flex;
+  align-items: stretch;
+  overflow: hidden;
+}
+
+@media screen and (min-width: 768px) {
+  .left-container {
+    flex-grow: 1;
+    width: 16%;
+    overflow-y: scroll;
+    height: 100vh;
+  }
+  .right-container {
+    flex-shrink: 0;
+    width: 84%;
+    overflow-y: scroll;
+    height: 100vh;
+  }
+}
+
+</style>
+
+</head>
+<body style="font-family: Georgia, serif">
+
+<div class="content-wrapper">
+  <div class="left-container">
+  <P><font size="+3">&#8592;</font> <a href="https://github.com/hosseinmoein/DataFrame?tab=readme-ov-file">Back to Github</a></LI>
+  <P><font size="+3">&#9730;</font> <a href="https://htmlpreview.github.io/?https://github.com/hosseinmoein/DataFrame/blob/master/docs/HTML/DataFrame.html#1">Introduction</a></P>
+  <P><font size="+3">&#128477;</font> <a href="https://htmlpreview.github.io/?https://github.com/hosseinmoein/DataFrame/blob/master/docs/HTML/DataFrame.html#2">API Reference</a></P>
+  <P><font size="+3">&#128640;</font> <a href="https://htmlpreview.github.io/?https://github.com/hosseinmoein/DataFrame/blob/master/docs/HTML/DataFrame.html#3">Multithreading</a><PLI>
+  <P><font size="+3">&#128269;</font> <a href="https://htmlpreview.github.io/?https://github.com/hosseinmoein/DataFrame/blob/master/docs/HTML/DataFrame.html#4">Views</a></P>
+  <P><font size="+3">&#128109;</font> <a href="https://htmlpreview.github.io/?https://github.com/hosseinmoein/DataFrame/blob/master/docs/HTML/DataFrame.html#5">Visitors</a></P>
+  <P><font size="+3">&#10052;</font> <a href="https://htmlpreview.github.io/?https://github.com/hosseinmoein/DataFrame/blob/master/docs/HTML/DataFrame.html#6">Memory Alignment</a></P>
+  <P><font size="+3">&#127922;</font> <a href="https://htmlpreview.github.io/?https://github.com/hosseinmoein/DataFrame/blob/master/docs/HTML/DataFrame.html#7">Numeric Generators</a></P>
+  <P><font size="+3">&#128450;</font> <a href="https://htmlpreview.github.io/?https://github.com/hosseinmoein/DataFrame/blob/master/docs/HTML/DataFrame.html#8">Code Structure</a></P>
+  <P><font size="+3">&#x1F6E0;</font> <a href="https://htmlpreview.github.io/?https://github.com/hosseinmoein/DataFrame/blob/master/docs/HTML/DataFrame.html#9">Build Instructions</a></P>
+  </div>
+
+  <div class="right-container">
+  <center>
+    <img src="https://github.com/hosseinmoein/DataFrame/blob/master/docs/LionLookingUp.jpg?raw=true" alt="C++ DataFrame" width="60" height="60"/>
+    <img src="https://github.com/hosseinmoein/DataFrame/blob/master/docs/LionLookingUp.jpg?raw=true" alt="C++ DataFrame" width="90" height="90"/>
+    <img src="https://github.com/hosseinmoein/DataFrame/blob/master/docs/LionLookingUp.jpg?raw=true" alt="C++ DataFrame" width="120" height="120"/>
+    <img src="https://github.com/hosseinmoein/DataFrame/blob/master/docs/LionLookingUp.jpg?raw=true" alt="C++ DataFrame" width="150" height="150"/>
+    <img src="https://github.com/hosseinmoein/DataFrame/blob/master/docs/LionLookingUp.jpg?raw=true" alt="C++ DataFrame" width="180" height="180"/>
+    <img src="https://github.com/hosseinmoein/DataFrame/blob/master/docs/LionLookingUp.jpg?raw=true" alt="C++ DataFrame" width="150" height="150"/>
+    <img src="https://github.com/hosseinmoein/DataFrame/blob/master/docs/LionLookingUp.jpg?raw=true" alt="C++ DataFrame" width="120" height="120"/>
+    <img src="https://github.com/hosseinmoein/DataFrame/blob/master/docs/LionLookingUp.jpg?raw=true" alt="C++ DataFrame" width="90" height="90"/>
+    <img src="https://github.com/hosseinmoein/DataFrame/blob/master/docs/LionLookingUp.jpg?raw=true" alt="C++ DataFrame" width="60" height="60"/>
+  </center>
+
+  <p id="hmdf_time"></p>
+    <script>
+      function update_time() {
+        const d = new Date();
+        document.getElementById("hmdf_time").style.textAlign = "center";
+        document.getElementById("hmdf_time").style.color = "blue";
+        document.getElementById("hmdf_time").innerHTML = d;
+      }
+      setInterval(update_time, 1000);
+    </script>
+  </p>
+
+  <H2 ID="1"><font color="blue">Introduction <font size="+4">&#9730;</font></font></H2>
+<P>
+  <font size="+1">DataFrame</font> is a templatized and heterogeneous C++ container designed for data analysis for statistical, machine-learning, or financial applications. You can think of data-frame as a two-dimensional data structure of columns and rows just like an Excel spreadsheet, or a SQL table. But in case of C++ DataFrame, your data needn't be two-dimensional necessarily. Columns in the C++ DataFrame could be vectors of any type, including DataFrames or other containers. So, a C++ DataFrame can be of any dimension. Columns are the first-class citizens of DataFrame, meaning operations and access to columns is far more efficient and easier than dealing with data row by row. That's the logical layout of the data. C++ DataFrame also includes an intuitive API for data analysis and analytics. The API is designed to be open-ended meaning you can easily include your own custom algorithms.<BR>
+  Any data-frame inherently includes a schema. C++ DataFrame schema is either built dynamically at run-time or it comes from a file. Currently C++ DataFrame could be shared between different nodes (e.g. computers) in a couple of ways. It can be written into a file, or it can be serialized into a buffer and sent across and reconstituted on the other side.
+  <UL>
+    <LI>A DataFrame can have one index column and many data columns of any built-in or user-defined types</LI>
+    <LI>Each column in DataFrame could be at most as long as the index column</LI>
+    <LI>Columns in the DataFrame are in order of creation and they could be accessed by name or index. If you rotate the columns, their order changes</LI>
+    <LI>To access a column for any operation, you must know its <B>name</B> (or index) and its <B>type</B> at compile time</LI>
+    <LI>To start off on basic operations, see <a href="https://github.com/hosseinmoein/DataFrame/blob/master/examples/hello_world.cc">Hello World</a> and/or <a href="https://docs.google.com/viewer?url=https://raw.githubusercontent.com/hosseinmoein/DataFrame/master/docs/CheatSheet.pdf">Cheat Sheet</a></LI>
+    <LI>Also, see <a href="https://htmlpreview.github.io/?https://github.com/hosseinmoein/DataFrame/blob/master/docs/HTML/DataFrameTypes.html">DataFrame Library Types</a></LI>
+    <LI>DataFrame has both sync and async interfaces, latter returning C++ std::future</LI>
+    <LI><I>Read <a href="https://htmlpreview.github.io/?https://github.com/hosseinmoein/DataFrame/blob/master/docs/HTML/DataFrame.html#3"><B>multithreading</B></a>, <a href="https://htmlpreview.github.io/?https://github.com/hosseinmoein/DataFrame/blob/master/docs/HTML/DataFrame.html#4"><B>views</B></a>, <a href="https://htmlpreview.github.io/?https://github.com/hosseinmoein/DataFrame/blob/master/docs/HTML/DataFrame.html#5"><B>visitors</B></a>, and <a href="https://htmlpreview.github.io/?https://github.com/hosseinmoein/DataFrame/blob/master/docs/HTML/DataFrame.html#6"><B>memory alignment</B></a> sections below, before getting serious about this library</I></LI>
+  </UL>
+
+<BR>
+<font size="+1">DataFrame</font> class is defined as:<BR>
+&nbsp;&nbsp;&nbsp;&nbsp;<B><span style='color:#800000; font-weight:bold; '>template</span><span style='color:#800080; '>&lt;</span><span style='color:#800000; font-weight:bold; '>typename</span> I<span style='color:#808030; '>,</span> <span style='color:#800000; font-weight:bold; '>typename</span> H<span style='color:#800080; '>></span><BR>
+&nbsp;&nbsp;&nbsp;&nbsp;<span style='color:#800000; font-weight:bold; '>class</span> DataFrame;</B><BR><BR>
+
+  <B>I</B> specifies the <I>index</I> column type. Index column in a DataFrame is unlike an index in a SQL database. SQL database index makes access efficient. It doesn't give you any more information. The index column in a DataFrame is metadata about the data in the DataFrame. Each entry in the index describes the given row. It could be time, frequency, …, or a set of descriptors in a struct (like temperature, altitude, …).<BR>
+  <B>H</B> specifies a heterogenous vector type to contain DataFrame columns &#8212; don't get hang up on this too much, instead use the convenient typedef's in <a href="https://htmlpreview.github.io/?https://github.com/hosseinmoein/DataFrame/blob/master/docs/HTML/DataFrameTypes.html">DataFrame Library Types</a>. <B>H</B> is a relatively complex construct. You do not need to fully understand <B>H</B> to use the DataFrame library.<BR>
+  <B>H</B> can only be:<BR>
+  <UL>
+    <LI><B>HeteroVector<span style='color:#808030; '>&lt;</span><span style='color:#666616;'>std</span><span style='color:#800080;'>::</span><span style='color:#603000;'>size_t</span> A <span style='color:#808030;'>=</span> <span style='color:#008c00;'>0</span><span style='color:#808030;'>></span></B>: This is an actual heterogenous vector that would contain data. This will result in a "standard" data frame</LI>
+    <LI><B>HeteroPtrView<span style='color:#808030; '>&lt;</span><span style='color:#666616;'>std</span><span style='color:#800080;'>::</span><span style='color:#603000;'>size_t</span> A <span style='color:#808030;'>=</span> <span style='color:#008c00;'>0</span><span style='color:#808030;'>></span></B>: This is a heterogenous vector view. It will result in a data frame view into a <I>disjoined</I> slice of another data frame.</LI>
+    <LI><B>HeteroConstPtrView<span style='color:#808030; '>&lt;</span><span style='color:#666616;'>std</span><span style='color:#800080;'>::</span><span style='color:#603000;'>size_t</span> A <span style='color:#808030;'>=</span> <span style='color:#008c00;'>0</span><span style='color:#808030;'>></span></B>: The const version of HeteroPtrView.</LI>
+    <LI><B>HeteroView<span style='color:#808030; '>&lt;</span><span style='color:#666616;'>std</span><span style='color:#800080;'>::</span><span style='color:#603000;'>size_t</span> A <span style='color:#808030;'>=</span> <span style='color:#008c00;'>0</span><span style='color:#808030;'>></span></B>: This is a heterogenous vector view. It will result in a data frame view into a <I>contiguous</I> slice of another data frame. This view is slightly more efficient than <I>HeteroPtrView</I></LI>
+    <LI><B>HeteroConstView<span style='color:#808030; '>&lt;</span><span style='color:#666616;'>std</span><span style='color:#800080;'>::</span><span style='color:#603000;'>size_t</span> A <span style='color:#808030;'>=</span> <span style='color:#008c00;'>0</span><span style='color:#808030;'>></span></B>: The const version of HeteroView.</LI>
+  </UL>
+  Template parameter <B>A</B> referrers to byte boundary alignment to be used in memory allocations. The default is system default boundaries for each type. See <a href="https://htmlpreview.github.io/?https://github.com/hosseinmoein/DataFrame/blob/master/docs/HTML/DataFrameTypes.html">DataFrame Library Types</a> for convenient typedef's, especially under <I> Library-wide Types</I> section. Also, see <a href="https://htmlpreview.github.io/?https://github.com/hosseinmoein/DataFrame/blob/master/docs/HTML/DataFrame.html#6"><I>Memory Alignment</I></a> section below<BR>
+  Some of the methods in DataFrame return another DataFrame or one of the above views depending on what you asked for. DataFrame and view instances should be indistinguishable from the user's point of view.<BR>
+  See <a href="https://htmlpreview.github.io/?https://github.com/hosseinmoein/DataFrame/blob/master/docs/HTML/DataFrame.html#4"><I>Views</I></a> section below. Also, see <a href="https://htmlpreview.github.io/?https://github.com/hosseinmoein/DataFrame/blob/master/docs/HTML/DataFrameTypes.html">DataFrame Library Types</a> for convenient typedef's<BR>
+
+<BR>
+
+  <font size="+1"><B><span class="line_wrapper"><span style="color:#800000; font-weight:bold; ">class</span> DateTime<span style="color:#800080; ">;</span></span></B></font> included in this library is a cool and handy object to manipulate date/time with nanosecond precision and multi timezone capability. It has a very simple and intuitive interface that allows you to break date/time to their components, reassemble date/time from their components, advance or pullback date/time with different granularities, and more. Please see <a href="https://htmlpreview.github.io/?https://github.com/hosseinmoein/DataFrame/blob/master/docs/HTML/DateTime.html">DateTime documentation</a>.<BR>
+
+<BR><HR COLOR="Gray" SIZE="5">
+
+  <H2 ID="2"><font color="blue">API Reference with code samples <font size="+4">&#128477;</font></font></H2>
+  DataFrame library interface is separated into two main categories:
+  <OL>
+    <LI>Accessing, adding, slicing &amp; dicing, joining &amp; groupby'ing ...  <B>(The first column in the table below)</B></LI>
+    <LI>Analytical algorithms being statistical, machine-learning, financial analysis ...  <B>(The second, third, and fourth columns in the table below)</B></LI>
+  </OL>
+  I employ regular parameterized methods (i.e. member functions) to implement item (1). For item (2), I chose the visitor pattern.<BR>
+  Please see the table below for a comprehensive list of methods, visitors, and types along with documentation and sample code for each feature
+</P>
+<BR>
+
+<!-- CSS goes in the document HEAD or added to your external stylesheet -->
+<style type="text/css">
+table.hovertable {
+    font-family: Georgia,serif;
+    font-weight:bold;
+    font-size:14px;
+    color:#333333;
+    border-width: 3px;
+    border-color: #999999;
+    border-collapse: collapse;
+}
+table.hovertable th {
+    background-color:SlateGrey;
+    border-width: 5px;
+    padding: 10px;
+    border-style: solid;
+    border-color: SlateGrey;
+}
+table.hovertable tr {
+    background-color:Azure;
+}
+table.hovertable td {
+    border-width: 1px;
+    padding: 6px;
+    border-style: solid;
+    border-color: SlateGrey;
+}
+</style>
+
+<div class="row">
+  <div class="column">
+  <table id="hmdf_table" align="center" class="hovertable">
+
+    <tr>
+      <th title="These are public member functions of DataFrame class"><font color="white">DataFrame<BR>Member Functions</font></th>
+    </tr>
+
+    <tr class="item" onmouseover="this.style.backgroundColor='#ffff66';" onmouseout="this.style.backgroundColor='#d4e3e5';">
+      <td title="These are used to load data into the DataFrame" style="text-align:center;background-color:LightGrey;color:DarkBlue">Loading Data &nbsp;&nbsp; <font size="+3">&#128666;</font></td>
+    </tr>
+
+    <tr class="item" onmouseover="this.style.backgroundColor='#ffff66';" onmouseout="this.style.backgroundColor='#d4e3e5';">
+      <td title="Appends data to a single column"><a href="https://htmlpreview.github.io/?https://github.com/hosseinmoein/DataFrame/blob/master/docs/HTML/append_column.html">append_column</a>( 2 )</td>
+    </tr>
+
+    <tr class="item" onmouseover="this.style.backgroundColor='#ffff66';" onmouseout="this.style.backgroundColor='#d4e3e5';">
+      <td title="Appends data to index column"><a href="https://htmlpreview.github.io/?https://github.com/hosseinmoein/DataFrame/blob/master/docs/HTML/append_index.html">append_index</a>( 2 )</td>
+    </tr>
+
+    <tr class="item" onmouseover="this.style.backgroundColor='#ffff66';" onmouseout="this.style.backgroundColor='#d4e3e5';">
+      <td title="Appends rows"><a href="https://htmlpreview.github.io/?https://github.com/hosseinmoein/DataFrame/blob/master/docs/HTML/append_row.html">append_row</a>()</td>
+    </tr>
+
+    <tr class="item" onmouseover="this.style.backgroundColor='#ffff66';" onmouseout="this.style.backgroundColor='#d4e3e5';">
+      <td title="Creates an empty column"><a href="https://htmlpreview.github.io/?https://github.com/hosseinmoein/DataFrame/blob/master/docs/HTML/create_column.html">create_column</a>()</td>
+    </tr>
+
+    <tr class="item" onmouseover="this.style.backgroundColor='#ffff66';" onmouseout="this.style.backgroundColor='#d4e3e5';">
+      <td title="Loads a column aligned with index column"><a href="https://htmlpreview.github.io/?https://github.com/hosseinmoein/DataFrame/blob/master/docs/HTML/load_column.html">load_align_column</a>()</td>
+    </tr>
+
+    <tr class="item" onmouseover="this.style.backgroundColor='#ffff66';" onmouseout="this.style.backgroundColor='#d4e3e5';">
+      <td title="Loads a single column"><a href="https://htmlpreview.github.io/?https://github.com/hosseinmoein/DataFrame/blob/master/docs/HTML/load_column.html">load_column</a>( 3 )</td>
+    </tr>
+
+    <tr class="item" onmouseover="this.style.backgroundColor='#ffff66';" onmouseout="this.style.backgroundColor='#d4e3e5';">
+      <td title="Loads index and multiple columns at the same time"><a href="https://htmlpreview.github.io/?https://github.com/hosseinmoein/DataFrame/blob/master/docs/HTML/load_data.html">load_data</a>()</td>
+    </tr>
+
+    <tr class="item" onmouseover="this.style.backgroundColor='#ffff66';" onmouseout="this.style.backgroundColor='#d4e3e5';">
+      <td title="Loads index column"><a href="https://htmlpreview.github.io/?https://github.com/hosseinmoein/DataFrame/blob/master/docs/HTML/load_index.html">load_index</a>( 2 )</td>
+    </tr>
+
+    <tr class="item" onmouseover="this.style.backgroundColor='#ffff66';" onmouseout="this.style.backgroundColor='#d4e3e5';">
+      <td title="Loads result of a visitor (i.e. algorithm) as a column"><a href="https://htmlpreview.github.io/?https://github.com/hosseinmoein/DataFrame/blob/master/docs/HTML/load_result_as_column.html">load_result_as_column</a>( 5 )</td>
+    </tr>
+
+    <tr class="item" onmouseover="this.style.backgroundColor='#ffff66';" onmouseout="this.style.backgroundColor='#d4e3e5';">
+      <td title="These are used to get data from DataFrame" style="text-align:center;background-color:LightGrey;color:DarkBlue">Getting Data &nbsp;&nbsp; <font size="+3">&#x1F6D2;</font></td>
+    </tr>
+
+    <tr class="item" onmouseover="this.style.backgroundColor='#ffff66';" onmouseout="this.style.backgroundColor='#d4e3e5';">
+      <td title="Generates DateTime index values"><a href="https://htmlpreview.github.io/?https://github.com/hosseinmoein/DataFrame/blob/master/docs/HTML/gen_datetime_index.html">static<BR>gen_datetime_index</a>()</td>
+    </tr>
+
+    <tr class="item" onmouseover="this.style.backgroundColor='#ffff66';" onmouseout="this.style.backgroundColor='#d4e3e5';">
+      <td title="Generates sequenced index values"><a href="https://htmlpreview.github.io/?https://github.com/hosseinmoein/DataFrame/blob/master/docs/HTML/gen_sequence_index.html">static<BR>gen_sequence_index</a>()</td>
+    </tr>
+
+    <tr class="item" onmouseover="this.style.backgroundColor='#ffff66';" onmouseout="this.style.backgroundColor='#d4e3e5';">
+      <td title="Gets a column vector"><a href="https://htmlpreview.github.io/?https://github.com/hosseinmoein/DataFrame/blob/master/docs/HTML/get_column.html">get_column</a>( 4 )</td>
+    </tr>
+
+    <tr class="item" onmouseover="this.style.backgroundColor='#ffff66';" onmouseout="this.style.backgroundColor='#d4e3e5';">
+      <td title="Gets the index vector"><a href="https://htmlpreview.github.io/?https://github.com/hosseinmoein/DataFrame/blob/master/docs/HTML/get_index.html">get_index</a>( 2 )</td>
+    </tr>
+
+    <tr class="item" onmouseover="this.style.backgroundColor='#ffff66';" onmouseout="this.style.backgroundColor='#d4e3e5';">
+      <td title="Gets a data row"><a href="https://htmlpreview.github.io/?https://github.com/hosseinmoein/DataFrame/blob/master/docs/HTML/get_row.html">get_row</a>( 2 )</td>
+    </tr>
+
+    <tr class="item" onmouseover="this.style.backgroundColor='#ffff66';" onmouseout="this.style.backgroundColor='#d4e3e5';">
+      <td title="These are used to get information from data" style="text-align:center;background-color:LightGrey;color:DarkBlue">Getting Information &nbsp;&nbsp; <font size="+3">&#128129;</font></td>
+    </tr>
+
+    <tr class="item" onmouseover="this.style.backgroundColor='#ffff66';" onmouseout="this.style.backgroundColor='#d4e3e5';">
+      <td title="Performs canonical correlation analysis between two sets of columns"><a href="https://htmlpreview.github.io/?https://github.com/hosseinmoein/DataFrame/blob/master/docs/HTML/canon_corr.html">canon_corr</a>()</td>
+    </tr>
+
+    <tr class="item" onmouseover="this.style.backgroundColor='#ffff66';" onmouseout="this.style.backgroundColor='#d4e3e5';">
+      <td title="Get column index for the given column name"><a href="https://htmlpreview.github.io/?https://github.com/hosseinmoein/DataFrame/blob/master/docs/HTML/col_name_to_idx.html">col_name_to_idx</a>()</td>
+    </tr>
+
+    <tr class="item" onmouseover="this.style.backgroundColor='#ffff66';" onmouseout="this.style.backgroundColor='#d4e3e5';">
+      <td title="Get column name for the given column index"><a href="https://htmlpreview.github.io/?https://github.com/hosseinmoein/DataFrame/blob/master/docs/HTML/col_name_to_idx.html">col_idx_to_name</a>()</td>
+    </tr>
+
+    <tr class="item" onmouseover="this.style.backgroundColor='#ffff66';" onmouseout="this.style.backgroundColor='#d4e3e5';">
+      <td title="Calculates Singular Value Decomposition (SVD)"><a href="https://htmlpreview.github.io/?https://github.com/hosseinmoein/DataFrame/blob/master/docs/HTML/pca_by_eigen.html">compact_svd</a>()</td>
+    </tr>
+
+    <tr class="item" onmouseover="this.style.backgroundColor='#ffff66';" onmouseout="this.style.backgroundColor='#d4e3e5';">
+      <td title="Calculates and returns the variance/covariance matrix"><a href="https://htmlpreview.github.io/?https://github.com/hosseinmoein/DataFrame/blob/master/docs/HTML/covariance_matrix.html">covariance_matrix</a>()</td>
+    </tr>
+
+    <tr class="item" onmouseover="this.style.backgroundColor='#ffff66';" onmouseout="this.style.backgroundColor='#d4e3e5';">
+      <td title="Returns a DataFrame describing the columns"><a href="https://htmlpreview.github.io/?https://github.com/hosseinmoein/DataFrame/blob/master/docs/HTML/describe.html">describe</a>()</td>
+    </tr>
+
+    <tr class="item" onmouseover="this.style.backgroundColor='#ffff66';" onmouseout="this.style.backgroundColor='#d4e3e5';">
+      <td title="Returns the difference between self and other"><a href="https://htmlpreview.github.io/?https://github.com/hosseinmoein/DataFrame/blob/master/docs/HTML/difference.html">difference</a>()</td>
+    </tr>
+
+    <tr class="item" onmouseover="this.style.backgroundColor='#ffff66';" onmouseout="this.style.backgroundColor='#d4e3e5';">
+      <td title="Returns a DataFrame with duplication masks for each column"><a href="https://htmlpreview.github.io/?https://github.com/hosseinmoein/DataFrame/blob/master/docs/HTML/duplication_mask.html">duplication_mask</a>()</td>
+    </tr>
+
+    <tr class="item" onmouseover="this.style.backgroundColor='#ffff66';" onmouseout="this.style.backgroundColor='#d4e3e5';">
+      <td title="Returns true/false if empty"><a href="https://htmlpreview.github.io/?https://github.com/hosseinmoein/DataFrame/blob/master/docs/HTML/empty.html">empty</a>()</td>
+    </tr>
+
+    <tr class="item" onmouseover="this.style.backgroundColor='#ffff66';" onmouseout="this.style.backgroundColor='#d4e3e5';">
+      <td title="Returns a vector of booleans indicating if values end with the given pattern"><a href="https://htmlpreview.github.io/?https://github.com/hosseinmoein/DataFrame/blob/master/docs/HTML/starts_with.html">ends_with( )</a></td>
+    </tr>
+
+    <tr class="item" onmouseover="this.style.backgroundColor='#ffff66';" onmouseout="this.style.backgroundColor='#d4e3e5';">
+      <td title="Calculates Independent Component Analysis (ICA)"><a href="https://htmlpreview.github.io/?https://github.com/hosseinmoein/DataFrame/blob/master/docs/HTML/fast_ica.html">fast_ica</a>()</td>
+    </tr>
+
+    <tr class="item" onmouseover="this.style.backgroundColor='#ffff66';" onmouseout="this.style.backgroundColor='#d4e3e5';">
+      <td title="Generates categorical column from one-hot indicators"><a href="https://htmlpreview.github.io/?https://github.com/hosseinmoein/DataFrame/blob/master/docs/HTML/load_indicators.html">from_indicators()<BR>load_indicators()</a></td>
+    </tr>
+
+    <tr class="item" onmouseover="this.style.backgroundColor='#ffff66';" onmouseout="this.style.backgroundColor='#d4e3e5';">
+      <td title="Gets unique column values"><a href="https://htmlpreview.github.io/?https://github.com/hosseinmoein/DataFrame/blob/master/docs/HTML/get_col_unique_values.html">get_col_unique_values</a>()</td>
+    </tr>
+
+    <tr class="item" onmouseover="this.style.backgroundColor='#ffff66';" onmouseout="this.style.backgroundColor='#d4e3e5';">
+      <td title="Returns info about columns"><a href="https://htmlpreview.github.io/?https://github.com/hosseinmoein/DataFrame/blob/master/docs/HTML/get_columns_info.html">get_columns_info</a>()</td>
+    </tr>
+
+    <tr class="item" onmouseover="this.style.backgroundColor='#ffff66';" onmouseout="this.style.backgroundColor='#d4e3e5';">
+      <td title="Gets memory usage statistics"><a href="https://htmlpreview.github.io/?https://github.com/hosseinmoein/DataFrame/blob/master/docs/HTML/get_memory_usage.html">get_memory_usage</a>()</td>
+    </tr>
+
+    <tr class="item" onmouseover="this.style.backgroundColor='#ffff66';" onmouseout="this.style.backgroundColor='#d4e3e5';">
+      <td title="Gets statistics about a string column"><a href="https://htmlpreview.github.io/?https://github.com/hosseinmoein/DataFrame/blob/master/docs/HTML/get_str_col_stats.html">get_str_col_stats</a>()</td>
+    </tr>
+
+    <tr class="item" onmouseover="this.style.backgroundColor='#ffff66';" onmouseout="this.style.backgroundColor='#d4e3e5';">
+      <td title="Returns true if the column exists"><a href="https://htmlpreview.github.io/?https://github.com/hosseinmoein/DataFrame/blob/master/docs/HTML/has_column.html">has_column</a>( 2 )</td>
+    </tr>
+
+    <tr class="item" onmouseover="this.style.backgroundColor='#ffff66';" onmouseout="this.style.backgroundColor='#d4e3e5';">
+      <td title="Returns a mask vector of 0s/1s for values between lower and upper bounds"><a href="https://htmlpreview.github.io/?https://github.com/hosseinmoein/DataFrame/blob/master/docs/HTML/in_between.html">in_between</a>()</td>
+    </tr>
+
+    <tr class="item" onmouseover="this.style.backgroundColor='#ffff66';" onmouseout="this.style.backgroundColor='#d4e3e5';">
+      <td title="Returns number of inversions in the named column"><a href="https://htmlpreview.github.io/?https://github.com/hosseinmoein/DataFrame/blob/master/docs/HTML/inversion_count.html">inversion_count</a>()</td>
+    </tr>
+
+    <tr class="item" onmouseover="this.style.backgroundColor='#ffff66';" onmouseout="this.style.backgroundColor='#d4e3e5';">
+      <td title="Returns true if DataFrames are equal"><a href="https://htmlpreview.github.io/?https://github.com/hosseinmoein/DataFrame/blob/master/docs/HTML/is_equal.html">is_equal</a>()</td>
+    </tr>
+
+    <tr class="item" onmouseover="this.style.backgroundColor='#ffff66';" onmouseout="this.style.backgroundColor='#d4e3e5';">
+      <td title="Calculates  K-Nearest Neighbors (KNN) algorithm"><a href="https://htmlpreview.github.io/?https://github.com/hosseinmoein/DataFrame/blob/master/docs/HTML/knn.html">knn</a>()</td>
+    </tr>
+
+    <tr class="item" onmouseover="this.style.backgroundColor='#ffff66';" onmouseout="this.style.backgroundColor='#d4e3e5';">
+      <td title="General masking function"><a href="https://htmlpreview.github.io/?https://github.com/hosseinmoein/DataFrame/blob/master/docs/HTML/mask.html">mask</a>()</td>
+    </tr>
+
+    <tr class="item" onmouseover="this.style.backgroundColor='#ffff66';" onmouseout="this.style.backgroundColor='#d4e3e5';">
+      <td title="Returns the Markov Chains stationary distributions"><a href="https://htmlpreview.github.io/?https://github.com/hosseinmoein/DataFrame/blob/master/docs/HTML/MC_station_dist.html">MC_station_dist</a>()</td>
+    </tr>
+
+    <tr class="item" onmouseover="this.style.backgroundColor='#ffff66';" onmouseout="this.style.backgroundColor='#d4e3e5';">
+      <td title="True, if matches an statistical pattern"><a href="https://htmlpreview.github.io/?https://github.com/hosseinmoein/DataFrame/blob/master/docs/HTML/pattern_spec.html">pattern_match</a>()</td>
+    </tr>
+
+    <tr class="item" onmouseover="this.style.backgroundColor='#ffff66';" onmouseout="this.style.backgroundColor='#d4e3e5';">
+      <td title="Calculates Principal Component Analysis (PCA)."><a href="https://htmlpreview.github.io/?https://github.com/hosseinmoein/DataFrame/blob/master/docs/HTML/pca_by_eigen.html">pca_by_eigen</a>()</td>
+    </tr>
+
+    <tr class="item" onmouseover="this.style.backgroundColor='#ffff66';" onmouseout="this.style.backgroundColor='#d4e3e5';">
+      <td title="Returns a mask vector of peaks"><a href="https://htmlpreview.github.io/?https://github.com/hosseinmoein/DataFrame/blob/master/docs/HTML/peaks.html">peaks</a>()</td>
+    </tr>
+
+    <tr class="item" onmouseover="this.style.backgroundColor='#ffff66';" onmouseout="this.style.backgroundColor='#d4e3e5';">
+      <td title="Returns the shape of DataFrame"><a href="https://htmlpreview.github.io/?https://github.com/hosseinmoein/DataFrame/blob/master/docs/HTML/shape.html">shape</a>()</td>
+    </tr>
+
+    <tr class="item" onmouseover="this.style.backgroundColor='#ffff66';" onmouseout="this.style.backgroundColor='#d4e3e5';">
+      <td title="Returns true/false if shapeless"><a href="https://htmlpreview.github.io/?https://github.com/hosseinmoein/DataFrame/blob/master/docs/HTML/empty.html">shapeless</a>()</td>
+    </tr>
+
+    <tr class="item" onmouseover="this.style.backgroundColor='#ffff66';" onmouseout="this.style.backgroundColor='#d4e3e5';">
+      <td title="Returns a vector of booleans indicating if values start with the given pattern"><a href="https://htmlpreview.github.io/?https://github.com/hosseinmoein/DataFrame/blob/master/docs/HTML/starts_with.html">starts_with( )</a></td>
+    </tr>
+
+    <tr class="item" onmouseover="this.style.backgroundColor='#ffff66';" onmouseout="this.style.backgroundColor='#d4e3e5';">
+      <td title="Returns a mask vector of valleys"><a href="https://htmlpreview.github.io/?https://github.com/hosseinmoein/DataFrame/blob/master/docs/HTML/peaks.html">valleys</a>()</td>
+    </tr>
+
+    <tr class="item" onmouseover="this.style.backgroundColor='#ffff66';" onmouseout="this.style.backgroundColor='#d4e3e5';">
+      <td title="Counts values in a column"><a href="https://htmlpreview.github.io/?https://github.com/hosseinmoein/DataFrame/blob/master/docs/HTML/value_counts.html">value_counts</a>( 2 )</td>
+    </tr>
+
+    <tr class="item" onmouseover="this.style.backgroundColor='#ffff66';" onmouseout="this.style.backgroundColor='#d4e3e5';">
+      <td title="These are used to slice the data in the DataFrame" style="text-align:center;background-color:LightGrey;color:DarkBlue">Slicing Data &nbsp;&nbsp; <font size="+3">&#128298;</font></td>
+    </tr>
+
+    <tr class="item" onmouseover="this.style.backgroundColor='#ffff66';" onmouseout="this.style.backgroundColor='#d4e3e5';">
+      <td title="Gets data or view of above quantile rows"><a href="https://htmlpreview.github.io/?https://github.com/hosseinmoein/DataFrame/blob/master/docs/HTML/get_above_quantile_data.html">get_above_quantile_data()<BR>get_above_quantile_view()</a></td>
+    </tr>
+
+    <tr class="item" onmouseover="this.style.backgroundColor='#ffff66';" onmouseout="this.style.backgroundColor='#d4e3e5';">
+      <td title="Gets data or view of below quantile rows"><a href="https://htmlpreview.github.io/?https://github.com/hosseinmoein/DataFrame/blob/master/docs/HTML/get_above_quantile_data.html">get_below_quantile_data()<BR>get_below_quantile_view()</a></td>
+    </tr>
+
+    <tr class="item" onmouseover="this.style.backgroundColor='#ffff66';" onmouseout="this.style.backgroundColor='#d4e3e5';">
+      <td title="Gets data or view of n bottom rows"><a href="https://htmlpreview.github.io/?https://github.com/hosseinmoein/DataFrame/blob/master/docs/HTML/get_top_n_data.html">get_bottom_n_data()<BR>get_bottom_n_view()</a></td>
+    </tr>
+
+    <tr class="item" onmouseover="this.style.backgroundColor='#ffff66';" onmouseout="this.style.backgroundColor='#d4e3e5';">
+      <td title="Gets a DataFrame copy or a view"><a href="https://htmlpreview.github.io/?https://github.com/hosseinmoein/DataFrame/blob/master/docs/HTML/get_data.html">get_data()<BR>get_view()</a></td>
+    </tr>
+
+    <tr class="item" onmouseover="this.style.backgroundColor='#ffff66';" onmouseout="this.style.backgroundColor='#d4e3e5';">
+      <td title="Gets data or view after specified time"><a href="https://htmlpreview.github.io/?https://github.com/hosseinmoein/DataFrame/blob/master/docs/HTML/get_data_after_times.html">get_data_after_times()<BR>get_view_after_times()</a></td>
+    </tr>
+
+    <tr class="item" onmouseover="this.style.backgroundColor='#ffff66';" onmouseout="this.style.backgroundColor='#d4e3e5';">
+      <td title="Gets data or view at specified time"><a href="https://htmlpreview.github.io/?https://github.com/hosseinmoein/DataFrame/blob/master/docs/HTML/get_data_at_times.html">get_data_at_times()<BR>get_view_at_times()</a></td>
+    </tr>
+
+    <tr class="item" onmouseover="this.style.backgroundColor='#ffff66';" onmouseout="this.style.backgroundColor='#d4e3e5';">
+      <td title="Gets data or view before specified time"><a href="https://htmlpreview.github.io/?https://github.com/hosseinmoein/DataFrame/blob/master/docs/HTML/get_data_before_times.html">get_data_before_times()<BR>get_view_before_times()</a></td>
+    </tr>
+
+    <tr class="item" onmouseover="this.style.backgroundColor='#ffff66';" onmouseout="this.style.backgroundColor='#d4e3e5';">
+      <td title="Gets data or view between specified times"><a href="https://htmlpreview.github.io/?https://github.com/hosseinmoein/DataFrame/blob/master/docs/HTML/get_data_between_times.html">get_data_between_times()<BR>get_view_between_times()</a></td>
+    </tr>
+
+    <tr class="item" onmouseover="this.style.backgroundColor='#ffff66';" onmouseout="this.style.backgroundColor='#d4e3e5';">
+      <td title="Gets data or views by applying Affinity Propagation algorithm"><a href="https://htmlpreview.github.io/?https://github.com/hosseinmoein/DataFrame/blob/master/docs/HTML/get_data_by_affin.html">get_data_by_affin()<BR>get_view_by_affin()</a></td>
+    </tr>
+
+    <tr class="item" onmouseover="this.style.backgroundColor='#ffff66';" onmouseout="this.style.backgroundColor='#d4e3e5';">
+      <td title="Gets data or views by applying DBSCAN algorithm"><a href="https://htmlpreview.github.io/?https://github.com/hosseinmoein/DataFrame/blob/master/docs/HTML/get_data_by_dbscan.html">get_data_by_dbscan()<BR>get_view_by_dbscan()</a></td>
+    </tr>
+
+    <tr class="item" onmouseover="this.style.backgroundColor='#ffff66';" onmouseout="this.style.backgroundColor='#d4e3e5';">
+      <td title="Gets data or view by index"><a href="https://htmlpreview.github.io/?https://github.com/hosseinmoein/DataFrame/blob/master/docs/HTML/get_data_by_idx.html">get_data_by_idx( 2 )<BR>get_view_by_idx( 2 )</a></td>
+    </tr>
+
+    <tr class="item" onmouseover="this.style.backgroundColor='#ffff66';" onmouseout="this.style.backgroundColor='#d4e3e5';">
+      <td title="Gets data or views by applying k-means clustering algorithm"><a href="https://htmlpreview.github.io/?https://github.com/hosseinmoein/DataFrame/blob/master/docs/HTML/get_data_by_kmeans.html">get_data_by_kmeans()<BR>get_view_by_kmeans()</a></td>
+    </tr>
+
+    <tr class="item" onmouseover="this.style.backgroundColor='#ffff66';" onmouseout="this.style.backgroundColor='#d4e3e5';">
+      <td title="Gets data or view by applying Glob-like (SQL like clause) pattern matching"><a href="https://htmlpreview.github.io/?https://github.com/hosseinmoein/DataFrame/blob/master/docs/HTML/get_data_by_like.html">get_data_by_like( 2 )<BR>get_view_by_like( 2 )</a></td>
+    </tr>
+
+    <tr class="item" onmouseover="this.style.backgroundColor='#ffff66';" onmouseout="this.style.backgroundColor='#d4e3e5';">
+      <td title="Gets data or view by location"><a href="https://htmlpreview.github.io/?https://github.com/hosseinmoein/DataFrame/blob/master/docs/HTML/get_data_by_loc.html">get_data_by_loc( 2 )<BR>get_view_by_loc( 2 )</a></td>
+    </tr>
+
+    <tr class="item" onmouseover="this.style.backgroundColor='#ffff66';" onmouseout="this.style.backgroundColor='#d4e3e5';">
+      <td title="Gets data or views by applying Mean-Shift algorithm"><a href="https://htmlpreview.github.io/?https://github.com/hosseinmoein/DataFrame/blob/master/docs/HTML/get_data_by_mshift.html">get_data_by_mshift()<BR>get_view_by_mshift()</a></td>
+    </tr>
+
+    <tr class="item" onmouseover="this.style.backgroundColor='#ffff66';" onmouseout="this.style.backgroundColor='#d4e3e5';">
+      <td title="Gets data or view by random"><a href="https://htmlpreview.github.io/?https://github.com/hosseinmoein/DataFrame/blob/master/docs/HTML/get_data_by_rand.html">get_data_by_rand()<BR>get_view_by_rand()</a></td>
+    </tr>
+
+    <tr class="item" onmouseover="this.style.backgroundColor='#ffff66';" onmouseout="this.style.backgroundColor='#d4e3e5';">
+      <td title="Gets data or view by selection"><a href="https://htmlpreview.github.io/?https://github.com/hosseinmoein/DataFrame/blob/master/docs/HTML/get_data_by_sel.html">get_data_by_sel( 5 )<BR>get_view_by_sel( 5 )</a></td>
+    </tr>
+
+    <tr class="item" onmouseover="this.style.backgroundColor='#ffff66';" onmouseout="this.style.backgroundColor='#d4e3e5';">
+      <td title="Gets data or views by applying spectral clustering algorithm"><a href="https://htmlpreview.github.io/?https://github.com/hosseinmoein/DataFrame/blob/master/docs/HTML/get_data_by_spectral.html">get_data_by_spectral()<BR>get_view_by_spectral()</a></td>
+    </tr>
+
+    <tr class="item" onmouseover="this.style.backgroundColor='#ffff66';" onmouseout="this.style.backgroundColor='#d4e3e5';">
+      <td title="Gets data or view by standard deviation"><a href="https://htmlpreview.github.io/?https://github.com/hosseinmoein/DataFrame/blob/master/docs/HTML/get_data_by_stdev.html">get_data_by_stdev()<BR>get_view_by_stdev()</a></td>
+    </tr>
+
+    <tr class="item" onmouseover="this.style.backgroundColor='#ffff66';" onmouseout="this.style.backgroundColor='#d4e3e5';">
+      <td title="Gets data or view for the given months"><a href="https://htmlpreview.github.io/?https://github.com/hosseinmoein/DataFrame/blob/master/docs/HTML/get_data_in_months.html">get_data_in_months()<BR>get_view_in_months()</a></td>
+    </tr>
+
+    <tr class="item" onmouseover="this.style.backgroundColor='#ffff66';" onmouseout="this.style.backgroundColor='#d4e3e5';">
+      <td title="Gets data or view for the given weekdays"><a href="https://htmlpreview.github.io/?https://github.com/hosseinmoein/DataFrame/blob/master/docs/HTML/get_data_on_days.html">get_data_on_days()<BR>get_view_on_days()</a></td>
+    </tr>
+
+    <tr class="item" onmouseover="this.style.backgroundColor='#ffff66';" onmouseout="this.style.backgroundColor='#d4e3e5';">
+      <td title="Gets data or view for the given days of the month"><a href="https://htmlpreview.github.io/?https://github.com/hosseinmoein/DataFrame/blob/master/docs/HTML/get_data_on_days_in_month.html">get_data_on_days_in_month()<BR>get_view_on_days_in_month()</a></td>
+    </tr>
+
+    <tr class="item" onmouseover="this.style.backgroundColor='#ffff66';" onmouseout="this.style.backgroundColor='#d4e3e5';">
+      <td title="Gets data or view of n top rows"><a href="https://htmlpreview.github.io/?https://github.com/hosseinmoein/DataFrame/blob/master/docs/HTML/get_top_n_data.html">get_top_n_data()<BR>get_top_n_view()</a></td>
+    </tr>
+
+    <tr class="item" onmouseover="this.style.backgroundColor='#ffff66';" onmouseout="this.style.backgroundColor='#d4e3e5';">
+      <td title="These are used to group/combine data in the DataFrame" style="text-align:center;background-color:LightGrey;color:DarkBlue">Cooking Data &nbsp;&nbsp; <font size="+3">&#127859;</font></td>
+    </tr>
+
+    <tr class="item" onmouseover="this.style.backgroundColor='#ffff66';" onmouseout="this.style.backgroundColor='#d4e3e5';">
+      <td title="Bucketizes a column data"><a href="https://htmlpreview.github.io/?https://github.com/hosseinmoein/DataFrame/blob/master/docs/HTML/bucketize.html">bucketize()<BR>bucketize_async()</a></td>
+    </tr>
+
+    <tr class="item" onmouseover="this.style.backgroundColor='#ffff66';" onmouseout="this.style.backgroundColor='#d4e3e5';">
+      <td title="Combines columns"><a href="https://htmlpreview.github.io/?https://github.com/hosseinmoein/DataFrame/blob/master/docs/HTML/combine.html">combine</a>( 3 )</td>
+    </tr>
+
+    <tr class="item" onmouseover="this.style.backgroundColor='#ffff66';" onmouseout="this.style.backgroundColor='#d4e3e5';">
+      <td title="Concatenates DataFrames"><a href="https://htmlpreview.github.io/?https://github.com/hosseinmoein/DataFrame/blob/master/docs/HTML/concat.html">concat()<BR>concat_view()<BR>self_concat()</a></td>
+    </tr>
+
+    <tr class="item" onmouseover="this.style.backgroundColor='#ffff66';" onmouseout="this.style.backgroundColor='#d4e3e5';">
+      <td title="Consolidates multiple columns into one"><a href="https://htmlpreview.github.io/?https://github.com/hosseinmoein/DataFrame/blob/master/docs/HTML/consolidate.html">consolidate</a>( 4 )</td>
+    </tr>
+
+    <tr class="item" onmouseover="this.style.backgroundColor='#ffff66';" onmouseout="this.style.backgroundColor='#d4e3e5';">
+      <td title="Explodes a container column into a value column"><a href="https://htmlpreview.github.io/?https://github.com/hosseinmoein/DataFrame/blob/master/docs/HTML/explode.html">explode</a>()</td>
+    </tr>
+
+    <tr class="item" onmouseover="this.style.backgroundColor='#ffff66';" onmouseout="this.style.backgroundColor='#d4e3e5';">
+      <td title="Performs group-by by one column"><a href="https://htmlpreview.github.io/?https://github.com/hosseinmoein/DataFrame/blob/master/docs/HTML/groupby.html">groupby1()<BR>groupby1_async()<BR>groupby2()<BR>groupby2_async()<BR>groupby3()<BR>groupby3_async()</a></td>
+    </tr>
+
+    <tr class="item" onmouseover="this.style.backgroundColor='#ffff66';" onmouseout="this.style.backgroundColor='#d4e3e5';">
+      <td title="Joins two DataFrames by column"><a href="https://htmlpreview.github.io/?https://github.com/hosseinmoein/DataFrame/blob/master/docs/HTML/join_by_column.html">join_by_column()<BR>join_by_index()</a></td>
+    </tr>
+
+    <tr class="item" onmouseover="this.style.backgroundColor='#ffff66';" onmouseout="this.style.backgroundColor='#d4e3e5';">
+      <td title="Sorts DataFrame"><a href="https://htmlpreview.github.io/?https://github.com/hosseinmoein/DataFrame/blob/master/docs/HTML/sort.html">sort( 5 )<BR>sort_async( 5 )</a></td>
+    </tr>
+
+    <tr class="item" onmouseover="this.style.backgroundColor='#ffff66';" onmouseout="this.style.backgroundColor='#d4e3e5';">
+      <td title="Returns an unpivoted DataFrame"><a href="https://htmlpreview.github.io/?https://github.com/hosseinmoein/DataFrame/blob/master/docs/HTML/explode.html">unpivot</a>()</td>
+    </tr>
+
+    <tr class="item" onmouseover="this.style.backgroundColor='#ffff66';" onmouseout="this.style.backgroundColor='#d4e3e5';">
+      <td title="These are used to modify data in the DataFrame" style="text-align:center;background-color:LightGrey;color:DarkBlue">Altering Data &nbsp;&nbsp; <font size="+3">&#9986;</font></td>
+    </tr>
+
+    <tr class="item" onmouseover="this.style.backgroundColor='#ffff66';" onmouseout="this.style.backgroundColor='#d4e3e5';">
+      <td title="Changes the frequency of the data"><a href="https://htmlpreview.github.io/?https://github.com/hosseinmoein/DataFrame/blob/master/docs/HTML/change_freq.html">change_freq</a>()</td>
+    </tr>
+
+    <tr class="item" onmouseover="this.style.backgroundColor='#ffff66';" onmouseout="this.style.backgroundColor='#d4e3e5';">
+      <td title="Clears/Empties the DataFrame"><a href="https://htmlpreview.github.io/?https://github.com/hosseinmoein/DataFrame/blob/master/docs/HTML/remove_column.html">clear</a>()</td>
+    </tr>
+
+    <tr class="item" onmouseover="this.style.backgroundColor='#ffff66';" onmouseout="this.style.backgroundColor='#d4e3e5';">
+      <td title="Detects anomalous data and changes them"><a href="https://htmlpreview.github.io/?https://github.com/hosseinmoein/DataFrame/blob/master/docs/HTML/detect_and_change.html">detect_and_change</a>()</td>
+    </tr>
+
+    <tr class="item" onmouseover="this.style.backgroundColor='#ffff66';" onmouseout="this.style.backgroundColor='#d4e3e5';">
+      <td title="Drops missing values"><a href="https://htmlpreview.github.io/?https://github.com/hosseinmoein/DataFrame/blob/master/docs/HTML/drop_missing.html">drop_missing</a>()</td>
+    </tr>
+
+    <tr class="item" onmouseover="this.style.backgroundColor='#ffff66';" onmouseout="this.style.backgroundColor='#d4e3e5';">
+      <td title="Fills missing values"><a href="https://htmlpreview.github.io/?https://github.com/hosseinmoein/DataFrame/blob/master/docs/HTML/drop_missing.html">fill_missing</a>( 2 )</td>
+    </tr>
+
+    <tr class="item" onmouseover="this.style.backgroundColor='#ffff66';" onmouseout="this.style.backgroundColor='#d4e3e5';">
+      <td title="Gets a reindexed` DataFrame"><a href="https://htmlpreview.github.io/?https://github.com/hosseinmoein/DataFrame/blob/master/docs/HTML/get_reindexed.html">get_reindexed()<BR>get_reindexed_view()</a></td>
+    </tr>
+
+    <tr class="item" onmouseover="this.style.backgroundColor='#ffff66';" onmouseout="this.style.backgroundColor='#d4e3e5';">
+      <td title="Makes index and columns sizes consistent"><a href="https://htmlpreview.github.io/?https://github.com/hosseinmoein/DataFrame/blob/master/docs/HTML/make_consistent.html">make_consistent</a>()</td>
+    </tr>
+
+    <tr class="item" onmouseover="this.style.backgroundColor='#ffff66';" onmouseout="this.style.backgroundColor='#d4e3e5';">
+      <td title="Makes the given column stationary"><a href="https://htmlpreview.github.io/?https://github.com/hosseinmoein/DataFrame/blob/master/docs/HTML/make_stationary.html">make_stationary</a>()</td>
+    </tr>
+
+    <tr class="item" onmouseover="this.style.backgroundColor='#ffff66';" onmouseout="this.style.backgroundColor='#d4e3e5';">
+      <td title="Modifies DataFrame by index"><a href="https://htmlpreview.github.io/?https://github.com/hosseinmoein/DataFrame/blob/master/docs/HTML/modify_by_idx.html">modify_by_idx</a>()</td>
+    </tr>
+
+    <tr class="item" onmouseover="this.style.backgroundColor='#ffff66';" onmouseout="this.style.backgroundColor='#d4e3e5';">
+      <td title="Removes data above specified quantile"><a href="https://htmlpreview.github.io/?https://github.com/hosseinmoein/DataFrame/blob/master/docs/HTML/remove_above_quantile_data.html">remove_above_quantile_data()</a></td>
+    </tr>
+
+    <tr class="item" onmouseover="this.style.backgroundColor='#ffff66';" onmouseout="this.style.backgroundColor='#d4e3e5';">
+      <td title="Removes data below specified quantile"><a href="https://htmlpreview.github.io/?https://github.com/hosseinmoein/DataFrame/blob/master/docs/HTML/remove_above_quantile_data.html">remove_below_quantile_data()</a></td>
+    </tr>
+
+    <tr class="item" onmouseover="this.style.backgroundColor='#ffff66';" onmouseout="this.style.backgroundColor='#d4e3e5';">
+      <td title="Removes bottom n rows"><a href="https://htmlpreview.github.io/?https://github.com/hosseinmoein/DataFrame/blob/master/docs/HTML/remove_top_n_data.html">remove_bottom_n_data</a>()</td>
+    </tr>
+
+    <tr class="item" onmouseover="this.style.backgroundColor='#ffff66';" onmouseout="this.style.backgroundColor='#d4e3e5';">
+      <td title="Removes column"><a href="https://htmlpreview.github.io/?https://github.com/hosseinmoein/DataFrame/blob/master/docs/HTML/remove_column.html">remove_column</a>( 2 )</td>
+    </tr>
+
+    <tr class="item" onmouseover="this.style.backgroundColor='#ffff66';" onmouseout="this.style.backgroundColor='#d4e3e5';">
+      <td title="Removes column data by using a FFT algorithm"><a href="https://htmlpreview.github.io/?https://github.com/hosseinmoein/DataFrame/blob/master/docs/HTML/remove_data_by_fft.html">remove_data_by_fft</a>()</td>
+    </tr>
+
+    <tr class="item" onmouseover="this.style.backgroundColor='#ffff66';" onmouseout="this.style.backgroundColor='#d4e3e5';">
+      <td title="Removes column data by index"><a href="https://htmlpreview.github.io/?https://github.com/hosseinmoein/DataFrame/blob/master/docs/HTML/remove_data_by_idx.html">remove_data_by_idx</a>()</td>
+    </tr>
+
+    <tr class="item" onmouseover="this.style.backgroundColor='#ffff66';" onmouseout="this.style.backgroundColor='#d4e3e5';">
+      <td title="Removes column data by using a Inter-Quartile Range (IQR) algorithm"><a href="https://htmlpreview.github.io/?https://github.com/hosseinmoein/DataFrame/blob/master/docs/HTML/remove_data_by_iqr.html">remove_data_by_iqr</a>()</td>
+    </tr>
+
+    <tr class="item" onmouseover="this.style.backgroundColor='#ffff66';" onmouseout="this.style.backgroundColor='#d4e3e5';">
+      <td title="Removes column data by using a Hampel filter"><a href="https://htmlpreview.github.io/?https://github.com/hosseinmoein/DataFrame/blob/master/docs/HTML/remove_data_by_hampel.html">remove_data_by_hampel</a>()</td>
+    </tr>
+
+    <tr class="item" onmouseover="this.style.backgroundColor='#ffff66';" onmouseout="this.style.backgroundColor='#d4e3e5';">
+      <td title="Removes column data by applying Glob-like (SQL like clause) pattern matching"><a href="https://htmlpreview.github.io/?https://github.com/hosseinmoein/DataFrame/blob/master/docs/HTML/remove_data_by_like.html">remove_data_by_like</a>( 2 )</td>
+    </tr>
+
+    <tr class="item" onmouseover="this.style.backgroundColor='#ffff66';" onmouseout="this.style.backgroundColor='#d4e3e5';">
+      <td title="Removes column data by location"><a href="https://htmlpreview.github.io/?https://github.com/hosseinmoein/DataFrame/blob/master/docs/HTML/remove_data_by_loc.html">remove_data_by_loc</a>()</td>
+    </tr>
+
+    <tr class="item" onmouseover="this.style.backgroundColor='#ffff66';" onmouseout="this.style.backgroundColor='#d4e3e5';">
+      <td title="Removes column data by selection"><a href="https://htmlpreview.github.io/?https://github.com/hosseinmoein/DataFrame/blob/master/docs/HTML/remove_data_by_sel.html">remove_data_by_sel</a>( 3 )</td>
+    </tr>
+
+    <tr class="item" onmouseover="this.style.backgroundColor='#ffff66';" onmouseout="this.style.backgroundColor='#d4e3e5';">
+      <td title="Removes column data by standard deviation"><a href="https://htmlpreview.github.io/?https://github.com/hosseinmoein/DataFrame/blob/master/docs/HTML/remove_data_by_stdev.html">remove_data_by_stdev</a>()</td>
+    </tr>
+
+    <tr class="item" onmouseover="this.style.backgroundColor='#ffff66';" onmouseout="this.style.backgroundColor='#d4e3e5';">
+      <td title="Removes column data by using z-score"><a href="https://htmlpreview.github.io/?https://github.com/hosseinmoein/DataFrame/blob/master/docs/HTML/remove_data_by_zscore.html">remove_data_by_zscore</a>()</td>
+    </tr>
+
+    <tr class="item" onmouseover="this.style.backgroundColor='#ffff66';" onmouseout="this.style.backgroundColor='#d4e3e5';">
+      <td title="Removes duplicated rows"><a href="https://htmlpreview.github.io/?https://github.com/hosseinmoein/DataFrame/blob/master/docs/HTML/remove_duplicates.html">remove_duplicates</a>( 6 )</td>
+    </tr>
+
+    <tr class="item" onmouseover="this.style.backgroundColor='#ffff66';" onmouseout="this.style.backgroundColor='#d4e3e5';">
+      <td title="Removes top n rows"><a href="https://htmlpreview.github.io/?https://github.com/hosseinmoein/DataFrame/blob/master/docs/HTML/remove_top_n_data.html">remove_top_n_data</a>()</td>
+    </tr>
+
+    <tr class="item" onmouseover="this.style.backgroundColor='#ffff66';" onmouseout="this.style.backgroundColor='#d4e3e5';">
+      <td title="Renames column"><a href="https://htmlpreview.github.io/?https://github.com/hosseinmoein/DataFrame/blob/master/docs/HTML/rename_column.html">rename_column</a>()</td>
+    </tr>
+
+    <tr class="item" onmouseover="this.style.backgroundColor='#ffff66';" onmouseout="this.style.backgroundColor='#d4e3e5';">
+      <td title ="Replaces data in columns"><a href="https://htmlpreview.github.io/?https://github.com/hosseinmoein/DataFrame/blob/master/docs/HTML/replace.html">replace( 2 )<BR>replace_async( 2 )</a></td>
+    </tr>
+
+    <tr class="item" onmouseover="this.style.backgroundColor='#ffff66';" onmouseout="this.style.backgroundColor='#d4e3e5';">
+      <td title="Replaces data in index column"><a href="https://htmlpreview.github.io/?https://github.com/hosseinmoein/DataFrame/blob/master/docs/HTML/replace.html">replace_index</a>()</td>
+    </tr>
+
+    <tr class="item" onmouseover="this.style.backgroundColor='#ffff66';" onmouseout="this.style.backgroundColor='#d4e3e5';">
+      <td title="Changes the type of a column"><a href="https://htmlpreview.github.io/?https://github.com/hosseinmoein/DataFrame/blob/master/docs/HTML/retype_column.html">retype_column</a>()</td>
+    </tr>
+
+    <tr class="item" onmouseover="this.style.backgroundColor='#ffff66';" onmouseout="this.style.backgroundColor='#d4e3e5';">
+      <td title="Rotates data left or right"><a href="https://htmlpreview.github.io/?https://github.com/hosseinmoein/DataFrame/blob/master/docs/HTML/rotate.html">rotate()<BR>self_rotate()</a></td>
+    </tr>
+
+    <tr class="item" onmouseover="this.style.backgroundColor='#ffff66';" onmouseout="this.style.backgroundColor='#d4e3e5';">
+      <td title="Shifts data up or down"><a href="https://htmlpreview.github.io/?https://github.com/hosseinmoein/DataFrame/blob/master/docs/HTML/self_shift.html">shift( 2 )<BR>self_shift()</a></td>
+    </tr>
+
+    <tr class="item" onmouseover="this.style.backgroundColor='#ffff66';" onmouseout="this.style.backgroundColor='#d4e3e5';">
+      <td title="Reclaims unused memory"><a href="https://htmlpreview.github.io/?https://github.com/hosseinmoein/DataFrame/blob/master/docs/HTML/shrink_to_fit.html">shrink_to_fit</a>()</td>
+    </tr>
+
+    <tr class="item" onmouseover="this.style.backgroundColor='#ffff66';" onmouseout="this.style.backgroundColor='#d4e3e5';">
+      <td title="Shufles data in columns"><a href="https://htmlpreview.github.io/?https://github.com/hosseinmoein/DataFrame/blob/master/docs/HTML/shuffle.html">shuffle</a>()</td>
+    </tr>
+
+    <tr class="item" onmouseover="this.style.backgroundColor='#ffff66';" onmouseout="this.style.backgroundColor='#d4e3e5';">
+      <td title="Transposes DataFrame"><a href="https://htmlpreview.github.io/?https://github.com/hosseinmoein/DataFrame/blob/master/docs/HTML/transpose.html">transpose</a>()</td>
+    </tr>
+
+    <tr class="item" onmouseover="this.style.backgroundColor='#ffff66';" onmouseout="this.style.backgroundColor='#d4e3e5';">
+      <td title="Removes data before and after the given index values"><a href="https://htmlpreview.github.io/?https://github.com/hosseinmoein/DataFrame/blob/master/docs/HTML/truncate.html">truncate</a>()</td>
+    </tr>
+
+    <tr class="item" onmouseover="this.style.backgroundColor='#ffff66';" onmouseout="this.style.backgroundColor='#d4e3e5';">
+      <td title="These are used to input/output data to/from DataFrame" style="text-align:center;background-color:LightGrey;color:DarkBlue">Input/Output &nbsp;&nbsp; <font size="+3">&#128268;</font></td>
+    </tr>
+
+    <tr class="item" onmouseover="this.style.backgroundColor='#ffff66';" onmouseout="this.style.backgroundColor='#d4e3e5';">
+      <td title="Restores the DataFrame from a binary buffer"><a href="https://htmlpreview.github.io/?https://github.com/hosseinmoein/DataFrame/blob/master/docs/HTML/from_string.html">deserialize()<BR>deserialize_async()</a></td>
+    </tr>
+
+    <tr class="item" onmouseover="this.style.backgroundColor='#ffff66';" onmouseout="this.style.backgroundColor='#d4e3e5';">
+      <td title="Restores the DataFrame from a string"><a href="https://htmlpreview.github.io/?https://github.com/hosseinmoein/DataFrame/blob/master/docs/HTML/from_string.html">from_string()<BR>from_string_async()</a></td>
+    </tr>
+
+    <tr class="item" onmouseover="this.style.backgroundColor='#ffff66';" onmouseout="this.style.backgroundColor='#d4e3e5';">
+      <td title="Reads data from stream"><a href="https://htmlpreview.github.io/?https://github.com/hosseinmoein/DataFrame/blob/master/docs/HTML/read.html">read()<BR>read_async()</a></td>
+    </tr>
+
+    <tr class="item" onmouseover="this.style.backgroundColor='#ffff66';" onmouseout="this.style.backgroundColor='#d4e3e5';">
+      <td title="Converts the DataFrame into a binary buffer"><a href="https://htmlpreview.github.io/?https://github.com/hosseinmoein/DataFrame/blob/master/docs/HTML/to_string.html">serialize()<BR>serialize_async()</a></td>
+    </tr>
+
+    <tr class="item" onmouseover="this.style.backgroundColor='#ffff66';" onmouseout="this.style.backgroundColor='#d4e3e5';">
+      <td title="Converts the DataFrame into a string"><a href="https://htmlpreview.github.io/?https://github.com/hosseinmoein/DataFrame/blob/master/docs/HTML/to_string.html">to_string()<BR>to_string_async()</a></td>
+    </tr>
+
+    <tr class="item" onmouseover="this.style.backgroundColor='#ffff66';" onmouseout="this.style.backgroundColor='#d4e3e5';">
+      <td title="Writes DataFrame to stream"><a href="https://htmlpreview.github.io/?https://github.com/hosseinmoein/DataFrame/blob/master/docs/HTML/write.html">write()<BR>write_async()</a></td>
+    </tr>
+
+    <tr class="item" onmouseover="this.style.backgroundColor='#ffff66';" onmouseout="this.style.backgroundColor='#d4e3e5';">
+      <td title="These are other functionalities of DataFrame" style="text-align:center;background-color:LightGrey;color:DarkBlue">Gears &amp; Stuff &nbsp;&nbsp; <font size="+3">&#x2699;</font></td>
+    </tr>
+
+    <tr class="item" onmouseover="this.style.backgroundColor='#ffff66';" onmouseout="this.style.backgroundColor='#d4e3e5';">
+      <td title="Applies function to the given column(s)"><a href="https://htmlpreview.github.io/?https://github.com/hosseinmoein/DataFrame/blob/master/docs/HTML/apply.html">apply</a>( 3 )</td>
+    </tr>
+
+    <tr class="item" onmouseover="this.style.backgroundColor='#ffff66';" onmouseout="this.style.backgroundColor='#d4e3e5';">
+      <td title="Assigns one DataFrame to another"><a href="https://htmlpreview.github.io/?https://github.com/hosseinmoein/DataFrame/blob/master/docs/HTML/assign.html">assign()</a></td>
+    </tr>
+
+    <tr class="item" onmouseover="this.style.backgroundColor='#ffff66';" onmouseout="this.style.backgroundColor='#d4e3e5';">
+      <td title="Visits multiple columns one at a time"><a href="https://htmlpreview.github.io/?https://github.com/hosseinmoein/DataFrame/blob/master/docs/HTML/multi_visit.html">multi_visit</a>()</td>
+    </tr>
+
+    <tr class="item" onmouseover="this.style.backgroundColor='#ffff66';" onmouseout="this.style.backgroundColor='#d4e3e5';">
+      <td title="Removes Spin Lock"><a href="https://htmlpreview.github.io/?https://github.com/hosseinmoein/DataFrame/blob/master/docs/HTML/remove_lock.html">static<BR>remove_lock()</a></td>
+    </tr>
+
+    <tr class="item" onmouseover="this.style.backgroundColor='#ffff66';" onmouseout="this.style.backgroundColor='#d4e3e5';">
+      <td title="Sets the Spin Lock"><a href="https://htmlpreview.github.io/?https://github.com/hosseinmoein/DataFrame/blob/master/docs/HTML/remove_lock.html">static<BR>set_lock</a>()</td>
+    </tr>
+
+    <tr class="item" onmouseover="this.style.backgroundColor='#ffff66';" onmouseout="this.style.backgroundColor='#d4e3e5';">
+      <td title="Single action visitor operation"><a href="https://htmlpreview.github.io/?https://github.com/hosseinmoein/DataFrame/blob/master/docs/HTML/single_act_visit.html">single_act_visit( 5 )<BR>single_act_visit_async( 5 )</a></td>
+    </tr>
+
+    <tr class="item" onmouseover="this.style.backgroundColor='#ffff66';" onmouseout="this.style.backgroundColor='#d4e3e5';">
+      <td title="Swaps data between two DataFrames"><a href="https://htmlpreview.github.io/?https://github.com/hosseinmoein/DataFrame/blob/master/docs/HTML/remove_column.html">swap</a>()</td>
+    </tr>
+
+    <tr class="item" onmouseover="this.style.backgroundColor='#ffff66';" onmouseout="this.style.backgroundColor='#d4e3e5';">
+      <td title="Visitor operation"><a href="https://htmlpreview.github.io/?https://github.com/hosseinmoein/DataFrame/blob/master/docs/HTML/visit.html">visit( 5 )<BR>visit_async( 5 )</a></td>
+    </tr>
+
+  </table>
+  </div>
+
+  <div class="column">
+  <table id="hmdf_table" align="center" class="hovertable">
+    <tr>
+      <th title="These are visitors mostly used in statistical analysis"><font color="white">Statistical Visitors</font></th>
+    </tr>
+
+    <tr class="item" onmouseover="this.style.backgroundColor='#ffff66';" onmouseout="this.style.backgroundColor='#d4e3e5';">
+      <td title="These are various statistical analysis" style="text-align:center;background-color:LightGrey;color:DarkBlue">Bread &amp; Butter &nbsp;&nbsp; <font size="+3">&#x1F956;</font></td>
+    </tr>
+
+    <tr class="item" onmouseover="this.style.backgroundColor='#ffff66';" onmouseout="this.style.backgroundColor='#d4e3e5';">
+      <td title="Calculates Box-Cox transformation"><a href="https://htmlpreview.github.io/?https://github.com/hosseinmoein/DataFrame/blob/master/docs/HTML/BoxCoxVisitor.html">BoxCoxVisitor</a>{}</td>
+    </tr>
+
+    <tr class="item" onmouseover="this.style.backgroundColor='#ffff66';" onmouseout="this.style.backgroundColor='#d4e3e5';">
+      <td title="Categorizes column data"><a href="https://htmlpreview.github.io/?https://github.com/hosseinmoein/DataFrame/blob/master/docs/HTML/CategoryVisitor.html">CategoryVisitor</a>{}</td>
+    </tr>
+
+    <tr class="item" onmouseover="this.style.backgroundColor='#ffff66';" onmouseout="this.style.backgroundColor='#d4e3e5';">
+      <td title="Calculates exponentially weighted correlation"><a href="https://htmlpreview.github.io/?https://github.com/hosseinmoein/DataFrame/blob/master/docs/HTML/ExponentiallyWeightedMeanVisitor.html">ExponentiallyWeightedCorrVisitor</a>{}</td>
+    </tr>
+
+    <tr class="item" onmouseover="this.style.backgroundColor='#ffff66';" onmouseout="this.style.backgroundColor='#d4e3e5';">
+      <td title="Calculates exponentially weighted covariance"><a href="https://htmlpreview.github.io/?https://github.com/hosseinmoein/DataFrame/blob/master/docs/HTML/ExponentiallyWeightedMeanVisitor.html">ExponentiallyWeightedCovVisitor</a>{}</td>
+    </tr>
+
+    <tr class="item" onmouseover="this.style.backgroundColor='#ffff66';" onmouseout="this.style.backgroundColor='#d4e3e5';">
+      <td title="Calculates exponentially weighted mean"><a href="https://htmlpreview.github.io/?https://github.com/hosseinmoein/DataFrame/blob/master/docs/HTML/ExponentiallyWeightedMeanVisitor.html">ExponentiallyWeightedMeanVisitor</a>{}</td>
+    </tr>
+
+    <tr class="item" onmouseover="this.style.backgroundColor='#ffff66';" onmouseout="this.style.backgroundColor='#d4e3e5';">
+      <td title="Calculates exponentially weighted var and stdev"><a href="https://htmlpreview.github.io/?https://github.com/hosseinmoein/DataFrame/blob/master/docs/HTML/ExponentiallyWeightedMeanVisitor.html">ExponentiallyWeightedVarVisitor</a>{}</td>
+    </tr>
+
+    <tr class="item" onmouseover="this.style.backgroundColor='#ffff66';" onmouseout="this.style.backgroundColor='#d4e3e5';">
+      <td title="Factorizes column data"><a href="https://htmlpreview.github.io/?https://github.com/hosseinmoein/DataFrame/blob/master/docs/HTML/FactorizeVisitor.html">FactorizeVisitor</a>{}</td>
+    </tr>
+
+    <tr class="item" onmouseover="this.style.backgroundColor='#ffff66';" onmouseout="this.style.backgroundColor='#d4e3e5';">
+      <td title="Calculates kth value"><a href="https://htmlpreview.github.io/?https://github.com/hosseinmoein/DataFrame/blob/master/docs/HTML/KthValueVisitor.html">KthValueVisitor</a>{}</td>
+    </tr>
+
+    <tr class="item" onmouseover="this.style.backgroundColor='#ffff66';" onmouseout="this.style.backgroundColor='#d4e3e5';">
+      <td title="Calculates different types of averages around average"><a href="https://htmlpreview.github.io/?https://github.com/hosseinmoein/DataFrame/blob/master/docs/HTML/MADVisitor.html">MADVisitor</a>{}</td>
+    </tr>
+
+    <tr class="item" onmouseover="this.style.backgroundColor='#ffff66';" onmouseout="this.style.backgroundColor='#d4e3e5';">
+      <td title="Calculates mode"><a href="https://htmlpreview.github.io/?https://github.com/hosseinmoein/DataFrame/blob/master/docs/HTML/ModeVisitor.html">ModeVisitor</a>{}</td>
+    </tr>
+
+    <tr class="item" onmouseover="this.style.backgroundColor='#ffff66';" onmouseout="this.style.backgroundColor='#d4e3e5';">
+      <td title="Calculates non-zero diff between two columns"><a href="https://htmlpreview.github.io/?https://github.com/hosseinmoein/DataFrame/blob/master/docs/HTML/NonZeroRangeVisitor.html">NonZeroRangeVisitor</a>{}</td>
+    </tr>
+
+    <tr class="item" onmouseover="this.style.backgroundColor='#ffff66';" onmouseout="this.style.backgroundColor='#d4e3e5';">
+      <td title="Calculates quantiles"><a href="https://htmlpreview.github.io/?https://github.com/hosseinmoein/DataFrame/blob/master/docs/HTML/QuantileVisitor.html">QuantileVisitor</a>{}</td>
+    </tr>
+
+    <tr class="item" onmouseover="this.style.backgroundColor='#ffff66';" onmouseout="this.style.backgroundColor='#d4e3e5';">
+      <td title="Calculates rank"><a href="https://htmlpreview.github.io/?https://github.com/hosseinmoein/DataFrame/blob/master/docs/HTML/RankVisitor.html">RankVisitor</a>{}</td>
+    </tr>
+
+    <tr class="item" onmouseover="this.style.backgroundColor='#ffff66';" onmouseout="this.style.backgroundColor='#d4e3e5';">
+      <td title="Calculates standard error of the mean"><a href="https://htmlpreview.github.io/?https://github.com/hosseinmoein/DataFrame/blob/master/docs/HTML/SEMVisitor.html">SEMVisitor</a>{}</td>
+    </tr>
+
+    <tr class="item" onmouseover="this.style.backgroundColor='#ffff66';" onmouseout="this.style.backgroundColor='#d4e3e5';">
+      <td title="Tests if the column is stationary"><a href="https://htmlpreview.github.io/?https://github.com/hosseinmoein/DataFrame/blob/master/docs/HTML/StationaryCheckVisitor.html">StationaryCheckVisitor</a>{}</td>
+    </tr>
+
+    <tr class="item" onmouseover="this.style.backgroundColor='#ffff66';" onmouseout="this.style.backgroundColor='#d4e3e5';">
+      <td title="These are boilerplate statistical analysis" style="text-align:center;background-color:LightGrey;color:DarkBlue">Boilerplates &nbsp;&nbsp; <font size="+3">&#127869;</font></td>
+    </tr>
+
+    <tr class="item" onmouseover="this.style.backgroundColor='#ffff66';" onmouseout="this.style.backgroundColor='#d4e3e5';">
+      <td title="Calculates autocorrelation"><a href="https://htmlpreview.github.io/?https://github.com/hosseinmoein/DataFrame/blob/master/docs/HTML/AutoCorrVisitor.html">AutoCorrVisitor</a>{}</td>
+    </tr>
+
+    <tr class="item" onmouseover="this.style.backgroundColor='#ffff66';" onmouseout="this.style.backgroundColor='#d4e3e5';">
+      <td title="Calculates beta"><a href="https://htmlpreview.github.io/?https://github.com/hosseinmoein/DataFrame/blob/master/docs/HTML/BetaVisitor.html">BetaVisitor</a>{}</td>
+    </tr>
+
+    <tr class="item" onmouseover="this.style.backgroundColor='#ffff66';" onmouseout="this.style.backgroundColor='#d4e3e5';">
+      <td title="Calculates correlation"><a href="https://htmlpreview.github.io/?https://github.com/hosseinmoein/DataFrame/blob/master/docs/HTML/CorrVisitor.html">CorrVisitor</a>{}</td>
+    </tr>
+
+    <tr class="item" onmouseover="this.style.backgroundColor='#ffff66';" onmouseout="this.style.backgroundColor='#d4e3e5';">
+      <td title="Calculates covariance"><a href="https://htmlpreview.github.io/?https://github.com/hosseinmoein/DataFrame/blob/master/docs/HTML/CovVisitor.html">CovVisitor</a>{}</td>
+    </tr>
+
+    <tr class="item" onmouseover="this.style.backgroundColor='#ffff66';" onmouseout="this.style.backgroundColor='#d4e3e5';">
+      <td title="Calculates cross correlations"><a href="https://htmlpreview.github.io/?https://github.com/hosseinmoein/DataFrame/blob/master/docs/HTML/CorrVisitor.html">CrossCorrVisitor</a>{}</td>
+    </tr>
+
+    <tr class="item" onmouseover="this.style.backgroundColor='#ffff66';" onmouseout="this.style.backgroundColor='#d4e3e5';">
+      <td title="Calculates dot product, magnitudes, Euclidean distance, and Manhattan distance of two vectors"><a href="https://htmlpreview.github.io/?https://github.com/hosseinmoein/DataFrame/blob/master/docs/HTML/DotProdVisitor.html">DotProdVisitor</a>{}</td>
+    </tr>
+
+    <tr class="item" onmouseover="this.style.backgroundColor='#ffff66';" onmouseout="this.style.backgroundColor='#d4e3e5';">
+      <td title="Calculates autocorrelation based on fixed lag period"><a href="https://htmlpreview.github.io/?https://github.com/hosseinmoein/DataFrame/blob/master/docs/HTML/AutoCorrVisitor.html">FixedAutoCorrVisitor</a>{}</td>
+    </tr>
+
+    <tr class="item" onmouseover="this.style.backgroundColor='#ffff66';" onmouseout="this.style.backgroundColor='#d4e3e5';">
+      <td title="Calculates partial autocorrelation"><a href="https://htmlpreview.github.io/?https://github.com/hosseinmoein/DataFrame/blob/master/docs/HTML/AutoCorrVisitor.html">PartialAutoCorrVisitor</a>{}</td>
+    </tr>
+
+    <tr class="item" onmouseover="this.style.backgroundColor='#ffff66';" onmouseout="this.style.backgroundColor='#d4e3e5';">
+      <td title="Calculates sample z-score"><a href="https://htmlpreview.github.io/?https://github.com/hosseinmoein/DataFrame/blob/master/docs/HTML/SampleZScoreVisitor.html">SampleZScoreVisitor</a>{}</td>
+    </tr>
+
+    <tr class="item" onmouseover="this.style.backgroundColor='#ffff66';" onmouseout="this.style.backgroundColor='#d4e3e5';">
+      <td title="Calculates multiple different statistics"><a href="https://htmlpreview.github.io/?https://github.com/hosseinmoein/DataFrame/blob/master/docs/HTML/StatsVisitor.html">StatsVisitor</a>{}</td>
+    </tr>
+
+    <tr class="item" onmouseover="this.style.backgroundColor='#ffff66';" onmouseout="this.style.backgroundColor='#d4e3e5';">
+      <td title="Calculates standard deviation"><a href="https://htmlpreview.github.io/?https://github.com/hosseinmoein/DataFrame/blob/master/docs/HTML/StdVisitor.html">StdVisitor</a>{}</td>
+    </tr>
+
+    <tr class="item" onmouseover="this.style.backgroundColor='#ffff66';" onmouseout="this.style.backgroundColor='#d4e3e5';">
+      <td title="Calculates tracking error"><a href="https://htmlpreview.github.io/?https://github.com/hosseinmoein/DataFrame/blob/master/docs/HTML/TrackingErrorVisitor.html">TrackingErrorVisitor</a>{}</td>
+    </tr>
+
+    <tr class="item" onmouseover="this.style.backgroundColor='#ffff66';" onmouseout="this.style.backgroundColor='#d4e3e5';">
+      <td title="Calculates variance"><a href="https://htmlpreview.github.io/?https://github.com/hosseinmoein/DataFrame/blob/master/docs/HTML/VarVisitor.html">VarVisitor</a>{}</td>
+    </tr>
+
+    <tr class="item" onmouseover="this.style.backgroundColor='#ffff66';" onmouseout="this.style.backgroundColor='#d4e3e5';">
+      <td title="Calculates z-score"><a href="https://htmlpreview.github.io/?https://github.com/hosseinmoein/DataFrame/blob/master/docs/HTML/ZScoreVisitor.html">ZScoreVisitor</a>{}</td>
+    </tr>
+
+    <tr class="item" onmouseover="this.style.backgroundColor='#ffff66';" onmouseout="this.style.backgroundColor='#d4e3e5';">
+      <td title="These algorithms calculate various tests" style="text-align:center;background-color:LightGrey;color:DarkBlue">Tests &nbsp;&nbsp; <font size="+3">&#128221;</font></td>
+    </tr>
+
+    <tr class="item" onmouseover="this.style.backgroundColor='#ffff66';" onmouseout="this.style.backgroundColor='#d4e3e5';">
+      <td title="Calculates Anderson-Darling test"><a href="https://htmlpreview.github.io/?https://github.com/hosseinmoein/DataFrame/blob/master/docs/HTML/AndersonDarlingTestVisitor.html">AndersonDarlingTestVisitor</a>{}</td>
+    </tr>
+
+    <tr class="item" onmouseover="this.style.backgroundColor='#ffff66';" onmouseout="this.style.backgroundColor='#d4e3e5';">
+      <td title="Calculates Cramer-von Mises test"><a href="https://htmlpreview.github.io/?https://github.com/hosseinmoein/DataFrame/blob/master/docs/HTML/CramerVonMisesTestVisitor.html">CramerVonMisesTestVisitor</a>{}</td>
+    </tr>
+
+    <tr class="item" onmouseover="this.style.backgroundColor='#ffff66';" onmouseout="this.style.backgroundColor='#d4e3e5';">
+      <td title="Calculates Two-sample Kolmogorov–Smirnov test"><a href="https://htmlpreview.github.io/?https://github.com/hosseinmoein/DataFrame/blob/master/docs/HTML/KolmoSmirnovTestVisitor.html">KolmoSmirnovTestVisitor</a>{}</td>
+    </tr>
+
+    <tr class="item" onmouseover="this.style.backgroundColor='#ffff66';" onmouseout="this.style.backgroundColor='#d4e3e5';">
+      <td title="Calculates Mann-Whitney U test"><a href="https://htmlpreview.github.io/?https://github.com/hosseinmoein/DataFrame/blob/master/docs/HTML/MannWhitneyUTestVisitor.html">MannWhitneyUTestVisitor</a>{}</td>
+    </tr>
+
+    <tr class="item" onmouseover="this.style.backgroundColor='#ffff66';" onmouseout="this.style.backgroundColor='#d4e3e5';">
+      <td title="Calculates Shapiro-Wilk test"><a href="https://htmlpreview.github.io/?https://github.com/hosseinmoein/DataFrame/blob/master/docs/HTML/ShapiroWilkTestVisitor.html">ShapiroWilkTestVisitor</a>{}</td>
+    </tr>
+
+    <tr class="item" onmouseover="this.style.backgroundColor='#ffff66';" onmouseout="this.style.backgroundColor='#d4e3e5';">
+      <td title="Calculates Student t-test"><a href="https://htmlpreview.github.io/?https://github.com/hosseinmoein/DataFrame/blob/master/docs/HTML/TTestVisitor.html">TTestVisitor</a>{}</td>
+    </tr>
+
+    <tr class="item" onmouseover="this.style.backgroundColor='#ffff66';" onmouseout="this.style.backgroundColor='#d4e3e5';">
+      <td title="These algorithms calculate averages" style="text-align:center;background-color:LightGrey;color:DarkBlue">Averages &nbsp;&nbsp; <font size="+3">&#128200;</font></td>
+    </tr>
+
+    <tr class="item" onmouseover="this.style.backgroundColor='#ffff66';" onmouseout="this.style.backgroundColor='#d4e3e5';">
+      <td title="Calculates Geometric mean"><a href="https://htmlpreview.github.io/?https://github.com/hosseinmoein/DataFrame/blob/master/docs/HTML/MeanVisitor.html">GeometricMeanVisitor</a>{}</td>
+    </tr>
+
+    <tr class="item" onmouseover="this.style.backgroundColor='#ffff66';" onmouseout="this.style.backgroundColor='#d4e3e5';">
+      <td title="Calculatews harmonic mean"><a href="https://htmlpreview.github.io/?https://github.com/hosseinmoein/DataFrame/blob/master/docs/HTML/MeanVisitor.html">HarmonicMeanVisitor</a>{}</td>
+    </tr>
+
+    <tr class="item" onmouseover="this.style.backgroundColor='#ffff66';" onmouseout="this.style.backgroundColor='#d4e3e5';">
+      <td title="Calculates rolling mean using linear regression"><a href="https://htmlpreview.github.io/?https://github.com/hosseinmoein/DataFrame/blob/master/docs/HTML/LinregMovingMeanVisitor.html">LinregMovingMeanVisitor</a>{}</td>
+    </tr>
+
+    <tr class="item" onmouseover="this.style.backgroundColor='#ffff66';" onmouseout="this.style.backgroundColor='#d4e3e5';">
+      <td title="Calculates median"><a href="https://htmlpreview.github.io/?https://github.com/hosseinmoein/DataFrame/blob/master/docs/HTML/MedianVisitor.html">MedianVisitor</a>{}</td>
+    </tr>
+
+    <tr class="item" onmouseover="this.style.backgroundColor='#ffff66';" onmouseout="this.style.backgroundColor='#d4e3e5';">
+      <td title="Calculates mean"><a href="https://htmlpreview.github.io/?https://github.com/hosseinmoein/DataFrame/blob/master/docs/HTML/MeanVisitor.html">MeanVisitor</a>{}</td>
+    </tr>
+
+    <tr class="item" onmouseover="this.style.backgroundColor='#ffff66';" onmouseout="this.style.backgroundColor='#d4e3e5';">
+      <td title="Calculates quadratic mean"><a href="https://htmlpreview.github.io/?https://github.com/hosseinmoein/DataFrame/blob/master/docs/HTML/MeanVisitor.html">QuadraticMeanVisitor</a>{}</td>
+    </tr>
+
+    <tr class="item" onmouseover="this.style.backgroundColor='#ffff66';" onmouseout="this.style.backgroundColor='#d4e3e5';">
+      <td title="Calculates Welford's algorithm mean"><a href="https://htmlpreview.github.io/?https://github.com/hosseinmoein/DataFrame/blob/master/docs/HTML/MeanVisitor.html">StableMeanVisitor</a>{}</td>
+    </tr>
+
+    <tr class="item" onmouseover="this.style.backgroundColor='#ffff66';" onmouseout="this.style.backgroundColor='#d4e3e5';">
+      <td title="Calculates rolling values of symmetric moving average"><a href="https://htmlpreview.github.io/?https://github.com/hosseinmoein/DataFrame/blob/master/docs/HTML/SymmTriangleMovingMeanVisitor.html">SymmTriangleMovingMeanVisitor</a>{}</td>
+    </tr>
+
+    <tr class="item" onmouseover="this.style.backgroundColor='#ffff66';" onmouseout="this.style.backgroundColor='#d4e3e5';">
+      <td title="Calculates weighted mean"><a href="https://htmlpreview.github.io/?https://github.com/hosseinmoein/DataFrame/blob/master/docs/HTML/MeanVisitor.html">WeightedMeanVisitor</a>{}</td>
+    </tr>
+
+    <tr class="item" onmouseover="this.style.backgroundColor='#ffff66';" onmouseout="this.style.backgroundColor='#d4e3e5';">
+      <td title="Calculates zero lag moving average"><a href="https://htmlpreview.github.io/?https://github.com/hosseinmoein/DataFrame/blob/master/docs/HTML/ZeroLagMovingMeanVisitor.html">ZeroLagMovingMeanVisitor</a>{}</td>
+    </tr>
+
+    <tr class="item" onmouseover="this.style.backgroundColor='#ffff66';" onmouseout="this.style.backgroundColor='#d4e3e5';">
+      <td title="These algorithms calculate min or max values" style="text-align:center;background-color:LightGrey;color:DarkBlue">Min/Max Algorithms &nbsp;&nbsp; <font size="+3">&#127956;</font></td>
+    </tr>
+
+    <tr class="item" onmouseover="this.style.backgroundColor='#ffff66';" onmouseout="this.style.backgroundColor='#d4e3e5';">
+      <td title="Finds the sub-interval with maximum sum"><a href="https://htmlpreview.github.io/?https://github.com/hosseinmoein/DataFrame/blob/master/docs/HTML/MaxSubArrayVisitor.html">MaxSubArrayVisitor</a>{}</td>
+    </tr>
+
+    <tr class="item" onmouseover="this.style.backgroundColor='#ffff66';" onmouseout="this.style.backgroundColor='#d4e3e5';">
+      <td title="Calculates max"><a href="https://htmlpreview.github.io/?https://github.com/hosseinmoein/DataFrame/blob/master/docs/HTML/MaxVisitor.html">MaxVisitor</a>{}</td>
+    </tr>
+
+    <tr class="item" onmouseover="this.style.backgroundColor='#ffff66';" onmouseout="this.style.backgroundColor='#d4e3e5';">
+      <td title="Finds the sub-interval with minimum sum"><a href="https://htmlpreview.github.io/?https://github.com/hosseinmoein/DataFrame/blob/master/docs/HTML/MaxSubArrayVisitor.html">MinSubArrayVisitor</a>{}</td>
+    </tr>
+
+    <tr class="item" onmouseover="this.style.backgroundColor='#ffff66';" onmouseout="this.style.backgroundColor='#d4e3e5';">
+      <td title="Calculates  min"><a href="https://htmlpreview.github.io/?https://github.com/hosseinmoein/DataFrame/blob/master/docs/HTML/MaxVisitor.html">MinVisitor</a>{}</td>
+    </tr>
+
+    <tr class="item" onmouseover="this.style.backgroundColor='#ffff66';" onmouseout="this.style.backgroundColor='#d4e3e5';">
+      <td title="Finds N largest values"><a href="https://htmlpreview.github.io/?https://github.com/hosseinmoein/DataFrame/blob/master/docs/HTML/NLargestVisitor.html">NLargestVisitor</a>{}</td>
+    </tr>
+
+    <tr class="item" onmouseover="this.style.backgroundColor='#ffff66';" onmouseout="this.style.backgroundColor='#d4e3e5';">
+      <td title="Finds at most N sub-intervals with maximum sum"><a href="https://htmlpreview.github.io/?https://github.com/hosseinmoein/DataFrame/blob/master/docs/HTML/MaxSubArrayVisitor.html">NMaxSubArrayVisitor</a>{}</td>
+    </tr>
+
+    <tr class="item" onmouseover="this.style.backgroundColor='#ffff66';" onmouseout="this.style.backgroundColor='#d4e3e5';">
+      <td title="Finds at most N sub-intervals with minimum sum"><a href="https://htmlpreview.github.io/?https://github.com/hosseinmoein/DataFrame/blob/master/docs/HTML/MaxSubArrayVisitor.html">NMinSubArrayVisitor</a>{}</td>
+    </tr>
+
+    <tr class="item" onmouseover="this.style.backgroundColor='#ffff66';" onmouseout="this.style.backgroundColor='#d4e3e5';">
+      <td title="Finds N smallest values"><a href="https://htmlpreview.github.io/?https://github.com/hosseinmoein/DataFrame/blob/master/docs/HTML/NLargestVisitor.html">NSmallestVisitor</a>{}</td>
+    </tr>
+
+    <tr class="item" onmouseover="this.style.backgroundColor='#ffff66';" onmouseout="this.style.backgroundColor='#d4e3e5';">
+      <td title="These algorithms calculate cumulative values" style="text-align:center;background-color:LightGrey;color:DarkBlue">Cumulative Algorithms &nbsp;&nbsp; <font size="+3">&#127754;</font></td>
+    </tr>
+
+    <tr class="item" onmouseover="this.style.backgroundColor='#ffff66';" onmouseout="this.style.backgroundColor='#d4e3e5';">
+      <td title="Cumulatively counts the number of non-nan data points in the given column"><a href="https://htmlpreview.github.io/?https://github.com/hosseinmoein/DataFrame/blob/master/docs/HTML/CountVisitor.html">CumCountVisitor</a>{}</td>
+    </tr>
+
+    <tr class="item" onmouseover="this.style.backgroundColor='#ffff66';" onmouseout="this.style.backgroundColor='#d4e3e5';">
+      <td title="Calculates cumulative maxes"><a href="https://htmlpreview.github.io/?https://github.com/hosseinmoein/DataFrame/blob/master/docs/HTML/CumMaxVisitor.html">CumMaxVisitor</a>{}</td>
+    </tr>
+
+    <tr class="item" onmouseover="this.style.backgroundColor='#ffff66';" onmouseout="this.style.backgroundColor='#d4e3e5';">
+      <td title="Calculates cumulative mins"><a href="https://htmlpreview.github.io/?https://github.com/hosseinmoein/DataFrame/blob/master/docs/HTML/CumMaxVisitor.html">CumMinVisitor</a>{}</td>
+    </tr>
+
+    <tr class="item" onmouseover="this.style.backgroundColor='#ffff66';" onmouseout="this.style.backgroundColor='#d4e3e5';">
+      <td title="Calculates cumulative products"><a href="https://htmlpreview.github.io/?https://github.com/hosseinmoein/DataFrame/blob/master/docs/HTML/CumProdVisitor.html">CumProdVisitor</a>{}</td>
+    </tr>
+
+    <tr class="item" onmouseover="this.style.backgroundColor='#ffff66';" onmouseout="this.style.backgroundColor='#d4e3e5';">
+      <td title="Calculates cumulative sums"><a href="https://htmlpreview.github.io/?https://github.com/hosseinmoein/DataFrame/blob/master/docs/HTML/CumSumVisitor.html">CumSumVisitor</a>{}</td>
+    </tr>
+
+    <tr class="item" onmouseover="this.style.backgroundColor='#ffff66';" onmouseout="this.style.backgroundColor='#d4e3e5';">
+      <td title="These visitors change the input column in-place " style="text-align:center;background-color:LightGrey;color:DarkBlue">Transformers &amp; Filters &nbsp;&nbsp; <font size="+3">&#x1F9DA;</font></td>
+    </tr>
+
+    <tr class="item" onmouseover="this.style.backgroundColor='#ffff66';" onmouseout="this.style.backgroundColor='#d4e3e5';">
+      <td title="Converts numeric values to their absolute values"><a href="https://htmlpreview.github.io/?https://github.com/hosseinmoein/DataFrame/blob/master/docs/HTML/AbsVisitor.html">AbsVisitor</a>{}</td>
+    </tr>
+
+    <tr class="item" onmouseover="this.style.backgroundColor='#ffff66';" onmouseout="this.style.backgroundColor='#d4e3e5';">
+      <td title="Clips column data to limits"><a href="https://htmlpreview.github.io/?https://github.com/hosseinmoein/DataFrame/blob/master/docs/HTML/ClipVisitor.html">ClipVisitor</a>{}</td>
+    </tr>
+
+    <tr class="item" onmouseover="this.style.backgroundColor='#ffff66';" onmouseout="this.style.backgroundColor='#d4e3e5';">
+      <td title="Applies Ehlers' smoothing band pass filter"><a href="https://htmlpreview.github.io/?https://github.com/hosseinmoein/DataFrame/blob/master/docs/HTML/EhlersHighPassFilterVisitor.html">EhlersBandPassFilterVisitor</a>{}</td>
+    </tr>
+
+    <tr class="item" onmouseover="this.style.backgroundColor='#ffff66';" onmouseout="this.style.backgroundColor='#d4e3e5';">
+      <td title="Applies Ehlers' smoothing high pass filter"><a href="https://htmlpreview.github.io/?https://github.com/hosseinmoein/DataFrame/blob/master/docs/HTML/EhlersHighPassFilterVisitor.html">EhlersHighPassFilterVisitor</a>{}</td>
+    </tr>
+
+    <tr class="item" onmouseover="this.style.backgroundColor='#ffff66';" onmouseout="this.style.backgroundColor='#d4e3e5';">
+      <td title="Exponential smoothing of a time-series"><a href="https://htmlpreview.github.io/?https://github.com/hosseinmoein/DataFrame/blob/master/docs/HTML/ExpoSmootherVisitor.html">ExpoSmootherVisitor</a>{}</td>
+    </tr>
+
+    <tr class="item" onmouseover="this.style.backgroundColor='#ffff66';" onmouseout="this.style.backgroundColor='#d4e3e5';">
+      <td title="Double (Holt-Winters) exponential smoothing of a time-series"><a href="https://htmlpreview.github.io/?https://github.com/hosseinmoein/DataFrame/blob/master/docs/HTML/ExpoSmootherVisitor.html">HWExpoSmootherVisitor</a>{}</td>
+    </tr>
+
+    <tr class="item" onmouseover="this.style.backgroundColor='#ffff66';" onmouseout="this.style.backgroundColor='#d4e3e5';">
+      <td title="Plug in other algorithms into these adopters" style="text-align:center;background-color:LightGrey;color:DarkBlue">Adopters &nbsp;&nbsp; <font size="+3">&#128141;</font></td>
+    </tr>
+
+    <tr class="item" onmouseover="this.style.backgroundColor='#ffff66';" onmouseout="this.style.backgroundColor='#d4e3e5';">
+      <td title="Applies calculations in a expanding rolling window"><a href="https://htmlpreview.github.io/?https://github.com/hosseinmoein/DataFrame/blob/master/docs/HTML/ExpandingRollAdopter.html">ExpandingRollAdopter</a>{}</td>
+    </tr>
+
+    <tr class="item" onmouseover="this.style.backgroundColor='#ffff66';" onmouseout="this.style.backgroundColor='#d4e3e5';">
+      <td title="Visitor adopter for rolling"><a href="https://htmlpreview.github.io/?https://github.com/hosseinmoein/DataFrame/blob/master/docs/HTML/SimpleRollAdopter.html">SimpleRollAdopter</a>{}</td>
+    </tr>
+
+    <tr class="item" onmouseover="this.style.backgroundColor='#ffff66';" onmouseout="this.style.backgroundColor='#d4e3e5';">
+      <td title="Visitor adopter for rolling over every Nth element"><a href="https://htmlpreview.github.io/?https://github.com/hosseinmoein/DataFrame/blob/master/docs/HTML/StepRollAdopter.html">StepRollAdopter</a>{}</td>
+    </tr>
+
+    <tr class="item" onmouseover="this.style.backgroundColor='#ffff66';" onmouseout="this.style.backgroundColor='#d4e3e5';">
+      <td title="These are miscellaneous analysis" style="text-align:center;background-color:LightGrey;color:DarkBlue">Miscellaneous &nbsp;&nbsp; <font size="+3">&#x1F9A9;</font></td>
+    </tr>
+
+    <tr class="item" onmouseover="this.style.backgroundColor='#ffff66';" onmouseout="this.style.backgroundColor='#d4e3e5';">
+      <td title="Counts the number of data points in the given column"><a href="https://htmlpreview.github.io/?https://github.com/hosseinmoein/DataFrame/blob/master/docs/HTML/CountVisitor.html">CountVisitor</a>{}</td>
+    </tr>
+
+    <tr class="item" onmouseover="this.style.backgroundColor='#ffff66';" onmouseout="this.style.backgroundColor='#d4e3e5';">
+      <td title="Calculates the diff between shifted values"><a href="https://htmlpreview.github.io/?https://github.com/hosseinmoein/DataFrame/blob/master/docs/HTML/DiffVisitor.html">DiffVisitor</a>{}</td>
+    </tr>
+
+    <tr class="item" onmouseover="this.style.backgroundColor='#ffff66';" onmouseout="this.style.backgroundColor='#d4e3e5';">
+      <td title="Gives you the first dataitem in the given column"><a href="https://htmlpreview.github.io/?https://github.com/hosseinmoein/DataFrame/blob/master/docs/HTML/FirstVisitor.html">FirstVisitor</a>{}</td>
+    </tr>
+
+    <tr class="item" onmouseover="this.style.backgroundColor='#ffff66';" onmouseout="this.style.backgroundColor='#d4e3e5';">
+      <td title="Gives you the last dataitem in the given column"><a href="https://htmlpreview.github.io/?https://github.com/hosseinmoein/DataFrame/blob/master/docs/HTML/FirstVisitor.html">LastVisitor</a>{}</td>
+    </tr>
+
+    <tr class="item" onmouseover="this.style.backgroundColor='#ffff66';" onmouseout="this.style.backgroundColor='#d4e3e5';">
+      <td title="Calculates product"><a href="https://htmlpreview.github.io/?https://github.com/hosseinmoein/DataFrame/blob/master/docs/HTML/ProdVisitor.html">ProdVisitor</a>{}</td>
+    </tr>
+
+    <tr class="item" onmouseover="this.style.backgroundColor='#ffff66';" onmouseout="this.style.backgroundColor='#d4e3e5';">
+      <td title="Calculates sum"><a href="https://htmlpreview.github.io/?https://github.com/hosseinmoein/DataFrame/blob/master/docs/HTML/SumVisitor.html">SumVisitor</a>{}</td>
+    </tr>
+
+  </table>
+  </div>
+
+  <div class="column">
+  <table id="hmdf_table" align="center" class="hovertable">
+    <tr>
+      <th title="These are visitors mostly used in ML analysis"><font color="white">Artificial-Intelligence<BR>Visitors</font></th>
+    </tr>
+
+    <tr class="item" onmouseover="this.style.backgroundColor='#ffff66';" onmouseout="this.style.backgroundColor='#d4e3e5';">
+      <td title="These are machine learning analysis" style="text-align:center;background-color:LightGrey;color:DarkBlue">Machine Learning &nbsp;&nbsp; <font size="+3">&#x1F9DB;</font></td>
+    </tr>
+
+    <tr class="item" onmouseover="this.style.backgroundColor='#ffff66';" onmouseout="this.style.backgroundColor='#d4e3e5';">
+      <td title="Calculates rolling rate of change between the source and a moving average"><a href="https://htmlpreview.github.io/?https://github.com/hosseinmoein/DataFrame/blob/master/docs/HTML/BiasVisitor.html">BiasVisitor</a>{}</td>
+    </tr>
+
+    <tr class="item" onmouseover="this.style.backgroundColor='#ffff66';" onmouseout="this.style.backgroundColor='#d4e3e5';">
+      <td title="Decomposes time-series into trend, seasonal, residual"><a href="https://htmlpreview.github.io/?https://github.com/hosseinmoein/DataFrame/blob/master/docs/HTML/DecomposeVisitor.html">DecomposeVisitor</a>{}</td>
+    </tr>
+
+    <tr class="item" onmouseover="this.style.backgroundColor='#ffff66';" onmouseout="this.style.backgroundColor='#d4e3e5';">
+      <td title="Calculates DTW distance between two columns"><a href="https://htmlpreview.github.io/?https://github.com/hosseinmoein/DataFrame/blob/master/docs/HTML/DynamicTimeWarpVisitor.html">DynamicTimeWarpVisitor</a>{}</td>
+    </tr>
+
+    <tr class="item" onmouseover="this.style.backgroundColor='#ffff66';" onmouseout="this.style.backgroundColor='#d4e3e5';">
+      <td title="Calculates information Entropy"><a href="https://htmlpreview.github.io/?https://github.com/hosseinmoein/DataFrame/blob/master/docs/HTML/EntropyVisitor.html">EntropyVisitor</a>{}</td>
+    </tr>
+
+    <tr class="item" onmouseover="this.style.backgroundColor='#ffff66';" onmouseout="this.style.backgroundColor='#d4e3e5';">
+      <td title="Calculate Fast Fourier Transform"><a href="https://htmlpreview.github.io/?https://github.com/hosseinmoein/DataFrame/blob/master/docs/HTML/FastFourierTransVisitor.html">FastFourierTransVisitor</a>{}</td>
+    </tr>
+
+    <tr class="item" onmouseover="this.style.backgroundColor='#ffff66';" onmouseout="this.style.backgroundColor='#d4e3e5';">
+      <td title="Calculates purity of the data column"><a href="https://htmlpreview.github.io/?https://github.com/hosseinmoein/DataFrame/blob/master/docs/HTML/EntropyVisitor.html">ImpurityVisitor</a>{}</td>
+    </tr>
+
+    <tr class="item" onmouseover="this.style.backgroundColor='#ffff66';" onmouseout="this.style.backgroundColor='#d4e3e5';">
+      <td title="Calculates different loss functions"><a href="https://htmlpreview.github.io/?https://github.com/hosseinmoein/DataFrame/blob/master/docs/HTML/LossFuncVisitor.html">LossFunctionVisitor</a>{}</td>
+    </tr>
+
+    <tr class="item" onmouseover="this.style.backgroundColor='#ffff66';" onmouseout="this.style.backgroundColor='#d4e3e5';">
+      <td title="Calculates mutual information between two variables"><a href="https://htmlpreview.github.io/?https://github.com/hosseinmoein/DataFrame/blob/master/docs/HTML/MutualInfoVisitor.html">MutualInfoVisitor</a>{}</td>
+    </tr>
+
+    <tr class="item" onmouseover="this.style.backgroundColor='#ffff66';" onmouseout="this.style.backgroundColor='#d4e3e5';">
+      <td title="Normalizes column data"><a href="https://htmlpreview.github.io/?https://github.com/hosseinmoein/DataFrame/blob/master/docs/HTML/NormalizeVisitor.html">NormalizeVisitor</a>{}</td>
+    </tr>
+
+    <tr class="item" onmouseover="this.style.backgroundColor='#ffff66';" onmouseout="this.style.backgroundColor='#d4e3e5';">
+      <td title="Calculates policy learning loss function"><a href="https://htmlpreview.github.io/?https://github.com/hosseinmoein/DataFrame/blob/master/docs/HTML/PolicyLearningLossVisitor.html">PolicyLearningLossVisitor</a>{}</td>
+    </tr>
+
+    <tr class="item" onmouseover="this.style.backgroundColor='#ffff66';" onmouseout="this.style.backgroundColor='#d4e3e5';">
+      <td title="Converts a column to a probability distribution"><a href="https://htmlpreview.github.io/?https://github.com/hosseinmoein/DataFrame/blob/master/docs/HTML/NormalizeVisitor.html">ProbabilityDistVisitor</a>{}</td>
+    </tr>
+
+    <tr class="item" onmouseover="this.style.backgroundColor='#ffff66';" onmouseout="this.style.backgroundColor='#d4e3e5';">
+      <td title="Calculates Rectifing functions"><a href="https://htmlpreview.github.io/?https://github.com/hosseinmoein/DataFrame/blob/master/docs/HTML/SigmoidVisitor.html">RectifyVisitor</a>{}</td>
+    </tr>
+
+    <tr class="item" onmouseover="this.style.backgroundColor='#ffff66';" onmouseout="this.style.backgroundColor='#d4e3e5';">
+      <td title="Finds seasonality in the given column (time series)"><a href="https://htmlpreview.github.io/?https://github.com/hosseinmoein/DataFrame/blob/master/docs/HTML/SeasonalPeriodVisitor.html">SeasonalPeriodVisitor</a>{}</td>
+    </tr>
+    <tr class="item" onmouseover="this.style.backgroundColor='#ffff66';" onmouseout="this.style.backgroundColor='#d4e3e5';">
+      <td title="Calculates Sigmoid functions"><a href="https://htmlpreview.github.io/?https://github.com/hosseinmoein/DataFrame/blob/master/docs/HTML/SigmoidVisitor.html">SigmoidVisitor</a>{}</td>
+    </tr>
+
+    <tr class="item" onmouseover="this.style.backgroundColor='#ffff66';" onmouseout="this.style.backgroundColor='#d4e3e5';">
+      <td title="Calculates simple linear regression"><a href="https://htmlpreview.github.io/?https://github.com/hosseinmoein/DataFrame/blob/master/docs/HTML/SLRegressionVisitor.html">SLRegressionVisitor</a>{}</td>
+    </tr>
+
+    <tr class="item" onmouseover="this.style.backgroundColor='#ffff66';" onmouseout="this.style.backgroundColor='#d4e3e5';">
+      <td title="Standardizes column data"><a href="https://htmlpreview.github.io/?https://github.com/hosseinmoein/DataFrame/blob/master/docs/HTML/NormalizeVisitor.html">StandardizeVisitor</a>{}</td>
+    </tr>
+
+    <tr class="item" onmouseover="this.style.backgroundColor='#ffff66';" onmouseout="this.style.backgroundColor='#d4e3e5';">
+      <td title="Calculates columns similarity"><a href="https://htmlpreview.github.io/?https://github.com/hosseinmoein/DataFrame/blob/master/docs/HTML/VectorSimilarityVisitor.html">VectorSimilarityVisitor</a>{}</td>
+    </tr>
+
+    <tr class="item" onmouseover="this.style.backgroundColor='#ffff66';" onmouseout="this.style.backgroundColor='#d4e3e5';">
+      <td title="These algorithms detect anomalies in data" style="text-align:center;background-color:LightGrey;color:DarkBlue">Anomaly Detection &nbsp;&nbsp; <font size="+3">&#128373;</font></td>
+    </tr>
+
+    <tr class="item" onmouseover="this.style.backgroundColor='#ffff66';" onmouseout="this.style.backgroundColor='#d4e3e5';">
+      <td title="Finds outliers by using FFT algorithm"><a href="https://htmlpreview.github.io/?https://github.com/hosseinmoein/DataFrame/blob/master/docs/HTML/AnomalyDetectByFFTVisitor.html">AnomalyDetectByFFTVisitor</a>{}</td>
+    </tr>
+
+    <tr class="item" onmouseover="this.style.backgroundColor='#ffff66';" onmouseout="this.style.backgroundColor='#d4e3e5';">
+      <td title="Finds outliers by using IQR algorithm"><a href="https://htmlpreview.github.io/?https://github.com/hosseinmoein/DataFrame/blob/master/docs/HTML/AnomalyDetectByIQRVisitor.html">AnomalyDetectByIQRVisitor</a>{}</td>
+    </tr>
+
+    <tr class="item" onmouseover="this.style.backgroundColor='#ffff66';" onmouseout="this.style.backgroundColor='#d4e3e5';">
+      <td title="Finds outliers by using LOF algorithm"><a href="https://htmlpreview.github.io/?https://github.com/hosseinmoein/DataFrame/blob/master/docs/HTML/AnomalyDetectByLOFVisitor.html">AnomalyDetectByLOFVisitor</a>{}</td>
+    </tr>
+
+    <tr class="item" onmouseover="this.style.backgroundColor='#ffff66';" onmouseout="this.style.backgroundColor='#d4e3e5';">
+      <td title="Finds outliers by using Z-Score"><a href="https://htmlpreview.github.io/?https://github.com/hosseinmoein/DataFrame/blob/master/docs/HTML/AnomalyDetectByZScoreVisitor.html">AnomalyDetectByZScoreVisitor</a>{}</td>
+    </tr>
+
+    <tr class="item" onmouseover="this.style.backgroundColor='#ffff66';" onmouseout="this.style.backgroundColor='#d4e3e5';">
+      <td title="Applies Hampel filter to column data"><a href="https://htmlpreview.github.io/?https://github.com/hosseinmoein/DataFrame/blob/master/docs/HTML/HampelFilterVisitor.html">HampelFilterVisitor</a>{}</td>
+    </tr>
+
+    <tr class="item" onmouseover="this.style.backgroundColor='#ffff66';" onmouseout="this.style.backgroundColor='#d4e3e5';">
+      <td title="These algorithms fit a curve into a dataset" style="text-align:center;background-color:LightGrey;color:DarkBlue">Fitting Algorithms &nbsp;&nbsp; <font size="+3">&#128087;</font></td>
+    </tr>
+
+    <tr class="item" onmouseover="this.style.backgroundColor='#ffff66';" onmouseout="this.style.backgroundColor='#d4e3e5';">
+      <td title="Fits cubic spline function through x-y coordinates"><a href="https://htmlpreview.github.io/?https://github.com/hosseinmoein/DataFrame/blob/master/docs/HTML/PolyFitVisitor.html">CubicSplineFitVisitor</a>{}</td>
+    </tr>
+
+    <tr class="item" onmouseover="this.style.backgroundColor='#ffff66';" onmouseout="this.style.backgroundColor='#d4e3e5';">
+      <td title="Fits exponential function through x-y coordinates"><a href="https://htmlpreview.github.io/?https://github.com/hosseinmoein/DataFrame/blob/master/docs/HTML/PolyFitVisitor.html">ExponentialFitVisitor</a>{}</td>
+    </tr>
+
+    <tr class="item" onmouseover="this.style.backgroundColor='#ffff66';" onmouseout="this.style.backgroundColor='#d4e3e5';">
+      <td title="Fits linear function through x-y coordinates"><a href="https://htmlpreview.github.io/?https://github.com/hosseinmoein/DataFrame/blob/master/docs/HTML/PolyFitVisitor.html">LinearFitVisitor</a>{}</td>
+    </tr>
+
+    <tr class="item" onmouseover="this.style.backgroundColor='#ffff66';" onmouseout="this.style.backgroundColor='#d4e3e5';">
+      <td title="Fits y = b0 + b1 * log(x) through x-y coordinates"><a href="https://htmlpreview.github.io/?https://github.com/hosseinmoein/DataFrame/blob/master/docs/HTML/PolyFitVisitor.html">LogFitVisitor</a>{}</td>
+    </tr>
+
+    <tr class="item" onmouseover="this.style.backgroundColor='#ffff66';" onmouseout="this.style.backgroundColor='#d4e3e5';">
+      <td title="Locally Weighted Scatterplot Smoothing"><a href="https://htmlpreview.github.io/?https://github.com/hosseinmoein/DataFrame/blob/master/docs/HTML/LowessVisitor.html">LowessVisitor</a>{}</td>
+    </tr>
+
+    <tr class="item" onmouseover="this.style.backgroundColor='#ffff66';" onmouseout="this.style.backgroundColor='#d4e3e5';">
+      <td title="Fits a n-degree polynomial through x-y coordinates"><a href="https://htmlpreview.github.io/?https://github.com/hosseinmoein/DataFrame/blob/master/docs/HTML/PolyFitVisitor.html">PolyFitVisitor</a>{}</td>
+    </tr>
+
+    <tr class="item" onmouseover="this.style.backgroundColor='#ffff66';" onmouseout="this.style.backgroundColor='#d4e3e5';">
+      <td title="Fits power function through x-y coordinates"><a href="https://htmlpreview.github.io/?https://github.com/hosseinmoein/DataFrame/blob/master/docs/HTML/PolyFitVisitor.html">PowerFitVisitor</a>{}</td>
+    </tr>
+
+    <tr class="item" onmouseover="this.style.backgroundColor='#ffff66';" onmouseout="this.style.backgroundColor='#d4e3e5';">
+      <td title="Fits quadratic function through x-y coordinates"><a href="https://htmlpreview.github.io/?https://github.com/hosseinmoein/DataFrame/blob/master/docs/HTML/PolyFitVisitor.html">QuadraticFitVisitor</a>{}</td>
+    </tr>
+
+    <tr class="item" onmouseover="this.style.backgroundColor='#ffff66';" onmouseout="this.style.backgroundColor='#d4e3e5';">
+      <td title="These algorithms divide a data set into clusters" style="text-align:center;background-color:LightGrey;color:DarkBlue">Clustering Algorithms &nbsp;&nbsp; <font size="+3">&#x1FA90;</font></td>
+    </tr>
+
+    <tr class="item" onmouseover="this.style.backgroundColor='#ffff66';" onmouseout="this.style.backgroundColor='#d4e3e5';">
+      <td title="Calculates affinity propagation"><a href="https://htmlpreview.github.io/?https://github.com/hosseinmoein/DataFrame/blob/master/docs/HTML/AffinityPropVisitor.html">AffinityPropVisitor</a>{}</td>
+    </tr>
+
+    <tr class="item" onmouseover="this.style.backgroundColor='#ffff66';" onmouseout="this.style.backgroundColor='#d4e3e5';">
+      <td title="Performs DBSCAN clustring"><a href="https://htmlpreview.github.io/?https://github.com/hosseinmoein/DataFrame/blob/master/docs/HTML/DBSCANVisitor.html">DBSCANVisitor</a>{}</td>
+    </tr>
+
+    <tr class="item" onmouseover="this.style.backgroundColor='#ffff66';" onmouseout="this.style.backgroundColor='#d4e3e5';">
+      <td title="Performs k-means clustring"><a href="https://htmlpreview.github.io/?https://github.com/hosseinmoein/DataFrame/blob/master/docs/HTML/KMeansVisitor.html">KMeansVisitor</a>{}</td>
+    </tr>
+
+    <tr class="item" onmouseover="this.style.backgroundColor='#ffff66';" onmouseout="this.style.backgroundColor='#d4e3e5';">
+      <td title="Performs mean-shift clustring"><a href="https://htmlpreview.github.io/?https://github.com/hosseinmoein/DataFrame/blob/master/docs/HTML/MeanShiftVisitor.html">MeanShiftVisitor</a>{}</td>
+    </tr>
+
+    <tr class="item" onmouseover="this.style.backgroundColor='#ffff66';" onmouseout="this.style.backgroundColor='#d4e3e5';">
+      <td title="Performs spectral clustring"><a href="https://htmlpreview.github.io/?https://github.com/hosseinmoein/DataFrame/blob/master/docs/HTML/SpectralClusteringVisitor.html">SpectralClusteringVisitor</a>{}</td>
+    </tr>
+
+  </table>
+  </div>
+
+  <div class="column">
+  <table id="hmdf_table" align="center" class="hovertable">
+    <tr>
+      <th title="These are visitors mostly used in financial/trading analysis"><font color="white">Financial Visitors</font></th>
+    </tr>
+
+    <tr class="item" onmouseover="this.style.backgroundColor='#ffff66';" onmouseout="this.style.backgroundColor='#d4e3e5';">
+      <td title="These are miscellaneous analysis" style="text-align:center;background-color:LightGrey;color:DarkBlue">Bread &amp; Butter &nbsp;&nbsp; <font size="+3">&#x1F956;</font></td>
+    </tr>
+
+    <tr class="item" onmouseover="this.style.backgroundColor='#ffff66';" onmouseout="this.style.backgroundColor='#d4e3e5';">
+      <td title="Calculates Bollinger bands"><a href="https://htmlpreview.github.io/?https://github.com/hosseinmoein/DataFrame/blob/master/docs/HTML/BollingerBand.html">BollingerBand</a>{}</td>
+    </tr>
+
+    <tr class="item" onmouseover="this.style.backgroundColor='#ffff66';" onmouseout="this.style.backgroundColor='#d4e3e5';">
+      <td title="Calculates rolling Chande/Kroll trading indicator"><a href="https://htmlpreview.github.io/?https://github.com/hosseinmoein/DataFrame/blob/master/docs/HTML/ChandeKrollStopVisitor.html">ChandeKrollStopVisitor</a>{}</td>
+    </tr>
+
+    <tr class="item" onmouseover="this.style.backgroundColor='#ffff66';" onmouseout="this.style.backgroundColor='#d4e3e5';">
+      <td title="Calculates decay indicator"><a href="https://htmlpreview.github.io/?https://github.com/hosseinmoein/DataFrame/blob/master/docs/HTML/DecayVisitor.html">DecayVisitor</a>{}</td>
+    </tr>
+
+    <tr class="item" onmouseover="this.style.backgroundColor='#ffff66';" onmouseout="this.style.backgroundColor='#d4e3e5';">
+      <td title="Calculates double cross over"><a href="https://htmlpreview.github.io/?https://github.com/hosseinmoein/DataFrame/blob/master/docs/HTML/DoubleCrossOver.html">DoubleCrossOver</a>{}</td>
+    </tr>
+
+    <tr class="item" onmouseover="this.style.backgroundColor='#ffff66';" onmouseout="this.style.backgroundColor='#d4e3e5';">
+      <td title="Calculates Drawdown"><a href="https://htmlpreview.github.io/?https://github.com/hosseinmoein/DataFrame/blob/master/docs/HTML/DrawdownVisitor.html">DrawdownVisitor</a>{}</td>
+    </tr>
+
+    <tr class="item" onmouseover="this.style.backgroundColor='#ffff66';" onmouseout="this.style.backgroundColor='#d4e3e5';">
+      <td title="Calculates Elder's Thermometer indicator"><a href="https://htmlpreview.github.io/?https://github.com/hosseinmoein/DataFrame/blob/master/docs/HTML/EldersThermometerVisitor.html">EldersThermometerVisitor</a>{}</td>
+    </tr>
+
+    <tr class="item" onmouseover="this.style.backgroundColor='#ffff66';" onmouseout="this.style.backgroundColor='#d4e3e5';">
+      <td title="Calculates Fisher transform"><a href="https://htmlpreview.github.io/?https://github.com/hosseinmoein/DataFrame/blob/master/docs/HTML/FisherTransVisitor.html">FisherTransVisitor</a>{}</td>
+    </tr>
+
+    <tr class="item" onmouseover="this.style.backgroundColor='#ffff66';" onmouseout="this.style.backgroundColor='#d4e3e5';">
+      <td title="Calculates Hurst exponent"><a href="https://htmlpreview.github.io/?https://github.com/hosseinmoein/DataFrame/blob/master/docs/HTML/HurstExponentVisitor.html">HurstExponentVisitor</a>{}</td>
+    </tr>
+
+    <tr class="item" onmouseover="this.style.backgroundColor='#ffff66';" onmouseout="this.style.backgroundColor='#d4e3e5';">
+      <td title="Calculates vectors of peaks and valleys"><a href="https://htmlpreview.github.io/?https://github.com/hosseinmoein/DataFrame/blob/master/docs/HTML/PeaksAndValleysVisitor.html">PeaksAndValleysVisitor</a>{}</td>
+    </tr>
+
+    <tr class="item" onmouseover="this.style.backgroundColor='#ffff66';" onmouseout="this.style.backgroundColor='#d4e3e5';">
+      <td title="Calculates Pivot Points, Supports and Resistances indicators"><a href="https://htmlpreview.github.io/?https://github.com/hosseinmoein/DataFrame/blob/master/docs/HTML/PivotPointSRVisitor.html">PivotPointSRVisitor</a>{}</td>
+    </tr>
+
+    <tr class="item" onmouseover="this.style.backgroundColor='#ffff66';" onmouseout="this.style.backgroundColor='#d4e3e5';">
+      <td title="Calculates Price Distance"><a href="https://htmlpreview.github.io/?https://github.com/hosseinmoein/DataFrame/blob/master/docs/HTML/PriceDistanceVisitor.html">PriceDistanceVisitor</a>{}</td>
+    </tr>
+
+    <tr class="item" onmouseover="this.style.backgroundColor='#ffff66';" onmouseout="this.style.backgroundColor='#d4e3e5';">
+      <td title="Calculates psychological line"><a href="https://htmlpreview.github.io/?https://github.com/hosseinmoein/DataFrame/blob/master/docs/HTML/PSLVisitor.html">PSLVisitor</a>{}</td>
+    </tr>
+
+    <tr class="item" onmouseover="this.style.backgroundColor='#ffff66';" onmouseout="this.style.backgroundColor='#d4e3e5';">
+      <td title="Calculates Quantitative Qualitative Estimation Indicator"><a href="https://htmlpreview.github.io/?https://github.com/hosseinmoein/DataFrame/blob/master/docs/HTML/QuantQualEstimationVisitor.html">QuantQualEstimationVisitor</a>{}</td>
+    </tr>
+
+    <tr class="item" onmouseover="this.style.backgroundColor='#ffff66';" onmouseout="this.style.backgroundColor='#d4e3e5';">
+      <td title="Calculates rate of change"><a href="https://htmlpreview.github.io/?https://github.com/hosseinmoein/DataFrame/blob/master/docs/HTML/RateOfChangeVisitor.html">RateOfChangeVisitor</a>{}</td>
+    </tr>
+
+    <tr class="item" onmouseover="this.style.backgroundColor='#ffff66';" onmouseout="this.style.backgroundColor='#d4e3e5';">
+      <td title="Calculates returns"><a href="https://htmlpreview.github.io/?https://github.com/hosseinmoein/DataFrame/blob/master/docs/HTML/ReturnVisitor.html">ReturnVisitor</a>{}</td>
+    </tr>
+
+    <tr class="item" onmouseover="this.style.backgroundColor='#ffff66';" onmouseout="this.style.backgroundColor='#d4e3e5';">
+      <td title="Calculates Sharpe or Sortino ratio"><a href="https://htmlpreview.github.io/?https://github.com/hosseinmoein/DataFrame/blob/master/docs/HTML/SharpeRatioVisitor.html">SharpeRatioVisitor</a>{}</td>
+    </tr>
+
+    <tr class="item" onmouseover="this.style.backgroundColor='#ffff66';" onmouseout="this.style.backgroundColor='#d4e3e5';">
+      <td title="Calculates slope of the diff"><a href="https://htmlpreview.github.io/?https://github.com/hosseinmoein/DataFrame/blob/master/docs/HTML/SlopeVisitor.html">SlopeVisitor</a>{}</td>
+    </tr>
+
+    <tr class="item" onmouseover="this.style.backgroundColor='#ffff66';" onmouseout="this.style.backgroundColor='#d4e3e5';">
+      <td title="Calculates Treynor ratio"><a href="https://htmlpreview.github.io/?https://github.com/hosseinmoein/DataFrame/blob/master/docs/HTML/SharpeRatioVisitor.html">TreynorRatioVisitor</a>{}</td>
+    </tr>
+
+    <tr class="item" onmouseover="this.style.backgroundColor='#ffff66';" onmouseout="this.style.backgroundColor='#d4e3e5';">
+      <td title="Calculates true price range based on low, high, close"><a href="https://htmlpreview.github.io/?https://github.com/hosseinmoein/DataFrame/blob/master/docs/HTML/TrueRangeVisitor.html">TrueRangeVisitor</a>{}</td>
+    </tr>
+
+    <tr class="item" onmouseover="this.style.backgroundColor='#ffff66';" onmouseout="this.style.backgroundColor='#d4e3e5';">
+      <td title="Calculates rolling Vortex trading indicator"><a href="https://htmlpreview.github.io/?https://github.com/hosseinmoein/DataFrame/blob/master/docs/HTML/VortexVisitor.html">VortexVisitor</a>{}</td>
+    </tr>
+
+    <tr class="item" onmouseover="this.style.backgroundColor='#ffff66';" onmouseout="this.style.backgroundColor='#d4e3e5';">
+      <td title="These are volatility based indicators" style="text-align:center;background-color:LightGrey;color:DarkBlue">Volatility Based &nbsp;&nbsp; <font size="+3">&#127755;</font></td>
+    </tr>
+
+    <tr class="item" onmouseover="this.style.backgroundColor='#ffff66';" onmouseout="this.style.backgroundColor='#d4e3e5';">
+      <td title="Calculates Acceleration bands"><a href="https://htmlpreview.github.io/?https://github.com/hosseinmoein/DataFrame/blob/master/docs/HTML/BollingerBand.html">AccelerationBandsVisitor</a>{}</td>
+    </tr>
+
+    <tr class="item" onmouseover="this.style.backgroundColor='#ffff66';" onmouseout="this.style.backgroundColor='#d4e3e5';">
+      <td title="Calculates rolling Garman Klass volatility"><a href="https://htmlpreview.github.io/?https://github.com/hosseinmoein/DataFrame/blob/master/docs/HTML/GarmanKlassVolVisitor.html">GarmanKlassVolVisitor</a>{}</td>
+    </tr>
+
+    <tr class="item" onmouseover="this.style.backgroundColor='#ffff66';" onmouseout="this.style.backgroundColor='#d4e3e5';">
+      <td title="Calculates rolling Hodges-Tompkins volatility"><a href="https://htmlpreview.github.io/?https://github.com/hosseinmoein/DataFrame/blob/master/docs/HTML/HodgesTompkinsVolVisitor.html">HodgesTompkinsVolVisitor</a>{}</td>
+    </tr>
+
+    <tr class="item" onmouseover="this.style.backgroundColor='#ffff66';" onmouseout="this.style.backgroundColor='#d4e3e5';">
+      <td title="Calculates rolling Keltner channels"><a href="https://htmlpreview.github.io/?https://github.com/hosseinmoein/DataFrame/blob/master/docs/HTML/KeltnerChannelsVisitor.html">KeltnerChannelsVisitor</a>{}</td>
+    </tr>
+
+    <tr class="item" onmouseover="this.style.backgroundColor='#ffff66';" onmouseout="this.style.backgroundColor='#d4e3e5';">
+      <td title="Calculates Mass Index for high/low columns"><a href="https://htmlpreview.github.io/?https://github.com/hosseinmoein/DataFrame/blob/master/docs/HTML/MassIndexVisitor.html">MassIndexVisitor</a>{}</td>
+    </tr>
+
+    <tr class="item" onmouseover="this.style.backgroundColor='#ffff66';" onmouseout="this.style.backgroundColor='#d4e3e5';">
+      <td title="Calculates rolling Parkinson volatility"><a href="https://htmlpreview.github.io/?https://github.com/hosseinmoein/DataFrame/blob/master/docs/HTML/ParkinsonVolVisitor.html">ParkinsonVolVisitor</a>{}</td>
+    </tr>
+
+    <tr class="item" onmouseover="this.style.backgroundColor='#ffff66';" onmouseout="this.style.backgroundColor='#d4e3e5';">
+      <td title="Calculates rolling Ulcer Index"><a href="https://htmlpreview.github.io/?https://github.com/hosseinmoein/DataFrame/blob/master/docs/HTML/UlcerIndexVisitor.html">UlcerIndexVisitor</a>{}</td>
+    </tr>
+
+    <tr class="item" onmouseover="this.style.backgroundColor='#ffff66';" onmouseout="this.style.backgroundColor='#d4e3e5';">
+      <td title="Calculates rolling Yang Zhang volatility"><a href="https://htmlpreview.github.io/?https://github.com/hosseinmoein/DataFrame/blob/master/docs/HTML/YangZhangVolVisitor.html">YangZhangVolVisitor</a>{}</td>
+    </tr>
+
+    <tr class="item" onmouseover="this.style.backgroundColor='#ffff66';" onmouseout="this.style.backgroundColor='#d4e3e5';">
+      <td title="These are volume based indicators" style="text-align:center;background-color:LightGrey;color:DarkBlue">Volume Based &nbsp;&nbsp; <font size="+3">&#128226;</font></td>
+    </tr>
+
+    <tr class="item" onmouseover="this.style.backgroundColor='#ffff66';" onmouseout="this.style.backgroundColor='#d4e3e5';">
+      <td title="Calculates Accumulation/Distribution (AD) indicator"><a href="https://htmlpreview.github.io/?https://github.com/hosseinmoein/DataFrame/blob/master/docs/HTML/AccumDistVisitor.html">AccumDistVisitor</a>{}</td>
+    </tr>
+
+    <tr class="item" onmouseover="this.style.backgroundColor='#ffff66';" onmouseout="this.style.backgroundColor='#d4e3e5';">
+      <td title="Calculates Chaikin Money Flow (CMF) indicator"><a href="https://htmlpreview.github.io/?https://github.com/hosseinmoein/DataFrame/blob/master/docs/HTML/ChaikinMoneyFlowVisitor.html">ChaikinMoneyFlowVisitor</a>{}</td>
+    </tr>
+
+    <tr class="item" onmouseover="this.style.backgroundColor='#ffff66';" onmouseout="this.style.backgroundColor='#d4e3e5';">
+      <td title="Calculates Ease Of Movement indicator"><a href="https://htmlpreview.github.io/?https://github.com/hosseinmoein/DataFrame/blob/master/docs/HTML/EaseOfMovementVisitor.html">EaseOfMovementVisitor</a>{}</td>
+    </tr>
+
+    <tr class="item" onmouseover="this.style.backgroundColor='#ffff66';" onmouseout="this.style.backgroundColor='#d4e3e5';">
+      <td title="Calculates On Balance Volume (OBV) indicator"><a href="https://htmlpreview.github.io/?https://github.com/hosseinmoein/DataFrame/blob/master/docs/HTML/OnBalanceVolumeVisitor.html">OnBalanceVolumeVisitor</a>{}</td>
+    </tr>
+
+    <tr class="item" onmouseover="this.style.backgroundColor='#ffff66';" onmouseout="this.style.backgroundColor='#d4e3e5';">
+      <td title="Price Volume Trend (PVT) indicator"><a href="https://htmlpreview.github.io/?https://github.com/hosseinmoein/DataFrame/blob/master/docs/HTML/OnBalanceVolumeVisitor.html">PriceVolumeTrendVisitor</a>{}</td>
+    </tr>
+
+    <tr class="item" onmouseover="this.style.backgroundColor='#ffff66';" onmouseout="this.style.backgroundColor='#d4e3e5';">
+      <td title="Calculates Volume Weighted Average Price and more"><a href="https://htmlpreview.github.io/?https://github.com/hosseinmoein/DataFrame/blob/master/docs/HTML/VWAPVisitor.html">VWAPVisitor</a>{}</td>
+    </tr>
+
+    <tr class="item" onmouseover="this.style.backgroundColor='#ffff66';" onmouseout="this.style.backgroundColor='#d4e3e5';">
+      <td title="Calculates Volume Weighted Bid-Ask Spread and more"><a href="https://htmlpreview.github.io/?https://github.com/hosseinmoein/DataFrame/blob/master/docs/HTML/VWBASVisitor.html">VWBASVisitor</a>{}</td>
+    </tr>
+
+    <tr class="item" onmouseover="this.style.backgroundColor='#ffff66';" onmouseout="this.style.backgroundColor='#d4e3e5';">
+      <td title="These are oscillators" style="text-align:center;background-color:LightGrey;color:DarkBlue">Oscillators &nbsp;&nbsp; <font size="+3">&#127926;</font></td>
+    </tr>
+
+    <tr class="item" onmouseover="this.style.backgroundColor='#ffff66';" onmouseout="this.style.backgroundColor='#d4e3e5';">
+      <td title="Calculates Balance of Power indicator"><a href="https://htmlpreview.github.io/?https://github.com/hosseinmoein/DataFrame/blob/master/docs/HTML/BalanceOfPowerVisitor.html">BalanceOfPowerVisitor</a>{}</td>
+    </tr>
+
+    <tr class="item" onmouseover="this.style.backgroundColor='#ffff66';" onmouseout="this.style.backgroundColor='#d4e3e5';">
+      <td title="Calculates rolling values of Detrend Price Oscillator"><a href="https://htmlpreview.github.io/?https://github.com/hosseinmoein/DataFrame/blob/master/docs/HTML/DetrendPriceOsciVisitor.html">DetrendPriceOsciVisitor</a>{}</td>
+    </tr>
+
+    <tr class="item" onmouseover="this.style.backgroundColor='#ffff66';" onmouseout="this.style.backgroundColor='#d4e3e5';">
+      <td title="Calculates Elder's Force Index (ERI) indicator"><a href="https://htmlpreview.github.io/?https://github.com/hosseinmoein/DataFrame/blob/master/docs/HTML/EldersForceIndexVisitor.html">EldersForceIndexVisitor</a>{}</td>
+    </tr>
+
+    <tr class="item" onmouseover="this.style.backgroundColor='#ffff66';" onmouseout="this.style.backgroundColor='#d4e3e5';">
+      <td title="Calculates moving average convergence/divergence oscillator"><a href="https://htmlpreview.github.io/?https://github.com/hosseinmoein/DataFrame/blob/master/docs/HTML/MACDVisitor.html">MACDVisitor</a>{}</td>
+    </tr>
+
+    <tr class="item" onmouseover="this.style.backgroundColor='#ffff66';" onmouseout="this.style.backgroundColor='#d4e3e5';">
+      <td title="Calculates rolling Percentage Price Oscillator"><a href="https://htmlpreview.github.io/?https://github.com/hosseinmoein/DataFrame/blob/master/docs/HTML/PercentPriceOSCIVisitor.html">PercentPriceOSCIVisitor</a>{}</td>
+    </tr>
+
+    <tr class="item" onmouseover="this.style.backgroundColor='#ffff66';" onmouseout="this.style.backgroundColor='#d4e3e5';">
+      <td title="Calculates Pretty Good oscillator"><a href="https://htmlpreview.github.io/?https://github.com/hosseinmoein/DataFrame/blob/master/docs/HTML/PrettyGoodOsciVisitor.html">PrettyGoodOsciVisitor</a>{}</td>
+    </tr>
+
+    <tr class="item" onmouseover="this.style.backgroundColor='#ffff66';" onmouseout="this.style.backgroundColor='#d4e3e5';">
+      <td title="Calculates Relative Vigor Index indicator"><a href="https://htmlpreview.github.io/?https://github.com/hosseinmoein/DataFrame/blob/master/docs/HTML/RelativeVigorIndexVisitor.html">RelativeVigorIndexVisitor</a>{}</td>
+    </tr>
+
+    <tr class="item" onmouseover="this.style.backgroundColor='#ffff66';" onmouseout="this.style.backgroundColor='#d4e3e5';">
+      <td title="Calculates Relative Strength Index"><a href="https://htmlpreview.github.io/?https://github.com/hosseinmoein/DataFrame/blob/master/docs/HTML/RSIVisitor.html">RSIVisitor</a>{}</td>
+    </tr>
+
+    <tr class="item" onmouseover="this.style.backgroundColor='#ffff66';" onmouseout="this.style.backgroundColor='#d4e3e5';">
+      <td title="Calculates The Relative Strength Xtra from Jurik Research"><a href="https://htmlpreview.github.io/?https://github.com/hosseinmoein/DataFrame/blob/master/docs/HTML/RSIVisitor.html">RSXVisitor</a>{}</td>
+    </tr>
+
+    <tr class="item" onmouseover="this.style.backgroundColor='#ffff66';" onmouseout="this.style.backgroundColor='#d4e3e5';">
+      <td title="Calculates The Relative Volatility Index from Jurik Research"><a href="https://htmlpreview.github.io/?https://github.com/hosseinmoein/DataFrame/blob/master/docs/HTML/RSIVisitor.html">RVIVisitor</a>{}</td>
+    </tr>
+
+    <tr class="item" onmouseover="this.style.backgroundColor='#ffff66';" onmouseout="this.style.backgroundColor='#d4e3e5';">
+      <td title="Calculates rolling Ultimate Oscillator"><a href="https://htmlpreview.github.io/?https://github.com/hosseinmoein/DataFrame/blob/master/docs/HTML/UltimateOSCIVisitor.html">UltimateOSCIVisitor</a>{}</td>
+    </tr>
+
+    <tr class="item" onmouseover="this.style.backgroundColor='#ffff66';" onmouseout="this.style.backgroundColor='#d4e3e5';">
+      <td title="These are momentum based indicators" style="text-align:center;background-color:LightGrey;color:DarkBlue">Momentum Based &nbsp;&nbsp; <font size="+3">&#x1F3C3;</font></td>
+    </tr>
+
+    <tr class="item" onmouseover="this.style.backgroundColor='#ffff66';" onmouseout="this.style.backgroundColor='#d4e3e5';">
+      <td title="Calculates rolling Coppock curve"><a href="https://htmlpreview.github.io/?https://github.com/hosseinmoein/DataFrame/blob/master/docs/HTML/CoppockCurveVisitor.html">CoppockCurveVisitor</a>{}</td>
+    </tr>
+
+    <tr class="item" onmouseover="this.style.backgroundColor='#ffff66';" onmouseout="this.style.backgroundColor='#d4e3e5';">
+      <td title="Calculates Ease Of Movement indicator"><a href="https://htmlpreview.github.io/?https://github.com/hosseinmoein/DataFrame/blob/master/docs/HTML/EaseOfMovementVisitor.html">EaseOfMovementVisitor</a>{}</td>
+    </tr>
+
+    <tr class="item" onmouseover="this.style.backgroundColor='#ffff66';" onmouseout="this.style.backgroundColor='#d4e3e5';">
+      <td title="Calculates rolling values of Inertia indicator"><a href="https://htmlpreview.github.io/?https://github.com/hosseinmoein/DataFrame/blob/master/docs/HTML/InertiaVisitor.html">InertiaVisitor</a>{}</td>
+    </tr>
+
+    <tr class="item" onmouseover="this.style.backgroundColor='#ffff66';" onmouseout="this.style.backgroundColor='#d4e3e5';">
+      <td title="Calculates On Balance Volume (OBV) indicator"><a href="https://htmlpreview.github.io/?https://github.com/hosseinmoein/DataFrame/blob/master/docs/HTML/OnBalanceVolumeVisitor.html">OnBalanceVolumeVisitor</a>{}</td>
+    </tr>
+
+    <tr class="item" onmouseover="this.style.backgroundColor='#ffff66';" onmouseout="this.style.backgroundColor='#d4e3e5';">
+      <td title="Calculates Relative Strength Index"><a href="https://htmlpreview.github.io/?https://github.com/hosseinmoein/DataFrame/blob/master/docs/HTML/RSIVisitor.html">RSIVisitor</a>{}</td>
+    </tr>
+
+    <tr class="item" onmouseover="this.style.backgroundColor='#ffff66';" onmouseout="this.style.backgroundColor='#d4e3e5';">
+      <td title="Calculates The Relative Strength Xtra from Jurik Research"><a href="https://htmlpreview.github.io/?https://github.com/hosseinmoein/DataFrame/blob/master/docs/HTML/RSIVisitor.html">RSXVisitor</a>{}</td>
+    </tr>
+
+    <tr class="item" onmouseover="this.style.backgroundColor='#ffff66';" onmouseout="this.style.backgroundColor='#d4e3e5';">
+      <td title="Calculates The Relative Volatility Index from Jurik Research"><a href="https://htmlpreview.github.io/?https://github.com/hosseinmoein/DataFrame/blob/master/docs/HTML/RSIVisitor.html">RVIVisitor</a>{}</td>
+    </tr>
+
+    <tr class="item" onmouseover="this.style.backgroundColor='#ffff66';" onmouseout="this.style.backgroundColor='#d4e3e5';">
+      <td title="Calculates rolling Triple Exponential Average return"><a href="https://htmlpreview.github.io/?https://github.com/hosseinmoein/DataFrame/blob/master/docs/HTML/TrixVisitor.html">TrixVisitor</a>{}</td>
+    </tr>
+
+    <tr class="item" onmouseover="this.style.backgroundColor='#ffff66';" onmouseout="this.style.backgroundColor='#d4e3e5';">
+      <td title="Calculates rolling Williams %R"><a href="https://htmlpreview.github.io/?https://github.com/hosseinmoein/DataFrame/blob/master/docs/HTML/WilliamPrcRVisitor.html">WilliamPrcRVisitor</a>{}</td>
+    </tr>
+
+    <tr class="item" onmouseover="this.style.backgroundColor='#ffff66';" onmouseout="this.style.backgroundColor='#d4e3e5';">
+      <td title="These are time-series smoothers" style="text-align:center;background-color:LightGrey;color:DarkBlue">Smoothers &nbsp;&nbsp; <font size="+3">&#128202;</font></td>
+    </tr>
+
+    <tr class="item" onmouseover="this.style.backgroundColor='#ffff66';" onmouseout="this.style.backgroundColor='#d4e3e5';">
+      <td title="Calculates Ehler's Super Smoother Filter (SSF) indicator"><a href="https://htmlpreview.github.io/?https://github.com/hosseinmoein/DataFrame/blob/master/docs/HTML/EhlerSuperSmootherVisitor.html">EhlerSuperSmootherVisitor</a>{}</td>
+    </tr>
+
+    <tr class="item" onmouseover="this.style.backgroundColor='#ffff66';" onmouseout="this.style.backgroundColor='#d4e3e5';">
+      <td title="Calculates Holt-Winter Channels (HWC) indicator"><a href="https://htmlpreview.github.io/?https://github.com/hosseinmoein/DataFrame/blob/master/docs/HTML/HoltWinterChannelVisitor.html">HoltWinterChannelVisitor</a>{}</td>
+    </tr>
+
+    <tr class="item" onmouseover="this.style.backgroundColor='#ffff66';" onmouseout="this.style.backgroundColor='#d4e3e5';">
+      <td title="Calculates Hull moving averages"><a href="https://htmlpreview.github.io/?https://github.com/hosseinmoein/DataFrame/blob/master/docs/HTML/HullRollingMeanVisitor.html">HullRollingMeanVisitor</a>{}</td>
+    </tr>
+
+    <tr class="item" onmouseover="this.style.backgroundColor='#ffff66';" onmouseout="this.style.backgroundColor='#d4e3e5';">
+      <td title="Calculates Kaufman's adaptive moving average"><a href="https://htmlpreview.github.io/?https://github.com/hosseinmoein/DataFrame/blob/master/docs/HTML/KamaVisitor.html">KamaVisitor</a>{}</td>
+    </tr>
+
+    <tr class="item" onmouseover="this.style.backgroundColor='#ffff66';" onmouseout="this.style.backgroundColor='#d4e3e5';">
+      <td title="Calculates rolling averages of max highs and min lows"><a href="https://htmlpreview.github.io/?https://github.com/hosseinmoein/DataFrame/blob/master/docs/HTML/RollingMidValueVisitor.html">RollingMidValueVisitor</a>{}</td>
+    </tr>
+
+    <tr class="item" onmouseover="this.style.backgroundColor='#ffff66';" onmouseout="this.style.backgroundColor='#d4e3e5';">
+      <td title="Calculates T3 moving average"><a href="https://htmlpreview.github.io/?https://github.com/hosseinmoein/DataFrame/blob/master/docs/HTML/T3MovingMeanVisitor.html">T3MovingMeanVisitor</a>{}</td>
+    </tr>
+
+    <tr class="item" onmouseover="this.style.backgroundColor='#ffff66';" onmouseout="this.style.backgroundColor='#d4e3e5';">
+      <td title="Calculates rolling Triple Exponential Average return"><a href="https://htmlpreview.github.io/?https://github.com/hosseinmoein/DataFrame/blob/master/docs/HTML/TrixVisitor.html">TrixVisitor</a>{}</td>
+    </tr>
+
+    <tr class="item" onmouseover="this.style.backgroundColor='#ffff66';" onmouseout="this.style.backgroundColor='#d4e3e5';">
+      <td title="Calculates Variable Index Dynamic Average (VIDYA) indicator"><a href="https://htmlpreview.github.io/?https://github.com/hosseinmoein/DataFrame/blob/master/docs/HTML/VarIdxDynAvgVisitor.html">VarIdxDynAvgVisitor</a>{}</td>
+    </tr>
+
+    <tr class="item" onmouseover="this.style.backgroundColor='#ffff66';" onmouseout="this.style.backgroundColor='#d4e3e5';">
+      <td title="Calculates Arnaud Legoux Moving Average"><a href="https://htmlpreview.github.io/?https://github.com/hosseinmoein/DataFrame/blob/master/docs/HTML/ArnaudLegouxMAVisitor.html">ArnaudLegouxMAVisitor</a>{}</td>
+    </tr>
+
+    <tr class="item" onmouseover="this.style.backgroundColor='#ffff66';" onmouseout="this.style.backgroundColor='#d4e3e5';">
+      <td title="These are volatility based indicators" style="text-align:center;background-color:LightGrey;color:DarkBlue">Trends &nbsp;&nbsp; <font size="+3">&#8598;</font></td>
+    </tr>
+
+    <tr class="item" onmouseover="this.style.backgroundColor='#ffff66';" onmouseout="this.style.backgroundColor='#d4e3e5';">
+      <td title="Calculates Average Directional Movement Index (ADX)"><a href="https://htmlpreview.github.io/?https://github.com/hosseinmoein/DataFrame/blob/master/docs/HTML/AvgDirMovIdxVisitor.html">AvgDirMovIdxVisitor</a>{}</td>
+    </tr>
+
+    <tr class="item" onmouseover="this.style.backgroundColor='#ffff66';" onmouseout="this.style.backgroundColor='#d4e3e5';">
+      <td title="Calculates rolling Commodity Channel Index"><a href="https://htmlpreview.github.io/?https://github.com/hosseinmoein/DataFrame/blob/master/docs/HTML/CCIVisitor.html">CCIVisitor</a>{}</td>
+    </tr>
+
+    <tr class="item" onmouseover="this.style.backgroundColor='#ffff66';" onmouseout="this.style.backgroundColor='#d4e3e5';">
+      <td title="Calculates rolling Ehlers' Center of Gravity indicator"><a href="https://htmlpreview.github.io/?https://github.com/hosseinmoein/DataFrame/blob/master/docs/HTML/CenterOfGravityVisitor.html">CenterOfGravityVisitor</a>{}</td>
+    </tr>
+
+    <tr class="item" onmouseover="this.style.backgroundColor='#ffff66';" onmouseout="this.style.backgroundColor='#d4e3e5';">
+      <td title="Calculates rolling Choppiness Index indicator"><a href="https://htmlpreview.github.io/?https://github.com/hosseinmoein/DataFrame/blob/master/docs/HTML/ChopIndexVisitor.html">ChopIndexVisitor</a>{}</td>
+    </tr>
+
+    <tr class="item" onmouseover="this.style.backgroundColor='#ffff66';" onmouseout="this.style.backgroundColor='#d4e3e5';">
+      <td title="Calculates Even Better Sine Wave (EBSW) indicator"><a href="https://htmlpreview.github.io/?https://github.com/hosseinmoein/DataFrame/blob/master/docs/HTML/EBSineWaveVisitor.html">EBSineWaveVisitor</a>{}</td>
+    </tr>
+
+    <tr class="item" onmouseover="this.style.backgroundColor='#ffff66';" onmouseout="this.style.backgroundColor='#d4e3e5';">
+      <td title="Calculates Elder Ray Index (ERI) indicator"><a href="https://htmlpreview.github.io/?https://github.com/hosseinmoein/DataFrame/blob/master/docs/HTML/ElderRayIndexVisitor.html">ElderRayIndexVisitor</a>{}</td>
+    </tr>
+
+    <tr class="item" onmouseover="this.style.backgroundColor='#ffff66';" onmouseout="this.style.backgroundColor='#d4e3e5';">
+      <td title="Calculates Heikin Ashi candles"><a href="https://htmlpreview.github.io/?https://github.com/hosseinmoein/DataFrame/blob/master/docs/HTML/HeikinAshiCndlVisitor.html">HeikinAshiCndlVisitor</a>{}</td>
+    </tr>
+
+    <tr class="item" onmouseover="this.style.backgroundColor='#ffff66';" onmouseout="this.style.backgroundColor='#d4e3e5';">
+      <td title="Price Volume Trend (PVT) indicator"><a href="https://htmlpreview.github.io/?https://github.com/hosseinmoein/DataFrame/blob/master/docs/HTML/OnBalanceVolumeVisitor.html">PriceVolumeTrendVisitor</a>{}</td>
+    </tr>
+
+    <tr class="item" onmouseover="this.style.backgroundColor='#ffff66';" onmouseout="this.style.backgroundColor='#d4e3e5';">
+      <td title="Calculates Parabolic Stop And Reverse indicator"><a href="https://htmlpreview.github.io/?https://github.com/hosseinmoein/DataFrame/blob/master/docs/HTML/ParabolicSARVisitor.html">ParabolicSARVisitor</a>{}</td>
+    </tr>
+
+    <tr class="item" onmouseover="this.style.backgroundColor='#ffff66';" onmouseout="this.style.backgroundColor='#d4e3e5';">
+      <td title="Calculates Trade To Market trend indicator"><a href="https://htmlpreview.github.io/?https://github.com/hosseinmoein/DataFrame/blob/master/docs/HTML/TTMTrendVisitor.html">TTMTrendVisitor</a>{}</td>
+    </tr>
+
+    <tr class="item" onmouseover="this.style.backgroundColor='#ffff66';" onmouseout="this.style.backgroundColor='#d4e3e5';">
+      <td title="Calculates Vertical Horizontal Filter (VHF) indicator"><a href="https://htmlpreview.github.io/?https://github.com/hosseinmoein/DataFrame/blob/master/docs/HTML/VertHorizFilterVisitor.html">VertHorizFilterVisitor</a>{}</td>
+    </tr>
+
+  </table>
+  </div>
+
+  <div class="column">
+  <table id="hmdf_table" align="center" class="hovertable">
+    <tr>
+      <th title="These are DataFrame library types"><font color="white">Types/Objects</font></th>
+    </tr>
+
+    <tr class="item" onmouseover="this.style.backgroundColor='#ffff66';" onmouseout="this.style.backgroundColor='#d4e3e5';">
+      <td title="These are DataFrame enum types" style="text-align:center;background-color:LightGrey;color:DarkBlue">Enum Types &nbsp;&nbsp; <font size="+3">&#129419;</font></td>
+    </tr>
+
+    <tr class="item" onmouseover="this.style.backgroundColor='#ffff66';" onmouseout="this.style.backgroundColor='#d4e3e5';">
+      <td title="Specification for Box-Cox transformation"><a href="https://htmlpreview.github.io/?https://github.com/hosseinmoein/DataFrame/blob/master/docs/HTML/BoxCoxVisitor.html">box_cox_type</a>{}</td>
+    </tr>
+
+    <tr class="item" onmouseover="this.style.backgroundColor='#ffff66';" onmouseout="this.style.backgroundColor='#d4e3e5';">
+      <td title="Specification for bucketize()"><a href="https://htmlpreview.github.io/?https://github.com/hosseinmoein/DataFrame/blob/master/docs/HTML/bucketize.html">bucket_type</a>{}</td>
+    </tr>
+
+    <tr class="item" onmouseover="this.style.backgroundColor='#ffff66';" onmouseout="this.style.backgroundColor='#d4e3e5';">
+      <td title="Concatenation policies"><a href="https://htmlpreview.github.io/?https://github.com/hosseinmoein/DataFrame/blob/master/docs/HTML/concat.html">concat_policy</a>{}</td>
+    </tr>
+
+    <tr class="item" onmouseover="this.style.backgroundColor='#ffff66';" onmouseout="this.style.backgroundColor='#d4e3e5';">
+      <td title="Correlation types"><a href="https://htmlpreview.github.io/?https://github.com/hosseinmoein/DataFrame/blob/master/docs/HTML/CorrVisitor.html">correlation_type</a>{}</td>
+    </tr>
+
+    <tr class="item" onmouseover="this.style.backgroundColor='#ffff66';" onmouseout="this.style.backgroundColor='#d4e3e5';">
+      <td title="Specification for time-series decomposition"><a href="https://htmlpreview.github.io/?https://github.com/hosseinmoein/DataFrame/blob/master/docs/HTML/DecomposeVisitor.html">decompose_type</a>{}</td>
+    </tr>
+
+    <tr class="item" onmouseover="this.style.backgroundColor='#ffff66';" onmouseout="this.style.backgroundColor='#d4e3e5';">
+      <td title="Different methods of detecting anomalous data points"><a href="https://htmlpreview.github.io/?https://github.com/hosseinmoein/DataFrame/blob/master/docs/HTML/detect_method.html">detect_method</a>{}</td>
+    </tr>
+
+    <tr class="item" onmouseover="this.style.backgroundColor='#ffff66';" onmouseout="this.style.backgroundColor='#d4e3e5';">
+      <td title="Drop policies"><a href="https://htmlpreview.github.io/?https://github.com/hosseinmoein/DataFrame/blob/master/docs/HTML/drop_missing.html">drop_policy</a>{}</td>
+    </tr>
+
+    <tr class="item" onmouseover="this.style.backgroundColor='#ffff66';" onmouseout="this.style.backgroundColor='#d4e3e5';">
+      <td title="Fill missing policies"><a href="https://htmlpreview.github.io/?https://github.com/hosseinmoein/DataFrame/blob/master/docs/HTML/drop_missing.html">fill_policy</a>{}</td>
+    </tr>
+
+    <tr class="item" onmouseover="this.style.backgroundColor='#ffff66';" onmouseout="this.style.backgroundColor='#d4e3e5';">
+      <td title="Exponential decay types"><a href="https://htmlpreview.github.io/?https://github.com/hosseinmoein/DataFrame/blob/master/docs/HTML/ExponentiallyWeightedMeanVisitor.html">exponential_decay_spec</a>{}</td>
+    </tr>
+
+    <tr class="item" onmouseover="this.style.backgroundColor='#ffff66';" onmouseout="this.style.backgroundColor='#d4e3e5';">
+      <td title="Data types from/to files"><a href="https://htmlpreview.github.io/?https://github.com/hosseinmoein/DataFrame/blob/master/docs/HTML/file_dtypes.html">file_dtypes</a>{}</td>
+    </tr>
+
+    <tr class="item" onmouseover="this.style.backgroundColor='#ffff66';" onmouseout="this.style.backgroundColor='#d4e3e5';">
+      <td title="Specification for Hampel filter"><a href="https://htmlpreview.github.io/?https://github.com/hosseinmoein/DataFrame/blob/master/docs/HTML/HampelFilterVisitor.html">hampel_type</a>{}</td>
+    </tr>
+
+    <tr class="item" onmouseover="this.style.backgroundColor='#ffff66';" onmouseout="this.style.backgroundColor='#d4e3e5';">
+      <td title="Purity calculation methods"><a href="https://htmlpreview.github.io/?https://github.com/hosseinmoein/DataFrame/blob/master/docs/HTML/EntropyVisitor.html">impurity_type</a>{}</td>
+    </tr>
+
+    <tr class="item" onmouseover="this.style.backgroundColor='#ffff66';" onmouseout="this.style.backgroundColor='#d4e3e5';">
+      <td title="Specifies begin/end of a range"><a href="https://htmlpreview.github.io/?https://github.com/hosseinmoein/DataFrame/blob/master/docs/HTML/Index2D.html">Index2D</a>{}</td>
+    </tr>
+
+    <tr class="item" onmouseover="this.style.backgroundColor='#ffff66';" onmouseout="this.style.backgroundColor='#d4e3e5';">
+      <td title="Different I/O formats"><a href="https://htmlpreview.github.io/?https://github.com/hosseinmoein/DataFrame/blob/master/docs/HTML/io_format.html">io_format</a>{}</td>
+    </tr>
+
+    <tr class="item" onmouseover="this.style.backgroundColor='#ffff66';" onmouseout="this.style.backgroundColor='#d4e3e5';">
+      <td title="Join policies"><a href="https://htmlpreview.github.io/?https://github.com/hosseinmoein/DataFrame/blob/master/docs/HTML/join_by_column.html">join_policy</a>{}</td>
+    </tr>
+
+    <tr class="item" onmouseover="this.style.backgroundColor='#ffff66';" onmouseout="this.style.backgroundColor='#d4e3e5';">
+      <td title="Specifies what values to return when calculating Linear Regression moving average"><a href="https://htmlpreview.github.io/?https://github.com/hosseinmoein/DataFrame/blob/master/docs/HTML/LinregMovingMeanVisitor.html">linreg_moving_mean_type</a>{}</td>
+    </tr>
+
+    <tr class="item" onmouseover="this.style.backgroundColor='#ffff66';" onmouseout="this.style.backgroundColor='#d4e3e5';">
+      <td title="Specifies different loss function types"><a href="https://htmlpreview.github.io/?https://github.com/hosseinmoein/DataFrame/blob/master/docs/HTML/LossFuncVisitor.html">loss_function_type</a>{}</td>
+    </tr>
+
+    <tr class="item" onmouseover="this.style.backgroundColor='#ffff66';" onmouseout="this.style.backgroundColor='#d4e3e5';">
+      <td title="Average around average types"><a href="https://htmlpreview.github.io/?https://github.com/hosseinmoein/DataFrame/blob/master/docs/HTML/MADVisitor.html">mad_type</a>{}</td>
+    </tr>
+
+    <tr class="item" onmouseover="this.style.backgroundColor='#ffff66';" onmouseout="this.style.backgroundColor='#d4e3e5';">
+      <td title="Matrix orientation"><a href="https://htmlpreview.github.io/?https://github.com/hosseinmoein/DataFrame/blob/master/docs/HTML/Matrix.html">matrix_orient</a>{}</td>
+    </tr>
+
+    <tr class="item" onmouseover="this.style.backgroundColor='#ffff66';" onmouseout="this.style.backgroundColor='#d4e3e5';">
+      <td title="Mean-shift clustering kernel types"><a href="https://htmlpreview.github.io/?https://github.com/hosseinmoein/DataFrame/blob/master/docs/HTML/MeanShiftVisitor.html">mean_shift_kernel</a>{}</td>
+    </tr>
+
+    <tr class="item" onmouseover="this.style.backgroundColor='#ffff66';" onmouseout="this.style.backgroundColor='#d4e3e5';">
+      <td title="Types of mean/average calculations"><a href="https://htmlpreview.github.io/?https://github.com/hosseinmoein/DataFrame/blob/master/docs/HTML/mean_type.html">mean_type</a>{}</td>
+    </tr>
+
+    <tr class="item" onmouseover="this.style.backgroundColor='#ffff66';" onmouseout="this.style.backgroundColor='#d4e3e5';">
+      <td title="NaN policies"><a href="https://htmlpreview.github.io/?https://github.com/hosseinmoein/DataFrame/blob/master/docs/HTML/nan_policy.html">nan_policy</a>{}</td>
+    </tr>
+
+    <tr class="item" onmouseover="this.style.backgroundColor='#ffff66';" onmouseout="this.style.backgroundColor='#d4e3e5';">
+      <td title="Normalization types"><a href="https://htmlpreview.github.io/?https://github.com/hosseinmoein/DataFrame/blob/master/docs/HTML/NormalizeVisitor.html">normalization_type</a>{}</td>
+    </tr>
+
+    <tr class="item" onmouseover="this.style.backgroundColor='#ffff66';" onmouseout="this.style.backgroundColor='#d4e3e5';">
+      <td title="Pattern types"><a href="https://htmlpreview.github.io/?https://github.com/hosseinmoein/DataFrame/blob/master/docs/HTML/pattern_spec.html">pattern_spec</a>{}</td>
+    </tr>
+
+    <tr class="item" onmouseover="this.style.backgroundColor='#ffff66';" onmouseout="this.style.backgroundColor='#d4e3e5';">
+      <td title="Specifies the methods to generate probability distribution"><a href="https://htmlpreview.github.io/?https://github.com/hosseinmoein/DataFrame/blob/master/docs/HTML/NormalizeVisitor.html">prob_dist_type</a>{}</td>
+    </tr>
+
+    <tr class="item" onmouseover="this.style.backgroundColor='#ffff66';" onmouseout="this.style.backgroundColor='#d4e3e5';">
+      <td title="Quantile policies"><a href="https://htmlpreview.github.io/?https://github.com/hosseinmoein/DataFrame/blob/master/docs/HTML/QuantileVisitor.html">quantile_policy</a>{}</td>
+    </tr>
+
+    <tr class="item" onmouseover="this.style.backgroundColor='#ffff66';" onmouseout="this.style.backgroundColor='#d4e3e5';">
+      <td title="Random policies"><a href="https://htmlpreview.github.io/?https://github.com/hosseinmoein/DataFrame/blob/master/docs/HTML/get_data_by_rand.html">random_policy</a>{}</td>
+    </tr>
+
+    <tr class="item" onmouseover="this.style.backgroundColor='#ffff66';" onmouseout="this.style.backgroundColor='#d4e3e5';">
+      <td title="Rank policies"><a href="https://htmlpreview.github.io/?https://github.com/hosseinmoein/DataFrame/blob/master/docs/HTML/RankVisitor.html">rank_policy</a>{}</td>
+    </tr>
+
+    <tr class="item" onmouseover="this.style.backgroundColor='#ffff66';" onmouseout="this.style.backgroundColor='#d4e3e5';">
+      <td title="Rectifing types"><a href="https://htmlpreview.github.io/?https://github.com/hosseinmoein/DataFrame/blob/master/docs/HTML/SigmoidVisitor.html">rectify_type</a>{}</td>
+    </tr>
+
+    <tr class="item" onmouseover="this.style.backgroundColor='#ffff66';" onmouseout="this.style.backgroundColor='#d4e3e5';">
+      <td title="Specification for removing duplicates"><a href="https://htmlpreview.github.io/?https://github.com/hosseinmoein/DataFrame/blob/master/docs/HTML/remove_duplicates.html">remove_dup_spec</a>{}</td>
+    </tr>
+
+    <tr class="item" onmouseover="this.style.backgroundColor='#ffff66';" onmouseout="this.style.backgroundColor='#d4e3e5';">
+      <td title="Return policies"><a href="https://htmlpreview.github.io/?https://github.com/hosseinmoein/DataFrame/blob/master/docs/HTML/ReturnVisitor.html">return_policy</a>{}</td>
+    </tr>
+
+    <tr class="item" onmouseover="this.style.backgroundColor='#ffff66';" onmouseout="this.style.backgroundColor='#d4e3e5';">
+      <td title="Enumerated type to specify how to roll different statistics over input series"><a href="https://htmlpreview.github.io/?https://github.com/hosseinmoein/DataFrame/blob/master/docs/HTML/roll_policy.html">roll_policy</a>{}</td>
+    </tr>
+
+    <tr class="item" onmouseover="this.style.backgroundColor='#ffff66';" onmouseout="this.style.backgroundColor='#d4e3e5';">
+      <td title="Shift policies"><a href="https://htmlpreview.github.io/?https://github.com/hosseinmoein/DataFrame/blob/master/docs/HTML/self_shift.html">shift_policy</a>{}</td>
+    </tr>
+
+    <tr class="item" onmouseover="this.style.backgroundColor='#ffff66';" onmouseout="this.style.backgroundColor='#d4e3e5';">
+      <td title="Specification for Sigmoid function"><a href="https://htmlpreview.github.io/?https://github.com/hosseinmoein/DataFrame/blob/master/docs/HTML/SigmoidVisitor.html">sigmoid_type</a>{}</td>
+    </tr>
+
+    <tr class="item" onmouseover="this.style.backgroundColor='#ffff66';" onmouseout="this.style.backgroundColor='#d4e3e5';">
+      <td title="Sort specifications"><a href="https://htmlpreview.github.io/?https://github.com/hosseinmoein/DataFrame/blob/master/docs/HTML/sort.html">sort_spec</a>{}</td>
+    </tr>
+
+    <tr class="item" onmouseover="this.style.backgroundColor='#ffff66';" onmouseout="this.style.backgroundColor='#d4e3e5';">
+      <td title="Sort states"><a href="https://htmlpreview.github.io/?https://github.com/hosseinmoein/DataFrame/blob/master/docs/HTML/sort_state.html">sort_state</a>{}</td>
+    </tr>
+
+    <tr class="item" onmouseover="this.style.backgroundColor='#ffff66';" onmouseout="this.style.backgroundColor='#d4e3e5';">
+      <td title="Staionary methods"><a href="https://htmlpreview.github.io/?https://github.com/hosseinmoein/DataFrame/blob/master/docs/HTML/make_stationary.html">stationary_method</a>{}</td>
+    </tr>
+
+    <tr class="item" onmouseover="this.style.backgroundColor='#ffff66';" onmouseout="this.style.backgroundColor='#d4e3e5';">
+      <td title="Staionary tests"><a href="https://htmlpreview.github.io/?https://github.com/hosseinmoein/DataFrame/blob/master/docs/HTML/StationaryCheckVisitor.html">stationary_test</a>{}</td>
+    </tr>
+
+    <tr class="item" onmouseover="this.style.backgroundColor='#ffff66';" onmouseout="this.style.backgroundColor='#d4e3e5';">
+      <td title="Time frequency types"><a href="https://htmlpreview.github.io/?https://github.com/hosseinmoein/DataFrame/blob/master/docs/HTML/time_frequency.html">time_frequency</a>{}</td>
+    </tr>
+
+    <tr class="item" onmouseover="this.style.backgroundColor='#ffff66';" onmouseout="this.style.backgroundColor='#d4e3e5';">
+      <td title="Types of vector similarity calculations"><a href="https://htmlpreview.github.io/?https://github.com/hosseinmoein/DataFrame/blob/master/docs/HTML/VectorSimilarityVisitor.html">vector_sim_type</a>{}</td>
+    </tr>
+
+    <tr class="item" onmouseover="this.style.backgroundColor='#ffff66';" onmouseout="this.style.backgroundColor='#d4e3e5';">
+      <td title="These are DataFrame objects" style="text-align:center;background-color:LightGrey;color:DarkBlue">Objects &nbsp;&nbsp; <font size="+3">&#x1F9F0;</font></td>
+    </tr>
+
+    <tr class="item" onmouseover="this.style.backgroundColor='#ffff66';" onmouseout="this.style.backgroundColor='#d4e3e5';">
+      <td title="Result of canonical correlation"><a href="https://htmlpreview.github.io/?https://github.com/hosseinmoein/DataFrame/blob/master/docs/HTML/canon_corr.html">CanonCorrResult</a>{}</td>
+    </tr>
+
+    <tr class="item" onmouseover="this.style.backgroundColor='#ffff66';" onmouseout="this.style.backgroundColor='#d4e3e5';">
+      <td title="Handy date and time object"><a href="https://htmlpreview.github.io/?https://github.com/hosseinmoein/DataFrame/blob/master/docs/HTML/DateTime.html">DateTime</a>{}</td>
+    </tr>
+
+    <tr class="item" onmouseover="this.style.backgroundColor='#ffff66';" onmouseout="this.style.backgroundColor='#d4e3e5';">
+      <td title="Parameters to the detect_and_fill() function"><a href="https://htmlpreview.github.io/?https://github.com/hosseinmoein/DataFrame/blob/master/docs/HTML/detect_and_change.html">DetectAndChangeParams</a>{}</td>
+    </tr>
+
+    <tr class="item" onmouseover="this.style.backgroundColor='#ffff66';" onmouseout="this.style.backgroundColor='#d4e3e5';">
+      <td title="structure containing the parameteres to fast_ica() call"><a href="https://htmlpreview.github.io/?https://github.com/hosseinmoein/DataFrame/blob/master/docs/HTML/fast_ica.html">ICAParams</a>{}</td>
+    </tr>
+
+    <tr class="item" onmouseover="this.style.backgroundColor='#ffff66';" onmouseout="this.style.backgroundColor='#d4e3e5';">
+      <td title="Matrix class"><a href="https://htmlpreview.github.io/?https://github.com/hosseinmoein/DataFrame/blob/master/docs/HTML/Matrix.html">Matrix</a>{}</td>
+    </tr>
+
+    <tr class="item" onmouseover="this.style.backgroundColor='#ffff66';" onmouseout="this.style.backgroundColor='#d4e3e5';">
+      <td title="Memory usage structure"><a href="https://htmlpreview.github.io/?https://github.com/hosseinmoein/DataFrame/blob/master/docs/HTML/get_memory_usage.html">MemUsage</a>{}</td>
+    </tr>
+
+    <tr class="item" onmouseover="this.style.backgroundColor='#ffff66';" onmouseout="this.style.backgroundColor='#d4e3e5';">
+      <td title="structure containing the parameteres to pca_by_eigen() call"><a href="https://htmlpreview.github.io/?https://github.com/hosseinmoein/DataFrame/blob/master/docs/HTML/pca_by_eigen.html">PCAParams</a>{}</td>
+    </tr>
+
+    <tr class="item" onmouseover="this.style.backgroundColor='#ffff66';" onmouseout="this.style.backgroundColor='#d4e3e5';">
+      <td title="structure containing the parameteres to random number generators"><a href="https://htmlpreview.github.io/?https://github.com/hosseinmoein/DataFrame/blob/master/docs/HTML/RandGenParams.html">RandGenParams</a>{}</td>
+    </tr>
+
+    <tr class="item" onmouseover="this.style.backgroundColor='#ffff66';" onmouseout="this.style.backgroundColor='#d4e3e5';">
+      <td title="structure containing the parameteres to SeasonalPeriodVisitor constructor"><a href="https://htmlpreview.github.io/?https://github.com/hosseinmoein/DataFrame/blob/master/docs/HTML/SeasonalPeriodVisitor.html">SeasonalityParams</a>{}</td>
+    </tr>
+
+    <tr class="item" onmouseover="this.style.backgroundColor='#ffff66';" onmouseout="this.style.backgroundColor='#d4e3e5';">
+      <td title="Parameters to make_stationary() function"><a href="https://htmlpreview.github.io/?https://github.com/hosseinmoein/DataFrame/blob/master/docs/HTML/make_stationary.html">StationaryParams</a>{}</td>
+    </tr>
+
+    <tr class="item" onmouseover="this.style.backgroundColor='#ffff66';" onmouseout="this.style.backgroundColor='#d4e3e5';">
+      <td title="Parameters to StationaryCheckVisitor constructor"><a href="https://htmlpreview.github.io/?https://github.com/hosseinmoein/DataFrame/blob/master/docs/HTML/StationaryCheckVisitor.html">StationaryTestParams</a>{}</td>
+    </tr>
+
+    <tr class="item" onmouseover="this.style.backgroundColor='#ffff66';" onmouseout="this.style.backgroundColor='#d4e3e5';">
+      <td title="String column statistics structure"><a href="https://htmlpreview.github.io/?https://github.com/hosseinmoein/DataFrame/blob/master/docs/HTML/get_str_col_stats.html">StringStats</a>{}</td>
+    </tr>
+
+    <tr class="item" onmouseover="this.style.backgroundColor='#ffff66';" onmouseout="this.style.backgroundColor='#d4e3e5';">
+      <td title="A generalized fixed-size and null-terminated string"><a href="https://htmlpreview.github.io/?https://github.com/hosseinmoein/DataFrame/blob/master/docs/HTML/VirtualString.html">VirtualString</a>{}</td>
+    </tr>
+
+    <tr class="item" onmouseover="this.style.backgroundColor='#ffff66';" onmouseout="this.style.backgroundColor='#d4e3e5';">
+      <td title="These are arithmetic operators between DataFrames" style="text-align:center;background-color:LightGrey;color:DarkBlue">Arithmetic Operators &nbsp;&nbsp; <font size="+3">&#10135;</font></td>
+    </tr>
+
+    <tr class="item" onmouseover="this.style.backgroundColor='#ffff66';" onmouseout="this.style.backgroundColor='#d4e3e5';">
+      <td title="Division operator for DataFrames"><a href="https://htmlpreview.github.io/?https://github.com/hosseinmoein/DataFrame/blob/master/docs/HTML/global_operators.html">df_divides</a>()</td>
+    </tr>
+
+    <tr class="item" onmouseover="this.style.backgroundColor='#ffff66';" onmouseout="this.style.backgroundColor='#d4e3e5';">
+      <td title="Minus operator for DataFrames"><a href="https://htmlpreview.github.io/?https://github.com/hosseinmoein/DataFrame/blob/master/docs/HTML/global_operators.html">df_minus</a>()</td>
+    </tr>
+
+    <tr class="item" onmouseover="this.style.backgroundColor='#ffff66';" onmouseout="this.style.backgroundColor='#d4e3e5';">
+      <td title="Multiplication operator for DataFrames"><a href="https://htmlpreview.github.io/?https://github.com/hosseinmoein/DataFrame/blob/master/docs/HTML/global_operators.html">df_multiplies</a>()</td>
+    </tr>
+
+    <tr class="item" onmouseover="this.style.backgroundColor='#ffff66';" onmouseout="this.style.backgroundColor='#d4e3e5';">
+      <td title="Plus operator for DataFrames"><a href="https://htmlpreview.github.io/?https://github.com/hosseinmoein/DataFrame/blob/master/docs/HTML/global_operators.html">df_plus</a>()</td>
+    </tr>
+
+    <tr class="item" onmouseover="this.style.backgroundColor='#ffff66';" onmouseout="this.style.backgroundColor='#d4e3e5';">
+      <td title="Division operator for DataFrames"><a href="https://htmlpreview.github.io/?https://github.com/hosseinmoein/DataFrame/blob/master/docs/HTML/global_operators.html">scaler_df_divides</a>()</td>
+    </tr>
+
+    <tr class="item" onmouseover="this.style.backgroundColor='#ffff66';" onmouseout="this.style.backgroundColor='#d4e3e5';">
+      <td title="Minus operator for DataFrames"><a href="https://htmlpreview.github.io/?https://github.com/hosseinmoein/DataFrame/blob/master/docs/HTML/global_operators.html">scaler_df_minus</a>()</td>
+    </tr>
+
+    <tr class="item" onmouseover="this.style.backgroundColor='#ffff66';" onmouseout="this.style.backgroundColor='#d4e3e5';">
+      <td title="Multiplication operator for DataFrames"><a href="https://htmlpreview.github.io/?https://github.com/hosseinmoein/DataFrame/blob/master/docs/HTML/global_operators.html">scaler_df_multiplies</a>()</td>
+    </tr>
+
+    <tr class="item" onmouseover="this.style.backgroundColor='#ffff66';" onmouseout="this.style.backgroundColor='#d4e3e5';">
+      <td title="Plus operator for DataFrames"><a href="https://htmlpreview.github.io/?https://github.com/hosseinmoein/DataFrame/blob/master/docs/HTML/global_operators.html">scaler_df_plus</a>()</td>
+    </tr>
+
+    <tr class="item" onmouseover="this.style.backgroundColor='#ffff66';" onmouseout="this.style.backgroundColor='#d4e3e5';">
+      <td title="These are exceptions thrown by this library" style="text-align:center;background-color:LightGrey;color:DarkBlue">Exceptions &nbsp;&nbsp; <font size="+3">&#128576;</font></td>
+    </tr>
+
+    <tr class="item" onmouseover="this.style.backgroundColor='#ffff66';" onmouseout="this.style.backgroundColor='#d4e3e5';">
+      <td title="An exception type"><a href="https://htmlpreview.github.io/?https://github.com/hosseinmoein/DataFrame/blob/master/docs/HTML/DataFrameTypes.html">BadRange</a>{}</td>
+    </tr>
+
+    <tr class="item" onmouseover="this.style.backgroundColor='#ffff66';" onmouseout="this.style.backgroundColor='#d4e3e5';">
+      <td title="An exception type"><a href="https://htmlpreview.github.io/?https://github.com/hosseinmoein/DataFrame/blob/master/docs/HTML/DataFrameTypes.html">ColNotFound</a>{}</td>
+    </tr>
+
+    <tr class="item" onmouseover="this.style.backgroundColor='#ffff66';" onmouseout="this.style.backgroundColor='#d4e3e5';">
+      <td title="An exception type"><a href="https://htmlpreview.github.io/?https://github.com/hosseinmoein/DataFrame/blob/master/docs/HTML/DataFrameTypes.html">DataFrameError</a>{}</td>
+    </tr>
+
+    <tr class="item" onmouseover="this.style.backgroundColor='#ffff66';" onmouseout="this.style.backgroundColor='#d4e3e5';">
+      <td title="An exception type"><a href="https://htmlpreview.github.io/?https://github.com/hosseinmoein/DataFrame/blob/master/docs/HTML/DataFrameTypes.html">InconsistentData</a>{}</td>
+    </tr>
+
+    <tr class="item" onmouseover="this.style.backgroundColor='#ffff66';" onmouseout="this.style.backgroundColor='#d4e3e5';">
+      <td title="An exception type"><a href="https://htmlpreview.github.io/?https://github.com/hosseinmoein/DataFrame/blob/master/docs/HTML/DataFrameTypes.html">NotFeasible</a>{}</td>
+    </tr>
+
+    <tr class="item" onmouseover="this.style.backgroundColor='#ffff66';" onmouseout="this.style.backgroundColor='#d4e3e5';">
+      <td title="An exception type"><a href="https://htmlpreview.github.io/?https://github.com/hosseinmoein/DataFrame/blob/master/docs/HTML/DataFrameTypes.html">NotImplemented</a>{}</td>
+    </tr>
+
+  </table>
+  </div>
+
+  <div class="column">
+  <table id="hmdf_table" align="center" class="hovertable">
+    <tr>
+      <th title="These are public stand-alone functions in DataFrame library"><font color="white">Stand-alone Functions</font></th>
+    </tr>
+
+    <tr class="item" onmouseover="this.style.backgroundColor='#ffff66';" onmouseout="this.style.backgroundColor='#d4e3e5';">
+      <td title="These are random number generators" style="text-align:center;background-color:LightGrey;color:DarkBlue">Random Numbers &nbsp;&nbsp; <font size="+3">&#127922;</font></td>
+    </tr>
+
+    <tr class="item" onmouseover="this.style.backgroundColor='#ffff66';" onmouseout="this.style.backgroundColor='#d4e3e5';">
+      <td title="Generates Bernoulli random numbers"><a href="https://htmlpreview.github.io/?https://github.com/hosseinmoein/DataFrame/blob/master/docs/HTML/gen_bernoulli_dist.html">gen_bernoulli_dist</a>()</td>
+    </tr>
+
+    <tr class="item" onmouseover="this.style.backgroundColor='#ffff66';" onmouseout="this.style.backgroundColor='#d4e3e5';">
+      <td title="Generates binomial random numbers"><a href="https://htmlpreview.github.io/?https://github.com/hosseinmoein/DataFrame/blob/master/docs/HTML/gen_binomial_dist.html">gen_binomial_dist</a>()</td>
+    </tr>
+
+    <tr class="item" onmouseover="this.style.backgroundColor='#ffff66';" onmouseout="this.style.backgroundColor='#d4e3e5';">
+      <td title="Generates cauchy random numbers"><a href="https://htmlpreview.github.io/?https://github.com/hosseinmoein/DataFrame/blob/master/docs/HTML/gen_cauchy_dist.html">gen_cauchy_dist</a>()</td>
+    </tr>
+
+    <tr class="item" onmouseover="this.style.backgroundColor='#ffff66';" onmouseout="this.style.backgroundColor='#d4e3e5';">
+      <td title="Generates chi-squared random numbers"><a href="https://htmlpreview.github.io/?https://github.com/hosseinmoein/DataFrame/blob/master/docs/HTML/gen_chi_squared_dist.html">gen_chi_squared_dist</a>()</td>
+    </tr>
+
+    <tr class="item" onmouseover="this.style.backgroundColor='#ffff66';" onmouseout="this.style.backgroundColor='#d4e3e5';">
+      <td title="Generates exponential random numbers"><a href="https://htmlpreview.github.io/?https://github.com/hosseinmoein/DataFrame/blob/master/docs/HTML/gen_exponential_dist.html">gen_exponential_dist</a>()</td>
+    </tr>
+
+    <tr class="item" onmouseover="this.style.backgroundColor='#ffff66';" onmouseout="this.style.backgroundColor='#d4e3e5';">
+      <td title="Generates extreme value random numbers"><a href="https://htmlpreview.github.io/?https://github.com/hosseinmoein/DataFrame/blob/master/docs/HTML/gen_extreme_value_dist.html">gen_extreme_value_dist</a>()</td>
+    </tr>
+
+    <tr class="item" onmouseover="this.style.backgroundColor='#ffff66';" onmouseout="this.style.backgroundColor='#d4e3e5';">
+      <td title="Generates Fisher random numbers"><a href="https://htmlpreview.github.io/?https://github.com/hosseinmoein/DataFrame/blob/master/docs/HTML/gen_fisher_f_dist.html">gen_fisher_f_dist</a>()</td>
+    </tr>
+
+    <tr class="item" onmouseover="this.style.backgroundColor='#ffff66';" onmouseout="this.style.backgroundColor='#d4e3e5';">
+      <td title="Generates gamma random numbers"><a href="https://htmlpreview.github.io/?https://github.com/hosseinmoein/DataFrame/blob/master/docs/HTML/gen_gamma_dist.html">gen_gamma_dist</a>()</td>
+    </tr>
+
+    <tr class="item" onmouseover="this.style.backgroundColor='#ffff66';" onmouseout="this.style.backgroundColor='#d4e3e5';">
+      <td title="Generates geometric random numbers"><a href="https://htmlpreview.github.io/?https://github.com/hosseinmoein/DataFrame/blob/master/docs/HTML/gen_geometric_dist.html">gen_geometric_dist</a>()</td>
+    </tr>
+
+    <tr class="item" onmouseover="this.style.backgroundColor='#ffff66';" onmouseout="this.style.backgroundColor='#d4e3e5';">
+      <td title="Generates log-normal random numbers"><a href="https://htmlpreview.github.io/?https://github.com/hosseinmoein/DataFrame/blob/master/docs/HTML/gen_lognormal_dist.html">gen_lognormal_dist</a>()</td>
+    </tr>
+
+    <tr class="item" onmouseover="this.style.backgroundColor='#ffff66';" onmouseout="this.style.backgroundColor='#d4e3e5';">
+      <td title="Generates negative-binomail random numbers"><a href="https://htmlpreview.github.io/?https://github.com/hosseinmoein/DataFrame/blob/master/docs/HTML/gen_negative_binomial_dist.html">gen_negative_binomial_dist</a>()</td>
+    </tr>
+
+    <tr class="item" onmouseover="this.style.backgroundColor='#ffff66';" onmouseout="this.style.backgroundColor='#d4e3e5';">
+      <td title="Generates normal random numberxs"><a href="https://htmlpreview.github.io/?https://github.com/hosseinmoein/DataFrame/blob/master/docs/HTML/gen_normal_dist.html">gen_normal_dist</a>()</td>
+    </tr>
+
+    <tr class="item" onmouseover="this.style.backgroundColor='#ffff66';" onmouseout="this.style.backgroundColor='#d4e3e5';">
+      <td title="Generate Poisson random numbers"><a href="https://htmlpreview.github.io/?https://github.com/hosseinmoein/DataFrame/blob/master/docs/HTML/gen_poisson_dist.html">gen_poisson_dist</a>()</td>
+    </tr>
+
+    <tr class="item" onmouseover="this.style.backgroundColor='#ffff66';" onmouseout="this.style.backgroundColor='#d4e3e5';">
+      <td title="Generates student-t random numbers"><a href="https://htmlpreview.github.io/?https://github.com/hosseinmoein/DataFrame/blob/master/docs/HTML/gen_student_t_dist.html">gen_student_t_dist</a>()</td>
+    </tr>
+
+    <tr class="item" onmouseover="this.style.backgroundColor='#ffff66';" onmouseout="this.style.backgroundColor='#d4e3e5';">
+      <td title="Generates uniform integer random numbers"><a href="https://htmlpreview.github.io/?https://github.com/hosseinmoein/DataFrame/blob/master/docs/HTML/gen_uniform_int_dist.html">gen_uniform_int_dist</a>()</td>
+    </tr>
+
+    <tr class="item" onmouseover="this.style.backgroundColor='#ffff66';" onmouseout="this.style.backgroundColor='#d4e3e5';">
+      <td title="Generates uniform real random numbers"><a href="https://htmlpreview.github.io/?https://github.com/hosseinmoein/DataFrame/blob/master/docs/HTML/gen_uniform_real_dist.html">gen_uniform_real_dist</a>()</td>
+    </tr>
+
+    <tr class="item" onmouseover="this.style.backgroundColor='#ffff66';" onmouseout="this.style.backgroundColor='#d4e3e5';">
+      <td title="Generates Weilbull random numbers"><a href="https://htmlpreview.github.io/?https://github.com/hosseinmoein/DataFrame/blob/master/docs/HTML/gen_weibull_dist.html">gen_weibull_dist</a>()</td>
+    </tr>
+
+    <tr class="item" onmouseover="this.style.backgroundColor='#ffff66';" onmouseout="this.style.backgroundColor='#d4e3e5';">
+      <td title="These are non-random number generators" style="text-align:center;background-color:LightGrey;color:DarkBlue">Non-Random Numbers &nbsp;&nbsp; <font size="+3">&#128290;</font></td>
+    </tr>
+
+    <tr class="item" onmouseover="this.style.backgroundColor='#ffff66';" onmouseout="this.style.backgroundColor='#d4e3e5';">
+      <td title="Generates the Discrete Fourier Transform sample frequencies"><a href="https://htmlpreview.github.io/?https://github.com/hosseinmoein/DataFrame/blob/master/docs/HTML/gen_log_space_nums.html">gen_dft_sample_freq</a>()</td>
+    </tr>
+
+    <tr class="item" onmouseover="this.style.backgroundColor='#ffff66';" onmouseout="this.style.backgroundColor='#d4e3e5';">
+      <td title="Generates n evenly spaced numbers"><a href="https://htmlpreview.github.io/?https://github.com/hosseinmoein/DataFrame/blob/master/docs/HTML/gen_log_space_nums.html">gen_even_space_nums</a>()</td>
+    </tr>
+
+    <tr class="item" onmouseover="this.style.backgroundColor='#ffff66';" onmouseout="this.style.backgroundColor='#d4e3e5';">
+      <td title="Generates logarithmically spaced numbers"><a href="https://htmlpreview.github.io/?https://github.com/hosseinmoein/DataFrame/blob/master/docs/HTML/gen_log_space_nums.html">gen_log_space_nums</a>()</td>
+    </tr>
+
+    <tr class="item" onmouseover="this.style.backgroundColor='#ffff66';" onmouseout="this.style.backgroundColor='#d4e3e5';">
+      <td title="Generates a set of numbers that represent the upper portion of a symmetric triangle"><a href="https://htmlpreview.github.io/?https://github.com/hosseinmoein/DataFrame/blob/master/docs/HTML/gen_log_space_nums.html">gen_sym_triangle</a>()</td>
+    </tr>
+
+    <tr class="item" onmouseover="this.style.backgroundColor='#ffff66';" onmouseout="this.style.backgroundColor='#d4e3e5';">
+      <td title="Generates triangular numbers"><a href="https://htmlpreview.github.io/?https://github.com/hosseinmoein/DataFrame/blob/master/docs/HTML/gen_log_space_nums.html">gen_triangular_nums</a>()</td>
+    </tr>
+
+    <tr class="item" onmouseover="this.style.backgroundColor='#ffff66';" onmouseout="this.style.backgroundColor='#d4e3e5';">
+      <td title="These populate the thread-pool" style="text-align:center;background-color:LightGrey;color:DarkBlue">Multithreading Controls &nbsp;&nbsp; <font size="+3">&#127899;</font></td>
+    </tr>
+
+    <tr class="item" onmouseover="this.style.backgroundColor='#ffff66';" onmouseout="this.style.backgroundColor='#d4e3e5';">
+      <td title="Returns number of threads in thread-pool"><a href="https://htmlpreview.github.io/?https://github.com/hosseinmoein/DataFrame/blob/master/docs/HTML/threads.html">get_thread_level</a>()</td>
+    </tr>
+
+    <tr class="item" onmouseover="this.style.backgroundColor='#ffff66';" onmouseout="this.style.backgroundColor='#d4e3e5';">
+      <td title="Sets optimum number of threads in thread-pool"><a href="https://htmlpreview.github.io/?https://github.com/hosseinmoein/DataFrame/blob/master/docs/HTML/threads.html">set_optimum_thread_level</a>()</td>
+    </tr>
+
+    <tr class="item" onmouseover="this.style.backgroundColor='#ffff66';" onmouseout="this.style.backgroundColor='#d4e3e5';">
+      <td title="Adds n threads to the thread-pool"><a href="https://htmlpreview.github.io/?https://github.com/hosseinmoein/DataFrame/blob/master/docs/HTML/threads.html">set_thread_level</a>()</td>
+    </tr>
+
+  </table>
+  </div>
+
+</div>
+
+<BR><HR COLOR="Gray" SIZE="5">
+
+  <H2 ID="3"><font color="blue">Multithreading <font size="+4">&#128640;</font></font></H2>
+    In general, multithreading could be very unintuitive. Often you think by using multithreading you enhance the performance of your program. But in fact, you are hindering it. To do effective multithreading, you must do two things repeatedly; measure and adjust. In general (rule of thumb), you should use multithreading in two contradictory situations. First, when you have intensive CPU-bound operations like mathematical equations that can independently utilize different cores. Second, when you have multiple I/O-bound operations that can go on independently while they wait for each other. The key word here is <I>independently</I>. You must also realize that multithreading has an inherent overhead that not only affects your process but also other processes running on the same node. It is recommended to start with a single-threaded version and when that is <I>working correctly</I>, establish a baseline, take measurements, and implement a multithreaded solution.<BR>
+DataFrame uses multithreading extensively and provides granular tools to adjust your environment. Let's divide the multithreading subject in DataFrame into two categories:<BR>
+
+  <H4>1. User Multithreading</H4>
+  If you use multithreading, you are responsible for synchronization of shared resources. Generally speaking, DataFrame is not multithreaded-safe. DataFrame has static data and per-instance data, both of which need protection in threads:<BR>
+    <UL>
+      <LI>DataFrame uses static containers to achieve type heterogeneity. By default, these static containers are unprotected. This is done by design. So, by default there is no locking overhead. If you use DataFrame in a multithreaded program, you must provide a <I>SpinLock</I> defined in <I>ThreadGranularity.h</I> file. DataFrame will use your <I>SpinLock</I> to protect the containers.<BR>Please see above, <I>set_lock()</I>, <I>remove_lock()</I>, and <I>dataframe_tester.cc#3767</I> for code example.<BR>In this case you must go through the above DataFrame API and use the <I>Spinlock</I>. Again, this protects the DataFrame static structures.</LI>
+      <LI>In addition, instances of DataFrame are not multithreaded safe either. In other words, a single instance of DataFrame must not be used in multiple threads without protection, unless it is used as read-only.<BR>In this case you must use your own lock and logic. In other words, DataFrame doesn't have an API for this category.</LI>
+    </UL>
+  <H4>2. DataFrame Internal Multithreading</H4>
+  Whether or not you, as the user, use multithreading, DataFrame utilizes a versatile thread-pool to employ parallel computing extensively in almost all its API's. By default, there is no multithreading. All algorithms execute their single-threaded version. To enable multithreading, call either <I>ThreadGranularity::set_optimum_thread_level()</I> (recommended) or <I>ThreadGranularity::set_thread_level(n)</I>.<BR>
+  When Multithreading is enabled, most parallel algorithms trigger when number of data points exceeds 250k and number of threads exceeds 2. Therefore, if your process deals with datasets smaller than this, it doesn't make sense to populate the thread-pool with threads as they will be waste of resources.<BR>
+  You do not need to worry about synchronization for DataFrame internal multithreading. It is done behind the scenes and unbeknown to you.<BR>
+  <UL>
+    <LI> There are asynchronous versions of some methods. For example, you have sort()/sort_async(), visit()/visit_async(), ... The latter versions return a std::future and would execute in parallel.<BR>If you chose to use DataFrame async interfaces, it is highly recommended to call <I>ThreadGranularity::set_optimum_thread_level()</I>, So your thread-pool is populated with optimal number of threads. Otherwise, if thread-pool is empty, async interfaces will add one thread to it. Having only one thread in thread-pool could be suboptimal and hinder performance.</LI>
+    <LI>As mentioned above, DataFrame uses parallel computing extensively. But by default, DataFrame is single threaded, because by default its thread-pool is empty. If you want to fully take advantage of DataFrame parallel computing, it is recommended to call <I>ThreadGranularity::set_optimum_thread_level()</I> at the beginning of your program. Alternatively you could call <I>ThreadGranularity:: set_thread_level(n)</I> to add a custom number of threads to the thread-pool. But you better have a good reason for that.<BR>Thread-pool and thread level are static properties of DataFrame. Once the thread level is set, it applies to all DataFrame instances.</LI>
+  </UL>
+
+<BR><HR COLOR="Gray" SIZE="5">
+
+  <H2 ID="4"><font color="blue">Views <font size="+4">&#128269;</font></font></H2>
+  <P>
+    Views have useful and practical use-cases. A view is a slice of a DataFrame that is a reference to the original DataFrame. It appears exactly the same as a DataFrame, but if you modify any data in the view, the corresponding data point(s) in the original DataFrame will also be modified and vice versa. There are certain things you cannot do in views. For example, you cannot add or delete columns, extend the index column, ...<BR><BR>
+
+    In general there are two kinds of views
+    <OL>
+      <LI>Regular Views: You can change data in the view or in the original DataFrame and see the change on both sides</LI>
+      <LI>Const Views: You can not change data in the view. But you can change the data in the original DataFrame or through another view and it will be reflected in the const view</LI>
+    </OL>
+   In the this context "you cannot" means it won't compile.<BR>
+
+    Why would you use views
+    <UL>
+      <LI>To run algorithms/slicing on smaller subsets of data, <I>without copying</I> data</LI>
+      <LI>To mix and compare different data subsets, <I>without copying</I> data</LI>
+      <LI>To have one source of truth, while having different datasets <I>without copying</I> data </LI>
+    </UL>
+
+    For more understanding, look at this document further and/or the test files.
+  </P>
+
+<BR><HR COLOR="Gray" SIZE="5">
+
+  <H2 ID="5"><font color="blue">Visitors <font size="+4">&#128109;</font></font></H2>
+  <P>
+    Visitors are the main mechanism to implement analytical (i.e. statistical, financial, machine-learning) algorithms. You can easily follow the visitor's interface to add your custom algorithm by which you will extend the DataFrame package. Visitors also play several roles that in other packages maybe handled by separate interfaces. Visitors play the role of <I>apply</I>, <I>transformer</I>, and  <I>algorithms</I>. For example, a visitor can transform column(s) or it may take the column(s) as read-only and implement an algorithm.<BR>
+    There are two visitor interfaces:<BR>
+    <OL>
+      <LI>Regular visit. This visitor is called by calling the <I>visit()</I> method on a DataFrame instance. In this case DataFrame passes the given index and column(s) data points one-by-one to the visitor functor. This is convenient for algorithms that can operate on one data point at a time. Examples are <I>correlation</I> or <I>variance</I> visitors.</LI>
+      <LI>Single-action visit. This visitor is called by calling the <I>single_act_visit()</I> method on a DataFrame instance . In this case begin and end iterators for the given index and column(s) are passed to the visitor functor. So the fuctor has access to all index and column(s) data at once. This is necessary for algorithms that need the whole data together. Examples are  <I>return</I> or <I>median</I> visitors.</LI>
+    </OL>
+    There are some common interfaces in most of the visitors. For example the following interfaces are common between almost all visitors:<BR>
+    <I>get_result():</I> It returns the result of the visitor/algorithm.<BR>
+    <I>pre():</I> It is called by DataFrame each time before starting to pass the data to the visitor. pre() is the place to initialize the process<BR>
+    <I>post():</I> It is called by DataFrame each time it is done with passing data to the visitor.<BR>
+    <BR>
+    See this document, <I>DataFrameStatsVisitors.h, DataFrameMLVisitors.h, DataFrameFinancialVisitors.h, DataFrameTransformVisitors.h</I>, and <I>test/dataframe_tester[_2].cc</I> for more examples and documentation.
+  </P>
+
+  I have been asked many times, why I chose the visitor pattern for algorithms as opposed to having member functions.<BR>
+  Because I wanted algorithms to be independent objects. To be more precise as to why:<BR>
+  <UL>
+    <LI>I wanted users to be able to incorporate their custom algorithms without touching or understanding the DataFrame codebase. If you follow a simple interface, you can write your custom visitor and use it in DataFrame</LI>
+    <LI>I wanted the algorithms to be self-contained like an object. That means a single <I>object</I> should contain the algorithm, input(s), parameter(s), and result(s). Because algorithms are self-contained objects, they can be passed to other algorithms</LI>
+    <LI>Life cycle of an algorithm and its result(s) should be independent of the life cycle of a DataFrame instance</LI>
+    <LI>Algorithms sometime have complex results. Sometimes the result is a single number. But sometimes the result of an algorithms could be a single or multiple vectors. That's not efficient to implement as a member function</LI>
+    <LI>If I had implemented them as member functions, I would have had 100's of member functions in DataFrame</LI>
+  </UL>
+  <a href="https://htmlpreview.github.io/?https://github.com/hosseinmoein/DataFrame/blob/master/docs/HTML/how_to_write_visitors.html">This is how you can implement your own visitor</a><BR>
+
+<BR><HR COLOR="Gray" SIZE="5">
+
+  <H2 ID="6"><font color="blue">Memory Alignment <font size="+4">&#10052;</font></font></H2>
+  <P>
+    DataFrame gives you the ability to allocate memory on custom alignment boundaries.<BR>
+    You can use this feature to take advantage of <I>SIMD</I> instructions in modern CPU's. Since DataFrame algorithms are all done on vectors of data &#8212; columns, this can come handy in conjunction with compiler optimizations. Also, you can use alignment to prevent false cache-line sharing between multiple columns.<BR>
+    There are convenient typedef's that define DataFrames that allocate memory, for example, on 64, 128, 256, ... bytes boundaries. Best alignment depends on cash line width of your system. See <a href="https://htmlpreview.github.io/?https://github.com/hosseinmoein/DataFrame/blob/master/docs/HTML/DataFrameTypes.html">DataFrame Library Types</a>.<BR>
+    When you get access to <I>columns</I> in a DataFrame, you will get a reference to a <I>StlVecType</I>. <I>StlVecType</I> is just a <I>std::vector</I> with custom allocator for the requested alignment.<BR><BR>
+	
+    SIMD stands for <I>Single Instruction, Multiple Data</I>. This powerful approach allows a single CPU instruction to process multiple data points simultaneously. Imagine you're working with an image or two vectors. Normally, operations on these data points would be performed one at a time - a method known as scalar operation. However, with SIMD optimization, these operations can be vectorized, meaning multiple data points are processed in one go. SIMD architectures typically organize data into vectors or arrays, enabling synchronized execution and faster computational throughput.<BR>
+    SIMD techniques have evolved alongside advancements in computer architecture and instruction set extensions. Initial SIMD implementations emerged in the 1990s, and subsequent developments, such as Intel's Streaming SIMD Extensions (SSE) and Advanced Vector Extensions (AVX), expanded SIMD capabilities. These extensions introduced specialized SIMD instructions that significantly improved computational performance by enabling efficient execution of parallel operations.<BR>
+  </P>
+
+<BR><HR COLOR="Gray" SIZE="5">
+
+  <H2 ID="7"><font color="blue">Numeric Generators <font size="+4">&#127922;</font></font></H2>
+  <P>
+    Random generators, and a few other numeric generators, were added as a series of convenient stand-alone functions to generate random numbers with various distributions. You can seamlessly use these routines to generate random DataFrame columns. The result vectors are space-optimized and you can choose different memory alignments.<BR>
+    See this document and file <I>RandGen.h</I> and <I>dataframe_tester.cc.</I>
+    For the definition and defaults of <I>RandGenParams</I>, see this document and file <I>DataFrameTypes.h</I>
+  </P>
+
+<BR><HR COLOR="Gray" SIZE="5">
+
+  <H2 ID="8"><font color="blue">Code Structure <font size="+4">&#128450;</font></font></H2>
+  <P>
+    Starting from the repo’s root directory:<BR><BR>
+
+    <UL type="disc">
+      <LI>Root contains README, license, master CMake, and other files</LI>
+      <UL type="circle">
+      <LI><B><a href="https://github.com/hosseinmoein/DataFrame/tree/master/.github">.github/</a></B> &#8212; Contains all GitHub files</LI>
+          <UL type="square">
+            <LI><B><a href="https://github.com/hosseinmoein/DataFrame/tree/master/.github/workflows">workflows/</a></B> &#8212; Contains all GitHub workflow files</LI>
+          </UL>
+      <LI><a href="https://github.com/hosseinmoein/DataFrame/tree/master/benchmarks"><B>benchmarks/</B></a> &#8212; Contains a few programs that time and benchmark various operations and compare them with other packages doing the same thing</LI>
+      <LI><a href="https://github.com/hosseinmoein/DataFrame/tree/master/cmake"><B>cmake/</B></a> &#8212; Contains general CMake files</LI>
+        <LI><a href="https://github.com/hosseinmoein/DataFrame/tree/master/data"><B>data/</B></a> &#8212; Contains all the mocked data files that are used by test programs</LI>
+        <LI><B><a href="https://github.com/hosseinmoein/DataFrame/tree/master/docs">docs/</B></a> &#8212; Contains all the documentations and images</LI>
+          <UL type="square">
+            <LI><B><a href="https://github.com/hosseinmoein/DataFrame/tree/master/docs/HTML">HTML/</B></a> &#8212; Contains all HTML documentations</LI>
+          </UL>
+      <LI><B><a href="https://github.com/hosseinmoein/DataFrame/tree/master/examples">examples/</B></a> &#8212; Contains the example <I>hello world</I> program</LI>
+        <LI><a href="https://github.com/hosseinmoein/DataFrame/tree/master/include/DataFrame"><B>include/DataFrame/</B></a> &#8212; Contains 99% of implementations. It includes <I>DataFrame</I> main header file and implementation of all analytical visitors. It also includes the following subdirectories:</LI>
+          <UL type="square">
+            <LI><B><a href="https://github.com/hosseinmoein/DataFrame/tree/master/include/DataFrame/Internals">Internals/</a></B> &#8212; Contains implementation of all APIs</LI>
+            <LI><a href="https://github.com/hosseinmoein/DataFrame/tree/master/include/DataFrame/Utils"><B>Utils/</B></a> &#8212; Contains various peripheral utilities used by <I>DataFrame</I></LI>
+              <UL type="disc">
+              <LI><B><a href="https://github.com/hosseinmoein/DataFrame/tree/master/include/DataFrame/Utils/Threads">Threads/</B></a> &#8212; Contains implementation of all thread related logic</LI>
+              </UL>
+            <LI><a href="https://github.com/hosseinmoein/DataFrame/tree/master/include/DataFrame/Vectors"><B>Vectors/</B></a> &#8212; Contains implementation of heterogenous vectors</LI>
+	      </UL>
+        <LI><a href="https://github.com/hosseinmoein/DataFrame/tree/master/src"><B>src/</B></a> &#8212; Contains Linux based makefiles and following subdirectory:</LI>
+          <UL type="square">
+            <LI><a href="https://github.com/hosseinmoein/DataFrame/tree/master/src/Utils"><B>Utils/</B></a> &#8212; Contains the sole source files in <I>DataFrame</I> that is archived into a library</LI>
+	      </UL>
+        <LI><a href="https://github.com/hosseinmoein/DataFrame/tree/master/test"><B>test/</B></a> &#8212; Contains all the test programs that I am happy to say tests 100% of the API</LI>
+	  </UL>
+        </UL>
+  </P>
+
+<BR><HR COLOR="Gray" SIZE="5">
+
+  <H2 ID="9"><font color="blue">Build Instructions <font size="+4">&#x1F6E0;</font></font></H2>
+    When building your application with DataFrame, if you define <I>HMDF_SANITY_EXCEPTIONS=1</I> on the compile line, DataFrame algorithms do runtime checks to make sure the dimensionality of your data is correct and other sanity checks (throw exceptions otherwise). If this is not defined there are no checks. For example, supposed you call to calculate KNN and supposed K is greater than observed datapoints passed in . if <I> HMDF_SANITY_EXCEPTIONS</I> is defined, you get an exception with explanation. If it is not defined, you get garbage or a crash.<BR>
+    In general, there are three ways you can build C++ applications and libraries.<BR>
+    <OL>
+      <LI><I>Bulidng with debug information and no optimizations.</I> This build allows you to debug your application and walk through the source code as it executes inside a debugger. This build results in bigger executable files and significantly slower execution.</LI>
+      <LI><I>Building with optimizations and no debug information.</I> You cannot debug these applications and if they crash, they don’t leave any meaningful trace. This build results in smaller executable files, and they are significantly faster at runtime.</LI>
+      <LI><I>Something in between.</I> Experiment with that in your own time.</LI>
+    </OL>
+
+
+    <BR><font size="+1"><B>Cloning Repo:</B></font><BR>
+<font size="+1">
+<pre class="code_syntax" style="color:#000000;background:#ffffff00;"><span class="line_wrapper">    <span style="color:#005fd2; ">git</span> <span style="color:#0000e6; ">clone</span> <span style="color:#0000e6; ">https://github.com/hosseinmoein/DataFrame.git</span></span>
+<span class="line_wrapper"></span></pre>
+</font>
+
+    <font size="+1"><B>Using CMake:</B></font><BR>
+<font size="+1">
+<pre class="code_syntax" style="color:#000000;background:#ffffff00;"><span class="line_wrapper">    <span style="color:#005fd2; ">mkdir</span> <span style="color:#0000e6; ">[Debug</span><span style="color:#bb7977; font-weight:bold; ">|</span><span style="color:#005fd2; ">Release]</span></span>
+<span class="line_wrapper">    <span style="color:#005fd2; ">cd</span> <span style="color:#0000e6; ">[Debug</span><span style="color:#bb7977; font-weight:bold; ">|</span><span style="color:#005fd2; ">Release]</span></span>
+<span class="line_wrapper"></span>
+<span class="line_wrapper">    <span style="color:#696969; "># Making the optimized release version</span></span>
+<span class="line_wrapper">    <span style="color:#696969; ">#</span></span>
+<span class="line_wrapper">    <span style="color:#005fd2; ">cmake</span> <span style="color:#074726; ">-DCMAKE_BUILD_TYPE=Release</span> <span style="color:#074726; ">-DHMDF_BENCHMARKS=1</span> <span style="color:#074726; ">-DHMDF_EXAMPLES=1</span> <span style="color:#074726; ">-DHMDF_TESTING=1</span> <span style="color:#0000e6; ">..</span></span>
+<span class="line_wrapper"></span>
+<span class="line_wrapper">    <span style="color:#696969; "># Making the debug version with debug info</span></span>
+<span class="line_wrapper">    <span style="color:#696969; ">#</span></span>
+<span class="line_wrapper">    <span style="color:#005fd2; ">cmake</span> <span style="color:#074726; ">-DCMAKE_BUILD_TYPE=Debug</span> <span style="color:#074726; ">-DHMDF_SANITY_EXCEPTIONS=1</span> <span style="color:#074726; ">-DHMDF_BENCHMARKS=1</span> <span style="color:#074726; ">-DHMDF_EXAMPLES=1</span> <span style="color:#074726; ">-DHMDF_TESTING=1</span> <span style="color:#0000e6; ">..</span></span>
+<span class="line_wrapper"></span>
+<span class="line_wrapper">    <span style="color:#005fd2; ">make</span></span>
+<span class="line_wrapper">    <span style="color:#005fd2; ">make</span> <span style="color:#0000e6; ">install</span></span>
+<span class="line_wrapper">    </span>
+<span class="line_wrapper">    <span style="color:#005fd2; ">cd</span> <span style="color:#0000e6; ">[Debug</span><span style="color:#bb7977; font-weight:bold; ">|</span><span style="color:#005fd2; ">Release]</span></span>
+<span class="line_wrapper">    <span style="color:#005fd2; ">make</span> <span style="color:#0000e6; ">uninstall</span></span>
+<span class="line_wrapper"></span></pre>
+</font>
+
+    <font size="+1"><B>Using Package Managers:</B></font><BR>
+    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;DataFrame is available on <a href="https://conan.io/center/recipes/dataframe"<I>Conan</I></a> platform. See <a href="https://docs.conan.io/2/"<I>Conan docs</I></a> for more information.<BR>
+    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;DataFrame is available on <a href="https://vcpkg.link/ports/dataframe"<I>VCPKG</I></a> platform. See <a href="https://learn.microsoft.com/en-us/vcpkg/"<I>VCPKG docs</i></a> for more information<BR>
+
+    <BR>
+    <font size="+1"><B>Using plain make and make-files</B></font> (<I>Not Recommended</I>):<BR>
+    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Go to the <I>src</I> subdirectory, and execute build_all.sh. This will build the library and test executables for <I>Linux/Unix flavors only</I><BR>
+
+    <BR>
+    <font size="+1"><B>Running the test executables:</B></font><BR>
+    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Almost all test programs in <I>test/</I>, <I>example/</I>, and <I> benchmarks/</I> directories need to open mocked datafiles that exist in <I>data/</I> directory. They also assume the datafiles are in the <I>current directory</I>. If you use CMake to build the project, it copies the datafiles into the execution directory. If you are running the tests by yourself, <I>data/</I> directory must be your current directory.<BR><BR>
+
+</div> </div>
+</body></html>
+
+<!--
+Local Variables:
+mode:HTML
+tab-width:4
+c-basic-offset:4
+End:
+-->

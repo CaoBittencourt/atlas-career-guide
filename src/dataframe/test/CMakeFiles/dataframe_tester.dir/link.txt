@@ -1,0 +1,1 @@
+/usr/bin/c++ -O3 -DNDEBUG -Wl,--dependency-file=CMakeFiles/dataframe_tester.dir/link.d CMakeFiles/dataframe_tester.dir/dataframe_tester.cc.o -o ../bin/dataframe_tester  ../libDataFrame.a -lrt

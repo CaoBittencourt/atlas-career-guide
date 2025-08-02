@@ -1,0 +1,1 @@
+/usr/bin/c++ -O3 -DNDEBUG -Wl,--dependency-file=CMakeFiles/iso_tree_tester.dir/link.d CMakeFiles/iso_tree_tester.dir/iso_tree_tester.cc.o -o ../bin/iso_tree_tester  ../libDataFrame.a -lrt

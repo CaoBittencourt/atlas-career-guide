@@ -1,0 +1,1 @@
+/usr/bin/c++ -O3 -DNDEBUG -Wl,--dependency-file=CMakeFiles/vectors_tester.dir/link.d CMakeFiles/vectors_tester.dir/vectors_tester.cc.o -o ../bin/vectors_tester  ../libDataFrame.a -lrt

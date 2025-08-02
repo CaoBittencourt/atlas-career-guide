@@ -1,0 +1,236 @@
+<!--
+Copyright (c) 2019-2026, Hossein Moein
+All rights reserved.
+Redistribution and use in source and binary forms, with or without
+modification, are permitted provided that the following conditions are met:
+* Redistributions of source code must retain the above copyright
+  notice, this list of conditions and the following disclaimer.
+* Redistributions in binary form must reproduce the above copyright
+  notice, this list of conditions and the following disclaimer in the
+  documentation and/or other materials provided with the distribution.
+* Neither the name of Hossein Moein and/or the DataFrame nor the
+  names of its contributors may be used to endorse or promote products
+  derived from this software without specific prior written permission.
+THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND
+ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
+WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+DISCLAIMED. IN NO EVENT SHALL Hossein Moein BE LIABLE FOR ANY
+DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
+(INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
+LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND
+ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+(INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
+SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+-->
+<!DOCTYPE html>
+<html>
+
+<head>
+<style>
+body {
+  background-image: linear-gradient(Azure, AliceBlue, GhostWhite, WhiteSmoke);
+}
+</style>
+</head>
+
+<style>
+.frac {
+    display: inline-block;
+    position: relative;
+    vertical-align: middle;
+    letter-spacing: 0.001em;
+    text-align: center;
+}
+.frac > span {
+    display: block;
+    padding-top: 0.01em;
+    padding-bottom: 0.01em;
+}
+.frac span.bottom {
+    border-top: thin solid white;
+    padding-top: 0.4em;
+    padding-bottom: 0.3em;
+}
+.frac span.symbol { display: none; }
+</style>
+
+<body style="font-family: Georgia, serif">
+
+  <font size="+3">&#8592;</font> <a href="https://htmlpreview.github.io/?https://github.com/hosseinmoein/DataFrame/blob/master/docs/HTML/DataFrame.html">Back to Documentations</a><BR><BR>
+  
+  <table border="1">
+
+    <tr bgcolor="lightblue">
+      <th>Signature</th> <th>Description</th>
+    </tr>
+    <tr bgcolor="Azure">
+      <td bgcolor="blue"> <font color="white">
+        <PRE><B>
+enum class  correlation_type : unsigned char  {
+
+    pearson = 1,   // &Rho; = <div class="frac"> <span>COV(X, Y)</span> <span class="symbol">/</span> <span class="bottom">&sigma;(X) * &sigma;(Y)</span> </div>
+
+    // Non-parametric (rank-based) correlations
+    //
+    spearman = 2,  // &Rho; = 1 - <div class="frac"> <span>6 * &sum;d<sub>i</sub><sup>2</sup></span> <span class="symbol">/</span> <span class="bottom">n * (n<sup>2</sup> - 1)</span> </div>    d<sub>i</sub> = Difference in rank of X member vs. Y member
+    kendall_tau = 3,  // &Rho; = <div class="frac"> <span>C - D</span> <span class="symbol">/</span> <span class="bottom">(n * (n - 1)) / 2</span> </div>    C = Concordant pairs,  D = Discordant pairs
+}; </font></B></PRE>
+      </td>
+      <td>
+        This specifies different correlation types.<BR>
+      </td>
+    </tr>
+
+  </table>
+  <BR>
+  <table border="1">
+
+    <tr bgcolor="lightblue">
+      <th>Signature</th> <th>Description</th> <th>Parameters</th>
+    </tr>
+    <tr bgcolor="Azure">
+      <td bgcolor="blue"> <font color="white">
+        <PRE><B>#include &lt;DataFrame/DataFrameStatsVisitors.h&gt;
+
+template&lt;typename T, typename I = unsigned long&gt;
+struct CorrVisitor;
+        </B></PRE></font>
+      </td>
+      <td>
+        This functor class calculates the correlation of two given columns.<BR>
+        <I>
+        <PRE>
+  explicit
+  CorrVisitor(correlation_type t = correlation_type::pearson,
+              bool bias = false,
+              bool skipnan = false,
+              bool stable_algo = false);
+        </PRE>
+        </I>
+        <B>correlation_type</B>: Correlation type from above.<BR>
+        <B>bias</B>: If true it divides by n - 1, otherwise by n.<BR>
+        <B>skip_nan</B>: If true it skips over nan numbers as if they didn't exist.<BR>
+        <B>stable_algo</B>: If true, it uses a version of Kahan summation that is numerically stable for data with very large values. Kahan summation is slower than regular summation, so only use it, if your data contains very large values.<BR>
+      </td>
+      <td width="30%">
+        <B>T</B>: Column data type. T must be an arithmetic-enabled type<BR>
+        <B>I</B>: Index type.
+      </td>
+    </tr>
+
+    <tr bgcolor="Azure">
+      <td bgcolor="blue"> <font color="white">
+        <PRE><B>#include &lt;DataFrame/DataFrameStatsVisitors.h&gt;
+
+template&lt;typename T, typename I = unsigned long,
+         std::size_t A = 0&gt;
+struct CrossCorrVisitor;
+        </B></PRE></font>
+      </td>
+      <td>
+        This functor calculates a series of above correlations between lagged vectors of the first and second time-series. Lags are from <I>min_lag</I> (included) to <I>max_lag</I> (excluded) and incremented by 1. The result  is a vector of correlations containing "<I>max_lag – min_lag</I>" values.<BR>
+        If lag value is positive, the second time-series is lagged forward. Otherwise, the first time-series is lagged forward.<BR>
+        <I>
+        <PRE>
+  CrossCorrVisitor (long min_lag,
+                    long max_lag,
+                    correlation_type t = correlation_type::pearson,
+                    bool biased = false,
+                    bool skip_nan = false,
+                    bool stable_algo = false);
+        </PRE>
+        </I>
+        <B>min_lag</B>: Minimum lag period<BR>
+        <B>max_lag</B>: Maximum lag period<BR>
+        <B>correlation_type</B>: Correlation type from above.<BR>
+        <B>bias</B>: If true it divides by n - 1, otherwise by n.<BR>
+        <B>skip_nan</B>: If true it skips over nan numbers as if they didn't exist.<BR>
+        <B>stable_algo</B>: If true, it uses a version of Kahan summation that is numerically stable for data with very large values. Kahan summation is slower than regular summation, so only use it, if your data contains very large values.<BR>
+      </td>
+      <td width="30%">
+        <B>T</B>: Column data type. T must be an arithmetic-enabled type<BR>
+        <B>I</B>: Index type.<BR>
+        <B>A</B>: Memory alignment boundary for vectors. Default is system default alignment<BR>
+      </td>
+    </tr>
+
+  </table>
+
+<pre class="code_syntax" style="color:#000000;background:#ffffff00;"><span class="line_wrapper">    MyDataFrame df<span style="color:#800080; ">;</span></span>
+<span class="line_wrapper"></span>
+<span class="line_wrapper">    df<span style="color:#808030; ">.</span>create_column<span style="color:#800080; ">&lt;</span><span style="color:#800000; font-weight:bold; ">int</span><span style="color:#800080; ">&gt;</span><span style="color:#808030; ">(</span><span style="color:#800000; font-weight:bold; ">static_cast</span><span style="color:#800080; ">&lt;</span><span style="color:#800000; font-weight:bold; ">const</span> <span style="color:#800000; font-weight:bold; ">char</span> <span style="color:#808030; ">*</span><span style="color:#800080; ">&gt;</span><span style="color:#808030; ">(</span><span style="color:#800000; ">"</span><span style="color:#0000e6; ">col_name</span><span style="color:#800000; ">"</span><span style="color:#808030; ">)</span><span style="color:#808030; ">)</span><span style="color:#800080; ">;</span></span>
+<span class="line_wrapper"></span>
+<span class="line_wrapper">    StlVecType<span style="color:#800080; ">&lt;</span><span style="color:#800000; font-weight:bold; ">int</span><span style="color:#800080; ">&gt;</span>            intvec <span style="color:#808030; ">=</span> <span style="color:#800080; ">{</span> <span style="color:#008c00; ">1</span><span style="color:#808030; ">,</span> <span style="color:#008c00; ">2</span><span style="color:#808030; ">,</span> <span style="color:#008c00; ">3</span><span style="color:#808030; ">,</span> <span style="color:#008c00; ">4</span><span style="color:#808030; ">,</span> <span style="color:#008c00; ">5</span> <span style="color:#800080; ">}</span><span style="color:#800080; ">;</span></span>
+<span class="line_wrapper">    StlVecType<span style="color:#800080; ">&lt;</span><span style="color:#800000; font-weight:bold; ">double</span><span style="color:#800080; ">&gt;</span>         dblvec <span style="color:#808030; ">=</span> <span style="color:#800080; ">{</span> <span style="color:#008000; ">1.2345</span><span style="color:#808030; ">,</span> <span style="color:#008000; ">2.2345</span><span style="color:#808030; ">,</span> <span style="color:#008000; ">3.2345</span><span style="color:#808030; ">,</span> <span style="color:#008000; ">4.2345</span><span style="color:#808030; ">,</span> <span style="color:#008000; ">5.2345</span> <span style="color:#800080; ">}</span><span style="color:#800080; ">;</span></span>
+<span class="line_wrapper">    StlVecType<span style="color:#800080; ">&lt;</span><span style="color:#800000; font-weight:bold; ">double</span><span style="color:#800080; ">&gt;</span>         dblvec2 <span style="color:#808030; ">=</span> <span style="color:#800080; ">{</span> <span style="color:#008000; ">0.998</span><span style="color:#808030; ">,</span> <span style="color:#008000; ">0.3456</span><span style="color:#808030; ">,</span> <span style="color:#008000; ">0.056</span><span style="color:#808030; ">,</span> <span style="color:#008000; ">0.15678</span><span style="color:#808030; ">,</span> <span style="color:#008000; ">0.00345</span><span style="color:#808030; ">,</span> <span style="color:#008000; ">0.923</span><span style="color:#808030; ">,</span> <span style="color:#008000; ">0.06743</span><span style="color:#808030; ">,</span> <span style="color:#008000; ">0.1</span> <span style="color:#800080; ">}</span><span style="color:#800080; ">;</span></span>
+<span class="line_wrapper">    StlVecType<span style="color:#800080; ">&lt;</span><span style="color:#666616; ">std</span><span style="color:#800080; ">::</span><span style="color:#603000; ">string</span><span style="color:#800080; ">&gt;</span>    strvec <span style="color:#808030; ">=</span> <span style="color:#800080; ">{</span> <span style="color:#800000; ">"</span><span style="color:#0000e6; ">Col_name</span><span style="color:#800000; ">"</span><span style="color:#808030; ">,</span> <span style="color:#800000; ">"</span><span style="color:#0000e6; ">Col_name</span><span style="color:#800000; ">"</span><span style="color:#808030; ">,</span> <span style="color:#800000; ">"</span><span style="color:#0000e6; ">Col_name</span><span style="color:#800000; ">"</span><span style="color:#808030; ">,</span> <span style="color:#800000; ">"</span><span style="color:#0000e6; ">Col_name</span><span style="color:#800000; ">"</span><span style="color:#808030; ">,</span> <span style="color:#800000; ">"</span><span style="color:#0000e6; ">Col_name</span><span style="color:#800000; ">"</span> <span style="color:#800080; ">}</span><span style="color:#800080; ">;</span></span>
+<span class="line_wrapper">    StlVecType<span style="color:#800080; ">&lt;</span><span style="color:#800000; font-weight:bold; ">unsigned</span> <span style="color:#800000; font-weight:bold; ">long</span><span style="color:#800080; ">&gt;</span>  ulgvec <span style="color:#808030; ">=</span> <span style="color:#800080; ">{</span> <span style="color:#008c00; ">1</span><span style="color:#006600; ">UL</span><span style="color:#808030; ">,</span> <span style="color:#008c00; ">2</span><span style="color:#006600; ">UL</span><span style="color:#808030; ">,</span> <span style="color:#008c00; ">3</span><span style="color:#006600; ">UL</span><span style="color:#808030; ">,</span> <span style="color:#008c00; ">4</span><span style="color:#006600; ">UL</span><span style="color:#808030; ">,</span> <span style="color:#008c00; ">5</span><span style="color:#006600; ">UL</span><span style="color:#808030; ">,</span> <span style="color:#008c00; ">8</span><span style="color:#006600; ">UL</span><span style="color:#808030; ">,</span> <span style="color:#008c00; ">7</span><span style="color:#006600; ">UL</span><span style="color:#808030; ">,</span> <span style="color:#008c00; ">6</span><span style="color:#006600; ">UL</span> <span style="color:#800080; ">}</span><span style="color:#800080; ">;</span></span>
+<span class="line_wrapper">    StlVecType<span style="color:#800080; ">&lt;</span><span style="color:#800000; font-weight:bold; ">unsigned</span> <span style="color:#800000; font-weight:bold; ">long</span><span style="color:#800080; ">&gt;</span>  xulgvec <span style="color:#808030; ">=</span> ulgvec<span style="color:#800080; ">;</span></span>
+<span class="line_wrapper"></span>
+<span class="line_wrapper">    MyDataFrame<span style="color:#800080; ">::</span>size_type  rc <span style="color:#808030; ">=</span> df<span style="color:#808030; ">.</span>load_data<span style="color:#808030; ">(</span><span style="color:#666616; ">std</span><span style="color:#800080; ">::</span><span style="color:#603000; ">move</span><span style="color:#808030; ">(</span>ulgvec<span style="color:#808030; ">)</span><span style="color:#808030; ">,</span></span>
+<span class="line_wrapper">                                              <span style="color:#666616; ">std</span><span style="color:#800080; ">::</span>make_pair<span style="color:#808030; ">(</span><span style="color:#800000; ">"</span><span style="color:#0000e6; ">int_col</span><span style="color:#800000; ">"</span><span style="color:#808030; ">,</span> intvec<span style="color:#808030; ">)</span><span style="color:#808030; ">,</span></span>
+<span class="line_wrapper">                                              <span style="color:#666616; ">std</span><span style="color:#800080; ">::</span>make_pair<span style="color:#808030; ">(</span><span style="color:#800000; ">"</span><span style="color:#0000e6; ">dbl_col</span><span style="color:#800000; ">"</span><span style="color:#808030; ">,</span> dblvec<span style="color:#808030; ">)</span><span style="color:#808030; ">,</span></span>
+<span class="line_wrapper">                                              <span style="color:#666616; ">std</span><span style="color:#800080; ">::</span>make_pair<span style="color:#808030; ">(</span><span style="color:#800000; ">"</span><span style="color:#0000e6; ">dbl_col_2</span><span style="color:#800000; ">"</span><span style="color:#808030; ">,</span> dblvec2<span style="color:#808030; ">)</span><span style="color:#808030; ">,</span></span>
+<span class="line_wrapper">                                              <span style="color:#666616; ">std</span><span style="color:#800080; ">::</span>make_pair<span style="color:#808030; ">(</span><span style="color:#800000; ">"</span><span style="color:#0000e6; ">str_col</span><span style="color:#800000; ">"</span><span style="color:#808030; ">,</span> strvec<span style="color:#808030; ">)</span><span style="color:#808030; ">,</span></span>
+<span class="line_wrapper">                                              <span style="color:#666616; ">std</span><span style="color:#800080; ">::</span>make_pair<span style="color:#808030; ">(</span><span style="color:#800000; ">"</span><span style="color:#0000e6; ">ul_col</span><span style="color:#800000; ">"</span><span style="color:#808030; ">,</span> xulgvec<span style="color:#808030; ">)</span><span style="color:#808030; ">)</span><span style="color:#800080; ">;</span></span>
+<span class="line_wrapper">    df<span style="color:#808030; ">.</span>append_column<span style="color:#800080; ">&lt;</span><span style="color:#666616; ">std</span><span style="color:#800080; ">::</span><span style="color:#603000; ">string</span><span style="color:#800080; ">&gt;</span><span style="color:#808030; ">(</span><span style="color:#800000; ">"</span><span style="color:#0000e6; ">str_col</span><span style="color:#800000; ">"</span><span style="color:#808030; ">,</span> <span style="color:#800000; ">"</span><span style="color:#0000e6; ">Additional column</span><span style="color:#800000; ">"</span><span style="color:#808030; ">)</span><span style="color:#800080; ">;</span></span>
+<span class="line_wrapper">    df<span style="color:#808030; ">.</span>append_column<span style="color:#808030; ">(</span><span style="color:#800000; ">"</span><span style="color:#0000e6; ">dbl_col</span><span style="color:#800000; ">"</span><span style="color:#808030; ">,</span> <span style="color:#008000; ">10.56</span><span style="color:#808030; ">)</span><span style="color:#800080; ">;</span></span>
+<span class="line_wrapper"></span>
+<span class="line_wrapper">    CorrVisitor<span style="color:#800080; ">&lt;</span><span style="color:#800000; font-weight:bold; ">double</span><span style="color:#800080; ">&gt;</span> p_corr_visitor<span style="color:#800080; ">;</span></span>
+<span class="line_wrapper">    CorrVisitor<span style="color:#800080; ">&lt;</span><span style="color:#800000; font-weight:bold; ">double</span><span style="color:#800080; ">&gt;</span> s_corr_visitor<span style="color:#808030; ">(</span>correlation_type<span style="color:#800080; ">::</span>spearman<span style="color:#808030; ">)</span><span style="color:#800080; ">;</span></span>
+<span class="line_wrapper">    CorrVisitor<span style="color:#800080; ">&lt;</span><span style="color:#800000; font-weight:bold; ">double</span><span style="color:#800080; ">&gt;</span> k_corr_visitor<span style="color:#808030; ">(</span>correlation_type<span style="color:#800080; ">::</span>kendall_tau<span style="color:#808030; ">)</span><span style="color:#800080; ">;</span></span>
+<span class="line_wrapper"></span>
+<span class="line_wrapper">    df<span style="color:#808030; ">.</span>single_act_visit<span style="color:#800080; ">&lt;</span><span style="color:#800000; font-weight:bold; ">double</span><span style="color:#808030; ">,</span> <span style="color:#800000; font-weight:bold; ">double</span><span style="color:#800080; ">&gt;</span><span style="color:#808030; ">(</span><span style="color:#800000; ">"</span><span style="color:#0000e6; ">dbl_col</span><span style="color:#800000; ">"</span><span style="color:#808030; ">,</span> <span style="color:#800000; ">"</span><span style="color:#0000e6; ">dbl_col_2</span><span style="color:#800000; ">"</span><span style="color:#808030; ">,</span> s_corr_visitor<span style="color:#808030; ">)</span><span style="color:#800080; ">;</span></span>
+<span class="line_wrapper">    df<span style="color:#808030; ">.</span>single_act_visit<span style="color:#800080; ">&lt;</span><span style="color:#800000; font-weight:bold; ">double</span><span style="color:#808030; ">,</span> <span style="color:#800000; font-weight:bold; ">double</span><span style="color:#800080; ">&gt;</span><span style="color:#808030; ">(</span><span style="color:#800000; ">"</span><span style="color:#0000e6; ">dbl_col</span><span style="color:#800000; ">"</span><span style="color:#808030; ">,</span> <span style="color:#800000; ">"</span><span style="color:#0000e6; ">dbl_col_2</span><span style="color:#800000; ">"</span><span style="color:#808030; ">,</span> k_corr_visitor<span style="color:#808030; ">)</span><span style="color:#800080; ">;</span></span>
+<span class="line_wrapper"></span>
+<span class="line_wrapper">    <span style="color:#800000; font-weight:bold; ">auto</span>            fut <span style="color:#808030; ">=</span> df<span style="color:#808030; ">.</span>visit_async<span style="color:#800080; ">&lt;</span><span style="color:#800000; font-weight:bold; ">double</span><span style="color:#808030; ">,</span> <span style="color:#800000; font-weight:bold; ">double</span><span style="color:#800080; ">&gt;</span><span style="color:#808030; ">(</span><span style="color:#800000; ">"</span><span style="color:#0000e6; ">dbl_col</span><span style="color:#800000; ">"</span><span style="color:#808030; ">,</span> <span style="color:#800000; ">"</span><span style="color:#0000e6; ">dbl_col_2</span><span style="color:#800000; ">"</span><span style="color:#808030; ">,</span> p_corr_visitor<span style="color:#808030; ">)</span><span style="color:#800080; ">;</span></span>
+<span class="line_wrapper">    <span style="color:#800000; font-weight:bold; ">const</span> <span style="color:#800000; font-weight:bold; ">double</span>    p_corr <span style="color:#808030; ">=</span> fut<span style="color:#808030; ">.</span>get<span style="color:#808030; ">(</span><span style="color:#808030; ">)</span><span style="color:#808030; ">.</span>get_result<span style="color:#808030; ">(</span><span style="color:#808030; ">)</span><span style="color:#800080; ">;</span></span>
+<span class="line_wrapper"></span>
+<span class="line_wrapper">    assert<span style="color:#808030; ">(</span><span style="color:#603000; ">fabs</span><span style="color:#808030; ">(</span>p_corr <span style="color:#808030; ">-</span> <span style="color:#808030; ">-</span><span style="color:#008000; ">0.358381</span><span style="color:#808030; ">)</span> <span style="color:#808030; ">&lt;</span> <span style="color:#008000; ">0.000001</span><span style="color:#808030; ">)</span><span style="color:#800080; ">;</span></span>
+<span class="line_wrapper">    assert<span style="color:#808030; ">(</span><span style="color:#603000; ">fabs</span><span style="color:#808030; ">(</span>s_corr_visitor<span style="color:#808030; ">.</span>get_result<span style="color:#808030; ">(</span><span style="color:#808030; ">)</span> <span style="color:#808030; ">-</span> <span style="color:#808030; ">-</span><span style="color:#008000; ">0.380952</span><span style="color:#808030; ">)</span> <span style="color:#808030; ">&lt;</span> <span style="color:#008000; ">0.000001</span><span style="color:#808030; ">)</span><span style="color:#800080; ">;</span></span>
+<span class="line_wrapper">    assert<span style="color:#808030; ">(</span><span style="color:#603000; ">fabs</span><span style="color:#808030; ">(</span>k_corr_visitor<span style="color:#808030; ">.</span>get_result<span style="color:#808030; ">(</span><span style="color:#808030; ">)</span> <span style="color:#808030; ">-</span> <span style="color:#808030; ">-</span><span style="color:#008000; ">0.285714</span><span style="color:#808030; ">)</span> <span style="color:#808030; ">&lt;</span> <span style="color:#008000; ">0.000001</span><span style="color:#808030; ">)</span><span style="color:#800080; ">;</span></span>
+<span class="line_wrapper"></span></pre>
+<pre class="code_syntax" style="color:#000000;background:#ffffff00;"><span class="line_wrapper"><span style="color:#696969; ">// ----------------------------------------------------------------------------</span></span>
+<span class="line_wrapper"></span>
+<span class="line_wrapper"><span style="color:#800000; font-weight:bold; ">static</span> <span style="color:#800000; font-weight:bold; ">void</span> test_CrossCorrVisitor<span style="color:#808030; ">(</span><span style="color:#808030; ">)</span>  <span style="color:#800080; ">{</span></span>
+<span class="line_wrapper"></span>
+<span class="line_wrapper">    <span style="color:#666616; ">std</span><span style="color:#800080; ">::</span><span style="color:#603000; ">cout</span> <span style="color:#808030; ">&lt;</span><span style="color:#808030; ">&lt;</span> <span style="color:#800000; ">"</span><span style="color:#0f69ff; ">\n</span><span style="color:#0000e6; ">Testing CrossCorrVisitor{ } ...</span><span style="color:#800000; ">"</span> <span style="color:#808030; ">&lt;</span><span style="color:#808030; ">&lt;</span> <span style="color:#666616; ">std</span><span style="color:#800080; ">::</span><span style="color:#603000; ">endl</span><span style="color:#800080; ">;</span></span>
+<span class="line_wrapper"></span>
+<span class="line_wrapper">    <span style="color:#800000; font-weight:bold; ">typedef</span> StdDataFrame64<span style="color:#800080; ">&lt;</span><span style="color:#666616; ">std</span><span style="color:#800080; ">::</span><span style="color:#603000; ">string</span><span style="color:#800080; ">&gt;</span> StrDataFrame<span style="color:#800080; ">;</span></span>
+<span class="line_wrapper"></span>
+<span class="line_wrapper">    StrDataFrame    df<span style="color:#800080; ">;</span></span>
+<span class="line_wrapper"></span>
+<span class="line_wrapper">    <span style="color:#800000; font-weight:bold; ">try</span>  <span style="color:#800080; ">{</span></span>
+<span class="line_wrapper">        df<span style="color:#808030; ">.</span><span style="color:#603000; ">read</span><span style="color:#808030; ">(</span><span style="color:#800000; ">"</span><span style="color:#0000e6; ">SHORT_IBM.csv</span><span style="color:#800000; ">"</span><span style="color:#808030; ">,</span> io_format<span style="color:#800080; ">::</span>csv2<span style="color:#808030; ">)</span><span style="color:#800080; ">;</span></span>
+<span class="line_wrapper">    <span style="color:#800080; ">}</span></span>
+<span class="line_wrapper">    <span style="color:#800000; font-weight:bold; ">catch</span> <span style="color:#808030; ">(</span><span style="color:#800000; font-weight:bold; ">const</span> DataFrameError <span style="color:#808030; ">&amp;</span>ex<span style="color:#808030; ">)</span>  <span style="color:#800080; ">{</span></span>
+<span class="line_wrapper">        <span style="color:#666616; ">std</span><span style="color:#800080; ">::</span><span style="color:#603000; ">cout</span> <span style="color:#808030; ">&lt;</span><span style="color:#808030; ">&lt;</span> ex<span style="color:#808030; ">.</span>what<span style="color:#808030; ">(</span><span style="color:#808030; ">)</span> <span style="color:#808030; ">&lt;</span><span style="color:#808030; ">&lt;</span> <span style="color:#666616; ">std</span><span style="color:#800080; ">::</span><span style="color:#603000; ">endl</span><span style="color:#800080; ">;</span></span>
+<span class="line_wrapper">    <span style="color:#800080; ">}</span></span>
+<span class="line_wrapper"></span>
+<span class="line_wrapper">    CrossCorrVisitor<span style="color:#800080; ">&lt;</span><span style="color:#800000; font-weight:bold; ">double</span><span style="color:#808030; ">,</span> <span style="color:#666616; ">std</span><span style="color:#800080; ">::</span><span style="color:#603000; ">string</span><span style="color:#800080; ">&gt;</span>   cc<span style="color:#808030; ">(</span><span style="color:#808030; ">-</span><span style="color:#008c00; ">16</span><span style="color:#808030; ">,</span> <span style="color:#008c00; ">16</span><span style="color:#808030; ">)</span><span style="color:#800080; ">;</span></span>
+<span class="line_wrapper"></span>
+<span class="line_wrapper">    df<span style="color:#808030; ">.</span>single_act_visit<span style="color:#800080; ">&lt;</span><span style="color:#800000; font-weight:bold; ">double</span><span style="color:#808030; ">,</span> <span style="color:#800000; font-weight:bold; ">double</span><span style="color:#800080; ">&gt;</span><span style="color:#808030; ">(</span><span style="color:#800000; ">"</span><span style="color:#0000e6; ">IBM_Close</span><span style="color:#800000; ">"</span><span style="color:#808030; ">,</span> <span style="color:#800000; ">"</span><span style="color:#0000e6; ">IBM_Open</span><span style="color:#800000; ">"</span><span style="color:#808030; ">,</span> cc<span style="color:#808030; ">)</span><span style="color:#800080; ">;</span></span>
+<span class="line_wrapper"></span>
+<span class="line_wrapper">    assert<span style="color:#808030; ">(</span>cc<span style="color:#808030; ">.</span>get_result<span style="color:#808030; ">(</span><span style="color:#808030; ">)</span><span style="color:#808030; ">.</span>size<span style="color:#808030; ">(</span><span style="color:#808030; ">)</span> <span style="color:#808030; ">=</span><span style="color:#808030; ">=</span> <span style="color:#008c00; ">32</span><span style="color:#808030; ">)</span><span style="color:#800080; ">;</span></span>
+<span class="line_wrapper">    assert<span style="color:#808030; ">(</span><span style="color:#666616; ">std</span><span style="color:#800080; ">::</span><span style="color:#603000; ">fabs</span><span style="color:#808030; ">(</span>cc<span style="color:#808030; ">.</span>get_result<span style="color:#808030; ">(</span><span style="color:#808030; ">)</span><span style="color:#808030; ">[</span><span style="color:#008c00; ">0</span><span style="color:#808030; ">]</span> <span style="color:#808030; ">-</span> <span style="color:#008000; ">0.906</span><span style="color:#808030; ">)</span> <span style="color:#808030; ">&lt;</span> <span style="color:#008000; ">0.0001</span><span style="color:#808030; ">)</span><span style="color:#800080; ">;</span></span>
+<span class="line_wrapper">    assert<span style="color:#808030; ">(</span><span style="color:#666616; ">std</span><span style="color:#800080; ">::</span><span style="color:#603000; ">fabs</span><span style="color:#808030; ">(</span>cc<span style="color:#808030; ">.</span>get_result<span style="color:#808030; ">(</span><span style="color:#808030; ">)</span><span style="color:#808030; ">[</span><span style="color:#008c00; ">1</span><span style="color:#808030; ">]</span> <span style="color:#808030; ">-</span> <span style="color:#008000; ">0.9117</span><span style="color:#808030; ">)</span> <span style="color:#808030; ">&lt;</span> <span style="color:#008000; ">0.0001</span><span style="color:#808030; ">)</span><span style="color:#800080; ">;</span></span>
+<span class="line_wrapper">    assert<span style="color:#808030; ">(</span><span style="color:#666616; ">std</span><span style="color:#800080; ">::</span><span style="color:#603000; ">fabs</span><span style="color:#808030; ">(</span>cc<span style="color:#808030; ">.</span>get_result<span style="color:#808030; ">(</span><span style="color:#808030; ">)</span><span style="color:#808030; ">[</span><span style="color:#008c00; ">15</span><span style="color:#808030; ">]</span> <span style="color:#808030; ">-</span> <span style="color:#008000; ">0.9919</span><span style="color:#808030; ">)</span> <span style="color:#808030; ">&lt;</span> <span style="color:#008000; ">0.0001</span><span style="color:#808030; ">)</span><span style="color:#800080; ">;</span></span>
+<span class="line_wrapper">    assert<span style="color:#808030; ">(</span><span style="color:#666616; ">std</span><span style="color:#800080; ">::</span><span style="color:#603000; ">fabs</span><span style="color:#808030; ">(</span>cc<span style="color:#808030; ">.</span>get_result<span style="color:#808030; ">(</span><span style="color:#808030; ">)</span><span style="color:#808030; ">[</span><span style="color:#008c00; ">16</span><span style="color:#808030; ">]</span> <span style="color:#808030; ">-</span> <span style="color:#008000; ">0.9971</span><span style="color:#808030; ">)</span> <span style="color:#808030; ">&lt;</span> <span style="color:#008000; ">0.0001</span><span style="color:#808030; ">)</span><span style="color:#800080; ">;</span></span>
+<span class="line_wrapper">    assert<span style="color:#808030; ">(</span><span style="color:#666616; ">std</span><span style="color:#800080; ">::</span><span style="color:#603000; ">fabs</span><span style="color:#808030; ">(</span>cc<span style="color:#808030; ">.</span>get_result<span style="color:#808030; ">(</span><span style="color:#808030; ">)</span><span style="color:#808030; ">[</span><span style="color:#008c00; ">30</span><span style="color:#808030; ">]</span> <span style="color:#808030; ">-</span> <span style="color:#008000; ">0.9239</span><span style="color:#808030; ">)</span> <span style="color:#808030; ">&lt;</span> <span style="color:#008000; ">0.0001</span><span style="color:#808030; ">)</span><span style="color:#800080; ">;</span></span>
+<span class="line_wrapper">    assert<span style="color:#808030; ">(</span><span style="color:#666616; ">std</span><span style="color:#800080; ">::</span><span style="color:#603000; ">fabs</span><span style="color:#808030; ">(</span>cc<span style="color:#808030; ">.</span>get_result<span style="color:#808030; ">(</span><span style="color:#808030; ">)</span><span style="color:#808030; ">[</span><span style="color:#008c00; ">31</span><span style="color:#808030; ">]</span> <span style="color:#808030; ">-</span> <span style="color:#008000; ">0.9179</span><span style="color:#808030; ">)</span> <span style="color:#808030; ">&lt;</span> <span style="color:#008000; ">0.0001</span><span style="color:#808030; ">)</span><span style="color:#800080; ">;</span></span>
+<span class="line_wrapper"><span style="color:#800080; ">}</span></span>
+<span class="line_wrapper"></span></pre>
+
+  <BR><img src="https://github.com/hosseinmoein/DataFrame/blob/master/docs/LionLookingUp.jpg?raw=true" alt="C++ DataFrame"
+       width="200" height="200" style="float:right"/>
+
+</body>
+</html>
+
+<!--
+Local Variables:
+mode:HTML
+tab-width:4
+c-basic-offset:4
+End:
+-->
