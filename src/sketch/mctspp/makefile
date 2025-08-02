@@ -15,5 +15,5 @@ build := ./build
 
 # compile
 $(build)/$(bin):
-	$(cc) -I $(root) examples/main.cc ../../dsds/dsds.cc -o $(build)/$(bin)
+	$(cc) -I $(root) examples/main.cc ../../dsds/dsds.cc ../../lalala/lalala.cc -o $(build)/$(bin)
 # 	$(cc) -I $(root) examples/main.cc imports/libDataFrame.a -o $(build)/$(bin)
